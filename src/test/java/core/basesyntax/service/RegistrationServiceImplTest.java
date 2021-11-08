@@ -60,6 +60,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_emptyLoginUser_NotOk() {
+        user.setLogin("");
+        User expected = null;
+        User actual = registrationService.register(user);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void register_nullAgeUser_NotOk() {
         user.setAge(null);
         User expected = null;
@@ -68,7 +76,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessThan18User_NotOk() {
+    void register_negativeAgeUser_NotOk() {
+        user.setAge(-1);
+        User expected = null;
+        User actual = registrationService.register(user);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_lessThan18AgeUser_NotOk() {
         user.setAge(17);
         User expected = null;
         User actual = registrationService.register(user);
@@ -78,6 +94,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPasswordUser_NotOk() {
         user.setPassword(null);
+        User expected = null;
+        User actual = registrationService.register(user);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_emptyPasswordUser_NotOk() {
+        user.setPassword("");
         User expected = null;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);

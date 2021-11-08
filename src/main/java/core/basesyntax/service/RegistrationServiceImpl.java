@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() == null || user.getAge() < 18
                 || user.getPassword() == null || user.getPassword().length() < 6
-                || user.getLogin() == null) {
+                || user.getLogin() == null || user.getLogin().length() < 1) {
             return null;
         }
         if (storageDao.get(user.getLogin()) != null) {
