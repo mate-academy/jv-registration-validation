@@ -14,38 +14,19 @@ class RegistrationServiceImplTest {
     static RegistrationService registrationService;
     static StorageDao storageDao;
     static Exception ExpectedException;
-    static User user1;
-    static User user2;
-    static User user3;
-    User user;
+    static User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         ExpectedException = new RuntimeException();
-        user1 = new User();
-        user2 = new User();
-        user3 = new User();
-        user1.setLogin("user1");
-        user1.setPassword("123456");
-        user1.setAge(18);
-        user2.setLogin("user2");
-        user2.setPassword("abcdef");
-        user2.setAge(40);
-        user3.setLogin("user3");
-        user3.setPassword("5hy9dd");
-        user3.setAge(30);
+        user = new User();
     }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        storageDao.add(user1);
-        storageDao.add(user2);
-        storageDao.add(user3);
-
-        user = new User();
         user.setLogin("okname");
         user.setPassword("okpassword");
         user.setAge(20);
@@ -69,7 +50,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_emptyLogin_NotOk() {
         user.setLogin("");
-        user.setLogin(null);
         assertThrows(ExpectedException.getClass(), () -> {
             registrationService.register(user);
         });
@@ -94,6 +74,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_NotOk() {
         user.setAge(null);
+        assertThrows(ExpectedException.getClass(), () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_zeroAge_NotOk() {
+        user.setAge(0);
         assertThrows(ExpectedException.getClass(), () -> {
             registrationService.register(user);
         });
