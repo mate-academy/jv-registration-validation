@@ -8,10 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    static RegistrationServiceImpl registrationService;
-    static StorageDaoImpl storageDao;
-    static User user;
-
+    private static RegistrationServiceImpl registrationService;
+    private static StorageDaoImpl storageDao;
+    private static User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -29,14 +28,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void _ValidUser_Ok() {
+    void register_validUser_Ok() {
         registrationService.register(user);
         Assertions.assertEquals(user, storageDao.get(user.getLogin())
                 , "User must be added to data");
     }
 
     @Test
-    void _WhenAgeLessThan18_NotOk() {
+    void register_whenAgeLessThan18_NotOk() {
         user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -44,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void _WithSuchLogin_NotOk() {
+    void register_withSuchLogin_NotOk() {
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
             registrationService.register(user);
@@ -52,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void _WithInvalidPassword_NotOk() {
+    void register_withInvalidPassword_NotOk() {
         user.setPassword(Integer.toString(123));
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -60,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void _WithNullPassword_NotOk() {
+    void register_withNullPassword_NotOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -68,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void _WithNullLogin_NotOk() {
+    void register_withNullLogin_NotOk() {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -76,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void _WithNegativeAge_NotOk() {
+    void register_withNegativeAge_NotOk() {
         user.setAge(-15);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -84,7 +83,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void _emptyLogin_NotOk() {
+    void register_withEmptyLogin_NotOk() {
         user.setLogin("");
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
