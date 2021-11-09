@@ -14,20 +14,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class StorageDaoImplTest {
     private static StorageDao storageDao;
     private static RegistrationService registrationService;
-    User user1;
-    User user2;
+    private static User user1;
+    private static User user2;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+        user1 = new User();
+        user2 = new User();
     }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        user1 = new User();
-        user2 = new User();
         user1.setAge(23);
         user1.setLogin("mylogin");
         user1.setPassword("SuperPassword666");
