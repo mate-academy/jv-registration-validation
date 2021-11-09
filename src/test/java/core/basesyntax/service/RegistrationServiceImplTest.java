@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    static RegistrationService registrationService;
-    static StorageDao storageDao;
-    static Exception ExpectedException;
-    static User user;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
+    private static Exception ExpectedException;
+    private static User user;
 
     @BeforeAll
     static void beforeAll() {
