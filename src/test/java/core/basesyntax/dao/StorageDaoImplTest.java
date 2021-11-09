@@ -4,6 +4,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
@@ -16,10 +17,14 @@ class StorageDaoImplTest {
     User user1;
     User user2;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
         Storage.people.clear();
         user1 = new User();
         user2 = new User();
@@ -36,7 +41,7 @@ class StorageDaoImplTest {
         registrationService.register(user1);
         registrationService.register(user2);
         assertTrue(user1.equals(storageDao.get(user1.getLogin()))
-                && user1.equals(storageDao.get(user1.getLogin())));
+                && user2.equals(storageDao.get(user2.getLogin())));
     }
 
     @Test
@@ -80,6 +85,12 @@ class StorageDaoImplTest {
     @Test
     void register_ageIsNegative_notOk() {
         user1.setAge(-3);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    }
+
+    @Test
+    void register_ageIs18_notOk() {
+        user1.setAge(18);
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
     }
 
