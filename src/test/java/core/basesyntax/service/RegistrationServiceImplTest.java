@@ -177,8 +177,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_correctUser_Ok() {
-        User expected = user;
         registrationService.register(user);
+        User expected = user;
         User actual = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
     }
