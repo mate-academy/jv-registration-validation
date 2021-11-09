@@ -20,6 +20,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && user.getAge() < 110) {
             return storageDao.add(user);
         }
-        return null;
+        throw new RuntimeException("Registration failed");
     }
 }
