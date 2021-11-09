@@ -15,9 +15,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (storageDao.get(user.getLogin()) == null
                 && user.getPassword().length() >= 6
-                && user.getAge() >= 18) {
+                && user.getAge() >= 18
+                && user.getLogin().length() >= 1) {
             return storageDao.add(user);
+        } else {
+            throw new RuntimeException("Can't register user with these parameters");
         }
-        return null;
     }
 }
