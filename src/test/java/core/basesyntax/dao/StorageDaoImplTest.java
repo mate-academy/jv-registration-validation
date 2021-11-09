@@ -2,6 +2,8 @@ package core.basesyntax.dao;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
+import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,11 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StorageDaoImplTest {
     private static StorageDao storageDao;
+    private static RegistrationService registrationService;
     User user1;
     User user2;
 
     @BeforeEach
     void setUp() {
+        registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         Storage.people.clear();
         user1 = new User();
@@ -27,30 +31,40 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void LoginAlreadyExists_notOk() {
+    void register_LoginAlreadyExists_notOk() {
         user1.setLogin("Vasya81");
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
-            assertNotEquals(user2, storageDao.add(user2));
+            assertNotEquals(user2, registrationService.register(user2));
         } catch (AssertionError e) {
             throw new RuntimeException("Login already exists", e);
         }
     }
 
     @Test
-    void loginIsNull_notOk() {
+    void register_loginIsNull_notOk() {
         user1.setLogin(null);
         try {
-            assertNotEquals(user1, storageDao.add(user1));
+            assertNotEquals(user1, registrationService.register(user1));
         } catch (AssertionError e) {
             throw new RuntimeException("Login is null", e);
         }
     }
 
     @Test
-    void loginNotOnlyLettersNumbers_notOk() {
+    void register_loginIsShorterThan6_notOk() {
+        user1.setLogin("login");
+        try {
+            assertNotEquals(user1, registrationService.register(user1));
+        } catch (AssertionError e) {
+            throw new RuntimeException("Login is shorter than 6", e);
+        }
+    }
+
+    @Test
+    void register_loginNotOnlyLettersNumbers_notOk() {
         user1.setLogin("log!@#$%^&*()<>?in");
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
             assertNull(storageDao.get("log!@#$%^&*()<>?in"));
         } catch (AssertionError e) {
@@ -59,15 +73,15 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void ageIsLegal_Ok() {
-        storageDao.add(user1);
+    void register_ageIsLegal_ok() {
+        registrationService.register(user1);
         assertEquals(user1, storageDao.get("mylogin"));
     }
 
     @Test
-    void ageIsIllegal_notOk() {
+    void register_ageIsIllegal_notOk() {
         user1.setAge(15);
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
             assertNull(storageDao.get("mylogin"));
         } catch (AssertionError e) {
@@ -76,9 +90,9 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void ageIsFantastic_notOk() {
+    void register_ageIsFantastic_notOk() {
         user1.setAge(120);
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
             assertNull(storageDao.get("mylogin"));
         } catch (AssertionError e) {
@@ -87,9 +101,9 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void ageIsNegative_notOk() {
+    void register_ageIsNegative_notOk() {
         user1.setAge(-3);
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
             assertNull(storageDao.get("mylogin"));
         } catch (AssertionError e) {
@@ -98,9 +112,9 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void ageIsNull_notOk() {
+    void register_ageIsNull_notOk() {
         user1.setAge(null);
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
             assertNull(storageDao.get("mylogin"));
         } catch (AssertionError e) {
@@ -109,9 +123,9 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void passwordIsShorterThan6_notOk() {
+    void register_pwdIsShorterThan6_notOk() {
         user1.setPassword("Pass1");
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
             assertNull(storageDao.get("mylogin"));
         } catch (AssertionError e) {
@@ -120,17 +134,17 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void passwordIsNotShorterThan6_Ok() {
-        storageDao.add(user1);
+    void register_pwdIsNotShorterThan6_ok() {
+        registrationService.register(user1);
         assertEquals(user1, storageDao.get("mylogin"));
     }
 
     @Test
-    void passwordNotOnlyLettersDigitsCaps_notOk() {
+    void register_pwdNotOnlyLettersDigitsCaps_notOk() {
         user1.setPassword("Pass10!@#$%^&*()><?");
         user2.setPassword("+=_:;dek83F");
-        storageDao.add(user1);
-        storageDao.add(user2);
+        registrationService.register(user1);
+        registrationService.register(user2);
         try {
             assertTrue(storageDao.get("mylogin") == null
                     && storageDao.get("Vasya81") == null);
@@ -140,11 +154,11 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void passwordNoCapsAndNumbers_notOk() {
+    void register_pwdNoCapsAndNumbers_notOk() {
         user1.setPassword("password1");
         user2.setPassword("PassWord");
-        storageDao.add(user1);
-        storageDao.add(user2);
+        registrationService.register(user1);
+        registrationService.register(user2);
         try {
             assertTrue(storageDao.get("mylogin") == null
                     && storageDao.get("Vasya81") == null);
@@ -154,9 +168,9 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void PasswordIsNullNotOk() {
+    void register_PwdIsNull_notOk() {
         user1.setPassword(null);
-        storageDao.add(user1);
+        registrationService.register(user1);
         try {
             assertNull(storageDao.get("mylogin"));
         } catch (AssertionError e) {
@@ -165,9 +179,9 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void allFieldsAreOk() {
-        storageDao.add(user1);
-        storageDao.add(user2);
+    void register_allFieldsAre_Ok() {
+        registrationService.register(user1);
+        registrationService.register(user2);
         assertTrue(user1.equals(storageDao.get("mylogin"))
                 && user2.equals(storageDao.get("Vasya81")));
     }
