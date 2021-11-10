@@ -15,12 +15,12 @@ class RegistrationServiceImplTest {
     private static final Integer DEFAULT_VALID_AGE = 21;
     private static final String ALL_SPECIAL_CHARACTERS = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
     private static final User TEST_USER = new User();
-    private static RegistrationService registrationService = new RegistrationServiceImpl();;
+    private static RegistrationService registrationService = new RegistrationServiceImpl();
     private static StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeAll
     static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();;
+        registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
@@ -113,7 +113,9 @@ class RegistrationServiceImplTest {
     @Test
     void registerUserWithValidValues_Ok() {
         User actual = registrationService.register(TEST_USER);
-        assertNotEquals(TEST_USER, actual,
+        System.out.println(actual);
+        System.out.println(TEST_USER);
+        assertEquals(TEST_USER, actual,
                 "Method register must return added user.");
     }
 
