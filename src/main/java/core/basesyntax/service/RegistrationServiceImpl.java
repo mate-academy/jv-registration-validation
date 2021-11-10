@@ -13,11 +13,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         userValidation(user);
         String password = user.getPassword();
         passwordValidation(password);
-        String userLogin = user.getLogin();
-        if (storageDao.get(userLogin) != null) {
+        String login = user.getLogin();
+        checkIsExistingUser(login);
+        return storageDao.add(user);
+    }
+
+    private void checkIsExistingUser(String login) {
+        if (storageDao.get(login) != null) {
             throw new RuntimeException("User with the same login is already exist.");
         }
-        return storageDao.add(user);
     }
 
     private void passwordValidation(String password) {
