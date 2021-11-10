@@ -9,7 +9,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
         if (user == null) {
             throw new RuntimeException("User can't bu null");
         }
@@ -22,6 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null || user.getAge() < MIN_VALID_AGE) {
             throw new RuntimeException("User's age must be at least 18 years");
         }
+        StorageDaoImpl storageDao = new StorageDaoImpl();
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with such login already exist");
         }
