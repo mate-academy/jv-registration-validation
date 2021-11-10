@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,6 +23,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         user.setAge(18);
         user.setLogin("user'sLogin");
         user.setPassword("user'sPassword");
@@ -40,6 +42,22 @@ class RegistrationServiceImplTest {
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         }, "Expected RuntimeException");
+    }
+
+    @Test
+    void register_whenAgeMoreThan18_Ok() {
+        user.setAge(25);
+        registrationService.register(user);
+        Assertions.assertEquals(user, storageDao.get(user.getLogin())
+                , "User must be added to data");
+    }
+
+    @Test
+    void register_whenAgeIsMaxInt() {
+        user.setAge(Integer.MAX_VALUE);
+        registrationService.register(user);
+        Assertions.assertEquals(user, storageDao.get(user.getLogin())
+                , "User must be added to data");
     }
 
     @Test
@@ -69,6 +87,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_withNullLogin_NotOk() {
         user.setLogin(null);
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        }, "Expected RuntimeException");
+    }
+
+    @Test
+    void register_withNullAge_NotOk() {
+        user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         }, "Expected RuntimeException");
