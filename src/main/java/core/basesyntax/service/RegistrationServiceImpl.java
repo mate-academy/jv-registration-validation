@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.db.Storage.people;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -11,16 +9,19 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (people.contains(storageDao.get(user.getLogin()))) {
-            throw new RuntimeException("Can`t add user, login already exists");
+        if (user == null
+                || user.getAge() == null
+                || user.getPassword() == null) {
+            throw new RuntimeException("Can`t register user, invalid data");
         }
-        if (user.getAge() < 18) {
-            throw new RuntimeException("Can`t add user, age should have more 18 years");
+
+        if (storageDao.get(user.getLogin()) == null
+                && user.getPassword().length() >= 6
+                && user.getAge() >= 18
+                && user.getLogin().length() >= 1) {
+            return storageDao.add(user);
+        } else {
+            throw new RuntimeException("Can't register user, invalid data");
         }
-        if (user.getPassword().length() < 6) {
-            throw new RuntimeException("Can`t add user, password should have more 6 symbols");
-        }
-        storageDao.add(user);
-        return null;
     }
 }
