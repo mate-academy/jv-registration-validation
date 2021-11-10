@@ -30,7 +30,7 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
     }
     @Test
-    void register_ValidUser_ok() {
+    void register_validUser_ok() {
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_EdgeAge_notOk() {
+    void register_EdgeAge_Ok() {
         user.setAge(18);
         User expected = user;
         User actual = registrationService.register(user);
