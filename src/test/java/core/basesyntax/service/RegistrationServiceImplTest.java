@@ -1,79 +1,33 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static core.basesyntax.db.Storage.people;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private User user = new User();
+    private static RegistrationServiceImpl registrationService;
+    private static StorageDaoImpl storageDao;
+    private static User user;
 
-    private User userWithDuplicateLogin = new User();
-    private User userWithEmptyLogin = new User();
-
-    private User userWithLessAge = new User();
-    private User userWithNormalAge = new User();
-    private User userWithFulAge = new User();
-    private User userWithZeroAge = new User();
-    private User userWithNegativeAge = new User();
-    private User userWithNullAge = new User();
-
-    private User userWithLessPassword = new User();
-    private User userWithNullPassword = new User();
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        user = new User();
+    }
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         Storage.people.clear();
 
-        user.setAge(30);
+        user.setAge(18);
         user.setLogin("userLogin");
         user.setPassword("userPassword");
-
-        userWithDuplicateLogin.setAge(50);
-        userWithDuplicateLogin.setLogin("userLogin");
-        userWithDuplicateLogin.setPassword("userWithDuplicateLogin");
-
-        userWithEmptyLogin.setAge(19);
-        userWithEmptyLogin.setLogin("");
-        userWithEmptyLogin.setPassword("userWithEmptyLogin");
-
-        userWithLessAge.setAge(17);
-        userWithLessAge.setLogin("userWithLessAge");
-        userWithLessAge.setPassword("userWithLessAge");
-
-        userWithNormalAge.setAge(18);
-        userWithNormalAge.setLogin("userWithNormalAge");
-        userWithNormalAge.setPassword("userWithNormalAge");
-
-        userWithFulAge.setAge(19);
-        userWithFulAge.setLogin("userWithFulAge");
-        userWithFulAge.setPassword("userWithFulAge");
-
-        userWithZeroAge.setAge(-5);
-        userWithZeroAge.setLogin("userWithZeroAge");
-        userWithZeroAge.setPassword("userWithZeroAge");
-
-        userWithNegativeAge.setAge(-5);
-        userWithNegativeAge.setLogin("userWithNegativeAge");
-        userWithNegativeAge.setPassword("userWithNegativeAge");
-
-        userWithNullAge.setAge(null);
-        userWithNullAge.setLogin("userWithNullAge");
-        userWithNullAge.setPassword("userWithNullAge");
-
-        userWithLessPassword.setAge(50);
-        userWithLessPassword.setLogin("userWithLessPassword");
-        userWithLessPassword.setPassword("pass");
-
-        userWithNullPassword.setAge(18);
-        userWithNullPassword.setLogin("userWithPasswordNull");
-        userWithNullPassword.setPassword(null);
     }
 
     @Test
@@ -84,71 +38,72 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void userNull_NotOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null),
+                "Expected RuntimeException");
+    }
+
+   @Test
     void loginDuplicate_NotOk() {
         registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithDuplicateLogin),
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 
     @Test
     void loginEmpty_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithEmptyLogin),
+        user.setLogin("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 
     @Test
     void ageLessThan18_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithLessAge),
+        user.setAge(17);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 
-    @Test
-    void ageThan18_Ok() {
-        registrationService.register(userWithNormalAge);
-        boolean actual = people.contains(userWithNormalAge);
-        assertTrue(actual);
-    }
 
     @Test
     void ageOverThan18_Ok() {
-        registrationService.register(userWithFulAge);
-        boolean actual = people.contains(userWithFulAge);
-        assertTrue(actual);
+        user.setAge(19);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
     void ageWithZero_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithZeroAge),
+        user.setAge(0);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 
     @Test
     void ageWithNegative_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithNegativeAge),
+        user.setAge(-18);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 
     @Test
     void ageWithNull_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithNullAge),
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 
     @Test
     void passwordLessThan6_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithLessPassword),
+        user.setPassword("short");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 
     @Test
     void passwordNull_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithNullPassword),
-                "Expected RuntimeException");
-    }
-
-    @Test
-    void userNull_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null),
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Expected RuntimeException");
     }
 }
