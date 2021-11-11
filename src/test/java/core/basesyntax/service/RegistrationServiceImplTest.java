@@ -14,20 +14,21 @@ class RegistrationServiceImplTest {
     private final User user = new User();
     private final StorageDao storageDao = new StorageDaoImpl();
     private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static final String VALID_LOGIN = "Valid_Login";
+    private static final String VALID_PASSWORD = "Valid_Password";
+    private static final int VALID_AGE = 23;
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 140;
 
     @BeforeEach
     void setUp() {
-        user.setLogin("Valid_Login");
-        user.setPassword("Valid_Password");
-        user.setAge(23);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
     }
 
     @Test
     void register_nullUser_notOk() {
-        User user = null;
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -44,9 +45,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidAge_notOk() {
-        for (int i = -10; i < 200; i++) {
+        for (int i = -10; i < 100; i++) {
             user.setAge(i);
-            if (i < MIN_AGE || i > MAX_AGE) {
+            if (i < MIN_AGE) {
                 assertThrows(RuntimeException.class, () -> registrationService.register(user));
             }
         }
@@ -70,8 +71,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addOneNewUser_Ok() {
-        registrationService.register(user);
-        assertEquals(user, storageDao.get(user.getLogin()));
+        User expected = registrationService.register(user);
+        User current = storageDao.get(user.getLogin());
+
+        assertEquals(expected, current);
     }
 
     @Test
