@@ -18,14 +18,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         return dao.add(user);
     }
 
-    private void checkUserDataForTrueValues (User user) {
+    private void checkUserDataForTrueValues(User user) {
         if (user == null) {
             throw new RuntimeException("Incorrect entry about user");
         }
         if (user.getLogin() == null || user.getPassword() == null) {
             throw new RuntimeException("User's login or password is absent");
         }
-        if ( user.getPassword().length() < 6) {
+        if (user.getPassword().length() < 6) {
             throw new RuntimeException("User's password is very short");
         }
         Integer age = user.getAge();
