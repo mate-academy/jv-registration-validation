@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
+    private static final long ID = 1;
+    private static final int AGE = 18;
+    private static final String LOGIN = "test@gmail.com";
+    private static final String PASSWORD = "1234556";
     private static RegistrationService registrationService;
     private static User user;
 
@@ -21,10 +25,10 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        user.setId(1L);
-        user.setLogin("test@gmail.com");
-        user.setPassword("1234556");
-        user.setAge(18);
+        user.setId(ID);
+        user.setLogin(LOGIN);
+        user.setPassword(PASSWORD);
+        user.setAge(AGE);
     }
 
     @Test
