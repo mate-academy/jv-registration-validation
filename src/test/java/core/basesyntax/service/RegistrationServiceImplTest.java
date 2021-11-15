@@ -2,14 +2,24 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.After;
-import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.Assert;
+import org.junit.After;
+
+import java.util.EmptyStackException;
 
 public class RegistrationServiceImplTest {
-  private final RegistrationService registrationService = new RegistrationServiceImpl();
+  private static RegistrationService registrationService;
   private User user;
+
+  @BeforeClass
+  public static void initialization() {
+    registrationService = new RegistrationServiceImpl();
+  }
 
   @Before
   public void setupUser() {
@@ -24,78 +34,83 @@ public class RegistrationServiceImplTest {
     Storage.people.clear();
   }
 
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
+
   @Test
-  public void register_userIsNull_ThrowMessage() {
-    Exception exception = generateRuntimeException(null);
-    Assert.assertEquals("Incorrect entry about user", exception.getMessage());
+  public void register_userIsNull_throwException() {
+    exception.expect(RuntimeException.class);
+    registrationService.register(null);
   }
 
   @Test
-  public void register_loginIsNull_ThrowMessage() {
+  public void register_loginIsNull_throwException() {
+    exception.expect(RuntimeException.class);
     user.setLogin(null);
-    Exception exception = generateRuntimeException(user);
-    Assert.assertEquals("User's login or password is absent", exception.getMessage());
+    registrationService.register(user);
   }
 
   @Test
-  public void register_passwordIsNull_ThrowMessage() {
+  public void register_passwordIsNull_throwException() {
+    exception.expect(RuntimeException.class);
     user.setPassword(null);
-    Exception exception = generateRuntimeException(user);
-    Assert.assertEquals("User's login or password is absent", exception.getMessage());
+    registrationService.register(user);
   }
 
   @Test
-  public void register_passwordIsShort_ThrowMessage() {
-    user.setPassword("3");
-    Exception exception = generateRuntimeException(user);
-    Assert.assertEquals("User's password is very short", exception.getMessage());
-  }
-
-  @Test
-  public void register_ageIsEmptyThrowMessage(){
+  public void register_ageIsNull_throwException() {
+    exception.expect(RuntimeException.class);
     user.setAge(null);
-    Exception exception = generateRuntimeException(user);
-    Assert.assertEquals("User's age is empty", exception.getMessage());
-
+    registrationService.register(user);
   }
 
   @Test
-  public void register_loginIsExit_ThrowMessage() {
+  public void register_passwordIsShort_throwException() {
+    exception.expect(RuntimeException.class);
+    user.setPassword("12345");
+    registrationService.register(user);
+  }
+
+  @Test
+  public void register_passwordIsOk_addToStorage() {
+    user.setPassword("123456");
+    Assert.assertEquals(user, registrationService.register(user));
+  }
+
+  @Test
+  public void register_loginIsExit_throwException() {
+    exception.expect(RuntimeException.class);
     User john = new User();
-    john.setId(16L);
-    john.setLogin("J");
+    john.setLogin("login");
     john.setPassword("John2005");
     john.setAge(22);
-    Storage.people.add(john);
-    user.setLogin("J");
-    Assert.assertEquals("Login is exist!", generateRuntimeException(user).getMessage());
+    registrationService.register(user);
+    registrationService.register(john);
   }
 
   @Test
-  public void register_UserIsNotAdult_ThrowMessage() {
-    user.setAge(10);
-    Assert.assertEquals("User is not adult!", generateRuntimeException(user).getMessage());
-  }
-
-  @Test
-  public void register_incorrectAge_ThrowMessage() {
+  public void register_incorrectAge_throwException() {
+    exception.expect(RuntimeException.class);
     user.setAge(-5);
-    Assert.assertEquals("Incorrect user's age. Age =" + user.getAge(), generateRuntimeException(user).getMessage());
+    registrationService.register(user);
   }
 
   @Test
-  public void register_userDataIsOk_AddToStorage() {
+  public void register_userIsNotAdult_throwException() {
+    exception.expect(RuntimeException.class);
+    user.setAge(17);
+    registrationService.register(user);
+  }
+
+  @Test
+  public void register_userIsAdult_addToStorage() {
+    user.setAge(18);
+    Assert.assertEquals(user, registrationService.register(user));
+  }
+
+  @Test
+  public void register_userDataIsOk_addToStorage() {
     registrationService.register(user);
     Assert.assertTrue(Storage.people.contains(user));
-  }
-
-  private Exception generateRuntimeException(User user) {
-    RuntimeException exception = new RuntimeException();
-    try {
-      registrationService.register(user);
-    } catch (RuntimeException exc) {
-      exception = exc;
-    }
-    return exception;
   }
 }
