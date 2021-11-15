@@ -4,10 +4,10 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int VALID_PASSWORD_LENGTH = 6;
+    private static final int VALID_LOGIN_LENGTH = 1;
+    private static final int VALID_AGE = 18;
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
-    private final static int VALID_PASSWORD_LENGTH = 6;
-    private final static int VALID_LOGIN_LENGTH = 1;
-    private final static int VALID_AGE = 18;
 
     @Override
     public User register(User user) {
