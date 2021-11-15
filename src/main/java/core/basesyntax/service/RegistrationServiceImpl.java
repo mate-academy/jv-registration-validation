@@ -17,7 +17,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age >= MIN_AGE_USER
                 && password.length() >= MIN_LENGTH_PASSWORD
                 && storageDao.get(login) == null
-                && !login.equals("")
                 && login.matches("^[a-zA-Z0-9]+$")
                 && age <= 110
                 && password.matches("^[a-zA-Z0-9]+$")) {
