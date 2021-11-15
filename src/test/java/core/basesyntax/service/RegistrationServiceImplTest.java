@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private User expectedUser;
+    private static User expectedUser;
     private static final String AGE_ERROR_MESSAGE = "Age must be equals or more than 18";
     private static final String PASSWORD_ERROR_MESSAGE = "Password must have 6 or more characters";
     private static final String FIELD_NULL_ERROR = "This field can't be \"null\"";
@@ -20,14 +20,19 @@ class RegistrationServiceImplTest {
     @BeforeAll
     public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        expectedUser = new User();
     }
 
     @BeforeEach
     public void setUp() {
-        expectedUser = new User();
         expectedUser.setLogin("login");
         expectedUser.setPassword("password");
         expectedUser.setAge(18);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -94,10 +99,5 @@ class RegistrationServiceImplTest {
         expectedUser.setPassword("11111");
         assertThrows(RuntimeException.class, () -> registrationService.register(expectedUser),
                 PASSWORD_ERROR_MESSAGE);
-    }
-
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
     }
 }
