@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsNull() {
+    void register_userIsNull() {
         user1 = null;
         assertThrows(RuntimeException.class, ()-> {
             registrationService.register(user1);
@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void containsSameLogin_NotOk() {
+    void register_containsSameLogin_NotOk() {
         registrationService.register(user1);
         user2.setLogin(user1.getLogin());
         assertThrows(RuntimeException.class, ()-> {
@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void containsDifferentLogin_Ok() {
+    void register_containsDifferentLogin_Ok() {
         registrationService.register(user1);
         registrationService.register(user2);
         assertTrue(Storage.people.contains(user1));
@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void containsNullLogin_NotOk() {
+    void register_containsNullLogin_NotOk() {
         user1.setLogin(null);
         assertThrows(RuntimeException.class, ()-> {
             registrationService.register(user1);
@@ -66,13 +66,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void olderThanEighteen_Ok() {
+    void register_olderThanEighteen_Ok() {
         registrationService.register(user1);
         assertTrue(Storage.people.contains(user1));
     }
 
     @Test
-    void youngerThanEighteen_NotOk() {
+    void register_youngerThanEighteen_NotOk() {
         user1.setAge(12);
         assertThrows(RuntimeException.class, ()-> {
             registrationService.register(user1);
@@ -80,7 +80,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsNull_NotOk() {
+    void register_ageIsNull_NotOk() {
         user1.setAge(null);
         assertThrows(RuntimeException.class, ()-> {
             registrationService.register(user1);
@@ -88,13 +88,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsLongEnough_Ok() {
+    void register_passwordIsLongEnough_Ok() {
         registrationService.register(user1);
         assertTrue(Storage.people.contains(user1));
     }
 
     @Test
-    void passwordIsNotLongEnough_NotOk() {
+    void register_passwordIsNotLongEnough_NotOk() {
         user1.setPassword("small");
         assertThrows(RuntimeException.class, ()-> {
             registrationService.register(user1);
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsNull_NotOk() {
+    void register_passwordIsNull_NotOk() {
         user1.setPassword(null);
         assertThrows(RuntimeException.class, ()-> {
             registrationService.register(user1);
