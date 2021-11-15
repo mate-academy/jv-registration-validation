@@ -74,7 +74,6 @@ class RegistrationServiceImplTest {
         StorageDao storageDao = new StorageDaoImpl();
         User expected = registrationService.register(user);
         User current = storageDao.get(user.getLogin());
-
         assertEquals(expected, current);
     }
 
