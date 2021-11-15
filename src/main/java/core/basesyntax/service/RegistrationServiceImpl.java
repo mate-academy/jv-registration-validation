@@ -5,6 +5,9 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
+    private final static int VALID_PASSWORD_LENGTH = 6;
+    private final static int VALID_LOGIN_LENGTH = 1;
+    private final static int VALID_AGE = 18;
 
     @Override
     public User register(User user) {
@@ -14,12 +17,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Invalid data");
         }
         if (storageDao.get(user.getLogin()) == null
-                && user.getPassword().length() >= 6
-                && user.getAge() >= 18
-                && user.getLogin().length() >= 1) {
+                && user.getPassword().length() >= VALID_PASSWORD_LENGTH
+                && user.getAge() >= VALID_AGE
+                && user.getLogin().length() >= VALID_LOGIN_LENGTH) {
             return storageDao.add(user);
-        } else {
-            throw new RuntimeException("Can't register user with these parameters");
         }
+        throw new RuntimeException("Can't register user with these parameters");
     }
 }

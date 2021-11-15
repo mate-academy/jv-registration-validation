@@ -10,14 +10,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private static StorageDaoImpl storageDao;
     private static User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService
                 = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
         user = new User();
     }
 
@@ -31,6 +29,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_Ok() {
+        StorageDaoImpl storageDao = new StorageDaoImpl();
         registrationService.register(user);
         Assertions.assertEquals(user, storageDao.get(user.getLogin())
                 , "User must be added to data");
@@ -41,11 +40,12 @@ class RegistrationServiceImplTest {
         user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 
     @Test
     void register_whenAgeMoreThan18_Ok() {
+        StorageDaoImpl storageDao = new StorageDaoImpl();
         user.setAge(25);
         registrationService.register(user);
         Assertions.assertEquals(user, storageDao.get(user.getLogin())
@@ -53,27 +53,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_whenAgeIsMaxInt() {
-        user.setAge(Integer.MAX_VALUE);
-        registrationService.register(user);
-        Assertions.assertEquals(user, storageDao.get(user.getLogin())
-                , "User must be added to data");
-    }
-
-    @Test
-    void register_withSuchLogin_NotOk() {
+    void register_userWithExistingLogin_NotOk() {
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 
     @Test
     void register_withInvalidPassword_NotOk() {
-        user.setPassword(Integer.toString(123));
+        user.setPassword("123");
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 
     @Test
@@ -81,7 +73,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 
     @Test
@@ -89,7 +81,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 
     @Test
@@ -97,7 +89,7 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 
     @Test
@@ -105,7 +97,7 @@ class RegistrationServiceImplTest {
         user.setAge(-15);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 
     @Test
@@ -113,6 +105,6 @@ class RegistrationServiceImplTest {
         user.setLogin("");
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        }, "Expected RuntimeException");
+        });
     }
 }
