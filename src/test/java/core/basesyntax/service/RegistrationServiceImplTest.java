@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,11 @@ public class RegistrationServiceImplTest {
     user.setLogin("login");
     user.setPassword("1234567p");
     user.setAge(20);
+  }
+  
+  @After
+  public void clearStorage() {
+    Storage.people.clear();
   }
 
   @Test
