@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && storageDao.get(login) == null
                 && login.matches("^[a-zA-Z0-9]+$")
                 && password.matches("^[a-zA-Z0-9]+$")) {
-        return storageDao.add(user);
+            return storageDao.add(user);
         }
         throw new RuntimeException("Incorrect data!");
     }
