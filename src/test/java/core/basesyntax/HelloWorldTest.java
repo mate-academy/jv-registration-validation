@@ -3,6 +3,8 @@ package core.basesyntax;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,8 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * Feel free to remove this class and create your own.
  */
 public class HelloWorldTest {
-    private User user = new User();
-    private RegistrationService registration = new RegistrationServiceImpl();
+    private static User user;
+    private static RegistrationService registration;
+
+    @BeforeAll
+    static void beforeAll() {
+        user = new User();
+        registration= new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     public void setUp() throws Exception {

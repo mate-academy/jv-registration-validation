@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getPassword() == null
                 || user.getLogin() == null
                 || storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("");
+            throw new RuntimeException("Invalid data");
         }
         return storageDao.add(user);
     }
