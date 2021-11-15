@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         user1.setAge(18);
         user1.setPassword("password");
         user1.setLogin("login@gmail.com");
@@ -107,5 +107,10 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, ()-> {
             registrationService.register(user1);
         });
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }

@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -17,11 +16,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("login == null");
         }
-        for (User userFromList: Storage.people) {
-            if (userFromList.getLogin().equals(user.getLogin())) {
-                throw new RuntimeException("User with same login already existing");
-            }
+        StorageDao storageDao = new StorageDaoImpl();
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with same login already existing");
         }
+
         if (user.getAge() == null) {
             throw new RuntimeException("Age is null");
         }
@@ -34,8 +33,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password must has at least 6 characters");
         }
-        StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
