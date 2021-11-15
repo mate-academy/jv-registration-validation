@@ -20,7 +20,7 @@ public class RegistrationServiceImplTest {
     @BeforeClass
     public static void beforeClass() {
         registrationService = new RegistrationServiceImpl();
-        firstUserOk = setUserData(1111L, "Bob", "qwerty", 28);
+        firstUserOk = setUserData(1111L, "Bob", "qwerty", 18);
         secondUserOk = setUserData(2222L, "Alice", "asdfghjk", 29);
         thirdUserOk = setUserData(3333L, "Jhon", "zxcvbnm", 25);
         userPasswordNotOk = setUserData(-1111L, "BadBob", "qwer", 19);
