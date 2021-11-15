@@ -41,6 +41,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_loginStartWithEmptyCharacter_notOk() {
+        user.setLogin(" acascd");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginContainEmptyCharacter_notOk() {
+        user.setLogin("ac   ascd");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginEmpty_notOk() {
+        user.setLogin("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
