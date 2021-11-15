@@ -7,133 +7,122 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StorageDaoImplTest {
-    private static StorageDao storageDao;
     private static RegistrationService registrationService;
-    private static User user1;
-    private static User user2;
+    private static User petya;
+    private static User vasya;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-        user1 = new User();
-        user2 = new User();
+        petya = new User();
+        vasya = new User();
     }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        user1.setAge(23);
-        user1.setLogin("mylogin");
-        user1.setPassword("SuperPassword666");
-        user2.setAge(40);
-        user2.setLogin("Vasya81");
-        user2.setPassword("Password81");
+        petya.setAge(23);
+        petya.setLogin("mylogin");
+        petya.setPassword("SuperPassword666");
+        vasya.setAge(40);
+        vasya.setLogin("Vasya81");
+        vasya.setPassword("Password81");
     }
 
     @Test
     void register_allFieldsAreValid_Ok() {
-        registrationService.register(user1);
-        registrationService.register(user2);
-        assertTrue(user1.equals(storageDao.get(user1.getLogin()))
-                && user2.equals(storageDao.get(user2.getLogin())));
+        assertTrue(petya.equals(registrationService.register(petya))
+                && vasya.equals(registrationService.register(vasya)));
     }
 
     @Test
-    void register_LoginAlreadyExists_notOk() {
-        user1.setLogin("Vasya81");
-        registrationService.register(user1);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user2));
+    void register_loginAlreadyExists_notOk() {
+        petya.setLogin("Vasya81");
+        registrationService.register(petya);
+        assertThrows(RuntimeException.class, () -> registrationService.register(vasya));
     }
 
     @Test
     void register_loginIsNull_notOk() {
-        user1.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        petya.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
 
     @Test
     void register_loginIsShorterThan6_notOk() {
-        user1.setLogin("login");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        petya.setLogin("login");
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
     void register_loginNotOnlyLettersNumbers_notOk() {
-        user1.setLogin("log!@#$%^&*()<>?in");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        petya.setLogin("log!@#$%^&*()<>?in");
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
     void register_ageIsIllegal_notOk() {
-        user1.setAge(15);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
-    }
-
-    @Test
-    void register_ageIsFantastic_notOk() {
-        user1.setAge(120);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        petya.setAge(15);
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
     void register_ageIsNegative_notOk() {
-        user1.setAge(-3);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        petya.setAge(-3);
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
     void register_ageIs18_notOk() {
-        user1.setAge(18);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        petya.setAge(18);
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
     void register_ageIsNull_notOk() {
-        user1.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        petya.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
-    void register_pwdIsShorterThan6_notOk() {
-        user1.setPassword("Pass1");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void register_passwordIsShorterThan6_notOk() {
+        petya.setPassword("Pass1");
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
-    void register_pwdNotOnlyLettersDigitsCaps_notOk() {
-        user1.setPassword("Pass10!@#$%^&*()><?");
-        user2.setPassword("+=_:;dek83F");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void register_passwordNotOnlyLettersDigitsCapitalsAtEnd_notOk() {
+        petya.setPassword("Pass10!@#$%^&*()><?");
+        vasya.setPassword("+=_:;dek83F");
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
-    void register_pwdNotOnlyLettersDigitsCaps2_notOk() {
-        user1.setPassword("+=_:;dek83F");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void register_passwordNotOnlyLettersDigitsCapitals2AtStart_notOk() {
+        petya.setPassword("+=_:;dek83F");
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
-    void register_pwdNoCaps_notOk() {
-        user1.setPassword("password1");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void register_passwordNoCaps_notOk() {
+        petya.setPassword("password1");
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
-    void register_pwdNoNumbers_notOk() {
-        user1.setPassword("PassWord");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void register_passwordNoNumbers_notOk() {
+        petya.setPassword("PassWord");
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
-    void register_PwdIsNull_notOk() {
-        user1.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void register_passwordIsNull_notOk() {
+        petya.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 }
