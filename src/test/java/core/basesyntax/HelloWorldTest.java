@@ -24,7 +24,7 @@ public class HelloWorldTest {
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         user.setAge(19);
         user.setLogin("Login");
         user.setPassword("Password");
@@ -70,5 +70,23 @@ public class HelloWorldTest {
         User expected = user;
         User actual = registration.register(user);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void loginIsEmpty_notOk() {
+        user.setLogin("");
+        assertThrows(RuntimeException.class, () -> registration.register(user));
+    }
+
+    @Test
+    public void passwordIsEmptyLine_NotOk() {
+        user.setPassword("is emptyLine");
+        assertThrows(RuntimeException.class, () -> registration.register(user));
+    }
+
+    @Test
+    public void loginEmptyLine_NotOk() {
+        user.setLogin("Empty Line");
+        assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 }
