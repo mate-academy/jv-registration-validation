@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,26 +26,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNullValue_NotOk() {
+    void register_nullValue_NotOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void registerUserWithAgeNull_NotOk() {
+    void register_userWithNullAge_NotOk() {
         testUser.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
                 "Null age shouldn't be accepted.");
     }
 
     @Test
-    void registerUserWithLoginNull_NotOk() {
+    void register_userWithNullLogin_NotOk() {
         testUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
                 "Null login shouldn't be accepted.");
     }
 
     @Test
-    void registerUserWithPasswordNull_NotOk() {
+    void register_userWithNullPassword_NotOk() {
         testUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
                 "Null password shouldn't be accepted.");
@@ -55,7 +53,7 @@ class RegistrationServiceImplTest {
 
 
     @Test
-    void registerUserWithAllFieldsValueNull_NotOk() {
+    void register_userWithNullValues_NotOk() {
         testUser.setAge(null);
         testUser.setLogin(null);
         testUser.setPassword(null);
@@ -64,42 +62,42 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithAgeLessThan18_NotOk() {
+    void register_userWithAgeLessThan18_NotOk() {
         testUser.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
                 "Users shouldn't be added with the age less than 18.");
     }
 
     @Test
-    void AgeEqualIntMaxValue_Ok() {
+    void register_ageEqualIntMaxValue_Ok() {
         testUser.setAge(Integer.MAX_VALUE);
         assertDoesNotThrow(() -> registrationService.register(testUser),
                 "User adding must be possible with the age equal integer MAX_VALUE. ");
     }
 
     @Test
-    void passwordIsLessThanMinValue_NotOk() {
+    void register_userWithPasswordLessThanMinValue_NotOk() {
         testUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
                 "Password shorter than 6 characters must not be accepted.");
     }
 
     @Test
-    void userIsAlreadyExist_NotOk() {
-        StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(testUser);
+    void register_userIsAlreadyExist_NotOk() {
+        Storage.people.add(testUser);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
                 "Users shouldn't be added with the same login.");
     }
 
     @Test
-    void registerUserWithValidValues_Ok() {
+    void register_userWithValidValues_Ok() {
         User addedUser = registrationService.register(testUser);
         assertEquals(testUser, addedUser,
                 "Method register must return added user.");
-        StorageDao storageDao = new StorageDaoImpl();
-        String loginOfAddedUser = addedUser.getLogin();
-        User actual = storageDao.get(loginOfAddedUser);
+        int storageActualSize = Storage.people.size();
+        assertEquals(1, storageActualSize,
+                "Storage size must be increased after adding new User.");
+        User actual = Storage.people.get(0);
         assertEquals(testUser, actual,
                 "User must be in the storage after adding.");
     }
