@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
@@ -9,7 +10,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
+        StorageDao storageDao = new StorageDaoImpl();
         String login = user.getLogin();
         String password = user.getPassword();
         int age = user.getAge();
@@ -26,4 +27,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         return user;
     }
+
 }

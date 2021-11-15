@@ -2,12 +2,13 @@ package core.basesyntax;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceTest {
-    private  static  RegistrationServiceImpl registrationService;
+    private  static RegistrationService registrationService;
     private static User user;
     private static User user1;
 
@@ -92,4 +93,5 @@ public class RegistrationServiceTest {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
 }
