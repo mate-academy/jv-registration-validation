@@ -43,14 +43,14 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_RepeatUser_NotOk() {
+    void register_RepeatUser_notOk() {
         registrationService.register(firstUser);
         registrationService.register(secondUser);
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));;
     }
 
    @Test
-    void register_NullUser_NotOk() {
+    void register_NullUser_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
    }
 
