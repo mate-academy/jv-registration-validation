@@ -7,4 +7,3 @@ public interface StorageDao {
 
     User get(String login);
 }
-
