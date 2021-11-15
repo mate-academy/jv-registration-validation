@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService = new RegistrationServiceImpl();
-    private static User user = new User();
+    private static RegistrationService registrationService;
+    private static User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -34,13 +34,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_check_years_error() {
+    void register_check_years_not_ok() {
         user.setAge(15);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_check_pass_error() {
+    void register_check_pass_not_ok() {
         user.setPassword("1");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
