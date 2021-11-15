@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user.getLogin() == null
                 || user.getLogin().contains(" ")
-                || user.getLogin().equals("")
+                || user.getLogin().isBlank()
                 || user.getPassword() == null
                 || user.getPassword().contains(" ")
                 || user.getAge() == null
@@ -23,7 +23,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || !Objects.equals(storageDao.get(user.getLogin()), null)) {
             throw new RuntimeException("Input data is not valid");
         }
-        storageDao.add(user);
-        return storageDao.get(user.getLogin());
+        return storageDao.add(user);
     }
 }

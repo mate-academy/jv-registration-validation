@@ -7,24 +7,24 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
-    User user = new User();
+    User user;
 
     @BeforeAll
     public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     public void setUp() {
         Storage.people.clear();
-        user.setLogin("qwertyu");
-        user.setPassword("asdfghj");
+        user = new User();
+        user.setLogin("qwerty");
+        user.setPassword("asdfgh");
         user.setAge(25);
     }
 
@@ -72,13 +72,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPassword_notOk() {
-        user.setPassword("zxcv");
+        user.setPassword("zxcvu");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_smallAge_notOk() {
-        user.setAge(15);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -92,7 +92,8 @@ class RegistrationServiceImplTest {
     void register_firstUserRegistration_Ok(){
         User firstActualUser = registrationService.register(user);
         int expected = 1;
-        assertEquals(expected, storageDao.get(firstActualUser.getLogin()).getId());
+        int actual = Storage.people.size();
+        assertEquals(expected, actual);
     }
 
     @Test
