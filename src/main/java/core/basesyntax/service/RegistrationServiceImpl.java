@@ -25,9 +25,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         StorageDao storageDao = new StorageDaoImpl();
 
         if (user.getAge() >= MIN_AGE
-            && user.getAge() <= MAX_AGE
-            && user.getPassword().length() >= MIN_PASSWORD_LENGTH
-            && userWithSameLoginExists(user) == false) {
+                && user.getAge() <= MAX_AGE
+                && user.getPassword().length() >= MIN_PASSWORD_LENGTH
+                && userWithSameLoginExists(user) == false) {
             storageDao.add(user);
             return user;
         }
