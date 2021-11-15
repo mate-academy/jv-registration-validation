@@ -72,18 +72,6 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void register_ageIsNegative_notOk() {
-        petya.setAge(-3);
-        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
-    }
-
-    @Test
-    void register_ageIs18_notOk() {
-        petya.setAge(18);
-        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
-    }
-
-    @Test
     void register_ageIsNull_notOk() {
         petya.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(petya));
@@ -96,20 +84,13 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void register_passwordNotOnlyLettersDigitsCapitalsAtEnd_notOk() {
-        petya.setPassword("Pass10!@#$%^&*()><?");
-        vasya.setPassword("+=_:;dek83F");
-        assertThrows(RuntimeException.class, () -> registrationService.register(petya));
-    }
-
-    @Test
-    void register_passwordNotOnlyLettersDigitsCapitals2AtStart_notOk() {
+    void register_passwordNotOnlyLettersDigitsCapitals_notOk() {
         petya.setPassword("+=_:;dek83F");
         assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
 
     @Test
-    void register_passwordNoCaps_notOk() {
+    void register_passwordNoCapsitals_notOk() {
         petya.setPassword("password1");
         assertThrows(RuntimeException.class, () -> registrationService.register(petya));
     }
