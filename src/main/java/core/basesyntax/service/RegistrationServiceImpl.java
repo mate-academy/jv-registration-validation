@@ -28,11 +28,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < 6) {
             throw new RuntimeException("User's password is very short");
         }
-        Integer age = user.getAge();
-        if (age == null) {
+        if (user.getAge() == null) {
             throw new RuntimeException("User's age is empty");
         }
-        if (age < 0 || age > 130) {
+        if (user.getAge() < 0) {
             throw new RuntimeException("Incorrect user's age. Age =" + user.getAge());
         }
     }
