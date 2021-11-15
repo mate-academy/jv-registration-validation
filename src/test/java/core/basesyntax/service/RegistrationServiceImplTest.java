@@ -12,15 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
-    private static Exception ExpectedException;
     private static User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-        ExpectedException = new RuntimeException();
         user = new User();
     }
 
@@ -34,7 +30,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_NotOk() {
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
@@ -42,7 +38,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_NotOk() {
         user.setLogin(null);
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -50,78 +46,42 @@ class RegistrationServiceImplTest {
     @Test
     void register_emptyLogin_NotOk() {
         user.setLogin("");
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_onlyWhitespacesLogin_Ok() {
+    void register_onlyWhitespacesLogin_notOk() {
         user.setLogin("     ");
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void register_onlySpecialCharsLogin_Ok() {
-        user.setLogin("#$%^&*)!(");
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_nullAge_NotOk() {
         user.setAge(null);
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_zeroAge_NotOk() {
+    void register_invalidAge_NotOk() {
         user.setAge(0);
-        assertThrows(ExpectedException.getClass(), () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_negativeAge_NotOk() {
         user.setAge(-1);
-        assertThrows(ExpectedException.getClass(), () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_lessThan18Age_NotOk() {
+        user.setAge(1);
         user.setAge(17);
-        assertThrows(ExpectedException.getClass(), () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_IntegerMinValueAge_NotOk() {
         user.setAge(Integer.MIN_VALUE);
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_18Age_Ok() {
+    void register_validAge_Ok() {
         user.setAge(18);
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void register_IntegerMaxValueAge_Ok() {
-        user.setAge(Integer.MAX_VALUE);
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);
@@ -130,15 +90,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_NotOk() {
         user.setPassword(null);
-        assertThrows(ExpectedException.getClass(), () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_emptyPassword_NotOk() {
-        user.setPassword("");
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -146,37 +98,31 @@ class RegistrationServiceImplTest {
     @Test
     void register_lessThan5CharsPassword_NotOk() {
         user.setPassword("12345");
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_onlyWhitespacesPassword_Ok() {
+    void register_onlyWhitespacesPassword_notOk() {
         user.setPassword("      ");
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
-    void register_onlySpecialCharsPassword_Ok() {
-        user.setPassword("#$%^&*)!(");
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void register_alreadyContainingUser_NotOk() {
+    void register_alreadyContainingUser_notOk() {
+        StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
-        assertThrows(ExpectedException.getClass(), () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
     void register_correctUser_Ok() {
+        StorageDao storageDao = new StorageDaoImpl();
         registrationService.register(user);
         User expected = user;
         User actual = storageDao.get(user.getLogin());

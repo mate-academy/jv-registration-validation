@@ -5,18 +5,22 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_VALID_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 1;
     private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         if (user == null
-                || user.getAge() == null || user.getAge() < 18
-                || user.getPassword() == null || user.getPassword().length() < 6
-                || user.getLogin() == null || user.getLogin().length() < 1
-                || storageDao.get(user.getLogin()) != null) {
+                || user.getAge() == null || user.getAge() < MIN_VALID_AGE
+                || user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH
+                || user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH
+                || storageDao.get(user.getLogin()) != null
+                || user.getPassword().trim().length() == 0
+                || user.getLogin().trim().length() == 0) {
             throw new RuntimeException("Invalid user data");
         }
-        storageDao.add(user);
-        return storageDao.get(user.getLogin());
+        return storageDao.add(user);
     }
 }
