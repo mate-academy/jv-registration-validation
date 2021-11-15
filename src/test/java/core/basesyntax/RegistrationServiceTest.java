@@ -94,3 +94,4 @@ public class RegistrationServiceTest {
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
+
