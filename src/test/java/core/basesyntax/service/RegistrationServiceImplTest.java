@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,14 +9,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private static StorageDaoImpl storageDao ;
     private static RegistrationService service;
     private static User testedUser;
 
 
     @BeforeAll
     public static void setUp() {
-        storageDao = new StorageDaoImpl();
         service = new RegistrationServiceImpl();
     }
 
@@ -40,7 +37,14 @@ class RegistrationServiceImplTest {
         testedUser.setLogin("userLogin");
         testedUser.setPassword("password");
         assertNotNull(service.register(testedUser));
+    }
 
+    @Test
+    public void register_17Age_notOk() {
+        testedUser.setAge(17);
+        testedUser.setLogin("userLogin");
+        testedUser.setPassword("password");
+        assertThrows(RuntimeException.class, () -> service.register(testedUser));
     }
 
     @Test
@@ -88,10 +92,17 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_passwordLengthLess6_notOk() {
-        //TODO check password length
         testedUser.setAge(21);
         testedUser.setLogin("userLogin");
         testedUser.setPassword("pass");
+        assertThrows(RuntimeException.class, () -> service.register(testedUser));
+    }
+
+    @Test
+    public void register_passwordLength5_notOk() {
+        testedUser.setAge(21);
+        testedUser.setLogin("userLogin");
+        testedUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> service.register(testedUser));
     }
 
@@ -100,10 +111,8 @@ class RegistrationServiceImplTest {
         testedUser.setAge(19);
         testedUser.setLogin("userLogin");
         testedUser.setPassword("password");
-        storageDao.add(testedUser);
-        storageDao.add(testedUser);
+        service.register(testedUser);
         assertThrows(RuntimeException.class, () -> service.register(testedUser));
-        //TODO check user exist in db
     }
 
     @Test
@@ -113,7 +122,4 @@ class RegistrationServiceImplTest {
         testedUser.setPassword("password");
         assertNotEquals(service.register(testedUser), null);
     }
-
-
-
 }
