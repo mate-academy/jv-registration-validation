@@ -6,106 +6,105 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User user1;
-    private static User user2;
+    private static User firstUser;
+    private static User secondUser;
 
     @BeforeAll
     static void beforeAll() {
-        user1 = new User();
-        user2 = new User();
+        firstUser = new User();
+        secondUser = new User();
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
     void setUp() {
-        user1.setAge(18);
-        user1.setPassword("password");
-        user1.setLogin("login@gmail.com");
-        user2.setAge(40);
-        user2.setPassword("differentPassword");
-        user2.setLogin("differentLogin@gmail.com");
+        firstUser.setAge(18);
+        firstUser.setPassword("password");
+        firstUser.setLogin("login@gmail.com");
+        secondUser.setAge(40);
+        secondUser.setPassword("differentPassword");
+        secondUser.setLogin("differentLogin@gmail.com");
     }
 
     @Test
     void register_userIsNull() {
-        user1 = null;
-        assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(user1);
-        });
-        user1 = new User();
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_containsSameLogin_NotOk() {
-        registrationService.register(user1);
-        user2.setLogin(user1.getLogin());
+    void register_containsSameLogin_notOk() {
+        registrationService.register(firstUser);
+        secondUser.setLogin(firstUser.getLogin());
         assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(user2);
+            registrationService.register(secondUser);
         });
     }
 
     @Test
     void register_containsDifferentLogin_Ok() {
-        registrationService.register(user1);
-        registrationService.register(user2);
-        assertTrue(Storage.people.contains(user1));
-        assertTrue(Storage.people.contains(user2));
+        assertDoesNotThrow(()-> {
+            registrationService.register(firstUser);
+        });
+        assertDoesNotThrow(()-> {
+            registrationService.register(secondUser);
+        });
     }
 
     @Test
-    void register_containsNullLogin_NotOk() {
-        user1.setLogin(null);
+    void register_containsNullLogin_notOk() {
+        firstUser.setLogin(null);
         assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(user1);
+            registrationService.register(firstUser);
         });
     }
 
     @Test
     void register_olderThanEighteen_Ok() {
-        registrationService.register(user1);
-        assertTrue(Storage.people.contains(user1));
+        registrationService.register(firstUser);
+        assertTrue(Storage.people.contains(firstUser));
     }
 
     @Test
-    void register_youngerThanEighteen_NotOk() {
-        user1.setAge(12);
+    void register_youngerThanEighteen_notOk() {
+        firstUser.setAge(17);
         assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(user1);
+            registrationService.register(firstUser);
         });
     }
 
     @Test
-    void register_ageIsNull_NotOk() {
-        user1.setAge(null);
+    void register_ageIsNull_notOk() {
+        firstUser.setAge(null);
         assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(user1);
+            registrationService.register(firstUser);
         });
     }
 
     @Test
     void register_passwordIsLongEnough_Ok() {
-        registrationService.register(user1);
-        assertTrue(Storage.people.contains(user1));
+        registrationService.register(firstUser);
+        assertTrue(Storage.people.contains(firstUser));
     }
 
     @Test
-    void register_passwordIsNotLongEnough_NotOk() {
-        user1.setPassword("small");
+    void register_passwordIsNotLongEnough_notOk() {
+        firstUser.setPassword("12345");
         assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(user1);
+            registrationService.register(firstUser);
         });
     }
 
     @Test
-    void register_passwordIsNull_NotOk() {
-        user1.setPassword(null);
+    void register_passwordIsNull_notOk() {
+        firstUser.setPassword(null);
         assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(user1);
+            registrationService.register(firstUser);
         });
     }
 
