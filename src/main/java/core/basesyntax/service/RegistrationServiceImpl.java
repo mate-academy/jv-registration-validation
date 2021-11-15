@@ -7,6 +7,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH_PASSWORD = 6;
     private static final int MIN_AGE_USER = 18;
+    private static final int MAX_AGE_USER = 110;
 
     @Override
     public User register(User user) {
@@ -18,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && password.length() >= MIN_LENGTH_PASSWORD
                 && storageDao.get(login) == null
                 && login.matches("^[a-zA-Z0-9]+$")
-                && age <= 110
+                && age <= MAX_AGE_USER
                 && password.matches("^[a-zA-Z0-9]+$")) {
             storageDao.add(user);
         } else {
