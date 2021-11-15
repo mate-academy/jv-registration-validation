@@ -11,8 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null
-                || user.getAge() == null || user.getPassword() == null
+        if (user == null || user.getAge() == null || user.getPassword() == null
                 || user.getLogin() == null || storageDao.get(user.getLogin()) != null
                 || user.getAge() < VALID_AGE || user.getPassword().length() < VALID_PASSWORD) {
             throw new RuntimeException("Incorrect data");

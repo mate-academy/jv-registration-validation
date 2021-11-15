@@ -1,22 +1,29 @@
 package core.basesyntax.service;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    RegistrationService service;
-    User standardUser;
+    private static RegistrationServiceImpl service;
+    private static User standardUser;
+
+    @BeforeAll
+    static void beforeAll(){
+        service = new RegistrationServiceImpl();
+        standardUser = new User();
+    }
 
     @BeforeEach
     void setUp(){
-        service = new RegistrationServiceImpl();
-        standardUser = new User();
+        Storage.people.clear();
         standardUser.setLogin("mate");
-        standardUser.setAge(19);
         standardUser.setPassword("123456");
+        standardUser.setAge(19);
     }
 
     @Test
@@ -25,7 +32,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void AgeIsNullCheck_NotOk(){
+    public void userIsNullCheck_NotOk(){
+        assertThrows(RuntimeException.class, () ->{
+            service.register(null);
+        });
+    }
+
+    @Test
+    public void ageIsNullCheck_NotOk(){
         standardUser.setAge(null);
         assertThrows(RuntimeException.class, () ->{
             service.register(standardUser);
@@ -33,7 +47,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void LoginIsNullCheck_NotOk(){
+    public void ageIsNegativeCheck_NotOk(){
+        standardUser.setAge(-3);
+        assertThrows(RuntimeException.class, () ->{
+            service.register(standardUser);
+        });
+    }
+
+    @Test
+    public void loginIsNullCheck_NotOk(){
         standardUser.setLogin(null);
         assertThrows(RuntimeException.class, () ->{
             service.register(standardUser);
@@ -41,7 +63,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void PasswordIsNullCheck_NotOk(){
+    public void passwordIsNullCheck_NotOk(){
         standardUser.setPassword(null);
         assertThrows(RuntimeException.class, () ->{
             service.register(standardUser);
@@ -50,7 +72,6 @@ class RegistrationServiceImplTest {
 
     @Test
     public void sameLoginCheck_NotOk(){
-        standardUser.setLogin("mates");
         service.register(standardUser);
         assertThrows(RuntimeException.class, () ->{
             service.register(standardUser);
