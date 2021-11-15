@@ -11,25 +11,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        userValidation(user);
-        passwordValidation(user.getPassword());
-        checkIsExistingUser(user.getLogin());
+        validateUser(user);
         return storageDao.add(user);
     }
 
-    private void checkIsExistingUser(String login) {
-        if (storageDao.get(login) != null) {
-            throw new RuntimeException("User with the same login is already exist.");
-        }
-    }
-
-    private void passwordValidation(String password) {
-        if (password.length() < PASSWORD_MIN_LENGTH) {
-            throw new RuntimeException("Password must be at least 6 character");
-        }
-    }
-
-    private void userValidation(User user) {
+    private void validateUser(User user) {
         if (user == null) {
             throw new RuntimeException("User cannot be null");
         }
@@ -39,6 +25,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() < MIN_USER_AGE) {
             throw new RuntimeException("Cannot register user with age less than 18");
+        }
+        if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
+            throw new RuntimeException("Password must be at least 6 character");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with the same login is already exist.");
         }
     }
 }
