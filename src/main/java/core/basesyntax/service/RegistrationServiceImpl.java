@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getAge() < MIN_AGE || user.getAge() == null) {
             throw new RuntimeException("Invalid Data");
         }
-        storageDao.add(user);
-        return user;
+
+        return storageDao.add(user);
     }
 }
