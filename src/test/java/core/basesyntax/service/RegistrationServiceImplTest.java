@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
@@ -29,9 +28,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_Ok() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
-        registrationService.register(user);
-        Assertions.assertEquals(user, storageDao.get(user.getLogin())
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual
                 , "User must be added to data");
     }
 
@@ -45,10 +43,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_whenAgeMoreThan18_Ok() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
         user.setAge(25);
-        registrationService.register(user);
-        Assertions.assertEquals(user, storageDao.get(user.getLogin())
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual
                 , "User must be added to data");
     }
 
