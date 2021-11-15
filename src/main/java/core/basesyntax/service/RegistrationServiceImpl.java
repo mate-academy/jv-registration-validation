@@ -10,18 +10,22 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("This user already exists!");
-        } else if (user.getLogin() == null || user.getPassword() == null) {
-            throw new RuntimeException("Login or Password might not be null!");
+        if (user == null) {
+            throw new RuntimeException("User might not be null");
+        } else if (user.getLogin() == null
+                || user.getPassword() == null
+                || user.getAge() == null) {
+            throw new RuntimeException("Login, Password or Age might not be null!");
+        } else if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("Age might be 18+ years");
+        } else if (user.getPassword().length() < MIN_LENGTH) {
+            throw new RuntimeException("Password length might be 6+ chars");
+        } else if (user.getLogin().length() < MIN_LENGTH) {
+            throw new RuntimeException("Login might be 6+ chars");
         } else if (user.getLogin().equals(user.getPassword())) {
             throw new RuntimeException("Login might not be equal Password!");
-        } else if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Age might be 18+");
-        } else if (user.getPassword().length() < MIN_LENGTH) {
-            throw new RuntimeException("Password length might be 6+");
-        } else if (user.getLogin().length() < MIN_LENGTH) {
-            throw new RuntimeException("Login might be 6+");
+        } else if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("This user already exists!");
         } else {
             return storageDao.add(user);
         }

@@ -64,7 +64,7 @@ public class StorageDaoTests {
 
     @Test
     void register_nullUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+        assertThrows(RuntimeException.class, () -> registrationService.register(new User()));
     }
 
     @Test
@@ -86,11 +86,6 @@ public class StorageDaoTests {
     }
 
     @Test
-    void  register_emptyUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(new User()));
-    }
-
-    @Test
     void register_PassEqualLogin_notOk() {
         user.setPassword("mateAcademy");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -104,7 +99,7 @@ public class StorageDaoTests {
 
     @Test
     void register_LessThenZeroAge_NotOk() {
-        user.setAge(null);
+        user.setAge(-4);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -125,6 +120,4 @@ public class StorageDaoTests {
         user.setPassword("#$133");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
-
-
 }
