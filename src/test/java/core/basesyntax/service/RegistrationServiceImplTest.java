@@ -75,7 +75,6 @@ class RegistrationServiceImplTest {
     void register_notValidPassword_notOk() {
         expectedUser.setPassword("qweqq");
         assertThrows(RuntimeException.class, () -> registrationService.register(expectedUser));
-
     }
 
     @Test
@@ -86,6 +85,5 @@ class RegistrationServiceImplTest {
     @Test
     void register_validPassword_Ok() {
         assertTrue(expectedUser.getPassword().length() >= 6);
-
     }
 }
