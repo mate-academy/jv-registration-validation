@@ -10,13 +10,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (confirmData(user)) {
-            storageDao.add(user);
-        }
-        return user;
+        confirmData(user);
+        return storageDao.add(user);
     }
 
-    private boolean confirmData(User user) {
+    private void confirmData(User user) {
         if (user == null || user.getLogin() == null || user.getPassword() == null) {
             throw new RuntimeException("Invalid data");
         }
@@ -32,6 +30,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_ALLOWABLE_PASSWORD_LENGTH) {
             throw new RuntimeException("user password must be at least 6 characters");
         }
-        return true;
     }
 }
