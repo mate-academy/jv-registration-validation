@@ -15,6 +15,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null
                 || user.getLogin().contains(" ")
                 || user.getLogin().equals("")
+                || user.getPassword().contains(" ")
+                || user.getPassword().equals("")
                 || user.getAge() == null
                 || user.getPassword() == null
                 || user.getAge() < MINIMUM_ALLOWED_AGE
