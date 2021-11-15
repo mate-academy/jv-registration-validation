@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -70,10 +68,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_invalidAge_NotOk() {
         user.setAge(0);
-        user.setAge(-1);
-        user.setAge(1);
-        user.setAge(17);
-        user.setAge(Integer.MIN_VALUE);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -96,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessThan5CharsPassword_NotOk() {
+    void register_lessThan6CharsPassword_NotOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -113,8 +107,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_alreadyContainingUser_notOk() {
-        StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(user);
+        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -122,10 +115,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_correctUser_Ok() {
-        StorageDao storageDao = new StorageDaoImpl();
-        registrationService.register(user);
         User expected = user;
-        User actual = storageDao.get(user.getLogin());
+        User actual = registrationService.register(user);
         assertEquals(expected, actual);
     }
 }
