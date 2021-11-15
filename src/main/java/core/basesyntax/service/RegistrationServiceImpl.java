@@ -8,10 +8,10 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
-    public User register(User user) {
+    public User register(User user) throws RuntimeException{
         StorageDao storageDao = new StorageDaoImpl();
-        if (user.getLogin() == null || user.getAge() == null ){
-            throw new RuntimeException("Login or Age are not correct")
+        if (user.getAge() == null) {
+            throw new RuntimeException("Exeption");
         }
         if (storageDao.get(user.getLogin()) == null && user.getAge() >=18 && user.getPassword().length() >= 6) {
             return storageDao.add(user);
