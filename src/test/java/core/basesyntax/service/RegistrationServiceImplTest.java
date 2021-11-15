@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -11,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private static StorageDao storageDao;
     private static RegistrationService registrationService;
     private User expectedUser;
     private static final String AGE_ERROR_MESSAGE = "Age must be equals or more than 18";
@@ -22,15 +19,14 @@ class RegistrationServiceImplTest {
 
     @BeforeAll
     public static void beforeAll() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
     public void setUp() {
         expectedUser = new User();
-        expectedUser.setLogin("qwe123");
-        expectedUser.setPassword("qwe123");
+        expectedUser.setLogin("login");
+        expectedUser.setPassword("password");
         expectedUser.setAge(18);
     }
 
@@ -71,7 +67,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_notExistedUser_Ok() {
-        assertNull(storageDao.get(expectedUser.getLogin()));
+        assertEquals(expectedUser,registrationService.register(expectedUser));
     }
 
     @Test

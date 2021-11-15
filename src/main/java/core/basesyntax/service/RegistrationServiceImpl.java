@@ -12,9 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || user.getLogin() == null
-                || user.getAge() == null || user.getPassword() == null
-                || user.getAge() < MIN_AGE || user.getPassword().length() < MIN_CHARS
+        if (user.getLogin() == null
+                || user.getAge() < MIN_AGE
+                || user.getPassword().length() < MIN_CHARS
                 || storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException(ERROR_MESSAGE);
         }
