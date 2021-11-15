@@ -14,21 +14,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("Invalid User");
         }
-        String userLogin = user.getLogin();
-        String userPass = user.getPassword();
-        int userAge = user.getAge();
-
-        if (userLogin == null || userLogin.isEmpty() || !checkLogin(userLogin)
-                || userPass == null
-                || userPass.length() < MIN_PASSWORD_LENGTH
-                || userAge < MIN_AGE) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()
+                || storageDao.get(user.getLogin()) != null
+                || user.getPassword() == null
+                || user.getPassword().length() < MIN_PASSWORD_LENGTH
+                || user.getAge() < MIN_AGE || user.getAge() == null) {
             throw new RuntimeException("Invalid Data");
         }
         storageDao.add(user);
         return user;
-    }
-
-    private boolean checkLogin(String login) {
-        return storageDao.get(login) == null;
     }
 }

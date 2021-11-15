@@ -5,25 +5,28 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private final User user = new User();
-    private final StorageDao storageDao = new StorageDaoImpl();
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private static final String VALID_LOGIN = "Valid_Login";
-    private static final String VALID_PASSWORD = "Valid_Password";
-    private static final int VALID_AGE = 23;
+    private User user;
+    private static RegistrationService registrationService;
     private static final int MIN_AGE = 18;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
+        user = new User();
+        user.setLogin("Valid_Login");
+        user.setPassword("Valid_Password");
+        user.setAge(23);
     }
 
     @Test
@@ -44,50 +47,39 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidAge_notOk() {
-        for (int i = -10; i < 100; i++) {
+    void register_nullAge_notOk() {
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_manyInvalidAge_notOk() {
+        for (int i = -10; i < MIN_AGE; i++) {
             user.setAge(i);
-            if (i < MIN_AGE) {
-                assertThrows(RuntimeException.class, () -> registrationService.register(user));
-            }
+            assertThrows(RuntimeException.class, () -> registrationService.register(user));
         }
     }
 
     @Test
     void register_invalidPassLength_notOk() {
-        user.setPassword("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
         user.setPassword("Abba");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-        user.setPassword("Jojob");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_addCreatingUser_notOk() {
+        StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_addOneNewUser_Ok() {
+        StorageDao storageDao = new StorageDaoImpl();
         User expected = registrationService.register(user);
         User current = storageDao.get(user.getLogin());
 
         assertEquals(expected, current);
-    }
-
-    @Test
-    void register_addTwoNewUsers_Ok() {
-        User user2 = new User();
-        user2.setLogin("Valid_login_User2");
-        user2.setPassword("Valid_password_User2");
-        user2.setAge(24);
-
-        registrationService.register(user);
-        registrationService.register(user2);
-        assertEquals(user, storageDao.get(user.getLogin()));
-        assertEquals(user2, storageDao.get(user2.getLogin()));
     }
 
     @AfterEach
