@@ -44,7 +44,6 @@ public class RegistrationServiceImplTest {
 
   @Test
   void register_manyUser_ok(){
-
     assertEquals(registrationService.register(user1), user1);
     assertEquals(registrationService.register(user2), user2);
   }
@@ -94,8 +93,4 @@ public class RegistrationServiceImplTest {
     registrationService.register(user1);
     assertThrows(RegistrationUserException.class, () -> registrationService.register(user1));
   }
-
-
-
-
 }
