@@ -4,7 +4,6 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -86,9 +85,10 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_correrctUser_ok() {
+    public void register_validUser_ok() {
         User expected = bob;
         User actual = registrationService.register(bob);
         assertEquals(expected, actual);
     }
 }
+
