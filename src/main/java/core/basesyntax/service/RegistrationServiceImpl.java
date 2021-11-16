@@ -17,13 +17,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateUserData(User user) {
         if (user == null
-                || storageDao.get(user.getLogin()) != null
                 || user.getLogin() == null
                 || user.getAge() == null
                 || user.getPassword() == null
                 || user.getLogin().equals("")
                 || user.getAge() < MINIMUM_USER_AGE
-                || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+                || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH
+                || storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Invalid user data or user already exists");
         }
     }
