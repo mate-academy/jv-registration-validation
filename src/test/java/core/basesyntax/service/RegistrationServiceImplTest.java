@@ -6,7 +6,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -62,7 +65,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_notExistedUser_Ok() {
-        assertEquals(expectedUser,registrationService.register(expectedUser));
+        assertEquals(expectedUser, registrationService.register(expectedUser));
     }
 
     @Test
@@ -79,11 +82,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validAge_Ok() {
-        assertTrue(expectedUser.getAge() >= 18);
+        assertTrue(registrationService.register(expectedUser).getAge() >= 18);
     }
 
     @Test
     void register_validPassword_Ok() {
-        assertTrue(expectedUser.getPassword().length() >= 6);
+        assertTrue(registrationService.register(expectedUser).getPassword().length() >= 6);
     }
 }
