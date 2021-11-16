@@ -1,28 +1,25 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private User user;
-    private StorageDaoImpl storageDao;
+import static org.junit.jupiter.api.Assertions.*;
 
+public class RegistrationServiceImplTest {
+    private RegistrationServiceImpl registrationService;
+    private User user;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
+        registrationService = new RegistrationServiceImpl();
         user = new User();
-        storageDao = new StorageDaoImpl();
     }
 
     @Test
     void register_nullUser_notOk() {
-        User actual = null;
-        assertThrows(RuntimeException.class, () -> registrationService.register(actual));
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -33,20 +30,20 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_incorrectAge_notOk() {
-        user.setAge(0);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_validUserCase_OK() {
-        User expected = new User(0L, "Alice", "password", 20);
+        User expected = new User("Alice", "password", 20);
         User actual = registrationService.register(expected);
-        assertTrue(expected.equals(actual));
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_storageContainsNewUser_OK() {
-        User actual = new User(0L, "Alice", "password", 20);
+        User actual = new User("Alice", "password", 20);
         Storage.people.add(actual);
         assertTrue(Storage.people.contains(actual));
     }
@@ -65,21 +62,14 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_passwordIsLessThanSixSymbols_notOK() {
-        User actual = new User(1L, "user1", "one", 20);
-        assertNull(registrationService.register(actual));
+        User actual = new User("user1", "12345", 20);
+        assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
     void register_UserWithThisLoginAlreadyExists_OK() {
-        User actual = new User(0L, "User", "password", 21);
-        storageDao.add(new User(1L, "User", "1234567", 45));
-        assertNull(registrationService.register(actual));
-    }
-
-    @Test
-    void register_userWithSameLoginExists() {
-        storageDao.add(new User(1L, "User", "1234567", 45));
-        boolean actual = registrationService.userWithSameLoginExists(new User(2L, "User", "password", 45));
-        assertTrue(actual);
+        User actual = new User("User", "password", 21);
+        registrationService.register(new User("User", "1234567", 45));
+        assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 }
