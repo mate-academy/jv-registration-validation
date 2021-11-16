@@ -9,10 +9,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private static final long ID = 1;
-    private static final int AGE = 18;
-    private static final String LOGIN = "test@gmail.com";
-    private static final String PASSWORD = "1234556";
     private static RegistrationService registrationService;
     private static User user;
 
@@ -25,49 +21,43 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        user.setId(ID);
-        user.setLogin(LOGIN);
-        user.setPassword(PASSWORD);
-        user.setAge(AGE);
+        user.setId(1L);
+        user.setLogin("test@gmail.com");
+        user.setPassword("1234556");
+        user.setAge(18);
     }
 
     @Test
-    void register_ok() {
+    void register_validUser_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void register_check_years_not_ok() {
+    void register_wrongAge_notOk() {
         user.setAge(15);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_check_pass_not_ok() {
+    void register_password_notOk() {
         user.setPassword("1");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void check_null_user() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void check_user_id_null() {
-        user.setId(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_check_years_null() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_check_pass_null() {
+    void register_nullPass_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
