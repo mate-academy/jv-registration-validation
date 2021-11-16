@@ -1,10 +1,8 @@
 package core.basesyntax.service;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -16,6 +14,7 @@ class RegistrationServiceImplTest {
         user.setAge(20);
         user.setLogin("qwerty");
         user.setPassword("123456");
+        Storage.people.clear();
     }
 
     @BeforeAll
@@ -55,10 +54,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginExist_not_ok() {
-        user.setLogin("qwerty");
-        User expected = user;
-        User actual = registrationService.register(user);
-        Assertions.assertEquals(expected, actual);
+        registrationService.register(user);
+        Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
 
     @Test
