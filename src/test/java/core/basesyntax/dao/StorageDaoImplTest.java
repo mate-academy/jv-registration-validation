@@ -12,111 +12,94 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StorageDaoImplTest {
     private static RegistrationService registrationServise;
-    private static User bob;
-    private static User alise;
+    private static User user1;
+    private static User user2;
 
     @BeforeAll
     static void beforeAll() {
         registrationServise = new RegistrationServiceImpl();
-        bob = new User();
-        alise = new User();
+        user1 = new User();
+        user2 = new User();
     }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        bob.setId(11L);
-        bob.setLogin("Volodymyr");
-        bob.setPassword("password");
-        bob.setAge(21);
-        alise.setId(12L);
-        alise.setLogin("1abcdef");
-        alise.setPassword("password");
-        alise.setAge(20);
+        user1.setLogin("user");
+        user1.setPassword("password");
+        user1.setAge(21);
+        user2.setLogin("1abcdef");
+        user2.setPassword("password");
+        user2.setAge(20);
     }
 
     @Test
     void register_correctUser_isOk() {
-        assertTrue(bob.equals(registrationServise.register(bob)));
+        registrationServise.register(user1);
+        assertTrue(Storage.people.contains(user1));
+        assertEquals(Storage.people.get(0), user1);
     }
 
     @Test
     void register_loginStartWithNumeric_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationServise.register(alise);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationServise.register(user2));
     }
 
     @Test
     void register_loginLengthLessThenThree_notOk() {
-        alise.setLogin("al");
-        assertThrows(RuntimeException.class, () -> {
-            registrationServise.register(alise);
-        });
+        user2.setLogin("al");
+        assertThrows(RuntimeException.class,
+                () -> registrationServise.register(user2));
     }
 
     @Test
     void register_nullAge_notOk() {
-        bob.setAge(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationServise.register(bob);
-        });
-    }
-
-    @Test
-    void register_nullId_notOk() {
-        bob.setId(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationServise.register(bob);
-        });
+        user1.setAge(null);
+        assertThrows(NullPointerException.class,
+                () -> registrationServise.register(user1));
     }
 
     @Test
     void register_nullLogin_notOk() {
-        bob.setLogin(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationServise.register(bob);
-        });
+        user1.setLogin(null);
+        assertThrows(NullPointerException.class,
+                () -> registrationServise.register(user1));
     }
 
     @Test
     void register_nullPassword_notOk() {
-        bob.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationServise.register(bob);
-        });
+        user1.setPassword(null);
+        assertThrows(NullPointerException.class,
+                () -> registrationServise.register(user1));
     }
 
     @Test
     void register_ageLessThanEighteen_notOk() {
-        bob.setAge(17);
-        assertThrows(RuntimeException.class, () -> {
-            registrationServise.register(bob);
-        });
+        user1.setAge(17);
+        assertThrows(RuntimeException.class,
+                () -> registrationServise.register(user1));
     }
 
     @Test
     void register_passwordLengthLessThanSix_notOk() {
-        bob.setPassword("abcd");
-        assertThrows(RuntimeException.class, () -> {
-            registrationServise.register(bob);
-        });
+        user1.setPassword("abcd");
+        assertThrows(RuntimeException.class,
+                () -> registrationServise.register(user1));
     }
 
     @Test
     void register_theSameUser_notOk() {
-        registrationServise.register(bob);
-        assertThrows(RuntimeException.class, () -> {
-            registrationServise.register(bob);
-        });
+        registrationServise.register(user1);
+        assertThrows(RuntimeException.class,
+                () -> registrationServise.register(user1));
     }
 
     @Test
     void register_UserWithExistingLogin_notOk() {
-        registrationServise.register(bob);
-        alise.setLogin("Volodymyr");
-        assertThrows(RuntimeException.class, () -> {
-            registrationServise.register(alise);
-        });
+        registrationServise.register(user1);
+        user2.setLogin("user");
+        assertThrows(RuntimeException.class,
+                () -> registrationServise.register(user2));
     }
 }
