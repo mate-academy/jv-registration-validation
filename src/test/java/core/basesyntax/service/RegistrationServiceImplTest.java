@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.*;
@@ -63,35 +61,35 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void null_age_not_ok() {
+    void register_nullAge_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(nullAgeUser);
         });
     }
 
     @Test
-    void null_user_not_ok() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(nullUser);
         });
     }
 
     @Test
-    void short_password_not_ok() {
+    void register_shortPassword_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(shortPasswordUser);
         });
     }
 
     @Test
-    void underAge_not_ok() {
+    void register_underage_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(underAgeUser);
         });
     }
 
     @Test
-    void same_login_not_ok() {
+    void register_sameLogin_notOk() {
         registrationService.register(normalUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(sameLoginUser);
@@ -99,7 +97,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void normal_user_ok() {
+    void register_normalCase_ok() {
         registrationService.register(normalUser);
         assertTrue(Storage.people.contains(normalUser));
         assertEquals(Storage.people.get(0), normalUser);
