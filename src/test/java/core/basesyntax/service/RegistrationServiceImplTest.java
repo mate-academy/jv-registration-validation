@@ -105,5 +105,4 @@ class RegistrationServiceImplTest {
         user.setAge(33);
         assertEquals(user, registration.register(user));
     }
-
 }
