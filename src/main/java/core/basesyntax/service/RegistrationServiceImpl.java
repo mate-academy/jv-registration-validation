@@ -11,11 +11,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     
     @Override
     public User register(User user) {
-        if ((user == null) 
-                || (user.getAge() == null)
-                || (user.getAge() < MIN_AGE) 
-                || (user.getPassword() == null)
-                || (user.getPassword().length() < MIN_PASSWORD_LENGTH)
+        if (user == null 
+                || user.getAge() == null
+                || user.getAge() < MIN_AGE 
+                || user.getPassword() == null
+                || user.getPassword().length() < MIN_PASSWORD_LENGTH
                 || user.getLogin() == null
                 || storageDaoImpl.get(user.getLogin()) != null) {
             throw new RuntimeException("Invalid data");
