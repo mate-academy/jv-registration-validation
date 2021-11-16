@@ -33,22 +33,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithNullAge_NotOk() {
         testUser.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
-                "Null age shouldn't be accepted.");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_userWithNullLogin_NotOk() {
         testUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
-                "Null login shouldn't be accepted.");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_userWithNullPassword_NotOk() {
         testUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
-                "Null password shouldn't be accepted.");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
 
@@ -57,36 +54,25 @@ class RegistrationServiceImplTest {
         testUser.setAge(null);
         testUser.setLogin(null);
         testUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
-                "Null fields shouldn't be accepted.");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_userWithAgeLessThan18_NotOk() {
         testUser.setAge(17);
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
-                "Users shouldn't be added with the age less than 18.");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_ageEqualIntMaxValue_Ok() {
         testUser.setAge(Integer.MAX_VALUE);
-        assertDoesNotThrow(() -> registrationService.register(testUser),
-                "User adding must be possible with the age equal integer MAX_VALUE. ");
+        assertDoesNotThrow(() -> registrationService.register(testUser));
     }
 
     @Test
     void register_userWithPasswordLessThanMinValue_NotOk() {
         testUser.setPassword("12345");
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
-                "Password shorter than 6 characters must not be accepted.");
-    }
-
-    @Test
-    void register_userIsAlreadyExist_NotOk() {
-        Storage.people.add(testUser);
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser),
-                "Users shouldn't be added with the same login.");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -94,11 +80,11 @@ class RegistrationServiceImplTest {
         User addedUser = registrationService.register(testUser);
         assertEquals(testUser, addedUser,
                 "Method register must return added user.");
-        int storageActualSize = Storage.people.size();
-        assertEquals(1, storageActualSize,
-                "Storage size must be increased after adding new User.");
-        User actual = Storage.people.get(0);
-        assertEquals(testUser, actual,
-                "User must be in the storage after adding.");
+    }
+
+    @Test
+    void register_userIsAlreadyExist_NotOk() {
+        registrationService.register(testUser);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 }
