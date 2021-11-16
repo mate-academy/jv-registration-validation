@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkPassword(String password) {
-        if(password == null){
+        if (password == null) {
             throw new RegistrationUserException("Password is null");
         }
         if (password.length() <= MINIMUM_LENGTH_PASSWORD) {
