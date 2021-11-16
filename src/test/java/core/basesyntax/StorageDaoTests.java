@@ -41,20 +41,20 @@ public class StorageDaoTests {
 
     @Test
     void register_validAge_ok() {
-        assertEquals(registrationService.register(user)
-                .getAge(), user.getAge());
+        assertEquals(user.getAge(), registrationService.register(user)
+                .getAge());
     }
 
     @Test
     void register_validPassword_ok() {
-        assertEquals(registrationService.register(user)
-                .getPassword(), user.getPassword());
+        assertEquals(user.getPassword(), registrationService.register(user)
+                .getPassword());
     }
 
     @Test
     void register_validLogin_ok() {
-        assertEquals(registrationService.register(user)
-                .getLogin(), user.getLogin());
+        assertEquals(user.getLogin(), registrationService.register(user)
+                .getLogin());
     }
 
     @Test
