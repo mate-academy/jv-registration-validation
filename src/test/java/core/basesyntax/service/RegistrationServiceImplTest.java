@@ -2,37 +2,50 @@ package core.basesyntax.service;
 
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
-    public static final Long DEF_ID = 19L;
-    public static final String DEF_LOGIN = "asdf@gmail.com";
-    public static final String DEF_PASSWORD = "qweasd";
-    public static final Integer DEF_AGE = 18;
     static User expected;
+    static User exist;
     static RegistrationServiceImpl registrationService;
     User actual;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        expected = new User(DEF_ID, DEF_LOGIN, DEF_PASSWORD, DEF_AGE);
-        User userExist = new User(1234L, "asdasd@gmail.com", "1234567", 65);
-        registrationService.register(userExist);
+        exist = new User();
+        exist.setPassword("123456");
+        exist.setAge(65);
+        exist.setLogin("lkjhg@gmail.com");
+        registrationService.register(exist);
+        expected = new User();
+        expected.setAge(65);
+        expected.setLogin("qwerty@gmail.com");
+        expected.setPassword("123456");
+    }
+
+    @BeforeEach
+    void setUp() {
+        actual = new User();
     }
 
     @Test
     void dataIsTrue_Ok() {
-        actual = new User(DEF_ID, DEF_LOGIN, DEF_PASSWORD, DEF_AGE);
+        actual.setAge(65);
+        actual.setLogin("qwerty@gmail.com");
+        actual.setPassword("123456");
         assertEquals(expected, actual);
     }
 
     @Test
     void isNull_NotOK() {
-        actual = new User(DEF_ID, null, DEF_PASSWORD, DEF_AGE);
+        actual.setPassword(null);
+        actual.setAge(null);
+        actual.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
@@ -40,15 +53,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void ageTooSmall_NotOk() {
-        actual = new User(DEF_ID, DEF_LOGIN, DEF_PASSWORD, 17);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
-        });
-    }
-
-    @Test
-    void ageTooBig_NotOK() {
-        actual = new User(DEF_ID, DEF_LOGIN, DEF_PASSWORD, 101);
+        actual.setAge(17);
+        actual.setLogin("asdfqwer@gmail.com");
+        actual.setPassword("123456");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
@@ -56,15 +63,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void passwordTooSmall_NotOk() {
-        actual = new User(DEF_ID, DEF_LOGIN, "qweas", DEF_AGE);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
-        });
-    }
-
-    @Test
-    void passwordTooBig_NotOK() {
-        actual = new User(DEF_ID, DEF_LOGIN, "qweasdzxcrtyfghvbnu", DEF_AGE);
+        actual.setPassword("12345");
+        actual.setAge(18);
+        actual.setLogin("asdfqwer@gmail.com");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
@@ -72,7 +73,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void loginExist_NotOK() {
-        actual = new User(DEF_ID, "asdasd@gmail.com", DEF_PASSWORD, DEF_AGE);
+        actual.setLogin("lkjhg@gmail.com");
+        actual.setAge(18);
+        actual.setPassword("123456");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(actual);
+        });
+    }
+
+    @Test
+    void idNotNull_NotOK() {
+        actual.setId(123456L);
+        actual.setAge(18);
+        actual.setLogin("asdfqwer@gmail.com");
+        actual.setPassword("123456");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
