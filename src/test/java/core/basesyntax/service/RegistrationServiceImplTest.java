@@ -34,24 +34,22 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsNull() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
     void register_containsSameLogin_notOk() {
         registrationService.register(firstUser);
         secondUser.setLogin(firstUser.getLogin());
-        assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(secondUser);
-        });
+        assertThrows(RuntimeException.class,
+                ()-> registrationService.register(secondUser));
     }
 
     @Test
     void register_containsDifferentLogin_Ok() {
         assertDoesNotThrow(()-> {
             registrationService.register(firstUser);
-        });
-        assertDoesNotThrow(()-> {
             registrationService.register(secondUser);
         });
     }
@@ -59,9 +57,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_containsNullLogin_notOk() {
         firstUser.setLogin(null);
-        assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(firstUser);
-        });
+        assertThrows(RuntimeException.class,
+                ()-> registrationService.register(firstUser));
     }
 
     @Test
@@ -73,17 +70,15 @@ class RegistrationServiceImplTest {
     @Test
     void register_youngerThanEighteen_notOk() {
         firstUser.setAge(17);
-        assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(firstUser);
-        });
+        assertThrows(RuntimeException.class,
+                ()-> registrationService.register(firstUser));
     }
 
     @Test
     void register_ageIsNull_notOk() {
         firstUser.setAge(null);
-        assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(firstUser);
-        });
+        assertThrows(RuntimeException.class,
+                ()-> registrationService.register(firstUser));
     }
 
     @Test
@@ -95,17 +90,15 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsNotLongEnough_notOk() {
         firstUser.setPassword("12345");
-        assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(firstUser);
-        });
+        assertThrows(RuntimeException.class,
+                ()-> registrationService.register(firstUser));
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         firstUser.setPassword(null);
-        assertThrows(RuntimeException.class, ()-> {
-            registrationService.register(firstUser);
-        });
+        assertThrows(RuntimeException.class,
+                ()-> registrationService.register(firstUser));
     }
 
     @AfterEach

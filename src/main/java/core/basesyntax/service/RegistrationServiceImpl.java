@@ -5,8 +5,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static int LEGAL_AGE = 18;
-    private static int MIN_PASSWORD_LENGTH = 6;
+    private static final int LEGAL_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
 
     @Override
     public User register(User user) {
@@ -20,7 +20,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with same login already existing");
         }
-
         if (user.getAge() == null) {
             throw new RuntimeException("Age is null");
         }
