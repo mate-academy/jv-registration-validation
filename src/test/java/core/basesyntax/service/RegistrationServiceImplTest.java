@@ -8,6 +8,11 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static User user;
 
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
     @BeforeEach
     void setUp() {
         user = new User();
@@ -15,11 +20,6 @@ class RegistrationServiceImplTest {
         user.setLogin("qwerty");
         user.setPassword("123456");
         Storage.people.clear();
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_notOk() {
+    void register_InvalidAge_notOk() {
         user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
@@ -57,23 +57,17 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
-
+    
     @Test
-    void register_id_notOk() {
-        user.setId(0L);
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_age_ok() {
-        user.setAge(20);
+    void register_ValidAge_ok() {
+        user.setAge(18);
         User expected = user;
         User actual = registrationService.register(user);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    void register_password_ok() {
+    void register_ValidPassword_ok() {
         user.setLogin("qwerty");
         User expected = user;
         User actual = registrationService.register(user);
