@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
@@ -28,7 +30,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void  register_user_Ok() {
+    public void register_user_Ok() {
         assertNotNull(registrationService.register(testedUser));
     }
 
@@ -45,7 +47,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_ageLessThan18_notOk() {
-        testedUser.setAge(16);
+        testedUser.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(testedUser));
     }
 
