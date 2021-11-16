@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getAge() == null || user.getAge() < MIN_VALID_AGE
-                || user.getPassword() == null || user.getPassword().isEmpty()
+                || user.getPassword() == null
                 || user.getPassword().length() < MIN_PASSWORD_LENGTH
                 || user.getLogin() == null || user.getLogin().isEmpty()
                 || storageDao.get(user.getLogin()) != null) {
