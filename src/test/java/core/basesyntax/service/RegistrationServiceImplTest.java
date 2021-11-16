@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserRegistered_ok() {
+    void register_userWithExistentLogin_ok() {
         User register = registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(register));
     }
