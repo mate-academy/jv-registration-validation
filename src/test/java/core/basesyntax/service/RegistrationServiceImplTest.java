@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
-
     private static RegistrationService registrationService;
     private static User user;
 
@@ -30,7 +29,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existedUser_notOk() {
-        Storage.people.add(user);
+        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 

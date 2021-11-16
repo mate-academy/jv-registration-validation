@@ -8,12 +8,14 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_USER_AGE = 18;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        StorageDao storageDao = new StorageDaoImpl();
         validateUserData(user);
-        checkIsLoginAlreadyRegistered(user.getLogin());
+        if (Storage.people.contains(user)) {
+            throw new RuntimeException("User already exists!");
+        }
         return storageDao.add(user);
     }
 
@@ -26,14 +28,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getAge() < MINIMUM_USER_AGE
                 || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
             throw new RuntimeException("Invalid user data!");
-        }
-    }
-
-    private void checkIsLoginAlreadyRegistered(String login) {
-        for (User currentUser : Storage.people) {
-            if (currentUser.getLogin().equals(login)) {
-                throw new RuntimeException("User with this login already exists!");
-            }
         }
     }
 }
