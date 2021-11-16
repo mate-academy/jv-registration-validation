@@ -14,11 +14,11 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        user = new User();
     }
 
     @BeforeEach
     void setUp() {
-        user = new User();
         user.setAge(19);
         user.setLogin("evreii");
         user.setPassword("helloMates");
