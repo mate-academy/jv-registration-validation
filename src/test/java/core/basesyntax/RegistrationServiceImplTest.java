@@ -59,8 +59,8 @@ public class RegistrationServiceImplTest {
     User actualFirst = registrationService.register(firstUser);
     User expectedSecond = secondUser;
     User actualSecond = registrationService.register(secondUser);
-    assertEquals(actualFirst, expectedFirst);
-    assertEquals(actualSecond, expectedSecond);
+    assertEquals(expectedFirst, actualFirst);
+    assertEquals(expectedSecond, actualSecond);
   }
 
   @Test
