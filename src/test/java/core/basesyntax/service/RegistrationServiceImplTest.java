@@ -110,7 +110,6 @@ public class RegistrationServiceImplTest {
 
   @Test
   public void register_userDataIsOk_addToStorage() {
-    registrationService.register(user);
-    Assert.assertTrue(Storage.people.contains(user));
+    Assert.assertEquals(user, registrationService.register(user));
   }
 }
