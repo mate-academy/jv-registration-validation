@@ -35,26 +35,8 @@ public class StorageDaoTests {
     }
 
     @Test
-    void register_notExistedUser_ok() {
+    void register_validUser_ok() {
         assertEquals(user,registrationService.register(user));
-    }
-
-    @Test
-    void register_validAge_ok() {
-        assertEquals(user.getAge(), registrationService.register(user)
-                .getAge());
-    }
-
-    @Test
-    void register_validPassword_ok() {
-        assertEquals(user.getPassword(), registrationService.register(user)
-                .getPassword());
-    }
-
-    @Test
-    void register_validLogin_ok() {
-        assertEquals(user.getLogin(), registrationService.register(user)
-                .getLogin());
     }
 
     @Test
