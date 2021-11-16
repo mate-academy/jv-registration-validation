@@ -7,8 +7,8 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RegistrationServiceTest {
     private static RegistrationService registrationService;
@@ -46,7 +46,7 @@ public class RegistrationServiceTest {
     void register_repeatUser_notOk() {
         registrationService.register(firstUser);
         registrationService.register(secondUser);
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));;
+        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
 
    @Test
@@ -55,13 +55,15 @@ public class RegistrationServiceTest {
    }
 
    @Test
-    void register_notValidPassword_notOk() {
+   void register_shortPassword_notOk() {
         firstUser.setPassword("user");
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
-        firstUser.setPassword("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
-        firstUser.setPassword("       ");
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
+   }
+
+   @Test
+   void register_notValidSymbolsPassword_notOk() {
+       firstUser.setPassword("       ");
+       assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
    }
 
    @Test
