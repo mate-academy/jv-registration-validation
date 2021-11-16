@@ -22,24 +22,18 @@ public class RegistrationServiceImplTest {
 
     @Before
     public void setUp() {
+        Storage.people.clear();
         bob = new User();
         bob.setLogin("123");
         bob.setAge(19);
         bob.setPassword("1234567");
     }
 
-    @After
-    public void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     public void register_userWithExistingLogin_notOk() {
-        User alice = new User();
-        alice.setLogin(bob.getLogin());
         registrationService.register(bob);
         assertThrows(RuntimeException.class, () -> {
-           registrationService.register(alice);
+           registrationService.register(bob);
         });
     }
 
@@ -68,27 +62,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ageIs18_ok() {
-        bob.setAge(18);
-        int expected = 18;
-        assertEquals(expected, (int) bob.getAge());
-    }
-
-    @Test
-    public void register_ageOver18_ok() {
-        bob.setAge(19);
-        assertTrue(bob.getAge() > 18);
-    }
-
-    @Test
-    public void register_negativeAge_notOk() {
-        bob.setAge(-1);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
-    }
-
-    @Test
     public void register_nullAge_notOk() {
         bob.setAge(null);
         assertThrows(RuntimeException.class, () -> {
@@ -105,24 +78,17 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_passwordIs6Characters_ok() {
-        bob.setPassword("123456");
-        registrationService.register(bob);
-        int expected = 6;
-        assertEquals(expected, bob.getPassword().length());
-    }
-
-    @Test
-    public void register_passwordOver6Characters_ok() {
-        registrationService.register(bob);
-        assertTrue(bob.getPassword().length() > 6);
-    }
-
-    @Test
     public void register_nullPassword_notOk() {
         bob.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
         });
+    }
+
+    @Test
+    public void register_correrctUser_ok() {
+        User expected = bob;
+        User actual = registrationService.register(bob);
+        assertEquals(expected, actual);
     }
 }
