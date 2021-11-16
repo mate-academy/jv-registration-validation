@@ -30,50 +30,43 @@ public class HelloWorldTest {
         user.setPassword("Password");
     }
 
-
     @Test
-    public void register_returnNull_NotOk() {
-        User accepted = null;
+    public void register_userNull_notOk() {
         assertThrows(RuntimeException.class, () -> registration.register(null));
     }
 
     @Test
-    public void register_userNull_NotOk() {
-        assertThrows(RuntimeException.class, () -> registration.register(null));
-    }
-
-    @Test
-    public void register_passwordNull_NotOk() {
+    public void register_passwordNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
-    public void register_ageNull_NotOk() {
+    public void register_ageNull_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
-    public void register_loginNull_NotOk() {
+    public void register_loginNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
-    public void register_invalidAge_NotOk() {
+    public void register_invalidAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
-    public void register_invalidPassword_NotOk() {
+    public void register_invalidPassword_notOk() {
         user.setPassword("notOk");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
-    public void register_validUser_Ok() {
+    public void register_validUser_ok() {
         User expected = user;
         User actual = registration.register(user);
         assertEquals(expected, actual);
@@ -86,13 +79,13 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void register_passwordIsEmptyBetweenLine_NotOk() {
+    public void register_passwordIsEmptyBetweenLine_notOk() {
         user.setPassword("is emptyLine");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
-    public void register_loginEmptyBetweenLine_NotOk() {
+    public void register_loginEmptyBetweenLine_notOk() {
         user.setLogin("Empty Line");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
