@@ -28,42 +28,42 @@ public class RegistrationServiceImplTest {
     }
     
     @Test(expected = RuntimeException.class)
-    public void register_nullUser_runtimeException() {
+    public void register_nullUser_notOk() {
         user = registrationServiceImpl.register(null);
     }
     
     @Test(expected = RuntimeException.class)
-    public void register_nullLogin_runtimeException() {
+    public void register_nullLogin_notOk() {
         user.setLogin(null);
         user = registrationServiceImpl.register(user);
     }
     
     @Test(expected = RuntimeException.class)
-    public void register_nullPassword_runtimeException() {
+    public void register_nullPassword_notOk() {
         user.setPassword(null);
         user = registrationServiceImpl.register(user);
     }
     
     @Test(expected = RuntimeException.class)
-    public void register_nullAge_runtimeException() {
+    public void register_nullAge_notOk() {
         user.setAge(null);
         user = registrationServiceImpl.register(user);
     }
     
     @Test(expected = RuntimeException.class)
-    public void register_ageLessThanMin_runtimeException() {
+    public void register_ageLessThanMin_notOk() {
         user.setAge(-25);
         user = registrationServiceImpl.register(user);
     }
     
     @Test(expected = RuntimeException.class)
-    public void register_passwordLengthLessThanMin_runtimeException() {
+    public void register_passwordLengthLessThanMin_notOk() {
         user.setPassword("1234");
         user = registrationServiceImpl.register(user);
     }
     
     @Test(expected = RuntimeException.class)
-    public void register_userAlreadyExists_runtimeException() {
+    public void register_userAlreadyExists_notOk() {
         user = registrationServiceImpl.register(user);
         user = registrationServiceImpl.register(user);
     }
