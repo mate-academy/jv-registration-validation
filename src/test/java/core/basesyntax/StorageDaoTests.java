@@ -37,23 +37,26 @@ public class StorageDaoTests {
     }
 
     @Test
-    void register_notExistedUser_Ok() {
+    void register_notExistedUser_ok() {
         assertEquals(user,registrationService.register(user));
     }
 
     @Test
-    void register_validAge_Ok() {
-        assertTrue(user.getAge() >= MIN_AGE);
+    void register_validAge_ok() {
+        assertTrue(registrationService.register(user)
+                .getAge() >= MIN_AGE);
     }
 
     @Test
-    void register_validPassword_Ok() {
-        assertTrue(user.getPassword().length() >= MIN_LENGTH);
+    void register_validPassword_ok() {
+        assertTrue(registrationService.register(user)
+                .getPassword().length() >= MIN_LENGTH);
     }
 
     @Test
-    void register_validLogin_Ok() {
-        assertTrue(user.getPassword().length() >= MIN_LENGTH);
+    void register_validLogin_ok() {
+        assertTrue(registrationService.register(user)
+                .getLogin().length() >= MIN_LENGTH);
     }
 
     @Test
@@ -63,24 +66,24 @@ public class StorageDaoTests {
     }
 
     @Test
-    void register_nullUser_NotOk() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(new User()));
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_LessThanMinLengthLogin_NotOk() {
+    void register_LessThanMinLengthLogin_notOk() {
         user.setLogin("1a2b3");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_emptyLogin_NotOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -92,31 +95,31 @@ public class StorageDaoTests {
     }
 
     @Test
-    void register_nullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_LessThenZeroAge_NotOk() {
+    void register_LessThenZeroAge_notOk() {
         user.setAge(-4);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_invalidAge_NotOk() {
+    void register_invalidAge_notOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_lessThanNeedPassword_NotOk() {
+    void register_lessThanNeedPassword_notOk() {
         user.setPassword("#$133");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
