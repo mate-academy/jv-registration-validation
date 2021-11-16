@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 public class RegistrationServiceTest {
     private static RegistrationService registrationService;
     private static User user = new User();
@@ -54,21 +53,19 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_NullUser_notOk() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_NullLogin_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_NullPass_notOk() {
+    void register_nullPass_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
-
-
 }
