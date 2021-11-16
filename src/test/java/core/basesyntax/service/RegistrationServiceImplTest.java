@@ -10,9 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private static User expected;
-    private static User exist;
     private static RegistrationServiceImpl registrationService;
-    private User actual;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -25,70 +24,73 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        actual = new User();
+        user = new User();
+        user.setLogin("qwerty@gmail.com");
+        user.setAge(65);
+        user.setPassword("123456");
     }
 
     @Test
-    void register_userValid_Ok() {
-        actual.setAge(65);
-        actual.setLogin("qwerty@gmail.com");
-        actual.setPassword("123456");
-        assertEquals(expected, actual);
+    void register_userValid_ok() {
+        user.setAge(65);
+        user.setLogin("qwerty@gmail.com");
+        user.setPassword("123456");
+        assertEquals(expected, user);
     }
 
     @Test
-    void register_isNull_NotOK() {
-        actual.setPassword(null);
-        actual.setAge(null);
-        actual.setLogin(null);
+    void register_passwordIsNull_notOK() {
+        user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_ageInvalid_NotOk() {
-        actual.setAge(17);
-        actual.setLogin("asdfqwer@gmail.com");
-        actual.setPassword("123456");
+    void register_ageIsNull_notOK() {
+        user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_passwordInvalid_NotOk() {
-        actual.setPassword("12345");
-        actual.setAge(18);
-        actual.setLogin("asdfqwer@gmail.com");
+    void register_loginIsNull_notOK() {
+        user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_loginExist_NotOK() {
-        exist = new User();
-        exist.setPassword("123456");
-        exist.setAge(65);
-        exist.setLogin("lkjhg@gmail.com");
-        registrationService.register(exist);
-        actual.setLogin("lkjhg@gmail.com");
-        actual.setAge(18);
-        actual.setPassword("123456");
+    void register_ageInvalid_notOk() {
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_idNotNull_NotOK() {
-        actual.setId(123456L);
-        actual.setAge(18);
-        actual.setLogin("asdfqwer@gmail.com");
-        actual.setPassword("123456");
+    void register_passwordInvalid_notOk() {
+        user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginExist_notOK() {
+        registrationService.register(user);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_idNotNull_notOK() {
+        user.setId(123456L);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
         });
     }
 }

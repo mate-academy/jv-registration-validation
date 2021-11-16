@@ -1,13 +1,12 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH_PASSWORD = 6;
-    private StorageDaoImpl storageDao;
+    private StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -23,13 +22,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new RuntimeException("unreliable password");
         }
-        for (User user1 : Storage.people) {
-            if (user.getLogin().equals(user1.getLogin())) {
-                throw new RuntimeException("such a user already exists");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("such a user already exists");
         }
-        storageDao = new StorageDaoImpl();
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
