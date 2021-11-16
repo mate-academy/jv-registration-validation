@@ -11,12 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int VALID_AGE = 25;
-    private static final String VALID_LOGIN = "Alice";
-    private static final String VALID_PASSWORD = "1234567";
-    private static final int AGE_LESS_18 = 17;
-    private static final int AGE_NEGATIVE = -20;
-    private static final String PASSWORD_LESS_SIX_SYMBOLS = "12345";
     private static StorageDao storageDao;
     private static RegistrationService registrationService;
     private User user;
@@ -30,72 +24,71 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(VALID_AGE);
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
+        user.setAge(25);
+        user.setLogin("Alice");
+        user.setPassword("1234567");
     }
 
     @Test
-    void register_NullUser_NotOk() {
-        user = null;
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    void register_nullUser_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_NullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_NullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_EmptyLogin_NotOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_NullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_SameLogin_NotOk() {
-        String sameLogin = VALID_LOGIN;
-        final User actual = new User();
-        user.setLogin(sameLogin);
-        user.setAge(VALID_AGE);
-        user.setPassword(VALID_PASSWORD);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actual));
-    }
-
-    @Test
-    void register_PasswordLessSixSymbol_NotOk() {
-        user.setPassword(PASSWORD_LESS_SIX_SYMBOLS);
+    void register_sameLogin_notOk() {
+        storageDao.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ValidData_Ok() {
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
-    }
-
-    @Test
-    void register_AgeLess18_NotOk() {
-        user.setAge(AGE_LESS_18);
+    void register_passwordLessSixSymbol_notOk() {
+        user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_NegativeAge_NotOk() {
-        user.setAge(AGE_NEGATIVE);
+    void register_validData_ok() {
+        User expected = new User();
+        expected.setAge(23);
+        expected.setLogin("Bob");
+        expected.setPassword("1234567");
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_ageLess18_notOk() {
+        user.setAge(17);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        user.setAge(-20);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
