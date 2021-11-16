@@ -9,19 +9,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
-    static User expected;
-    static User exist;
-    static RegistrationServiceImpl registrationService;
-    User actual;
+    private static User expected;
+    private static User exist;
+    private static RegistrationServiceImpl registrationService;
+    private User actual;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        exist = new User();
-        exist.setPassword("123456");
-        exist.setAge(65);
-        exist.setLogin("lkjhg@gmail.com");
-        registrationService.register(exist);
         expected = new User();
         expected.setAge(65);
         expected.setLogin("qwerty@gmail.com");
@@ -73,6 +68,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginExist_NotOK() {
+        exist = new User();
+        exist.setPassword("123456");
+        exist.setAge(65);
+        exist.setLogin("lkjhg@gmail.com");
+        registrationService.register(exist);
         actual.setLogin("lkjhg@gmail.com");
         actual.setAge(18);
         actual.setPassword("123456");

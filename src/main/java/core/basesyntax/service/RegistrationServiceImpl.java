@@ -5,8 +5,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final int MIN_AGE = 18;
-    public static final int MIN_LENGTH_PASSWORD = 6;
+    private static final int MIN_AGE = 18;
+    private static final int MIN_LENGTH_PASSWORD = 6;
     private StorageDaoImpl storageDao;
 
     @Override
