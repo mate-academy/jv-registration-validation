@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl service;
     private static User standardUser;
@@ -34,65 +33,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void userIsNullCheck_NotOk(){
-        assertThrows(RuntimeException.class, () ->{
-            service.register(null);
-        });
+    public void userIsNullCheck_notOk(){
+        assertThrows(RuntimeException.class, () -> service.register(null));
     }
 
     @Test
-    public void ageIsNullCheck_NotOk(){
+    public void ageIsNullCheck_notOk(){
         standardUser.setAge(null);
-        assertThrows(RuntimeException.class, () ->{
-            service.register(standardUser);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(standardUser));
     }
 
     @Test
-    public void ageIsNegativeCheck_NotOk(){
+    public void ageIsNegativeCheck_notOk(){
         standardUser.setAge(-3);
-        assertThrows(RuntimeException.class, () ->{
-            service.register(standardUser);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(standardUser));
     }
 
     @Test
-    public void loginIsNullCheck_NotOk(){
+    public void loginIsNullCheck_notOk(){
         standardUser.setLogin(null);
-        assertThrows(RuntimeException.class, () ->{
-            service.register(standardUser);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(standardUser));
     }
 
     @Test
-    public void passwordIsNullCheck_NotOk(){
+    public void passwordIsNullCheck_notOk(){
         standardUser.setPassword(null);
-        assertThrows(RuntimeException.class, () ->{
-            service.register(standardUser);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(standardUser));
     }
 
     @Test
-    public void sameLoginCheck_NotOk(){
+    public void sameLoginCheck_notOk(){
         service.register(standardUser);
-        assertThrows(RuntimeException.class, () ->{
-            service.register(standardUser);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(standardUser));
     }
 
     @Test
-    public void smallAgeCheck_NotOk(){
-        standardUser.setAge(2);
-        assertThrows(RuntimeException.class, () ->{
-            service.register(standardUser);
-        });
+    public void smallAgeCheck_notOk(){
+        standardUser.setAge(17);
+        assertThrows(RuntimeException.class, () -> service.register(standardUser));
     }
 
     @Test
-    public void wrongPasswordCheck_NotOk(){
-        standardUser.setPassword("111");
-        assertThrows(RuntimeException.class, () ->{
-            service.register(standardUser);
-        });
+    public void wrongPasswordCheck_notOk(){
+        standardUser.setPassword("11111");
+        assertThrows(RuntimeException.class, () -> service.register(standardUser));
     }
 }
