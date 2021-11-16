@@ -36,7 +36,6 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_nullLogin_notOk() {
-        registrationService.register(firstUserOk);
         assertThrows(RuntimeException.class, () -> registrationService.register(userLoginNullNotOk));
     }
 
@@ -58,7 +57,6 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_nullPassword_notOk() {
-        registrationService.register(firstUserOk);
         userPasswordNotOk = setUserData(-1111L, "BadBob", null, 19);
         assertThrows(RuntimeException.class, () -> registrationService.register(userPasswordNotOk));
     }
