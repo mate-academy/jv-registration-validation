@@ -9,24 +9,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private static StorageDao storageDao;
     private static RegistrationService registrationService;
     private static User user;
 
     @BeforeAll
     static void beforeAll() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
         user = new User();
     }
 
     @BeforeEach
     void setUp(){
-        user.setId(123456789L);
         user.setLogin("userLogin");
         user.setPassword("validPassword");
         user.setAge(20);
@@ -48,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsLessThan_MIN_AGE_notOk() {
+    void register_ageIsLessThanMinAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -72,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessThan_MIN_COUNT_CHARACTER_notOk() {
+    void register_passwordLessThanMinCountCharacter_notOk() {
         user.setPassword("fd12");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -97,14 +93,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_suchLoginExists_notOk() {
-        storageDao.add(user);
+        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_checkValidDate_Ok() {
+    void register_checkValidData_Ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
