@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void dataIsTrue_Ok() {
+    void register_userValid_Ok() {
         actual.setAge(65);
         actual.setLogin("qwerty@gmail.com");
         actual.setPassword("123456");
@@ -42,7 +42,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void isNull_NotOK() {
+    void register_isNull_NotOK() {
         actual.setPassword(null);
         actual.setAge(null);
         actual.setLogin(null);
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageTooSmall_NotOk() {
+    void register_ageInvalid_NotOk() {
         actual.setAge(17);
         actual.setLogin("asdfqwer@gmail.com");
         actual.setPassword("123456");
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordTooSmall_NotOk() {
+    void register_passwordInvalid_NotOk() {
         actual.setPassword("12345");
         actual.setAge(18);
         actual.setLogin("asdfqwer@gmail.com");
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginExist_NotOK() {
+    void register_loginExist_NotOK() {
         actual.setLogin("lkjhg@gmail.com");
         actual.setAge(18);
         actual.setPassword("123456");
@@ -82,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void idNotNull_NotOK() {
+    void register_idNotNull_NotOK() {
         actual.setId(123456L);
         actual.setAge(18);
         actual.setLogin("asdfqwer@gmail.com");
