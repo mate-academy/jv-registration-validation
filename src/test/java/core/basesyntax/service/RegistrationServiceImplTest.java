@@ -23,43 +23,43 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginIsNull_not_ok() {
+    void register_loginIsNull_notOk() {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ageIsNull_not_ok() {
+    void register_ageIsNull_notOk() {
         user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
 
     @Test
-    void register_passwordIsNull_not_ok() {
+    void register_passwordIsNull_notOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_age_not_ok() {
+    void register_age_notOk() {
         user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
 
     @Test
-    void register_password_not_ok() {
+    void register_password_notOk() {
         user.setPassword("12345");
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
 
     @Test
-    void register_loginExist_not_ok() {
+    void register_loginExist_notOk() {
         registrationService.register(user);
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
 
     @Test
-    void register_id_not_ok() {
+    void register_id_notOk() {
         user.setId(0L);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
