@@ -2,18 +2,23 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService;
+    private static RegistrationService registrationService;
     private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     public void setUp() {
-        registrationService = new RegistrationServiceImpl();
         user = new User();
     }
 
