@@ -22,6 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin() == null
                 || user.getAge() == null
                 || user.getPassword() == null
+                || user.getLogin().equals("")
                 || user.getAge() < MINIMUM_USER_AGE
                 || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
             throw new RuntimeException("Invalid user data!");
