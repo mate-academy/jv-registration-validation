@@ -89,4 +89,10 @@ public class HelloWorldTest {
         user.setLogin("Empty Line");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
+
+    @Test
+    void register_addCreatingUser_notOk() {
+        registration.register(user);
+        assertThrows(RuntimeException.class, () -> registration.register(user));
+    }
 }

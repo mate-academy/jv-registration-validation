@@ -15,8 +15,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getPassword() == null || user.getPassword().length() < MINIMUM_PASSWORD
                 || user.getPassword().contains(" ")
                 || user.getLogin().isEmpty()
-                || storageDao.get(user.getLogin()) != null
-                || user.getLogin().contains(" ")) {
+                || user.getLogin().contains(" ")
+                || storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Invalid data");
         }
         return storageDao.add(user);
