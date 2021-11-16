@@ -18,10 +18,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getAge() == null) {
             throw new RuntimeException("User cannot have null states");
         }
-        if (storage.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with login " + user.getLogin()
-                    + " is already registered");
-        }
         if (user.getLogin().equals("")) {
             throw new RuntimeException("User can't have empty login");
         }
@@ -32,6 +28,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password should be biggest or"
                     + " equals to 6 symbols");
+        }
+        if (storage.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with login " + user.getLogin()
+                    + " is already registered");
         }
         return storage.add(user);
     }
