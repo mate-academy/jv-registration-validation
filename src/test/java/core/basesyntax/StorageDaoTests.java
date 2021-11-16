@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StorageDaoTests {
-    private static final int MIN_AGE = 18;
-    private static final int MIN_LENGTH = 6;
     private static RegistrationService registrationService;
     private static User user;
 
@@ -43,20 +41,20 @@ public class StorageDaoTests {
 
     @Test
     void register_validAge_ok() {
-        assertTrue(registrationService.register(user)
-                .getAge() >= MIN_AGE);
+        assertEquals(registrationService.register(user)
+                .getAge(), user.getAge());
     }
 
     @Test
     void register_validPassword_ok() {
-        assertTrue(registrationService.register(user)
-                .getPassword().length() >= MIN_LENGTH);
+        assertEquals(registrationService.register(user)
+                .getPassword(), user.getPassword());
     }
 
     @Test
     void register_validLogin_ok() {
-        assertTrue(registrationService.register(user)
-                .getLogin().length() >= MIN_LENGTH);
+        assertEquals(registrationService.register(user)
+                .getLogin(), user.getLogin());
     }
 
     @Test
@@ -77,7 +75,7 @@ public class StorageDaoTests {
     }
 
     @Test
-    void register_LessThanMinLengthLogin_notOk() {
+    void register_lessThanMinLengthLogin_notOk() {
         user.setLogin("1a2b3");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -89,7 +87,7 @@ public class StorageDaoTests {
     }
 
     @Test
-    void register_PassEqualLogin_notOk() {
+    void register_passwordEqualLogin_notOk() {
         user.setPassword("mateAcademy");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -97,12 +95,6 @@ public class StorageDaoTests {
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_LessThenZeroAge_notOk() {
-        user.setAge(-4);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
