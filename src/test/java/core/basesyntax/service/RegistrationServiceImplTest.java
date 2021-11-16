@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,14 +60,12 @@ class RegistrationServiceImplTest {
     void register_validData_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
-        Storage.people.remove(user);
     }
 
     @Test
     void register_sameLogin_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-        Storage.people.remove(user);
     }
 
     @Test
@@ -79,5 +78,10 @@ class RegistrationServiceImplTest {
     void register_ageLess18_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
