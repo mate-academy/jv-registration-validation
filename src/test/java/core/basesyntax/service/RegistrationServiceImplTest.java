@@ -6,16 +6,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationServiceImplTest {
-    private static RegistrationServiceImpl registrationService;
+    private static RegistrationService registrationService;
     private static User firstUserOk;
     private static User secondUserOk;
     private static User thirdUserOk;
     private static User userPasswordNotOk;
     private static User userAgeNotOk;
-    private static User userNameNullNotOk;
+    private static User userLoginNullNotOk;
 
     @BeforeClass
     public static void beforeClass() {
@@ -25,7 +26,7 @@ public class RegistrationServiceImplTest {
         thirdUserOk = setUserData(3333L, "Jhon", "zxcvbnm", 25);
         userPasswordNotOk = setUserData(-1111L, "BadBob", "qwer", 19);
         userAgeNotOk = setUserData(-2222L, "BadAlice", "asdfghjk", 17);
-        userNameNullNotOk = setUserData(-2222L, null, "asdfghjk", 23);
+        userLoginNullNotOk = setUserData(-2222L, null, "asdfghjk", 23);
     }
 
     @Before
@@ -34,57 +35,43 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_nullName_notOk() {
+    public void register_nullLogin_notOk() {
         registrationService.register(firstUserOk);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userNameNullNotOk);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(userLoginNullNotOk));
+    }
+
+    @Test
+    public void register_emptyLogin_notOk() {
+        userLoginNullNotOk = setUserData(-2222L, "", "asdfghjk", 23);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userLoginNullNotOk));
     }
 
     @Test
     public void register_nullUser_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(null);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    public void register_Password_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userPasswordNotOk);
-        });
+    public void register_passwordLessThanMinLength_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(userPasswordNotOk));
     }
 
     @Test
     public void register_nullPassword_notOk() {
         registrationService.register(firstUserOk);
         userPasswordNotOk = setUserData(-1111L, "BadBob", null, 19);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userPasswordNotOk);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(userPasswordNotOk));
     }
 
     @Test
-    public void register_AgeLessThan18_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userAgeNotOk);
-        });
-    }
-
-    @Test
-    public void register_AgeLessThan0_notOk() {
-        setUserData(-1111L, "BadBob", "qwer", -20);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userAgeNotOk);
-        });
+    public void register_AgeLessThanMinAge_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(userAgeNotOk));
     }
 
     @Test
     public void register_nullAge_notOk() {
-        setUserData(-1111L, "BadBob", "qwer", null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userAgeNotOk);
-        });
+        userAgeNotOk = setUserData(-1111L, "BadBob", "qwer789", null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userAgeNotOk));
     }
 
     @Test
@@ -92,9 +79,7 @@ public class RegistrationServiceImplTest {
         registrationService.register(firstUserOk);
         registrationService.register(secondUserOk);
         registrationService.register(thirdUserOk);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(secondUserOk);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(secondUserOk));
     }
 
     @Test
