@@ -23,7 +23,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Invalid password");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
