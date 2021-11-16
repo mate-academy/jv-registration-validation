@@ -41,13 +41,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_InvalidAge_notOk() {
+    void register_invalidAge_notOk() {
         user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
 
     @Test
-    void register_InvalidPassword_notOk() {
+    void register_invalidPassword_notOk() {
         user.setPassword("12345");
         Assertions.assertThrows(RuntimeException.class, ()-> registrationService.register(user));
     }
@@ -59,7 +59,7 @@ class RegistrationServiceImplTest {
     }
     
     @Test
-    void register_ValidAge_ok() {
+    void register_validAge_ok() {
         user.setAge(18);
         User expected = user;
         User actual = registrationService.register(user);
@@ -67,8 +67,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidPassword_ok() {
+    void register_validPassword_ok() {
         user.setLogin("qwerty");
+        User expected = user;
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_validUser_ok() {
         User expected = user;
         User actual = registrationService.register(user);
         Assertions.assertEquals(expected, actual);
