@@ -71,12 +71,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_emptyLogin_notOk() {
-        user.setLogin("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));

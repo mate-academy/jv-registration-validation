@@ -8,7 +8,6 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_USER_AGE = 18;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
-    private static final int MINIMUM_LOGIN_LENGTH = 1;
 
     @Override
     public User register(User user) {
@@ -23,7 +22,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin() == null
                 || user.getAge() == null
                 || user.getPassword() == null
-                || user.getLogin().length() < MINIMUM_LOGIN_LENGTH
                 || user.getAge() < MINIMUM_USER_AGE
                 || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
             throw new RuntimeException("Invalid user data!");
@@ -33,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void checkIsLoginAlreadyRegistered(String login) {
         for (User currentUser : Storage.people) {
             if (currentUser.getLogin().equals(login)) {
-                throw new RuntimeException("User with this email address already exists!");
+                throw new RuntimeException("User with this login already exists!");
             }
         }
     }
