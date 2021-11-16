@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static User user;
 
     @BeforeAll
@@ -36,10 +35,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserGet_ok() {
+    void register_validUserRegistered_ok() {
         User register = registrationService.register(user);
-        User actual = storageDao.get(user.getLogin());
-        assertEquals(register, actual);
+        assertThrows(RuntimeException.class, () -> registrationService.register(register));
     }
 
     @Test
