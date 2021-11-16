@@ -35,7 +35,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_nullUser_NotOk() {
+    void register_nullUser_notOk() {
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
@@ -48,20 +48,20 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_nullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_negativeAge_NotOk() {
+    void register_negativeAge_notOk() {
         user.setAge(-25);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_invalidAge_NotOk() {
-        user.setAge(13);
+    void register_invalidAge_notOk() {
+        user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -74,13 +74,13 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_emptyLogin_NotOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -94,14 +94,15 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_shortPassword_NotOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("12345");
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
 }
