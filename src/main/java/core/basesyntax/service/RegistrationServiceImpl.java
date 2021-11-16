@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user.getPassword() == null || user.getAge() == null
                 || user.getLogin() == null) {
-            throw new NullPointerException("One or more fields of user equals null");
+            throw new RuntimeException("One or more fields of user equals null");
         }
         if (!Character.isLetter(user.getLogin().charAt(POSITION_FIRST_CHARACTER))) {
             throw new RuntimeException("Your login must start from a letter");
