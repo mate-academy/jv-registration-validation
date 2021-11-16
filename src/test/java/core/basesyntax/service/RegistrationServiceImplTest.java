@@ -2,9 +2,9 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,35 +14,32 @@ public class RegistrationServiceImplTest {
     private static User firstUserOk;
     private static User secondUserOk;
     private static User thirdUserOk;
-    private static User userPasswordNotOk;
-    private static User userAgeNotOk;
-    private static User userLoginNullNotOk;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         registrationService = new RegistrationServiceImpl();
-        firstUserOk = setUserData(1111L, "Bob", "qwerty", 18);
-        secondUserOk = setUserData(2222L, "Alice", "asdfghjk", 29);
-        thirdUserOk = setUserData(3333L, "Jhon", "zxcvbnm", 25);
-        userPasswordNotOk = setUserData(-1111L, "BadBob", "qwer", 19);
-        userAgeNotOk = setUserData(-2222L, "BadAlice", "asdfghjk", 17);
-        userLoginNullNotOk = setUserData(-2222L, null, "asdfghjk", 23);
+        firstUserOk = new User("Bob", "qwerty", 18);
+        secondUserOk = new User("Alice", "asdfghjk", 29);
+        thirdUserOk = new User("Jhon", "zxcvbnm", 25);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Storage.people.clear();
     }
 
     @Test
     public void register_nullLogin_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userLoginNullNotOk));
+        User userNullLoginNotOk = new User(null, "asdfghjk", 23);
+        assertThrows(RuntimeException.class, ()
+                -> registrationService.register(userNullLoginNotOk));
     }
 
     @Test
     public void register_emptyLogin_notOk() {
-        userLoginNullNotOk = setUserData(-2222L, "", "asdfghjk", 23);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userLoginNullNotOk));
+        User userEmptyLoginNotOk = new User( "", "asdfghjk", 23);
+        assertThrows(RuntimeException.class, ()
+                -> registrationService.register(userEmptyLoginNotOk));
     }
 
     @Test
@@ -52,28 +49,33 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_passwordLessThanMinLength_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userPasswordNotOk));
+        User userPasswordLessThanMinLengthNotOk = new User("BadBob", "qwer5", 19);
+        assertThrows(RuntimeException.class, ()
+                -> registrationService.register(userPasswordLessThanMinLengthNotOk));
     }
 
     @Test
     public void register_nullPassword_notOk() {
-        userPasswordNotOk = setUserData(-1111L, "BadBob", null, 19);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userPasswordNotOk));
+        User userNullPasswordNotOk = new User("BadBob", null, 19);
+        assertThrows(RuntimeException.class, ()
+                -> registrationService.register(userNullPasswordNotOk));
     }
 
     @Test
-    public void register_AgeLessThanMinAge_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(userAgeNotOk));
+    public void register_ageLessThanMinAge_notOk() {
+        User userAgeLessThanMinAgeNotOk = new User("BadAlice", "asdfghjk", 17);
+        assertThrows(RuntimeException.class, ()
+                -> registrationService.register(userAgeLessThanMinAgeNotOk));
     }
 
     @Test
     public void register_nullAge_notOk() {
-        userAgeNotOk = setUserData(-1111L, "BadBob", "qwer789", null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userAgeNotOk));
+        User userNullAgeNotOk = new User("BadBob", "qwer789", null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userNullAgeNotOk));
     }
 
     @Test
-    public void register_SecondUserExists_notOk() {
+    public void register_secondUserExists_notOk() {
         registrationService.register(firstUserOk);
         registrationService.register(secondUserOk);
         registrationService.register(thirdUserOk);
@@ -81,21 +83,12 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ThreeUsers_Ok() {
+    public void register_threeUsers_Ok() {
         int expect = 3;
         registrationService.register(firstUserOk);
         registrationService.register(secondUserOk);
         registrationService.register(thirdUserOk);
         int actual = Storage.people.size();
         assertEquals(expect, actual);
-    }
-
-    private static User setUserData(Long id, String login, String password, Integer age) {
-        User user = new User();
-        user.setId(id);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
-        return user;
     }
 }
