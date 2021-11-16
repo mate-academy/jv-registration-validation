@@ -15,12 +15,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User is null");
         }
         if (user.getLogin() == null || user.getPassword() == null
-                || user.getAge() == null || user.getId() == null) {
+                || user.getAge() == null) {
             throw new RuntimeException("User cannot have null states");
         }
         if (storage.get(user.getLogin()) != null) {
             throw new RuntimeException("User with login " + user.getLogin()
                     + " is already registered");
+        }
+        if (user.getLogin().equals("")) {
+            throw new RuntimeException("User can't have empty login");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User is too young, " + user.getAge()

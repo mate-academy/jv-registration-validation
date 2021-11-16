@@ -43,6 +43,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userAgeIsLessThanEighteen_NotOk() {
+        user.setLogin("wrongAge");
+        user.setPassword("wrongAge");
         user.setAge(-228);
         assertThrows(RuntimeException.class, () ->
                 registration.register(user)
@@ -51,16 +53,46 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_passwordLengthIsLessThanSix_NotOk() {
+        user.setLogin("wrongPassword");
         user.setPassword("12345");
+        user.setAge(41);
         assertThrows(RuntimeException.class, () ->
                 registration.register(user)
         );
     }
 
     @Test
-    void registration_userWithNullStates_NotOk() {
-        user.setLogin("titan");
-        user.setPassword("brotherfromanothermother");
+    void registration_userWithNullLogin_NotOk() {
+        user.setPassword("nullLogin");
+        user.setAge(32);
+        assertThrows(RuntimeException.class, () ->
+                registration.register(user)
+        );
+    }
+
+    @Test
+    void registration_userWithNullPassword_NotOk() {
+        user.setLogin("nullPassword");
+        user.setAge(32);
+        assertThrows(RuntimeException.class, () ->
+                registration.register(user)
+        );
+    }
+
+    @Test
+    void registration_userWithNullAge_NotOk() {
+        user.setLogin("nullAge");
+        user.setPassword("nullAge");
+        assertThrows(RuntimeException.class, () ->
+                registration.register(user)
+        );
+    }
+
+    @Test
+    void registration_userWithEmptyLogin_NotOk() {
+        user.setLogin("");
+        user.setPassword("wrongLogin");
+        user.setAge(30);
         assertThrows(RuntimeException.class, () ->
                 registration.register(user)
         );
@@ -68,7 +100,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_checkByNormalUser_Ok() {
-        user.setId(1L);
         user.setLogin("normalUser");
         user.setPassword("normalUser");
         user.setAge(33);
