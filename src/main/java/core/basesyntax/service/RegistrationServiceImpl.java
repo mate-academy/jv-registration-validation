@@ -14,13 +14,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null || user.getAge() == null || user.getPassword() == null) {
             throw new RuntimeException("Not all fields are filled");
         }
+        if (user.getLogin().equals("")) {
+            throw new RuntimeException("an empty line in the Login or Password field");
+        }
         if (user.getAge() < 0) {
             throw new RuntimeException("The user entered a negative number or was not born yet");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_VALID_AGE) {
             throw new RuntimeException("User is too young");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Short password");
         }
         if (storageDao.get(user.getLogin()) != null) {
