@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    static StorageDao storageDao;
-    static RegistrationService registrationService;
-    static User user;
+    private static StorageDao storageDao;
+    private static RegistrationService registrationService;
+    private static User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -42,14 +42,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageIsNull_notOk() {
         user.setAge(null);
-        System.out.println(user.toString());
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_ageIsLessThan18_notOk() {
+    void register_ageIsLessThan_MIN_AGE_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -73,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessThanSixCharacter_notOk() {
+    void register_passwordLessThan_MIN_COUNT_CHARACTER_notOk() {
         user.setPassword("fd12");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
