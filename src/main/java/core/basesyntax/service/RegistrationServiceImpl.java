@@ -11,6 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationUserException("User is null");
+        }
         checkLogin(user.getLogin());
         checkPassword(user.getPassword());
         if (user.getAge() < MIN_AGE_USER) {
@@ -20,6 +23,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkLogin(String login) {
+        if (login == null) {
+            throw new RegistrationUserException("Login is null");
+        }
         if (login.length() < 1) {
             throw new RegistrationUserException("Login is not valid, length is less than 1");
         }
@@ -30,6 +36,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkPassword(String password) {
+        if(password == null){
+            throw new RegistrationUserException("Password is null");
+        }
         if (password.length() <= MINIMUM_LENGTH_PASSWORD) {
             throw new RegistrationUserException("Login is not valid, length is less than "
                     + MINIMUM_LENGTH_PASSWORD);
