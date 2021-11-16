@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         user.setAge(19);
         user.setLogin("evreii");
         user.setPassword("helloMates");
@@ -61,10 +63,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingLogin_notOk() {
-        user.setLogin("Evreii");
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
+        registrationService.register(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -78,6 +78,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_validPassword_ok() {
         user.setPassword("helloMates");
+        User expected = user;
+        User actual = registrationService.register(user);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_validUser_ok() {
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);
