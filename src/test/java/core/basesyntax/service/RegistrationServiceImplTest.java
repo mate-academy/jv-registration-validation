@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,11 +26,6 @@ class RegistrationServiceTest {
         user.setAge(18);
     }
 
-    @AfterAll
-    static void afterAll() {
-        Storage.people.clear();
-    }
-
     @Test
     void registration_validPassword_Ok() {
         user.setPassword("goodPassword");
@@ -49,37 +43,37 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void registration_nullLogin_NotOk() {
+    void registration_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registration_emptyLogin_NotOk() {
+    void registration_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registration_nullPassword_NotOk() {
+    void registration_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registration_passwordLength_NotOk() {
+    void registration_passwordLength_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registration_ageVerification_NotOk() {
-        user.setAge(10);
+    void registration_ageVerification_notOk() {
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registration_ageIsNull_NotOk() {
+    void registration_ageIsNull_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
