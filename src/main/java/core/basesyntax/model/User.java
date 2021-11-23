@@ -8,6 +8,10 @@ public class User {
     private String password;
     private Integer age;
 
+    public User() {
+
+    }
+
     public Long getId() {
         return id;
     }
