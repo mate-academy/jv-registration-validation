@@ -8,12 +8,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 class StorageDaoImplTest {
     private StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeEach
-    void SetUp() {
+    void setUp() {
         for (User user : Storage.people) {
             storageDao.add(new User(1L,"log000","ffffff",46));
         }
@@ -26,17 +25,21 @@ class StorageDaoImplTest {
 
     @Test
     void userAgeLow18_NotOk() {
-        assertThrows(RuntimeException.class, () -> storageDao.add(new User(1L,"gfgf", "ffffff",1)));
+        assertThrows(RuntimeException.class, () -> storageDao
+                .add(new User(1L,"gfgf", "ffffff",1)));
     }
 
     @Test
     void suchLoginAlreadyExist_NotOk() {
         storageDao.add(new User(1L,"user1","ffffff",56));
-        assertThrows(RuntimeException.class, () -> storageDao.add(new User(1L,"user1","ffffff",26)));
+        assertThrows(RuntimeException.class, () -> storageDao
+                .add(new User(1L,"user1","ffffff",26)));
     }
 
     @Test
     void passwordLess6Charicters_NotOk() {
-        assertThrows(RuntimeException.class, () -> storageDao.add(new User(1L,"user1","fff",26)));
+        assertThrows(RuntimeException.class, () -> storageDao
+                .add(new User(1L,"user1","fff",26)));
     }
 }
+
