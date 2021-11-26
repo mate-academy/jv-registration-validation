@@ -1,12 +1,11 @@
 package core.basesyntax.dao;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
     private final StorageDao storageDao = new StorageDaoImpl();
