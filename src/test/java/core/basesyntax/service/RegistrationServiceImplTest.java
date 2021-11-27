@@ -4,7 +4,9 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 
 class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
