@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -7,8 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -44,7 +46,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerAge_over18_Ok() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
+        final StorageDaoImpl storageDao = new StorageDaoImpl();
         user.setLogin("Bob");
         user.setAge(32);
         user.setPassword("randomPassword");
@@ -83,7 +85,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerPassword_isLongerThan5_Ok() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
+        final StorageDaoImpl storageDao = new StorageDaoImpl();
         String goodPassword = "qwerty";
         user.setPassword(goodPassword);
         user.setLogin("Bob");
