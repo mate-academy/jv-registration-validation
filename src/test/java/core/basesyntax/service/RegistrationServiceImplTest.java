@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private StorageDaoImpl storageDao;
     private User user;
 
     @BeforeAll
@@ -24,6 +25,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        storageDao = new StorageDaoImpl();
     }
 
     @Test
@@ -46,7 +48,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerAge_over18_Ok() {
-        final StorageDaoImpl storageDao = new StorageDaoImpl();
         user.setLogin("Bob");
         user.setAge(32);
         user.setPassword("randomPassword");
@@ -56,7 +57,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUser_isNew_Ok() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
         assertNull(storageDao.get(user.getLogin()));
     }
 
@@ -75,7 +75,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUser_notNew_NotOk() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
         user.setLogin("Bob");
         User newUser = new User();
         newUser.setLogin("Bob");
@@ -85,7 +84,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerPassword_isLongerThan5_Ok() {
-        final StorageDaoImpl storageDao = new StorageDaoImpl();
         String goodPassword = "qwerty";
         user.setPassword(goodPassword);
         user.setLogin("Bob");
