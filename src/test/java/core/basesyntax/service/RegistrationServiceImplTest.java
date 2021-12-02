@@ -30,8 +30,6 @@ class RegistrationServiceImplTest {
     @Test
     void nullLogin_NotOk() {
         user.setLogin(null);
-        System.out.println("login1");
-        System.out.println(user.getAge());
         assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
@@ -45,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_NotOk() { // те саме, чому тест успішний коли убрать перевірку на нал
+    void nullPassword_NotOk() {
         user.setPassword(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
