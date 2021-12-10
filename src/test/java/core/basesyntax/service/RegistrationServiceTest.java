@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
@@ -14,24 +14,35 @@ class RegistrationServiceTest {
     void noRepeatedUserLogin() {
         registrationService.register(new User(0L,"goodLogin_A","myPassword_A",56));
         registrationService.register(new User(0L,"goodLogin_B","myPassword_A",56));
-        registrationService.register(new User(0L,"goodLogin_A","myPassword_B",57));
         assertTrue(Storage.people.contains(new User(0L,"goodLogin_A","myPassword_A",56)));
         assertTrue(Storage.people.contains(new User(0L,"goodLogin_B","myPassword_A",56)));
-        assertFalse(Storage.people.contains(new User(0L,"goodLogin_A","myPassword_B",57)));
-        System.out.println(Storage.people.size());
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(new User(0L,"goodLogin_A","myPassword_B",57)));
     }
 
     @Test
-    void userAgeHaveToMoreOrEqual18() {
+    void userAgeHaveToMoreOrEqual18ButNoMore135() {
         registrationService.register(new User(0L,"goodLogin_C","myPassword_A",18));
-        registrationService.register(new User(0L,"goodLogin_D","myPassword_A",17));
         assertTrue(Storage.people.contains(new User(0L,"goodLogin_C","myPassword_A",18)));
-        assertFalse(Storage.people.contains(new User(0L,"goodLogin_D","myPassword_A",17)));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(new User(0L,"goodLogin_D","myPassword_A",17)));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(new User(0L,"goodLogin_D","myPassword_A",136)));
+    }
+
+    @Test
+    void nullLoginOrNullPasswordOrNullAge() {
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(new User(0L,null,"myPassword_A",18)));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(new User(0L,"goodLogin_C",null,18)));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(new User(0L,"goodLogin_C","myPassword_A",null)));
     }
 
     @Test
     void userPasswordHaveToAtLeast6Charecters() {
-        registrationService.register(new User(0L,"goodLoginF","myPas",18));
-        assertFalse(Storage.people.contains(new User(0L,"goodLoginF","myPas",18)));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(new User(0L,"goodLoginF","myPas",18)));
     }
 }
