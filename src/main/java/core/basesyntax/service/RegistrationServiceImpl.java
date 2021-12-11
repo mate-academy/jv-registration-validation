@@ -22,12 +22,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User age have to more or equal 18");
         }
 
-        if (user.getAge() > 135) {
+        if (user.getAge() > 122) {
             throw new RuntimeException("Your age unreal...");
         }
 
         if (user.getPassword().length() < 6) {
             throw new RuntimeException("UserPassword have to more or equal 6 characters");
+        }
+
+        if (user.getPassword().indexOf(" ") != -1 || user.getLogin().contains(" ")) {
+            throw new RuntimeException("Your login/password couldn't have empty symbol");
         }
 
         StorageDaoImpl storageDao = new StorageDaoImpl();
