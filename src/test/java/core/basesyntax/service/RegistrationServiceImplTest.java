@@ -1,10 +1,10 @@
 package core.basesyntax.service;
 
-import core.basesyntax.model.User;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import core.basesyntax.model.User;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
 
@@ -17,12 +17,16 @@ class RegistrationServiceImplTest {
         user1.setLogin("Chandra");
         user1.setPassword("fjvn84n(nfn");
         User registredUser = registrationService.register(user1);
-        assertThrows(RuntimeException.class, () -> {registrationService.register(registredUser);});
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(registredUser);
+        });
     }
 
     @Test
     void register_nullValue_notOk() {
-        assertThrows(RuntimeException.class, () -> {registrationService.register(null);});
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(null);
+        });
     }
 
     @Test
@@ -31,7 +35,9 @@ class RegistrationServiceImplTest {
         user1.setAge(17);
         user1.setLogin("Chandra");
         user1.setPassword("fjvn84n(nfn");
-        assertThrows(RuntimeException.class, () -> {registrationService.register(user1);});
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user1);
+        });
     }
 
     @Test
@@ -40,7 +46,9 @@ class RegistrationServiceImplTest {
         user1.setAge(19);
         user1.setLogin("Sandra");
         user1.setPassword("f(R4n");
-        assertThrows(RuntimeException.class, () -> {registrationService.register(user1);});
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user1);
+        });
     }
 
     @Test
