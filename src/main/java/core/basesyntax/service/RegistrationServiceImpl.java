@@ -12,6 +12,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && user.getAge() >= 18 && user.getPassword().length() >= 6) {
             return storageDao.add(user);
         }
-        throw new RuntimeException();
+        throw new RuntimeException("Invalid user data provided");
     }
 }
