@@ -1,14 +1,11 @@
 package core.basesyntax.service;
 
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
 
@@ -28,6 +25,7 @@ class RegistrationServiceImplTest {
         bob.setAge(19);
         bob.setPassword("1234567");
     }
+
     @Test
     public void register_userWithExistingLogin_notOk() {
         registrationService.register(bob);
@@ -43,6 +41,7 @@ class RegistrationServiceImplTest {
             registrationService.register(bob);
         });
     }
+
     @Test
     public void register_nullLogin_notOk() {
         bob.setLogin(null);
@@ -58,6 +57,7 @@ class RegistrationServiceImplTest {
             registrationService.register(bob);
         });
     }
+
     @Test
     public void register_nullAge_notOk() {
         bob.setAge(null);
