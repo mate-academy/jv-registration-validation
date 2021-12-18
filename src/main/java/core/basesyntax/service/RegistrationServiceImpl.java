@@ -1,23 +1,27 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_VALID_AGE = 18;
-    private static final int MIN_PASSWORD_LENGTH = 6;
-    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user.getAge() == null || user.getAge() < MIN_VALID_AGE
-                || user.getPassword() == null
-                || user.getPassword().length() < MIN_PASSWORD_LENGTH
-                || user.getLogin() == null || user.getLogin().isEmpty()
-                || storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Invalid input data!");
+        if (user.getLogin() == null || user.getAge() == null || user.getPassword() == null) {
+            throw new NullPointerException();
         }
-        return storageDao.add(user);
+        if (user.getLogin().isEmpty() || user.getAge() < 18
+                || user.getAge() > 110 || user.getPassword().length() < 6) {
+            throw new RuntimeException();
+        }
+        for (User users : Storage.people) {
+            if (Objects.equals(user.getLogin(), users.getLogin())
+                    || user.getLogin().equals(users.getLogin())) {
+                throw new RuntimeException();
+            }
+        }
+        Storage.people.add(user);
+        return user;
     }
 }

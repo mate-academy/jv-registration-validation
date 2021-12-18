@@ -1,91 +1,81 @@
 package core.basesyntax.service;
 
-import core.basesyntax.db.Storage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static RegistrationService registrationService;
-    private User bob;
+    private List<User> users;
+    private User user;
 
-    @BeforeClass
-    public static void beforeClass() {
+    @BeforeAll
+    static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @Before
-    public void setUp() {
-        Storage.people.clear();
-        bob = new User();
-        bob.setLogin("123");
-        bob.setAge(19);
-        bob.setPassword("1234567");
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setLogin("login");
+        user.setPassword("password");
+        user.setAge(20);
     }
 
     @Test
-    public void register_userWithExistingLogin_notOk() {
-        registrationService.register(bob);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+    void nullLogin_NotOk() {
+        user.setLogin(null);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_emptyLogin_notOk() {
-        bob.setLogin("");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+    void nullAge_NotOk() {
+        user.setAge(null);
+        System.out.println("age1");
+        System.out.println(user.getLogin());
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+
     }
 
     @Test
-    public void register_nullLogin_notOk() {
-        bob.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+    void nullPassword_NotOk() {
+        user.setPassword(null);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_ageUnder18_notOk() {
-        bob.setAge(17);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+    void emptyLogin_NotOk() {
+        user.setLogin("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_nullAge_notOk() {
-        bob.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+    void uniqueLogin_Ok() {
+        user.setLogin("Login");
+        User userTwo = new User();
+        userTwo.setLogin("Login");
+        userTwo.setAge(25);
+        userTwo.setPassword("passwordTwo");
+        registrationService.register(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userTwo));
     }
 
     @Test
-    public void register_passwordUnder6Characters_notOk() {
-        bob.setPassword("12345");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+    void correctAge_Ok() {
+        user.setAge(20);
+        int expectedAge = user.getAge();
+        int actualAge = registrationService.register(user).getAge();
+        assertEquals(expectedAge, actualAge);
     }
 
     @Test
-    public void register_nullPassword_notOk() {
-        bob.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
-    }
-
-    @Test
-    public void register_validUser_ok() {
-        User expected = bob;
-        User actual = registrationService.register(bob);
-        assertEquals(expected, actual);
+    void passwordStrength_NotOk() {
+        user.setPassword("poor1");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
