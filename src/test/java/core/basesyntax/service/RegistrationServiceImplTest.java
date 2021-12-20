@@ -49,7 +49,7 @@ class RegistrationServiceImplTest {
         user.setPassword("123989789234");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        },", Expect an RuntimeException when trying to register a user with null login");
     }
 
     @Test
@@ -58,7 +58,12 @@ class RegistrationServiceImplTest {
         user.setAge(65);
         user.setPassword("123989789234");
         user.setLogin("TestUser");
-        assertEquals(user,registrationService.register(user));
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser,
+                String.format(", User before %s registration"
+                                + " and after %s registration must be equals",
+                        user,
+                        registeredUser));
     }
 
     @Test
@@ -69,7 +74,7 @@ class RegistrationServiceImplTest {
         user.setLogin("user1");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException when trying to register an existing user");
     }
 
     @Test
@@ -80,7 +85,7 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException when trying to register a user with null age");
     }
 
     @Test
@@ -89,7 +94,12 @@ class RegistrationServiceImplTest {
         user.setAge(18);
         user.setPassword("123989789234");
         user.setLogin("TestUser");
-        assertEquals(user,registrationService.register(user));
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser,
+                String.format(", User before %s registration"
+                                + " and after %s registration must be equals",
+                        user,
+                        registeredUser));
     }
 
     @Test
@@ -98,7 +108,12 @@ class RegistrationServiceImplTest {
         user.setAge(19);
         user.setPassword("123989789234");
         user.setLogin("TestUser");
-        assertEquals(user,registrationService.register(user));
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser,
+                String.format(", User before %s registration"
+                                + " and after %s registration must be equals",
+                        user,
+                        registeredUser));
     }
 
     @Test
@@ -109,7 +124,8 @@ class RegistrationServiceImplTest {
         user.setLogin("TestUser");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException"
+                + " when trying to register a user with age less then 18 years old");
     }
 
     @Test
@@ -120,7 +136,7 @@ class RegistrationServiceImplTest {
         user.setAge(-98);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException when trying to register a user with negative age");
     }
 
     @Test
@@ -131,7 +147,7 @@ class RegistrationServiceImplTest {
         user.setAge(0);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException when trying to register a user with zero age");
     }
 
     @Test
@@ -140,7 +156,12 @@ class RegistrationServiceImplTest {
         user.setAge(22);
         user.setPassword("123456");
         user.setLogin("TestUser");
-        assertEquals(user,registrationService.register(user));
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser,
+                String.format(", User before %s registration"
+                                + " and after %s registration must be equals",
+                        user,
+                        registeredUser));
     }
 
     @Test
@@ -151,7 +172,8 @@ class RegistrationServiceImplTest {
         user.setLogin("TestUser");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException"
+                + " when trying to register a user with password less than 6 chars");
     }
 
     @Test
@@ -162,7 +184,7 @@ class RegistrationServiceImplTest {
         user.setLogin("TestUser");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException when trying to register a user with password is empty");
     }
 
     @Test
@@ -173,7 +195,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, ", Expect an RuntimeException when trying to register a user with password is NULL");
     }
 
 }
