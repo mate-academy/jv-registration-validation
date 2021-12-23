@@ -74,6 +74,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_ageIsLessThan18_NotOk() {
+        User user = new User();
+        user.setAge(17);
+        user.setPassword("password");
+        user.setLogin("Login");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        }, ", Expect an RuntimeException"
+                + " when trying to register a user with age less then 18 years old");
+    }
+
+    @Test
     void passwordStrength_NotOk() {
         user.setPassword("dssfs");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
