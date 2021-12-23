@@ -75,7 +75,28 @@ class RegistrationServiceImplTest {
 
     @Test
     void passwordStrength_NotOk() {
-        user.setPassword("poor1");
+        user.setPassword("dssfs");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+    @Test
+    void register_passwordIsEmptyString_notOk() {
+        User user = new User();
+        user.setAge(61);
+        user.setPassword("");
+        user.setLogin("Login");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        }, ", Expect an RuntimeException when trying to register a user with password is empty");
+    }
+
+    @Test
+    void register_passwordIsNull_notOk() {
+        User user = new User();
+        user.setAge(61);
+        user.setLogin("Login");
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        }, ", Expect an RuntimeException when trying to register a user with password is NULL");
     }
 }
