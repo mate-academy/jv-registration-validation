@@ -10,12 +10,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RuntimeException("Can't create User");
+            throw new RuntimeException("Can't create User, because user is null");
         }
 
         if (user.getLogin() == null || user.getLogin().isEmpty()
-                                    || user.getLogin().isBlank()) {
-            throw new RuntimeException("Please, write correct Login");
+                || user.getLogin().isBlank()) {
+            throw new RuntimeException("Cant register user.Login shouldn't be null and empty."
+                    + " User: " + user);
         }
 
         if (storage.get(user.getLogin()) != null) {
@@ -23,15 +24,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getAge() == null || user.getAge() < 18) {
-            throw new RuntimeException("The age doesn't correct");
+            throw new RuntimeException("Cant register user.Age shouldn't be null and less 18.User:"
+                    + user);
         }
 
         if (user.getPassword() == null || user.getPassword().length() < 6
-                                       || user.getPassword().isBlank()) {
+                || user.getPassword().isBlank()) {
             throw new RuntimeException("Please, write correct Password");
         }
 
-        return storage.add(user);
+        storage.add(user);
+        return user;
     }
 }
 

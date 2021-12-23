@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -17,7 +17,6 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-
     }
 
     @BeforeEach
@@ -30,7 +29,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void createUser_notNull_Ok() {
-        assertNotNull(registrationService.register(user));
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test
@@ -61,9 +60,9 @@ class RegistrationServiceImplTest {
     void userRegistration_duplicateLogin_notOk() {
         registrationService.register(user);
         User userDuplicate = new User();
-        userDuplicate.setLogin("MyNickname@mateAcademy");
-        userDuplicate.setPassword("needMore6Numbers");
-        userDuplicate.setAge(18);
+        userDuplicate.setLogin(user.getLogin());
+        userDuplicate.setPassword(user.getPassword());
+        userDuplicate.setAge(user.getAge());
         assertThrows(RuntimeException.class, () -> registrationService.register(userDuplicate));
     }
 
