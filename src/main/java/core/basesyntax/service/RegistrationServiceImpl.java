@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("login is null");
         }
-        for(User storageUser : Storage.people) {
+        for (User storageUser : Storage.people) {
             if (user.getLogin().equals(storageUser.getLogin())) {
                 throw new RuntimeException("user with this login already exists");
             }
