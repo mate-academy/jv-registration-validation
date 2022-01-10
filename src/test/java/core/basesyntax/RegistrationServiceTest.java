@@ -18,19 +18,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(OrderAnnotation.class)
 public class RegistrationServiceTest {
     private static RegistrationService registrationService;
-    private final String loginNull = null;
-    private final String loginEmpty = "";
-    private final String loginDefault = "login";
-    private final String passNull = null;
-    private final String passShort = "short";
-    private final String passDefault = "password";
-    private final Integer ageNull = null;
-    private final Integer ageYoung = 17;
-    private final Integer ageBarely = 18;
-    private final Integer ageMax = Integer.MAX_VALUE;
-    private final Integer ageMin = Integer.MIN_VALUE;
-    private final Integer ageDefault = 25;
-    long id = 0L; // there is no restrictions for id field
+    private static final String loginNull = null;
+    private static final String loginDefault = "login";
+    private static final String passNull = null;
+    private static final String passShort = "short";
+    private static final String passDefault = "password";
+    private static final Integer ageNull = null;
+    private static final Integer ageYoung = 17;
+    private static final Integer ageBarely = 18;
+    private static final Integer ageMax = Integer.MAX_VALUE;
+    private static final Integer ageMin = Integer.MIN_VALUE;
+    private static final Integer ageDefault = 25;
+    private static final long id = 0L; // there is no restrictions for id field
 
 
     @BeforeAll
@@ -38,10 +37,11 @@ public class RegistrationServiceTest {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @BeforeEach
-    void init() {
+    @AfterEach
+    void tearDown() {
         Storage.people.clear();
     }
+
 
     @Test
     @DisplayName("Correct login handling")
