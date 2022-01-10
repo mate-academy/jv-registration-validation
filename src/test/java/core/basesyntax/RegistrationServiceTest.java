@@ -91,7 +91,23 @@ public class RegistrationServiceTest {
         assertEquals(expected_1, Storage.people.get(1), "Storage user 1");
     }
 
+    @Test
+    @DisplayName("Null password handling")
+    @Order(5)
+    void passwordNull_NotOk() {
+        User user = getUser(id, loginDefault, passNull, ageDefault);
+        assertThrows(RuntimeException.class, ()->registrationService.register(user),
+                "password couldn't be null");
+    }
 
+    @Test
+    @DisplayName("Short password handling")
+    @Order(6)
+    void passwordShort_NotOk() {
+        User user = getUser(id, loginDefault, passShort, ageDefault);
+        assertThrows(RuntimeException.class, ()->registrationService.register(user),
+                "password couldn't be null");
+    }
 
 
     private static User getUser(Long id, String login, String password, Integer age) {
