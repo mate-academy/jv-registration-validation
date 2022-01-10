@@ -10,6 +10,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Feel free to remove this class and create your own.
@@ -24,7 +25,7 @@ public class RegistrationServiceTest {
     private final String passShort = "short";
     private final String passDefault = "password";
     private final Integer ageNull = null;
-    private final Integer ageSmall = 17;
+    private final Integer ageYoung = 17;
     private final Integer ageBarely = 18;
     private final Integer ageMax = Integer.MAX_VALUE;
     private final Integer ageMin = Integer.MIN_VALUE;
@@ -58,8 +59,11 @@ public class RegistrationServiceTest {
     @Order(2)
     void loginNull_NotOk() {
         User user = getUser(id, loginNull, passDefault, ageDefault);
-        assertThrows(RuntimeException.class, ()->registrationService.register(user),
-                "login couldn't be null");
+        assertAll(
+                ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
+                "login couldn't be null"),
+                ()->assertTrue(Storage.people.isEmpty())
+        );
     }
 
     @Test
@@ -105,10 +109,70 @@ public class RegistrationServiceTest {
     @Order(6)
     void passwordShort_NotOk() {
         User user = getUser(id, loginDefault, passShort, ageDefault);
-        assertThrows(RuntimeException.class, ()->registrationService.register(user),
-                "password couldn't be null");
+        assertAll(
+                ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
+                "password couldn't be null"),
+                ()->assertTrue(Storage.people.isEmpty())
+        );
     }
 
+    @Test
+    @DisplayName("Null age handling")
+    @Order(7)
+    void ageNull_NotOk() {
+        User user = getUser(id, loginDefault, passDefault, ageNull);
+        assertAll(
+                ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
+                        "age couldn't be null"),
+                ()->assertTrue(Storage.people.isEmpty())
+        );
+    }
+
+    @Test
+    @DisplayName("Small age handling")
+    @Order(8)
+    void ageYoung_NotOk() {
+        User user = getUser(id, loginDefault, passDefault, ageYoung);
+        assertAll(
+                ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
+                        "age couldn't be less then " + ageBarely),
+                ()->assertTrue(Storage.people.isEmpty())
+        );
+    }
+
+    @Test
+    @DisplayName("Integer.MIN age handling")
+    @Order(9)
+    void ageMin_NotOk() {
+        User user = getUser(id, loginDefault, passDefault, ageMin);
+        assertAll(
+                ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
+                        "age couldn't be less then " + ageBarely),
+                ()->assertTrue(Storage.people.isEmpty())
+        );
+    }
+
+    @Test
+    @DisplayName("Integer.MAX age handling")
+    @Order(10)
+    void ageMax_Ok() {
+        User expected = getUser(id, loginDefault, passDefault, ageMax);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
+        assertEquals(1, Storage.people.size(), "Storage size");
+        assertEquals(expected, Storage.people.get(0), "Storage user 0");
+    }
+
+    @Test
+    @DisplayName("Barely legal age handling")
+    @Order(11)
+    void ageBarely_Ok() {
+        User expected = getUser(id, loginDefault, passDefault, ageBarely);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
+        assertEquals(1, Storage.people.size(), "Storage size");
+        assertEquals(expected, Storage.people.get(0), "Storage user 0");
+    }
 
     private static User getUser(Long id, String login, String password, Integer age) {
         User user = new User();
