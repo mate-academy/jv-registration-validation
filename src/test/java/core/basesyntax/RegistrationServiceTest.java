@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -62,11 +61,9 @@ public class RegistrationServiceTest {
     @Order(2)
     void register_loginNull_NotOk() {
         User user = getUser(id, loginNull, passDefault, ageDefault);
-        assertAll(
-                () -> assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                "login couldn't be null"),
-                () -> assertTrue(Storage.people.isEmpty())
-        );
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "login couldn't be null");
+        assertTrue(Storage.people.isEmpty(), "Storage is not empty");
     }
 
     @Test
@@ -76,11 +73,10 @@ public class RegistrationServiceTest {
         User expected = getUser(id, loginDefault, passDefault, ageDefault);
         registrationService.register(expected);
         User sameLoginUser = getUser(1L, loginDefault, passDefault, ageDefault);
-        assertAll(
-                () -> assertThrows(RuntimeException.class,
-                    () -> registrationService.register(sameLoginUser), "login = null"),
-                () -> assertEquals(1, Storage.people.size(), "Storage size"),
-                () -> assertEquals(expected, Storage.people.get(0), "Added to Storage user"));
+        assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser),
+                "login = null");
+        assertEquals(1, Storage.people.size(), "Storage size");
+        assertEquals(expected, Storage.people.get(0), "Added to Storage user");
     }
 
     @Test
@@ -112,11 +108,9 @@ public class RegistrationServiceTest {
     @Order(6)
     void register_passwordShort_NotOk() {
         User user = getUser(id, loginDefault, passShort, ageDefault);
-        assertAll(
-                () -> assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                "password couldn't be null"),
-                () -> assertTrue(Storage.people.isEmpty())
-        );
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "password couldn't be null");
+        assertTrue(Storage.people.isEmpty(), "Storage is not empty");
     }
 
     @Test
@@ -124,11 +118,9 @@ public class RegistrationServiceTest {
     @Order(7)
     void register_ageNull_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageNull);
-        assertAll(
-                () -> assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                        "age couldn't be null"),
-                () -> assertTrue(Storage.people.isEmpty())
-        );
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                    "age couldn't be null");
+        assertTrue(Storage.people.isEmpty(), "Storage is not empty");
     }
 
     @Test
@@ -136,11 +128,9 @@ public class RegistrationServiceTest {
     @Order(8)
     void register_ageYoung_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageYoung);
-        assertAll(
-                () -> assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                        "age couldn't be less then " + ageBarely),
-                () -> assertTrue(Storage.people.isEmpty())
-        );
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "age couldn't be less then " + ageBarely);
+        assertTrue(Storage.people.isEmpty(), "Storage is not empty");
     }
 
     @Test
@@ -148,11 +138,9 @@ public class RegistrationServiceTest {
     @Order(9)
     void register_ageMin_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageMin);
-        assertAll(
-                () -> assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                        "age couldn't be less then " + ageBarely),
-                () -> assertTrue(Storage.people.isEmpty())
-        );
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "age couldn't be less then " + ageBarely);
+        assertTrue(Storage.people.isEmpty(), "Storage is not empty");
     }
 
     @Test
