@@ -8,8 +8,13 @@ public class User {
     private String password;
     private Integer age;
 
-    public Long getId() {
-        return id;
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
+    public User(){
     }
 
     public void setId(Long id) {
@@ -20,24 +25,12 @@ public class User {
         return login;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Integer getAge() {
         return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
     }
 
     @Override
