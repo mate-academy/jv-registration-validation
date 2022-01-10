@@ -46,7 +46,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Correct login handling")
     @Order(1)
-    void login_Ok() {
+    void register_login_Ok() {
         User expected = getUser(id, loginDefault, passDefault, ageDefault);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual, "register method return value");
@@ -57,7 +57,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Null login handling")
     @Order(2)
-    void loginNull_NotOk() {
+    void register_loginNull_NotOk() {
         User user = getUser(id, loginNull, passDefault, ageDefault);
         assertAll(
                 ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
@@ -69,7 +69,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Existing login handling")
     @Order(3)
-    void loginExist_NotOk() {
+    void register_loginExist_NotOk() {
         User expected = getUser(id, loginDefault, passDefault, ageDefault);
         registrationService.register(expected);
         User sameLoginUser = getUser(1L, loginDefault, passDefault, ageDefault);
@@ -84,7 +84,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Different users handling")
     @Order(4)
-    void loginDiff_Ok() {
+    void register_loginDiff_Ok() {
         User expected_0 = getUser(id, loginDefault, passDefault, ageDefault);
         registrationService.register(expected_0);
         User expected_1 = getUser(1L, loginDefault, passDefault, ageDefault);
@@ -98,7 +98,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Null password handling")
     @Order(5)
-    void passwordNull_NotOk() {
+    void register_passwordNull_NotOk() {
         User user = getUser(id, loginDefault, passNull, ageDefault);
         assertThrows(RuntimeException.class, ()->registrationService.register(user),
                 "password couldn't be null");
@@ -107,7 +107,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Short password handling")
     @Order(6)
-    void passwordShort_NotOk() {
+    void register_passwordShort_NotOk() {
         User user = getUser(id, loginDefault, passShort, ageDefault);
         assertAll(
                 ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
@@ -119,7 +119,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Null age handling")
     @Order(7)
-    void ageNull_NotOk() {
+    void register_ageNull_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageNull);
         assertAll(
                 ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
@@ -131,7 +131,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Small age handling")
     @Order(8)
-    void ageYoung_NotOk() {
+    void register_ageYoung_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageYoung);
         assertAll(
                 ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
@@ -143,7 +143,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Integer.MIN age handling")
     @Order(9)
-    void ageMin_NotOk() {
+    void register_ageMin_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageMin);
         assertAll(
                 ()->assertThrows(RuntimeException.class, ()->registrationService.register(user),
@@ -155,7 +155,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Integer.MAX age handling")
     @Order(10)
-    void ageMax_Ok() {
+    void register_ageMax_Ok() {
         User expected = getUser(id, loginDefault, passDefault, ageMax);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
@@ -166,7 +166,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Barely legal age handling")
     @Order(11)
-    void ageBarely_Ok() {
+    void register_ageBarely_Ok() {
         User expected = getUser(id, loginDefault, passDefault, ageBarely);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
