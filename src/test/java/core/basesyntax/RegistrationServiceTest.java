@@ -85,9 +85,10 @@ public class RegistrationServiceTest {
     @DisplayName("Different users handling")
     @Order(4)
     void register_loginDiff_Ok() {
+        String loginAnother = new StringBuilder(loginDefault).reverse().toString();
         User expected_0 = getUser(id, loginDefault, passDefault, ageDefault);
         registrationService.register(expected_0);
-        User expected_1 = getUser(1L, loginDefault, passDefault, ageDefault);
+        User expected_1 = getUser(1L, loginAnother, passDefault, ageDefault);
         User actual_1 = registrationService.register(expected_1);
         assertEquals(expected_1, actual_1, "register method return value");
         assertEquals(2, Storage.people.size(), "Storage size");

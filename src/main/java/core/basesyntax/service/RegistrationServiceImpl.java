@@ -32,6 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_USER_AGE) {
             throw new RuntimeException("age less then " + MIN_USER_AGE);
         }
+        Storage.people.add(user);
         return user;
     }
 }
