@@ -14,10 +14,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Please, insert your password");
         }
         User userFromDb = storageDao.get(user.getLogin());
-        if (userFromDb.getPassword().length() < 6) {
+        if (user.getPassword().length() < 6) {
             throw new RuntimeException("Your password is too short");
         }
-        if (userFromDb.getAge() < 18) {
+        if (user.getAge() < 18) {
             throw new RuntimeException("You are to young for registration");
         }
 

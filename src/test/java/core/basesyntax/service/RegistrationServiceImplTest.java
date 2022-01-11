@@ -2,64 +2,64 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private User petro;
-    private User semen;
-    private User vasyl;
-    private User dmytro;
-    private User kotyhoroshko;
-    private User ivanMykhailovych;
-    private List<User> userList;
+    private User tooShortPasswordUser;
+    private User tooYoungUser;
+    private User nullPassUser;
+    private User validUserDmytro;
+    private User validUserKotyhoroshko;
+    private User tooYoungUserIvan;
 
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
     void setUp() {
-        petro = new User("Petro", "Pet", 34);
-        semen = new User("Semen", "SeMen2005", 16);
-        vasyl = new User("Vasyl", null, 41);
-        dmytro = new User("Dmytro2000", "nullPassword", 22);
-        kotyhoroshko = new User("Kotyhoroshko", "bestPassword", 28);
-        ivanMykhailovych = new User("Ivan Mykhailovych", "Vano133", 17);
+        tooShortPasswordUser = new User("Petro", "Pet", 34);
+        tooYoungUser = new User("Semen", "SeMen2005", 16);
+        nullPassUser = new User("Vasyl", null, 41);
+        validUserDmytro = new User("Dmytro2000", "nullPassword", 22);
+        validUserKotyhoroshko = new User("Kotyhoroshko", "bestPassword", 28);
+        tooYoungUserIvan = new User("Ivan Mykhailovych", "Vano133", 17);
     }
 
     @Test
     void register_nullPassword_NotOk() {
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(vasyl));
+        Assertions.assertThrows(RuntimeException.class,
+                () -> registrationService.register(nullPassUser));
     }
 
     @Test
     void register_GetValidUser() {
-        Storage.people.add(dmytro);
-        Storage.people.add(semen);
-        Assertions.assertEquals(dmytro, Storage.people.get(0));
-        Assertions.assertEquals(semen, Storage.people.get(1));
+        Storage.people.add(validUserDmytro);
+        Storage.people.add(tooYoungUser);
+        Assertions.assertEquals(validUserDmytro, Storage.people.get(0));
+        Assertions.assertEquals(tooYoungUser, Storage.people.get(1));
     }
 
     @Test
     void register_CheckIfAgeIsValid_NotOk() {
         Assertions
                 .assertThrows(RuntimeException.class,
-                    () -> registrationService.register(ivanMykhailovych));
+                    () -> registrationService.register(tooYoungUserIvan));
     }
 
     @Test
     void register_checkIfAgeIsOk() {
-        int expected = 28;
-        int actual = kotyhoroshko.getAge();
-        Assertions.assertEquals(expected, actual);
+        registrationService.register(validUserKotyhoroshko);
+        boolean actual = Storage.people.contains(validUserKotyhoroshko);
+        Assertions.assertTrue(actual);
     }
 
     @Test
     void register_IfPasswordLengthIsWrong() {
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(petro),
-                "Your password should be longer, then 6 symbols");
+        Assertions.assertThrows(RuntimeException.class,
+                () -> registrationService.register(tooShortPasswordUser),
+                "You should throw an exception for invalid pass user");
     }
 
     @AfterEach
