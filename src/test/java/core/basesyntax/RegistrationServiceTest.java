@@ -11,7 +11,7 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 /**
  * Feel free to remove this class and create your own.
  */
-@TestMethodOrder(OrderAnnotation.class)
+@TestMethodOrder(Random.class)
 public class RegistrationServiceTest {
     private static RegistrationService registrationService;
     private static final String loginNull = null;
@@ -47,7 +47,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Correct login handling")
-    @Order(1)
     void register_login_Ok() {
         User expected = getUser(id, loginDefault, passDefault, ageDefault);
         User actual = registrationService.register(expected);
@@ -58,7 +57,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Null login handling")
-    @Order(2)
     void register_loginNull_NotOk() {
         User user = getUser(id, loginNull, passDefault, ageDefault);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
@@ -68,7 +66,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Existing login handling")
-    @Order(3)
     void register_loginExist_NotOk() {
         User expected = getUser(id, loginDefault, passDefault, ageDefault);
         registrationService.register(expected);
@@ -81,7 +78,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Different users handling")
-    @Order(4)
     void register_loginDiff_Ok() {
         String loginAnother = new StringBuilder(loginDefault).reverse().toString();
         User expected0 = getUser(id, loginDefault, passDefault, ageDefault);
@@ -96,7 +92,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Null password handling")
-    @Order(5)
     void register_passwordNull_NotOk() {
         User user = getUser(id, loginDefault, passNull, ageDefault);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
@@ -105,7 +100,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Short password handling")
-    @Order(6)
     void register_passwordShort_NotOk() {
         User user = getUser(id, loginDefault, passShort, ageDefault);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
@@ -115,7 +109,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Null age handling")
-    @Order(7)
     void register_ageNull_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageNull);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
@@ -125,7 +118,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Small age handling")
-    @Order(8)
     void register_ageYoung_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageYoung);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
@@ -135,7 +127,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Integer.MIN age handling")
-    @Order(9)
     void register_ageMin_NotOk() {
         User user = getUser(id, loginDefault, passDefault, ageMin);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
@@ -145,7 +136,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Integer.MAX age handling")
-    @Order(10)
     void register_ageMax_Ok() {
         User expected = getUser(id, loginDefault, passDefault, ageMax);
         User actual = registrationService.register(expected);
@@ -156,7 +146,6 @@ public class RegistrationServiceTest {
 
     @Test
     @DisplayName("Barely legal age handling")
-    @Order(11)
     void register_ageBarely_Ok() {
         User expected = getUser(id, loginDefault, passDefault, ageBarely);
         User actual = registrationService.register(expected);
