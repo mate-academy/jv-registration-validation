@@ -12,7 +12,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.Random;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
@@ -48,7 +47,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Correct login handling")
     void register_login_Ok() {
-        User expected = getUser(id, loginDefault, passDefault, ageDefault);
+        User expected = new User(id, loginDefault, passDefault, ageDefault);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual, "register method return value");
         assertEquals(1, Storage.people.size(), "Storage size");
@@ -58,7 +57,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Null login handling")
     void register_loginNull_NotOk() {
-        User user = getUser(id, loginNull, passDefault, ageDefault);
+        User user = new User(id, loginNull, passDefault, ageDefault);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "login couldn't be null");
         assertTrue(Storage.people.isEmpty(), "Storage is not empty");
@@ -67,9 +66,9 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Existing login handling")
     void register_loginExist_NotOk() {
-        User expected = getUser(id, loginDefault, passDefault, ageDefault);
+        User expected = new User(id, loginDefault, passDefault, ageDefault);
         registrationService.register(expected);
-        User sameLoginUser = getUser(1L, loginDefault, passDefault, ageDefault);
+        User sameLoginUser = new User(1L, loginDefault, passDefault, ageDefault);
         assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser),
                 "login = null");
         assertEquals(1, Storage.people.size(), "Storage size");
@@ -80,9 +79,9 @@ public class RegistrationServiceTest {
     @DisplayName("Different users handling")
     void register_loginDiff_Ok() {
         String loginAnother = new StringBuilder(loginDefault).reverse().toString();
-        User expected0 = getUser(id, loginDefault, passDefault, ageDefault);
+        User expected0 = new User(id, loginDefault, passDefault, ageDefault);
         registrationService.register(expected0);
-        User expected1 = getUser(1L, loginAnother, passDefault, ageDefault);
+        User expected1 = new User(1L, loginAnother, passDefault, ageDefault);
         User actual1 = registrationService.register(expected1);
         assertEquals(expected1, actual1, "register method return value");
         assertEquals(2, Storage.people.size(), "Storage size");
@@ -93,7 +92,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Null password handling")
     void register_passwordNull_NotOk() {
-        User user = getUser(id, loginDefault, passNull, ageDefault);
+        User user = new User(id, loginDefault, passNull, ageDefault);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "password couldn't be null");
     }
@@ -101,7 +100,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Short password handling")
     void register_passwordShort_NotOk() {
-        User user = getUser(id, loginDefault, passShort, ageDefault);
+        User user = new User(id, loginDefault, passShort, ageDefault);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "password couldn't be null");
         assertTrue(Storage.people.isEmpty(), "Storage is not empty");
@@ -110,7 +109,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Null age handling")
     void register_ageNull_NotOk() {
-        User user = getUser(id, loginDefault, passDefault, ageNull);
+        User user = new User(id, loginDefault, passDefault, ageNull);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                     "age couldn't be null");
         assertTrue(Storage.people.isEmpty(), "Storage is not empty");
@@ -119,7 +118,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Small age handling")
     void register_ageYoung_NotOk() {
-        User user = getUser(id, loginDefault, passDefault, ageYoung);
+        User user = new User(id, loginDefault, passDefault, ageYoung);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "age couldn't be less then " + ageBarely);
         assertTrue(Storage.people.isEmpty(), "Storage is not empty");
@@ -128,7 +127,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Integer.MIN age handling")
     void register_ageMin_NotOk() {
-        User user = getUser(id, loginDefault, passDefault, ageMin);
+        User user = new User(id, loginDefault, passDefault, ageMin);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "age couldn't be less then " + ageBarely);
         assertTrue(Storage.people.isEmpty(), "Storage is not empty");
@@ -137,7 +136,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Integer.MAX age handling")
     void register_ageMax_Ok() {
-        User expected = getUser(id, loginDefault, passDefault, ageMax);
+        User expected = new User(id, loginDefault, passDefault, ageMax);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
         assertEquals(1, Storage.people.size(), "Storage size");
@@ -147,19 +146,10 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Barely legal age handling")
     void register_ageBarely_Ok() {
-        User expected = getUser(id, loginDefault, passDefault, ageBarely);
+        User expected = new User(id, loginDefault, passDefault, ageBarely);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
         assertEquals(1, Storage.people.size(), "Storage size");
         assertEquals(expected, Storage.people.get(0), "Storage user 0");
-    }
-
-    private static User getUser(Long id, String login, String password, Integer age) {
-        User user = new User();
-        user.setId(id);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
-        return user;
     }
 }
