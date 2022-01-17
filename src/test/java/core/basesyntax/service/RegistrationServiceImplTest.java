@@ -1,12 +1,11 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,12 +14,14 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static User firstUser;
     private static User secondUser;
+    private static User thirdUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         firstUser = new User();
         secondUser = new User();
+        thirdUser = new User();
     }
 
     @BeforeEach
@@ -41,29 +42,89 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsExists_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            assertEquals(firstUser.getLogin(), registrationService.register(firstUser).getLogin());
+    void register_nullPassword_notOk() {
+        thirdUser.setPassword(null);
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(thirdUser);
         });
     }
 
     @Test
-    void register_userDoesNotExists_Ok() {
-        assertNotEquals(secondUser, firstUser);
+    void register_nullLogin_notOk() {
+        thirdUser.setLogin(null);
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(thirdUser);
+        });
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        thirdUser.setPassword("");
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(thirdUser);
+        });
+    }
+
+    @Test
+    void register_emptyLogin_notOk() {
+        thirdUser.setLogin("");
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(thirdUser);
+        });
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        thirdUser.setAge(null);
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(thirdUser);
+        });
+    }
+
+    @Test
+    void register_negativeAge() {
+        thirdUser.setAge(-1);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(thirdUser);
+        });
+    }
+
+    @Test
+    void register_userIsExists_notOk() {
+        thirdUser.setLogin("angela16081988");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(thirdUser);
+        });
     }
 
     @Test
     void register_ageLessThen_notOk() {
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(secondUser).getAge();
+            registrationService.register(secondUser);
         });
     }
 
     @Test
     void register_passwordContainsLessThen_notOk() {
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(secondUser).getPassword();
+            registrationService.register(secondUser);
         });
+    }
+
+    @Test
+    void register_ageMoreThen_Ok() {
+        int expected = 18;
+        int actual = firstUser.getAge();
+        Storage.people.contains(actual);
+        Assertions.assertEquals(expected,actual);
+    }
+
+    @Test
+    void register_passwordContainsMoreThen_Ok() {
+        String expected = "Qwerty";
+        String actual = firstUser.getPassword();
+        Storage.people.contains(actual);
+        Assertions.assertEquals(expected,actual);
     }
 
     @AfterEach
@@ -71,4 +132,3 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 }
-

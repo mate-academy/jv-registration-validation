@@ -10,17 +10,20 @@ public class RegistrationServiceImpl implements RegistrationService {
     public static final int MIN_PASSWORD_CHARACTERS_AMOUNT = 6;
 
     @Override
-    public User register(User user) throws RuntimeException {
+    public User register(User user) {
         StorageDao storageDao = new StorageDaoImpl();
         User userFromDb = storageDao.get(user.getLogin());
 
-        if (userFromDb.getAge() == 0
-                || userFromDb.getLogin().isEmpty()
-                || userFromDb.getPassword().isEmpty()) {
+        if (user.getAge() == 0
+                || user.getLogin() == null
+                || user.getPassword() == null
+                || user.getLogin().isEmpty()
+                || user.getPassword().isEmpty()) {
             throw new NullPointerException("This line cannot be empty");
         }
         if (Storage.people.contains(userFromDb)) {
-            throw new RuntimeException("User with this login is already exists");
+            throw new RuntimeException(
+                    "User with this login " + user.getLogin() + " is already exists");
         }
         if (userFromDb.getAge() <= MIN_AGE) {
             throw new RuntimeException("User's age is under 18");
@@ -28,14 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (userFromDb.getPassword().length() <= MIN_PASSWORD_CHARACTERS_AMOUNT) {
             throw new RuntimeException("Password contains less then 6 characters");
         }
+
         return storageDao.add(userFromDb);
     }
 }
-
-
-
-
-
-
-
-
