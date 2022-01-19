@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
