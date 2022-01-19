@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static Storage storage;
     private static User firstUser;
     private static User secondUser;
     private static User thirdUser;
@@ -19,6 +19,7 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storage = new Storage();
         firstUser = new User();
         secondUser = new User();
         thirdUser = new User();
@@ -91,7 +92,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsExists_notOk() {
-        thirdUser.setLogin("angela16081988");
+        firstUser.setLogin("Qwerty16");
+        thirdUser.setLogin("Qwerty16");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(thirdUser);
         });
@@ -109,22 +111,6 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(secondUser);
         });
-    }
-
-    @Test
-    void register_ageMoreThen_Ok() {
-        int expected = 18;
-        int actual = firstUser.getAge();
-        Storage.people.contains(actual);
-        Assertions.assertEquals(expected,actual);
-    }
-
-    @Test
-    void register_passwordContainsMoreThen_Ok() {
-        String expected = "Qwerty";
-        String actual = firstUser.getPassword();
-        Storage.people.contains(actual);
-        Assertions.assertEquals(expected,actual);
     }
 
     @AfterEach
