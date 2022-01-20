@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -9,13 +10,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
-    private User testUser1;
+    private User firstUser;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        testUser1 = new User();
-        testUser1.setId(1L);
+        firstUser = new User();
+        firstUser.setId(1L);
     }
 
     @Test
@@ -31,10 +32,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         try {
-            testUser1.setPassword("1234567");
-            testUser1.setLogin("testUser1");
-            testUser1.setAge(null);
-            registrationService.register(testUser1);
+            firstUser.setPassword("1234567");
+            firstUser.setLogin("testUser1");
+            firstUser.setAge(null);
+            registrationService.register(firstUser);
         } catch (RuntimeException e) {
             return;
         }
@@ -44,10 +45,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         try {
-            testUser1.setPassword("1234567");
-            testUser1.setLogin(null);
-            testUser1.setAge(19);
-            registrationService.register(testUser1);
+            firstUser.setPassword("1234567");
+            firstUser.setLogin(null);
+            firstUser.setAge(19);
+            registrationService.register(firstUser);
         } catch (RuntimeException e) {
             return;
         }
@@ -57,10 +58,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         try {
-            testUser1.setPassword(null);
-            testUser1.setLogin("User");
-            testUser1.setAge(19);
-            registrationService.register(testUser1);
+            firstUser.setPassword(null);
+            firstUser.setLogin("User");
+            firstUser.setAge(19);
+            registrationService.register(firstUser);
         } catch (RuntimeException e) {
             return;
         }
@@ -69,39 +70,49 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_less18Age_notOk() {
-        testUser1.setPassword("12345678");
-        testUser1.setLogin("User");
-        testUser1.setAge(17);
+        firstUser.setPassword("12345678");
+        firstUser.setLogin("User");
+        firstUser.setAge(17);
 
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(testUser1);
+            registrationService.register(firstUser);
         });
     }
 
     @Test
     void register_less6PassLength_notOk() {
-        testUser1.setPassword("12345");
-        testUser1.setLogin("User");
-        testUser1.setAge(20);
+        firstUser.setPassword("12345");
+        firstUser.setLogin("User");
+        firstUser.setAge(20);
 
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(testUser1);
+            registrationService.register(firstUser);
         });
     }
 
     @Test
     void register_issetLogin_notOk() {
-        testUser1.setPassword("12345678");
-        testUser1.setLogin("User1");
-        testUser1.setAge(20);
-        User testUser2 = new User();
-        testUser2.setId(2L);
-        testUser2.setAge(35);
-        testUser2.setPassword("qawsedrftg");
-        testUser2.setLogin("User1");
-        registrationService.register(testUser1);
+        firstUser.setPassword("12345678");
+        firstUser.setLogin("User1");
+        firstUser.setAge(20);
+        User secondUser = new User();
+        secondUser.setId(2L);
+        secondUser.setAge(35);
+        secondUser.setPassword("qawsedrftg");
+        secondUser.setLogin("User1");
+        registrationService.register(firstUser);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(testUser2);
+            registrationService.register(secondUser);
         });
+    }
+
+    @Test
+    void register_User_Ok() {
+        firstUser.setPassword("12345678");
+        firstUser.setLogin("FirstUser");
+        firstUser.setAge(20);
+        User returnUser = registrationService.register(firstUser);
+        assertEquals(firstUser, returnUser, "User not added");
+        System.out.println("User successfully added");
     }
 }
