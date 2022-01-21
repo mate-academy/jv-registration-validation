@@ -2,7 +2,9 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -104,22 +106,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validDataUser_Ok() {
+    void register_userIsExists_notOk() {
         User validDataUser = new User();
         validDataUser.setLogin("DEDE16081717");
         validDataUser.setAge(31);
         validDataUser.setPassword("Qwerty1234567");
         registrationService.register(validDataUser);
-    }
 
-    @Test
-    void register_userIsExists_notOk() {
-        User secondUser = new User();
-        secondUser.setLogin("DEDE16081717");
-        user.setAge(18);
-        user.setPassword("1818Qwerty");
+        User newUser = new User();
+        newUser.setLogin("DEDE16081717");
+        newUser.setAge(18);
+        newUser.setPassword("1818Qwerty");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(secondUser);
+            registrationService.register(newUser);
         });
     }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
 }
+
