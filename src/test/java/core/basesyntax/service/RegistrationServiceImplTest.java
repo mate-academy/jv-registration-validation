@@ -113,6 +113,5 @@ class RegistrationServiceImplTest {
         firstUser.setAge(20);
         User returnUser = registrationService.register(firstUser);
         assertEquals(firstUser, returnUser, "User not added");
-        System.out.println("User successfully added");
     }
 }
