@@ -17,7 +17,6 @@ public class RegistrationServiceTest {
     private static final String PASSWORD_2 = "asdfgh";
     private static final String SMALL_PASSWORD = "12345";
     private static final Integer AGE_1 = 25;
-    private static final Integer AGE_2 = 25;
     private static final Integer SMALL_AGE = 17;
     private static final Long ID_1 = 1L;
     private static final Long ID_2 = 2L;
@@ -86,7 +85,7 @@ public class RegistrationServiceTest {
     @Test
     void registerUser_registerSameLogin_notOk() {
         registrationService.register(new User(ID_1, LOGIN_1, PASSWORD_1, AGE_1));
-        User user2 = new User(ID_2, LOGIN_1, PASSWORD_2, AGE_2);
+        User user2 = new User(ID_2, LOGIN_1, PASSWORD_2, AGE_1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user2));
         assertEquals(EXPECTED_SIZE, Storage.people.size());
     }
