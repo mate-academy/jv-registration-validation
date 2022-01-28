@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (validate(user)) {
             storageDao.add(user);
         } else {
-            throw new RuntimeException("Provided user data are not valid");
+            throw new RuntimeException("Invalid user data");
         }
         return storageDao.get(user.getLogin());
     }
