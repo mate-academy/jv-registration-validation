@@ -9,10 +9,11 @@ import java.util.regex.Pattern;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_USER_AGE = 18;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
-    private static final String SMALL_LETTERS_PATTERN = "[a-z]";
-    private static final String CAPITAL_LETTERS_PATTERN = "[A-Z]";
-    private static final String DIGITS_PATTERN = "[0-9]";
-    private static final String METACHARACTERS_PATTERN = "[~!@#$%^&*()_+{}\\\\[\\\\]:;,.< >/?-]";
+    private static final Pattern SMALL_LETTERS_PATTERN = Pattern.compile("[a-z]");
+    private static final Pattern CAPITAL_LETTERS_PATTERN = Pattern.compile("[A-Z]");
+    private static final Pattern DIGITS_PATTERN = Pattern.compile("[0-9]");
+    private static final Pattern METACHARACTERS_PATTERN
+            = Pattern.compile("[~!@#$%^&*()_+{}\\\\[\\\\]:;,.< >/?-]");
 
     @Override
     public User register(User user) {
@@ -41,17 +42,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                 return false;
             }
         }
-        Pattern patternSmallLetters = Pattern.compile(SMALL_LETTERS_PATTERN);
-        Pattern patternCapitalLetters = Pattern.compile(CAPITAL_LETTERS_PATTERN);
-        Pattern patternDigits = Pattern.compile(DIGITS_PATTERN);
-        Pattern patternMetaCharacters = Pattern.compile(METACHARACTERS_PATTERN);
-
-        if (patternMetaCharacters.matcher(user.getLogin()).find()) {
+        if (METACHARACTERS_PATTERN.matcher(user.getLogin()).find()) {
             return false;
         }
-        return patternSmallLetters.matcher(user.getPassword()).find()
-                && patternCapitalLetters.matcher(user.getPassword()).find()
-                && patternDigits.matcher(user.getPassword()).find()
-                && patternMetaCharacters.matcher(user.getPassword()).find();
+        return SMALL_LETTERS_PATTERN.matcher(user.getPassword()).find()
+                && CAPITAL_LETTERS_PATTERN.matcher(user.getPassword()).find()
+                && DIGITS_PATTERN.matcher(user.getPassword()).find()
+                && METACHARACTERS_PATTERN.matcher(user.getPassword()).find();
     }
 }
