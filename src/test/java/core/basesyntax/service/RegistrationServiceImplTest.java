@@ -3,104 +3,90 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationServiceImpl registrationService;
+    private static User user;
 
-    @Test
-    void registerUserNull_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(null);
-        });
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
+        user = new User("userUser", "password", 18);
     }
 
     @Test
-    void registerIdNull_notOK() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(null, "john34", "password", 18));
-        });
+    void registerUserNull_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
     void registerLoginNull_notOk() {
+        user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(1345L, null, "password", 18));
+            registrationService.register(user);
         });
     }
 
     @Test
     void registerPasswordNull_notOk() {
+        user.setPassword("null");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(1345L, "Lol01", null, 18));
+            registrationService.register(user);
         });
     }
 
     @Test
-    void registerNullAge_notOk() {
+    void registerAgeNull_notOk() {
+        user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(1345L, "Sam01", "password", null));
+            registrationService.register(user);
         });
     }
 
     @Test
     void registerSameLogin_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            User john01 = registrationService.register(new User(1213L, "john01", "password", 19));
-            User john02 = registrationService.register(
-                    new User(124415L, "john01", "password02", 26));
-            assertEquals(john01.getLogin(), john02.getLogin());
-        });
+        registrationService.register(user);
+        User user2 = new User("userUser", "password123", 45);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user2));
     }
 
     @Test
     void registerAgeLessThenEighteen_notOk() {
+        user.setAge(15);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(134443L, "john34", "password", 15));
-        });
-    }
-
-    @Test
-    void registerAgeNotEqualZero_Ok() {
-        assertThrows(RuntimeException.class, () -> {
-            User user = registrationService.register(new User(134443L, "john34", "password", 0));
-            assertEquals(0, (int) user.getAge());
-        });
-    }
-
-    @Test
-    void registerAgeNegative_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(134443L, "john34", "password", -2));
-        });
-    }
-
-    @Test
-    void registerLoginLengthLessThenSix_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(134443L, "bobo", "password", 44));
+            registrationService.register(user);
         });
     }
 
     @Test
     void registerPasswordLengthLessThenSix_notOk() {
+        user.setPassword("pass");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(134443L, "login0101", "pass", 44));
+            registrationService.register(user);
         });
     }
 
     @Test
-    void registerFirstLetterOfLogin() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(134443L, "$ogin0101", "pass", 44));
-        });
+    void register_User_Ok() {
+        user.setLogin("LoginLogin");
+        user.setAge(45);
+        user.setPassword("PasswordPassword");
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
-    @Test
-    void registerPasswordNotContainsADigits_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(134443L, "login0101", "password", 44));
-        });
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
