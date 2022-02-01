@@ -38,6 +38,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullUser_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null), "User can't be null");
+
+    }
+
+    @Test
     void register_notAvailableLogin_notOk() {
         registrationService.register(validUser);
         User userWithNotAvailableLogin = new User();
