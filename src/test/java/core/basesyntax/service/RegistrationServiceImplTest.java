@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RegistrationServiceImplTest {
 
     private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private static User userWithBadAge = new User();
-    private static User userWithBadPassword = new User();
-    private static User goodUser = new User();
-    private static User sameUser = new User();
+    private User userWithBadAge = new User();
+    private User userWithBadPassword = new User();
+    private User goodUser = new User();
+    private User sameUser = new User();
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void setUp() {
         goodUser.setAge(18);
         goodUser.setLogin("login1245");
         goodUser.setPassword("123456");
