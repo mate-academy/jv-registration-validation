@@ -11,12 +11,20 @@ class RegistrationServiceImplTest {
     private RegistrationService registrationService = new RegistrationServiceImpl();
     private StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user = new User();
+    private User user1 = new User();
+    private User user2 = new User();
 
     @BeforeEach
     void setUp() {
         user.setLogin("login");
         user.setPassword("password");
         user.setAge(18);
+        user1.setLogin("login1");
+        user1.setPassword("somepassword");
+        user1.setAge(18);
+        user2.setLogin("login1");
+        user2.setPassword("anotherpassword");
+        user2.setAge(25);
     }
 
     @Test
@@ -68,24 +76,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_theSameUserInStorage_notOk() {
-        storageDao.add(user);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
     void register_theSameLoginInStorage_notOk() {
-        User user1 = new User();
-        user1.setLogin("login1");
-        user1.setPassword("somepassword");
-        user1.setAge(18);
         storageDao.add(user1);
-        User user2 = new User();
-        user2.setLogin("login1");
-        user2.setPassword("anotherpassword");
-        user2.setAge(25);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user2);
         });
