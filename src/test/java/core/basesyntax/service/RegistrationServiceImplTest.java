@@ -1,68 +1,82 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    private static final String DEFAULT_LOGIN = "login";
+    private static final String DEFAULT_LOGIN = "user_Lili";
     private static final String VALID_PASSWORD = "password";
     private static final int VALID_AGE = 24;
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao = new StorageDaoImpl();
+    private RegistrationService registrationService;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        registrationService.register(storageDao.add(new User("user_Alise", "1234567", 23)));
-        registrationService.register(storageDao.add(new User("user_Bob", "password", 41)));
-        registrationService.register(storageDao.add(new User("user_Lili", "student", 24)));
+        registrationService = new RegistrationServiceImpl();
+        user = new User();
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
     }
 
     @Test
     void register_validData_registerOk() {
-        User actual = registrationService.register((storageDao
-                .add((new User(DEFAULT_LOGIN, VALID_PASSWORD, VALID_AGE)))));
-        assertEquals(new User(DEFAULT_LOGIN, VALID_PASSWORD, VALID_AGE), actual);
+        User actual = user;
+        assertEquals(registrationService.register(user), actual);
     }
 
     @Test
     void register_notValidAge_callException() {
+        user.setAge(13);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(storageDao.add(new User(DEFAULT_LOGIN, VALID_PASSWORD, 13)));
-            registrationService.register(storageDao.add(new User(DEFAULT_LOGIN, VALID_PASSWORD, 0)));
-            registrationService.register(storageDao.add(new User(DEFAULT_LOGIN, VALID_PASSWORD, 145)));
+            registrationService.register(user);
+        });
+        user.setAge(0);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(145);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_notValidPassword_callException() {
+        user.setPassword("123");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(storageDao.add(new User(DEFAULT_LOGIN, "123", VALID_AGE)));
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_nullPassword_callException() {
+        user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(storageDao.add(new User(DEFAULT_LOGIN, null, VALID_AGE)));
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_existingLogin_callException() {
+        User newUser = new User();
+        newUser.setLogin(user.getLogin());
+        newUser.setPassword("12345678");
+        newUser.setAge(24);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(storageDao.add(new User("user_Lili", VALID_PASSWORD, VALID_AGE)));
+            registrationService.register(newUser);
         });
     }
 
     @Test
     void register_nullLogin_callException() {
+        user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(storageDao.add(new User(null, VALID_PASSWORD, VALID_AGE)));
+            registrationService.register(user);
         });
     }
 }
