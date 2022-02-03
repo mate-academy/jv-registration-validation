@@ -18,13 +18,18 @@ public class RegistrationServiceImplTest {
     void setUp() {
         service = new RegistrationServiceImpl();
         users = new HashMap<String,User>();
-        users.put("normalUser",new User((long)6542324,"Georg","qwerty123",20));
+        users.put("normalUser",new User("Georg","qwerty123",20));
         users.put("nullUser",null);
-        users.put("invalidAgeUser",new User((long)124252234,"Alice","QWERTY312",10));
-        users.put("invalidIdUser",new User((long)-4251214,"Sasha","12345678",19));
-        users.put("invalidPasswordUser",new User((long)523543,"Oleg","qqq1",33));
-        users.put("sameLoginUser1",new User((long)435321,"Stefan","stefan1234",20));
-        users.put("sameLoginUser2",new User((long)435321,"Stefan","stefan1234",20));
+        users.put("invalidAgeUser",new User("Alice","QWERTY312",10));
+        users.put("invalidAgeUser2",new User("Alex","QWERTY312",0));
+        users.put("invalidAgeUser3",new User("Mary","QWERTY312",-4));
+        users.put("nullAgeUser",new User("Bob","QWERTY312",null));
+        users.put("invalidPasswordUser",new User("Oleg","qqq1",33));
+        users.put("nullPasswordUser",new User("Ann",null,33));
+        users.put("nullLoginUser",new User(null,"Rsafgewqqwe",22));
+        users.put("invalidLoginUser",new User("","qqq131413",42));
+        users.put("sameLoginUser1",new User("Stefan","stefan1234",20));
+        users.put("sameLoginUser2",new User("Stefan","stefan1234",20));
     }
 
     @Test
@@ -43,25 +48,42 @@ public class RegistrationServiceImplTest {
     void addInvalidAgeUser_NotOk() {
         assertThrows(RuntimeException.class, () -> service.register(users.get("invalidAgeUser")),
                 "we shouldn't be able to add the user under 18");
+        assertThrows(RuntimeException.class, () -> service.register(users.get("invalidAgeUser2")),
+                "we shouldn't be able to add the user under 18");
+        assertThrows(RuntimeException.class, () -> service.register(users.get("invalidAgeUser3")),
+                "value of age cant be less than 0");
+        assertThrows(RuntimeException.class, () -> service.register(users.get("nullAgeUser")),
+                "we shouldn't be able to add the user with null value of age");
     }
 
     @Test
-    void addInvalidIdUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> service.register(users.get("invalidIdUser")),
-                "we shouldn't be able to add the user with invalid id");
-    }
-
-    @Test
-    void addInvalidPasswordUser() {
+    void addInvalidPasswordUser_NotOk() {
         assertThrows(RuntimeException.class,
                 () -> service.register(users.get("invalidPasswordUser")),
+                "we shouldn't be able to add the user with invalid password");
+        assertThrows(RuntimeException.class,
+                () -> service.register(users.get("nullPasswordUser")),
+                "we shouldn't be able to add the user with null value password");
+    }
+
+    @Test
+    void addInvalidLoginUser_NotOk() {
+        assertThrows(RuntimeException.class,
+                () -> service.register(users.get("invalidLoginUser")),
+                "length() of login will be more that 0");
+    }
+
+    @Test
+    void addNullLoginUser_NotOk() {
+        assertThrows(RuntimeException.class,
+                () -> service.register(users.get("nullLoginUser")),
                 "we shouldn't be able to add the user with invalid password");
     }
 
     @Test
-    void addSameLoginUser() {
+    void addSameLoginUser_NotOk() {
         service.register(users.get("sameLoginUser1"));
         assertThrows(RuntimeException.class, () -> service.register(users.get("sameLoginUser2")),
-                "we shouldn't be able to add user which was added earlier");
+                "we shouldn't be able to add user with login, that already exists in storage");
     }
 }
