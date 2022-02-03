@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +13,13 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "Daniil";
     private static final String DEFAULT_PASSWORD = "12345678";
     private static final Integer DEFAULT_AGE = 25;
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
     private User testedUser;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
@@ -21,7 +27,6 @@ class RegistrationServiceImplTest {
         testedUser.setPassword(DEFAULT_PASSWORD);
         testedUser.setAge(DEFAULT_AGE);
         testedUser.setLogin(DEFAULT_LOGIN);
-        registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
 
