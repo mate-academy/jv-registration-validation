@@ -9,7 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static final RegistrationServiceImpl registrationService =
+            new RegistrationServiceImpl();
     private static final User user = new User();
     private static User user1;
     private static final User user2 = new User();
