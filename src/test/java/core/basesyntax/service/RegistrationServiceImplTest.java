@@ -29,7 +29,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullLogin_NotOK() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_User_OK() {
+    void register_user_ok() {
         User registerUser = registrationService.register(user);
         assertEquals(user.getLogin(), registerUser.getLogin());
         assertEquals(user.getPassword(), registerUser.getPassword());
@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeLessThan18_NotOK() {
+    void register_ageLessThan18_notOk() {
         user.setAge(5);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordLess_Length_NotOK() {
+    void register_passwordLess_length_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -69,7 +69,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullPassword_NotOK() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -77,7 +77,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ExistLogin_NotOk() {
+    void register_existLogin_notOk() {
         registrationService.register(user);
         User newUser = new User();
         newUser.setLogin(user.getLogin());
