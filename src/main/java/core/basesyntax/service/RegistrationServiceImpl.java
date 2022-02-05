@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -24,6 +25,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("The same login has already existed");
         }
-        return user;
+        return new StorageDaoImpl().add(user);
     }
 }
