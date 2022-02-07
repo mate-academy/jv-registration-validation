@@ -10,9 +10,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        notNullValidate(user);
+        loginValidate(user);
+        ageValidate(user);
+        storageDao.add(user);
+        return user;
+    }
+
+    private User notNullValidate(User user) {
         if (user == null) {
             throw new RuntimeException("User can`t be null");
         }
+        return user;
+    }
+
+    private User loginValidate(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("Oops, your login should not be null");
         } else if (user.getLogin().isEmpty()) {
@@ -21,6 +33,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Oops, user with this login already registered");
         }
+        return user;
+    }
+
+    private User ageValidate(User user) {
         if (user.getAge() == null) {
             throw new RuntimeException("Oops, user`s age should not be null");
         } else if (user.getAge() < MIN_AGE) {
@@ -29,19 +45,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("Oops, your password should not be null");
         } else if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Oops, your password should be at least " + MIN_PASSWORD_LENGTH
-                    + " symbols length");
-        }
-        storageDao.add(user);
-        return user;
-    }
-
-    private User isNotNull(User user) {
-        if (user == null) {
-            throw new RuntimeException("User can`t be null");
+            throw new RuntimeException("Oops, your password should be at least "
+                    + MIN_PASSWORD_LENGTH + " symbols length");
         }
         return user;
     }
-
-
 }
