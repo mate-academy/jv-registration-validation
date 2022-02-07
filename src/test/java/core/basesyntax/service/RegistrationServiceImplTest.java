@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private final User registrateFirstUser = new User();
-    private final User registrateSameToFirstLoginUser = new User();
 
     @BeforeEach
     void setUp() {
@@ -20,9 +19,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithAgeLessThanMin_notOk() {
-        registrateFirstUser.setAge(15);
-        assertThrows(RuntimeException.class, ()
-                -> registrationService.register(registrateFirstUser));
+        registrateFirstUser.setAge(17);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(registrateFirstUser));
     }
 
     @Test
@@ -66,13 +65,4 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(registrateFirstUser));
     }
 
-    @Test
-    void register_userWithCurrentLoginAlreadyExist_notSuccess() {
-        registrateSameToFirstLoginUser.setLogin("nafania");
-        registrateSameToFirstLoginUser.setPassword("youngBob");
-        registrateSameToFirstLoginUser.setAge(20);
-        registrationService.register(registrateFirstUser);
-        assertThrows(RuntimeException.class,
-                () -> registrationService.register(registrateSameToFirstLoginUser));
-    }
 }
