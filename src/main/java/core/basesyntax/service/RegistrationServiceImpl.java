@@ -13,8 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("Invalid data type, please input correct date type");
         }
-        if (user.getId() == null || user.getAge() == null
-                || user.getLogin() == null || user.getPassword() == null) {
+        if (user.getAge() == null || user.getLogin() == null || user.getPassword() == null) {
             throw new RuntimeException("There is empty line,"
                     + " please fill all information about user");
         }
