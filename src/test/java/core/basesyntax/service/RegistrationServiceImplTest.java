@@ -1,16 +1,14 @@
 
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    private static final int MIN_CHAR_FOR_PASS = 6;
-    private static final int MIN_AGE_FOR_REG = 18;
-
     private final RegistrationService registrationService
             = new RegistrationServiceImpl();
 
