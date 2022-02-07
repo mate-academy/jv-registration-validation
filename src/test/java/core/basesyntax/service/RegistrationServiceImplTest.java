@@ -80,14 +80,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageMoreThenEighteen_Ok() {
-        testedUser.setAge(20);
-        registrationService.register(testedUser);
-        assertTrue(Storage.people.contains(testedUser));
-    }
-
-    @Test
-    void register_ageMoreThanMaxAge_NotOk() {
+    void register_ageMoreThanMaxAge_notOk() {
         testedUser.setAge(561);
         assertThrows(RuntimeException.class, () -> registrationService.register(testedUser));
     }
@@ -100,14 +93,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_withExistedLogin_NotOk() {
+    void register_withExistedLogin_notOk() {
         testedUser.setLogin("admin");
-        registrationService.register(testedUser);
+        Storage.people.add(testedUser);
         assertThrows(RuntimeException.class, () -> registrationService.register(testedUser));
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         testedUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(testedUser));
     }

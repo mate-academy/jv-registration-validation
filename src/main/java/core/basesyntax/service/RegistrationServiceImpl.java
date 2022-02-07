@@ -12,18 +12,34 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RuntimeException("User cannot be null");
-        }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_PASS_LENGTH) {
-            throw new RuntimeException("Password not Ok!");
-        }
-        if (user.getAge() == null || user.getAge() < MIN_AGE || user.getAge() >= MAX_AGE) {
-            throw new RuntimeException("Age not Ok!");
-        }
+        checkUserNotNull(user);
+        checkPassword(user);
+        checkAge(user);
+        checkLogin(user);
+        return storageDao.add(user);
+    }
+
+    private void checkLogin(User user) {
         if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Login not Ok!");
         }
-        return storageDao.add(user);
+    }
+
+    private void checkAge(User user) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE || user.getAge() >= MAX_AGE) {
+            throw new RuntimeException("Age not Ok!");
+        }
+    }
+
+    private void checkPassword(User user) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_PASS_LENGTH) {
+            throw new RuntimeException("Password not Ok!");
+        }
+    }
+
+    private void checkUserNotNull(User user) {
+        if (user == null) {
+            throw new RuntimeException("User cannot be null");
+        }
     }
 }
