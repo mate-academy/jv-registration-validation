@@ -31,10 +31,6 @@ class RegistrationServiceImplTest {
         correctUser.setAge(23);
         correctUser.setLogin("david23");
         correctUser.setPassword("1d2f3h");
-        wrongUser = new User();
-        wrongUser.setAge(15);
-        wrongUser.setLogin("spartak77");
-        wrongUser.setPassword("2326");
     }
 
     @Test
@@ -52,7 +48,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginDuplicate_notOk() {
-        Storage.people.add(correctUser);
+        storageDao.add(correctUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(correctUser);
         });
@@ -60,8 +56,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_age_notOk() {
+        correctUser.setAge(17);
         try {
-            registrationService.register(wrongUser);
+            registrationService.register(correctUser);
         } catch (RuntimeException e) {
             return;
         }
@@ -70,9 +67,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageIsNull_notOk() {
-        wrongUser.setAge(null);
+        correctUser.setAge(null);
         try {
-            registrationService.register(wrongUser);
+            registrationService.register(correctUser);
         } catch (RuntimeException e) {
             return;
         }
@@ -81,8 +78,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_password_notOk() {
+        correctUser.setPassword("1212");
         try {
-            registrationService.register(wrongUser);
+            registrationService.register(correctUser);
         } catch (RuntimeException e) {
             return;
         }
@@ -91,17 +89,17 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_loginNull_notOk() {
-        wrongUser.setLogin(null);
+        correctUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(wrongUser);
+            registrationService.register(correctUser);
         });
     }
 
     @Test
     public void register_passwordNull_notOk() {
-        wrongUser.setPassword(null);
+        correctUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(wrongUser);
+            registrationService.register(correctUser);
         });
     }
 
