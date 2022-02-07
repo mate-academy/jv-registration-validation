@@ -14,16 +14,16 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_PASSWORD = "12345678";
     private static final Integer DEFAULT_AGE = 25;
     private static RegistrationService registrationService;
-    private User testedUser;
+    private static User testedUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        testedUser = new User();
     }
 
     @BeforeEach
     void setUp() {
-        testedUser = new User();
         testedUser.setPassword(DEFAULT_PASSWORD);
         testedUser.setAge(DEFAULT_AGE);
         testedUser.setLogin(DEFAULT_LOGIN);
