@@ -2,13 +2,12 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,6 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User correctUser;
-    private User wrongUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -33,15 +31,19 @@ class RegistrationServiceImplTest {
         correctUser.setPassword("1d2f3h");
     }
 
-    @Test
-    void register_userNull_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(null);
-        });
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void register_Ok() {
+    void register_userNull_notOk() {
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(null));
+    }
+
+    @Test
+    void register_validData_Ok() {
         registrationService.register(correctUser);
         assertEquals(storageDao.get(correctUser.getLogin()), correctUser);
     }
@@ -49,94 +51,70 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginDuplicate_notOk() {
         storageDao.add(correctUser);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(correctUser);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
     void register_age_notOk() {
         correctUser.setAge(17);
-        try {
-            registrationService.register(correctUser);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Runtime exception must be thrown if age less than 18!");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
     void register_ageIsNull_notOk() {
         correctUser.setAge(null);
-        try {
-            registrationService.register(correctUser);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Runtime exception must be thrown if age is Null!");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
-    void register_password_notOk() {
+    void register_shortPassword_notOk() {
         correctUser.setPassword("1212");
-        try {
-            registrationService.register(correctUser);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Runtime exception must be thrown if age less than 18!");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
     public void register_loginNull_notOk() {
         correctUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(correctUser);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
     public void register_passwordNull_notOk() {
         correctUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(correctUser);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
-    void register_passwordEmpty_notOk() {
+    void register_passwordIsEmpty_notOk() {
         correctUser.setPassword("        ");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(correctUser);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
-    void register_loginEmpty_notOk() {
+    void register_loginIsEmpty_notOk() {
         correctUser.setLogin("       ");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(correctUser);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
-    void register_password_has_spaces_notOk() {
+    void register_passwordHasSpaces_notOk() {
         correctUser.setPassword("12  566   77");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(correctUser);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
-    void register_login_has_spaces_notOk() {
+    void register_loginHasSpaces_notOk() {
         correctUser.setLogin("12 4555 aw");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(correctUser);
-        });
-    }
-
-    @AfterAll
-    static void afterAll() {
-        Storage.people.clear();
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(correctUser));
     }
 }
