@@ -60,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUserWithSuchLogin(User user) {
         for (User u : Storage.people) {
-            if (u.getLogin().equals(user.getLogin())) {
+            if (storageDao.get(u.getLogin()).equals(user)) {
                 throw new RuntimeException("User with such login already exists!");
             }
         }
