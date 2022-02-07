@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationServiceImpl;
-    User userTest = new User();
-    private StorageDaoImpl storageDao = new StorageDaoImpl();
-    Storage storage = new Storage();
+    private static StorageDaoImpl storageDao = new StorageDaoImpl();
+    private User userTest;
 
     @BeforeAll
     static void beforeAll() {
@@ -22,11 +20,10 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        User userTest = new User();
+        userTest = new User();
+        userTest.setLogin("userTest");
         userTest.setAge(20);
         userTest.setPassword("123456");
-        userTest.setLogin("userTest");
-        userTest.setId(9l);
     }
 
     @Test
@@ -37,82 +34,73 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginNull_notOk() {
-        userTest.setAge(20);
-        userTest.setPassword("123456");
-        userTest.setLogin(null);
+        User currentUser = userTest;
+        currentUser.setLogin(null);
         assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
+                registrationServiceImpl.register(currentUser));
     }
 
     @Test
     void register_loginEmpty_notOk() {
-        userTest.setAge(20);
-        userTest.setPassword("");
-        userTest.setLogin(null);
+        User currentUser = userTest;
+        currentUser.setLogin("");
         assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
+                registrationServiceImpl.register(currentUser));
+    }
+
+    @Test
+    void register_loginExistsInStorage_notOk() {
+        User currentUser = userTest;
+        currentUser.setLogin("098765");
+        registrationServiceImpl.register(currentUser);
+        assertThrows(RuntimeException.class, () ->
+                registrationServiceImpl.register(currentUser));
     }
 
     @Test
     void register_loginNew_ok() {
-        userTest.setAge(20);
-        userTest.setPassword("123456");
-        userTest.setLogin("userTest");
         User expectedUser = registrationServiceImpl.register(userTest);
         User actualUser = storageDao.get(userTest.getLogin());
         assertEquals(expectedUser, actualUser);
     }
 
     @Test
-    void register_loginExistsInStorage_notOk() {
-        userTest.setAge(20);
-        userTest.setPassword("123456");
-        userTest.setLogin("userTest");
-        registrationServiceImpl.register(userTest);
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
-    }
-
-
-
-    @Test
     void register_ageNull_notOk() {
-        userTest.setAge(null);
+        User currentUser = userTest;
+        currentUser.setAge(null);
         assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
+                registrationServiceImpl.register(currentUser));
     }
 
     @Test
     void register_agePositive_notOk() {
-        userTest.setAge(10);
+        User currentUser = userTest;
+        currentUser.setAge(10);
         assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
+                registrationServiceImpl.register(currentUser));
     }
 
     @Test
     void register_ageNegative_notOk() {
-        userTest.setAge(-10);
+        User currentUser = userTest;
+        currentUser.setAge(-10);
         assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
+                registrationServiceImpl.register(currentUser));
     }
 
     @Test
     void register_passwordNull_notOk() {
-        userTest.setLogin("userTest");
-        userTest.setPassword(null);
+        User currentUser = userTest;
+        currentUser.setPassword(null);
         assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
+                registrationServiceImpl.register(currentUser));
     }
 
     @Test
-    void register_passwordLessThanMin_notOk() {
-        userTest.setLogin("userTest");
-        userTest.setPassword("123");
+    void register_passwordToShort_notOk() {
+        User currentUser = userTest;
+        currentUser.setPassword("12345");
         assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(userTest));
+                registrationServiceImpl.register(currentUser));
     }
-
-
-
-
 }

@@ -32,9 +32,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Oops, your password should be at least " + MIN_PASSWORD_LENGTH
                     + " symbols length");
         }
-
-
         storageDao.add(user);
         return user;
     }
+
+    private User isNotNull(User user) {
+        if (user == null) {
+            throw new RuntimeException("User can`t be null");
+        }
+        return user;
+    }
+
+
 }
