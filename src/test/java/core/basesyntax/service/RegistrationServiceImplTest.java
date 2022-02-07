@@ -1,7 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,8 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private final User registrateFirstUser = new User();
+    private final User registrateNotSameFirstLoginUser = new User();
+    private final StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @BeforeEach
     void setUp() {
@@ -65,4 +69,21 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(registrateFirstUser));
     }
 
+    @Test
+    void register_userSuccessRegistration_Ok() {
+        registrateNotSameFirstLoginUser.setLogin("nafaniaNotSame");
+        registrateNotSameFirstLoginUser.setPassword("youngBob");
+        registrateNotSameFirstLoginUser.setAge(20);
+        storageDao.add(registrateFirstUser);
+        storageDao.add(registrateNotSameFirstLoginUser);
+        assertNotNull(storageDao.get(registrateFirstUser.getLogin()));
+        assertNotNull(storageDao.get(registrateNotSameFirstLoginUser.getLogin()));
+    }
+
+    @Test
+    void register_userWithCurrentLoginAlreadyExist_notOk() {
+        storageDao.add(registrateFirstUser);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(registrateFirstUser));
+    }
 }
