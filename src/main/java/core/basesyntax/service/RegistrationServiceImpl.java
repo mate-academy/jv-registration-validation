@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -16,26 +15,37 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        return storageDao.add(user);
+    }
+
+    private void validateUser(User user) {
         if (Objects.isNull(user)) {
             throw new RuntimeException("User can't be null");
         }
-        if (Objects.isNull(user.getLogin())) {
-            throw new RuntimeException("User login can't be null");
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
+    }
+
+    private void validateLogin(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User login not available");
         }
-        if (user.getLogin().isEmpty()) {
-            throw new RuntimeException("User login can't be empty");
+        if (Objects.isNull(user.getLogin()) || user.getLogin().isEmpty()) {
+            throw new RuntimeException("User login can't be null or empty");
         }
-        if (user.getLogin().length() <= MIN_LENGTH) {
+        if (user.getLogin().length() < MIN_LENGTH) {
             throw new RuntimeException("User login can't be shorter than 6");
         }
         if (PATTERN_WORD_IS_NUMERIC.matcher(user.getLogin()).matches()) {
             throw new RuntimeException("User login can't be only numeric");
         }
-        if (Objects.isNull(user.getPassword())) {
-            throw new RuntimeException("User password can't be null");
-        }
-        if (user.getPassword().isEmpty()) {
-            throw new RuntimeException("User password can't be empty");
+    }
+
+    private void validatePassword(User user) {
+        if (Objects.isNull(user.getPassword()) || user.getPassword().isEmpty()) {
+            throw new RuntimeException("User password can't be null or empty");
         }
         if (PATTERN_WORD_IS_NUMERIC.matcher(user.getPassword()).matches()) {
             throw new RuntimeException("User password can't be only numeric");
@@ -43,20 +53,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() <= MIN_LENGTH) {
             throw new RuntimeException("User password can't be shorter than 6");
         }
+    }
+
+    private void validateAge(User user) {
         if (Objects.isNull(user.getAge())) {
             throw new RuntimeException("User age can't be null");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("User must be at least 18 years old");
+        if (user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
+            throw new RuntimeException("User must be between 18 and 100 years old");
         }
-        if (user.getAge() > MAX_AGE) {
-            throw new RuntimeException("User can't be older than 100 years old");
-        }
-        for (User person : Storage.people) {
-            if (Objects.nonNull(person) && person.getLogin().equals(user.getLogin())) {
-                throw new RuntimeException("User login not available");
-            }
-        }
-        return storageDao.add(user);
     }
 }

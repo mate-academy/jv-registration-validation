@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static RegistrationService registrationService;
     private User validUser;
 
@@ -31,17 +30,12 @@ class RegistrationServiceImplTest {
     void register_validUser_Ok() {
         User registeredUser = registrationService.register(validUser);
         assertEquals(validUser, registeredUser);
-        assertEquals(validUser.getLogin(), registeredUser.getLogin());
-        assertEquals(validUser.getAge(), registeredUser.getAge());
-        assertEquals(validUser.getId(), registeredUser.getId());
-        assertEquals(validUser.getPassword(), registeredUser.getPassword());
     }
 
     @Test
     void register_nullUser_notOk() {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(null), "User can't be null");
-
     }
 
     @Test
@@ -60,7 +54,7 @@ class RegistrationServiceImplTest {
         userWithNullLogin.setLogin(null);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userWithNullLogin),
-                "User login can't be null");
+                "User login can't be null or empty");
     }
 
     @Test
@@ -69,7 +63,7 @@ class RegistrationServiceImplTest {
         userWithEmptyLogin.setLogin("");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userWithEmptyLogin),
-                "User login can't be empty");
+                "User login can't be null or empty");
     }
 
     @Test
@@ -98,7 +92,7 @@ class RegistrationServiceImplTest {
         userWithNullPassword.setPassword(null);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userWithNullPassword),
-                "User password can't be null");
+                "User password can't be null or empty");
     }
 
     @Test
@@ -108,7 +102,7 @@ class RegistrationServiceImplTest {
         userWithEmptyPassword.setPassword("");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userWithEmptyPassword),
-                "User password can't be empty");
+                "User password can't be null or empty");
     }
 
     @Test
@@ -145,10 +139,10 @@ class RegistrationServiceImplTest {
     void register_tooYoungUser_notOk() {
         User tooYoungUser = validUser;
         tooYoungUser.setLogin("login7");
-        tooYoungUser.setAge(-3);
+        tooYoungUser.setAge(17);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(tooYoungUser),
-                "User must be at least 18 years old");
+                "User must be between 18 and 100 years old");
     }
 
     @Test
@@ -158,6 +152,6 @@ class RegistrationServiceImplTest {
         tooOldUser.setAge(300);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(tooOldUser),
-                "User can't be older than 100 years old");
+                "User must be between 18 and 100 years old");
     }
 }
