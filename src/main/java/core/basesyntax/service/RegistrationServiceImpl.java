@@ -10,16 +10,28 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Sorry, this login already exit");
+        checkLogin(user.getLogin());
+        checkAge(user.getAge());
+        checkPassword(user.getPassword());
+        return storageDao.add(user);
+    }
+
+    private void checkPassword(String password) {
+        if (password.length() < REQUIRE_PASSWORD_MIN_LENGTH) {
+            throw new RuntimeException(
+                    "Sorry, your password is too small." + password.length());
         }
-        if (user.getAge() < REQUIRE_MIN_AGE) {
+    }
+
+    private void checkAge(int age) {
+        if (age < REQUIRE_MIN_AGE) {
             throw new RuntimeException("Sorry, age should be the same 18 y. old.");
         }
-        if (user.getPassword().length() < REQUIRE_PASSWORD_MIN_LENGTH) {
-            throw new RuntimeException(
-                    "Sorry, your password is too small." + user.getPassword().length());
+    }
+
+    private void checkLogin(String login) {
+        if (storageDao.get(login) != null) {
+            throw new RuntimeException("Sorry, this login already exit");
         }
-        return storageDao.add(user);
     }
 }
