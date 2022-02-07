@@ -67,7 +67,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithCurrentLoginAlreadyExist_notSuccess() {
+    void register_userWithCurrentLoginAlreadyExist_notOk() {
+
         registrateSameToFirstLoginUser.setLogin("nafania");
         registrateSameToFirstLoginUser.setPassword("youngBob");
         registrateSameToFirstLoginUser.setAge(20);
