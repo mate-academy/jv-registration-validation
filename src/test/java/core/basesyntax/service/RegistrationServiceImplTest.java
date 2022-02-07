@@ -11,20 +11,15 @@ class RegistrationServiceImplTest {
     private RegistrationService registrationService = new RegistrationServiceImpl();
     private StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user = new User();
-    private User user1 = new User();
-    private User user2 = new User();
+    private User userWithTheSameLogin1 = new User();
+    private User userWithTheSameLogin2 = new User();
 
     @BeforeEach
     void setUp() {
         user.setLogin("login");
         user.setPassword("password");
         user.setAge(18);
-        user1.setLogin("login1");
-        user1.setPassword("somepassword");
-        user1.setAge(18);
-        user2.setLogin("login1");
-        user2.setPassword("anotherpassword");
-        user2.setAge(25);
+
     }
 
     @Test
@@ -52,14 +47,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_negativeAge_notOk() {
-        user.setAge(-18);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
     void register_moreThanHundredAge_notOk() {
         user.setAge(101);
         assertThrows(RuntimeException.class, () -> {
@@ -77,9 +64,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_theSameLoginInStorage_notOk() {
-        storageDao.add(user1);
+        userWithTheSameLogin1.setLogin("login1");
+        userWithTheSameLogin1.setPassword("somepassword");
+        userWithTheSameLogin1.setAge(18);
+        userWithTheSameLogin2.setLogin("login1");
+        userWithTheSameLogin2.setPassword("anotherpassword");
+        userWithTheSameLogin2.setAge(25);
+        storageDao.add(userWithTheSameLogin1);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(userWithTheSameLogin2);
         });
     }
 }
