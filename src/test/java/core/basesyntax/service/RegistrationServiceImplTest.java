@@ -64,5 +64,4 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(registrateFirstUser));
     }
-
 }
