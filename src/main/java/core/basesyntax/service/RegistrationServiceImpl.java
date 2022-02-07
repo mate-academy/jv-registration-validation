@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -59,10 +58,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkUserWithSuchLogin(User user) {
-        for (User u : Storage.people) {
-            if (storageDao.get(u.getLogin()).equals(user)) {
-                throw new RuntimeException("User with such login already exists!");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with such login already exists!");
         }
     }
 }
