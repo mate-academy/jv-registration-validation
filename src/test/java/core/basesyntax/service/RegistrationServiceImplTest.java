@@ -19,7 +19,6 @@ class RegistrationServiceImplTest {
         user.setLogin("login");
         user.setPassword("password");
         user.setAge(18);
-
     }
 
     @Test
@@ -71,8 +70,8 @@ class RegistrationServiceImplTest {
         userWithTheSameLogin2.setPassword("anotherpassword");
         userWithTheSameLogin2.setAge(25);
         storageDao.add(userWithTheSameLogin1);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userWithTheSameLogin2);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(userWithTheSameLogin2)
+        );
     }
 }
