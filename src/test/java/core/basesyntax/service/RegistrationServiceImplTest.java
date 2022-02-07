@@ -32,54 +32,48 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validLogin_Ok() {
+    void register_validLogin_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void register_invalidLogin_NotOk() {
+    void register_invalidLogin_notOk() {
         user.setPassword("short");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_invalidAge_NotOk() {
+    void register_invalidAge_notOk() {
         user.setAge(LOWER_THAN_RECOMMENDED_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_userNegativeAge_NotOk() {
-        user.setAge(-MIN_AGE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_userAlreadyExists_NotOk() {
+    void register_userAlreadyExists_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullUser_NotOk() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_nullUserLogin_NotOk() {
+    void register_nullUserLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullUserPassword_NotOk() {
+    void register_nullUserPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullUserAge_NotOk() {
+    void register_nullUserAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
