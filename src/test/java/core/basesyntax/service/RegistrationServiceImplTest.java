@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private final StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user;
 
     @BeforeAll
@@ -75,7 +77,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existLogin_notOk() {
-        registrationService.register(user);
+        storageDao.add(user);
         User newUser = new User();
         newUser.setLogin(user.getLogin());
         newUser.setAge(18);
