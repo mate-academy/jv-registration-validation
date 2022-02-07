@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_allDataValid_Ok() {
+    void register_allDataValid_ok() {
         registrationService.register(testedUser);
         assertTrue(Storage.people.contains(testedUser));
     }
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_normalPassword_Ok() {
+    void register_normalPassword_ok() {
         testedUser.setPassword("12345678");
         registrationService.register(testedUser);
         assertTrue(Storage.people.contains(testedUser));
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLowerEighteen() {
+    void register_ageLowerEighteen_notOk() {
         testedUser.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(testedUser));
     }
@@ -73,7 +73,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_normalAge_Ok() {
+    void register_normalAge_ok() {
         testedUser.setAge(37);
         registrationService.register(testedUser);
         assertTrue(Storage.people.contains(testedUser));
@@ -86,7 +86,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_normalLogin_Ok() {
+    void register_normalLogin_ok() {
         testedUser.setLogin("Alucard");
         registrationService.register(testedUser);
         assertTrue(Storage.people.contains(testedUser));
