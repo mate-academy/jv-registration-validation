@@ -5,19 +5,18 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final int LOWEST_AGE_THRESHOLD = 18;
-    public static final int HIGHEST_AGE_THRESHOLD = 125;
-    public static final int SHORTEST_PASSWORD_LENGTH = 6;
-    private StorageDao storageDao;
+    private static final int LOWEST_AGE_THRESHOLD = 18;
+    private static final int HIGHEST_AGE_THRESHOLD = 125;
+    private static final int SHORTEST_PASSWORD_LENGTH = 6;
 
     @Override
     public User register(User user) {
-        storageDao = new StorageDaoImpl();
         isNull(user.getAge(), "Enter your age");
         isNull(user.getPassword(), "Enter your password, please!");
         isNull(user.getLogin(), "Enter your login");
         isAgeValid(user.getAge());
-        isPasswordValid(user, user.getPassword());
+        isPasswordValid(user);
+        StorageDao storageDao = new StorageDaoImpl();
         if (storageDao.get(user.getLogin()) == null) {
             return storageDao.add(user);
         }
@@ -37,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void isPasswordValid(User user, String password) {
+    public void isPasswordValid(User user) {
         if (user.getPassword().length() < SHORTEST_PASSWORD_LENGTH) {
             throw new RuntimeException("Your password is too short.");
         }

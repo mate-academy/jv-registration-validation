@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int VALID_AGE = 45;
-    private static final int INVALID_AGE1 = 15;
-    private static final int INVALID_AGE2 = 180;
+    private static final int INVALID_AGE1 = 17;
+    private static final int INVALID_AGE2 = 126;
     private static final String VALID_PASSWORD = "qwerty";
     private static final String INVALID_PASSWORD = "1234";
     private static final String LOGIN = "login";
@@ -84,10 +84,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAlreadyExist_notOk() {
-        User userClone = userBob;
         registrationService.register(userBob);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(userClone)
+                () -> registrationService.register(userBob)
         );
     }
 }
