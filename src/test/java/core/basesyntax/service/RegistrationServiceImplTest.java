@@ -24,41 +24,41 @@ class RegistrationServiceImplTest {
     @Test
     void register_lessThanSixCharactersInPassword_notOk() {
         user.setPassword("12345");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
     void register_nullInPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
     void register_lessThanEighteenAge_notOk() {
         user.setAge(17);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
     void register_moreThanHundredAge_notOk() {
         user.setAge(101);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
     void register_nullInLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
