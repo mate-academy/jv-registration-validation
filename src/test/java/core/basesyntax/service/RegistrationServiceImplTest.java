@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private User goodUser = new User();
 
