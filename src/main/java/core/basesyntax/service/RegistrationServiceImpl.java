@@ -10,27 +10,51 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new RuntimeException("Login can't be null");
-        }
-        if (user.getAge() == null) {
-            throw new RuntimeException("Age can't be null");
-        }
-        if (user.getAge() < MIN_USER_AGE) {
-            throw new RuntimeException("Age is less then " + MIN_USER_AGE);
-        }
-        if (user.getPassword() == null) {
-            throw new RuntimeException("Password can't be null");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password is less then "
-                    + MIN_PASSWORD_LENGTH + " symbols");
-        }
+        userNullCheck(user);
+        ageNullCheck(user);
+        minAgeCheck(user);
+        passwordNullCheck(user);
+        passwordLengthCheck(user);
+        sameLoginCheck(user);
+        return storageDao.add(user);
+    }
+
+    private void sameLoginCheck(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with login ["
                     + user.getLogin()
                     + "] already exist!");
         }
-        return storageDao.add(user);
+    }
+
+    private void passwordLengthCheck(User user) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("Password is less then "
+                    + MIN_PASSWORD_LENGTH + " symbols");
+        }
+    }
+
+    private void passwordNullCheck(User user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Password can't be null");
+        }
+    }
+
+    private void minAgeCheck(User user) {
+        if (user.getAge() < MIN_USER_AGE) {
+            throw new RuntimeException("Age is less then " + MIN_USER_AGE);
+        }
+    }
+
+    private void ageNullCheck(User user) {
+        if (user.getAge() == null) {
+            throw new RuntimeException("Age can't be null");
+        }
+    }
+
+    private void userNullCheck(User user) {
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Login can't be null");
+        }
     }
 }
