@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -12,9 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int MIN_AGE = 18;
-    public static final int LOWER_THAN_RECOMMENDED_AGE = 10;
+    public static final int LOWER_THAN_RECOMMENDED_AGE = 17;
     public static final String USER_LOGIN = "user";
     public static final String VALID_PASSWORD = "validPassword";
     private static RegistrationService registrationService;
@@ -34,20 +32,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidLogin_Ok() {
+    void register_validLogin_Ok() {
         User actual = registrationService.register(user);
-        assertTrue(actual.getPassword().length() >= MIN_PASSWORD_LENGTH);
+        assertEquals(user, actual);
     }
 
     @Test
     void register_invalidLogin_NotOk() {
         user.setPassword("short");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_ValidAge_Ok() {
-        assertEquals(MIN_AGE, registrationService.register(user).getAge());
     }
 
     @Test
