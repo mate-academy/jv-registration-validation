@@ -47,58 +47,44 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOK() {
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(null);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(null));
     }
 
     @Test
     void register_idNotNull_notOK() {
         User userIdNotNull = defaultUser;
         userIdNotNull.setId(1L);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userIdNotNull);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userIdNotNull));
     }
 
     @Test
     void register_NullLogin_notOK() {
         User userWithNullLogin = defaultUser;
         userWithNullLogin.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithNullLogin);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithNullLogin));
     }
 
     @Test
     void register_NullPassword_notOK() {
         User userWithNullPassword = defaultUser;
         userWithNullPassword.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithNullPassword);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithNullPassword));
     }
 
     @Test
     void register_NullAge_notOK() {
         User userWithNullAge = defaultUser;
         userWithNullAge.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithNullAge);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithNullAge));
     }
 
     @Test
     void register_WrongAge_notOK() {
         User userWrongAge = defaultUser;
         userWrongAge.setAge(WRONG_AGE1);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWrongAge);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWrongAge));
         userWrongAge.setAge(WRONG_AGE2);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWrongAge);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWrongAge));
 
     }
 
@@ -108,18 +94,14 @@ class RegistrationServiceImplTest {
         User sameLogin = defaultUser;
         sameLogin.setPassword(OTHER_PASSWORD);
         sameLogin.setAge(OTHER_AGE);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(sameLogin);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(sameLogin));
     }
 
     @Test
     void register_shortPassword_notOK() {
         User userPasswordIsWrong = defaultUser;
         userPasswordIsWrong.setPassword(WRONG_PASSWORD);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userPasswordIsWrong);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userPasswordIsWrong));
     }
 
     @AfterEach
