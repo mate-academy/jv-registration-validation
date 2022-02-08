@@ -20,8 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkIsLoginValid(user);
         checkIsPasswordValid(user);
         checkIsAgeValid(user);
-        storage.add(user);
-        return storage.get(user.getLogin());
+        return storage.add(user);
     }
 
     private void checkIsUserValid(User user) {
