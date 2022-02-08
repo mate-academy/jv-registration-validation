@@ -5,8 +5,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final int MIN_PASSWORD_LENGTH = 6;
-    private final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @Override
@@ -17,13 +17,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Sorry, password to short minimal length is " + MIN_PASSWORD_LENGTH);
+            throw new RuntimeException("Sorry, password to short minimal length is "
+                    + MIN_PASSWORD_LENGTH);
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Sorry, \n" +
-                    "your age must be at least required to register" + MIN_AGE + " years old");
+            throw new RuntimeException("Sorry, \n"
+                    + "your age must be at least required to register"
+                    + MIN_AGE + " years old");
         }
         return storageDao.add(user);
-        }
     }
-
+}

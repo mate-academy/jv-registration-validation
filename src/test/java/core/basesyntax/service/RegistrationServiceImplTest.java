@@ -13,16 +13,16 @@ class RegistrationServiceImplTest {
     private User userGoodPassword = new User();
     private User userGoodAge = new User();
 
-  @BeforeEach
+    @BeforeEach
     public void setUp() {
-      userLogin.setLogin("user123");
-      userGoodAge.setAge(18);
-      userGoodPassword.setPassword("123456");
-  }
+        userLogin.setLogin("user123");
+        userGoodAge.setAge(18);
+        userGoodPassword.setPassword("123456");
+    }
 
-  @AfterEach
-  public void cleanDataBase() {
-      Storage.people.clear();
+    @AfterEach
+    public void cleanDataBase() {
+        Storage.people.clear();
     }
 
     @Test
@@ -37,13 +37,13 @@ class RegistrationServiceImplTest {
         User testUser = userGoodPassword;
         testUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
-  }
+    }
 
     @Test
     void register_userWithNullPassword_notOk() {
-      User testUser = userGoodPassword;
-      testUser.setPassword(null);
-      assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+        User testUser = userGoodPassword;
+        testUser.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
         User testUser = userGoodAge;
         testUser.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
-  }
+    }
 
     @Test
     void register_userWithNullAgeValue_notOk() {
@@ -70,5 +70,4 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(testUser));
     }
-
 }
