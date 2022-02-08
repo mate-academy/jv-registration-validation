@@ -11,20 +11,39 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
-            throw new RuntimeException("You can't register a user with any null parameters!");
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("You can't register a user under the age of 18!");
-        }
-        if (isUserExist(user)) {
-            throw new RuntimeException("User with login:" + user.getLogin() + " is already exist.");
-        }
+        checkUserNullFields(user);
+        checkInvalidAge(user);
+        checkUserExist(user);
+        storageDao.add(user);
+        return user;
+    }
+
+    private boolean checkValidPass(User user) {
         if (user.getPassword().length() < MIN_PASS_LENGTH) {
             throw new RuntimeException("User password must be at least 6 characters.");
         }
-        storageDao.add(user);
-        return user;
+        return true;
+    }
+
+    private boolean checkUserExist(User user) {
+        if (isUserExist(user)) {
+            throw new RuntimeException("User with login:" + user.getLogin() + " is already exist.");
+        }
+        return true;
+    }
+
+    private boolean checkInvalidAge(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("You can't register a user under the age of 18!");
+        }
+        return true;
+    }
+
+    private boolean checkUserNullFields (User user) {
+        if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
+            throw new RuntimeException("You can't register a user with any null parameters!");
+        }
+        return true;
     }
 
     private boolean isUserExist(User user) {
