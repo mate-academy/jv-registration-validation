@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.db.Storage;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User user;
@@ -32,102 +31,63 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserIsNull_NotOk() {
-        try {
-            registrationService.register(null);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail();
+    void register_userIsNull_notOk() {
+        user = null;
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-        void register_UserIsLess18_NotOk() {
-        user.setAge(15);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail();
+        void register_userIsLess18_notOk() {
+        user.setAge(17);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-  void register_PasswordIsLess6Letters_NotOk() {
+  void register_passwordIsLess6Letters_notOk() {
         user.setPassword("12345");
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail();
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-  void register_AddExistingLoginUser_NotOk() {
+  void register_addExistingLoginUser_notOk() {
         Storage.people.add(user);
         user.setLogin("Alice");
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail();
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-  void register_AddExistingLoginUserUpperCase_NotOk() {
+  void register_addExistingLoginUserUpperCase_notOk() {
         Storage.people.add(user);
-        user.setLogin("aLICe");
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail();
+        user.setLogin("aLLice");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-  void registerAdd_CorrectInput_Ok() {
+  void registerAdd_correctInput_ok() {
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
-  void register_LoginValueIsNull_NotOK() {
+  void register_loginValueIsNull_notOK() {
         user.setLogin(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail();
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-  void register_AgeIsNull_NotOk() {
+  void register_ageIsNull_notOk() {
         user.setAge(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail();
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-  void register_UserNegativeAge_NotOk() {
+  void register_userNegativeAge_notOk() {
         user.setAge(-26);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("User age can not be negative");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-  void register_UserAgeOver18_Ok() {
+  void register_userAgeOver18_ok() {
         user.setAge(39);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
