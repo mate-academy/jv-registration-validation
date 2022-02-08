@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -8,8 +12,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "valid@gmail.com";
@@ -111,10 +113,12 @@ class RegistrationServiceImplTest {
     void register_invalidPassword_notOk() {
         User invalidPasswordUser = user;
         invalidPasswordUser.setPassword(EMPTY_DATA);
-        assertThrows(RuntimeException.class, () -> registrationService.register(invalidPasswordUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(invalidPasswordUser));
 
         invalidPasswordUser.setPassword(INVALID_PASSWORD);
-        assertThrows(RuntimeException.class, () -> registrationService.register(invalidPasswordUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(invalidPasswordUser));
     }
 
     @Test
