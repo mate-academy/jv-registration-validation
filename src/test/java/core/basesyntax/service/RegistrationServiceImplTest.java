@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addExistUser_NotOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         User user2 = user;
         assertThrows(RuntimeException.class, () -> registrationService.register(user2));
     }

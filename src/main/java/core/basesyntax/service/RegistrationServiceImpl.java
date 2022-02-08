@@ -7,10 +7,10 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     static final int MIN_AGE = 18;
     static final int MIN_PASSWORD_LENGTH = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        StorageDao storageDao = new StorageDaoImpl();
         if (dataIsNull(user)) {
             throw new RuntimeException("Invalid data! User and user's fields should be not null.");
         }
