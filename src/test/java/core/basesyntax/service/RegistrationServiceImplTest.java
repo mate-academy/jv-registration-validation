@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,8 +20,13 @@ class RegistrationServiceImplTest {
       userGoodPassword.setPassword("123456");
   }
 
+  @AfterEach
+  public void cleanDataBase() {
+      Storage.people.clear();
+    }
+
     @Test
-    public void registerUser_Ok() {
+    public void register_User_ok() {
         User excepted = userLogin;
         User testUser = registrationService.register(excepted);
         assertEquals(excepted, testUser, "Please enter another login");
@@ -34,20 +40,35 @@ class RegistrationServiceImplTest {
   }
 
     @Test
+    void register_userWithNullPassword_notOk() {
+      User testUser = userGoodPassword;
+      testUser.setPassword(null);
+      assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
     void register_userBadAge_notOk() {
         User testUser = userGoodAge;
-        testUser.setAge(15);
+        testUser.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
   }
 
     @Test
+    void register_userWithNullAgeValue_notOk() {
+        User testUser = userGoodAge;
+        testUser.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
     public void register_userLoginAlreadyExit_notOk() {
+        Storage.people.add(userLogin);
         User testUser = new User();
         testUser.setLogin(userLogin.getLogin());
         testUser.setPassword("123456");
         testUser.setAge(18);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(testUser);
+                () -> registrationService.register(testUser));
     }
 
 }
