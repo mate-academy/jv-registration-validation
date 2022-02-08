@@ -1,11 +1,14 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     public static final int MINIMUM_PASSWORD_LENGTH = 6;
     public static final int MINIMUM_USER_AGE = 18;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -29,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         } else {
             throw new RuntimeException("Login is null");
         }
-        Storage.people.add(user);
+        storageDao.add(user);
         return user;
     }
 }
