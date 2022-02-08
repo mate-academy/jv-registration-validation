@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static Storage storage;
-    private User user1;
-    private User user2;
+    private User userForTest1;
+    private User userForTest2;
 
     @BeforeAll
     static void beforeAll() {
@@ -24,15 +24,15 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new User();
-        user1.setLogin("Use1_Name");
-        user1.setPassword("password1");
-        user1.setAge(20);
+        userForTest1 = new User();
+        userForTest1.setLogin("Use1_Name");
+        userForTest1.setPassword("password1");
+        userForTest1.setAge(20);
 
-        user2 = new User();
-        user2.setLogin("User2_Name");
-        user2.setPassword("password2");
-        user2.setAge(21);
+        userForTest2 = new User();
+        userForTest2.setLogin("User2_Name");
+        userForTest2.setPassword("password2");
+        userForTest2.setAge(21);
     }
 
     @AfterEach
@@ -41,62 +41,62 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void putNullUse_Not_Ok() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void putNullLogin_Not_Ok() {
-        user1.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void checkLogin_nullLogin_notOk() {
+        userForTest1.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForTest1));
     }
 
     @Test
-    void putNonUniqueLogin_Not_Ok() {
-        user2.setLogin(user1.getLogin());
-        storage.people.add(user1);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user2));
+    void checkLogin_nonUniqueLogin_notOk() {
+        userForTest2.setLogin(userForTest1.getLogin());
+        storage.people.add(userForTest1);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForTest2));
     }
 
     @Test
-    void putNullPassword_Not_Ok() {
-        user1.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void checkPassword_nullPassword_notOk() {
+        userForTest1.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForTest1));
     }
 
     @Test
-    void putPasswordNotValidLength_Not_Ok() {
-        user1.setPassword("test");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void checkPassword_shortPassword_notOk() {
+        userForTest1.setPassword("test");
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForTest1));
     }
 
     @Test
-    void putAgeNull_Not_Ok() {
-        user1.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void checkAge_ageNull_notOk() {
+        userForTest1.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForTest1));
     }
 
     @Test
-    void putUserWithSmallAge_Not_Ok() {
-        user1.setAge(11);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void checkAge_smallAge_notOk() {
+        userForTest1.setAge(17);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForTest1));
     }
 
     @Test
-    void putUserWithBigAge_Ok() {
-        user1.setAge(111);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    void checkAge_bigAge_notOk() {
+        userForTest1.setAge(101);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userForTest1));
     }
 
     @Test
-    void conteinsUser_Ok() {
-        assertEquals(user1,registrationService.register(user1));
+    void register_conteinsUser_Ok() {
+        assertEquals(userForTest1,registrationService.register(userForTest1));
     }
 
     @Test
-    void checkSize_Ok() {
-        registrationService.register(user1);
-        registrationService.register(user2);
+    void size_checkSize_Ok() {
+        registrationService.register(userForTest1);
+        registrationService.register(userForTest2);
         assertEquals(2,storage.people.size());
     }
 }
