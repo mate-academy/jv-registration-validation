@@ -5,15 +5,16 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
     private static final int MIN_PASS_LENGTH = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         checkUserNullFields(user);
         checkInvalidAge(user);
         checkUserExist(user);
+        checkValidPass(user);
         storageDao.add(user);
         return user;
     }
@@ -39,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return true;
     }
 
-    private boolean checkUserNullFields (User user) {
+    private boolean checkUserNullFields(User user) {
         if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
             throw new RuntimeException("You can't register a user with any null parameters!");
         }
