@@ -13,6 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         notNullValidate(user);
         loginValidate(user);
         ageValidate(user);
+        passwordValidate(user);
         storageDao.add(user);
         return user;
     }
@@ -42,6 +43,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         } else if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Oops, user`s minimum age should be at least 18 years");
         }
+        return user;
+    }
+
+    private User passwordValidate(User user) {
         if (user.getPassword() == null) {
             throw new RuntimeException("Oops, your password should not be null");
         } else if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {

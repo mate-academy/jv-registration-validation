@@ -10,8 +10,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int APPROPRIATE_AGE = 20;
+    private static final int NOT_APPROPRIATE_AGE_ONE = 17;
+    private static final int NOT_APPROPRIATE_AGE_TWO = -10;
+    private static final String APPROPRIATE_LOGIN_ONE = "userTest";
+    private static final String APPROPRIATE_LOGIN_TWO = "userTestTwo";
+    private static final String APPROPRIATE_PASSWORD = "123456";
+    private static final String NOT_APPROPRIATE_PASSWORD = "12345";
     private static RegistrationServiceImpl registrationServiceImpl;
-    private static StorageDaoImpl storageDao = new StorageDaoImpl();
+    private static final StorageDaoImpl storageDao = new StorageDaoImpl();
     private User userTest;
 
     @BeforeAll
@@ -22,40 +29,38 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         userTest = new User();
-        userTest.setLogin("userTest");
-        userTest.setAge(20);
-        userTest.setPassword("123456");
+        userTest.setLogin(APPROPRIATE_LOGIN_ONE);
+        userTest.setAge(APPROPRIATE_AGE);
+        userTest.setPassword(APPROPRIATE_PASSWORD);
     }
 
     @Test
     void register_userNull_notOk() {
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(null));
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(null));
     }
 
     @Test
     void register_loginNull_notOk() {
-        User currentUser = userTest;
-        currentUser.setLogin(null);
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        userTest.setLogin(null);
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(userTest));
     }
 
     @Test
     void register_loginEmpty_notOk() {
-        User currentUser = userTest;
-        currentUser.setLogin("");
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        userTest.setLogin("");
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(userTest));
     }
 
     @Test
     void register_loginExistsInStorage_notOk() {
         User currentUser = userTest;
-        currentUser.setLogin("098765");
+        currentUser.setLogin(APPROPRIATE_LOGIN_TWO);
         registrationServiceImpl.register(currentUser);
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(currentUser));
     }
 
     @Test
@@ -67,41 +72,36 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageNull_notOk() {
-        User currentUser = userTest;
-        currentUser.setAge(null);
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        userTest.setAge(null);
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(userTest));
     }
 
     @Test
     void register_agePositive_notOk() {
-        User currentUser = userTest;
-        currentUser.setAge(10);
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        userTest.setAge(NOT_APPROPRIATE_AGE_ONE);
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(userTest));
     }
 
     @Test
     void register_ageNegative_notOk() {
-        User currentUser = userTest;
-        currentUser.setAge(-10);
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        userTest.setAge(NOT_APPROPRIATE_AGE_TWO);
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(userTest));
     }
 
     @Test
     void register_passwordNull_notOk() {
-        User currentUser = userTest;
-        currentUser.setPassword(null);
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        userTest.setPassword(null);
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(userTest));
     }
 
     @Test
     void register_passwordToShort_notOk() {
-        User currentUser = userTest;
-        currentUser.setPassword("12345");
-        assertThrows(RuntimeException.class, () ->
-                registrationServiceImpl.register(currentUser));
+        userTest.setPassword(NOT_APPROPRIATE_PASSWORD);
+        assertThrows(RuntimeException.class,
+                () -> registrationServiceImpl.register(userTest));
     }
 }
