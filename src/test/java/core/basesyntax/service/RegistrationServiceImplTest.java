@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,11 +13,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -28,14 +32,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullUser_notOk() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         }, "When User is null, the method should throw RuntimeException");
     }
 
     @Test
-    void registerUserWithNullLogin_notOk() {
+    void register_userWithNullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -43,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNullPassword_notOk() {
+    void register_userWithNullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -51,7 +55,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNullAge_notOk() {
+    void register_userWithNullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -59,7 +63,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidUser_Ok() {
+    void register_validUser_ok() {
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual, "Test failed! Method should return registered user");
@@ -69,15 +73,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerTheSameUser_notOk() {
-        registrationService.register(user);
+    void register_theSameUser_notOk() {
+        storageDao.add(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         }, "When user already registered, the method should throw RuntimeException");
     }
 
     @Test
-    void registerUserWithNotValidPassword_notOk() {
+    void register_userWithNotValidPassword_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -89,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNotValidAge_notOk() {
+    void register_userWithNotValidAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
