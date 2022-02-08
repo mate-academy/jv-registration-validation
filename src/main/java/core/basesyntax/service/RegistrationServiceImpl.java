@@ -18,11 +18,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    private User notNullValidate(User user) {
+    private boolean notNullValidate(User user) {
         if (user == null) {
             throw new RuntimeException("User can`t be null");
         }
-        return user;
+        return true;
     }
 
     private User loginValidate(User user) {
