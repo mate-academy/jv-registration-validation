@@ -73,7 +73,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_exitingLogin_notOk() {
+    void register_existingLogin_notOk() {
         service.register(testUser);
         User user = new User();
         user.setLogin("Nazarii");
