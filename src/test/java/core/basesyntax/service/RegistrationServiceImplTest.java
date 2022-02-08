@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
     @Test
     void putNonUniqueLogin_Not_Ok() {
         user2.setLogin(user1.getLogin());
-        registrationService.register(user1);
+        storage.people.add(user1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user2));
     }
 
@@ -77,20 +77,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void putUserWithNotValidAge_Not_Ok() {
+    void putUserWithSmallAge_Not_Ok() {
         user1.setAge(11);
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+    }
+
+    @Test
+    void putUserWithBigAge_Ok() {
         user1.setAge(111);
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
     }
 
     @Test
-    void conteinsUser() {
+    void conteinsUser_Ok() {
         assertEquals(user1,registrationService.register(user1));
     }
 
     @Test
-    void checkSize() {
+    void checkSize_Ok() {
         registrationService.register(user1);
         registrationService.register(user2);
         assertEquals(2,storage.people.size());
