@@ -12,9 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private User user = new User();
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao = new StorageDaoImpl();
+    private final User user = new User();
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeEach
     void setUp() {
@@ -26,14 +26,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_validUser_ok() {
         registrationService.register(user);
-        User expected = user;
-        User actual = storageDao.get(user.getLogin());
-        assertEquals(expected, actual);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    @Test
+    void register_successfulAddingNewUser_ok() {
+        int startSize = Storage.people.size();
+        registrationService.register(user);
+        assertEquals(startSize + 1, Storage.people.size());
     }
 
     @Test
@@ -71,5 +76,4 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
-
 }
