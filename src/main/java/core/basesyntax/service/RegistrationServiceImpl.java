@@ -7,6 +7,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_VALID_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -14,7 +15,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkExistingUsers(user);
         checkAge(user);
         checkPassword(user);
-        StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
         return user;
     }
@@ -26,7 +26,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkExistingUsers(User user) {
-        StorageDao storageDao = new StorageDaoImpl();
         if (storageDao.get(user.getLogin()) != null
                 && storageDao.get(user.getLogin()).equals(user)) {
             throw new RuntimeException("User already registered");
