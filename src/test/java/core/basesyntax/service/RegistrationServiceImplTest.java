@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,9 +31,14 @@ class RegistrationServiceImplTest {
         assertEquals(expected, actual);
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
     void register_userLoginAlreadyExist_notOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
