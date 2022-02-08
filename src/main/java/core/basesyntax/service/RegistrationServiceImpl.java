@@ -8,6 +8,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int LOWEST_AGE_THRESHOLD = 18;
     private static final int HIGHEST_AGE_THRESHOLD = 125;
     private static final int SHORTEST_PASSWORD_LENGTH = 6;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -16,7 +17,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         isNull(user.getLogin(), "Enter your login");
         isAgeValid(user.getAge());
         isPasswordValid(user);
-        StorageDao storageDao = new StorageDaoImpl();
         if (storageDao.get(user.getLogin()) == null) {
             return storageDao.add(user);
         }
