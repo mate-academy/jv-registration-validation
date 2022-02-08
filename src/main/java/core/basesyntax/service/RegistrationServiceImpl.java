@@ -32,7 +32,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         } else {
             throw new RuntimeException("Login is null");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
