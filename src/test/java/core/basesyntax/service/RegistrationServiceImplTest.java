@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -21,7 +20,6 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -67,7 +65,7 @@ class RegistrationServiceImplTest {
 
     @Test
   void register_AddExistingLoginUser_NotOk() {
-        storageDao.add(user);
+        Storage.people.add(user);
         user.setLogin("Alice");
         try {
             registrationService.register(user);
@@ -79,7 +77,7 @@ class RegistrationServiceImplTest {
 
     @Test
   void register_AddExistingLoginUserUpperCase_NotOk() {
-        storageDao.add(user);
+        Storage.people.add(user);
         user.setLogin("aLICe");
         try {
             registrationService.register(user);
