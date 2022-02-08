@@ -75,7 +75,6 @@ class RegistrationServiceImplTest {
         registrateNotSameFirstLoginUser.setPassword("youngBob");
         registrateNotSameFirstLoginUser.setAge(20);
         registrationService.register(registrateNotSameFirstLoginUser);
-        assertNotNull(storageDao.get(registrateFirstUser.getLogin()));
         assertNotNull(storageDao.get(registrateNotSameFirstLoginUser.getLogin()));
     }
 
