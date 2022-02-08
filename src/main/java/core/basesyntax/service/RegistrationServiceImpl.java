@@ -23,8 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Your age is below the legal limit.");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private boolean dataIsNull(User user) {
