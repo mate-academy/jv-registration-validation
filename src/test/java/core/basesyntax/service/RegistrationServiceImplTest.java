@@ -17,6 +17,7 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "valid@gmail.com";
     private static final String VALID_PASSWORD = "valid_password";
     private static final Integer MIN_REGISTRATION_AGE = 18;
+    private static final Integer MAX_REGISTRATION_AGE = 100;
     private static final String INVALID_PASSWORD = "test1";
     private static final String EMPTY_DATA = " ";
 
@@ -73,7 +74,8 @@ class RegistrationServiceImplTest {
         userWithSameLogin.setAge(MIN_REGISTRATION_AGE);
         userWithSameLogin.setPassword(VALID_PASSWORD);
 
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWithSameLogin));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(userWithSameLogin));
         assertEquals(1, Storage.people.size());
     }
 
@@ -82,31 +84,36 @@ class RegistrationServiceImplTest {
         StorageDao storage = new StorageDaoImpl();
         User sameUser = user;
         storage.add(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(sameUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(sameUser));
     }
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
     void register_emptyUser_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(new User()));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(new User()));
     }
 
     @Test
     void register_invalidLogin_notOk() {
         User invalidLoginUser = user;
         invalidLoginUser.setLogin(EMPTY_DATA);
-        assertThrows(RuntimeException.class, () -> registrationService.register(invalidLoginUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(invalidLoginUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
         User nullLoginUser = user;
         nullLoginUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullLoginUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(nullLoginUser));
     }
 
     @Test
@@ -125,24 +132,28 @@ class RegistrationServiceImplTest {
     void register_nullPassword_notOk() {
         User nullPasswordUser = user;
         nullPasswordUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullPasswordUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(nullPasswordUser));
     }
 
     @Test
     void register_invalidAge_notOK() {
         User invalidAgeUser = user;
         invalidAgeUser.setAge(MIN_REGISTRATION_AGE - 1);
-        assertThrows(RuntimeException.class, () -> registrationService.register(invalidAgeUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(invalidAgeUser));
 
-        invalidAgeUser.setAge(Integer.MAX_VALUE + 1);
-        assertThrows(RuntimeException.class, () -> registrationService.register(invalidAgeUser));
+        invalidAgeUser.setAge(MAX_REGISTRATION_AGE + 1);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(invalidAgeUser));
     }
 
     @Test
     void register_nullAge_notOk() {
         User nullAgeUser = user;
         nullAgeUser.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullAgeUser));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(nullAgeUser));
     }
 
     @AfterEach
