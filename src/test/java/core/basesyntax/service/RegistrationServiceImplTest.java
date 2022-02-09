@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl service = new RegistrationServiceImpl();
+    private final RegistrationServiceImpl service = new RegistrationServiceImpl();
     private User testUser;
 
     @BeforeEach
