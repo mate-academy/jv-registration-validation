@@ -50,15 +50,10 @@ class RegistrationServiceImplTest {
 
     @Test
   void register_addExistingLoginUser_notOk() {
-        Storage.people.add(user);
-        user.setLogin("Alice");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-  void register_addExistingLoginUserUpperCase_notOk() {
-        Storage.people.add(user);
-        user.setLogin("aLLice");
+        User bob = new User();
+        bob.setLogin("Bob");
+        Storage.people.add(bob);
+        user.setLogin("Bob");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
