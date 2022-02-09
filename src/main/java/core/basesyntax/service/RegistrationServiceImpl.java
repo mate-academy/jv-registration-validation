@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkMinPasswordLength(user);
         checkAgeIsNotNull(user);
         checkMinAge(user);
-        checkIfAddToStorage(user);
+        Storage.people.add(user);
         return user;
     }
 
@@ -55,14 +55,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         return true;
     }
-
-    private boolean checkIfAddToStorage(User user) {
-        int storageOldSize = Storage.people.size();
-        storageDao.add(user);
-        if (Storage.people.size() != storageOldSize + 1) {
-            throw new RuntimeException("User was not add to the storage!");
-        }
-        return true;
-    }
-
 }

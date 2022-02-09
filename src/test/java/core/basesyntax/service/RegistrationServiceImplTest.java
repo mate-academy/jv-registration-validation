@@ -28,55 +28,55 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_fullSuccess_ok() {
+    void register_allDataCorrect_ok() {
         User testUser = registrationService.register(user);
         assertEquals(user, testUser);
     }
 
     @Test
-    void register_existUser_notOk() {
+    void register_existingUser_notOk() {
         Storage.people.add(user);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_setEmptyLogin_notOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_setNullLogin_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(NullPointerException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_setShortPassword_notOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_setNullPassword_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(NullPointerException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_setNullAge_notOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(NullPointerException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_setLess18YearsAge_notOk() {
+    void register_less18YearsAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
