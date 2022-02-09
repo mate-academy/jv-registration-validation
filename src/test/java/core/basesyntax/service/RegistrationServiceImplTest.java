@@ -28,11 +28,6 @@ class RegistrationServiceImplTest {
         userAlexTest.setAge(21);
     }
 
-    @AfterEach
-    void afterEach() {
-        storage.people.clear();
-    }
-
     @Test
     void register_userNull_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
@@ -59,8 +54,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_login_notOk() {
         User userBroTest = new User();
-        storage.people.add(userBroTest);
         userBroTest.setLogin("12345User");
+        userBroTest.setAge(21);
+        userBroTest.setPassword("123456LL");
+        storage.people.add(userBroTest);
         assertThrows(RuntimeException.class, () -> registrationService.register(userBroTest));
     }
 
@@ -70,5 +67,10 @@ class RegistrationServiceImplTest {
         userAlexTest.setPassword(null);
         userAlexTest.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(userAlexTest));
+    }
+
+    @AfterEach
+    void afterEach() {
+        storage.people.clear();
     }
 }

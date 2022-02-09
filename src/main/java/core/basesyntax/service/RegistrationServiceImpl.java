@@ -7,7 +7,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 100;
-    private static final int PASS_LENGTH = 6;
+    private static final int MIN_PASS_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -15,9 +15,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         checksUserForNull(user);
         checksIfAgeTooYoung(user);
         checksPasswordLength(user);
-        checksValidLogin(user);
+        checksUserLoginAlreadyExists(user);
         checksUserNullFields(user);
-        checkcIfAgeTooOld(user);
+        checksIfAgeTooOld(user);
         return storageDao.add(user);
     }
 
@@ -33,14 +33,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkcIfAgeTooOld(User user) {
+    private void checksIfAgeTooOld(User user) {
         if (user.getAge() > MAX_AGE) {
             throw new RuntimeException("Sorry age must be above 18 and below 100");
         }
     }
 
     private void checksPasswordLength(User user) {
-        if (user.getPassword().length() < PASS_LENGTH) {
+        if (user.getPassword().length() < MIN_PASS_LENGTH) {
             throw new RuntimeException("Password is too short");
         }
     }
@@ -51,7 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checksValidLogin(User user) {
+    private void checksUserLoginAlreadyExists(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Sorry such login already exists");
         }
