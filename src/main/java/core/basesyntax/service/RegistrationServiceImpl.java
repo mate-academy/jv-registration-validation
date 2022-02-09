@@ -17,8 +17,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         validateUser(user);
         validateUserId(user);
-        if (storage.get(user.getLogin()) == null
-                && user.getAge() >= MIN_AGE
+        checkLoginInStorage(user);
+        if (user.getAge() >= MIN_AGE
                 && user.getPassword().length() >= MIN_PASSWORD_LENGTH
         ) {
             storage.add(user);
@@ -41,6 +41,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateUserId(User user) {
         if (user.getId() != null) {
             throw new RuntimeException("Cannot register new user with an assigned id");
+        }
+    }
+
+    private void checkLoginInStorage(User user) {
+        if (storage.get(user.getLogin()) != null) {
+            throw new RuntimeException("user with such login already exists");
         }
     }
 }
