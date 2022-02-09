@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_18years_Ok() {
+    void userWithValidAge_ok() {
         testUser.setAge(18);
         User user = service.register(testUser);
         Assertions.assertEquals(user, testUser);
