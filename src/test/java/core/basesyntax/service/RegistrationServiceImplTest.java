@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_tooYoung_notOk() {
-        testUser.setAge(15);
+        testUser.setAge(17);
         Assertions.assertThrows(RuntimeException.class,
                 () -> { service.register(testUser);
         });
