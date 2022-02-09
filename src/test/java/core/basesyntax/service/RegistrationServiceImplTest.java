@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private User user = new User();
+    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private final User user = new User();
 
     @BeforeEach
     public void setUp() {
@@ -20,13 +20,8 @@ class RegistrationServiceImplTest {
         user.setPassword("123456");
     }
 
-    @AfterEach
-    public void cleanDataBase() {
-        Storage.people.clear();
-    }
-
     @Test
-    public void register_User_ok() {
+    public void register_validUser_ok() {
         User excepted = user;
         User testUser = registrationService.register(excepted);
         assertEquals(excepted, testUser, "Please enter another login");
@@ -89,5 +84,10 @@ class RegistrationServiceImplTest {
         testUser.setAge(18);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(testUser));
+    }
+
+    @AfterEach
+    public void cleanDataBase() {
+        Storage.people.clear();
     }
 }
