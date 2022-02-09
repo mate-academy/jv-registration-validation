@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingLogin_notOk() {
-        service.register(testUser);
+        Storage.people.add(testUser);
         User user = new User();
         user.setLogin("Nazarii");
         user.setPassword("1234qwerasd");
