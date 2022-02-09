@@ -12,26 +12,26 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkUserAge(user);
-        checkUserPassword(user);
-        checkUserLogin(user);
+        validateUserAge(user);
+        validateUserPassword(user);
+        validateUserLogin(user);
         return storageDao.add(user);
     }
 
-    private void checkUserAge(User user) {
+    private void validateUserAge(User user) {
         if (user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
             throw new RuntimeException("The age should be 18 or more and less then 100");
         }
     }
 
-    private void checkUserPassword(User user) {
+    private void validateUserPassword(User user) {
         if (user.getPassword() == null || user.getPassword().length() < MIN_LETTERS_IN_PASSWORD) {
             throw new RuntimeException("The password should contain at least 6 characters"
                     + " and don't contain null");
         }
     }
 
-    private void checkUserLogin(User user) {
+    private void validateUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("The login should consist of letters and numbers only");
         }
