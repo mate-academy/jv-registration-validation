@@ -11,6 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        userLoginCheck(user);
         userPasswordCheck(user);
         userAgeCheck(user);
         User userFromBase = storageDao.get(user.getLogin());
@@ -18,6 +19,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             return storageDao.add(user);
         }
         throw new RuntimeException("User is already in use");
+    }
+
+    public boolean userLoginCheck(User user) {
+        if (user.getLogin() == null || user.getLogin().equals("")) {
+            throw new RuntimeException("There is no login");
+        }
+        return true;
     }
 
     public boolean userPasswordCheck(User user) {

@@ -33,7 +33,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_UserWithNullValue_notOk() {
+    public void register_userWithNullValueOfLogin_notOk() {
+        User testUser = user;
+        testUser.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    public void register_userWithEmptyValueOfLogin_notOk() {
+        User testUser = user;
+        testUser.setLogin("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    public void register_userWithNullValue_notOk() {
         User excepted = user;
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
@@ -61,8 +75,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithNullAgeValue_notOk() {
-        User testUser = user
-                ;
+        User testUser = user;
         testUser.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
