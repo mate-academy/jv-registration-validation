@@ -42,13 +42,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existUser_notOk() {
-        registrationService.register(user);
-        User secondUser = new User();
-        secondUser.setLogin("user");
-        secondUser.setAge(18);
-        secondUser.setPassword("psswrd");
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(secondUser);
+            registrationService.register(user);
         });
     }
 
