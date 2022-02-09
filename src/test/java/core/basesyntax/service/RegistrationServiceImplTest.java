@@ -18,17 +18,20 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        user = new User();
     }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
+        user = new User();
+        user.setPassword("svknsdkv");
+        user.setLogin("First user");
+        user.setAge(22);
     }
 
     @Test
-    void register_isAgeCorrect_NotOk() {
-        user.setAge(-5);
+    void register_isAgeCorrect_notOk() {
+        user.setAge(-50);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
         user.setAge(102);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -37,11 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsCorrect_Ok() {
-        User user = new User();
-        user.setAge(22);
-        user.setPassword("svknsdkv");
-        user.setLogin("First user");
+    void register_ageIsCorrect_ok() {
         assertEquals(user, registrationService.register(user));
         user = new User();
         user.setAge(88);
@@ -56,7 +55,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIsIncorrect_NotOk() {
+    void register_passwordIsIncorrect_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
         user.setPassword("123");
@@ -68,10 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIsCorrect_Ok() {
-        user.setAge(22);
-        user.setPassword("1234567");
-        user.setLogin("First user");
+    void register_passwordIsCorrect_ok() {
         assertEquals(user, registrationService.register(user));
         user = new User();
         user.setAge(22);
@@ -91,19 +87,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addTwoSameUsers_NotOk() {
-        user.setAge(30);
-        user.setPassword("sdmvonss");
-        user.setLogin("First user");
+    void register_addTwoSameUsers_notOk() {
         registrationService.register(user);
         assertNull(registrationService.register(user));
     }
 
     @Test
-    void register_addDifferentUsers_Ok() {
-        user.setAge(30);
-        user.setPassword("sdmvonss");
-        user.setLogin("First user");
+    void register_addDifferentUsers_ok() {
         assertEquals(user, registrationService.register(user));
         User secondUser = new User();
         secondUser.setAge(35);
@@ -123,13 +113,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsNull_Exception() {
+    void register_userIsNull_exception() {
         user = null;
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_loginIsIncorrect_Ok() {
+    void register_loginIsIncorrect_ok() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
         user.setLogin(null);
