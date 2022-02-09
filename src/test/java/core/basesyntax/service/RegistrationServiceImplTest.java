@@ -23,24 +23,21 @@ class RegistrationServiceImplTest {
     void register_nullAge_notOk() {
         testUser.setAge(null);
         Assertions.assertThrows(RuntimeException.class,
-                () -> { service.register(testUser);
-        });
+                () -> service.register(testUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
         testUser.setLogin(null);
         Assertions.assertThrows(RuntimeException.class,
-                () -> { service.register(testUser);
-        });
+                () -> service.register(testUser));
     }
 
     @Test
     void register_tooYoung_notOk() {
         testUser.setAge(17);
         Assertions.assertThrows(RuntimeException.class,
-                () -> { service.register(testUser);
-        });
+                () -> service.register(testUser));
     }
 
     @Test
@@ -54,16 +51,14 @@ class RegistrationServiceImplTest {
     void register_nullPassword_notOk() {
         testUser.setPassword(null);
         Assertions.assertThrows(RuntimeException.class,
-                () -> { service.register(testUser);
-        });
+                () -> service.register(testUser));
     }
 
     @Test
     void register_tooShortPassword_notOk() {
         testUser.setPassword("qwert");
         Assertions.assertThrows(RuntimeException.class,
-                () -> { service.register(testUser);
-        });
+                () -> service.register(testUser));
     }
 
     @Test
@@ -80,8 +75,7 @@ class RegistrationServiceImplTest {
         user.setPassword("1234qwerasd");
         user.setAge(21);
         Assertions.assertThrows(RuntimeException.class,
-                () -> { service.register(user);
-        });
+                () -> service.register(user));
     }
 
     @AfterEach
