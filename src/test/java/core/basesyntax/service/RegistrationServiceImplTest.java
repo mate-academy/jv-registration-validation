@@ -95,4 +95,11 @@ class RegistrationServiceImplTest {
             registrationService.register(user);
         });
     }
+
+    @Test
+    void register_addUserToStorage_ok() {
+        int oldSize = Storage.people.size();
+        registrationService.register(user);
+        assertEquals(oldSize + 1, Storage.people.size());
+    }
 }
