@@ -1,13 +1,14 @@
 package core.basesyntax;
 
 import static core.basesyntax.db.Storage.people;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,6 @@ public class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setId(1L);
         user.setPassword("passwordTest123");
         user.setLogin("testLogin");
         user.setAge(21);
@@ -33,7 +33,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void userAdd_OK() {
-        assertNotNull(registrationService.register(user));
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test
@@ -90,5 +90,10 @@ public class RegistrationServiceImplTest {
         userValid.setPassword("passwordTest1234");
         people.add(userValid);
         assertThrows(RuntimeException.class, () -> registrationService.register(userValid));
+    }
+
+    @AfterEach
+    void clear() {
+        people.clear();
     }
 }
