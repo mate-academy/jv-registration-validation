@@ -22,24 +22,24 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         testUser.setAge(null);
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
+        Assertions.assertThrows(RuntimeException.class,
+                () -> { service.register(testUser);
         });
     }
 
     @Test
     void register_nullLogin_notOk() {
         testUser.setLogin(null);
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
+        Assertions.assertThrows(RuntimeException.class,
+                () -> { service.register(testUser);
         });
     }
 
     @Test
     void register_tooYoung_notOk() {
         testUser.setAge(15);
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
+        Assertions.assertThrows(RuntimeException.class,
+                () -> { service.register(testUser);
         });
     }
 
@@ -53,16 +53,16 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         testUser.setPassword(null);
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
+        Assertions.assertThrows(RuntimeException.class,
+                () -> { service.register(testUser);
         });
     }
 
     @Test
     void register_tooShortPassword_notOk() {
         testUser.setPassword("qwert");
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
+        Assertions.assertThrows(RuntimeException.class,
+                () -> { service.register(testUser);
         });
     }
 
@@ -79,8 +79,8 @@ class RegistrationServiceImplTest {
         user.setLogin("Nazarii");
         user.setPassword("1234qwerasd");
         user.setAge(21);
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            service.register(user);
+        Assertions.assertThrows(RuntimeException.class,
+                () -> { service.register(user);
         });
     }
 
