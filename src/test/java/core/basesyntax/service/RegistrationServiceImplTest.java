@@ -20,7 +20,6 @@ class RegistrationServiceImplTest {
     private static final Integer MAX_REGISTRATION_AGE = 100;
     private static final String INVALID_PASSWORD = "test1";
     private static final String EMPTY_DATA = " ";
-
     private static RegistrationService registrationService;
     private User user;
 
@@ -40,7 +39,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_validUser_ok() {
         User actual = registrationService.register(user);
-
         assertEquals(user, actual, "Valid user is not registered!");
         assertEquals(1, Storage.people.size());
         assertTrue(Storage.people.contains(user));
@@ -49,7 +47,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_severalUsers_ok() {
         User[] users = new User[5];
-
         for (int i = 0; i < users.length; i++) {
             users[i] = new User();
             users[i].setLogin("user" + i + "@gmail.com");
@@ -57,7 +54,6 @@ class RegistrationServiceImplTest {
             users[i].setPassword(VALID_PASSWORD);
             registrationService.register(users[i]);
         }
-
         for (int i = 0; i < users.length; i++) {
             assertEquals(users[i], Storage.people.get(i));
         }
@@ -68,12 +64,10 @@ class RegistrationServiceImplTest {
     void register_userWithSameLoginIsAlreadyExist_notOk() {
         StorageDao storage = new StorageDaoImpl();
         storage.add(user);
-
         User userWithSameLogin = new User();
         userWithSameLogin.setLogin(VALID_LOGIN);
         userWithSameLogin.setAge(MIN_REGISTRATION_AGE);
         userWithSameLogin.setPassword(VALID_PASSWORD);
-
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userWithSameLogin));
         assertEquals(1, Storage.people.size());
@@ -122,7 +116,6 @@ class RegistrationServiceImplTest {
         invalidPasswordUser.setPassword(EMPTY_DATA);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(invalidPasswordUser));
-
         invalidPasswordUser.setPassword(INVALID_PASSWORD);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(invalidPasswordUser));
@@ -142,7 +135,6 @@ class RegistrationServiceImplTest {
         invalidAgeUser.setAge(MIN_REGISTRATION_AGE - 1);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(invalidAgeUser));
-
         invalidAgeUser.setAge(MAX_REGISTRATION_AGE + 1);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(invalidAgeUser));
