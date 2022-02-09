@@ -58,8 +58,6 @@ class RegistrationServiceImplTest {
     void register_passwordIsIncorrect_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-        user.setPassword("123");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
         user.setPassword("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
         user.setPassword(null);
@@ -87,9 +85,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addTwoSameUsers_notOk() {
+    void register_addTwoSameUsers_exception() {
         registrationService.register(user);
-        assertNull(registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test

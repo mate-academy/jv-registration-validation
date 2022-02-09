@@ -15,14 +15,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        userExists(user);
+        checkIfUserExists(user);
         validateLogin(user);
         validateAge(user);
         validatePassword(user);
-        return storageDao.get(user.getLogin()) == null ? storageDao.add(user) : null;
+        return storageDao.add(checkIfUserAlreadyExists(user));
     }
 
-    public void userExists(User user) {
+    private User checkIfUserAlreadyExists (User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("This user already exists");
+        }
+        return user;
+    }
+
+    private void checkIfUserExists(User user) {
         if (user == null) {
             throw new RuntimeException("There is no user");
         }
