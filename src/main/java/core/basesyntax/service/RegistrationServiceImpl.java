@@ -10,7 +10,22 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storage;
 
     public RegistrationServiceImpl() {
-        this.storage = new StorageDaoImpl();
+        storage = new StorageDaoImpl();
+    }
+
+    @Override
+    public User register(User user) {
+        validateUser(user);
+        validateUserId(user);
+        if (storage.get(user.getLogin()) == null
+                && user.getAge() >= MIN_AGE
+                && user.getPassword().length() >= MIN_PASSWORD_LENGTH
+        ) {
+            storage.add(user);
+            return storage.get(user.getLogin());
+        } else {
+            throw new RuntimeException("Entered data does not correspond requirements to register");
+        }
     }
 
     private void validateUser(User user) {
@@ -23,18 +38,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    @Override
-    public User register(User user) {
-        validateUser(user);
-        if (user.getId() == null
-                && storage.get(user.getLogin()) == null
-                && user.getAge() >= MIN_AGE
-                && user.getPassword().length() >= MIN_PASSWORD_LENGTH
-        ) {
-            storage.add(user);
-            return storage.get(user.getLogin());
-        } else {
-            throw new RuntimeException("Entered data does not correspond requirements to register");
+    private void validateUserId(User user) {
+        if (user.getId() != null) {
+            throw new RuntimeException("Cannot register new user with an assigned id");
         }
     }
 }
