@@ -10,33 +10,36 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        correctUserData(user);
-        correctUserAge(user);
-        correctLogin(user);
-        correctPassword(user);
+        validateUserData(user);
+        validateUserAge(user);
+        validateLogin(user);
+        validatePassword(user);
         return storageDao.add(user);
     }
 
-    private void correctUserData(User user) {
+    private void  validateUserData(User user) {
         if (user == null || user.getLogin() == null || user.getPassword() == null) {
             throw new RuntimeException("Enter your date");
         }
     }
 
-    private void correctUserAge(User user) {
+    private void  validateUserAge(User user) {
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RuntimeException("Enter your age if you are over 18");
         }
     }
 
-    private void correctLogin(User user) {
+    private void  validateLogin(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with such data already exists");
         }
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Enter your login");
+        }
     }
 
-    private void correctPassword(User user) {
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+    private void  validatePassword(User user) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Enter your password more than 6 characters");
         }
     }
