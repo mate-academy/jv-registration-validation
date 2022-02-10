@@ -17,19 +17,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private void  validateUserData(User user) {
+    private void validateUserData(User user) {
         if (user == null || user.getLogin() == null || user.getPassword() == null) {
             throw new RuntimeException("Enter your date");
         }
     }
 
-    private void  validateUserAge(User user) {
+    private void validateUserAge(User user) {
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RuntimeException("Enter your age if you are over 18");
         }
     }
 
-    private void  validateLogin(User user) {
+    private void validateLogin(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with such data already exists");
         }
@@ -38,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void  validatePassword(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Enter your password more than 6 characters");
         }
