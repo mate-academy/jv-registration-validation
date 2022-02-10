@@ -9,11 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDaoImpl storageDao = new StorageDaoImpl();
-    private User user = new User();
-    private User userWithTheSameLogin1 = new User();
-    private User userWithTheSameLogin2 = new User();
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDaoImpl storageDao = new StorageDaoImpl();
+    private final User user = new User();
 
     @BeforeEach
     void setUp() {
@@ -58,9 +56,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserNull_notOK() {
-        User user2 = null;
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(user2));
+                () -> registrationService.register(null));
     }
 
     @Test
@@ -93,6 +90,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerSameLoginInStorage_notOk() {
+        final User userWithTheSameLogin1 = new User();
+        final User userWithTheSameLogin2 = new User();
         userWithTheSameLogin1.setLogin("loginOne");
         userWithTheSameLogin1.setPassword("password1");
         userWithTheSameLogin1.setAge(20);

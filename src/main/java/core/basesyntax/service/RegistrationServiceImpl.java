@@ -18,7 +18,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         validLogin(user);
         validEmpty(user);
         validSpaces(user);
+        validNull(user);
         return storageDao.add(user);
+    }
+
+    private void validNull(User user) {
+        if (user == null) {
+            throw new RuntimeException("Empty data is not allowed. :(");
+        }
     }
 
     private void validSpaces(User user) {
