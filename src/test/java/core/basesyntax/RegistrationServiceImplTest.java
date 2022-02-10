@@ -32,56 +32,56 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAdd_OK() {
+    void register_validUser_Ok() {
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_UserIsNull_notOK() {
+    void register_userIsNull_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void registerUserLoginIsNull_notOK() {
+    void register_userLoginIsNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_IncorrectPassword_notOK() {
+    void register_incorrectPassword_notOk() {
         user.setPassword("123");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_PasswordIsEmpty_notOK() {
+    void register_passwordIsEmpty_notOk() {
         user.setPassword("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_PasswordNull_notOK() {
+    void register_passwordNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("Should return throws when user age is less than 18")
-    void register_lessAge_notOK() {
+    void register_lessAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullAge_notOK() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("Should throw exception when user exists")
-    void registerUserAlreadyExists_notOK() {
+    void register_userAlreadyExists_notOk() {
         User userValid = new User();
         userValid.setLogin("testLogin1");
         userValid.setAge(22);
