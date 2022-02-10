@@ -14,9 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (!validateUser(user)) {
-            return null;
-        }
+        validateUser(user);
         return storageDao.add(user);
     }
 
@@ -31,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void userForNull(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null, you can't register user with null");
+            throw new RuntimeException("User is null, you can't register user with null");
         }
     }
 
