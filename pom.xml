@@ -18,6 +18,7 @@
         </maven.checkstyle.plugin.configLocation>
         <junit-jupiter.version>5.7.0</junit-jupiter.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
