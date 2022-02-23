@@ -10,7 +10,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (isNullUserData(user) || isNoValidUserRegistration(user, storageDao)) {
-            throw new RuntimeException();
+            throw new RuntimeException("Invalid data");
         }
 
         return storageDao.add(user);
