@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
@@ -129,9 +128,8 @@ class RegistrationServiceImplTest {
         secondUser.setLogin("Casual User");
         secondUser.setPassword("qazwsx");
         secondUser.setAge(28);
-        registrationService.register(secondUser);
 
+        assertThrows(UserException.class, () -> registrationService.register(secondUser));
         assertNotNull(firstUser.getId());
-        assertNull(secondUser.getId());
     }
 }
