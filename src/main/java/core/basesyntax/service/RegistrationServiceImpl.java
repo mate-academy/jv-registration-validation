@@ -5,7 +5,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDaoImpl  storageDao = new StorageDaoImpl();
+    private final StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
