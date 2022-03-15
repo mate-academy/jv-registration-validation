@@ -16,8 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User couldn't be null");
         }
         User current = storageDaoimpl.get(user.getLogin());
-        if (current != null
-                && user.getLogin().equals(current.getLogin())) {
+        if (current != null) {
             throw new RuntimeException("Added user doesn't meet requirements."
                     + " User with this login: "
                     + user.getLogin() + " already exist.");
@@ -27,6 +26,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + " User login start with: "
                     + user.getLogin().charAt(0) + " but must start with letter.");
         }
+        ageLengthCheck(user);
+        passwordLengthCheck(user);
+        return storageDaoimpl.add(user);
+    }
+
+    private void ageLengthCheck(User user) {
         if (user.getAge() < MIN_POSSIBLE_AGE) {
             throw new RuntimeException("Added user doesn't meet requirements."
                     + " User age: "
@@ -39,6 +44,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + user.getAge() + " is more than maximum expected age - "
                     + MAX_POSSIBLE_AGE + ".");
         }
+    }
+
+    private void passwordLengthCheck(User user) {
         if (user.getPassword().length() < MIN_POSSIBLE_CHARS) {
             throw new RuntimeException("Added user doesn't meet requirements."
                     + " User password length: "
@@ -51,6 +59,5 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + user.getPassword() + " is more than maximum expected password - "
                     + MIN_POSSIBLE_CHARS + "length.");
         }
-        return storageDaoimpl.add(user);
     }
 }
