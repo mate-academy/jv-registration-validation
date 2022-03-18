@@ -27,7 +27,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_less6Characters_notOk() {
+    void register_passwordLessThan6Characters_notOk() {
         user.setPassword("qwerty");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
@@ -41,21 +41,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessThan18_notOk() {
+    void register_ageLessThan18_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_more60_notOk() {
+    void register_ageMoreThan60_notOk() {
         user.setAge(101);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_UserNull_notOK() {
+    void register_userNull_notOk() {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(null));
     }
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullInLogin_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
@@ -76,17 +76,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerSameLoginInStorage_notOk() {
-        final User userWithTheSameLogin1 = new User();
-        final User userWithTheSameLogin2 = new User();
-        userWithTheSameLogin1.setLogin("loginOne");
-        userWithTheSameLogin1.setPassword("password1");
-        userWithTheSameLogin1.setAge(20);
-        userWithTheSameLogin2.setLogin("loginOne");
-        userWithTheSameLogin2.setPassword("password2");
-        userWithTheSameLogin2.setAge(23);
-        storageDao.add(userWithTheSameLogin1);
+        final User firstUser = new User();
+        final User secondUser = new User();
+        firstUser.setLogin("loginOne");
+        firstUser.setPassword("password1");
+        firstUser.setAge(20);
+        secondUser.setLogin("loginOne");
+        secondUser.setPassword("password2");
+        secondUser.setAge(23);
+        storageDao.add(firstUser);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(userWithTheSameLogin2)
+                () -> registrationService.register(secondUser)
         );
     }
 }
