@@ -75,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerSameLoginInStorage_notOk() {
+    void register_sameLoginInStorage_notOk() {
         final User firstUser = new User();
         final User secondUser = new User();
         firstUser.setLogin("loginOne");
