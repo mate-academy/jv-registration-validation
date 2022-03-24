@@ -22,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    void checkUser(User user) {
+    private void checkUser(User user) {
         if (user == null) {
             throw new RuntimeException("Empty data of user");
         }
@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user);
     }
 
-    void checkPassword(User user) {
+    private void checkPassword(User user) {
         if (user.getPassword().length() < MINIMUM_LENGTH_PASSWORD
                 || user.getPassword().length() > MAXIMUM_LENGTH_PASSWORD
                 || user.getPassword() == null) {
@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    void checkAge(User user) {
+    private void checkAge(User user) {
         if (user.getAge() < MINIMUM_AGE
                 || user.getAge() > MAXIMUM_AGE
                 || user.getAge() == null) {
@@ -47,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    void checkLogin(User user) {
+    private void checkLogin(User user) {
         if (storageDao.get(user.getLogin()) != null || user.getLogin() == null) {
             throw new RuntimeException("Invalid login to registration");
         }

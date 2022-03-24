@@ -40,18 +40,18 @@ class RegistrationServiceImplTest {
         user.setAge(19);
         user.setLogin("boris");
         user.setPassword("123456");
-        User user2 = new User();
-        user2.setAge(24);
-        user2.setLogin("morris");
-        user2.setPassword("1234567");
-        User user3 = new User();
-        user3.setAge(48);
-        user3.setLogin("cris");
-        user3.setPassword("1234568");
+        User secondUser = new User();
+        secondUser.setAge(24);
+        secondUser.setLogin("morris");
+        secondUser.setPassword("1234567");
+        User thirdUser = new User();
+        thirdUser.setAge(48);
+        thirdUser.setLogin("cris");
+        thirdUser.setPassword("1234568");
 
         Assertions.assertEquals(user, registrationService.register(user));
-        Assertions.assertEquals(user2, registrationService.register(user2));
-        Assertions.assertEquals(user3, registrationService.register(user3));
+        Assertions.assertEquals(secondUser, registrationService.register(secondUser));
+        Assertions.assertEquals(thirdUser, registrationService.register(thirdUser));
     }
 
     @Test
@@ -67,13 +67,13 @@ class RegistrationServiceImplTest {
         user.setAge(24);
         user.setLogin("boris");
         user.setPassword("123456");
-        User user2 = new User();
-        user2.setAge(18);
-        user2.setLogin("boris");
-        user2.setPassword("1234567");
+        User secondUser = new User();
+        secondUser.setAge(18);
+        secondUser.setLogin("boris");
+        secondUser.setPassword("1234567");
         registrationService.register(user);
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(secondUser);
         });
     }
 
