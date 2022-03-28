@@ -38,24 +38,17 @@ class RegistrationServiceTest {
 
     @Test
     void register_userIsValid_Ok() {
-        assertTrue(Storage.people.contains(registrationService.register(userValid)));
+        User registeredUser = registrationService.register(userValid);
+        assertTrue(Storage.people.contains(registeredUser));
+        assertTrue(registeredUser.getAge() >= MINIMUM_AGE);
+        assertTrue(registeredUser.getPassword().length()
+                >= MIN_PASSWORD_LENGTH);
     }
 
     @Test
     void register_userIsNull_NotOk() {
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(null));
-    }
-
-    @Test
-    void register_ageIsValid() {
-        assertTrue(registrationService.register(userValid).getAge() >= MINIMUM_AGE);
-    }
-
-    @Test
-    void register_passwordIsValid_Ok() {
-        assertTrue(registrationService.register(userValid).getPassword().length()
-                >= MIN_PASSWORD_LENGTH);
     }
 
     @Test
