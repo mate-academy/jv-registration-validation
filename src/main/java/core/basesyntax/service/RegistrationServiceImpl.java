@@ -7,27 +7,28 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static int MIN_PASSWORD_LENGTH = 6;
     private static int MIN_AGE = 18;
-    private StorageDao storageDao;
-
-    public RegistrationServiceImpl() {
-        this.storageDao = new StorageDaoImpl();
-    }
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user == null
-                || user.getLogin() == null
-                || user.getPassword() == null
-                || user.getAge() == null) {
-            throw new NullPointerException("Null input");
+        if (user == null) {
+            throw new NullPointerException("Null user");
+        }
+        if (user.getLogin() == null) {
+            throw new NullPointerException("Null login");
+        }
+        if (user.getPassword() == null) {
+            throw new NullPointerException("Null password");
+        }
+        if (user.getAge() == null) {
+            throw new NullPointerException("Null age");
         }
         if (storageDao.get(user.getLogin()) == null
                 && user.getPassword().length() >= MIN_PASSWORD_LENGTH
                 && user.getAge() >= MIN_AGE) {
             storageDao.add(user);
-        } else {
-            throw new RuntimeException("Invalid user data");
+            return user;
         }
-        return user;
+        throw new RuntimeException("Invalid user data");
     }
 }
