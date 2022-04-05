@@ -11,22 +11,14 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static int MIN_AGE = 18;
-    private static int NEGATIVE_AGE = -23;
-    private static int LESS_THAN_MIN_AGE = 12;
-    private static int GREATER_THAN_MIN_AGE = 2056;
-    private static int VALID_AGE = 20;
-    private static String INVALID_PASSWORD = "bad12";
-    private static String VALID_PASSWORD = "secure_password123";
-    private static String VALID_LOGIN = "GreatLogin";
-    private static String EMPTY_STRING = "";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static User testUser;
-    private User validUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+    private User validUser = new User("GreatLogin", "secure_password123", 20);
 
     @BeforeAll
     static void beforeAll() {
@@ -35,12 +27,13 @@ class RegistrationServiceImplTest {
         testUser = new User();
     }
 
+    @BeforeEach
+    void setUp() {
+        testUser = new User();
+    }
+
     @AfterEach
     void cleanUp() {
-        testUser.setId(null);
-        testUser.setLogin(null);
-        testUser.setPassword(null);
-        testUser.setAge(null);
         Storage.people.clear();
     }
 
@@ -50,37 +43,37 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginIsNull_NotOk() {
+    void register_LoginIsNull_NotOk() {
         testUser.setLogin(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_ageIsNull_NotOk() {
+    void register_AgeIsNull_NotOk() {
         testUser.setAge(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_passwordIsNull_NotOk() {
+    void register_PasswordIsNull_NotOk() {
         testUser.setPassword(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_ValidUser_ReturnsSameUser() {
+    void register_ValidUserReturnsSameUser_Ok() {
         assertEquals(validUser, registrationService.register(validUser));
     }
 
     @Test
-    void register_ValidUser_UserAddedOnlyOneTime() {
+    void register_ValidUserAddedOnlyOneTime_Ok() {
         registrationService.register(validUser);
         Storage.people.remove(validUser);
         assertTrue(Storage.people.isEmpty());
     }
 
     @Test
-    void register_ValidUser_UserAddedToDatabaseIsNotModified() {
+    void register_ValidUserAddedToDatabaseIsNotModified_Ok() {
         registrationService.register(validUser);
         assertEquals(validUser, storageDao.get(validUser.getLogin()));
     }
@@ -93,20 +86,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeLessThanMinimum_NotOk() {
-        testUser.setAge(LESS_THAN_MIN_AGE);
+        testUser.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_NegativeAge_NotOk() {
-        testUser.setAge(NEGATIVE_AGE);
+        testUser.setAge(-15);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_MinimumAge_Ok() {
         testUser = validUser;
-        testUser.setAge(MIN_AGE);
+        testUser.setAge(18);
         assertEquals(testUser, registrationService.register(testUser));
         assertNotNull(storageDao.get(testUser.getLogin()));
     }
@@ -114,7 +107,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_AgeGreaterThanMin_Ok() {
         testUser = validUser;
-        testUser.setAge(GREATER_THAN_MIN_AGE);
+        testUser.setAge(42);
         assertEquals(testUser, registrationService.register(testUser));
         assertNotNull(storageDao.get(testUser.getLogin()));
     }
@@ -122,23 +115,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_PasswordEmptyString_NotOk() {
         testUser = validUser;
-        testUser.setPassword(EMPTY_STRING);
+        testUser.setPassword("");
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_InvalidPassword_NotOk() {
         testUser = validUser;
-        testUser.setPassword(INVALID_PASSWORD);
+        testUser.setPassword("bad12");
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
-    }
-
-    @Test
-    void register_ValidUser_Ok() {
-        testUser = validUser;
-        assertEquals(validUser, registrationService.register(validUser));
-        assertEquals(validUser, storageDao.get(validUser.getLogin()));
-        Storage.people.remove(validUser);
-        assertTrue(Storage.people.isEmpty());
     }
 }
