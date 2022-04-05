@@ -13,15 +13,6 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
 
-    private static User createUser(Long id, String login, String password, Integer age) {
-        User user = new User();
-        user.setId(id);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
-        return user;
-    }
-
     @BeforeAll
     public static void setUp() {
         registrationService = new RegistrationServiceImpl();
@@ -84,14 +75,23 @@ class RegistrationServiceImplTest {
     @Test
     public void register_notAdultUser_notOk() {
         User notAdultUser = createUser(35252L, "Zorro",
-                "Hazzard!", 14);
+                "Hazzard!", 17);
         assertThrows(RuntimeException.class, () -> registrationService.register(notAdultUser));
     }
 
     @Test void register_shortPasswordUser_notOk() {
         User shortPasswordUser = createUser(135211L, "Vendetta means",
-                "V", 42);
+                "12345", 42);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(shortPasswordUser));
+    }
+
+    private static User createUser(Long id, String login, String password, Integer age) {
+        User user = new User();
+        user.setId(id);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        return user;
     }
 }

@@ -6,7 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private static final StorageDao storageDAO = new StorageDaoImpl();
+    private static final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin() == null || user.getId() == null)) {
             throw new RuntimeException("Invalid user");
         }
-        if (storageDAO.get(user.getLogin()) != null) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already exists");
         }
         if (user.getAge() < 18) {
@@ -24,6 +24,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User password is to short. Needs at least 6 characters");
         }
 
-        return storageDAO.add(user);
+        return storageDao.add(user);
     }
 }
