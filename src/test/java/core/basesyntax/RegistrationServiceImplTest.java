@@ -27,7 +27,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(3364L, "admin", "pass123", 18);
+        user = new User("admin", "pass123", 18);
     }
 
     @AfterEach
@@ -57,7 +57,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -69,12 +69,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_nullId_notOk() {
-        user.setId(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
