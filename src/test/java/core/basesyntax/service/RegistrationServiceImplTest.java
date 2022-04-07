@@ -57,8 +57,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNullUser_NotOk() {
-        user = null;
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
