@@ -23,7 +23,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && user.getPassword().length() >= VALID_PASSWORD_LENGTH) {
             return storageDao.add(user);
         }
-        return null;
-
+        throw new RuntimeException("Something went wrong...");
     }
 }
