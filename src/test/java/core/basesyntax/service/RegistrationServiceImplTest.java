@@ -63,7 +63,7 @@ class RegistrationServiceImplTest {
     void containsValidUser_Ok() {
         User actual = user;
         registrationService.register(user);
-        assertTrue(Storage.people.contains(actual)); //storage - static
+        assertTrue(Storage.people.contains(actual));
     }
 
     @Test
@@ -74,13 +74,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerWithInvalidAge_NotOk() {
-        user.setAge(5);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerWithInvalidPassword_NotOk() {
-        user.setPassword("abob");
+        user.setPassword("aboba");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
