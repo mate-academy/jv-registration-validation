@@ -60,13 +60,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void containsValidUser_Ok() {
-        User actual = user;
-        registrationService.register(user);
-        assertTrue(Storage.people.contains(actual));
-    }
-
-    @Test
     void registerWithExistingLogin_NotOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
