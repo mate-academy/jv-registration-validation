@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -9,9 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationServiceImpl registrationService
+    private final RegistrationServiceImpl registrationService
             = new RegistrationServiceImpl();
-    private static final StorageDaoImpl storageDaoImpl = new StorageDaoImpl();
+    private final StorageDaoImpl storageDaoImpl = new StorageDaoImpl();
     private User user;
 
     @BeforeEach
@@ -50,21 +50,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userRegistration_isNotOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
     void register_userNull_isNotOk() {
         user = null;
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_loginCheckDuplicate_isOk() {
-        User user1 = new User("bob@gmail.com", "bobobob10",19);
-        User logGetUser = storageDaoImpl.get(user1.getLogin());
-        assertNotEquals(user1.getLogin(), logGetUser);
+    void register_loginCheckDuplicate_isNotOk() {
+        registrationService.register(user);
+        assertEquals(user, storageDaoImpl.get(user.getLogin()));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
