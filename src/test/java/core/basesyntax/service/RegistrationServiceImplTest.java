@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_NotOk() {
+    void register_NullUser_notOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(null);
         });
@@ -49,21 +49,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checksForIncorrectlyFieldLogin_NotOk() {
+    void register_ChecksLogin_notOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(userFailLogin);
         });
     }
 
     @Test
-    void checksForIncorrectlyFieldPassword_NotOk() {
+    void register_ChecksPassword_notOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(userFailPassword);
         });
     }
 
     @Test
-    void checksForIncorrectlyFieldAge_NotOk() {
+    void register_ChecksAge_notOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(userFailAge);
         });
