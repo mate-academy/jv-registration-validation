@@ -23,70 +23,58 @@ class RegistrationServiceImplTest {
         service = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
 
-        userDefault = createUserForTest("Denys","12345678",23);
-        userFailLogin = createUserForTest("Ma","asdasdd34",21);
-        userFailPassword = createUserForTest("Mak","45",21);
-        userFailAge = createUserForTest("Mak","asdqwert6",17);
-    }
-
-    private User createUserForTest(String login, String pass, int age) {
-        User user = new User();
-        user.setLogin(login);
-        user.setPassword(pass);
-        user.setAge(age);
-        storageDao.add(user);
-        return user;
+        userDefault = createUser("Denys","12345678",23);
+        userFailLogin = createUser("Ma","asdasdd34",21);
+        userFailPassword = createUser("Mak","45",21);
+        userFailAge = createUser("Mak","asdqwert6",17);
     }
 
     @AfterEach
-    void afterEachClearStorage() {
+    void clearStorage() {
         Storage.people.clear();
     }
 
     @Test
-    void register_nullUser_notOk() {
+    void register_NullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(null);
         });
     }
 
     @Test
-    void should_AddUsersInStorage_Default_Ok() {
-        int actual = Storage.people.size();
-        assertEquals(4, actual);
-    }
-
-    @Test
-    void should_AddUser_Ok() {
+    void register_AddUser_Ok() {
         service.register(userDefault);
         int actual = Storage.people.size();
         assertEquals(5, actual);
     }
 
     @Test
-    void should_ReturnUser_Ok() {
-        User expected = storageDao.get(userDefault.getLogin());
-        assertEquals(expected, userDefault);
-    }
-
-    @Test
-    void should_ReturnRunExeptionLogin_NotOk() {
+    void checksForIncorrectlyFieldLogin_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(userFailLogin);
         });
     }
 
     @Test
-    void shouldReturnRunExeptionPassword_NotOk() {
+    void checksForIncorrectlyFieldPassword_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(userFailPassword);
         });
     }
 
     @Test
-    void shouldReturnRunExeptionAge_NotOk() {
+    void checksForIncorrectlyFieldAge_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(userFailAge);
         });
+    }
+
+    private User createUser(String login, String password, int age) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        storageDao.add(user);
+        return user;
     }
 }
