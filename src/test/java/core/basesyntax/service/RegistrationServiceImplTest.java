@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl service = new RegistrationServiceImpl();
+    private RegistrationServiceImpl service;
     private StorageDaoImpl storageDao;
     private User userDefault;
     private User userFailLogin;
@@ -20,31 +20,22 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        service = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
 
-        userDefault = new User();
-        userDefault.setLogin("denys");
-        userDefault.setPassword("1245367");
-        userDefault.setAge(19);
-        storageDao.add(userDefault);
+        userDefault = createUserForTest("Denys","12345678",23);
+        userFailLogin = createUserForTest("Ma","asdasdd34",21);
+        userFailPassword = createUserForTest("Mak","45",21);
+        userFailAge = createUserForTest("Mak","asdqwert6",17);
+    }
 
-        userFailLogin = new User();
-        userFailLogin.setLogin("Ma");
-        userFailLogin.setPassword("dqweasd45");
-        userFailLogin.setAge(21);
-        storageDao.add(userFailLogin);
-
-        userFailPassword = new User();
-        userFailPassword.setLogin("Mak");
-        userFailPassword.setPassword("45");
-        userFailPassword.setAge(21);
-        storageDao.add(userFailPassword);
-
-        userFailAge = new User();
-        userFailAge.setLogin("Mak");
-        userFailAge.setPassword("dqweasd45");
-        userFailAge.setAge(17);
-        storageDao.add(userFailAge);
+    private User createUserForTest(String login, String pass, int age) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(pass);
+        user.setAge(age);
+        storageDao.add(user);
+        return user;
     }
 
     @AfterEach
@@ -53,33 +44,33 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void expected_Null() {
-        assertThrows(NullPointerException.class, () -> {
+    void register_nullUser_notOk() {
+        assertThrows(RuntimeException.class, () -> {
             service.register(null);
         });
     }
 
     @Test
-    void shouldAddUsersInStorageDefault() {
+    void should_AddUsersInStorage_Default_Ok() {
         int actual = Storage.people.size();
         assertEquals(4, actual);
     }
 
     @Test
-    void shouldAddUser_Ok() {
+    void should_AddUser_Ok() {
         service.register(userDefault);
         int actual = Storage.people.size();
         assertEquals(5, actual);
     }
 
     @Test
-    void shouldReturnUser_Ok() {
+    void should_ReturnUser_Ok() {
         User expected = storageDao.get(userDefault.getLogin());
         assertEquals(expected, userDefault);
     }
 
     @Test
-    void shouldReturnRunExeptionLogin_NotOk() {
+    void should_ReturnRunExeptionLogin_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(userFailLogin);
         });

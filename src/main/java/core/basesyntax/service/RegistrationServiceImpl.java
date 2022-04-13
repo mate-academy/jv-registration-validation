@@ -5,20 +5,25 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private StorageDaoImpl storageDao = new StorageDaoImpl();
+    private static final int MIN_LENGTH_LOGIN = 3;
+    private static final int MIN_LENGTH_PASSWORD = 6;
+    private static final int MIN_AGE_USER = 18;
 
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User can`t be null");
+            throw new RuntimeException("User can`t be null");
         }
-        if (user.getLogin().isEmpty() || user.getLogin().length() <= 2) {
-            throw new RuntimeException("Login can`t be empty or length over 2");
+        if (user.getLogin().isEmpty()
+                || user.getLogin().length() < MIN_LENGTH_LOGIN) {
+            throw new RuntimeException("Login can`t be empty or length over " + MIN_LENGTH_LOGIN);
         }
-        if (user.getPassword().isEmpty() || user.getPassword().length() < 6) {
-            throw new RuntimeException("Password must be over 5 symbols");
+        if (user.getPassword().isEmpty()
+                || user.getPassword().length() < MIN_LENGTH_PASSWORD) {
+            throw new RuntimeException("Password must be over " + MIN_LENGTH_PASSWORD + " symbols");
         }
-        if (user.getAge() < 18) {
-            throw new RuntimeException("Age must be over behind 17");
+        if (user.getAge() < MIN_AGE_USER) {
+            throw new RuntimeException("Age must be over " + MIN_AGE_USER);
         }
         storageDao.add(user);
         return user;
