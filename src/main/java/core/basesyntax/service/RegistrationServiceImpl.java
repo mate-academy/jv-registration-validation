@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-
 import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
