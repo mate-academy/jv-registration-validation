@@ -1,12 +1,14 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -30,10 +32,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkingInStorage(User user) {
-        for (User users : Storage.people) {
-            if (Objects.equals(user.getLogin(), users.getLogin())) {
-                throw new RuntimeException("This user was created");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("This user was created");
         }
     }
 
