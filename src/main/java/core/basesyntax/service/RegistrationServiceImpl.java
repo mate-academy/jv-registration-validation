@@ -19,6 +19,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             data.add(user);
             return user;
         }
-        throw new RuntimeException("Can't register user" + user);
+        throw new RuntimeException("Can't register user " + user);
     }
 }

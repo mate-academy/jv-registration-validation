@@ -24,7 +24,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerAge_isOk() {
+    void register_age_isOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(22);
         validUser.setPassword("password123");
@@ -33,7 +33,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerAge_notOk() {
+    void register_age_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(17);
         validUser.setPassword("password123");
@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNegativeAge_notOk() {
+    void register_negativeAge_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(-17);
         validUser.setPassword("password123");
@@ -49,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullAge_notOk() {
+    void register_nullAge_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(null);
         validUser.setPassword("password123");
@@ -57,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerPassword_isOk() {
+    void register_password_isOk() {
         validUser.setLogin("loginpas@gmail.com");
         validUser.setAge(22);
         validUser.setPassword("password123");
@@ -66,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerPassword_notOk() {
+    void register_password_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(22);
         validUser.setPassword("passw");
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullPassword_notOk() {
+    void register_nullPassword_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(22);
         validUser.setPassword(null);
@@ -82,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullLogin_notOk() {
+    void register_nullLogin_notOk() {
         validUser.setLogin(null);
         validUser.setAge(22);
         validUser.setPassword("21687998");
@@ -90,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerSameUser_notOk() {
+    void register_sameUser_notOk() {
         validUser.setLogin("loginnnn@gmail.com");
         validUser.setAge(33);
         validUser.setPassword("password1");
