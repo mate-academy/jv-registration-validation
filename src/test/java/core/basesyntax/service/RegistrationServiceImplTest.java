@@ -1,12 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private User userCorrect;
@@ -52,7 +54,7 @@ class RegistrationServiceImplTest {
     @Test
     void userLoginIsNull_notOk() {
         User actual = new User(null, "password", 25);
-        assertThrows(RuntimeException.class, () ->{
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
     }
@@ -60,7 +62,7 @@ class RegistrationServiceImplTest {
     @Test
     void userLoginIsEmpty_notOk() {
         User actual = new User("", "password", 25);
-        assertThrows(RuntimeException.class, () ->{
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
     }
@@ -79,7 +81,7 @@ class RegistrationServiceImplTest {
     @Test
     void userPasswordIsNull_notOk() {
         User actual = new User("login", null, 25);
-        assertThrows(RuntimeException.class, () ->{
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
     }
@@ -87,7 +89,7 @@ class RegistrationServiceImplTest {
     @Test
     void userPasswordIsEmpty_notOk() {
         User actual = new User("login", "", 25);
-        assertThrows(RuntimeException.class, () ->{
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(actual);
         });
     }
@@ -105,7 +107,7 @@ class RegistrationServiceImplTest {
     @Test
     void userWithNullAge() {
         User currentUser = new User("login", "password", null);
-        assertThrows(RuntimeException.class, () ->{
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(currentUser);
         });
     }
@@ -113,7 +115,7 @@ class RegistrationServiceImplTest {
     @Test
     void userWithZeroAge() {
         User currentUser = new User("login", "password", 0);
-        assertThrows(RuntimeException.class, () ->{
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(currentUser);
         });
     }
@@ -121,7 +123,7 @@ class RegistrationServiceImplTest {
     @Test
     void userWithNegativeAge() {
         User currentUser = new User("login", "password", -26);
-        assertThrows(RuntimeException.class, () ->{
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(currentUser);
         });
     }

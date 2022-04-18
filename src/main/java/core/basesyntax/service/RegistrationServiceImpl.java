@@ -5,9 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private StorageDao storageDao = new StorageDaoImpl();
     private static final int ALLOW_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
