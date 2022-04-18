@@ -7,25 +7,20 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User FIRST_VALID_USER = new User("cat@gmail.com", "12345678", 40);
-    private static final User SECOND_VALID_USER = new User("cow@gmail.com", "12345678", 23);
-    private static final User THIRD_VALID_USER = new User("bird@gmail.com", "12345678", 18);
-    private static final User FOURTH_VALID_USER = new User("snake@gmail.com", "12345678", 18);
-    private static final User NO_VALID_AGE_USER = new User("turtle@gmail.com", "123456", 11);
-    private static final User SECOND_REPEAT_USER = new User("cow@gmail.com", "134567", 23);
-    private static final User NO_VALID_PASSWORD_USER = new User("fish@gmail.com", "1234", 52);
-    private static final User NULL_PASSWORD_USER = new User("null@gmail.com", null, 43);
-    private static final User NULL_LOGIN_USER = new User(null, "143493934", 0);
-    private static final User NULL_AGE_USER = new User("null@gmail.com", "143493934", null);
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
+    private User firstValidUser;
+    private User likeFirstValidUser;
+    private User noValidPasswordUser;
+    private User noValidAgeUser;
+    private User userNull;
 
     @BeforeAll
     static void beforeAll() {
-        Storage.people.add(FIRST_VALID_USER);
-        Storage.people.add(SECOND_VALID_USER);
+        registrationService = new RegistrationServiceImpl();
     }
 
     @AfterEach
@@ -33,51 +28,62 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 
+    @BeforeEach
+    void setUp() {
+        firstValidUser = new User("cow@gmail.com", "12345678", 23);
+        likeFirstValidUser = new User("cow@gmail.com", "132322567", 20);
+        noValidPasswordUser = new User("fish@gmail.com", "1234", 52);
+        noValidAgeUser = new User("turtle@gmail.com", "123456", 11);
+        userNull = new User(null, null, 0);
+    }
+
     @Test
     void register_userAlreadyWasAdded_NotOk() {
+        registrationService.register(firstValidUser);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(SECOND_REPEAT_USER));
+                () -> registrationService.register(likeFirstValidUser));
     }
 
     @Test
-    void userOlder_NotOk() {
+    void register_userOlder_NotOk() {
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(NO_VALID_AGE_USER));
+                () -> registrationService.register(noValidAgeUser));
     }
 
     @Test
-    void passwordLenght_NotOk() {
+    void register_passwordLenght_NotOk() {
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(NO_VALID_PASSWORD_USER));
+                () -> registrationService.register(noValidPasswordUser));
     }
 
     @Test
     void registerUser_Ok() {
-        registrationService.register(THIRD_VALID_USER);
-        registrationService.register(FOURTH_VALID_USER);
-        assertEquals(2, Storage.people.size());
+        registrationService.register(firstValidUser);
+        assertEquals(1, Storage.people.size());
     }
 
     @Test
-    void passwordIsNull_NotOk() {
+    void register_passwordIsNull_NotOk() {
         assertThrows(NullPointerException.class,
-                () -> registrationService.register(NULL_PASSWORD_USER));
+                () -> registrationService.register(userNull));
     }
 
     @Test
-    void loginIsNull_NotOk() {
+    void register_loginIsNull_NotOk() {
         assertThrows(NullPointerException.class,
-                () -> registrationService.register(NULL_LOGIN_USER));
+                () -> registrationService.register(userNull));
     }
 
     @Test
-    void ageIsNull_NotOk() {
+    void register_ageIsNull_NotOk() {
+        registrationService.register(firstValidUser);
+        firstValidUser.setAge(null);
         assertThrows(NullPointerException.class,
-                () -> registrationService.register(NULL_AGE_USER));
+                () -> registrationService.register(firstValidUser));
     }
 
     @Test
-    void userIsNull_NotOk() {
+    void register_userIsNull_NotOk() {
         assertThrows(NullPointerException.class,
                 () -> registrationService.register(null));
     }
