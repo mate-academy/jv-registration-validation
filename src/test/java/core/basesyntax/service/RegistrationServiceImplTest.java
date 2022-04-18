@@ -6,17 +6,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private RegistrationService validateRegistration;
+    private User validUser;
+    private User validUser2;
+    private StorageDao data;
 
-    private final RegistrationService validateRegistration = new RegistrationServiceImpl();
-    private final User validUser = new User();
-    private final User validUser2 = new User();
-    private final StorageDao data = new StorageDaoImpl();
+    @BeforeEach
+    void setUp() {
+        validateRegistration = new RegistrationServiceImpl();
+        validUser = new User();
+        validUser2 = new User();
+        data = new StorageDaoImpl();
+    }
 
     @Test
-    void age_isOk() {
+    void registerAge_isOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(22);
         validUser.setPassword("password123");
@@ -25,7 +33,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_notOk() {
+    void registerAge_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(17);
         validUser.setPassword("password123");
@@ -33,7 +41,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void negativeAge_notOk() {
+    void registerNegativeAge_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(-17);
         validUser.setPassword("password123");
@@ -41,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullAge_notOk() {
+    void registerNullAge_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(null);
         validUser.setPassword("password123");
@@ -49,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void password_isOk() {
+    void registerPassword_isOk() {
         validUser.setLogin("loginpas@gmail.com");
         validUser.setAge(22);
         validUser.setPassword("password123");
@@ -58,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void password_notOk() {
+    void registerPassword_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(22);
         validUser.setPassword("passw");
@@ -66,7 +74,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_notOk() {
+    void registerNullPassword_notOk() {
         validUser.setLogin("login@gmail.com");
         validUser.setAge(22);
         validUser.setPassword(null);
@@ -74,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullLogin_notOk() {
+    void registerNullLogin_notOk() {
         validUser.setLogin(null);
         validUser.setAge(22);
         validUser.setPassword("21687998");
@@ -82,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationUserWhenUserDataBase_isOk() {
+    void registerSameUser_notOk() {
         validUser.setLogin("loginnnn@gmail.com");
         validUser.setAge(33);
         validUser.setPassword("password1");
