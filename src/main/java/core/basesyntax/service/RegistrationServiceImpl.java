@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -27,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkingAge(user);
         checkingPasswordLength(user);
         checkingInStorage(user);
-        Storage.people.add(user);
+        storageDao.add(user);
         return user;
     }
 

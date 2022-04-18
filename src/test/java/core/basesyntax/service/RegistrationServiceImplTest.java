@@ -13,10 +13,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User firstValidUser;
-    private User likeFirstValidUser;
-    private User noValidPasswordUser;
-    private User noValidAgeUser;
-    private User userNull;
+    private User userWithNullProperties;
 
     @BeforeAll
     static void beforeAll() {
@@ -31,27 +28,27 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         firstValidUser = new User("cow@gmail.com", "12345678", 23);
-        likeFirstValidUser = new User("cow@gmail.com", "132322567", 20);
-        noValidPasswordUser = new User("fish@gmail.com", "1234", 52);
-        noValidAgeUser = new User("turtle@gmail.com", "123456", 11);
-        userNull = new User(null, null, 0);
+        userWithNullProperties = new User(null, null, 0);
     }
 
     @Test
     void register_userAlreadyWasAdded_NotOk() {
+        User sameAsFirstValidUser = new User("cow@gmail.com", "132322567", 20);
         registrationService.register(firstValidUser);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(likeFirstValidUser));
+                () -> registrationService.register(sameAsFirstValidUser));
     }
 
     @Test
     void register_userOlder_NotOk() {
+        User noValidAgeUser = new User("turtle@gmail.com", "123456", 17);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(noValidAgeUser));
     }
 
     @Test
-    void register_passwordLenght_NotOk() {
+    void register_passwordLength_NotOk() {
+        User noValidPasswordUser = new User("fish@gmail.com", "12345", 52);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(noValidPasswordUser));
     }
@@ -65,13 +62,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsNull_NotOk() {
         assertThrows(NullPointerException.class,
-                () -> registrationService.register(userNull));
+                () -> registrationService.register(userWithNullProperties));
     }
 
     @Test
     void register_loginIsNull_NotOk() {
         assertThrows(NullPointerException.class,
-                () -> registrationService.register(userNull));
+                () -> registrationService.register(userWithNullProperties));
     }
 
     @Test
