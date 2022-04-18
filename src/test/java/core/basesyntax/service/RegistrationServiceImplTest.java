@@ -28,61 +28,61 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUser_validValues_ok() {
+    void registration_validValues_ok() {
         User actual = registrationService.register(user);
         assertEquals(actual, user);
     }
 
     @Test
-    void addNullUser_ThrowsException() {
+    void registration_NullUser_ThrowsException() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void addUser_withNullLogin_ThrowsException() {
+    void registration_withNullLogin_ThrowsException() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_under18_ThrowsException() {
+    void registration_under18_ThrowsException() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_negativeAge_ThrowsException() {
+    void registration_negativeAge_ThrowsException() {
         user.setAge(-18);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_older18_ok() {
+    void registration_older18_ok() {
         user.setAge(22);
         User actual = registrationService.register(user);
         assertEquals(actual.getAge(), user.getAge());
     }
 
     @Test
-    void addUser_nullAge_ThrowsException() {
+    void registration_nullAge_ThrowsException() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_passwordLessThanSixCharacters_ThrowsException() {
+    void registration_passwordLessThanSixCharacters_ThrowsException() {
         user.setPassword("1234");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_passwordIsNull_ThrowsException() {
+    void registration_passwordIsNull_ThrowsException() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_withExcitingLogin_ThrowsException() {
+    void registration_withExcitingLogin_ThrowsException() {
         User bob = new User();
         bob.setLogin("bob");
         bob.setAge(20);
