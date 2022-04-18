@@ -13,7 +13,7 @@ class RegistrationServiceImplTest {
 
     private static StorageDaoImpl database;
     private static RegistrationService registration;
-    User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
