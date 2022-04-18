@@ -1,46 +1,38 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class RegistrationServiceImplTest {
-    private User user1 = new User();
-    private User user2 = new User();
-    private User user3 = new User();
+    private User userCorrect;
+    private User userAgeLess18;
+    private User userWrongPassword;
     private StorageDao storageDao = new StorageDaoImpl();
     private RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
     void setUp() {
-        user1.setLogin("userLogin");
-        user1.setPassword("password");
-        user1.setAge(18);
-        user2.setLogin("userLogin2");
-        user2.setPassword("password2");
-        user2.setAge(16);
-        user3.setLogin("userLogin3");
-        user3.setPassword("pass");
-        user3.setAge(20);
+        userCorrect = new User("userLogin", "password", 18);
+        userAgeLess18 = new User("userLogin2", "password", 16);
+        userWrongPassword = new User("userLogin2", "pas", 20);
     }
 
     @Test
-    void userRegistered() {
-        User actualUser = registrationService.register(user1);
-        assertEquals(user1, actualUser);
-        storageDao.add(actualUser);
-        assertEquals(storageDao.get(actualUser.getLogin()), user1);
+    void userRegistered_ok() {
+        User actualUser = new User("userLogin3", "password3", 19);
+        registrationService.register(actualUser);
+        assertEquals(storageDao.get(actualUser.getLogin()), actualUser);
     }
 
     @Test
-    void passwordLengthLessThenSixSymbols() {
+    void passwordLengthLessThenSixSymbols_notOk() {
         try {
-            registrationService.register(user3);
+            registrationService.register(userWrongPassword);
         } catch (RuntimeException e) {
             return;
         }
@@ -48,7 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void user_isNull() {
+    void userIsNull_notOk() {
         try {
             registrationService.register(null);
         } catch (RuntimeException e) {
@@ -58,11 +50,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkUserLoginWithSameLogin() {
-        storageDao.add(user1);
-        storageDao.add(user2);
+    void userLoginIsNull_notOk() {
+        User actual = new User(null, "password", 25);
+        assertThrows(RuntimeException.class, () ->{
+            registrationService.register(actual);
+        });
+    }
+
+    @Test
+    void userLoginIsEmpty_notOk() {
+        User actual = new User("", "password", 25);
+        assertThrows(RuntimeException.class, () ->{
+            registrationService.register(actual);
+        });
+    }
+
+    @Test
+    void checkUserLoginWithSameLogin_notOk() {
+        registrationService.register(userCorrect);
         try {
-            registrationService.register(user1);
+            registrationService.register(userCorrect);
         } catch (RuntimeException e) {
             return;
         }
@@ -70,12 +77,52 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void userPasswordIsNull_notOk() {
+        User actual = new User("login", null, 25);
+        assertThrows(RuntimeException.class, () ->{
+            registrationService.register(actual);
+        });
+    }
+
+    @Test
+    void userPasswordIsEmpty_notOk() {
+        User actual = new User("login", "", 25);
+        assertThrows(RuntimeException.class, () ->{
+            registrationService.register(actual);
+        });
+    }
+
+    @Test
     void userAgeLessThen18() {
         try {
-            registrationService.register(user2);
+            registrationService.register(userAgeLess18);
         } catch (RuntimeException e) {
             return;
         }
         fail("Test should fall, your age is less then 18");
+    }
+
+    @Test
+    void userWithNullAge() {
+        User currentUser = new User("login", "password", null);
+        assertThrows(RuntimeException.class, () ->{
+            registrationService.register(currentUser);
+        });
+    }
+
+    @Test
+    void userWithZeroAge() {
+        User currentUser = new User("login", "password", 0);
+        assertThrows(RuntimeException.class, () ->{
+            registrationService.register(currentUser);
+        });
+    }
+
+    @Test
+    void userWithNegativeAge() {
+        User currentUser = new User("login", "password", -26);
+        assertThrows(RuntimeException.class, () ->{
+            registrationService.register(currentUser);
+        });
     }
 }
