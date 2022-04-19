@@ -12,13 +12,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (!(user.getLogin() == null)
-                && user.getPassword().length() >= MIN_PASSWORD_LENGTH
-                && user.getAge() >= MIN_AGE
+        if (isLoginCorrect(user.getLogin())
+                && isPasswordCorrect(user.getPassword())
+                && isAgeCorrect(user.getAge())
                 && !Objects.equals(data.get(user.getLogin()), user)) {
             data.add(user);
             return user;
         }
         throw new RuntimeException("Can't register user " + user);
+    }
+
+    private boolean isAgeCorrect(Integer age) {
+        return age != null && age >= MIN_AGE;
+    }
+
+    private boolean isPasswordCorrect(String password) {
+        return password != null && password.length() >= MIN_PASSWORD_LENGTH;
+    }
+
+    private boolean isLoginCorrect(String login) {
+        return login != null;
     }
 }
