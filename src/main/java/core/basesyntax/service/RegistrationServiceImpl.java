@@ -6,6 +6,9 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
 
+    public static final int ADULT_AGE = 18;
+    public static final int MAX_LENTH = 6;
+
     private static final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -19,11 +22,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User with such login already exists");
         }
 
-        if (user.getAge() < 18) {
+        if (user.getAge() < ADULT_AGE) {
             throw new RuntimeException("User should be 18 y. o. to register");
         }
 
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MAX_LENTH) {
             throw new RuntimeException("Invalid age for registration");
         }
 

@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLength_notOk() {
+    void register_passwordInvalidLength_NotOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
