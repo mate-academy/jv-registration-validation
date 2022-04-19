@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-        void register_ProperLogin_Ok() {
+    void register_ProperLogin_Ok() {
         user.setLogin("ProperLogin");
         user.setPassword("123456");
         user.setAge(20);
@@ -104,7 +104,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-        void register_userShortPassword_NotOk() {
+    void register_userShortPassword_NotOk() {
         user.setAge(18);
         user.setLogin("PasswordTooShort");
         user.setPassword("short");
