@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     void registration_older18_ok() {
         user.setAge(22);
         User actual = registrationService.register(user);
-        assertEquals(actual.getAge(), user.getAge());
+        assertEquals(user.getAge(), actual.getAge());
     }
 
     @Test
