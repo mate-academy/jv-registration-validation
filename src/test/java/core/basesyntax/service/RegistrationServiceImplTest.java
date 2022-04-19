@@ -11,39 +11,38 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private User user;
-    private RegistrationService registration;
+    private RegistrationService registration = new RegistrationServiceImpl();
 
     @BeforeEach
     void setup() {
         user = new User("gerasimov", "wevrewvre", 18);
-        registration = new RegistrationServiceImpl();
     }
 
     @Test
-    void ageValidation() {
-        user.setAge(15);
+    void register_age_NotOk() {
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registration.register(user);
         });
     }
 
     @Test
-    void passwordValidation() {
-        user.setPassword("rehb");
+    void register_password_NotOk() {
+        user.setPassword("rehba");
         assertThrows(RuntimeException.class, () -> {
             registration.register(user);
         });
     }
 
     @Test
-    void nullValue_NotOk() {
+    void register_nullValue_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registration.register(null);
         });
     }
 
     @Test
-    void addDuplicate_NotOk() {
+    void register_Duplicate_NotOk() {
         registration.register(user);
         assertThrows(RuntimeException.class, () -> {
             registration.register(user);
@@ -51,7 +50,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addValue_Ok() {
+    void register_NewValue_Ok() {
         user.setLogin("ivanov");
         registration.register(user);
         assertEquals(1, Storage.people.size());
@@ -63,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void getValidation() {
+    void get_UserId_Ok() {
         registration.register(user);
         assertEquals(user.getLogin(), Storage.people.get(Math.toIntExact(user.getId()) - 1)
                 .getLogin());
