@@ -30,11 +30,11 @@ class RegistrationServiceImplTest {
     @Test
     void registration_validValues_ok() {
         User actual = registrationService.register(user);
-        assertEquals(actual, user);
+        assertEquals(user, actual);
     }
 
     @Test
-    void registration_NullUser_ThrowsException() {
+    void registration_nullUser_ThrowsException() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
@@ -71,7 +71,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_passwordLessThanSixCharacters_ThrowsException() {
-        user.setPassword("1234");
+        user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
