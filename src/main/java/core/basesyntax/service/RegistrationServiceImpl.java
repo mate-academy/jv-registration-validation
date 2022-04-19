@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.util.Objects;
 
@@ -13,14 +12,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null");
+            throw new RuntimeException("User is null");
         }
-        if (Storage.people.size() > 0) {
-            for (User person : Storage.people) {
-                if (Objects.equals(person.getLogin(), user.getLogin())) {
-                    throw new RuntimeException("There is a user with such a login in the Storage");
-                }
-            }
+        if ((user.getLogin() == null) || Objects.equals(user.getLogin(), "")) {
+            throw new RuntimeException("Login is null or empty");
+        }
+        if (user.getPassword() == null || Objects.equals(user.getPassword(), "")) {
+            throw new RuntimeException("Password is null or empty");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("There is a user with such a login in the Storage");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User must be at least 18 years old");
