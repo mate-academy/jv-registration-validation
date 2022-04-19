@@ -1,12 +1,13 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_THRESHOLD_YEARS = 18;
     private static final int PASSWORD_LENGTH = 6;
-    private StorageDaoImpl storageData = new StorageDaoImpl();
+    private StorageDao storageData = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
