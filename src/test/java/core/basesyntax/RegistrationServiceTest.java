@@ -1,20 +1,26 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
     private User user;
+
+    @BeforeAll
+    static void set() {
+        registrationService = new RegistrationServiceImpl();
+
+    }
 
     @BeforeEach
     void setUp() {
@@ -49,8 +55,8 @@ public class RegistrationServiceTest {
     @Test
     void passwordLength_10characters_ok() {
         user.setPassword("10_symbols");
-        boolean actual = user == registrationService.register(user);
-        assertTrue(actual);
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -62,8 +68,8 @@ public class RegistrationServiceTest {
     @Test
     void userAgeIs18_ok() {
         user.setAge(18);
-        boolean actual = user == registrationService.register(user);
-        assertTrue(actual);
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -74,17 +80,16 @@ public class RegistrationServiceTest {
 
     @Test
     void userLoginAlreadyExist_notOk() {
-        StorageDaoImpl testStorageData = new StorageDaoImpl();
         user.setLogin("Login");
-        testStorageData.add(user);
+        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void userLoginIsUnique_ok() {
         user.setLogin("Unique_Login");
-        boolean actual = user == registrationService.register(user);
-        assertTrue(actual);
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
