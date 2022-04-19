@@ -13,9 +13,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || user.getId() == null || user.getLogin() == null
-                || user.getPassword() == null || user.getAge() == null) {
+        if (user == null) {
             throw new RuntimeException("Please provide valid registration data");
+        }
+        if (user.getId() == null) {
+            throw new RuntimeException("Please provide id");
+        }
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Please provide login");
+        }
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Please provide password");
+        }
+        if (user.getAge() == null) {
+            throw new RuntimeException("Please provide age");
         }
 
         if (storageDao.get(user.getLogin()) != null) {
