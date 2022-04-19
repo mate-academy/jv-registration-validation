@@ -35,12 +35,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsValid_NotOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
     void register_userIsNull_NotOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
