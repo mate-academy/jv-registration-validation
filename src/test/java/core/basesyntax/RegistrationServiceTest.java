@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import static core.basesyntax.db.Storage.people;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
