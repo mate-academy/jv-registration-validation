@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
 
     @BeforeEach
@@ -26,13 +27,12 @@ public class RegistrationServiceTest {
 
     @AfterEach
     void storageClose() {
-        people.clear();
+        Storage.people.clear();
     }
 
     @Test
     void register_userNull_notOk() {
-        user = null;
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
