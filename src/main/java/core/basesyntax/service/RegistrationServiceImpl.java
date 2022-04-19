@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private User ageCheck(User user) {
-        if (user.getAge() == null || user.getAge() < 0 || user.getAge() < ADULT_AGE) {
+        if (user.getAge() == null || user.getAge() < ADULT_AGE) {
             throw new RuntimeException("Invalid age for registration");
         }
         return user;

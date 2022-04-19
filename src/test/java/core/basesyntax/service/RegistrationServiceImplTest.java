@@ -1,41 +1,45 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int ADULT_AGE = 18;
     private static final int PASSWORD_VALID_LENGTH = 6;
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
     private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
         user = new User();
         user.setAge(24);
         user.setLogin("abababalamaga");
         user.setPassword("19840321");
-        user.setId(59L);
     }
 
     @Test
     void register_validUser_Ok() {
         User newUser = registrationService.register(user);
         assertTrue(Storage.people.contains(newUser));
-        assertTrue(newUser.getPassword().length() >= PASSWORD_VALID_LENGTH);
-        assertTrue(newUser.getAge() >= ADULT_AGE);
+        assertEquals(user, newUser);
     }
 
     @Test
     void register_isNotAdult_notOk() {
-        user.setAge(14);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -47,7 +51,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLength_notOk() {
-        user.setPassword("666");
+        user.setPassword("66666");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
