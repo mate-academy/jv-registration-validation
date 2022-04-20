@@ -13,10 +13,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user == null
                 || user.getLogin() == null
-                || user.getLogin().contains(" ")
                 || user.getAge() == null
                 || user.getPassword() == null) {
             throw new NullPointerException("Incorrect input");
+        }
+        if (user.getLogin().contains(" ")) {
+            throw new RuntimeException("Enter login without spaces");
         }
         if (user.getAge() < MIN_YEARS) {
             throw new RuntimeException("You are under 18");

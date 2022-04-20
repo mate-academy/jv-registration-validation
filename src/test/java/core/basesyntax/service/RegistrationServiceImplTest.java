@@ -14,12 +14,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private StorageDao storageDao = new StorageDaoImpl();
+    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -69,19 +70,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void userAge_NotOk() {
-        user.setAge(10);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void userAgeNegative_NotOk() {
-        user.setAge(-20);
+        user.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void userAge_IsOk() {
-        user.setAge(50);
+        user.setAge(18);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
@@ -94,7 +95,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userPasswordLength_NotOk() {
-        user.setPassword("2223");
+        user.setPassword("22333");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
