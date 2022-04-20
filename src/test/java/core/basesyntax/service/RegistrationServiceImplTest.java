@@ -29,8 +29,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsValid_ok() {
+        User expected = user;
         User actual = registrationService.register(user);
-        assertEquals(user,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -48,17 +49,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_withExistLogin_notOk() {
-        User user1 = new User();
-        user1.setLogin("mate");
-        user1.setPassword("password");
-        user1.setAge(19);
-        registrationService.register(user1);
-        User user2 = new User();
-        user2.setLogin("mate");
-        user2.setPassword("password");
-        user2.setAge(30);
+        User firstUser = new User();
+        firstUser.setLogin("mate");
+        firstUser.setPassword("password");
+        firstUser.setAge(19);
+        registrationService.register(firstUser);
+        User secondUser = new User();
+        secondUser.setLogin("mate");
+        secondUser.setPassword("password");
+        secondUser.setAge(30);
         assertThrows(RuntimeException.class, () ->
-                registrationService.register(user2));
+                registrationService.register(secondUser));
     }
 
     @Test
