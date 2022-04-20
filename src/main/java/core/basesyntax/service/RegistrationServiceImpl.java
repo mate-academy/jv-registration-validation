@@ -11,8 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-
-        nullCheck(user);
+        checkingNotNull(user);
         checkingAge(user);
         checkingPasswordLength(user);
         checkingInStorage(user);
@@ -20,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    private User nullCheck(User user) {
+    private User checkingNotNull(User user) {
         if (user == null || user.getLogin() == null || user.getPassword() == null) {
             throw new NullPointerException("Enter correct registration info");
         }
