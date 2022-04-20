@@ -59,8 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validPassword_Ok() {
-        user.setPassword("12345689");
+    void register_validUser_Ok() {
         User actualUser = registrationService.register(user);
         User expectedUser = user;
         assertEquals(expectedUser, actualUser);

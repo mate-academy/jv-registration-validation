@@ -26,9 +26,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This login is already taken, please choose another one");
-        } else if (user.getAge() < MIN_AGE) {
+        }
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("You must be 18 or older to register");
-        } else if (user.getPassword().length() < PASSWORD_LENGTH) {
+        }
+        if (user.getPassword().length() < PASSWORD_LENGTH) {
             throw new RuntimeException("Your password must contain at least 6 characters");
         }
         return storageDao.add(user);
