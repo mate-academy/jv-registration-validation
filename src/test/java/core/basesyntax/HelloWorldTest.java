@@ -25,38 +25,37 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void addingNormalUser() {
+    public void addingUser_Ok() {
         User user1 = new User("Login", "123456", 18);
         User user2 = new User("Login2", "123456", 18);
         registration.register(user1);
         registration.register(user2);
-
         Assert.assertEquals(user2, storage.get(user2.getLogin()));
     }
 
     @Test
-    public void checkIfPassword_NotOK() {
+    public void wrongPassword_NotOK() {
         User user = new User("Login", "12345", 18);
         Assert.assertThrows(RuntimeException.class, ()
                 -> registration.register(user));
     }
 
     @Test
-    public void checkIfAge_NotOK() {
+    public void wrongAge_NotOK() {
         User user = new User("Login", "123457", 17);
         Assert.assertThrows(RuntimeException.class, ()
                 -> registration.register(user));
     }
 
     @Test
-    public void checkWhenLoginIsNull() {
+    public void loginIsNull_NotOk() {
         User user = new User(null, "123457", 17);
         Assert.assertThrows(RuntimeException.class, ()
                 -> registration.register(user));
     }
 
     @Test
-    public void checkIfLoginAlreadyExist() {
+    public void LoginAlreadyExist_NotOk() {
         User user1 = new User("Login", "123457", 18);
         User user2 = new User("Login", "7354787", 19);
         registration.register(user1);
@@ -65,7 +64,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void addingNullUser() {
+    public void addingNullUser_NotOk() {
         Assert.assertThrows(RuntimeException.class, ()
                 -> registration.register(null));
     }
