@@ -1,8 +1,11 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,11 @@ class RegistrationServiceImplTest {
         user.setLogin("userLogin");
         user.setPassword("qwerty123");
         user.setAge(30);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -51,8 +59,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_validPassword_Ok() {
+        user.setPassword("12345689");
+        User actualUser = registrationService.register(user);
+        User expectedUser = user;
+        assertEquals(expectedUser, actualUser);
+    }
+
+    @Test
     void register_shortPassword_NotOk() {
-        user.setPassword("123");
+        user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 

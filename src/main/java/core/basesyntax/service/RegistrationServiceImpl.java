@@ -13,11 +13,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user == null) {
             throw new RuntimeException("User can't be null");
-        } else if (user.getLogin() == null) {
+        }
+        if (user.getLogin() == null) {
             throw new RuntimeException("User's login can't be null");
-        } else if (user.getPassword() == null) {
+        }
+        if (user.getPassword() == null) {
             throw new RuntimeException("User's password can't be null");
-        } else if (user.getAge() == null) {
+        }
+        if (user.getAge() == null) {
             throw new RuntimeException("User's age can't be null");
         }
 
