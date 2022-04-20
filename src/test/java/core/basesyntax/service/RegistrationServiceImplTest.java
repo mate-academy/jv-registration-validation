@@ -73,7 +73,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageIsNull_NotOk() {
-        registrationService.register(firstValidUser);
         firstValidUser.setAge(null);
         assertThrows(NullPointerException.class,
                 () -> registrationService.register(firstValidUser));
