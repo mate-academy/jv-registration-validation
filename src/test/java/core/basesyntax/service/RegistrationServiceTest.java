@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,6 @@ class RegistrationServiceTest {
     void loginIsUsed_NotOk() {
         User userWithEqualLogin = new User("alice", "425gfh89", 110);
         User userValid = new User("alice", "fOre8dfg", 35);
-        Storage.people.clear();
         registrationService.register(userValid);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(userWithEqualLogin));
@@ -62,7 +62,6 @@ class RegistrationServiceTest {
     @Test
     void userIsValid_Ok() {
         User userValid = new User("alice", "fOre8dfg", 35);
-        Storage.people.clear();
         User registeredUser = registrationService.register(userValid);
         assertTrue(Storage.people.contains(registeredUser));
     }
@@ -79,5 +78,10 @@ class RegistrationServiceTest {
         User userWithNullPassword = new User("jack", null, 43);
         assertThrows(NullPointerException.class, () ->
                 registrationService.register(userWithNullPassword));
+    }
+
+    @AfterEach
+    public void cleanUpEach() {
+        Storage.people.clear();
     }
 }
