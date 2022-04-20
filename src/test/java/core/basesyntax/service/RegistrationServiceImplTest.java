@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,12 +66,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_usergetloginisNotOk() {
-        user.setLogin("abc");
+    void register_theSameLogin_notOk() {
+        user.setLogin("marina");
         User user2 = new User();
-        user2.setLogin("abc");
         user2.setAge(19);
-        user2.setPassword("123456");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user2));
+        user2.setLogin("marina");
+        user2.setPassword("passsword");
+        registrationService.register(user2);
+        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }

@@ -24,6 +24,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             data.add(user);
             return user;
         }
-        throw new RuntimeException();
+        throw new RuntimeException("POH");
     }
 }
