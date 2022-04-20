@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -11,7 +12,7 @@ import org.testng.Assert;
 
 public class HelloWorldTest {
     private static RegistrationServiceImpl registration;
-    private static StorageDaoImpl storage;
+    private static StorageDao storage;
 
     @BeforeAll
     static void beforeAll() {
@@ -28,9 +29,10 @@ public class HelloWorldTest {
     public void addingUser_Ok() {
         User user1 = new User("Login", "123456", 18);
         User user2 = new User("Login2", "123456", 18);
-        registration.register(user1);
-        registration.register(user2);
-        Assert.assertEquals(user2, storage.get(user2.getLogin()));
+        User actualFirst = registration.register(user1);
+        User actualSecond = registration.register(user2);
+        Assert.assertEquals(user1, actualFirst);
+        Assert.assertEquals(user2, actualSecond);
     }
 
     @Test
