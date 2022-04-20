@@ -13,9 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationTests {
-    private static User user;
     private static RegistrationService registrationService;
     private static StorageDaoImpl storageDao;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -25,8 +25,7 @@ class RegistrationTests {
 
     @BeforeEach
     void setUp() {
-        user = new User(111L, "userLogin", "Rn963b", 18);
-        storageDao.clear();
+        user = new User("userLogin", "Rn963b", 18);
     }
 
     @AfterEach
@@ -44,7 +43,7 @@ class RegistrationTests {
 
     @Test
     void register_UserWithAgeLessThanMinimum_NotOK() {
-        user.setAge(16);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -64,13 +63,13 @@ class RegistrationTests {
 
     @Test
     void register_UserWithExistingLogin_NotOK() {
-        storageDao.add(user);
+        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_UserWithPasswordLessThanMinimum_NotOK() {
-        user.setPassword("123");
+        user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -116,11 +115,5 @@ class RegistrationTests {
     void register_UserWithNullAge() {
         user.setAge(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_NotUserObject_NotOK() {
-        assertThrows(ClassCastException.class, () ->
-                registrationService.register((User) new Object()));
     }
 }
