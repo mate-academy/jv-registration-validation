@@ -49,6 +49,13 @@ public class HelloWorldTest {
     }
 
     @Test
+    public void checkWhenLoginIsNull() {
+        User user = new User(null, "123457", 17);
+        Assert.assertThrows(RuntimeException.class, ()
+                -> registration.register(user));
+    }
+
+    @Test
     public void checkIfLoginAlreadyExist() {
         User user1 = new User("Login", "123457", 18);
         User user2 = new User("Login", "7354787", 19);

@@ -13,6 +13,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD) {
             throw new RuntimeException("Password isn't correct!");
         }
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Login is null!");
+        }
         if (storage.get(user.getLogin()) != null) {
             throw new RuntimeException("Login already exist!");
         }
