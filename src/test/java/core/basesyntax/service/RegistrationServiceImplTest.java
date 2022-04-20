@@ -10,20 +10,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static StorageDao storage;
     private static RegistrationService registrationService;
-    private static User user;
+    private StorageDao storage;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
-        storage = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
-        user = new User();
     }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
+        user = new User();
         user.setAge(18);
         user.setLogin("marina");
         user.setPassword("password");
@@ -55,8 +54,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        User user1 = null;
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user1));
+        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test

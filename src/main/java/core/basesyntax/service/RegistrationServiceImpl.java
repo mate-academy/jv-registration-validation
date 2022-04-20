@@ -7,6 +7,8 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static int INITIAL_AGE = 18;
     private static int PASSWORD_LENGTH = 6;
+    private StorageDao storageDao = new StorageDaoImpl();
+
 
     @Override
     public User register(User user) {
@@ -15,13 +17,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getPassword() == null) {
             throw new RuntimeException("User is null");
         }
-        StorageDao storageDao = new StorageDaoImpl();
         if (user.getAge() >= INITIAL_AGE && storageDao.get(user.getLogin()) == null
                 && user.getPassword().length() >= PASSWORD_LENGTH) {
             storageDao.add(user);
             return user;
-        } else {
-            throw new RuntimeException("Incorrect data");
         }
+        throw new RuntimeException("Incorrect data");
     }
 }
