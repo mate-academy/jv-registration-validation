@@ -35,12 +35,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void newUser_notExist_Ok() {
-        User newUser = registrationService.register(user);
-        Assertions.assertEquals(user, newUser);
-    }
-
-    @Test
     void newUser_alreadyExist_notOk() {
         storageDao.add(user);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));

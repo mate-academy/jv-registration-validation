@@ -16,8 +16,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("You have empty lines. Please pass correct data");
         }
         if (user.getAge() < MIN_REGISTRATION_AGE) {
-            throw new RuntimeException("Your age must be greater "
-                    + MIN_REGISTRATION_AGE + " than 18");
+            throw new RuntimeException("Your age must be greater or equal than "
+                    + MIN_REGISTRATION_AGE);
         }
         if (user.getPassword().length() < MIN_LOGIN_SYMBOLS) {
             throw new RuntimeException("Your password must be greater than "
