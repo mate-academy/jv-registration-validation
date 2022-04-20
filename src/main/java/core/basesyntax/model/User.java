@@ -40,6 +40,12 @@ public class User {
         this.age = age;
     }
 
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
