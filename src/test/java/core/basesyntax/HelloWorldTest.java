@@ -55,7 +55,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void LoginAlreadyExist_NotOk() {
+    public void loginAlreadyExist_NotOk() {
         User user1 = new User("Login", "123457", 18);
         User user2 = new User("Login", "7354787", 19);
         registration.register(user1);
