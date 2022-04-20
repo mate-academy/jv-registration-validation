@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.Objects;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,17 +40,19 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-    void userRegister_Ok() {
-        Storage.people.clear();
+    void setup() {
         registrationService.register(firstUser);
-        User registerUser = new User("Bob", "qwe123", 55);
-        boolean actual = Objects.equals(registerUser, Storage.people.get(0));
-        assertTrue(actual);
+        assertEquals(firstUser, Storage.people.get(0));
+        Storage.people.clear();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void repeatingName_NotOk() {
-        Storage.people.clear();
+    void register_repeatingName_NotOk() {
         registrationService.register(firstUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(thirdUser);
@@ -59,7 +61,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void largeAge_NotOk() {
-        Storage.people.clear();
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(secondUser);
         });
@@ -67,7 +68,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void largeAge_Ok() {
-        Storage.people.clear();
         registrationService.register(thirdUser);
         assertTrue(Storage.people.get(0).getAge() >= MIN_AGE);
         assertEquals(Storage.people.get(0).getAge(), thirdUser.getAge());
@@ -75,7 +75,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void validPasswordLength_NotOk() {
-        Storage.people.clear();
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(fourthUser);
         });
@@ -83,14 +82,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void validPasswordLength_Ok() {
-        Storage.people.clear();
         registrationService.register(firstUser);
         assertTrue(Storage.people.get(0).getPassword().length() >= MIN_PASSWORD_LENGTH);
+        assertEquals(Storage.people.get(0).getPassword(), firstUser.getPassword());
     }
 
     @Test
     void validUserCase_ok() {
-        Storage.people.clear();
         registrationService.register(firstUser);
         registrationService.register(fifthUser);
         assertEquals(2, Storage.people.size());
@@ -98,7 +96,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void userRegisterWithNull_NotOk() {
-        Storage.people.clear();
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
@@ -106,7 +103,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void userNameNullOrEmpty_NotOk() {
-        Storage.people.clear();
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(sixthUser);
         });
@@ -117,7 +113,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void userPasswordNullOrEmpty_NotOk() {
-        Storage.people.clear();
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(eighthUser);
         });
