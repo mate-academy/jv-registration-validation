@@ -11,22 +11,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationServiceImpl registrationService;
-    private static User user;
+    private static RegistrationService registrationService;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        user = new User();
     }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
+        user = new User();
     }
 
     @Test
-    void register_userIsOK() {
+    void registerUserIsOK() {
         user.setAge(19);
         user.setPassword("123456");
         user.setLogin("pasis");
@@ -35,38 +35,38 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userGetAgeIsNotOK() {
+    void registerUserGetAgeIsNotOK() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_userGetAgeIsNull() {
+    void registerUserGetAgeIsNull() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_userGetPasswordIsNotOK() {
+    void registerUserGetPasswordIsNotOK() {
         user.setAge(18);
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_usergetpasswordIsNull() {
+    void registerUserGetPasswordIsNull() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_usergetloginIsNull() {
+    void registerUserGetloginIsNull() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_theSameLogin_notOk() {
+    void registerTheSameLogin_NotOk() {
         user.setLogin("marina");
         User user2 = new User();
         user2.setAge(19);
