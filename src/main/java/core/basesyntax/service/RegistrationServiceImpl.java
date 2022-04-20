@@ -31,11 +31,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (checkAge(user)) {
-            return storageDao.add(user);
+            if (checkPassword(user)) {
+                return storageDao.add(user);
+            }
         }
 
         if (checkPassword(user)) {
-            return storageDao.add(user);
+            if (checkAge(user)) {
+                return storageDao.add(user);
+            }
         }
         return storageDao.add(user);
     }
