@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -22,8 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("Login can't be null, please fix your login");
         }
         if (loginIsNotUsed(user) && ageIsValid(user) && passWordIsValid(user)) {
-            Storage.people.add(user);
-            return user;
+            return storageDao.add(user);
         }
         throw new RuntimeException("We can't register user, please try letter");
     }

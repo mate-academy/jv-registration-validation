@@ -31,7 +31,7 @@ class RegistrationServiceTest {
         userWithNullPassword = new User("jack", null, 43);
         userWithNotValidPassword = new User("john", "49Gк5", 18);
         userValid = new User("alice", "fOre8dfg", 35);
-        userWithInvalidAge = new User("rey", "dUrmd8sI", 15);
+        userWithInvalidAge = new User("rey", "dUrmd8sI", 17);
         userWithEqualLogin = new User("alice", "425gfh89", 110);
         Storage.people.clear();
     }
