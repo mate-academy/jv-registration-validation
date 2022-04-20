@@ -15,7 +15,7 @@ class RegistrationServiceImplTest {
     private User user;
 
     @BeforeAll
-    static void set() {
+    static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -23,7 +23,7 @@ class RegistrationServiceImplTest {
     void setUp() {
         user = new User();
         user.setAge(18);
-        user.setLogin("yarikClownBoy");
+        user.setLogin("noOneIsClownBoy");
         user.setPassword("1337228");
     }
 
@@ -78,7 +78,7 @@ class RegistrationServiceImplTest {
     @Test
     void userLoginIs_notOk() {
         User secondBoy = new User();
-        secondBoy.setLogin("yarikClownBoy");
+        secondBoy.setLogin("noOneIsClownBoy");
         secondBoy.setPassword("7654321");
         secondBoy.setAge(19);
         registrationService.register(secondBoy);
@@ -87,7 +87,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userLoginIs_ok() {
-        user.setLogin("yarikNotClownBoy");
+        user.setLogin("oneIsClownBoy");
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
