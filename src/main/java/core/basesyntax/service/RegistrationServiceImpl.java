@@ -9,7 +9,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static int PASSWORD_LENGTH = 6;
     private StorageDao storageDao = new StorageDaoImpl();
 
-
     @Override
     public User register(User user) {
         if (user == null || user.getAge() == null
