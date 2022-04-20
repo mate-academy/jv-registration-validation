@@ -23,16 +23,9 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void userIsValid_Ok() {
-        userValid = new User("alice", "fOre8dfg", 35);
-        User registeredUser = registrationService.register(userValid);
-        assertTrue(Storage.people.contains(registeredUser));
-    }
-
-    @Test
     void loginIsUsed_NotOk() {
-        userWithEqualLogin = new User("alice", "425gfh89", 110);
-        userValid = new User("alice", "fOre8dfg", 35);
+        User userWithEqualLogin = new User("alice", "425gfh89", 110);
+        User userValid = new User("alice", "fOre8dfg", 35);
         Storage.people.clear();
         registrationService.register(userValid);
         assertThrows(RuntimeException.class, () ->
@@ -41,7 +34,7 @@ class RegistrationServiceTest {
 
     @Test
     void loginIsNull_NotOk() {
-        userWithNullLogin = new User(null, "q3ff5e", 23);
+        User userWithNullLogin = new User(null, "q3ff5e", 23);
         assertThrows(NullPointerException.class, () ->
                 registrationService.register(userWithNullLogin));
     }
@@ -54,21 +47,28 @@ class RegistrationServiceTest {
 
     @Test
     void passwordIsNotValid_NotOk() {
-        userWithNotValidPassword = new User("john", "49Gк5", 18);
+        User userWithNotValidPassword = new User("john", "49Gк5", 18);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(userWithNotValidPassword));
     }
 
     @Test
-    void invalidAge_notOk() {
-        userWithInvalidAge = new User("rey", "dUrmd8sI", 17);
+    void userIsValid_Ok() {
+        User userValid = new User("alice", "fOre8dfg", 35);
+        User userWithValidAge = registrationService.register(userValid);
+        assertTrue(Storage.people.contains(userWithValidAge));
+    }
+
+    @Test
+    void invalidAge_NotOk() {
+        User userWithInvalidAge = new User("rey", "dUrmd8sI", 17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(userWithInvalidAge));
     }
 
     @Test
-    void passwordIsNull_notOk() {
-        userWithNullPassword = new User("jack", null, 43);
+    void passwordIsNull_NotOk() {
+        User userWithNullPassword = new User("jack", null, 43);
         assertThrows(NullPointerException.class, () ->
                 registrationService.register(userWithNullPassword));
     }
