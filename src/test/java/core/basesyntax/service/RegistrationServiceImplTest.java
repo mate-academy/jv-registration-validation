@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -55,8 +55,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUser_Ok() {
-        registrationService.register(firstValidUser);
-        assertEquals(1, Storage.people.size());
+        User actual = registrationService.register(firstValidUser);
+        assertTrue(Storage.people.contains(actual));
     }
 
     @Test
