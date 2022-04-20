@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
-public class HelloWorldTest {
+public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registration;
     private static StorageDao storage;
 
