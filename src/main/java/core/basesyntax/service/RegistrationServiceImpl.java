@@ -15,13 +15,16 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin() == null
                 || user.getAge() == null
                 || user.getPassword() == null) {
-            throw new NullPointerException("You have to fill all fields or check correct entry");
+            throw new RuntimeException("You have to fill all fields or check correct entry");
         }
         if (user.getAge() < MIN_PASS_AGE) {
             throw new RuntimeException("You must be 18 years old");
         }
         if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new RuntimeException("Your password must be consist of six characters");
+        }
+        if (storageData.get(user.getLogin()) != null) {
+            throw new RuntimeException("User is exists");
         }
         return storageData.add(user);
     }
