@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
