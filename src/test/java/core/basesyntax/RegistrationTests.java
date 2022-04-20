@@ -113,6 +113,12 @@ class RegistrationTests {
     }
 
     @Test
+    void register_UserWithNullAge() {
+        user.setAge(null);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_NotUserObject_NotOK() {
         assertThrows(ClassCastException.class, () ->
                 registrationService.register((User) new Object()));

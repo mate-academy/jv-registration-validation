@@ -26,6 +26,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("User's password is null");
         }
 
+        if (user.getAge() == null) {
+            throw new NullPointerException("User's age is null");
+        }
+
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with login " + user.getLogin() + " already exists");
         }
