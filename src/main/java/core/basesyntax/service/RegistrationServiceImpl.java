@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Incorrect data");
         }
         if (user.getAge() < MINIMUM_AGE) {
-            throw new RuntimeException("The user must be" + MINIMUM_AGE + " years of age or older");
+            throw new RuntimeException("The user must be " + MINIMUM_AGE + " years of age or older");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password length must be at least " + MIN_PASSWORD_LENGTH);
