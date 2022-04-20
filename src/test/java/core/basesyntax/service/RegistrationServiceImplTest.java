@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static User user;
     private static RegistrationService registrationService;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -71,7 +71,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userAgeIsLessThan18_notOk() {
-        user.setAge(10);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
@@ -107,9 +107,7 @@ class RegistrationServiceImplTest {
     @Test
     void userIsValid_OK() {
         User registerUser = registrationService.register(user);
-        assertEquals(user.getLogin(), registerUser.getLogin());
-        assertEquals(user.getPassword(), registerUser.getPassword());
-        assertEquals(user.getAge(), registerUser.getAge());
+        assertEquals(user, registerUser);
     }
 }
 

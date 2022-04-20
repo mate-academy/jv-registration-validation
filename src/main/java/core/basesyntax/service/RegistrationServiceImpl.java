@@ -11,19 +11,26 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().isBlank()
-                || user.getAge() == null) {
+        if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().isBlank()) {
             throw new RuntimeException("Please, enter a valid login");
-        } else if (storageDao.get(user.getLogin()) != null) {
+        }
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This user is already exist");
-        } else if (user.getAge() < MINIMAL_AGE) {
+        }
+        if (user.getAge() == null) {
+            throw new RuntimeException("Please, enter a valid age");
+        }
+        if (user.getAge() < MINIMAL_AGE) {
             throw new RuntimeException("You should be at least " + MINIMAL_AGE
                    + " years old to register");
-        } else if (user.getPassword() == null || user.getPassword().isBlank()
+        }
+        if (user.getPassword() == null || user.getPassword().isBlank()
                 || user.getPassword().isEmpty()) {
             throw new RuntimeException("Please, enter a valid password");
-        } else if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
-            throw new RuntimeException("Your password should have at least 6 characters."
+        }
+        if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
+            throw new RuntimeException("Your password should have at least "
+                    + MINIMAL_PASSWORD_LENGTH + " characters."
                     + " Please, enter a valid password");
         }
         storageDao.add(user);
