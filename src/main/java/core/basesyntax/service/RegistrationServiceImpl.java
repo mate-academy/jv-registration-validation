@@ -26,15 +26,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         throw new RuntimeException("We can't register user, please try letter");
     }
 
-    public boolean ageIsValid(User user) {
+    private boolean ageIsValid(User user) {
         return user.getAge() >= MIN_AGE;
     }
 
-    public boolean loginIsNotUsed(User user) {
+    private boolean loginIsNotUsed(User user) {
         return storageDao.get(user.getLogin()) == null;
     }
 
-    public boolean passWordIsValid(User user) {
+    private boolean passWordIsValid(User user) {
         return user.getPassword().length() >= MIN_LENGTH;
     }
 }
