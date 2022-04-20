@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -22,21 +21,21 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("Password should be not null");
         }
         if (loginIsNotUsed(user) && ageIsValid(user) && passwordIsValid(user)) {
-            Storage.people.add(user);
+            storageDao.add(user);
             return user;
         }
         throw new RuntimeException("Can't register user, something going wrong!");
     }
 
-    public boolean ageIsValid(User user) {
+    private boolean ageIsValid(User user) {
         return user.getAge() >= MIN_AGE;
     }
 
-    public boolean loginIsNotUsed(User user) {
+    private boolean loginIsNotUsed(User user) {
         return storageDao.get(user.getLogin()) == null;
     }
 
-    public boolean passwordIsValid(User user) {
+    private boolean passwordIsValid(User user) {
         return user.getPassword().length() >= MIN_PASSWORD_LENGTH;
     }
 }

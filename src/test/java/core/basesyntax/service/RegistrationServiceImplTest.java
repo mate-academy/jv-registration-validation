@@ -27,12 +27,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        userWithNotValidPassword = new User("aboba", "5T76r", 23);
         userValid = new User("aliba", "Hsg7sjg79", 32);
-        userWithInvalidAge = new User("johoba", "gjS8fhfH87", 14);
-        userWithEqualLogin = new User("aliba", "87hhf77", 25);
-        userWithNullLogin = new User(null, "yhfl6j", 0);
-        userWithNullPassword = new User("eliba", null, 0);
         Storage.people.clear();
     }
 
@@ -40,9 +35,6 @@ class RegistrationServiceImplTest {
     void userIsValid_Ok() {
         User registeredUser = registrationService.register(userValid);
         assertTrue(Storage.people.contains(registeredUser));
-        assertTrue(registeredUser.getAge() >= MIN_AGE);
-        assertTrue(registeredUser.getPassword().length()
-                >= MIN_PASSWORD_LENGTH);
     }
 
     @Test
@@ -53,31 +45,36 @@ class RegistrationServiceImplTest {
 
     @Test
     void loginIsNull_NotOk() {
+        userWithNullLogin = new User(null, "yhfl6j", 0);
         assertThrows(NullPointerException.class, () ->
                 registrationService.register(userWithNullLogin));
     }
 
     @Test
     void loginIsUsed_NotOk() {
-        Storage.people.add(userValid);
+        userWithEqualLogin = new User("aliba", "87hhf77", 25);
+        registrationService.register(userValid);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(userWithEqualLogin));
     }
 
     @Test
     void invalidAge_NotOk() {
+        userWithInvalidAge = new User("johoba", "gjS8fhfH87", 14);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(userWithInvalidAge));
     }
 
     @Test
     void passwordIsNull_NotOk() {
+        userWithNullPassword = new User("eliba", null, 0);
         assertThrows(NullPointerException.class, () ->
                 registrationService.register(userWithNullPassword));
     }
 
     @Test
     void passwordIsNotValid_NotOk() {
+        userWithNotValidPassword = new User("aboba", "5T76r", 23);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(userWithNotValidPassword));
     }
