@@ -25,15 +25,10 @@ class RegistrationServiceImplTest {
         user.setPassword("123456");
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     void register_Correct_Ok() {
         User registeredUser = registrationService.register(user);
-        Assertions.assertTrue(Storage.people.contains(registeredUser));
+        Assertions.assertEquals(user, registeredUser);
     }
 
     @Test
@@ -66,5 +61,10 @@ class RegistrationServiceImplTest {
     void register_NullPass_NotOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }

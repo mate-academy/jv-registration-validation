@@ -27,7 +27,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Min pass length " + MIN_PASS_LENGTH
                     + ", but was " + user.getPassword().length());
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
