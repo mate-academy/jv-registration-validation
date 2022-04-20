@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -12,13 +10,11 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -36,7 +32,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void newUser_alreadyExist_notOk() {
-        storageDao.add(user);
+        registrationService.register(user);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -60,7 +56,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void nullAge_notOk() {
-        user.setAge(0);
+        user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -72,7 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userAgeLessThan18_notOk() {
-        user.setAge(12);
+        user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 

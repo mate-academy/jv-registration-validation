@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null || user.getPassword() == null
-                || user.getAge() == 0) {
+                || user.getAge() == null) {
             throw new RuntimeException("You have empty lines. Please pass correct data");
         }
         if (user.getAge() < MIN_REGISTRATION_AGE) {
