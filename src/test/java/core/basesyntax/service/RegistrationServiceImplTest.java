@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void passwordLength_notOk() {
-        user.setPassword("smal");
+        user.setPassword("smal1");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userAgeIs_notOk() {
-        user.setAge(10);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginIs_notOk() {
+    void userLoginIsSame_notOk() {
         User secondBoy = new User();
         secondBoy.setLogin("noOneIsClownBoy");
         secondBoy.setPassword("7654321");
