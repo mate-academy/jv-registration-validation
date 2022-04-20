@@ -16,13 +16,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new NullPointerException("User is null");
         }
+        checkLogin(user);
+        checkPassword(user);
+        checkAge(user);
+        return storageDao.add(user);
+    }
 
+    private boolean checkLogin(User user) {
         if (user.getLogin() == null) {
             throw new NullPointerException("User's login is null");
-        }
-
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with login " + user.getLogin() + " already exists");
         }
 
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
@@ -30,18 +32,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MIN_LOGIN_LENGTH + " characters");
         }
 
-        if (checkAge(user)) {
-            if (checkPassword(user)) {
-                return storageDao.add(user);
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with login " + user.getLogin() + " already exists");
         }
-
-        if (checkPassword(user)) {
-            if (checkAge(user)) {
-                return storageDao.add(user);
-            }
-        }
-        return storageDao.add(user);
+        return true;
     }
 
     private boolean checkAge(User user) {
