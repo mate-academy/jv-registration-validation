@@ -53,10 +53,18 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void userIsValid_Ok() {
+    void userIsValidAge_Ok() {
         User userValid = new User("alice", "fOre8dfg", 35);
         User userWithValidAge = registrationService.register(userValid);
         assertTrue(Storage.people.contains(userWithValidAge));
+    }
+
+    @Test
+    void userIsValid_Ok() {
+        User userValid = new User("alice", "fOre8dfg", 35);
+        Storage.people.clear();
+        User registeredUser = registrationService.register(userValid);
+        assertTrue(Storage.people.contains(registeredUser));
     }
 
     @Test
