@@ -16,9 +16,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("Please provide valid registration data");
         }
-        if (user.getId() == null) {
-            throw new RuntimeException("Please provide id");
-        }
         if (user.getLogin() == null) {
             throw new RuntimeException("Please provide login");
         }

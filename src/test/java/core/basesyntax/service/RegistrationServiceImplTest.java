@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -22,7 +22,6 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setId(12345678L);
         user.setLogin("dopman3000");
         user.setPassword("1234567");
         user.setAge(20);
@@ -37,12 +36,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_userIsNull_NotOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
-    }
-
-    @Test
-    void register_idIsNull_NotOk() {
-        user.setId(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -73,6 +66,13 @@ class RegistrationServiceImplTest {
     void register_invalidAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_isExisted_notOk() {
+        registrationService.register(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+
     }
 
     @AfterEach
