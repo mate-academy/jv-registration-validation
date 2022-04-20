@@ -11,10 +11,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || user.getLogin() == null
-                || user.getPassword() == null || user.getAge() == null) {
-            throw new RuntimeException("Necessary fields must be initialized");
+        if (user == null) {
+            throw new RuntimeException("User can't be null");
+        } else if (user.getLogin() == null) {
+            throw new RuntimeException("User's login can't be null");
+        } else if (user.getPassword() == null) {
+            throw new RuntimeException("User's password can't be null");
+        } else if (user.getAge() == null) {
+            throw new RuntimeException("User's age can't be null");
         }
+
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This login is already taken, please choose another one");
         } else if (user.getAge() < MIN_AGE) {
@@ -22,7 +28,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         } else if (user.getPassword().length() < PASSWORD_LENGTH) {
             throw new RuntimeException("Your password must contain at least 6 characters");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
