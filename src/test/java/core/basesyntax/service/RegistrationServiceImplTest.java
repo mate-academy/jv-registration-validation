@@ -15,11 +15,11 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        user = new User();
     }
 
     @BeforeEach
     void setUp() {
+        user = new User();
         user.setAge(18);
         user.setLogin("Loki");
         user.setPassword("123456");
@@ -31,16 +31,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_CorrectUser_Ok() {
+    void register_Correct_Ok() {
         User registeredUser = registrationService.register(user);
         Assertions.assertTrue(Storage.people.contains(registeredUser));
-        Assertions.assertTrue(registeredUser.getAge() >= 18);
-        Assertions.assertTrue(registeredUser.getPassword().length() >= 6);
     }
 
     @Test
     void register_LowAge_NotOk() {
-        user.setAge(12);
+        user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
