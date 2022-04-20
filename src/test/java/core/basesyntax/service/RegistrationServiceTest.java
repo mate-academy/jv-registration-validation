@@ -11,12 +11,6 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
     private static RegistrationService registrationService;
-    private User userWithNotValidPassword;
-    private User userValid;
-    private User userWithInvalidAge;
-    private User userWithEqualLogin;
-    private User userWithNullLogin;
-    private User userWithNullPassword;
 
     @BeforeAll
     static void beforeAll() {
