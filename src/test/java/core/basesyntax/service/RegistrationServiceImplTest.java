@@ -36,7 +36,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationNullField_notOk() {
+    void register_NullField_notOk() {
         userFirst.setLogin(null);
         userSecond.setPassword(null);
         userThird.setAge(null);
@@ -46,7 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationValidField_Ok() {
+    void register_ValidField_Ok() {
         assertEquals(userFirst, registrationService.register(userFirst));
         assertEquals(userSecond, registrationService.register(userSecond));
         assertEquals(userThird, registrationService.register(userThird));
@@ -56,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationSameLogin_Ok() {
+    void register_SameLogin_Ok() {
         userFirst.setLogin("SameLogin");
         userSecond.setLogin("SameLogin");
         assertEquals(userFirst, registrationService.register(userFirst));
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationIncorrectAge_notOk() {
+    void register_IncorrectAge_notOk() {
         userFirst.setAge(17);
         userSecond.setAge(16);
         assertThrows(RuntimeException.class, () -> registrationService.register(userFirst));
@@ -73,13 +73,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationInvalidPassword_notOk() {
+    void register_InvalidPassword_notOk() {
         userFirst.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(userFirst));
     }
 
     @Test
-    void registrationNullUser_notOk() {
+    void register_NullUser_notOk() {
         userFirst = null;
         assertThrows(RuntimeException.class, () -> registrationService.register(userFirst));
     }
