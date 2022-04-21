@@ -9,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int INITIAL_PASS_LENGTH = 6;
     private static final int INITIAL_LOGIN_LENGTH = 4;
 
-    private StorageDao data = new StorageDaoImpl();
+    private final StorageDao data = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
