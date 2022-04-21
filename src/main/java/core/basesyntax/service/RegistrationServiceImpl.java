@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
@@ -8,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int INITIAL_PASS_LENGTH = 6;
     private static final int INITIAL_LOGIN_LENGTH = 4;
 
-    private StorageDaoImpl data = new StorageDaoImpl();
+    private StorageDao data = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
