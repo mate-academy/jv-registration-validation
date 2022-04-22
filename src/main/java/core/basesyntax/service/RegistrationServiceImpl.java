@@ -31,7 +31,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MINIMAL_LENGTH_PASS) {
             throw new RuntimeException("Password should be 6 characters or more");
         }
-        StorageDao newUser = new StorageDaoImpl();
-        return newUser.add(user);
+        return storageDao.add(user);
     }
 }
