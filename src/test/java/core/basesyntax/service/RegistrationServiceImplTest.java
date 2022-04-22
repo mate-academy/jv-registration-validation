@@ -95,15 +95,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_emptyPass_notOk() {
+    void register_emptyPassOrLogin_notOk() {
         final User emptyPassUser = new User();
         emptyPassUser.setAge(42);
         emptyPassUser.setLogin("Empty Pass User");
         emptyPassUser.setPassword("");
+        final User emptyLoginUser = new User();
+        emptyLoginUser.setAge(42);
+        emptyLoginUser.setLogin("");
+        emptyLoginUser.setPassword("786854444");
         assertThrows(RuntimeException.class, () ->
                 registrationUser.register(emptyPassUser),
-                "Password can't be emptu, password length should be 6 or more characters");
-
+                "Password can't be empty, password length should be 6 or more characters");
+        assertThrows(RuntimeException.class, () ->
+                        registrationUser.register(emptyLoginUser),
+                "Login can't be empty");
     }
 
     @Test
@@ -113,8 +119,7 @@ class RegistrationServiceImplTest {
         negativeAgeUser.setLogin("Negative Age User");
         negativeAgeUser.setPassword("76353422");
         assertThrows(RuntimeException.class, () ->
-                registrationUser.register(negativeAgeUser),
+                        registrationUser.register(negativeAgeUser),
                 "Age can't be negative, Users age should be greater than 18yo");
-
     }
 }

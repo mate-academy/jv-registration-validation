@@ -14,8 +14,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null
                 || user.getLogin() == null
                 || user.getAge() == null
-                || user.getPassword() == null) {
-            throw new RuntimeException("Can't register User with null parameters");
+                || user.getPassword() == null
+                || user.getPassword().equals("")
+                || user.getLogin().equals("")) {
+            throw new RuntimeException("Can't register User with null or empty parameters");
         }
         if (user.getAge() < MINIMAL_AGE) {
             throw new RuntimeException("Users should be greater than 18yo");
