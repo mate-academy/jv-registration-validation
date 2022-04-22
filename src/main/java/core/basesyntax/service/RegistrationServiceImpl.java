@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Can't register User with null parameters");
         }
         if (user.getAge() < MINIMAL_AGE) {
-            throw new RuntimeException("Users age should be greater than 18yo");
+            throw new RuntimeException("Users should be greater than 18yo");
         }
         for (User users : Storage.people) {
             if (users.getLogin().equals(user.getLogin())) {
