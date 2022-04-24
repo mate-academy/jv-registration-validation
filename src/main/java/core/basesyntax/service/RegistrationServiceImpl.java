@@ -6,8 +6,6 @@ import core.basesyntax.model.User;
 import org.jetbrains.annotations.NotNull;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final int edgedAge = 18;
-    private final int minPasswordLength = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -16,10 +14,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             // throw new RuntimeException("You must not leave any fields empty");
             throw new NullPointerException();
         }
-        if (user.getAge() < edgedAge) {
+        if (user.getAge() < 18) {
             throw new RuntimeException("Your age must be greater than eighteen");
         }
-        if (user.getPassword().length() < minPasswordLength) {
+        if (user.getPassword().length() < 6) {
             throw new RuntimeException("Your password must have more than 6 characters");
         }
 
