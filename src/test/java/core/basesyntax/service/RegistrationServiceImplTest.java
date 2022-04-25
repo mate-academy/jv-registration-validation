@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -11,10 +13,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
@@ -23,54 +27,85 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_uniqueLogin_Ok() {
-        User expected = new User("Bastard", "123456", 20);
-        User expected1 = new User("Bitch", "123456", 24);
-        registrationService.register(expected);
-        registrationService.register(expected1);
-        assertEquals(expected, Storage.people.get(0));
-        assertEquals(expected1, Storage.people.get(1));
+    void register_user_Ok() {
+        User firstExpected = new User();
+        firstExpected.setLogin("Bastard");
+        firstExpected.setPassword("123456");
+        firstExpected.setAge(20);
+        User secondExpected = new User();
+        secondExpected.setLogin("Bitch");
+        secondExpected.setPassword("123456");
+        secondExpected.setAge(24);
+        registrationService.register(firstExpected);
+        registrationService.register(secondExpected);
         assertEquals(2, Storage.people.size());
+        assertEquals(firstExpected, storageDao.get(firstExpected.getLogin()));
+        assertEquals(secondExpected, storageDao.get(secondExpected.getLogin()));
+
     }
 
     @Test
     void register_nullLogin_NotOk() {
-        User userNullLog = new User(null, "123456", 20);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userNullLog));
-        assertEquals(0, Storage.people.size());
+        User user = new User();
+        user.setLogin(null);
+        user.setPassword("123456");
+        user.setAge(20);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_sameLogin_NotOk() {
-        User user = new User("Moron", "1234567", 19);
-        User sameLoginUser = new User("Moron", "123456", 21);
-        Storage.people.add(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser));
+    void register_existingLogin_NotOk() {
+        User user = new User();
+        user.setLogin("Moron");
+        user.setPassword("1234567");
+        user.setAge(19);
+        registrationService.register(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
         assertEquals(1, Storage.people.size());
     }
 
     @Test
-    void register_underOrNullAge_NotOk() {
-        User userNullAge = new User("Dark_Vlastelin", "123456", null);
-        User underAgeUser = new User("Moron", "1234567", 17);
-        assertThrows(RuntimeException.class, () -> registrationService.register(underAgeUser));
-        assertThrows(RuntimeException.class, () -> registrationService.register(userNullAge));
-        assertEquals(0, Storage.people.size());
+    void register_underAge_NotOk() {
+        User user = new User();
+        user.setLogin("Moron");
+        user.setPassword("1234567");
+        user.setAge(17);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_NullAge_NotOk() {
+        User user = new User();
+        user.setLogin("Dark_Vlastelin");
+        user.setPassword("123456");
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_negativeAge_NotOk() {
-        User negativeAgeUser = new User("Gnom", "543231",-3);
-        assertThrows(RuntimeException.class, () -> registrationService.register(negativeAgeUser));
-        assertEquals(0, Storage.people.size());
+        User user = new User();
+        user.setLogin("Gnom");
+        user.setPassword("543231");
+        user.setAge(-3);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ShortOrNullPassword_NotOk() {
-        User wrongPassUser = new User("Dumb", "12345", 25);
-        User userNullPass = new User("Black", null, 15);
-        assertThrows(RuntimeException.class, () -> registrationService.register(wrongPassUser));
-        assertThrows(RuntimeException.class, () -> registrationService.register(userNullPass));
-        assertEquals(0, Storage.people.size());
+    void register_NullPassword_NotOk() {
+        User user = new User();
+        user.setLogin("Black");
+        user.setPassword(null);
+        user.setAge(21);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_ShortPassword_NotOk() {
+        User user = new User();
+        user.setLogin("Dumb");
+        user.setPassword("12345");
+        user.setAge(25);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
