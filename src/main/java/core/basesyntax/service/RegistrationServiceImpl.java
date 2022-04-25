@@ -6,7 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MIN_LENGTH_PASSWORD = 6;
+    private static final int PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Your age must be greater than eighteen");
         }
-        if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
+        if (user.getPassword().length() < PASSWORD_LENGTH) {
             throw new RuntimeException("Your password must have more than 6 characters");
         }
         return storageDao.add(user);
