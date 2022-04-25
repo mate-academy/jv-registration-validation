@@ -7,22 +7,21 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
     private static User user;
     private static RegistrationService registrationService;
 
-    @BeforeEach
-    void getDefaultUser() {
+    @BeforeAll
+   static void init() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @Test
     public void register_nullAge_notOk() {
         user = new User();
-        user.setId(1L);
         user.setAge(null);
         user.setLogin("null");
         user.setPassword("user-null");
@@ -30,19 +29,17 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_LessThanEighteenAge_notOk() {
+    public void register_lessThanEighteenAge_notOk() {
         user = new User();
-        user.setId(1L);
         user.setAge(16);
-        user.setLogin("user16");
+        user.setLogin("user");
         user.setPassword("user16");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_GreaterOrEqualEighteenAge_Ok() {
+    public void register_greaterOrEqualEighteenAge_ok() {
         User user = new User();
-        user.setId(1L);
         user.setAge(22);
         user.setLogin("Bob");
         user.setPassword("boby22");
@@ -51,9 +48,8 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_NegativeAge_notOk() {
+    public void register_negativeAge_notOk() {
         user = new User();
-        user.setId(1L);
         user.setAge(-18);
         user.setLogin("user-18");
         user.setPassword("user-18");
@@ -63,7 +59,6 @@ public class RegistrationServiceTest {
     @Test
     public void register_passwordNull_notOk() {
         user = new User();
-        user.setId(1L);
         user.setAge(22);
         user.setLogin("user22");
         user.setPassword(null);
@@ -73,7 +68,6 @@ public class RegistrationServiceTest {
     @Test
     public void register_passwordCharactersLessThanSix_notOk() {
         user = new User();
-        user.setId(1L);
         user.setAge(22);
         user.setLogin("user22");
         user.setPassword("user");
@@ -81,9 +75,8 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_passwordCharactersMoreThanSix_Ok() {
+    public void register_passwordCharactersMoreThanSix_ok() {
         user = new User();
-        user.setId(1L);
         user.setAge(22);
         user.setLogin("user22");
         user.setPassword("user22");
@@ -94,7 +87,6 @@ public class RegistrationServiceTest {
     @Test
     public void register_loginNull_notOk() {
         user = new User();
-        user.setId(1L);
         user.setAge(22);
         user.setLogin(null);
         user.setPassword("user22");
