@@ -15,9 +15,21 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         userRegistrationService = new RegistrationServiceImpl();
-        userRegistrationService.register(new User("John", 18, "site7t@gmail.com"));
-        userRegistrationService.register(new User("Bob", 20, "bob@gmail.com"));
-        userRegistrationService.register(new User("Alice", 19, "alice4@gmail.com"));
+        User userJohn = new User();
+        userJohn.setLogin("John");
+        userJohn.setAge(18);
+        userJohn.setPassword("site7tJohn");
+        userRegistrationService.register(userJohn);
+        User userBob = new User();
+        userBob.setLogin("Bob");
+        userBob.setAge(20);
+        userBob.setPassword("site7tBob");
+        userRegistrationService.register(userBob);
+        User userAlice = new User();
+        userAlice.setLogin("Alice");
+        userAlice.setAge(19);
+        userAlice.setPassword("site7tAlice");
+        userRegistrationService.register(userAlice);
     }
 
     @BeforeEach
@@ -26,10 +38,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserAllData_Ok() {
-        user = new User("Tom", 18, "tom7t@gmail.com");
+    void register_validUserData_Ok() {
+        user.setLogin("Tom");
+        user.setAge(18);
+        user.setPassword("tom7t@gmail.com");
         User actual = userRegistrationService.register(user);
-        User expected = new User("Tom", 18, "tom7t@gmail.com");
+        User expected = user;
         assertEquals(expected, actual);
     }
 
@@ -98,23 +112,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_ToTheEmptyStorage_Ok() {
-        userRegistrationService.reset();
-        user = new User("John", 18, "site7t@gmail.com");
-        userRegistrationService.register(user);
-        int actual = userRegistrationService.getSize();
-        int expected = 1;
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void register_userLoginExisted_notOk() {
-        user = new User("Alice", 26, "alice2@gmail.com");
+        user.setLogin("Alice");
         assertThrows(RuntimeException.class, () -> {
             userRegistrationService.register(user);
         });
-        String actual = user.getLogin();
-        String expected = "Alice";
-        assertEquals(expected, actual);
     }
 }

@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -10,20 +9,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getAge() >= 18 && user.getPassword().length() >= 6
-                && storageDao.get(user.getLogin()) == null) {
-            return storageDao.add(user);
+        if (user.getAge() < 18) {
+            throw new RuntimeException("Invalid age. The user must be at least 18 years old");
         }
-        throw new RuntimeException("Invalid data");
-    }
-
-    @Override
-    public int getSize() {
-        return Storage.people.size();
-    }
-
-    @Override
-    public void reset() {
-        Storage.people.clear();
+        if (user.getPassword().length() < 6) {
+            throw new RuntimeException("Password length must be at least 6 characters");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Login is already used. Create new login");
+        }
+        return storageDao.add(user);
     }
 }
