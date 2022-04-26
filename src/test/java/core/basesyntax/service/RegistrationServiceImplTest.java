@@ -27,7 +27,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_Ok() {
+    void register_validUser_Ok() {
         User firstExpected = new User();
         firstExpected.setLogin("Bastard");
         firstExpected.setPassword("123456");
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullAge_NotOk() {
+    void register_nullAge_NotOk() {
         User user = new User();
         user.setLogin("Dark_Vlastelin");
         user.setPassword("123456");
@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullPassword_NotOk() {
+    void register_nullPassword_NotOk() {
         User user = new User();
         user.setLogin("Black");
         user.setPassword(null);
@@ -101,7 +101,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ShortPassword_NotOk() {
+    void register_shortPassword_NotOk() {
         User user = new User();
         user.setLogin("Dumb");
         user.setPassword("12345");
