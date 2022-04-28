@@ -2,110 +2,120 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String REGISTERED_USER_LOGIN = "Login1";
-    private static final String REGISTERED_USER_PASSWORD = "Password123";
-    private static final int REGISTERED_USER_AGE = 19;
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private final User actualUser = new User();
-    private final StorageDaoImpl storageDao = new StorageDaoImpl();
+    private static RegistrationServiceImpl registrationService;
+    private static User newUser;
+    private static StorageDaoImpl storageDao;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        newUser = new User();
+    }
 
     @BeforeEach
     void setUp() {
-        actualUser.setLogin(REGISTERED_USER_LOGIN);
-        actualUser.setPassword(REGISTERED_USER_PASSWORD);
-        actualUser.setAge(REGISTERED_USER_AGE);
-        storageDao.add(actualUser);
+        final String newUserLogin = "LoginNew";
+        final String newUserPassword = "PasswordNew";
+        final int newUserAge = 29;
+        newUser.setLogin(newUserLogin);
+        newUser.setPassword(newUserPassword);
+        newUser.setAge(newUserAge);
     }
 
     @Test
-    void register_nullValue_notOK() {
+    void register_nullUser_notOK() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_userNullLogin_notOK() {
-        actualUser.setLogin(null);
-        actualUser.setPassword("abc123");
-        actualUser.setAge(26);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        newUser.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     void register_userBlankLogin_notOK() {
-        actualUser.setLogin("");
-        actualUser.setPassword("abc123");
-        actualUser.setAge(26);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        newUser.setLogin("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertNull(storageDao.get(newUser.getLogin()));
     }
 
     @Test
     void register_userNullPassword_notOK() {
-        actualUser.setLogin("Login2");
-        actualUser.setAge(26);
-        actualUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        newUser.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertNull(storageDao.get(newUser.getLogin()));
     }
 
     @Test
     void register_userBlankPassword_notOK() {
-        actualUser.setLogin("Login2");
-        actualUser.setAge(26);
-        actualUser.setPassword("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
-
+        newUser.setPassword("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertNull(storageDao.get(newUser.getLogin()));
     }
 
     @Test
     void register_userNullAge_notOK() {
-        actualUser.setLogin("Login2");
-        actualUser.setAge(null);
-        actualUser.setPassword("abc123");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        newUser.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertNull(storageDao.get(newUser.getLogin()));
     }
 
     @Test
     void register_containsAlreadyUserLogin_notOk() {
-        actualUser.setLogin("Login1");
-        actualUser.setAge(26);
-        actualUser.setPassword("abc123");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        final String registeredUserLogin = "LoginReg";
+        final String registeredUserPassword = "PasswordReg";
+        final int registeredUserAge = 19;
+        User registeredUser = new User();
+        registeredUser.setLogin(registeredUserLogin);
+        registeredUser.setPassword(registeredUserPassword);
+        registeredUser.setAge(registeredUserAge);
+        storageDao.add(registeredUser);
+        int hash = storageDao.hashCode();
+        newUser.setLogin(registeredUserLogin);
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertEquals(hash, storageDao.hashCode());
     }
 
     @Test
-    void register_YoungerThan18_notOk() {
-        actualUser.setLogin("Login2");
-        actualUser.setAge(16);
-        actualUser.setPassword("abc123");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+    void register_youngerThan18_notOk() {
+        newUser.setAge(16);
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertNull(storageDao.get(newUser.getLogin()));
     }
 
     @Test
-    void register_ShortPassword_notOk() {
-        actualUser.setLogin("Login2");
-        actualUser.setAge(26);
-        actualUser.setPassword("abc12");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+    void register_shortPassword_notOk() {
+        newUser.setPassword("abc12");
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertNull(storageDao.get(newUser.getLogin()));
     }
 
     @Test
     void register_newUser_Ok() {
-        User newUser = new User();
-        newUser.setLogin("LoginNewUser");
-        newUser.setPassword("PasswordNewUser");
-        newUser.setAge(22);
-        registrationService.register(newUser);
-        assertNotNull(storageDao.get("LoginNewUser"));
-        assertEquals(newUser, storageDao.get("LoginNewUser"));
-        assertEquals("LoginNewUser", storageDao.get("LoginNewUser").getLogin());
-        assertEquals("PasswordNewUser", storageDao.get("LoginNewUser").getPassword());
-        assertEquals(22, storageDao.get("LoginNewUser").getAge());
+        final String newRegisteredUserLogin = "LoginNewReg";
+        final String newRegisteredUserPassword = "PasswordNewReg";
+        final int newRegisteredUserAge = 39;
+        User newRegisteredUser = new User();
+        newRegisteredUser.setLogin(newRegisteredUserLogin);
+        newRegisteredUser.setPassword(newRegisteredUserPassword);
+        newRegisteredUser.setAge(newRegisteredUserAge);
+        registrationService.register(newRegisteredUser);
+        assertNotNull(storageDao.get(newRegisteredUser.getLogin()));
+        assertEquals(newRegisteredUser, storageDao.get(newRegisteredUser.getLogin()));
+        assertEquals("LoginNewReg", storageDao.get(newRegisteredUser.getLogin()).getLogin());
+        assertEquals("PasswordNewReg", storageDao.get(newRegisteredUser.getLogin()).getPassword());
+        assertEquals(39, storageDao.get(newRegisteredUser.getLogin()).getAge());
     }
 }
