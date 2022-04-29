@@ -24,13 +24,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User's password can not be null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("User's password must be at least 6 symbols");
+            throw new RuntimeException("User's password must be at least "
+                    + MIN_PASSWORD_LENGTH + " symbols");
         }
         if (user.getAge() == null) {
             throw new RuntimeException("User's age can not be null");
         }
         if (user.getAge() < MIN_USER_AGE) {
-            throw new RuntimeException("User's age must be at least 18");
+            throw new RuntimeException("User's age must be at least " + MIN_USER_AGE);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with this login already exists");
