@@ -33,6 +33,5 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MINIMUM_PASSWORD_LENGTH + " characters, try again.");
         }
         return storageDao.add(user);
-
     }
 }

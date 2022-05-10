@@ -33,28 +33,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginIsNull_NotOk() {
+    void register_nullLogin_NotOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userLoginIsEmpty_NotOK() {
+    void register_isEmptyLogin_NotOK() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userLoginIsBlank_NotOk() {
+    void register_isBlankLogin_NotOk() {
         user.setLogin("     ");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userLoginIsAlreadyExists_NotOk() {
+    void register_isAlreadyExistLogin_NotOk() {
         registrationService.register(user);
         User newUser = new User();
         newUser.setLogin("fujitsu");
@@ -63,49 +63,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeIsNull_notOK() {
+    void register_nullAge_notOK() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userAgeIsLessThanMinimum_notOk() {
+    void register_isLessThanMinimumAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userPasswordIsNull_NotOk() {
+    void register_nullPassword_NotOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userPasswordIsEmpty_NotOk() {
+    void register_isEmptyPassword_NotOk() {
         user.setPassword("");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userPasswordIsBlank_NotOk() {
+    void register_isBlankPassword_NotOk() {
         user.setPassword("      ");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userPasswordLengthIsLessThanMinimum_NotOk() {
+    void register_isLessThanMinimumPasswordLength_NotOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void userPassedRegistration_OK() {
+    void register_acceptNewUserRegistration_OK() {
         User registerUser = registrationService.register(user);
         assertEquals(user, registerUser);
     }
