@@ -28,7 +28,6 @@ class RegistrationServiceImplTest {
     private static final String SPACE_SYMBOL = " ";
     private static final String TAB_SYMBOL = "  ";
     private static final String SIX_SPACES = "      ";
-
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User user;
@@ -69,7 +68,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
         } catch (RuntimeException e) {
-            assertEquals("Invalid login or already exists", e.getMessage());
+            assertEquals("Invalid login", e.getMessage());
             return;
         }
         fail();
@@ -81,7 +80,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
         } catch (RuntimeException e) {
-            assertEquals("Invalid login or already exists", e.getMessage());
+            assertEquals("Login already exists", e.getMessage());
             return;
         }
         fail();
@@ -93,7 +92,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
         } catch (RuntimeException e) {
-            assertEquals("Invalid login or already exists", e.getMessage());
+            assertEquals("Empty login", e.getMessage());
             return;
         }
         fail("The user with an empty login should not be added to Storage");
@@ -105,7 +104,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
         } catch (RuntimeException e) {
-            assertEquals("Invalid login or already exists", e.getMessage());
+            assertEquals("Empty login", e.getMessage());
             return;
         }
         fail("The user with an empty login should not be added to Storage");
@@ -137,7 +136,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
         } catch (RuntimeException e) {
-            assertEquals("The age should be at least 18 years old", e.getMessage());
+            assertEquals("Invalid age", e.getMessage());
             return;
         }
         fail();
@@ -174,7 +173,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
         } catch (RuntimeException e) {
-            assertEquals("The password should be at least 6 symbols", e.getMessage());
+            assertEquals("Invalid password", e.getMessage());
             return;
         }
         fail();
