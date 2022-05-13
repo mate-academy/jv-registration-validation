@@ -5,7 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int Age_18 = 18;
+    private static final int AGE_18 = 18;
     private static final int SIX_SYMBOLS = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Invalid age");
         }
-        if (user.getAge() < Age_18) {
+        if (user.getAge() < AGE_18) {
             throw new RuntimeException("Age should be at least 18 years old");
         }
 
