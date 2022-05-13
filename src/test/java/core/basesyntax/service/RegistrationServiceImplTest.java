@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -11,7 +10,6 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 class RegistrationServiceImplTest {
     private static final int NEGATIVE_AGE = -1;
@@ -53,68 +51,49 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_NotOk() {
         user = null;
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("Invalid input user", e.getMessage());
-            return;
-        }
-        fail();
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Invalid input user", thrown.getMessage());
     }
 
     @Test
     void register_nullLogin_NotOk() {
         user.setLogin(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("Invalid login", e.getMessage());
-            return;
-        }
-        fail();
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Invalid login", thrown.getMessage());
     }
 
     @Test
     void register_existingLogin_NotOk() {
         user.setLogin(EXISTING_LOGIN);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("Login already exists", e.getMessage());
-            return;
-        }
-        fail();
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login already exists", thrown.getMessage());
     }
 
     @Test
     void register_emptyLogin_NotOk() {
         user.setLogin(EMPTY_STRING);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("Empty login", e.getMessage());
-            return;
-        }
-        fail("The user with an empty login should not be added to Storage");
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Empty login", thrown.getMessage());
     }
 
     @Test
     void register_spacesLogin_NotOk() {
         user.setLogin(SPACE_SYMBOL);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("Empty login", e.getMessage());
-            return;
-        }
-        fail("The user with an empty login should not be added to Storage");
+        RuntimeException thrownSpace = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Empty login", thrownSpace.getMessage());
         user.setLogin(TAB_SYMBOL);
-        Executable actualTabSymbol = () -> registrationService.register(user);
-        assertThrows(RuntimeException.class, actualTabSymbol);
+        RuntimeException thrownTab = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Empty login", thrownTab.getMessage());
         user.setLogin(SIX_SPACES);
-        Executable actualSixSpaces = () -> registrationService.register(user);
-        assertThrows(RuntimeException.class, actualSixSpaces);
-
+        RuntimeException thrownSixSpaces = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Empty login", thrownSixSpaces.getMessage());
     }
 
     @Test
@@ -133,31 +112,25 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_NotOk() {
         user.setAge(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("Invalid age", e.getMessage());
-            return;
-        }
-        fail();
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Invalid age", thrown.getMessage());
     }
 
     @Test
     void register_ageUnder18_NotOk() {
         user.setAge(AGE_17);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("The age should be at least 18 years old", e.getMessage());
-            return;
-        }
-        fail();
+        RuntimeException thrownAge17 = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Age should be at least 18 years old", thrownAge17.getMessage());
         user.setAge(AGE_0);
-        Executable actualAge0 = () -> registrationService.register(user);
-        assertThrows(RuntimeException.class, actualAge0);
+        RuntimeException thrownAge0 = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Age should be at least 18 years old", thrownAge0.getMessage());
         user.setAge(NEGATIVE_AGE);
-        Executable actualAgeNegative = () -> registrationService.register(user);
-        assertThrows(RuntimeException.class, actualAgeNegative);
+        RuntimeException thrownNegativeAge = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Age should be at least 18 years old", thrownNegativeAge.getMessage());
     }
 
     @Test
@@ -170,42 +143,32 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_NotOk() {
         user.setPassword(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("Invalid password", e.getMessage());
-            return;
-        }
-        fail();
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Invalid password", thrown.getMessage());
     }
 
     @Test
     void register_passwordSixSpaces_NotOk() {
         user.setPassword(SIX_SPACES);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("The password should be at least 6 symbols", e.getMessage());
-            return;
-        }
-        fail("");
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password should be at least 6 symbols", thrown.getMessage());
     }
 
     @Test
     void register_passwordUnderSixSymbols_NotOk() {
         user.setPassword(FIVE_SYMBOLS);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            assertEquals("The password should be at least 6 symbols", e.getMessage());
-            return;
-        }
-        fail();
+        RuntimeException thrownFiveSymbols = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password should be at least 6 symbols", thrownFiveSymbols.getMessage());
         user.setPassword(EMPTY_STRING);
-        Executable actualEmptyPassword = () -> registrationService.register(user);
-        assertThrows(RuntimeException.class, actualEmptyPassword);
+        RuntimeException thrownEmptyString = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password should be at least 6 symbols", thrownEmptyString.getMessage());
         user.setPassword(SPACE_SYMBOL);
-        Executable actualSpacePassword = () -> registrationService.register(user);
-        assertThrows(RuntimeException.class, actualSpacePassword);
+        RuntimeException thrownSpace = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password should be at least 6 symbols", thrownSpace.getMessage());
     }
 }
