@@ -6,6 +6,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int AGE_RESTRICTIONS_ON_REGISTRATION = 18;
+    private static final int MIN_NUMBER_OF_SYMBOLS_IN_THE_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -16,8 +18,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getPassword() == null) {
             return null;
         }
-        if (user.getAge() < 18
-                || user.getPassword().length() < 6
+        if (user.getAge() < AGE_RESTRICTIONS_ON_REGISTRATION
+                || user.getPassword().length()
+                < MIN_NUMBER_OF_SYMBOLS_IN_THE_PASSWORD
                 || existLoginInStorage(user.getLogin())) {
             throw new RuntimeException("The user does not meet the "
                     + "following criteria:"
