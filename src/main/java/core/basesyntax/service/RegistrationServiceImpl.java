@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Invalid input. User could not be null");
         }
         if (user.getLogin() == null) {
-            throw new RuntimeException("Invalid login");
+            throw new RuntimeException("Null login");
         }
         String pureLogin = user.getLogin().trim();
         user.setLogin(pureLogin);
