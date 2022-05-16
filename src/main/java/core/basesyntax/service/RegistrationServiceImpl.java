@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RuntimeException("Invalid input user");
+            throw new RuntimeException("Invalid input. User could not be null");
         }
         if (user.getLogin() == null) {
             throw new RuntimeException("Invalid login");
