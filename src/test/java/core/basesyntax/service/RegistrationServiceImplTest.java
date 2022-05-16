@@ -15,10 +15,10 @@ class RegistrationServiceImplTest {
     private static final int NEGATIVE_AGE = -1;
     private static final int AGE_0 = 0;
     private static final int AGE_17 = 17;
-    private static final int AGE_18 = 18;
+    private static final int MIN_AGE = 18;
     private static final int AGE_30 = 30;
     private static final String FIVE_SYMBOLS = "qwert";
-    private static final String SIX_SYMBOLS = "qwerty";
+    private static final String MIN_PASSWORD_LENGTH = "qwerty";
     private static final String TEN_SYMBOLS = "?-qwerty@7";
     private static final String EXISTING_LOGIN = "here_i_am";
     private static final String NEW_LOGIN = "new_first";
@@ -44,8 +44,8 @@ class RegistrationServiceImplTest {
         storageDao.add(existingInStorage);
         user = new User();
         user.setLogin(NEW_LOGIN);
-        user.setAge(AGE_18);
-        user.setPassword(SIX_SYMBOLS);
+        user.setAge(MIN_AGE);
+        user.setPassword(MIN_PASSWORD_LENGTH);
     }
 
     @Test

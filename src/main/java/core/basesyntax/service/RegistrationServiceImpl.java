@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Invalid age");
         }
-        if (user.getAge() < AGE_18) {
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age should be at least 18 years old");
         }
 
@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         String purePassword = user.getPassword().trim();
         user.setPassword(purePassword);
-        if (user.getPassword().length() < SIX_SYMBOLS) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password should be at least 6 symbols");
         }
         storageDao.add(user);
