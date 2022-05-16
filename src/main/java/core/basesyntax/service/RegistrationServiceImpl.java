@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Invalid age");
         }
         if (user.getAge() < AGE_18) {
-            throw new RuntimeException("Age should be at least 18 years old");
+            throw new RuntimeException("Age should be at least "+MIN_AGE+" years old");
         }
 
         if (user.getPassword() == null) {
