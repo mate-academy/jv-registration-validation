@@ -69,7 +69,7 @@ class RegistrationServiceImplTest {
         user.setLogin(EXISTING_LOGIN);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Login already exists", thrown.getMessage());
+        assertEquals("Login already exists " + user.getLogin(), thrown.getMessage());
     }
 
     @Test
