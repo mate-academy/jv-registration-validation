@@ -29,16 +29,16 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        final String MIN_SYMBOLS = "qwerty";
-        final String NEW_LOGIN = "new_first";
+        final String minSymbols = "qwerty";
+        final String newLogin = "new_first";
         Storage.people.clear();
         final User existingInStorage = new User();
         existingInStorage.setLogin(EXISTING_LOGIN);
         storageDao.add(existingInStorage);
         user = new User();
-        user.setLogin(NEW_LOGIN);
+        user.setLogin(newLogin);
         user.setAge(MIN_AGE);
-        user.setPassword(MIN_SYMBOLS);
+        user.setPassword(minSymbols);
     }
 
     @Test
@@ -75,12 +75,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_spacesLogin_NotOk() {
-        final String TAB_SYMBOL = "  ";
+        final String tabSymbol = "  ";
         user.setLogin(SPACE_SYMBOL);
         RuntimeException thrownSpace = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
         assertEquals("Login could not be empty", thrownSpace.getMessage());
-        user.setLogin(TAB_SYMBOL);
+        user.setLogin(tabSymbol);
         RuntimeException thrownTab = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
         assertEquals("Login could not be empty", thrownTab.getMessage());
@@ -98,8 +98,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageOver18_Ok() {
-        final int AGE_30 = 30;
-        user.setAge(AGE_30);
+        final int age30 = 30;
+        user.setAge(age30);
         User actualAge30 = registrationService.register(user);
         assertEquals(user, actualAge30);
     }
@@ -114,27 +114,28 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageUnder18_NotOk() {
-        final int NEGATIVE_AGE = -1;
-        final int AGE_0 = 0;
-        final int AGE_17 = 17;
-        user.setAge(AGE_17);
+        final int negativeAge = -1;
+        final int age0 = 0;
+        final int age17 = 17;
+        user.setAge(age17);
         RuntimeException thrownAge17 = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
         assertEquals("Age should be at least " + MIN_AGE + " years old", thrownAge17.getMessage());
-        user.setAge(AGE_0);
+        user.setAge(age0);
         RuntimeException thrownAge0 = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
         assertEquals("Age should be at least " + MIN_AGE + " years old", thrownAge0.getMessage());
-        user.setAge(NEGATIVE_AGE);
+        user.setAge(negativeAge);
         RuntimeException thrownNegativeAge = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Age should be at least " + MIN_AGE + " years old", thrownNegativeAge.getMessage());
+        assertEquals("Age should be at least "
+                + MIN_AGE + " years old", thrownNegativeAge.getMessage());
     }
 
     @Test
     void register_passwordOverSixSymbols_Ok() {
-        final String TEN_SYMBOLS = "?-qwerty@7";
-        user.setPassword(TEN_SYMBOLS);
+        final String tenSymbols = "?-qwerty@7";
+        user.setPassword(tenSymbols);
         User actualPassword10 = registrationService.register(user);
         assertEquals(user, actualPassword10);
     }
@@ -157,8 +158,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordUnderSixSymbols_NotOk() {
-        final String FIVE_SYMBOLS = "qwert";
-        user.setPassword(FIVE_SYMBOLS);
+        final String fiveSymbols = "qwert";
+        user.setPassword(fiveSymbols);
         RuntimeException thrownFiveSymbols = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
         assertEquals("Password should be at least 6 symbols", thrownFiveSymbols.getMessage());

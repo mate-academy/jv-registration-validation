@@ -34,10 +34,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Password could not be null");
         }
         if (user.getPassword().trim().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password should be at least " + MIN_PASSWORD_LENGTH + " symbols");
+            throw new RuntimeException("Password should be at least "
+                    + MIN_PASSWORD_LENGTH + " symbols");
         }
         storageDao.add(user);
         return user;
     }
 }
-
