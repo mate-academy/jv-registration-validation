@@ -5,7 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_USER_VALID_AGE = 18;
+    private static final int MIN_USER_AGE = 18;
     private static final int MIN_USER_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -22,10 +22,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Field can't be EMPTY");
         }
         if (user.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
-            throw new RuntimeException("Min user password must be 6 characters");
+            throw new RuntimeException("Min user password must be "
+                    + MIN_USER_PASSWORD_LENGTH + " characters");
         }
-        if (user.getAge() < MIN_USER_VALID_AGE) {
-            throw new RuntimeException("Minimum user age must be 18 years old");
+        if (user.getAge() < MIN_USER_AGE) {
+            throw new RuntimeException("Minimum user age must be " + MIN_USER_AGE + " years old");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User's login is already exist");
