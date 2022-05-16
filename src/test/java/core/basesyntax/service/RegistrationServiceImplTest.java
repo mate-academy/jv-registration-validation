@@ -18,7 +18,7 @@ class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
     private static final int AGE_30 = 30;
     private static final String FIVE_SYMBOLS = "qwert";
-    private static final String MIN_PASSWORD_LENGTH = "qwerty";
+    private static final String MIN_SYMBOLS = "qwerty";
     private static final String TEN_SYMBOLS = "?-qwerty@7";
     private static final String EXISTING_LOGIN = "here_i_am";
     private static final String NEW_LOGIN = "new_first";
@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
         user = new User();
         user.setLogin(NEW_LOGIN);
         user.setAge(MIN_AGE);
-        user.setPassword(MIN_PASSWORD_LENGTH);
+        user.setPassword(MIN_SYMBOLS);
     }
 
     @Test
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
         user = null;
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Invalid input. User could not be null", thrown.getMessage());
+        assertEquals("User could not be null", thrown.getMessage());
     }
 
     @Test
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Null login", thrown.getMessage());
+        assertEquals("Login could not be null", thrown.getMessage());
     }
 
     @Test
@@ -77,7 +77,7 @@ class RegistrationServiceImplTest {
         user.setLogin(EMPTY_STRING);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Empty login", thrown.getMessage());
+        assertEquals("Login could not be empty", thrown.getMessage());
     }
 
     @Test
@@ -85,15 +85,15 @@ class RegistrationServiceImplTest {
         user.setLogin(SPACE_SYMBOL);
         RuntimeException thrownSpace = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Empty login", thrownSpace.getMessage());
+        assertEquals("Login could not be empty", thrownSpace.getMessage());
         user.setLogin(TAB_SYMBOL);
         RuntimeException thrownTab = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Empty login", thrownTab.getMessage());
+        assertEquals("Login could not be empty", thrownTab.getMessage());
         user.setLogin(SIX_SPACES);
         RuntimeException thrownSixSpaces = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Empty login", thrownSixSpaces.getMessage());
+        assertEquals("Login could not be empty", thrownSixSpaces.getMessage());
     }
 
     @Test
@@ -114,7 +114,7 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Invalid age", thrown.getMessage());
+        assertEquals("Age could not be null", thrown.getMessage());
     }
 
     @Test
@@ -122,15 +122,15 @@ class RegistrationServiceImplTest {
         user.setAge(AGE_17);
         RuntimeException thrownAge17 = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Age should be at least 18 years old", thrownAge17.getMessage());
+        assertEquals("Age should be at least " + MIN_AGE + " years old", thrownAge17.getMessage());
         user.setAge(AGE_0);
         RuntimeException thrownAge0 = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Age should be at least 18 years old", thrownAge0.getMessage());
+        assertEquals("Age should be at least " + MIN_AGE + " years old", thrownAge0.getMessage());
         user.setAge(NEGATIVE_AGE);
         RuntimeException thrownNegativeAge = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Age should be at least 18 years old", thrownNegativeAge.getMessage());
+        assertEquals("Age should be at least " + MIN_AGE + " years old", thrownNegativeAge.getMessage());
     }
 
     @Test
@@ -145,7 +145,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Invalid password", thrown.getMessage());
+        assertEquals("Password could not be null", thrown.getMessage());
     }
 
     @Test
