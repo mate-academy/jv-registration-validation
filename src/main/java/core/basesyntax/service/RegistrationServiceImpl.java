@@ -33,9 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("Invalid password");
         }
-        String purePassword = user.getPassword().trim();
-        user.setPassword(purePassword);
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        if (user.getPassword().trim().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password should be at least 6 symbols");
         }
         storageDao.add(user);

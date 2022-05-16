@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
         user = null;
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Invalid input user", thrown.getMessage());
+        assertEquals("Invalid input. User could not be null", thrown.getMessage());
     }
 
     @Test
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
-        assertEquals("Invalid login", thrown.getMessage());
+        assertEquals("Null login", thrown.getMessage());
     }
 
     @Test
