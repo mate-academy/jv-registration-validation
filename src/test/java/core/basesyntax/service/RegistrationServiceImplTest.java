@@ -12,19 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int NEGATIVE_AGE = -1;
-    private static final int AGE_0 = 0;
-    private static final int AGE_17 = 17;
     private static final int MIN_AGE = 18;
-    private static final int AGE_30 = 30;
-    private static final String FIVE_SYMBOLS = "qwert";
-    private static final String MIN_SYMBOLS = "qwerty";
-    private static final String TEN_SYMBOLS = "?-qwerty@7";
     private static final String EXISTING_LOGIN = "here_i_am";
-    private static final String NEW_LOGIN = "new_first";
     private static final String EMPTY_STRING = "";
     private static final String SPACE_SYMBOL = " ";
-    private static final String TAB_SYMBOL = "  ";
     private static final String SIX_SPACES = "      ";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
@@ -38,6 +29,8 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        final String MIN_SYMBOLS = "qwerty";
+        final String NEW_LOGIN = "new_first";
         Storage.people.clear();
         final User existingInStorage = new User();
         existingInStorage.setLogin(EXISTING_LOGIN);
@@ -82,6 +75,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_spacesLogin_NotOk() {
+        final String TAB_SYMBOL = "  ";
         user.setLogin(SPACE_SYMBOL);
         RuntimeException thrownSpace = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
@@ -104,6 +98,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageOver18_Ok() {
+        final int AGE_30 = 30;
         user.setAge(AGE_30);
         User actualAge30 = registrationService.register(user);
         assertEquals(user, actualAge30);
@@ -119,6 +114,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageUnder18_NotOk() {
+        final int NEGATIVE_AGE = -1;
+        final int AGE_0 = 0;
+        final int AGE_17 = 17;
         user.setAge(AGE_17);
         RuntimeException thrownAge17 = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
@@ -135,6 +133,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordOverSixSymbols_Ok() {
+        final String TEN_SYMBOLS = "?-qwerty@7";
         user.setPassword(TEN_SYMBOLS);
         User actualPassword10 = registrationService.register(user);
         assertEquals(user, actualPassword10);
@@ -158,6 +157,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordUnderSixSymbols_NotOk() {
+        final String FIVE_SYMBOLS = "qwert";
         user.setPassword(FIVE_SYMBOLS);
         RuntimeException thrownFiveSymbols = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
