@@ -81,12 +81,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingUser_NotOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUser_Ok() {
+    void register_validUser_Ok() {
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);
