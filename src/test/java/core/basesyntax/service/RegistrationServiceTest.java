@@ -3,7 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -43,8 +43,7 @@ class RegistrationServiceTest {
     @Test
     void register_alreadyExistedLogin_notOk() {
         User loginAlreadyExist = new User("LoginAlreadyExist", "123456", 19);
-        StorageDaoImpl storageDao = new StorageDaoImpl();
-        storageDao.add(loginAlreadyExist);
+        Storage.people.add(loginAlreadyExist);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(loginAlreadyExist);
         });
@@ -121,8 +120,7 @@ class RegistrationServiceTest {
     void register_userAddToStorage_Ok() {
         User userAddToStorage = new User("userAddToStorage", "123456", 30);
         User actual = registrationService.register(userAddToStorage);
-        StorageDaoImpl storageDao = new StorageDaoImpl();
-        User expected = storageDao.get("userAddToStorage");
+        User expected = Storage.people.get(Storage.people.size() - 1);
         assertEquals(expected, actual);
     }
 

@@ -25,9 +25,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("A user with this login already exists");
         } else if (user.getLogin().length() < 1) {
             throw new RuntimeException("Username can't be empty");
-        } else {
-            storageDao.add(user);
-            return user;
         }
+        storageDao.add(user);
+        return user;
     }
 }
