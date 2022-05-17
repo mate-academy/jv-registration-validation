@@ -1,5 +1,7 @@
 package core.basesyntax.service;
 
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_USER_AGE;
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_USER_PASSWORD_LENGTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -10,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
 
@@ -24,19 +25,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lowAge_notOk() {
-        user.setLogin("q");
-        user.setAge(17);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            System.out.println("Ok, got exception " + e);
-            return;
+        for (int i = 0; i < 20; i++) {
+            int invalidAge = 17 - i;
+            user.setLogin("qq" + i * 10);
+            user.setAge(invalidAge);
+            assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                    "Age should not be lower " + MIN_USER_AGE + "\nyour age was" + (17 - i));
         }
-        fail("Should got exception for age: 17");
     }
 
     @Test
-    void register_enoughAge_ok() {
+    void register_validAge_ok() {
         user.setLogin("w");
         user.setAge(19);
         User actual = registrationService.register(user);
@@ -44,17 +43,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_sameLoginUser_notOk() {
-        User userSameLogin = new User();
-        userSameLogin.setLogin("validLogin");
-        registrationService.register(user);
+    void register_sameUserLogin_notOk() {
+        User userSameLogin = user.clone();
+        userSameLogin.setLogin("validUserLogin");
+        Storage.people.add(userSameLogin);
         try {
             registrationService.register(userSameLogin);
         } catch (RuntimeException e) {
-            System.out.println("Ok, got exception " + e);
             return;
         }
-        fail("You cant register user with same login");
+        fail("You should not be able register user with same login");
     }
 
     @Test
@@ -73,7 +71,8 @@ class RegistrationServiceImplTest {
     void register_invalidPassword_notOk() {
         user.setLogin("q2");
         user.setPassword("qwert");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "Password should not be less then " + MIN_USER_PASSWORD_LENGTH);
     }
 
     @Test
@@ -87,6 +86,20 @@ class RegistrationServiceImplTest {
             assertEquals(previousSize + 1, Storage.people.size(),
                     "The storage size expected to grow after registration");
         }
+    }
 
+    @Test
+    void register_nullFieldUser_notOk() {
+        user.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "Login should not be null");
+        user.setLogin("validLogin");
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "Password should not be null");
+        user.setPassword("validPassword");
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "Age should not be null");
     }
 }
