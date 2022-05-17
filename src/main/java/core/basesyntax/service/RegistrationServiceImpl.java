@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user == null || user.getLogin() == null || user.getAge() == 0
                 || user.getPassword() == null) {
-            throw new NullPointerException("The user or one of the fields "
+            throw new RuntimeException("The user or one of the fields "
                     + "can't be null");
         } else if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("The user must be at least "
