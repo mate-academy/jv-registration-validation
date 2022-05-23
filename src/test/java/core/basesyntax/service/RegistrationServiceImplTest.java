@@ -78,12 +78,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_gotTooOldUser_notOk() {
-        testUser.setAge(111);
-        assertThrows(RuntimeException.class, () -> testRegistration.register(testUser));
-    }
-
-    @Test
     void register_gotEmptyPassword_notOk() {
         testUser.setPassword("");
         assertThrows(RuntimeException.class, () -> testRegistration.register(testUser));
