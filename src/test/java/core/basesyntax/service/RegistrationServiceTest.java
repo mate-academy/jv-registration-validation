@@ -36,14 +36,14 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void nullValue_NotOk() {
+    void register_nullValue_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void ageValueNull_NotOk() {
+    void register_ageValueNull_NotOk() {
         newUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -51,7 +51,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void valueAgeAdult_NotOK() {
+    void register_valueAgeAdult_NotOK() {
         newUser.setAge(16);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -59,7 +59,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void passwordValueNull_NotOk() {
+    void register_passwordValueNull_NotOk() {
         newUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -67,7 +67,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void passwordValueIsBlank_NotOk() {
+    void register_passwordValueIsBlank_NotOk() {
         newUser.setPassword("");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -75,7 +75,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void passwordValueIsShort_NotOk() {
+    void register_passwordValueIsShort_NotOk() {
         newUser.setPassword("short");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -84,7 +84,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void loginValueNull_NotOk() {
+    void register_loginValueNull_NotOk() {
         newUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -92,7 +92,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void loginValueIsBlank_NotOk() {
+    void register_loginValueIsBlank_NotOk() {
         newUser.setLogin("");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -100,13 +100,12 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void suchLoginValue_NotOk() {
+    void register_suchLoginValue_NotOk() {
         newUser.setLogin("Djon");
         storageDao.add(newUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
         });
-
     }
 }
 
