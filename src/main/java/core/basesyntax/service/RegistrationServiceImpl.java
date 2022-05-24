@@ -5,8 +5,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final StorageDao storageDao = new StorageDaoImpl();
-    private static final int ADULT_AGE = 18;
+    private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MIN_ADULT_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     @Override
@@ -18,8 +18,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                                   || user.getLogin() == null) {
             throw new RuntimeException("User's age, login or password cannot be null!");
         }
-        if (user.getAge() < ADULT_AGE) {
-            throw new RuntimeException("Age must be more than " + ADULT_AGE);
+        if (user.getAge() < MIN_ADULT_AGE) {
+            throw new RuntimeException("Age must be more than " + MIN_ADULT_AGE);
         }
         if (user.getPassword().isBlank()) {
             throw new RuntimeException("Password field is blank");
