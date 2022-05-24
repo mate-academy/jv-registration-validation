@@ -100,7 +100,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_suchLoginValue_NotOk() {
+    void register_existentLoginValue_NotOk() {
         newUser.setLogin("Djon");
         storageDao.add(newUser);
         assertThrows(RuntimeException.class, () -> {
@@ -108,4 +108,3 @@ class RegistrationServiceTest {
         });
     }
 }
-
