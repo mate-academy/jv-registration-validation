@@ -18,9 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < 6) {
             throw new RuntimeException("Password should be longer then 5 symbols");
         }
-        if (user.getPassword() == null) {
-            throw new RuntimeException("Password can't be null");
-        }
+
         storageDao.add(user);
         return user;
     }
