@@ -9,6 +9,19 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Duplicate login");
+        }
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Login can't be null");
+        }
+        if (user.getPassword().length() < 6) {
+            throw new RuntimeException("Password should be longer then 5 symbols");
+        }
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Password can't be null");
+        }
+        storageDao.add(user);
+        return user;
     }
 }
