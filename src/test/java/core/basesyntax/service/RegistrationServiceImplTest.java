@@ -27,11 +27,6 @@ class RegistrationServiceImplTest {
         user.setAge(RegistrationServiceImpl.AGE_MINIMUM_FOR_REGISTRATION);
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     void register_loginNull_notOk() {
         user.setLogin(null);
@@ -58,6 +53,19 @@ class RegistrationServiceImplTest {
     void register_login_Ok() {
         User actual = register.register(user);
         assertEquals(user, actual);
+    }
+
+    @Test
+    void register_loginMultiplyRegistration_Ok() {
+        int numberUsers = 5;
+        for (int i = 0; i < numberUsers; i++) {
+            User newUser = new User();
+            newUser.setLogin("new-user-" + i);
+            newUser.setPassword("test-password" + i);
+            newUser.setAge(RegistrationServiceImpl.AGE_MINIMUM_FOR_REGISTRATION + i);
+            User actual = register.register(newUser);
+        }
+        assertEquals(numberUsers, Storage.people.size());
     }
 
     @Test
@@ -115,5 +123,10 @@ class RegistrationServiceImplTest {
         user.setPassword("*".repeat(RegistrationServiceImpl.PASSWORD_MINIMUM_LENGTH));
         User actual = register.register(user);
         assertEquals(user, actual);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
