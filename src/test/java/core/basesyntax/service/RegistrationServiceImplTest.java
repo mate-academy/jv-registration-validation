@@ -90,14 +90,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_underAge_notOk() {
-        user.setAge(12);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        user.setPassword("bad");
+        user.setPassword("small");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
@@ -110,14 +110,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_uniqueUser_Ok() {
+    void register_uniqueUser_ok() {
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);
     }
 
     @Test
-    void register_suitableAge_Ok() {
+    void register_suitableAge_ok() {
         user.setAge(18);
         User expected = user;
         User actual = registrationService.register(user);
@@ -125,7 +125,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_aboveAge_Ok() {
+    void register_aboveAge_ok() {
         user.setAge(34);
         User expected = user;
         User actual = registrationService.register(user);
@@ -133,7 +133,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_suitablePassword_Ok() {
+    void register_suitablePassword_ok() {
         user.setPassword("whyNot");
         User expected = user;
         User actual = registrationService.register(user);
@@ -141,7 +141,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_longPassword_OK() {
+    void register_longPassword_ok() {
         user.setPassword("TheBestPasswordEver123");
         User expected = user;
         User actual = registrationService.register(user);
