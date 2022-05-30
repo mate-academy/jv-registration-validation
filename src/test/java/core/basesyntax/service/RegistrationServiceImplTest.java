@@ -42,9 +42,9 @@ class RegistrationServiceImplTest {
     void register_loginAlreadyExist_notOk() {
         register.register(user);
         User newUser = new User();
-        newUser.setLogin("test-user");
-        newUser.setPassword("test-password");
-        newUser.setAge(RegistrationServiceImpl.AGE_MINIMUM_FOR_REGISTRATION);
+        newUser.setLogin(user.getLogin());
+        newUser.setPassword(user.getPassword());
+        newUser.setAge(user.getAge());
         assertThrows(RuntimeException.class, () -> register.register(newUser));
     }
 
@@ -56,13 +56,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_login_Ok() {
-        register.register(user);
-        User expected = new User();
-        expected.setLogin("new-test-user");
-        expected.setAge(RegistrationServiceImpl.AGE_MINIMUM_FOR_REGISTRATION);
-        expected.setPassword("test-password");
-        User actual = register.register(expected);
-        assertEquals(expected, actual);
+        User actual = register.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -72,14 +67,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_notOk() {
+    void register_ageUnderRestriction_notOk() {
         user.setAge(RegistrationServiceImpl.AGE_MINIMUM_FOR_REGISTRATION - 1);
         assertThrows(RuntimeException.class, () -> register.register(user));
     }
 
     @Test
-    void register_age_Ok() {
+    void register_ageNegative_notOk() {
+        user.setAge(-1);
+        assertThrows(RuntimeException.class, () -> register.register(user));
+    }
+
+    @Test
+    void register_ageRestrictionEqual_Ok() {
         user.setAge(RegistrationServiceImpl.AGE_MINIMUM_FOR_REGISTRATION);
+        User actual = register.register(user);
+        assertEquals(user, actual);
+    }
+
+    @Test
+    void register_ageAboveRestriction_Ok() {
+        user.setAge(RegistrationServiceImpl.AGE_MINIMUM_FOR_REGISTRATION + 1);
         User actual = register.register(user);
         assertEquals(user, actual);
     }
