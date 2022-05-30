@@ -11,15 +11,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return checkUser(user) ? user : null;
+        if (checkUser(user)) {
+            return storageDao.add(user);
+        }
+        return null;
     }
 
     private boolean checkUser(User user) {
-        if (isValidUserLogin(user) && isValidUserAge(user) && isValidUserPassword(user)) {
-            storageDao.add(user);
-            return true;
-        }
-        return false;
+        return isValidUserLogin(user) && isValidUserAge(user) && isValidUserPassword(user);
     }
 
     private boolean isValidUserLogin(User user) {
