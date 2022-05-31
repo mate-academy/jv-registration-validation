@@ -21,20 +21,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addToStorage_Ok() {
+    void register_validUser_Ok() {
         User firstUser = new User();
         firstUser.setLogin("drapail");
-        User actual = storage.add(firstUser);
-        User expected = firstUser;
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void register_getExistingUserFromStorage_Ok() {
-        User firstUser = new User();
-        firstUser.setLogin("drapail");
-        storage.add(firstUser);
-        User actual = storage.get("drapail");
+        firstUser.setPassword("drapail123");
+        firstUser.setAge(27);
+        User actual = registrationService.register(firstUser);
         User expected = firstUser;
         assertEquals(expected, actual);
     }
@@ -42,9 +34,13 @@ class RegistrationServiceImplTest {
     @Test
     public void register_duplicateLogin_notOk() {
         User firstUser = new User();
-        User secondUser = new User();
         firstUser.setLogin("drapail");
+        firstUser.setPassword("drapail123");
+        firstUser.setAge(27);
+        User secondUser = new User();
         secondUser.setLogin("drapail");
+        secondUser.setPassword("drapail123");
+        secondUser.setAge(27);
         storage.add(firstUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(secondUser);
@@ -55,6 +51,7 @@ class RegistrationServiceImplTest {
     void register_underageUser_notOk() {
         User firstUser = new User();
         firstUser.setLogin("drapail");
+        firstUser.setPassword("drapail123");
         firstUser.setAge(4);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(firstUser);
@@ -65,7 +62,7 @@ class RegistrationServiceImplTest {
     void register_nullAgeUser_notOk() {
         User firstUser = new User();
         firstUser.setLogin("drapail");
-        firstUser.setAge(null);
+        firstUser.setPassword("drapail123");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(firstUser);
         });
@@ -74,7 +71,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLoginUser_notOk() {
         User firstUser = new User();
-        firstUser.setLogin(null);
+        firstUser.setPassword("drapail123");
+        firstUser.setAge(27);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(firstUser);
         });
@@ -85,6 +83,7 @@ class RegistrationServiceImplTest {
         User firstUser = new User();
         firstUser.setLogin("drapail");
         firstUser.setPassword("qwert");
+        firstUser.setAge(27);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(firstUser);
         });
@@ -94,7 +93,7 @@ class RegistrationServiceImplTest {
     void register_nullPassword_notOk() {
         User firstUser = new User();
         firstUser.setLogin("drapail");
-        firstUser.setPassword(null);
+        firstUser.setAge(27);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(firstUser);
         });
