@@ -11,13 +11,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (checkUser(user)) {
+        if (isValidUser(user)) {
             return storageDao.add(user);
         }
         return null;
     }
 
-    private boolean checkUser(User user) {
+    private boolean isValidUser(User user) {
         return isValidUserLogin(user) && isValidUserAge(user) && isValidUserPassword(user);
     }
 
@@ -52,5 +52,4 @@ public class RegistrationServiceImpl implements RegistrationService {
     private boolean isWhitespaceLine(String line) {
         return line.trim().length() > 0;
     }
-
 }
