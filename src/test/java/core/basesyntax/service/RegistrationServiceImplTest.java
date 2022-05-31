@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUserLogin_notOK() {
+    void register_nullUserLogin_notOk() {
         firstUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
@@ -52,13 +52,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUserPassword_notOK() {
+    void register_nullUserPassword_notOk() {
         firstUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
-    void register_notValidPassword_notOK() {
+    void register_notValidPassword_notOk() {
         firstUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
@@ -70,13 +70,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUserAge_notOK() {
+    void register_nullUserAge_notOk() {
         firstUser.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
-    void register_notValidAge_notOK() {
+    void register_notValidAge_notOk() {
         firstUser.setAge(NOT_VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
@@ -94,7 +94,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_multipleRegistrations_Ok() {
+    void register_multipleRegistrations_ok() {
         List<User> users = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             users.add(new User());
