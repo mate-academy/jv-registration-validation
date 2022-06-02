@@ -34,7 +34,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userIsNull_NotOk() {
+    void userNull_NotOk() {
         User userNull = null;
         assertThrows(UserNullException.class,
                 () -> registrationService.register(userNull),
@@ -42,7 +42,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userIsYoungerThan18_NotOk() {
+    void userYoungerThan18_NotOk() {
         user.setAge(12);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
@@ -50,7 +50,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userAgeIsNegative_NotOk() {
+    void userAgeNegative_NotOk() {
         user.setAge(-25);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
@@ -66,7 +66,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userLoginIsNull_NotOk() {
+    void userLoginNull_NotOk() {
         user.setLogin(null);
         assertThrows(UserHasNoLoginException.class,
                 () -> registrationService.register(user),
@@ -91,7 +91,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userPasswordIsNull_NotOk() {
+    void userPasswordNull_NotOk() {
         user.setPassword(null);
         assertThrows(UserPasswordNullException.class,
                 () -> registrationService.register(user),
