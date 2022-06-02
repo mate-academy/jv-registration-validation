@@ -6,7 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int ADULTHOOD_AGE = 18;
-    private static final int LENGTH_OF_LOGIN = 6;
+    private static final int LENGTH_OF_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -23,9 +23,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void loginValidate(String login) {
         if (login == null) {
             throw new UserHasNoLoginException("user's login is null");
-        }
-        if (login.length() < LENGTH_OF_LOGIN) {
-            throw new RuntimeException("login too short, must be at least six symbols");
         }
         if (login.replaceAll("\\W+", "")
                 .length() - login.length() != 0) {
@@ -49,9 +46,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new UserPasswordNullException("user's password is null");
         }
+        if (password.length() < LENGTH_OF_PASSWORD) {
+            throw new RuntimeException("password too short, must be at least six symbols");
+        }
         if (password.replaceAll("\\W+", "")
                 .length() - password.length() != 0) {
-            throw new RuntimeException("Password has at least one invalid symbol");
+            throw new RuntimeException("password has at least one invalid symbol");
         }
     }
 }

@@ -58,11 +58,11 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_userLoginLessThanSixCharacters_notOk() {
-        user.setLogin("Robin");
+    void register_userPasswordLessThanSixCharacters_notOk() {
+        user.setPassword("Robin");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
-                "too short login\n");
+                "too short password\n");
     }
 
     @Test
