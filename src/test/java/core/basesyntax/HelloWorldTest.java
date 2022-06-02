@@ -67,6 +67,21 @@ public class HelloWorldTest {
     }
 
     @Test
+    void addUserWhichLoginIncludesDigits_Ok() {
+        user.setLogin("John2005");
+        User user2 = new User();
+        user2.setLogin("92Alexander08");
+        user2.setPassword("jupiter");
+        user2.setAge(30);
+        registrationService.register(user);
+        registrationService.register(user2);
+        assertEquals(2, Storage.people.size(),
+                "After adding two users which logins include digits to database "
+                        + "the size must be 2, but actual size is "
+                        + Storage.people.size());;
+    }
+
+    @Test
     void register_nullUser_notOk() {
         User userNull = null;
         assertThrows(UserNullException.class,
