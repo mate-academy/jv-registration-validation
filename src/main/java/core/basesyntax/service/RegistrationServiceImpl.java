@@ -5,7 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final String LOGIN_EXIST = "user with such login already exists";
+    private static final String LOGIN_EXISTS = "user with such login already exists";
     private static final String LOGIN_IS_NULL = "user's login is null";
     private static final String USER_IS_NULL = "user is null";
     private static final String TOO_YOUNG = "user must first grow up a little; age less than 18";
@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException(LOGIN_HAS_INVALID_SYMBOL);
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException(LOGIN_EXIST);
+            throw new RuntimeException(LOGIN_EXISTS);
         }
         return storageDao.add(user);
     }
