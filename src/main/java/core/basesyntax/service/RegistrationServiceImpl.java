@@ -14,11 +14,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkUserLogin(user.getLogin());
         checkUserPassword(user.getPassword());
         checkUserAge(user.getAge());
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
-    public void checkUserLogin(String login) {
+    private void checkUserLogin(String login) {
         if (login == null || login.isEmpty() || login.isBlank()) {
             throw new RuntimeException("User login is null!");
         }
@@ -27,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void checkUserPassword(String password) {
+    private void checkUserPassword(String password) {
         if (password == null || password.isEmpty() || password.isBlank()) {
             throw new RuntimeException("User password is null!");
         }
@@ -36,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void checkUserAge(Integer age) {
+    private void checkUserAge(Integer age) {
         if (age == null) {
             throw new RuntimeException("User age is null!");
         }

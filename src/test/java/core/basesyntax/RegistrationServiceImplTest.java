@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private static User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -28,20 +28,15 @@ public class RegistrationServiceImplTest {
         user.setPassword("Qwerty123456");
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
-    void register_newUser_Ok() {
+    void register_newUser_ok() {
         User newUser = registrationService.register(user);
         assertEquals(user, newUser);
     }
 
     @Test
     void register_newUserSameInformation_notOk() {
-        registrationService.register(user);
+        assertEquals(user, registrationService.register(user));
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -53,19 +48,19 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_emptyLoginNotOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_spacesLoginNotOk() {
+    void register_spacesLogin_notOk() {
         user.setLogin("         ");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_theSameLoginExists_NotOk() {
+    void register_theSameLoginExists_notOk() {
         registrationService.register(user);
         User currentUser = new User();
         currentUser.setLogin("ivan_yuriv");
@@ -105,7 +100,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_incorrectAge_NotOk() {
+    void register_incorrectAge_notOk() {
         user.setAge(-2);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -120,5 +115,10 @@ public class RegistrationServiceImplTest {
     void lessThanMinimalAge_notOk() {
         user.setAge(10);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
