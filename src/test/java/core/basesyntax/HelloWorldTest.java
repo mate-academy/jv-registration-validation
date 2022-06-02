@@ -53,6 +53,20 @@ public class HelloWorldTest {
     }
 
     @Test
+    void register_addTwoUsersWithTheSamePasswordsAndDifferentLogins_Ok() {
+        User user2 = new User();
+        user2.setLogin("Alex");
+        user2.setPassword(user.getPassword());
+        user2.setAge(35);
+        registrationService.register(user);
+        registrationService.register(user2);
+        assertEquals(2, Storage.people.size(),
+                "After adding two users with the same passwords but different "
+                        + "logins to database, the size must be 2, but actual size is "
+                        + Storage.people.size());
+    }
+
+    @Test
     void register_nullUser_notOk() {
         User userNull = null;
         assertThrows(UserNullException.class,
