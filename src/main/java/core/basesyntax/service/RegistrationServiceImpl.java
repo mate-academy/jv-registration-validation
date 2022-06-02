@@ -5,51 +5,53 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final String LOGIN_EXISTS = "user with such login already exists";
-    private static final String LOGIN_IS_NULL = "user's login is null";
-    private static final String USER_IS_NULL = "user is null";
-    private static final String PASSWORD_IS_NULL = "user's password is null";
-    private static final String TOO_YOUNG = "user must first grow up a little; age less than 18";
-    private static final String NEGATIVE_AGE = "negative user's age";
-    private static final String LOGIN_HAS_INVALID_SYMBOL = "login has at least one invalid symbol";
-    private static final String PASSWORD_HAS_INVALID_SYMBOL
-            = "Password has at least one invalid symbol";
-    private static final String LOGIN_HAS_LESS_THAT_SIX_SYMBOLS
-            = "login too short, must be at least six symbols";
-    private static final String SPECIAL_SYMBOL = "\\W+";
+    private static final int ADULTHOOD_AGE = 18;
+    private static final int LENGTH_OF_LOGIN = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new UserNullException(USER_IS_NULL);
+            throw new UserNullException("user is null");
         }
-        if (user.getLogin() == null) {
-            throw new UserHasNoLoginException(LOGIN_IS_NULL);
-        }
-        if (user.getAge() > -1 && user.getAge() < 18) {
-            throw new RuntimeException(TOO_YOUNG);
-        }
-        if (user.getAge() < 0) {
-            throw new RuntimeException(NEGATIVE_AGE);
-        }
-        if (user.getLogin().length() < 6) {
-            throw new RuntimeException(LOGIN_HAS_LESS_THAT_SIX_SYMBOLS);
-        }
-        if (user.getLogin().replaceAll(SPECIAL_SYMBOL, "")
-                .length() - user.getLogin().length() != 0) {
-            throw new RuntimeException(LOGIN_HAS_INVALID_SYMBOL);
-        }
-        if (user.getPassword() == null) {
-            throw new UserPasswordNullException(PASSWORD_IS_NULL);
-        }
-        if (user.getPassword().replaceAll(SPECIAL_SYMBOL, "")
-                .length() - user.getPassword().length() != 0) {
-            throw new RuntimeException(PASSWORD_HAS_INVALID_SYMBOL);
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException(LOGIN_EXISTS);
-        }
+        loginValidate(user.getLogin());
+        userAgeValidate(user.getAge());
+        passwordValidate(user.getPassword());
         return storageDao.add(user);
+    }
+
+    private void loginValidate(String login) {
+        if (login == null) {
+            throw new UserHasNoLoginException("user's login is null");
+        }
+        if (login.length() < LENGTH_OF_LOGIN) {
+            throw new RuntimeException("login too short, must be at least six symbols");
+        }
+        if (login.replaceAll("\\W+", "")
+                .length() - login.length() != 0) {
+            throw new RuntimeException("login has at least one invalid symbol");
+        }
+        if (storageDao.get(login) != null) {
+            throw new RuntimeException("user with such login already exists");
+        }
+    }
+
+    private void userAgeValidate(int age) {
+        if (age > -1 && age < ADULTHOOD_AGE) {
+            throw new RuntimeException("user must first grow up a little; age less than 18");
+        }
+        if (age < 0) {
+            throw new RuntimeException("negative user's age");
+        }
+    }
+
+    private void passwordValidate(String password) {
+        if (password == null) {
+            throw new UserPasswordNullException("user's password is null");
+        }
+        if (password.replaceAll("\\W+", "")
+                .length() - password.length() != 0) {
+            throw new RuntimeException("Password has at least one invalid symbol");
+        }
     }
 }

@@ -34,7 +34,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userNull_notOk() {
+    void register_nullUser_notOk() {
         User userNull = null;
         assertThrows(UserNullException.class,
                 () -> registrationService.register(userNull),
@@ -42,23 +42,23 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userYoungerThan18_notOk() {
-        user.setAge(12);
+    void register_userAgeLessThan18_notOk() {
+        user.setAge(17);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
                 "condition break: user with age up to 18 was added\n");
     }
 
     @Test
-    void userAgeNegative_notOk() {
-        user.setAge(-25);
+    void register_negativeUserAge_notOk() {
+        user.setAge(-1);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
                 "condition break: user's age can't be negative\n");
     }
 
     @Test
-    void userLoginLesserThanSixCharacters_notOk() {
+    void register_userLoginLessThanSixCharacters_notOk() {
         user.setLogin("Robin");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
@@ -66,7 +66,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userLoginNull_notOk() {
+    void register_nullUserLogin_notOk() {
         user.setLogin(null);
         assertThrows(UserHasNoLoginException.class,
                 () -> registrationService.register(user),
@@ -74,7 +74,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userLoginHasInvalidSymbols_notOk() {
+    void register_invalidSymbolsInUserLogin_notOk() {
         user.setLogin("caramba#98");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
@@ -82,7 +82,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userWithDuplicateLoginMayBeAddToDatabase_notOk() {
+    void register_userWithDuplicateLoginMayBeAddToDatabase_notOk() {
         assertEquals(user, registrationService.register(user),
                 "method register had to add user to the storage, but it didn't\n");
         assertThrows(RuntimeException.class,
@@ -91,7 +91,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userPasswordNull_notOk() {
+    void register_nullUserPassword_notOk() {
         user.setPassword(null);
         assertThrows(UserPasswordNullException.class,
                 () -> registrationService.register(user),
@@ -99,7 +99,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userPasswordHasInvalidSymbols_notOk() {
+    void register_invalidSymbolsInPassword_notOk() {
         user.setPassword("$$$spirit$$$");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
