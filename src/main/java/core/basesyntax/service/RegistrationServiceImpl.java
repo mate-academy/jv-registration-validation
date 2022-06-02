@@ -6,7 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int PASSWORD_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null || password.isEmpty() || password.isBlank()) {
             throw new RuntimeException("User password is null!");
         }
-        if (password.length() < PASSWORD_LENGTH) {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("User password is less than 6 characters!");
         }
     }
@@ -38,9 +38,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void checkUserAge(Integer age) {
         if (age == null) {
             throw new RuntimeException("User age is null!");
-        }
-        if (age < 0) {
-            throw new RuntimeException("User age is less than zero!");
         }
         if (age < MIN_AGE) {
             throw new RuntimeException("User age is less than 18!");

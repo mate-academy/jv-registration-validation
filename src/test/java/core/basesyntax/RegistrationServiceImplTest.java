@@ -40,7 +40,6 @@ public class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
-    //Tests for login checking:
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
@@ -67,7 +66,6 @@ public class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
-    //Tests for password checking:
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
@@ -92,7 +90,6 @@ public class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
-    //Tests for ages checking:
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
@@ -112,8 +109,8 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void lessThanMinimalAge_notOk() {
-        user.setAge(10);
+    void register_lessThanMinimalAge_notOk() {
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
