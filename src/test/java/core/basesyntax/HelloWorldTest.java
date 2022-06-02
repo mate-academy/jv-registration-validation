@@ -3,8 +3,6 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -19,14 +17,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
-    private static final String PLUG = "test";
-    private static StorageDao storage;
     private static RegistrationService registrationService;
     private User user;
 
     @BeforeAll
     static void initial() {
-        storage = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -88,13 +83,6 @@ public class HelloWorldTest {
 
     @Test
     void userWithDuplicateLoginMayBeAddToDatabase_NotOk() {
-        String login = user.getLogin();
-        User uniqueUser = storage.get(login);
-        while (uniqueUser != null) {
-            login = login + PLUG;
-            user.setLogin(login);
-            uniqueUser = storage.get(login);
-        }
         assertEquals(user, registrationService.register(user),
                 "method register had to add user to the storage, but it didn't\n");
         assertThrows(RuntimeException.class,
