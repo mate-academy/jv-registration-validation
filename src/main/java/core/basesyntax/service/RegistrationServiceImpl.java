@@ -11,6 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RuntimeException("User == null");
+        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Duplicate login " + user.getLogin());
         }

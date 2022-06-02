@@ -22,26 +22,34 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_Ok() {
-        User firstUser = new User();
-        firstUser.setLogin("drapail");
-        firstUser.setPassword("drapail123");
-        firstUser.setAge(27);
-        User actual = registrationService.register(firstUser);
-        User expected = firstUser;
+        User expected = new User();
+        expected.setLogin("drapail");
+        expected.setPassword("drapail123");
+        expected.setAge(27);
+        User actual = registrationService.register(expected);
         assertEquals(expected, actual);
     }
 
     @Test
+    public void register_nullUser_notOk() {
+        User user = null;
+        String expectedErrorMessage = "User == null";
+        Throwable nullUserException = assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user); });
+        assertEquals(expectedErrorMessage, nullUserException.getMessage());
+    }
+
+    @Test
     public void register_duplicateLogin_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("drapail");
-        firstUser.setPassword("drapail123");
-        firstUser.setAge(27);
+        User user = new User();
+        user.setLogin("drapail");
+        user.setPassword("drapail123");
+        user.setAge(27);
         User secondUser = new User();
         secondUser.setLogin("drapail");
         secondUser.setPassword("drapail123");
         secondUser.setAge(27);
-        storage.add(firstUser);
+        storage.add(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(secondUser);
         });
@@ -49,53 +57,53 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_underageUser_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("drapail");
-        firstUser.setPassword("drapail123");
-        firstUser.setAge(4);
+        User user = new User();
+        user.setLogin("drapail");
+        user.setPassword("drapail123");
+        user.setAge(4);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(firstUser);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_nullAgeUser_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("drapail");
-        firstUser.setPassword("drapail123");
+    void register_nullUserAge_notOk() {
+        User user = new User();
+        user.setLogin("drapail");
+        user.setPassword("drapail123");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(firstUser);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_nullLoginUser_notOk() {
-        User firstUser = new User();
-        firstUser.setPassword("drapail123");
-        firstUser.setAge(27);
+    void register_nullUserLogin_notOk() {
+        User user = new User();
+        user.setPassword("drapail123");
+        user.setAge(27);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(firstUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_weakPassword_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("drapail");
-        firstUser.setPassword("qwert");
-        firstUser.setAge(27);
+        User user = new User();
+        user.setLogin("drapail");
+        user.setPassword("qwert");
+        user.setAge(27);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(firstUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_nullPassword_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("drapail");
-        firstUser.setAge(27);
+        User user = new User();
+        user.setLogin("drapail");
+        user.setAge(27);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(firstUser);
+            registrationService.register(user);
         });
     }
 
