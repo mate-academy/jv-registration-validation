@@ -23,6 +23,7 @@ public class HelloWorldTest {
     @BeforeAll
     static void initial() {
         registrationService = new RegistrationServiceImpl();
+        Storage.people.clear();
     }
 
     @BeforeEach
@@ -31,6 +32,24 @@ public class HelloWorldTest {
         user.setAge(42);
         user.setLogin("labudabudapta");
         user.setPassword("motorama");
+    }
+
+    @Test
+    void register_addSomeUsersWithUniqueLoginsToDatabase_Ok() {
+        User user2 = new User();
+        user2.setLogin("Petro");
+        user2.setPassword("Petro1990");
+        user2.setAge(32);
+        User user3 = new User();
+        user3.setLogin("Taras");
+        user3.setPassword("Taras1998");
+        user3.setAge(24);
+        registrationService.register(user);
+        registrationService.register(user2);
+        registrationService.register(user3);
+        assertEquals(3, Storage.people.size(),
+                "After adding three users to database, the size must be 3"
+                + ", but actual size is " + Storage.people.size());
     }
 
     @Test
