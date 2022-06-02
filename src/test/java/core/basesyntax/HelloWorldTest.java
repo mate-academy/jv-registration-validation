@@ -29,11 +29,10 @@ public class HelloWorldTest {
     }
 
     @BeforeEach
-     void setUp() {
+     void createValidUser() {
         user = new User();
         user.setAge(42);
         user.setLogin("labudabudapta");
-        user.setPassword("motorama");
     }
 
     @Test
@@ -93,7 +92,7 @@ public class HelloWorldTest {
     }
 
     @AfterAll
-    static void clearingStorageWithTestingUserObjects() {
+    static void clearingStorageWithTestingObjects() {
         Storage.people.clear();
     }
 }
