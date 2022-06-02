@@ -8,8 +8,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final String LOGIN_EXISTS = "user with such login already exists";
     private static final String LOGIN_IS_NULL = "user's login is null";
     private static final String USER_IS_NULL = "user is null";
+    private static final String PASSWORD_IS_NULL = "user's password is null";
     private static final String TOO_YOUNG = "user must first grow up a little; age less than 18";
-    private static final String LOGIN_HAS_INVALID_SYMBOL = "login has at least one invalid symbols";
+    private static final String NEGATIVE_AGE = "negative user's age";
+    private static final String LOGIN_HAS_INVALID_SYMBOL = "login has at least one invalid symbol";
+    private static final String PASSWORD_HAS_INVALID_SYMBOL
+            = "Password has at least one invalid symbol";
     private static final String LOGIN_HAS_LESS_THAT_SIX_SYMBOLS
             = "login too short, must be at least six symbols";
     private static final String SPECIAL_SYMBOL = "\\W+";
@@ -23,8 +27,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new UserHasNoLoginException(LOGIN_IS_NULL);
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() > -1 && user.getAge() < 18) {
             throw new RuntimeException(TOO_YOUNG);
+        }
+        if (user.getAge() < 0) {
+            throw new RuntimeException(NEGATIVE_AGE);
         }
         if (user.getLogin().length() < 6) {
             throw new RuntimeException(LOGIN_HAS_LESS_THAT_SIX_SYMBOLS);
@@ -32,6 +39,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().replaceAll(SPECIAL_SYMBOL, "")
                 .length() - user.getLogin().length() != 0) {
             throw new RuntimeException(LOGIN_HAS_INVALID_SYMBOL);
+        }
+        if (user.getPassword() == null) {
+            throw new UserPasswordNullException(PASSWORD_IS_NULL);
+        }
+        if (user.getPassword().replaceAll(SPECIAL_SYMBOL, "")
+                .length() - user.getPassword().length() != 0) {
+            throw new RuntimeException(PASSWORD_HAS_INVALID_SYMBOL);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException(LOGIN_EXISTS);

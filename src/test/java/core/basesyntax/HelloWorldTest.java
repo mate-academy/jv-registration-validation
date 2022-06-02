@@ -11,7 +11,9 @@ import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.service.UserHasNoLoginException;
 import core.basesyntax.service.UserNullException;
+import core.basesyntax.service.UserPasswordNullException;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,7 @@ public class HelloWorldTest {
         user = new User();
         user.setAge(42);
         user.setLogin("labudabudapta");
+        user.setPassword("motorama");
     }
 
     @Test
@@ -49,6 +52,14 @@ public class HelloWorldTest {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
                 "condition break: user with age up to 18 was added\n");
+    }
+
+    @Test
+    void userAgeIsNegative_NotOk() {
+        user.setAge(-25);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user),
+                "condition break: user's age can't be negative\n");
     }
 
     @Test
@@ -89,6 +100,27 @@ public class HelloWorldTest {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
                 "you added user to the storage with duplicate login\n");
+    }
+
+    @Test
+    void userPasswordIsNull_NotOk() {
+        user.setPassword(null);
+        assertThrows(UserPasswordNullException.class,
+                () -> registrationService.register(user),
+                "User's password might not be null\n");
+    }
+
+    @Test
+    void userPasswordHasInvalidSymbols_NotOk() {
+        user.setPassword("$$$spirit$$$");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user),
+                "Password shouldn't have any special symbol\n");
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 
     @AfterAll
