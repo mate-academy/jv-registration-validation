@@ -24,8 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new UserHasNoLoginException("user's login is null");
         }
-        if (login.replaceAll("\\W+", "")
-                .length() - login.length() != 0) {
+        if (!login.replaceAll("\\w+", "").isBlank()) {
             throw new RuntimeException("login has at least one invalid symbol");
         }
         if (storageDao.get(login) != null) {
@@ -49,8 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password.length() < LENGTH_OF_PASSWORD) {
             throw new RuntimeException("password too short, must be at least six symbols");
         }
-        if (password.replaceAll("\\W+", "")
-                .length() - password.length() != 0) {
+        if (!password.replaceAll("\\w+", "").isBlank()) {
             throw new RuntimeException("password has at least one invalid symbol");
         }
     }

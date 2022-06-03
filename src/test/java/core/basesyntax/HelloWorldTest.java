@@ -10,7 +10,6 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.service.UserHasNoLoginException;
 import core.basesyntax.service.UserNullException;
 import core.basesyntax.service.UserPasswordNullException;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +34,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_addSomeUsersWithUniqueLoginsToDatabase_Ok() {
+    void register_addSomeUsersWithUniqueLoginsToDatabase_ok() {
         User user2 = new User();
         user2.setLogin("Petro");
         user2.setPassword("Petro1990");
@@ -53,7 +52,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_addTwoUsersWithTheSamePasswordsAndDifferentLogins_Ok() {
+    void register_addTwoUsersWithTheSamePasswordsAndDifferentLogins_ok() {
         User user2 = new User();
         user2.setLogin("Alex");
         user2.setPassword(user.getPassword());
@@ -67,7 +66,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void addUserWhichLoginIncludesDigits_Ok() {
+    void addUserWhichLoginIncludesDigits_ok() {
         user.setLogin("John2005");
         User user2 = new User();
         user2.setLogin("92Alexander08");
@@ -156,11 +155,6 @@ public class HelloWorldTest {
 
     @AfterEach
     void clearStorage() {
-        Storage.people.clear();
-    }
-
-    @AfterAll
-    static void clearingStorageWithTestingObjects() {
         Storage.people.clear();
     }
 }
