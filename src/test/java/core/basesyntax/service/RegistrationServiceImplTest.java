@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     public static final int MIN_USER_AGE = 18;
-    public static final int MIN_PASSWORD_LENGTH = 6;
     private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user;
@@ -28,7 +27,7 @@ class RegistrationServiceImplTest {
         user.setPassword("somepassword");
         user.setAge(25);
         assertThrows(RuntimeException.class, () ->
-                registrationService.register(user).equals(storageDao.get(user.getLogin())));
+                registrationService.register(user));
     }
 
     @Test
@@ -57,12 +56,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsNull_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_negativeAge_NotOk() {
-        user = new User();
+        User user = new User();
         user.setAge(-1);
         user.setLogin("kijupoohzt");
         user.setPassword("newidiaa");
@@ -71,7 +70,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_zeroAge_NotOk() {
-        user = new User();
+        User user = new User();
         user.setAge(0);
         user.setLogin("kijüpijuhzt");
         user.setPassword("jdhszdgtr");
@@ -80,7 +79,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThatMinAge_NotOk() {
-        user = new User();
+        User user = new User();
         user.setAge(17);
         user.setLogin("kijuhzt");
         user.setPassword("jdhszdgtr");
@@ -89,67 +88,68 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minAge_Ok() {
-        user = new User();
+        User user = new User();
         user.setAge(MIN_USER_AGE);
         user.setLogin("kjgvfujzfuzfpp");
         user.setPassword("ljhzvgljz");
-        assertNotNull(registrationService.register(user));/////
+        assertNotNull(registrationService.register(user));
     }
 
     @Test
-    void register_ageMoreThenEighteen_Ok() {
-        user = new User();
+    void register_ageMoreThenMinAge_Ok() {
+        User user = new User();
         user.setAge(19);
         user.setLogin("kijtfuhzt");
         user.setPassword("jdhszdgtrppp");
-        assertDoesNotThrow(() -> registrationService.register(user).getAge());/////
+        assertDoesNotThrow(() -> registrationService.register(user).getAge());
     }
 
     @Test
-    void loginEmpty_NotOk() {
+    void register_loginEmpty_NotOk() {
         user = new User();
         user.setAge(19);
         user.setLogin("");
         user.setPassword("jdhszpppdgtr");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user).getLogin());
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_passwordMoreTheSix_Ok() {
-        user = new User();
+    void register_passwordMoreThenMinLength_Ok() {
+        User user = new User();
         user.setAge(19);
         user.setLogin("llllkkbjklvg");
         user.setPassword("jdhszdlllgtr");
-        assertDoesNotThrow(() -> (registrationService.register(user).getPassword()));/////
+        assertDoesNotThrow(() -> (registrationService.register(user)));
     }
 
     @Test
-    void register_passwordIsSix_Ok() {
-        user = new User();
+    void register_passwordEqualMinLength_Ok() {
+        final int Min_Password_length = 6;
+        User user = new User();
         user.setAge(MIN_USER_AGE);
         user.setLogin("Victory2022");
         user.setPassword("jkjhgf");
         assertTrue(registrationService.register(user).getPassword().length()
-                == MIN_PASSWORD_LENGTH);
+                == Min_Password_length);
     }
 
     @Test
-    void register_passwordLessSix_Ok() {
-        user = new User();
+    void register_passwordLessThanMin_NotOk() {
+        User user = new User();
         user.setAge(MIN_USER_AGE);
         user.setLogin("Victory2022");
         user.setPassword("jkj");
         assertThrows(RuntimeException.class, () ->
-                registrationService.register(user).getPassword());
+                registrationService.register(user));
     }
 
     @Test
     void register_passwordIsEmpty_Ok() {
-        user = new User();
+        User user = new User();
         user.setAge(MIN_USER_AGE);
         user.setLogin("Victory2022");
         user.setPassword("");
         assertThrows(RuntimeException.class, () ->
-                registrationService.register(user).getPassword());
+                registrationService.register(user));
     }
 }
