@@ -7,6 +7,6 @@ public interface RegistrationService {
 
     boolean passwordIsValid(String password);
 
-    boolean ageIsValid(int age);
+    boolean ageIsValid(Integer age);
 
 }

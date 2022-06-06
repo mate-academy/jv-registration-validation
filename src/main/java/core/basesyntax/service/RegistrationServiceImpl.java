@@ -19,6 +19,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public boolean passwordIsValid(String password) {
+        if (password == null) {
+            throw new RuntimeException();
+        }
         if (password.length() >= 6) {
             return true;
         }
@@ -26,7 +29,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public boolean ageIsValid(int age) {
+    public boolean ageIsValid(Integer age) {
+        if (age == null) {
+            throw new RuntimeException();
+        }
         if (age >= 18) {
             return true;
         }
