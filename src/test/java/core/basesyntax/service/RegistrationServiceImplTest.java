@@ -35,6 +35,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerUserLoginNull_NotOk() {
         user.setPassword("password");
+        user.setAge(20);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -42,7 +43,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUserLoginEmpty_NotOk() {
-        user.setPassword("");
+        user.setLogin("");
+        user.setPassword("password");
+        user.setAge(20);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -51,6 +54,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerUserPasswordNull_NotOk() {
         user.setLogin("Login");
+        user.setAge(20);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -58,6 +62,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUserLoginAndPasswordNull_NotOk() {
+        user.setAge(20);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
