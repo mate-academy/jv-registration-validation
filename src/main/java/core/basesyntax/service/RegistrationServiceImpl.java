@@ -9,19 +9,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkUser(user);
+        return storageDao.add(user);
+    }
+
+    private void checkUser(User user) {
         if (user == null) {
-            throw  new RuntimeException("Null input parameter at user argument");
+            throw new RuntimeException("Null input parameter at user argument");
+        }
+        if (user.getLogin() == null || user.getLogin().length() == 0) {
+            throw new RuntimeException("Can`t register, invalid login");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Can`t register, login is exist");
         }
-        if (user.getAge() >= 18) {
+        if (user.getAge() < 18) {
             throw new RuntimeException("Can`t register, not enough years");
         }
-        if (user.getPassword().length() >= 6) {
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RuntimeException("Can`t register, password must be longer");
         }
-        storageDao.add(user);
-        return user;
     }
 }
