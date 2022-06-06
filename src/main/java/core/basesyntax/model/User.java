@@ -8,6 +8,15 @@ public class User {
     private String password;
     private Integer age;
 
+    public User() {
+    }
+
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     public Long getId() {
         return id;
     }
@@ -38,6 +47,11 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "LOGIN: " + login + ", PASSWORD: " + password + ", AGE: " + age;
     }
 
     @Override
