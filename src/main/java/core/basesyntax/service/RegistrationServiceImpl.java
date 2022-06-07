@@ -17,17 +17,29 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("Null input parameter at user argument");
         }
+        checkUserPassword(user);
+        checkUserAge(user);
+        checkUserLogin(user);
+    }
+
+    private void checkUserLogin(User user) {
         if (user.getLogin() == null || user.getLogin().length() == 0) {
             throw new RuntimeException("Can`t register, invalid login");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Can`t register, login is exist");
         }
-        if (user.getAge() < 18) {
-            throw new RuntimeException("Can`t register, not enough years");
-        }
+    }
+
+    private void checkUserPassword(User user) {
         if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RuntimeException("Can`t register, password must be longer");
+        }
+    }
+
+    private void checkUserAge(User user) {
+        if (user.getAge() < 18) {
+            throw new RuntimeException("Can`t register, not enough years");
         }
     }
 }
