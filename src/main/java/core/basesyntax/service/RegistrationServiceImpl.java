@@ -12,13 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        String password = user.getPassword();
-        String login = user.getLogin();
-        Integer age = user.getAge();
-
-        verifyPassword(password);
-        verifyAge(age);
-        verifyLogin(login);
+        verifyPassword(user.getPassword());
+        verifyAge(user.getAge());
+        verifyLogin(user.getLogin());
         return storageDao.add(user);
     }
 

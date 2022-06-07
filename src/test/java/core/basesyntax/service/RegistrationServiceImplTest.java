@@ -28,11 +28,6 @@ class RegistrationServiceImplTest {
         regService = new RegistrationServiceImpl();
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     void register_passwordMore6Char_ok() {
         User expectedUser = new User();
@@ -51,9 +46,7 @@ class RegistrationServiceImplTest {
         validUser1.setAge(AGE_VALID);
 
         regService.register(validUser1);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(validUser1);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(validUser1));
     }
 
     @Test
@@ -62,9 +55,7 @@ class RegistrationServiceImplTest {
         userWithShortPass.setPassword(PASSWORD_LESS_6);
         userWithShortPass.setAge(AGE_VALID);
         userWithShortPass.setLogin(LOGIN_VALID);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithShortPass);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithShortPass));
     }
 
     @Test
@@ -73,9 +64,7 @@ class RegistrationServiceImplTest {
         userWithNullPass.setLogin(LOGIN_VALID);
         userWithNullPass.setPassword(NULL);
         userWithNullPass.setAge(AGE_VALID);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithNullPass);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithNullPass));
     }
 
     @Test
@@ -84,9 +73,7 @@ class RegistrationServiceImplTest {
         userWithEmptyPass.setLogin(LOGIN_VALID);
         userWithEmptyPass.setPassword(EMPTY_STRING);
         userWithEmptyPass.setAge(AGE_VALID);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithEmptyPass);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithEmptyPass));
     }
 
     @Test
@@ -95,9 +82,7 @@ class RegistrationServiceImplTest {
         userWithEmptyPass.setLogin(LOGIN_VALID);
         userWithEmptyPass.setPassword(ONLY_WHITESPACES);
         userWithEmptyPass.setAge(AGE_VALID);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithEmptyPass);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithEmptyPass));
     }
 
     @Test
@@ -106,9 +91,7 @@ class RegistrationServiceImplTest {
         userWithEmptyLogin.setLogin(EMPTY_STRING);
         userWithEmptyLogin.setPassword(PASSWORD_VALID);
         userWithEmptyLogin.setAge(AGE_VALID);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithEmptyLogin);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithEmptyLogin));
     }
 
     @Test
@@ -117,9 +100,7 @@ class RegistrationServiceImplTest {
         userWithNullLogin.setLogin(NULL);
         userWithNullLogin.setPassword(PASSWORD_VALID);
         userWithNullLogin.setAge(AGE_VALID);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithNullLogin);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithNullLogin));
     }
 
     @Test
@@ -128,9 +109,7 @@ class RegistrationServiceImplTest {
         userWithNullLogin.setLogin(ONLY_WHITESPACES);
         userWithNullLogin.setPassword(PASSWORD_VALID);
         userWithNullLogin.setAge(AGE_VALID);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userWithNullLogin);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userWithNullLogin));
     }
 
     @Test
@@ -139,9 +118,7 @@ class RegistrationServiceImplTest {
         userAgeLess18.setLogin(ONLY_WHITESPACES);
         userAgeLess18.setPassword(PASSWORD_VALID);
         userAgeLess18.setAge(AGE_INVALID_LESS_18);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userAgeLess18);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userAgeLess18));
     }
 
     @Test
@@ -150,8 +127,11 @@ class RegistrationServiceImplTest {
         userAgeLess18.setLogin(ONLY_WHITESPACES);
         userAgeLess18.setPassword(PASSWORD_VALID);
         userAgeLess18.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            regService.register(userAgeLess18);
-        });
+        assertThrows(RuntimeException.class, () -> regService.register(userAgeLess18));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
