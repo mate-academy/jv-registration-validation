@@ -40,13 +40,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addTheSameUser_notOk() {
-        User validUser1 = new User();
-        validUser1.setLogin(LOGIN_VALID);
-        validUser1.setPassword(PASSWORD_VALID);
-        validUser1.setAge(AGE_VALID);
+        User validUser = new User();
+        validUser.setLogin(LOGIN_VALID);
+        validUser.setPassword(PASSWORD_VALID);
+        validUser.setAge(AGE_VALID);
 
-        regService.register(validUser1);
-        assertThrows(RuntimeException.class, () -> regService.register(validUser1));
+        regService.register(validUser);
+        assertThrows(RuntimeException.class, () -> regService.register(validUser));
     }
 
     @Test
