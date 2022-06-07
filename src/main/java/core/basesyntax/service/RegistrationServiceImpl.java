@@ -9,6 +9,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null
+                || user.getAge() < 18 || user.getPassword().length() < 6
+                || storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException();
+        }
+        return storageDao.add(user);
     }
 }
