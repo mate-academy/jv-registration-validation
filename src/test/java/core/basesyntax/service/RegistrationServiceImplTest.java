@@ -16,10 +16,10 @@ class RegistrationServiceImplTest {
     private static final String ONLY_WHITESPACES = "       ";
 
     private static final String PASSWORD_VALID = "123456";
-    private static final String PASSWORD_LESS_6 = "12345";
+    private static final String PASSWORD_SHORTER = "12345";
 
     private static final Integer AGE_VALID = 18;
-    private static final Integer AGE_INVALID_LESS_18 = 17;
+    private static final Integer AGE_INVALID = 17;
 
     private static RegistrationService regService;
 
@@ -29,7 +29,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordMore6Char_ok() {
+    void register_validValues_ok() {
         User expectedUser = new User();
         expectedUser.setLogin(LOGIN_VALID);
         expectedUser.setPassword(PASSWORD_VALID);
@@ -50,9 +50,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLess6Char_notOk() {
+    void register_passwordShorter_notOk() {
         User userWithShortPass = new User();
-        userWithShortPass.setPassword(PASSWORD_LESS_6);
+        userWithShortPass.setPassword(PASSWORD_SHORTER);
         userWithShortPass.setAge(AGE_VALID);
         userWithShortPass.setLogin(LOGIN_VALID);
         assertThrows(RuntimeException.class, () -> regService.register(userWithShortPass));
@@ -105,29 +105,29 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginWhitespacesOnly_notOk() {
-        User userWithNullLogin = new User();
-        userWithNullLogin.setLogin(ONLY_WHITESPACES);
-        userWithNullLogin.setPassword(PASSWORD_VALID);
-        userWithNullLogin.setAge(AGE_VALID);
-        assertThrows(RuntimeException.class, () -> regService.register(userWithNullLogin));
+        User loginWhitespacesOnly = new User();
+        loginWhitespacesOnly.setLogin(ONLY_WHITESPACES);
+        loginWhitespacesOnly.setPassword(PASSWORD_VALID);
+        loginWhitespacesOnly.setAge(AGE_VALID);
+        assertThrows(RuntimeException.class, () -> regService.register(loginWhitespacesOnly));
     }
 
     @Test
-    void register_less18_notOk() {
-        User userAgeLess18 = new User();
-        userAgeLess18.setLogin(ONLY_WHITESPACES);
-        userAgeLess18.setPassword(PASSWORD_VALID);
-        userAgeLess18.setAge(AGE_INVALID_LESS_18);
-        assertThrows(RuntimeException.class, () -> regService.register(userAgeLess18));
+    void register_ageYounger_notOk() {
+        User userYounger = new User();
+        userYounger.setLogin(LOGIN_VALID);
+        userYounger.setPassword(PASSWORD_VALID);
+        userYounger.setAge(AGE_INVALID);
+        assertThrows(RuntimeException.class, () -> regService.register(userYounger));
     }
 
     @Test
     void register_ageNull_notOk() {
-        User userAgeLess18 = new User();
-        userAgeLess18.setLogin(ONLY_WHITESPACES);
-        userAgeLess18.setPassword(PASSWORD_VALID);
-        userAgeLess18.setAge(null);
-        assertThrows(RuntimeException.class, () -> regService.register(userAgeLess18));
+        User userAgeNull = new User();
+        userAgeNull.setLogin(LOGIN_VALID);
+        userAgeNull.setPassword(PASSWORD_VALID);
+        userAgeNull.setAge(null);
+        assertThrows(RuntimeException.class, () -> regService.register(userAgeNull));
     }
 
     @AfterEach

@@ -20,8 +20,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean verifyPassword(String password) {
         if (!checkStringHasWhitespacesOnly(password)) {
-            throw new RuntimeException("User's Password should be more than 6 characters,"
-                    + " not whitespaces");
+            throw new RuntimeException("Password shouldn't contains whitespaces. "
+                   + "It should contains characters");
         }
         if (password == null || password.length() < PASSWORD_MIN_LENGTH) {
             throw new RuntimeException("Password should have 6 and more characters");
@@ -38,13 +38,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean verifyLogin(String login) {
         if (!checkStringHasWhitespacesOnly(login)) {
-            throw new RuntimeException("User's LOGIN should be more than 4 characters");
+            throw new RuntimeException("Login shouldn't contains whitespaces. "
+                    + "It should contains characters");
         }
         if (login != null) {
-            for (User registeredUser : Storage.people) {
-                if (registeredUser.getLogin().equals(login)) {
-                    throw new RuntimeException("User with such login exist already");
-                }
+            if (storageDao.get(login) != null) {
+                throw new RuntimeException("User with such login exist already");
             }
         }
         return true;
