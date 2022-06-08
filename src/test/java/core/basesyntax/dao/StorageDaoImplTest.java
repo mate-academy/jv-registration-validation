@@ -113,7 +113,9 @@ class StorageDaoImplTest {
         }
 
         for (int i = 0; i < 50; i++) {
-            assertEquals(i + 1, storageDao.get("User" + i).getId());
+            assertEquals(i + 1, storageDao.get("User" + i).getId(),
+                    "Expected=" + (i + 1) + " storageDao.get(User" + i + ").getId()="
+                                + storageDao.get("User" + i).getId());
         }
 
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
