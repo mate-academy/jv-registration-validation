@@ -25,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkLogin(User user) {
-        if (user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().length() == 0) {
             throw new RuntimeException("You need to enter your login.");
         } else if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Your login already exists.");

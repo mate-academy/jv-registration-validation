@@ -94,6 +94,9 @@ class RegistrationServiceImplTest {
     @Test
     void password_minimum_required_length_isOk() {
         user.setPassword("123456");
+        User expected = user;
+        User actual = registrationService.register(user);
+        assertEquals(expected, actual);
     }
 
     @Test
