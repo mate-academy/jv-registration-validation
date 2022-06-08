@@ -110,7 +110,6 @@ class StorageDaoImplTest {
             assertEquals(actual, user, "Registration method should return registered "
                     + "User Object");
             expectedSize++;
-
         }
 
         for (int i = 0; i < 50; i++) {
