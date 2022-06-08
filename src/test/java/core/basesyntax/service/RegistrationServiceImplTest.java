@@ -4,25 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static StorageDaoImpl storage;
     private User userBob;
     private User user;
     private RegistrationServiceImpl registrationService;
-
-    @BeforeAll
-    static void beforeAll() {
-        storage = new StorageDaoImpl();
-        storage.add(new User("BobAlreadyExists", "password", 19));
-    }
 
     @BeforeEach
     void setUp() {
@@ -37,11 +28,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_if_login_exists_notOk() {
-        user.setLogin(userBob.getLogin());
-        registrationService.register(user);
+    void user_is_null_notOK() {
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(null);
         });
     }
 
@@ -54,16 +43,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void password_is_null_notOk() {
-        user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void age_is_null_notOk() {
-        user.setAge(null);
+    void check_if_login_exists_notOk() {
+        user.setLogin(userBob.getLogin());
+        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -78,6 +60,30 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void login_is_ok() {
+        user.setLogin("SomeSmartName");
+        User expected = user;
+        User actual = registrationService.register(user);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void password_is_null_notOk() {
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void password_is_short_notOk() {
+        user.setPassword("three");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void password_is_ok() {
         user.setPassword("ThisPasswordIsLongEnough");
         User expected = user;
@@ -86,8 +92,29 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void login_is_ok() {
-        user.setLogin("SomeSmartName");
+    void password_minimum_required_length_isOk() {
+        user.setPassword("123456");
+    }
+
+    @Test
+    void age_is_null_notOk() {
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void age_is_lower_notOk() {
+        user.setAge(17);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void age_minimum_value_ok() {
+        user.setAge(18);
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);

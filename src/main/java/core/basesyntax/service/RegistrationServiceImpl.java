@@ -11,20 +11,40 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null
-                || user.getPassword() == null
-                || user.getAge() == null
-                || user.getLogin() == null) {
-            throw new RuntimeException("Your input is null");
-        } else if (user.getPassword().length() < PASSWORD_MINIMUM_LENGTH) {
-            throw new RuntimeException("Your password is less than 6 symbols");
-        } else if (user.getAge() < MINIMUM_VALID_AGE) {
-            throw new RuntimeException("Your age is lower than 18 years.");
-        } else if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException(("Your login is already used"));
-        } else {
-            storageDao.add(user);
+        checkUser(user);
+        return storageDao.add(user);
+    }
+
+    public void checkUser(User user) {
+        if (user == null) {
+            throw new RuntimeException("Put some user's value.");
         }
-        return user;
+        checkLogin(user);
+        checkPassword(user);
+        checkAge(user);
+    }
+
+    public void checkLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new RuntimeException("You need to enter your login.");
+        } else if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Your login already exists.");
+        }
+    }
+
+    public void checkPassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException("You need to enter your password.");
+        } else if (user.getPassword().length() < PASSWORD_MINIMUM_LENGTH) {
+            throw new RuntimeException("Your password should be minimum 6 symbols.");
+        }
+    }
+
+    public void checkAge(User user) {
+        if (user.getAge() == null) {
+            throw new RuntimeException("You need to enter your age.");
+        } else if (user.getAge() < MINIMUM_VALID_AGE) {
+            throw new RuntimeException("Your age should be 18 or higher.");
+        }
     }
 }
