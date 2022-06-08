@@ -8,13 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
     private static StorageDao storageDao;
-    private int expectingSize;
+    private int expectedSize;
 
     private static User userConstructor(long id, String login, String password, int age) {
         User user = new User();
@@ -28,11 +27,11 @@ class StorageDaoImplTest {
     @BeforeEach
     void setUp() {
         storageDao = new StorageDaoImpl();
-        expectingSize = 0;
+        expectedSize = 0;
     }
 
     @Test
-    void addAndGet_validUser_Ok() {
+    void addingAndGettingMultiple_validUser_Ok() {
         int lowestValidAge = 18;
         int adultAge = 32;
         String lowestValidPass = "123456";
@@ -49,7 +48,7 @@ class StorageDaoImplTest {
                     + "User Object");
             assertNotEquals(oldId, user.getId(), "User Id must should be changed "
                     + "due to registration");
-            expectingSize++;
+            expectedSize++;
         }
 
         for (User user : users) {
@@ -57,7 +56,7 @@ class StorageDaoImplTest {
                     "Get method returned not expected user by login");
         }
 
-        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
@@ -73,12 +72,12 @@ class StorageDaoImplTest {
                 + "User Object");
         assertNotEquals(oldId, user.getId(), "User Id must should be changed "
                 + "due to registration");
-        expectingSize++;
+        expectedSize++;
 
         assertNull(storageDao.get(notExistentLogin),
                 "Get method not returned null for not existing login");
 
-        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
@@ -93,12 +92,12 @@ class StorageDaoImplTest {
                 + "User Object");
         assertNotEquals(oldId, user.getId(), "User Id must should be changed "
                 + "due to registration");
-        expectingSize++;
+        expectedSize++;
 
         assertNull(storageDao.get(null),
                 "Get method not returned null for not existing login");
 
-        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @AfterEach
