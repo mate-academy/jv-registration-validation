@@ -11,6 +11,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 class StorageDaoImplTest {
     private static StorageDao storageDao;
     private int expectedSize;
@@ -103,7 +105,7 @@ class StorageDaoImplTest {
     void adding_testingCorrectId_Ok() {
         User user;
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10; i++) {
             user = userConstructor(101L * i, "User" + i, "password", 18 + i);
             User actual = storageDao.add(user);
             assertNotNull(actual, "Returned Object must be not null");
@@ -112,7 +114,12 @@ class StorageDaoImplTest {
             expectedSize++;
         }
 
-        for (int i = 0; i < 50; i++) {
+        System.out.println("Getting users ID:");
+        for(User u : Storage.people) {
+            System.out.println(u.getId());
+        }
+
+        for (int i = 0; i < 10; i++) {
             assertEquals(i + 1, storageDao.get("User" + i).getId(),
                     "Expected=" + (i + 1) + " storageDao.get(User" + i + ").getId()="
                                 + storageDao.get("User" + i).getId());
