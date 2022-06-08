@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,17 +11,23 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String VALID_LOGIN = "bob";
+    private static final String VALID_PASSWORD = "bob123";
+    private static final int VALID_AGE = 42;
+    private static final String INVALID_PASSWORD = "admin";
+    private static final int INVALID_AGE = 17;
+
     private RegistrationService registrationService;
     private User user;
 
     @BeforeEach
     public void setUp() {
         registrationService = new RegistrationServiceImpl();
+        Storage.people.clear();
         user = new User();
-        user.setLogin("bob");
-        user.setPassword("bob123");
-        user.setAge(42);
-        user.setId((long) 1234);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
     }
 
     @Test
@@ -37,12 +44,15 @@ class RegistrationServiceImplTest {
 
         @Test
         public void register_userAlreadyExists_notOk() {
+            System.out.println(Storage.people);
             User user2 = new User();
-            user2.setLogin("bob");
-            user2.setPassword("alice456");
-            user2.setAge(34);
-            user2.setId((long) 5678);
+            user2.setLogin(VALID_LOGIN);
+            user2.setPassword(VALID_PASSWORD);
+            user2.setAge(VALID_AGE);
             registrationService.register(user2);
+            assertThrows(RuntimeException.class, () -> {
+                registrationService.register(user);
+            });
         }
 
         @Test
@@ -52,7 +62,7 @@ class RegistrationServiceImplTest {
 
         @Test
         public void register_ageLessThan18_notOk() {
-            user.setAge(17);
+            user.setAge(INVALID_AGE);
         }
 
         @Test
@@ -61,13 +71,8 @@ class RegistrationServiceImplTest {
         }
 
         @Test
-        public void register_idNull_notOk() {
-            user.setId(null);
-        }
-
-        @Test
         public void register_passwordLessThanSixSymbols_notOk() {
-            user.setPassword("admin");
+            user.setPassword(INVALID_PASSWORD);
         }
 
         @Test
