@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,16 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD = "admin";
     private static final int INVALID_AGE = 17;
 
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
     private User user;
+
+    @BeforeAll
+    public static void initialSetUp() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     public void setUp() {
-        registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
         user = new User();
         user.setLogin(VALID_LOGIN);
@@ -44,15 +49,12 @@ class RegistrationServiceImplTest {
 
         @Test
         public void register_userAlreadyExists_notOk() {
-            System.out.println(Storage.people);
             User user2 = new User();
             user2.setLogin(VALID_LOGIN);
             user2.setPassword(VALID_PASSWORD);
             user2.setAge(VALID_AGE);
             registrationService.register(user2);
-            assertThrows(RuntimeException.class, () -> {
-                registrationService.register(user);
-            });
+            assertThrows(RuntimeException.class, () -> registrationService.register(user));
         }
 
         @Test
@@ -61,7 +63,7 @@ class RegistrationServiceImplTest {
         }
 
         @Test
-        public void register_ageLessThan18_notOk() {
+        public void register_invalidAge_notOk() {
             user.setAge(INVALID_AGE);
         }
 
@@ -71,7 +73,7 @@ class RegistrationServiceImplTest {
         }
 
         @Test
-        public void register_passwordLessThanSixSymbols_notOk() {
+        public void register_invalidPassword_notOk() {
             user.setPassword(INVALID_PASSWORD);
         }
 
@@ -84,7 +86,7 @@ class RegistrationServiceImplTest {
         public void expectException() {
             assertThrows(RuntimeException.class, () -> {
                 registrationService.register(user);
-            });
+            }, "RuntimeException expected");
         }
     }
 }

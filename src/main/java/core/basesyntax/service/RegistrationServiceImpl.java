@@ -9,31 +9,57 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throwException(" User is null.");
-        }
-        if (user.getLogin() == null) {
-            throwException(" User login is null.");
-        }
-        if (user.getAge() == null) {
-            throwException(" User age is null.");
-        }
-        if (user.getPassword() == null) {
-            throwException(" User password is null.");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throwException(" User already exists.");
-        }
-        if (user.getAge() < 18) {
-            throwException(" Age is less than 18.");
-        }
-        if (user.getPassword().length() < 6) {
-            throwException(" Password should be at least 6 symbols.");
-        }
+        checkUserNotNull(user);
+        checkLoginNotNull(user);
+        checkAgeNotNull(user);
+        checkPasswordNotNull(user);
+        checkUserDoesNotAlreadyExist(user);
+        checkAgeValid(user);
+        checkPasswordValid(user);
         return storageDao.add(user);
     }
 
-    private void throwException(String message) {
-        throw new RuntimeException("Cannot register user." + message);
+    private void checkUserNotNull(User user) {
+        if (user == null) {
+            throw new RuntimeException("Cannot register user. User is null.");
+        }
+    }
+
+    private void checkLoginNotNull(User user) {
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Cannot register user. User login is null.");
+        }
+    }
+
+    private void checkAgeNotNull(User user) {
+        if (user.getAge() == null) {
+            throw new RuntimeException("Cannot register user. User age is null.");
+        }
+    }
+
+    private void checkPasswordNotNull(User user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Cannot register user. User password is null.");
+        }
+    }
+
+    private void checkUserDoesNotAlreadyExist(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Cannot register user. User"
+                    + user.getLogin() + " already exists.");
+        }
+    }
+
+    private void checkPasswordValid(User user) {
+        if (user.getAge() < 18) {
+            throw new RuntimeException("Cannot register user. Age is less than 18.");
+        }
+    }
+
+    private void checkAgeValid(User user) {
+        if (user.getPassword().length() < 6) {
+            throw new RuntimeException("Cannot register user. "
+                    + "Password should be at least 6 symbols.");
+        }
     }
 }
