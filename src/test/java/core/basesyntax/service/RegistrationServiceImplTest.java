@@ -15,15 +15,6 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private int expectedSize;
 
-    private User createUser(long id, String login, String password, int age) {
-        User user = new User();
-        user.setId(id);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
-        return user;
-    }
-
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
@@ -192,5 +183,14 @@ class RegistrationServiceImplTest {
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    private User createUser(long id, String login, String password, int age) {
+        User user = new User();
+        user.setId(id);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        return user;
     }
 }
