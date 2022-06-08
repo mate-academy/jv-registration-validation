@@ -3,8 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,15 +12,10 @@ class RegistrationServiceImplTest {
     private User user;
     private RegistrationServiceImpl registrationService;
 
-    @AfterEach
-    void tearDown() {
-        registrationService.clearStorage();
-    }
-
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         user = new User();
-        user.setId(1L);
         user.setLogin("loginOne");
         user.setAge(20);
         user.setPassword("werewjdskfj");
@@ -57,37 +52,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeLessZero_NotOk() {
-        user.setAge(-56);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
     void userAgeNotAdult_NotOk() {
-        user.setAge(5);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void userAgeUnbelieveble_NotOk() {
-        user.setAge(200);
+        user.setAge(131);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void userAgeValid_Ok() {
-        assertEquals(user, registrationService.register(user));
     }
 
     @Test
     void userPassword_NotOk() {
         user.setPassword("dskfj");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void userValidPassword_Ok() {
-        assertEquals(user, registrationService.register(user));
     }
 
     @Test

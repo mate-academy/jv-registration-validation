@@ -15,25 +15,25 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null) {
-            throw new RuntimeException("Login is null");
+            throw new RuntimeException("Login is empty, input your login");
         }
         if (user.getAge() == null) {
-            throw new RuntimeException("Age is null");
+            throw new RuntimeException("Age is empty, input your age");
         }
         if (user.getPassword() == null) {
-            throw new RuntimeException("Password is null");
+            throw new RuntimeException("Password is empty, input you password");
         }
         if (user.getLogin().length() == EMPTY_LINE || user.getLogin().matches("^[ ]*$")) {
-            throw new RuntimeException("Login is empty");
+            throw new RuntimeException("Login is empty, input your login");
         }
         if (user.getPassword().length() == EMPTY_LINE || user.getPassword().matches("^[ ]*$")) {
-            throw new RuntimeException("Password is empty");
+            throw new RuntimeException("Password is empty, input you password");
         }
         if (!Character.isLetter(user.getLogin().charAt(0))) {
-            throw new RuntimeException("First letter of login mast be letter");
+            throw new RuntimeException("First letter of login must be a letter");
         }
         if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
-            throw new RuntimeException("Password is too short");
+            throw new RuntimeException("Password is short, input at least 6 character");
         }
         if (user.getAge() < VALID_AGE && user.getAge() > ZERO_AGE) {
             throw new RuntimeException("Age for access must be 18 and older");
@@ -45,14 +45,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("We don't believe in this age");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with input login already present in storage");
+            throw new RuntimeException("User with input login "
+                    + "already present in storage, choose another login");
         } else {
             storageDao.add(user);
             return user;
         }
-    }
-
-    public void clearStorage() {
-        storageDao.clearStorage();
     }
 }
