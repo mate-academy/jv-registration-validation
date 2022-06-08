@@ -63,7 +63,6 @@ class StorageDaoImplTest {
     void getNotExistentLogin_NotOk() {
         User actual;
         long oldId;
-        String notExistentLogin = "NotExistentLogin";
         User user = userConstructor(101L, "FirstUser", "password", 32);
         oldId = user.getId();
         actual = storageDao.add(user);
@@ -74,7 +73,7 @@ class StorageDaoImplTest {
                 + "due to registration");
         expectedSize++;
 
-        assertNull(storageDao.get(notExistentLogin),
+        assertNull(storageDao.get("NotExistentLogin"),
                 "Get method not returned null for not existing login");
 
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");

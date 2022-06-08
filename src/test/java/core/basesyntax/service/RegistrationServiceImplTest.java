@@ -103,7 +103,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_existentLoginUser_notOk() {
         User firstUser = userConstructor(101L, "User", "password", 32);
-        User sameLoginUser = userConstructor(102L, "User", "password2", 43);
         long oldId = firstUser.getId();
         User actual = registrationService.register(firstUser);
         assertNotNull(actual, "Returned Object must be not null");
@@ -113,6 +112,7 @@ class RegistrationServiceImplTest {
                 + "due to registration");
         expectedSize++;
 
+        User sameLoginUser = userConstructor(102L, "User", "password2", 43);
         assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser),
                 "There must RuntimeException throw when try register User with same login");
 
