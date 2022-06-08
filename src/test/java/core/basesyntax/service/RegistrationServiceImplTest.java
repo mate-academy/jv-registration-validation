@@ -153,7 +153,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lowPassword_NotOk() {
+    void register_shortPassword_NotOk() {
         User notValidPassUser = userConstructor(1L, "NotValidPassUser", "12345", 32);
         assertThrows(RuntimeException.class, () -> registrationService.register(notValidPassUser),
                 "There must RuntimeException throw when PASSWORD less then six symbols");
