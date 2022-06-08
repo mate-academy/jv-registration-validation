@@ -112,7 +112,7 @@ class StorageDaoImplTest {
             expectedSize++;
         }
         System.out.println("Getting IDs:");
-        for(User u : Storage.people) {
+        for (User u : Storage.people) {
             System.out.println("ID=" + u.getId());
         }
         for (int i = 0; i < 10; i++) {
