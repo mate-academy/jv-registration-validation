@@ -15,7 +15,7 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private int expectedSize;
 
-    private static User userConstructor(long id, String login, String password, int age) {
+    private User createUser(long id, String login, String password, int age) {
         User user = new User();
         user.setId(id);
         user.setLogin(login);
@@ -36,9 +36,9 @@ class RegistrationServiceImplTest {
         int adultAge = 32;
         String lowestValidPass = "123456";
         User[] users = new User[3];
-        users[0] = userConstructor(101L, "FirstUser", "password", adultAge);
-        users[1] = userConstructor(102L, "SecondUser", lowestValidPass, adultAge + adultAge);
-        users[2] = userConstructor(103L, "ThirdUser", "password", lowestValidAge);
+        users[0] = createUser(101L, "FirstUser", "password", adultAge);
+        users[1] = createUser(102L, "SecondUser", lowestValidPass, adultAge + adultAge);
+        users[2] = createUser(103L, "ThirdUser", "password", lowestValidAge);
 
         for (User user : users) {
             long oldId = user.getId();
@@ -55,7 +55,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_notOk() {
-        User user = userConstructor(1L, "UserNullAge", "password", 0);
+        User user = createUser(1L, "UserNullAge", "password", 0);
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "There must RuntimeException throw when NULL AGE field in "
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_under18Age_notOk() {
-        User user = userConstructor(1L, "UserYoungAge", "password", 12);
+        User user = createUser(1L, "UserYoungAge", "password", 12);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "There must RuntimeException throw when UNDER 18 AGE field in "
                         + "User registration");
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOk() {
-        User user = userConstructor(1L, "UserNegativeAge", "password", 0);
+        User user = createUser(1L, "UserNegativeAge", "password", 0);
         user.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "There must RuntimeException throw when NEGATIVE AGE field in "
@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existentUser_notOk() {
-        User user = userConstructor(101L, "User", "password", 32);
+        User user = createUser(101L, "User", "password", 32);
         long oldId = user.getId();
         User actual = registrationService.register(user);
         assertNotNull(actual, "Returned Object must be not null");
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existentLoginUser_notOk() {
-        User firstUser = userConstructor(101L, "User", "password", 32);
+        User firstUser = createUser(101L, "User", "password", 32);
         long oldId = firstUser.getId();
         User actual = registrationService.register(firstUser);
         assertNotNull(actual, "Returned Object must be not null");
@@ -112,7 +112,7 @@ class RegistrationServiceImplTest {
                 + "due to registration");
         expectedSize++;
 
-        User sameLoginUser = userConstructor(102L, "User", "password2", 43);
+        User sameLoginUser = createUser(102L, "User", "password2", 43);
         assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser),
                 "There must RuntimeException throw when try register User with same login");
 
@@ -121,7 +121,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_emptyLoginUser_notOk() {
-        User user = userConstructor(101L, "", "password", 32);
+        User user = createUser(101L, "", "password", 32);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "There must RuntimeException throw when try register User with empty login");
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
@@ -137,7 +137,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLoginUser_NotOk() {
-        User nullLoginUser = userConstructor(1L, null, "password", 32);
+        User nullLoginUser = createUser(1L, null, "password", 32);
         assertThrows(RuntimeException.class, () -> registrationService.register(nullLoginUser),
                 "There must RuntimeException throw when null LOGIN field in User registration");
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
@@ -145,7 +145,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPasswordUser_NotOk() {
-        User nullPasswordUser = userConstructor(1L, "NullPasswordUser", null, 32);
+        User nullPasswordUser = createUser(1L, "NullPasswordUser", null, 32);
         assertThrows(RuntimeException.class, () -> registrationService.register(nullPasswordUser),
                 "There must RuntimeException throw when null PASSWORD field in User registration");
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
@@ -153,7 +153,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_emptyPassword_NotOk() {
-        User emptyPasswordUser = userConstructor(1L, "EmptyPasswordUser", "", 32);
+        User emptyPasswordUser = createUser(1L, "EmptyPasswordUser", "", 32);
         assertThrows(RuntimeException.class, () -> registrationService.register(emptyPasswordUser),
                 "There must RuntimeException throw when EMPTY PASSWORD field in "
                         + "User registration");
@@ -162,7 +162,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPassword_NotOk() {
-        User notValidPassUser = userConstructor(1L, "NotValidPassUser", "12345", 32);
+        User notValidPassUser = createUser(1L, "NotValidPassUser", "12345", 32);
         assertThrows(RuntimeException.class, () -> registrationService.register(notValidPassUser),
                 "There must RuntimeException throw when PASSWORD less then six symbols");
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
@@ -173,7 +173,7 @@ class RegistrationServiceImplTest {
         User user;
 
         for (int i = 0; i < 10; i++) {
-            user = userConstructor(101L * i, "User" + i, "password", 18 + i);
+            user = createUser(101L * i, "User" + i, "password", 18 + i);
             User actual = registrationService.register(user);
             assertNotNull(actual, "Returned Object must be not null");
             assertEquals(actual, user, "Registration method should return registered "
