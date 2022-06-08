@@ -100,6 +100,27 @@ class StorageDaoImplTest {
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
+    @Test
+    void adding_testingCorrectId_Ok() {
+        User user;
+
+        for (int i = 0; i < 50; i++) {
+            user = userConstructor(101L * i, "User" + i, "password", 18 + i);
+            User actual = storageDao.add(user);
+            assertNotNull(actual, "Returned Object must be not null");
+            assertEquals(actual, user, "Registration method should return registered "
+                    + "User Object");
+            expectedSize++;
+
+        }
+
+        for (int i = 0; i < 50; i++) {
+            assertEquals(i + 1, storageDao.get("User" + i).getId());
+        }
+
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
+    }
+
     @AfterEach
     void tearDown() {
         Storage.people.clear();
