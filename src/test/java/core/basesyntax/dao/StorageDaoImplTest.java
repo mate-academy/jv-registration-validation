@@ -11,8 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 class StorageDaoImplTest {
     private static StorageDao storageDao;
     private int expectedSize;
@@ -113,18 +111,15 @@ class StorageDaoImplTest {
                     + "User Object");
             expectedSize++;
         }
-
-        System.out.println("Getting users ID:");
+        System.out.println("Getting IDs:");
         for(User u : Storage.people) {
-            System.out.println(u.getId());
+            System.out.println("ID=" + u.getId());
         }
-
         for (int i = 0; i < 10; i++) {
             assertEquals(i + 1, storageDao.get("User" + i).getId(),
                     "Expected=" + (i + 1) + " storageDao.get(User" + i + ").getId()="
                                 + storageDao.get("User" + i).getId());
         }
-
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
