@@ -13,6 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         checkUser(user);
+        storageDao.add(user);
         return user;
     }
 
