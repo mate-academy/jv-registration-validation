@@ -20,6 +20,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        user.setId(1L);
         user.setLogin("loginOne");
         user.setAge(20);
         user.setPassword("werewjdskfj");
