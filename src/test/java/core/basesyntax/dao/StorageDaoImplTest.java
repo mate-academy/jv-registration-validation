@@ -60,29 +60,47 @@ class StorageDaoImplTest {
         assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
     }
 
- /*   @Test
-    void getNotExistingLogin_NotOk() {
+    @Test
+    void getNotExistentLogin_NotOk() {
         User actual;
         long oldId;
-        oldId = validUser1.getId();
-        actual = storageDao.add(validUser1);
+        String notExistentLogin = "NotExistentLogin";
+        User user = userConstructor(101L, "FirstUser", "password", 32);
+        oldId = user.getId();
+        actual = storageDao.add(user);
         assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser1, "Registration method should return registered "
+        assertEquals(actual, user, "Registration method should return registered "
                 + "User Object");
-        assertNotEquals(oldId, validUser1.getId(), "User Id must should be changed "
+        assertNotEquals(oldId, user.getId(), "User Id must should be changed "
                 + "due to registration");
         expectingSize++;
 
-        assertEquals(storageDao.get(validUser1.getLogin()), validUser1,
-                "Get method returned not expected user by login");
-
-        assertNull(storageDao.get(validUser2.getLogin()),
+        assertNull(storageDao.get(notExistentLogin),
                 "Get method not returned null for not existing login");
 
-        assertNull(storageDao.get(null),
-                "Get method not returned null for not null login");
+        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
     }
-*/
+
+    @Test
+    void getNullLogin_NotOk() {
+        User actual;
+        long oldId;
+        User user = userConstructor(101L, "FirstUser", "password", 32);
+        oldId = user.getId();
+        actual = storageDao.add(user);
+        assertNotNull(actual, "Returned Object must be not null");
+        assertEquals(actual, user, "Registration method should return registered "
+                + "User Object");
+        assertNotEquals(oldId, user.getId(), "User Id must should be changed "
+                + "due to registration");
+        expectingSize++;
+
+        assertNull(storageDao.get(null),
+                "Get method not returned null for not existing login");
+
+        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
+    }
+
     @AfterEach
     void tearDown() {
         Storage.people.clear();
