@@ -161,10 +161,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_testingCorrectID_Ok() {
-        User user;
-
         for (int i = 0; i < 10; i++) {
-            user = createUser(101L * i, "User" + i, "password", 18 + i);
+            User user = createUser(101L * i, "User" + i, "password", 18 + i);
             User actual = registrationService.register(user);
             assertNotNull(actual, "Returned Object must be not null");
             assertEquals(actual, user, "Registration method should return registered "
