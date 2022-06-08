@@ -172,10 +172,10 @@ class RegistrationServiceImplTest {
             expectedSize++;
         }
 
-        long pervID = Storage.people.get(0).getId();
+        long perviousUserID = Storage.people.get(0).getId();
         for (int i = 1; i < 10; i++) {
-            assertEquals(pervID + 1, Storage.people.get(i).getId());
-            pervID = Storage.people.get(i).getId();
+            assertEquals(perviousUserID + 1, Storage.people.get(i).getId());
+            perviousUserID = Storage.people.get(i).getId();
         }
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
