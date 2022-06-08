@@ -15,15 +15,6 @@ class StorageDaoImplTest {
     private static StorageDaoImpl storageDao;
     private int expectedSize;
 
-    private static User userConstructor(long id, String login, String password, int age) {
-        User user = new User();
-        user.setId(id);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
-        return user;
-    }
-
     @BeforeEach
     void setUp() {
         storageDao = new StorageDaoImpl();
@@ -36,9 +27,9 @@ class StorageDaoImplTest {
         int adultAge = 32;
         String lowestValidPass = "123456";
         User[] users = new User[3];
-        users[0] = userConstructor(101L, "FirstUser", "password", adultAge);
-        users[1] = userConstructor(102L, "SecondUser", lowestValidPass, adultAge + adultAge);
-        users[2] = userConstructor(103L, "ThirdUser", "password", lowestValidAge);
+        users[0] = createUser(101L, "FirstUser", "password", adultAge);
+        users[1] = createUser(102L, "SecondUser", lowestValidPass, adultAge + adultAge);
+        users[2] = createUser(103L, "ThirdUser", "password", lowestValidAge);
 
         for (User user : users) {
             long oldId = user.getId();
@@ -62,7 +53,7 @@ class StorageDaoImplTest {
     void getNotExistentLogin_NotOk() {
         User actual;
         long oldId;
-        User user = userConstructor(101L, "FirstUser", "password", 32);
+        User user = createUser(101L, "FirstUser", "password", 32);
         oldId = user.getId();
         actual = storageDao.add(user);
         assertNotNull(actual, "Returned Object must be not null");
@@ -81,7 +72,7 @@ class StorageDaoImplTest {
     void getNullLogin_NotOk() {
         User actual;
         long oldId;
-        User user = userConstructor(101L, "FirstUser", "password", 32);
+        User user = createUser(101L, "FirstUser", "password", 32);
         oldId = user.getId();
         actual = storageDao.add(user);
         assertNotNull(actual, "Returned Object must be not null");
@@ -99,5 +90,14 @@ class StorageDaoImplTest {
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    private User createUser(long id, String login, String password, int age) {
+        User user = new User();
+        user.setId(id);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        return user;
     }
 }
