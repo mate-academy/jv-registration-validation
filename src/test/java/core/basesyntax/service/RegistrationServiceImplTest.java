@@ -8,176 +8,160 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int YOUNG_AGE = 12;
-    private static final int LOWEST_VALID_AGE = 18;
-    private static final int ADULT_AGE = 32;
-    private static final int NEGATIVE_AGE = -1;
-    private static final String LOWEST_VALID_PASS = "qw21re";
-    private static final String EMPTY_PASS = "";
-    private static final String NOT_VALID_PASS = "2we3a";
-    private static User validUser1;
-    private static User validUser2;
-    private static User validUser3;
-    private static User nullUser;
     private static RegistrationService registrationService;
-    private int expectingSize;
+    private int expectedSize;
 
-    @BeforeAll
-    static void beforeAll() {
-        validUser1 = new User();
-        validUser2 = new User();
-        validUser3 = new User();
-        nullUser = new User();
+    private static User userConstructor(long id, String login, String password, int age) {
+        User user = new User();
+        user.setId(id);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        return user;
     }
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        validUser1.setId(101L);
-        validUser1.setLogin("ValidUser1");
-        validUser1.setPassword("q1w2e3r4");
-        validUser1.setAge(ADULT_AGE);
-
-        validUser2.setId(102L);
-        validUser2.setLogin("ValidUser2");
-        validUser2.setPassword(LOWEST_VALID_PASS);
-        validUser2.setAge(ADULT_AGE + ADULT_AGE);
-
-        validUser3.setId(103L);
-        validUser3.setLogin("ValidUser3");
-        validUser3.setPassword("q1w2e3r4");
-        validUser3.setAge(LOWEST_VALID_AGE);
-
-        expectingSize = 0;
+        expectedSize = 0;
     }
 
     @Test
     void register_newValidUsers_Ok() {
-        User actual;
-        long oldId;
-        oldId = validUser1.getId();
-        actual = registrationService.register(validUser1);
-        assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser1, "Registration method should return registered "
-                + "User Object");
-        assertNotEquals(oldId, validUser1.getId(), "User Id must should be changed "
-                + "due to registration");
-        expectingSize++;
+        int lowestValidAge = 18;
+        int adultAge = 32;
+        String lowestValidPass = "123456";
+        User[] users = new User[3];
+        users[0] = userConstructor(101L, "FirstUser", "password", adultAge);
+        users[1] = userConstructor(102L, "SecondUser", lowestValidPass, adultAge + adultAge);
+        users[2] = userConstructor(103L, "ThirdUser", "password", lowestValidAge);
 
-        oldId = validUser2.getId();
-        actual = registrationService.register(validUser2);
-        assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser2, "Registration method should return registered "
-                + "User Object");
-        assertNotEquals(oldId, validUser2.getId(), "User Id must should be changed "
-                + "due to registration");
-        expectingSize++;
-
-        oldId = validUser3.getId();
-        actual = registrationService.register(validUser3);
-        assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser3, "Registration method should return registered "
-                + "User Object");
-        assertNotEquals(oldId, validUser3.getId(), "User Id must should be changed "
-                + "due to registration");
-        expectingSize++;
+        for (User user : users) {
+            long oldId = user.getId();
+            User actual = registrationService.register(user);
+            assertNotNull(actual, "Returned Object must be not null");
+            assertEquals(actual, user, "Registration method should return registered "
+                    + "User Object");
+            assertNotEquals(oldId, user.getId(), "User Id must should be changed "
+                    + "due to registration");
+            expectedSize++;
+        }
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
     void register_nullAge_notOk() {
-        validUser1.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser1));
+        User user = userConstructor(1L, "UserNullAge", "password", 0);
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "There must RuntimeException throw when NULL AGE field in "
+                        + "User registration");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
     void register_lowAge_notOk() {
-        validUser1.setAge(YOUNG_AGE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser1));
+        User user = userConstructor(1L, "UserYoungAge", "password", 12);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "There must RuntimeException throw when UNDER 18 AGE field in "
+                        + "User registration");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
     void register_negativeAge_notOk() {
-        validUser1.setAge(NEGATIVE_AGE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser1));
+        User user = userConstructor(1L, "UserNegativeAge", "password", 0);
+        user.setAge(-1);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "There must RuntimeException throw when NEGATIVE AGE field in "
+                        + "User registration");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
-    void register_sameUser_notOk() {
-        User actual;
-        long oldId;
-        oldId = validUser1.getId();
-        actual = registrationService.register(validUser1);
+    void register_existentUser_notOk() {
+        User user = userConstructor(101L, "User", "password", 32);
+        long oldId = user.getId();
+        User actual = registrationService.register(user);
         assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser1, "Registration method should return "
+        assertEquals(actual, user, "Registration method should return "
                 + "registered User Object");
-        assertNotEquals(oldId, validUser1.getId(), "User Id must should be changed "
+        assertNotEquals(oldId, user.getId(), "User Id must should be changed "
                 + "due to registration");
-        expectingSize++;
+        expectedSize++;
 
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser1),
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "There must RuntimeException throw when try register same User");
+
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
-    void register_sameLoginUser_notOk() {
-        User actual;
-        long oldId;
-        oldId = validUser1.getId();
-        actual = registrationService.register(validUser1);
+    void register_existentLoginUser_notOk() {
+        User firstUser = userConstructor(101L, "User", "password", 32);
+        User sameLoginUser = userConstructor(102L, "User", "password2", 43);
+        long oldId = firstUser.getId();
+        User actual = registrationService.register(firstUser);
         assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser1, "Registration method should return "
+        assertEquals(actual, firstUser, "Registration method should return "
                 + "registered User Object");
-        assertNotEquals(oldId, validUser1.getId(), "User Id must should be changed "
+        assertNotEquals(oldId, firstUser.getId(), "User Id must should be changed "
                 + "due to registration");
-        expectingSize++;
+        expectedSize++;
 
-        validUser2.setLogin(validUser1.getLogin());
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser2),
+        assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser),
                 "There must RuntimeException throw when try register User with same login");
+
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
     void register_nullFieldsUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullUser),
+        User nullFieldsUser = new User();
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullFieldsUser),
                 "There must RuntimeException throw when null ALL fields User registration");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
+    }
 
-        validUser1.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser1),
-                "There must RuntimeException throw when null AGE field in User registration");
-
-        validUser2.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser2),
+    @Test
+    void register_nullLoginUser_NotOk() {
+        User nullLoginUser = userConstructor(1L, null, "password", 32);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullLoginUser),
                 "There must RuntimeException throw when null LOGIN field in User registration");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
+    }
 
-        validUser3.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser3),
+    @Test
+    void register_nullPasswordUser_NotOk() {
+        User nullPasswordUser = userConstructor(1L, "NullPasswordUser", null, 32);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullPasswordUser),
                 "There must RuntimeException throw when null PASSWORD field in User registration");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
     void register_emptyPassword_NotOk() {
-        validUser1.setPassword(EMPTY_PASS);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser1),
+        User emptyPasswordUser = userConstructor(1L, "EmptyPasswordUser", "", 32);
+        assertThrows(RuntimeException.class, () -> registrationService.register(emptyPasswordUser),
                 "There must RuntimeException throw when EMPTY PASSWORD field in "
                         + "User registration");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @Test
     void register_lowPassword_NotOk() {
-        validUser1.setPassword(NOT_VALID_PASS);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser1),
+        User notValidPassUser = userConstructor(1L, "NotValidPassUser", "12345", 32);
+        assertThrows(RuntimeException.class, () -> registrationService.register(notValidPassUser),
                 "There must RuntimeException throw when PASSWORD less then six symbols");
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
     @AfterEach
     void tearDown() {
-        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
-
         Storage.people.clear();
     }
 }
