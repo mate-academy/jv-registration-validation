@@ -9,14 +9,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Wrong login of registering user (cannot be empty or already exist)");
+        if (user.getLogin() == null || user.getLogin().equals("")
+                || storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Wrong login of registering user "
+                    + "(cannot be empty or already exist)");
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new RuntimeException("Password is incorrect (cannot be empty or less then six symbols)");
+            throw new RuntimeException("Password is incorrect "
+                    + "(cannot be empty or less then six symbols)");
         }
         if (user.getAge() == null || user.getAge() < 18) {
-            throw new RuntimeException("The registered user must be an adult (or age field cannot be empty)");
+            throw new RuntimeException("The registered user must be an adult "
+                    + "(or age field cannot be empty)");
         }
         return storageDao.add(user);
     }

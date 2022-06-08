@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lowAge_notOk() {
+    void register_under18Age_notOk() {
         User user = userConstructor(1L, "UserYoungAge", "password", 12);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "There must RuntimeException throw when UNDER 18 AGE field in "
@@ -116,6 +116,14 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser),
                 "There must RuntimeException throw when try register User with same login");
 
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
+    }
+
+    @Test
+    void register_emptyLoginUser_notOk() {
+        User user = userConstructor(101L, "", "password", 32);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "There must RuntimeException throw when try register User with empty login");
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
