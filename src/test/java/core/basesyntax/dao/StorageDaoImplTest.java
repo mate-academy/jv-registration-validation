@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
-    private static StorageDao storageDao;
+    private static StorageDaoImpl storageDao;
     private int expectedSize;
 
     private static User userConstructor(long id, String login, String password, int age) {
