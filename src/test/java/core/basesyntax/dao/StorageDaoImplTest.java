@@ -68,11 +68,9 @@ class StorageDaoImplTest {
 
     @Test
     void getNullLogin_NotOk() {
-        User actual;
-        long oldId;
         User user = createUser(101L, "FirstUser", "password", 32);
-        oldId = user.getId();
-        actual = storageDao.add(user);
+        long oldId = user.getId();
+        User actual = storageDao.add(user);
         assertNotNull(actual, "Returned Object must be not null");
         assertEquals(actual, user, "Registration method should return registered "
                 + "User Object");
