@@ -168,6 +168,27 @@ class RegistrationServiceImplTest {
         assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
     }
 
+    @Test
+    void register_testingCorrectID_Ok() {
+        User user;
+
+        for (int i = 0; i < 10; i++) {
+            user = userConstructor(101L * i, "User" + i, "password", 18 + i);
+            User actual = registrationService.register(user);
+            assertNotNull(actual, "Returned Object must be not null");
+            assertEquals(actual, user, "Registration method should return registered "
+                    + "User Object");
+            expectedSize++;
+        }
+
+        long pervID = Storage.people.get(0).getId();
+        for (int i = 1; i < 10; i++) {
+            assertEquals(pervID + 1, Storage.people.get(i).getId());
+            pervID = Storage.people.get(i).getId();
+        }
+        assertEquals(expectedSize, Storage.people.size(), "Storage size not changed properly");
+    }
+
     @AfterEach
     void tearDown() {
         Storage.people.clear();
