@@ -13,84 +13,54 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
-    private static final int LOWEST_VALID_AGE = 18;
-    private static final int ADULT_AGE = 32;
-    private static final String LOWEST_VALID_PASS = "qw21re";
-    private static User validUser1;
-    private static User validUser2;
-    private static User validUser3;
-    private StorageDao storageDao;
+    private static StorageDao storageDao;
     private int expectingSize;
 
-    @BeforeAll
-    static void beforeAll() {
-        validUser1 = new User();
-        validUser2 = new User();
-        validUser3 = new User();
+    private static User userConstructor(long id, String login, String password, int age) {
+        User user = new User();
+        user.setId(id);
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        return user;
     }
 
     @BeforeEach
     void setUp() {
         storageDao = new StorageDaoImpl();
-
-        validUser1.setId(101L);
-        validUser1.setLogin("ValidUser1");
-        validUser1.setPassword("q1w2e3r4");
-        validUser1.setAge(ADULT_AGE);
-
-        validUser2.setId(102L);
-        validUser2.setLogin("ValidUser2");
-        validUser2.setPassword(LOWEST_VALID_PASS);
-        validUser2.setAge(ADULT_AGE + ADULT_AGE);
-
-        validUser3.setId(103L);
-        validUser3.setLogin("ValidUser3");
-        validUser3.setPassword("q1w2e3r4");
-        validUser3.setAge(LOWEST_VALID_AGE);
-
         expectingSize = 0;
     }
 
     @Test
-    void addAndGet_normalUser_Ok() {
-        User actual;
-        long oldId;
-        oldId = validUser1.getId();
-        actual = storageDao.add(validUser1);
-        assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser1, "Registration method should return registered "
-                + "User Object");
-        assertNotEquals(oldId, validUser1.getId(), "User Id must should be changed "
-                + "due to registration");
-        expectingSize++;
+    void addAndGet_validUser_Ok() {
+        int lowestValidAge = 18;
+        int adultAge = 32;
+        String lowestValidPass = "123456";
+        User[] users = new User[3];
+        users[0] = userConstructor(101L, "FirstUser", "password", adultAge);
+        users[1] = userConstructor(102L, "SecondUser", lowestValidPass, adultAge + adultAge);
+        users[2] = userConstructor(103L, "ThirdUser", "password", lowestValidAge);
 
-        oldId = validUser2.getId();
-        actual = storageDao.add(validUser2);
-        assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser2, "Registration method should return registered "
-                + "User Object");
-        assertNotEquals(oldId, validUser2.getId(), "User Id must should be changed "
-                + "due to registration");
-        expectingSize++;
+        for (User user : users) {
+            long oldId = user.getId();
+            User actual = storageDao.add(user);
+            assertNotNull(actual, "Returned Object must be not null");
+            assertEquals(actual, user, "Registration method should return registered "
+                    + "User Object");
+            assertNotEquals(oldId, user.getId(), "User Id must should be changed "
+                    + "due to registration");
+            expectingSize++;
+        }
 
-        oldId = validUser3.getId();
-        actual = storageDao.add(validUser3);
-        assertNotNull(actual, "Returned Object must be not null");
-        assertEquals(actual, validUser3, "Registration method should return registered "
-                + "User Object");
-        assertNotEquals(oldId, validUser3.getId(), "User Id must should be changed "
-                + "due to registration");
-        expectingSize++;
+        for (User user : users) {
+            assertEquals(storageDao.get(user.getLogin()), user,
+                    "Get method returned not expected user by login");
+        }
 
-        assertEquals(storageDao.get(validUser1.getLogin()), validUser1,
-                "Get method returned not expected user by login");
-        assertEquals(storageDao.get(validUser2.getLogin()), validUser2,
-                "Get method returned not expected user by login");
-        assertEquals(storageDao.get(validUser3.getLogin()), validUser3,
-                "Get method returned not expected user by login");
+        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
     }
 
-    @Test
+ /*   @Test
     void getNotExistingLogin_NotOk() {
         User actual;
         long oldId;
@@ -112,11 +82,9 @@ class StorageDaoImplTest {
         assertNull(storageDao.get(null),
                 "Get method not returned null for not null login");
     }
-
+*/
     @AfterEach
     void tearDown() {
-        assertEquals(expectingSize, Storage.people.size(), "Storage size not changed properly");
-
         Storage.people.clear();
     }
 }
