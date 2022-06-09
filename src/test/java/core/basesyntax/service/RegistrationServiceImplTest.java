@@ -5,90 +5,95 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+public class RegistrationServiceImplTest {
+    private static RegistrationServiceImpl registrationService;
     private User user;
-    private RegistrationServiceImpl registrationService;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         Storage.people.clear();
         user = new User();
         user.setLogin("loginOne");
         user.setAge(20);
         user.setPassword("werewjdskfj");
-        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
-    void userValidParameters_Ok() {
+    public void userValidParameters_ok() {
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void userAlreadyPresent_NotOk() {
+    public void userAlreadyPresent_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginNull_NotOk() {
+    public void userLoginNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordNull_NotOk() {
+    public void userPasswordNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeNull_NotOk() {
+    public void userAgeNull_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeNotAdult_NotOk() {
+    public void userAgeNotAdult_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeUnbelieveble_NotOk() {
+    public void userAgeUnbelieveble_notOk() {
         user.setAge(131);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPassword_NotOk() {
+    public void userPassword_notOk() {
         user.setPassword("dskfj");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginWrong_NotOk() {
+    public void userLoginWrong_notOk() {
         user.setLogin("12dfss");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginEmpty_NotOk() {
+    public void userLoginEmpty_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginSpaces_NotOk() {
+    public void userLoginSpaces_notOk() {
         user.setLogin("        ");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordEmpty_NotOk() {
+    public void userPasswordEmpty_notOk() {
         user.setPassword("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
