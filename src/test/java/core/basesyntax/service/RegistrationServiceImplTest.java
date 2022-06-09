@@ -78,7 +78,6 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
-
     @Test
     public void registerSameUser_notOk() {
         User user2 = new User(user.getLogin(), "anotherpassword", 56);
