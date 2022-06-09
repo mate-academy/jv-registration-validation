@@ -12,37 +12,37 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (checkAge(user) && checkLogin(user) && checkPassword(user)) {
+        if (checkAge(user.getAge()) && checkLogin(user.getLogin()) && checkPassword(user.getPassword())) {
             storageDao.add(user);
             return user;
         }
         return null;
     }
 
-    private boolean checkAge(User user) {
-        if (user.getAge() == null) {
+    private boolean checkAge(Integer age) {
+        if (age == null) {
             throw new RuntimeException("Age can't be null");
-        } else if (user.getAge() < MINIMAL_AGE) {
+        } else if (age < MINIMAL_AGE) {
             throw new RuntimeException("Age must be 18 or greater for this action.");
-        } else if (user.getAge() < FINAL_STATIC_ZERO) {
+        } else if (age < FINAL_STATIC_ZERO) {
             throw new RuntimeException("Age can't be negative");
         }
         return true;
     }
 
-    private boolean checkLogin(User user) {
-        if (user.getLogin() == null) {
+    private boolean checkLogin(String login) {
+        if (login == null) {
             throw new RuntimeException("Login can't be null");
-        } else if (storageDao.get(user.getLogin()) != null) {
+        } else if (storageDao.get(login) != null) {
             throw new RuntimeException("User with same login is already exists");
         }
         return true;
     }
 
-    private boolean checkPassword(User user) {
-        if (user.getPassword() == null) {
+    private boolean checkPassword(String password) {
+        if (password == null) {
             throw new RuntimeException("Password can't be null");
-        } else if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
+        } else if (password.length() < MINIMAL_PASSWORD_LENGTH) {
             throw new RuntimeException("Password must be greater than 6 characters");
         }
         return true;
