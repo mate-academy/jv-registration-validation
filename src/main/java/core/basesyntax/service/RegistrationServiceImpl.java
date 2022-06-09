@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword() == null || user.getPassword().length() < PASSWORD_MIN_LENGTH) {
             throw new RuntimeException("Password is incorrect "
-                    + "(cannot be empty or less then six symbols)");
+                    + "(cannot be empty or less then " + PASSWORD_MIN_LENGTH + " symbols)");
         }
         if (user.getAge() == null || user.getAge() < USER_MIN_AGE) {
             throw new RuntimeException("The registered user must be an adult "
