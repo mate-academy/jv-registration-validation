@@ -25,73 +25,62 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserNull_NotOK() {
+    public void registerUserNull_notOK() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void registerUserLoginNull_NotOk() {
+    public void registerUserLoginNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserLoginEmpty_NotOk() {
+    public void registerUserLoginEmpty_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserPasswordNull_NotOk() {
+    public void registerUserPasswordNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserLoginAndPasswordNull_NotOk() {
+    public void registerUserLoginAndPasswordNull_NotOk() {
         user.setLogin(null);
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register17Year_NotOk() {
-        user.setAge(17);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register18Year_Ok() {
+    public void registerAdultUser_ok() {
         user.setAge(18);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register19Year_Ok() {
-        user.setAge(19);
-        assertEquals(user, registrationService.register(user));
-    }
-
-    @Test
-    void registerPassword4len_NotOk() {
-        user.setPassword("pass");
+    public void registerYoungUser_notOk() {
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerPassword6len_Ok() {
+    public void registerPassword_ok() {
         user.setPassword("passwd");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void registerPassword7len_Ok() {
-        user.setPassword("passwor");
-        assertEquals(user, registrationService.register(user));
+    public void registerPassword_notOk() {
+        user.setPassword("passw");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
+
     @Test
-    void registerSameUser_NotOk() {
+    public void registerSameUser_notOk() {
         User user2 = new User(user.getLogin(), "anotherpassword", 56);
         registrationService.register(user2);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
