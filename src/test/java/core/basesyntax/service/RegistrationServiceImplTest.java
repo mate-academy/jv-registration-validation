@@ -1,12 +1,13 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -17,31 +18,35 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         storage = new StorageDaoImpl();
         storage.add(new User(1535854439L, "bobTheOne", "iAmHereAlice", 23));
-    }
-
-    @BeforeEach
-    void setUp() {
         service = new RegistrationServiceImpl();
     }
 
     @Test
-    void register_ExistingUser_NotOk() {
+    void register_normalUser_Ok() {
+        User normalUser = new User(1535855239L, "MisterSandman", "BringMeADreams", 20);
+        User user = service.register(normalUser);
+        assertNotNull(user);
+        assertEquals(normalUser, user);
+    }
+
+    @Test
+    void register_existingUser_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             service.register(new User(1535854439L, "bobTheOne", "iAmHereAlice", 23));
         });
     }
 
     @Test
-    void register_UserAgeLessThan18_NotOk() {
+    void register_userAgeLessNotValid_NotOk() {
         assertThrows(RuntimeException.class, () -> {
-            service.register(new User(15358545039L, "Shazam", "SHAZAM!!!", 12));
+            service.register(new User(15358545039L, "Shazam", "SHAZAM!!!", 17));
         });
     }
 
     @Test
-    void register_ShortPassword_NotOk() {
+    void register_shortPassword_NotOk() {
         assertThrows(RuntimeException.class, () -> {
-            service.register(new User(1535855239L, "John", "hi", 19));
+            service.register(new User(1535855239L, "John", "passw", 19));
         });
     }
 
@@ -66,30 +71,8 @@ class RegistrationServiceImplTest {
         });
     }
 
-    @Test
-    void register_nullID_NotOk() {
-        assertThrows(RuntimeException.class, () -> {
-            service.register(new User(null, "NeoTheChosen", "followTheWhiteRabbit", 19));
-        });
-    }
-
-    @Test
-    void register_negativeAge_NotOk() {
-        assertThrows(RuntimeException.class, () -> {
-            service.register(new User(1535829039L, "BendjaminButton", "amILive?", -12));
-        });
-    }
-
-    @Test
-    void register_negativeID_NotOk() {
-        assertThrows(RuntimeException.class, () -> {
-            service.register(new User(-1535854439L, "Penguin", "whereIsRobin?", 29));
-        });
-    }
-
-    @Test
-    void register_normalUser_Ok() {
-        User user = service.register(new User(1535855239L, "MisterSandman", "BringMeADreams", 20));
-        assertNotNull(user);
+    @AfterEach
+    void tearDown() {
+        storage = new StorageDaoImpl();
     }
 }
