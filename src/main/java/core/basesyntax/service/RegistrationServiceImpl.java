@@ -35,13 +35,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUserPassword(User user) {
         if (user.getPassword() == null || user.getPassword().length()
-                < RegistrationServiceImpl.MIN_PASSWORD_LENGTH) {
+                < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Can`t register, password must be longer");
         }
     }
 
     private void checkUserAge(User user) {
-        if (user.getAge() < RegistrationServiceImpl.MIN_AGE) {
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Can`t register, not enough years");
         }
     }
