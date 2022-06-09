@@ -19,29 +19,28 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("Null input parameter at user argument");
         }
-        checkUserPassword(user);
-        checkUserAge(user);
-        checkUserLogin(user);
+        checkUserLogin(user.getLogin());
+        checkUserPassword(user.getPassword());
+        checkUserAge(user.getAge());
     }
 
-    private void checkUserLogin(User user) {
-        if (user.getLogin() == null || user.getLogin().length() == 0) {
+    private void checkUserLogin(String login) {
+        if (login == null || login.length() == 0) {
             throw new RuntimeException("Can`t register, invalid login");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (storageDao.get(login) != null) {
             throw new RuntimeException("Can`t register, login is exist");
         }
     }
 
-    private void checkUserPassword(User user) {
-        if (user.getPassword() == null || user.getPassword().length()
-                < MIN_PASSWORD_LENGTH) {
+    private void checkUserPassword(String password) {
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Can`t register, password must be longer");
         }
     }
 
-    private void checkUserAge(User user) {
-        if (user.getAge() < MIN_AGE) {
+    private void checkUserAge(int age) {
+        if (age < MIN_AGE) {
             throw new RuntimeException("Can`t register, not enough years");
         }
     }
