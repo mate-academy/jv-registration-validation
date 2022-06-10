@@ -7,50 +7,49 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
-
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         checkUser(user);
-        checkLogin(user);
-        checkAge(user);
-        checkPassword(user);
+        checkLogin(user.getLogin());
+        checkAge(user.getAge());
+        checkPassword(user.getPassword());
         storageDao.add(user);
         return user;
     }
 
     void checkUser(User user) {
         if (user == null) {
-            throw new RuntimeException("Error! Null user");
+            throw new RuntimeException("User could not be null");
         }
     }
 
-    void checkLogin(User user) {
-        if (user.getLogin() == null) {
-            throw new RuntimeException("Error! Null login");
-        } else if (user.getLogin().isEmpty() || user.getLogin().isBlank()) {
-            throw new RuntimeException("Error! Empty login");
-        } else if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Error! Login already in use");
+    void checkLogin(String login) {
+        if (login == null) {
+            throw new RuntimeException("Login could not be null");
+        } else if (login.isEmpty() || login.isBlank()) {
+            throw new RuntimeException("Login could not be empty");
+        } else if (storageDao.get(login) != null) {
+            throw new RuntimeException("Login already in use");
         }
     }
 
-    void checkAge(User user) {
-        if (user.getAge() == null) {
-            throw new RuntimeException("Error! Null age");
-        } else if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Error! Age must be 18 or greater");
+    void checkAge(Integer age) {
+        if (age == null) {
+            throw new RuntimeException("Age could not be null");
+        } else if (age < MIN_AGE) {
+            throw new RuntimeException("Acceptable age is 18 or greater");
         }
     }
 
-    void checkPassword(User user) {
-        if (user.getPassword() == null) {
-            throw new RuntimeException("Error! Password null");
-        } else if (user.getPassword().isEmpty() || user.getPassword().isBlank()) {
-            throw new RuntimeException("Error! Empty password");
-        } else if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Error! Password less that six symbols");
+    void checkPassword(String password) {
+        if (password == null) {
+            throw new RuntimeException("Password could not be null");
+        } else if (password.isEmpty() || password.isBlank()) {
+            throw new RuntimeException("Password could not be empty");
+        } else if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("Password should contain six or more symbols");
         }
     }
 }
