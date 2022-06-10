@@ -15,35 +15,35 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    public void checkUser(User user) {
+    private void checkUser(User user) {
         if (user == null) {
             throw new RuntimeException("Put some user's value.");
         }
-        checkLogin(user);
-        checkPassword(user);
-        checkAge(user);
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
     }
 
-    public void checkLogin(User user) {
-        if (user.getLogin() == null || user.getLogin().length() == 0) {
+    private void checkLogin(String login) {
+        if (login == null || login.length() == 0) {
             throw new RuntimeException("You need to enter your login.");
-        } else if (storageDao.get(user.getLogin()) != null) {
+        } else if (storageDao.get(login) != null) {
             throw new RuntimeException("Your login already exists.");
         }
     }
 
-    public void checkPassword(User user) {
-        if (user.getPassword() == null) {
+    private void checkPassword(String password) {
+        if (password == null) {
             throw new RuntimeException("You need to enter your password.");
-        } else if (user.getPassword().length() < PASSWORD_MINIMUM_LENGTH) {
+        } else if (password.length() < PASSWORD_MINIMUM_LENGTH) {
             throw new RuntimeException("Your password should be minimum 6 symbols.");
         }
     }
 
-    public void checkAge(User user) {
-        if (user.getAge() == null) {
+    private void checkAge(int age) {
+        if (age == 0) {
             throw new RuntimeException("You need to enter your age.");
-        } else if (user.getAge() < MINIMUM_VALID_AGE) {
+        } else if (age < MINIMUM_VALID_AGE) {
             throw new RuntimeException("Your age should be 18 or higher.");
         }
     }
