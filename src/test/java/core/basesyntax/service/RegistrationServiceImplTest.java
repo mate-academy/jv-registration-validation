@@ -6,17 +6,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
-    private User userBob;
+public class RegistrationServiceImplTest {
+    private static User userBob;
     private User user;
-    private RegistrationServiceImpl registrationService;
+    private static RegistrationServiceImpl registrationService;
 
-    {
+
+    @BeforeAll
+    static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        user = new User("Alice", "Johnson", 63);
         userBob = new User("Bob", "SomeLength", 22);
+    }
+
+    @BeforeEach
+    void setUp() {
+        user = new User("Alice", "Johnson", 63);
     }
 
     @Test
@@ -54,9 +62,9 @@ class RegistrationServiceImplTest {
     @Test
     public void checkPassword_isNull_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () ->
+            registrationService.register(user)
+        );
     }
 
     @Test
