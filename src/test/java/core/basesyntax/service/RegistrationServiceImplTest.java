@@ -17,7 +17,6 @@ public class RegistrationServiceImplTest {
     private static final String LOGIN_ANOTHER = "another";
     private static final int AGE_ALLOWED = 18;
     private static final int AGE_LESS_ALLOWED = 17;
-
     private static final String PASSWORD_DEFAULT = "default";
     private static final String PASSWORD_SHORT = "short";
     private static RegistrationService registrationService;
