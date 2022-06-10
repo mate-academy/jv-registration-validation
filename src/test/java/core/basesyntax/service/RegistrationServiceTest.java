@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,6 @@ class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         user = new User();
         user.setLogin("usersLogin.com");
         user.setPassword("usersPassword");
@@ -105,5 +105,10 @@ class RegistrationServiceTest {
         user.setAge(19);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }

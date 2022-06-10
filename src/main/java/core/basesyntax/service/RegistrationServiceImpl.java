@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUsersLogin(String login) {
         if (login.isEmpty() || login.isBlank()) {
-            throw new RuntimeException("Logins field is empty!");
+            throw new RuntimeException("Login field is empty!");
         } else if (storageDao.get(login) != null) {
             throw new RuntimeException("This login already exists!");
         }
@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUsersPassword(String password) {
         if (password.isEmpty() || password.isBlank()) {
-            throw new RuntimeException("Passwords field is empty!");
+            throw new RuntimeException("Password field is empty!");
         } else if (password.length() < MIN_LENGTH_OF_PASSWORD) {
             throw new RuntimeException("This password " + password
                     + "must bee more, then " + MIN_LENGTH_OF_PASSWORD + "characters");
@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(Integer age) {
         if (age == null) {
-            throw new RuntimeException("Ages field is empty!");
+            throw new RuntimeException("Age field is empty!");
         } else if (age < MIN_USERS_AGE) {
             throw new RuntimeException("User must be older, then " + MIN_USERS_AGE);
         }
