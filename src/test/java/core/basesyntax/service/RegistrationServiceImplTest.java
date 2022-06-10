@@ -11,10 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
+    private static RegistrationServiceImpl registrationService;
     private static User userBob;
     private User user;
-    private static RegistrationServiceImpl registrationService;
-
 
     @BeforeAll
     static void beforeAll() {
@@ -63,7 +62,7 @@ public class RegistrationServiceImplTest {
     public void checkPassword_isNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () ->
-            registrationService.register(user)
+                registrationService.register(user)
         );
     }
 
