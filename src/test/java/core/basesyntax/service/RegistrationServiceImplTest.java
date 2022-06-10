@@ -43,6 +43,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_blankLogin_notOk() {
+        user.setLogin("     ");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        user.setLogin("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -56,12 +64,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidLogin_notOk() {
-        User user2 = new User();
-        user2.setLogin(user.getLogin());
-        user2.setAge(22);
-        user2.setPassword("qazxsw");
         registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user2));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
