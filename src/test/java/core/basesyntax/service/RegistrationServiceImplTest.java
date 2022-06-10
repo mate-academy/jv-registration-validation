@@ -50,6 +50,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userNull_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+    }
+
+    @Test
     void register_loginNotUsed_Ok() {
         addUserDirectly(getDefaultUser());
         user.setLogin(LOGIN_ANOTHER);
@@ -75,6 +80,20 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginEmpty_notOk() {
         user.setLogin("");
+
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginBlack_notOk() {
+        user.setLogin("       ");
+
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_ageNull_notOk() {
+        user.setAge(null);
 
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -133,6 +152,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordEmpty_notOk() {
         user.setPassword("");
+
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordBlank_notOk() {
+        user.setPassword("       ");
 
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
