@@ -9,9 +9,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private  User userBob;
-    private  User user;
-    private  RegistrationServiceImpl registrationService;
+    private User userBob;
+    private User user;
+    private RegistrationServiceImpl registrationService;
 
     {
         registrationService = new RegistrationServiceImpl();
