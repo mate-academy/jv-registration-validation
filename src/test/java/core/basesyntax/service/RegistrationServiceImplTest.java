@@ -1,70 +1,86 @@
 
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    private final StorageDao storageDao = new StorageDaoImpl();
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
+    private User user;
 
-    @Test
-    void register_Password_IsOk() {
-        String password = "hfjkghyr";
-        boolean actual = registrationService.passwordIsValid(password);
-        assertTrue(actual);
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setLogin("Evgenii");
+        user.setAge(34);
+        user.setPassword("1234567");
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void register_Password_NotOk() {
-        String password = "hfjk";
-        boolean actual = registrationService.passwordIsValid(password);
-        assertFalse(actual);
+    void register_nullLogin_NotOk() {
+        user.setLogin(null);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
     void register_NullPassword_NotOk() {
+        user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.passwordIsValid(null);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_NullAge_NotOk() {
+        user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.ageIsValid(null);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_Age_IsOk() {
-        int age = 21;
-        boolean actual = registrationService.ageIsValid(age);
-        assertTrue(actual);
+    void register_blankLogin_NotOk() {
+        user.setLogin("   ");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
-    void register_Age_NotOk() {
-        int age = 16;
-        boolean actual = registrationService.ageIsValid(age);
-        assertFalse(actual);
+    void register_lessPasswordLength_NotOk() {
+        user.setPassword("12345");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
-    void register_NoLogin_IsOk() {
-        String login = "Yevheniy";
-        User actual = storageDao.get(login);
-        assertNull(actual);
+    void register_lessAge_NotOk() {
+        user.setAge(17);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
-    void register_NullLogin_NotOk() {
-        assertThrows(RuntimeException.class, () -> {
-            storageDao.get(null);
-        });
+    void register_existLogin_NotOk() {
+        User newUser = new User();
+        newUser.setLogin("Evgenii");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 }

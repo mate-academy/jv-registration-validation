@@ -5,37 +5,52 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE = 18;
+
     private final User user = new User();
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (passwordIsValid(user.getPassword()) && ageIsValid(user.getAge())
-                && storageDao.get(user.getLogin()) == null) {
-            storageDao.add(user);
+        if (user == null || loginValidation(user.getLogin())
+                || passwordValidation(user.getPassword()) || ageValidation(user.getAge())) {
+            throw new RuntimeException("Invalid registration");
         }
+        storageDao.add(user);
         return user;
     }
 
-    @Override
-    public boolean passwordIsValid(String password) {
-        if (password == null) {
-            throw new RuntimeException();
+    private boolean loginValidation(String login) {
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Login is empty");
         }
-        if (password.length() >= 6) {
-            return true;
+        if (user.getLogin().isBlank()) {
+            throw new RuntimeException("Login is blank");
         }
-        return false;
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Login is already in use");
+        }
+        return true;
     }
 
-    @Override
-    public boolean ageIsValid(Integer age) {
+    private boolean passwordValidation(String password) {
+        if (password == null) {
+            throw new RuntimeException("Password is empty");
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("Password length must be more than 6");
+        }
+        return true;
+    }
+
+    private boolean ageValidation(Integer age) {
         if (age == null) {
-            throw new RuntimeException();
+            throw new RuntimeException("Age does not correct");
         }
-        if (age >= 18) {
-            return true;
+        if (age < MIN_AGE) {
+            throw new RuntimeException("Age must be more 18");
         }
-        return false;
+        return true;
     }
 }
