@@ -92,7 +92,6 @@ public class RegistrationServiceTest {
 
     @Test
     void register_equalAge_isOk() {
-        user = new User();
         user.setLogin("login123");
         user.setAge(18);
         user.setPassword("24pass");
@@ -109,7 +108,6 @@ public class RegistrationServiceTest {
 
     @Test
     void register_overAge_isOk() {
-        user = new User();
         user.setLogin("login678");
         user.setAge(39);
         user.setPassword("34login_password");
@@ -128,7 +126,6 @@ public class RegistrationServiceTest {
 
     @Test
     void register_oneMoreUser_isOk() {
-        user = new User();
         user.setLogin("user_login");
         user.setAge(24);
         user.setPassword("user_password");
