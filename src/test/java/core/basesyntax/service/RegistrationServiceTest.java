@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceTest {
+public class RegistrationServiceTest {
     private static RegistrationService registrationService;
     private static User user;
 
@@ -23,21 +23,26 @@ class RegistrationServiceTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin("usersLogin.com");
+        user.setLogin("usersLogin");
         user.setPassword("usersPassword");
         user.setAge(18);
     }
 
     @Test
-    void register_login_isOK() {
+    void register_login_Ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void register_gotNullUser_notOk() {
-        user = null;
+    void register_loginNotUsed_notOk() {
+        User actual = registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_gotNullUser_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -65,19 +70,19 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_passwordIsNull_NotOk() {
+    void register_passwordIsNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_passwordIsEmpty_NotOk() {
+    void register_passwordIsEmpty_notOk() {
         user.setPassword("");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_passwordIsBlank_NotOk() {
+    void register_passwordIsBlank_notOk() {
         user.setPassword("     ");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
