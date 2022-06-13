@@ -78,7 +78,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_existLogin_NotOk() {
+    public void register_existLogin_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () ->
                     registrationService.register(user));
