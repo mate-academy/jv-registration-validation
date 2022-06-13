@@ -15,8 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user.getLogin());
         checkAge(user.getAge());
         checkPassword(user.getPassword());
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     void checkUser(User user) {
