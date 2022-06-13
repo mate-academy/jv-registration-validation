@@ -27,11 +27,6 @@ public class RegistrationServiceTest {
         user = new User("login", "password", 25);
     }
 
-    @AfterEach
-    void afterAll() {
-        Storage.people.clear();
-    }
-
     @Test
     void register_goodUser_isOk() {
         user.setLogin("good_login");
@@ -138,5 +133,10 @@ public class RegistrationServiceTest {
         user.setAge(null);
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @AfterEach
+    void afterAll() {
+        Storage.people.clear();
     }
 }
