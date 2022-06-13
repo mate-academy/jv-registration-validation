@@ -78,13 +78,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_existLogin_NotOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () ->
-                    registrationService.register(user));
-    }
-
-    @Test
     public void register_userAll_IsOk() {
         User expected = user;
         User actual = registrationService.register(user);
