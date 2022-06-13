@@ -114,16 +114,16 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_passwordAboveSixChars_NotOk() {
+        user.setPassword(PASSWORD_SHORT);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     public void register_passwordSixChars_Ok() {
         user.setPassword(PASSWORD_DEFAULT);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
-    }
-
-    @Test
-    public void register_passwordAboveSixChars_NotOk() {
-        user.setPassword(PASSWORD_SHORT);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
