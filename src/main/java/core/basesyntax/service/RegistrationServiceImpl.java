@@ -13,44 +13,40 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || loginValidation(user.getLogin())
-                || passwordValidation(user.getPassword()) || ageValidation(user.getAge())) {
-            throw new RuntimeException("Invalid registration");
+        loginValidation(user.getLogin());
+        passwordValidation(user.getPassword());
+        ageValidation(user.getAge());
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Login is already in use");
         }
         storageDao.add(user);
         return user;
     }
 
-    private boolean loginValidation(String login) {
-        if (user.getLogin() == null) {
+    private void loginValidation(String login) {
+        if (login == null || login.isEmpty() || login.isBlank()) {
             throw new RuntimeException("Login is empty");
         }
-        if (user.getLogin().isBlank()) {
-            throw new RuntimeException("Login is blank");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (storageDao.get(login) != null) {
             throw new RuntimeException("Login is already in use");
         }
-        return true;
     }
 
-    private boolean passwordValidation(String password) {
-        if (password == null) {
+    private void passwordValidation(String pasword) {
+        if (pasword == null) {
             throw new RuntimeException("Password is empty");
         }
-        if (password.length() < MIN_PASSWORD_LENGTH) {
+        if (pasword.length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password length must be more than 6");
         }
-        return true;
     }
 
-    private boolean ageValidation(Integer age) {
+    private void ageValidation(Integer age) {
         if (age == null) {
             throw new RuntimeException("Age does not correct");
         }
         if (age < MIN_AGE) {
             throw new RuntimeException("Age must be more 18");
         }
-        return true;
     }
 }
