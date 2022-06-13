@@ -34,14 +34,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_nullLogin_NotOk() {
+    public void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    public void register_NullPassword_NotOk() {
+    public void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -49,7 +49,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_NullAge_NotOk() {
+    public void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -57,21 +57,21 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_blankLogin_NotOk() {
+    public void register_blankLogin_notOk() {
         user.setLogin("   ");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    public void register_lessPasswordLength_NotOk() {
+    public void register_lessPasswordLength_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    public void register_lessAge_NotOk() {
+    public void register_lessAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
@@ -85,7 +85,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_userAll_IsOk() {
+    public void register_userAll_ok() {
         User expected = user;
         User actual = registrationService.register(user);
         assertEquals(expected, actual);

@@ -19,8 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Login is already in use");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void loginValidation(String login) {
