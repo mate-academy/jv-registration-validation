@@ -7,7 +7,6 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -69,15 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_allCorrect_ok() {
+    public void register_validUser_ok() {
         assertEquals(service.register(user), user);
-    }
-
-    @Nested
-    public class ExceptionExpectingTests {
-        @Test
-        public void register_nullUser_notOk() {
-            user = null;
-        }
     }
 }
