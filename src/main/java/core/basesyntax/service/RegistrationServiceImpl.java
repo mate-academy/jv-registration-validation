@@ -11,18 +11,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validationUser(user);
+        validateUser(user);
         storageDao.add(user);
         return user;
     }
 
-    private void validationUser(User user) {
-        validationPassword(user.getPassword());
-        validationAge(user.getAge());
-        validationLogin(user.getLogin());
+    private void validateUser(User user) {
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        validateLogin(user.getLogin());
     }
 
-    private void validationLogin(String login) {
+    private void validateLogin(String login) {
         if (login == null || login.isEmpty() || login.isBlank()) {
             throw new RuntimeException("Login is not correct");
         }
@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validationAge(Integer age) {
+    private void validateAge(Integer age) {
         if (age == null) {
             throw new RuntimeException("Age is null");
         }
@@ -40,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void validationPassword(String password) {
+    public void validatePassword(String password) {
         if (password == null || password.isEmpty() || password.isBlank()) {
             throw new RuntimeException("Password is not correct");
         }

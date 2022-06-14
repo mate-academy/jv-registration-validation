@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-
     private static RegistrationService registrationService;
     private User user;
 
@@ -28,7 +27,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_goodUser_isOk() {
+    void register_goodUser_ok() {
         user.setLogin("good_login");
         user.setAge(44);
         user.setPassword("good_password");
@@ -56,13 +55,13 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_repeatedLogin_notOk() {
+    void register_registeredUser_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_strongPassword_isOk() {
+    void register_strongPassword_ok() {
         user.setPassword("eh46kitu89ph34bk");
         User expected = user;
         User actual = registrationService.register(user);
@@ -94,7 +93,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_equalAge_isOk() {
+    void register_equalAge_ok() {
         user.setAge(18);
         User expected = user;
         User actual = registrationService.register(user);
@@ -102,7 +101,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_overAge_isOk() {
+    void register_overAge_ok() {
         user.setAge(39);
         User expected = user;
         User actual = registrationService.register(user);
@@ -117,7 +116,7 @@ public class RegistrationServiceTest {
 
     @Test
     void register_negativeAge_notOk() {
-        user.setAge(-13);
+        user.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
