@@ -27,11 +27,6 @@ class RegistrationServiceImplTest {
         user.setPassword("amogus");
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     void register_user_ok() {
         User user = registrationService.register(this.user);
@@ -65,7 +60,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_theSameLoginExists_notOk() {
         registrationService.register(user);
-        User user = new User();
         user.setLogin("Hatsune Miku");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -84,7 +78,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lessThanMinimaPassword_notOk() {
-        user.setPassword("sus");
+        user.setPassword("dobre");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -96,7 +90,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_incorrectAge_notOk() {
-        user.setAge(-666);
+        user.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -104,5 +98,10 @@ class RegistrationServiceImplTest {
     void register_zeroAge_notOk() {
         user.setAge(0);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
