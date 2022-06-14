@@ -8,6 +8,18 @@ public class User {
     private String password;
     private Integer age;
 
+    public User(User user) {
+        this.age = user.getAge();
+        this.login = user.getLogin();
+        this.password = user.getPassword();
+    }
+
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     public Long getId() {
         return id;
     }

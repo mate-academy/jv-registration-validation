@@ -28,18 +28,12 @@ class RegistrationServiceImplTest {
     @BeforeEach
     public void setUp() {
         Storage.people.clear();
-        user = new User();
-        user.setAge(VALID_AGE);
-        user.setPassword(VALID_PASSWORD);
-        user.setLogin(VALID_LOGIN);
+        user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
     }
 
     @Test
     public void register_userExist_notOk() {
-        User user2 = new User();
-        user2.setLogin(VALID_LOGIN);
-        user2.setPassword(VALID_PASSWORD);
-        user2.setAge(VALID_AGE);
+        User user2 = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         service.register(user2);
         assertThrows(RuntimeException.class, () -> service.register(user));
     }
