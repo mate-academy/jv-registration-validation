@@ -32,8 +32,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        user = null;
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -70,7 +69,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOk() {
-        user.setAge(-17);
+        user.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -88,7 +87,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_Ok() {
+    void register_validUser_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
