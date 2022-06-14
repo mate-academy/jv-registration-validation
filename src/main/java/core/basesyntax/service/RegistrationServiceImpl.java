@@ -2,24 +2,23 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_LENGTH_OF_PASSWORD = 6;
+    private static final int MIN_VALID_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_VALID_AGE) {
             throw new RuntimeException("Age must be more than 17");
         }
-        if (user.getPassword() == null || user.getPassword().length() < 6) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH_OF_PASSWORD) {
             throw new RuntimeException("Password must be more than 5 symbols");
         }
-        for (User userFromList : Storage.people) {
-            if (userFromList.getLogin().equals(user.getLogin())) {
-                throw new RuntimeException("User login already exist");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User login already exist");
         }
         storageDao.add(user);
         return user;

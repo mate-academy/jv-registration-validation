@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User firstUser;
     private User secondUser;
@@ -23,12 +23,12 @@ class RegistrationServiceImplTest {
     private User fourthUser;
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         firstUser = new User("Mike", "mike12345", 22);
         secondUser = new User("Alice", "password", 19);
         thirdUser = new User("Melisa", "qwerty", 20);
@@ -36,44 +36,62 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void password_Length_Is_Valid() {
-        firstUser.setPassword("ddd");
+    public void register_passwordLength_isValid() {
+        firstUser.setPassword("dddssssssssad");
         secondUser.setPassword("asdadado");
-        thirdUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
+        thirdUser.setPassword("sss123osaa");
+        fourthUser.setPassword("qwrerasfdsdfs");
+        assertEquals(firstUser, registrationService.register(firstUser));
         assertEquals(secondUser, registrationService.register(secondUser));
-        assertThrows(RuntimeException.class, () -> registrationService.register(thirdUser));
+        assertEquals(thirdUser, registrationService.register(thirdUser));
+        assertEquals(fourthUser, registrationService.register(fourthUser));
     }
 
     @Test
-    void age_Is_Valid() {
-        firstUser.setAge(10);
-        secondUser.setAge(22);
-        thirdUser.setAge(null);
-        fourthUser.setAge(-100);
-
+    public void register_passwordLength_isNotValid() {
+        firstUser.setPassword("ddd");
+        secondUser.setPassword("0");
+        thirdUser.setPassword(null);
+        fourthUser.setPassword("..");
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
-        assertEquals(secondUser, registrationService.register(secondUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(secondUser));
         assertThrows(RuntimeException.class, () -> registrationService.register(thirdUser));
         assertThrows(RuntimeException.class, () -> registrationService.register(fourthUser));
     }
 
     @Test
-    void check_Addition_To_List() {
-        fourthUser.setLogin("Mike");
+    public void register_age_isNotValid() {
+        firstUser.setAge(10);
+        secondUser.setAge(null);
+        thirdUser.setAge(17);
+        fourthUser.setAge(-100);
 
+        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(secondUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(thirdUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(fourthUser));
+    }
+
+    @Test
+    public void register_age_isValid() {
+        assertEquals(firstUser, registrationService.register(firstUser));
+        assertEquals(secondUser, registrationService.register(secondUser));
+        assertEquals(thirdUser, registrationService.register(thirdUser));
+        assertEquals(fourthUser, registrationService.register(fourthUser));
+    }
+
+    @Test
+    public void checkAdditionToList_ok() {
         registrationService.register(firstUser);
         assertEquals(1, Storage.people.size());
         registrationService.register(secondUser);
         assertEquals(2, Storage.people.size());
         registrationService.register(thirdUser);
         assertEquals(3, Storage.people.size());
-        assertThrows(RuntimeException.class, () -> registrationService.register(fourthUser));
-        assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void get_Login_check() {
+    public void getLoginCheck_isValid() {
         registrationService.register(firstUser);
         registrationService.register(secondUser);
         registrationService.register(thirdUser);
@@ -84,6 +102,11 @@ class RegistrationServiceImplTest {
         assertEquals(secondUser, getUserBylogin.get("Alice"));
         assertEquals(thirdUser, getUserBylogin.get("Melisa"));
         assertEquals(fourthUser, getUserBylogin.get("MaX"));
+    }
+
+    @Test
+    public void getLoginCheck_isNotValid() {
+        StorageDao getUserBylogin = new StorageDaoImpl();
         assertNull(getUserBylogin.get("AAAA"));
         assertNull(getUserBylogin.get("max"));
         assertNull(getUserBylogin.get("BoDyA"));
@@ -91,7 +114,7 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         Storage.people.clear();
     }
 }
