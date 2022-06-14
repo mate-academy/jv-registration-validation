@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAge(User user) {
-        if (user.getAge() < MIN_VALID_AGE) {
+        if (user.getAge() < MIN_VALID_AGE || user.getAge() == null) {
             throw new RuntimeException("Age must be more than 17");
         }
     }
@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void loginExistsCheck(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
+        if (storageDao.get(user.getLogin()) != null || user.getLogin() == null) {
             throw new RuntimeException("User login already exist");
         }
     }
