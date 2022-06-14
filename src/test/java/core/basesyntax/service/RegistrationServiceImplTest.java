@@ -1,22 +1,19 @@
 package core.basesyntax.service;
 
-import core.basesyntax.db.Storage;
-import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
+import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 class RegistrationServiceImplTest {
+    private static final User TOO_YOUNG = new User(16, "Bob", "passwd");
+    private static final User USER_OK = new User(25, "Alice", "passwd");
+    private static final User DUPLICATE_LOGIN = new User(23, "Alice", "passwd");
+    private static final User TOO_OLD = new User(150, "Mystery", "passwd");
     private RegistrationServiceImpl registrationService;
-    private final static User TOO_YOUNG = new User(16, "Bob", "passwd");
-    private final static User USER_OK = new User(25, "Alice", "passwd");
-    private final static User DUPLICATE_LOGIN = new User(23, "Alice", "passwd");
-    private final static User TOO_OLD = new User(150, "Mystery", "passwd");
 
     @BeforeEach
     void setUp() {

@@ -8,14 +8,14 @@ public class User {
     private String password;
     private Integer age;
 
-    public User (User user) {
+    public User(User user) {
         this.id = user.getId();
         this.age = user.getAge();
         this.login = user.getLogin();
         this.password = user.getPassword();
     }
 
-    public User (int age, String login, String password) {
+    public User(int age, String login, String password) {
         this.age = age;
         this.login = login;
         this.password = password;
