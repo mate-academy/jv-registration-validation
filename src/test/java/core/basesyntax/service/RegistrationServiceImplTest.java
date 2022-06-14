@@ -8,6 +8,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,8 +24,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        Storage.people.clear();
-        user = new User(0L, "user1", "12345678", 19);
+        user = new User(0L, "user1", "12345678", 18);
     }
 
     @Test
@@ -61,15 +61,21 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addOneUserWithIncorectAge_notOk() {
-        user.setAge(15);
+        user.setAge(17);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_addTwoUsersWithSameLogin_notOk() {
-        User user1 = new User(0L, "user1", "12345678", 19);
-        User user2 = new User(0L, "user1", "12345678", 18);
+        User user1 = new User(0L, "user1", "12345678", 18);
+        User user2 = new User(0L, "user1", "123456789", 18);
         registrationService.register(user1);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user2));
     }
+
+    @AfterEach
+    public void tearDown() {
+        Storage.people.clear();
+    }
+
 }
