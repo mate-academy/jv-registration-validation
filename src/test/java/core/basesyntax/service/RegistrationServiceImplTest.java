@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -41,28 +40,32 @@ class RegistrationServiceImplTest {
     @Test
     public void register_ageNull_notOk() {
         user.setAge(null);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
     public void register_passwordNull_notOk() {
         user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> service.register(user));
+
     }
 
     @Test
     public void register_invalidAge_notOk() {
         user.setAge(INVALID_AGE);
-        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
     public void register_loginNull_notOk() {
         user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
     public void register_invalidPassword_notOk() {
         user.setPassword(INVALID_PASSWORD);
-        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
@@ -76,11 +79,5 @@ class RegistrationServiceImplTest {
         public void register_nullUser_notOk() {
             user = null;
         }
-    }
-
-    @AfterEach
-    public void expectException() {
-        assertThrows(RuntimeException.class, () -> service.register(user),
-                "RuntimeException expected");
     }
 }
