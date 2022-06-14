@@ -1,11 +1,8 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -68,27 +65,6 @@ public class RegistrationServiceImplTest {
     public void addToList_length_ok() {
         registrationService.register(user);
         assertEquals(1, Storage.people.size());
-    }
-
-    @Test
-    public void get_byLogin_ok() {
-        registrationService.register(user);
-
-        StorageDao getUserBylogin = new StorageDaoImpl();
-        assertEquals(user, getUserBylogin.get("Mike"));
-    }
-
-    @Test
-    public void get_byLogin_notOk() {
-        StorageDao getUserBylogin = new StorageDaoImpl();
-        assertNull(getUserBylogin.get("AAAA"));
-        assertNull(getUserBylogin.get(null));
-    }
-
-    @Test
-    public void get_byNullLogin_notOk() {
-        StorageDao getUserBylogin = new StorageDaoImpl();
-        assertNull(getUserBylogin.get(null));
     }
 
     @AfterEach
