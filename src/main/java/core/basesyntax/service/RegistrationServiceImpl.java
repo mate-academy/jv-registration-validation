@@ -13,8 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && storageDao.get(user.getLogin()) == null
                 && user.getAge() >= 18 && user.getAge() <= Integer.MAX_VALUE
                 && user.getPassword().length() >= 6) {
-            storageDao.add(user);
-            return user;
+            return storageDao.add(user);
         } else {
             throw new RuntimeException("Invalid data");
         }
