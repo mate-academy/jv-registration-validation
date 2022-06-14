@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void validUser_ok() {
+    void register_validUser_Ok() {
         User actual = service.register(user);
         assertEquals(user, actual);
         assertTrue(Storage.people.contains(user));
@@ -59,66 +59,54 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void existedUserByLogin_notOk() {
+    void register_existedUserByLogin_notOk() {
         user.setLogin("Bob");
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void tooYoungUser_notOk() {
+    void register_tooYoungUser_notOk() {
         user.setAge(15);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void shortPassword_notOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("Q&");
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void nullUser_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            service.register(null);
-        });
+    void register_nullUser_notOk() {
+        assertThrows(RuntimeException.class, () -> service.register(null));
         assertFalse(Storage.people.contains(null));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void loginNull_notOk() {
+    void register_loginNull_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void passwordNull_notOk() {
+    void register_passwordNull_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void emptyLogin_ok() {
+    void register_emptyLogin_Ok() {
         user.setLogin("");
         User actual = service.register(user);
         assertEquals(user, actual);
@@ -127,31 +115,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void emptyPassword_notOk() {
+    void register_emptyPassword_notOk() {
         user.setPassword("");
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void ageExceededMaxValue_notOk() {
+    void register_ageExceededMaxValue_notOk() {
         user.setAge(Integer.MAX_VALUE + 1);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void negativeAge_notOk() {
+    void register_negativeAge_notOk() {
         user.setAge(-19);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> service.register(user));
         assertFalse(Storage.people.contains(user));
         assertEquals(3, Storage.people.size());
     }
