@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+public class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "login";
     private static final int VALID_AGE = 19;
     private static final String VALID_PASSWORD = "password";
@@ -63,24 +63,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidLogin_notOk() {
+    void register_duplicateLogin_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_invalidAge_notOk() {
-        user.setAge(17);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    void register_negativeAge_notOk() {
         user.setAge(-17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_invalidPassword_notOk() {
-        user.setPassword("abc");
+    void register_blankPassword_notOk() {
+        user.setPassword("    ");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-        user.setPassword("");
+    }
+
+    @Test
+    void register_invalidUser_notOk() {
+        user.setAge(17);
+        user.setPassword("abc");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 

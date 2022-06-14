@@ -11,26 +11,44 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null
-                || user.getLogin() == null || user.getLogin().isBlank()
-                || user.getAge() == null
-                || user.getPassword() == null) {
-            throw new RuntimeException("Empty input");
-        }
-        if (storageUser.get(user.getLogin()) != null) {
-            getThrow("Login used");
-        }
-        if (user.getAge() < VALID_AGE) {
-            getThrow("Invalid age");
-        }
-        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
-            getThrow("Password length must be over 6 charted");
-        }
+        checkUser(user);
+        checkLogin(user);
+        checkAge(user);
+        checkPassword(user);
         storageUser.add(user);
         return user;
     }
 
-    private void getThrow(String message) {
-        throw new RuntimeException("Can`t registration. " + message);
+    private void checkUser(User user) {
+        if (user == null) {
+            throw new RuntimeException("User null");
+        }
+    }
+
+    private void checkLogin(User user) {
+        if (user.getLogin() == null || user.getLogin().isBlank()) {
+            throw new RuntimeException("Login is empty. Input your login");
+        }
+        if (storageUser.get(user.getLogin()) != null) {
+            throw new RuntimeException("Login used");
+        }
+    }
+
+    private void checkAge(User user) {
+        if (user.getAge() == null) {
+            throw new RuntimeException("Age is empty. Input your age");
+        }
+        if (user.getAge() < VALID_AGE) {
+            throw new RuntimeException("Invalid age. Your can`t be registered with this age");
+        }
+    }
+
+    private void checkPassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Password is empty. Input your password");
+        }
+        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
+            throw new RuntimeException("Password length should be more 6 character");
+        }
     }
 }
