@@ -22,13 +22,13 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("Bober","Abracadabra",27);
+        user = new User("Bober", "Abracadabra", 27);
     }
 
     @Test
     void register_newUser_Ok() {
         User newUser = registrationService.register(user);
-        assertEquals(user,newUser);
+        assertEquals(user, newUser);
     }
 
     @Test
@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOk() {
-        user.setAge(-18);
+        user.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
