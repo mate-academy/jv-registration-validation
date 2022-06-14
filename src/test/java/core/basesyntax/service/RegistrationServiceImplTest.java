@@ -22,14 +22,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullObject_NotOk() {
+    void register_nullObject_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void register_DuplicateLogin_NotOk() {
+    void register_duplicateLogin_notOk() {
         registrationService.register(new User(USER_OK));
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(DUPLICATE_LOGIN));
@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_DoubleRegistration_NotOk() {
+    void register_doubleRegistration_notOk() {
         registrationService.register(new User(USER_OK));
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(USER_OK));
@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_WeekPassword_NotOk() {
+    void register_weekPassword_notOk() {
         User testUser = new User(USER_OK);
         testUser.setPassword("");
         assertThrows(RuntimeException.class, () -> {
@@ -56,35 +56,35 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(19, null, "passwd"));
         });
     }
 
     @Test
-    void register_NullPasswd_NotOk() {
+    void register_nullPasswd_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(19, "SomeUser", null));
         });
     }
 
     @Test
-    void register_YoungUser_NotOk() {
+    void register_youngUser_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(TOO_YOUNG));
         });
     }
 
     @Test
-    void register_FakeAge_NotOk() {
+    void register_fakeAge_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(TOO_OLD));
         });
     }
 
     @Test
-    void register_OneUser_Ok() {
+    void register_oneUser_ok() {
         User actual = registrationService.register(new User(USER_OK));
         assertEquals(USER_OK, actual);
     }
@@ -92,11 +92,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_SeveralUsers_Ok() {
         User testUser = new User(USER_OK);
-        for (int i = 0; i < 50; i++) {
-            User actual = registrationService.register(new User(testUser));
-            assertEquals(testUser, actual);
-            testUser.setLogin(USER_OK.getLogin() + i);
-            testUser.setAge(testUser.getAge() + 1);
-        }
+        User actual = registrationService.register(new User(testUser));
+        assertEquals(testUser, actual);
+        testUser.setLogin(USER_OK.getLogin() + 1);
+        actual = registrationService.register(new User(testUser));
+        assertEquals(testUser, actual);
     }
 }
