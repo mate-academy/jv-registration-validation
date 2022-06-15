@@ -62,6 +62,13 @@ public class RegistrationServiceImplTest {
         assertEquals(1, Storage.people.size());
     }
 
+    @Test
+    public void register_existUser_ok() {
+        User sameLoginUser = new User("Mike","goodPassword",29);
+        registrationService.register(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser));
+    }
+
     @AfterEach
     public void tearDown() {
         Storage.people.clear();
