@@ -62,7 +62,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void addToList_length_ok() {
+    public void size_addElement_biggerSize() {
         registrationService.register(user);
         assertEquals(1, Storage.people.size());
     }
