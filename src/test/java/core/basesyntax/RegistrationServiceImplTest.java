@@ -51,18 +51,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_age_ok() {
-        assertEquals(user, registrationService.register(user));
-    }
-
-    @Test
     public void register_nullAge_ok() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void size_addElement_biggerSize() {
+    public void register_validUser_ok() {
         registrationService.register(user);
         assertEquals(1, Storage.people.size());
     }
