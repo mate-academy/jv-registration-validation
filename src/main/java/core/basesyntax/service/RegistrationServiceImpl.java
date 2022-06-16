@@ -10,10 +10,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MAX_LOGIN_LENGTH = 256;
     private static final int MAX_PASSWORD_LENGTH = 256;
     private static final int MIN_PASSWORD_LENGTH = 6;
-    private StorageDao dao = new StorageDaoImpl();
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RuntimeException("User doesn't exist or null!");
+        }
         if (user.getLogin() == null || user.getLogin() == "") {
             throw new RuntimeException("Login must NOT be null or empty!");
         }
@@ -33,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() > MAX_PASSWORD_LENGTH) {
             throw new RuntimeException("Password too long!");
         }
-        dao.add(user);
+        storageDao.add(user);
         return user;
     }
 }
