@@ -1,25 +1,21 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.Test;
 
-public class StorageTest {
+public class RegistrationServiceImplTest {
     private static final String TEST_LOGIN = "Kolya";
     private static final String TEST_PASSWORD = "password";
     private static final Integer TEST_AGE = 23;
     private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao = new StorageDaoImpl();
 
     @Test
-    void register_validUser_ok() {
+      void registrationService_registerValidUser_ok() {
         User user = new User();
         User actual = user;
         actual.setLogin(TEST_LOGIN);
@@ -31,39 +27,13 @@ public class StorageTest {
     }
 
     @Test
-      void get_byLogin_ok() {
-        User user = new User();
-        String login = "Vasya";
-        user.setLogin(login);
-        user.setPassword(TEST_PASSWORD);
-        user.setAge(TEST_AGE);
-        User actual = user;
-        registrationService.register(actual);
-        User expected = registrationService.register(user);
-        assertEquals(actual, expected);
-    }
-
-    @Test
-      void get_notExistUserByLogin_OK() {
-        User user = new User();
-        String login = "Semen";
-        user.setLogin(TEST_LOGIN);
-        user.setPassword(TEST_PASSWORD);
-        user.setAge(TEST_AGE);
-        User expected = storageDao.get(login);
-        User actual = user;
-        registrationService.register(actual);
-        assertNull(expected);
-    }
-
-    @Test
-    void get_userIsNull_notOk() {
+    void registrationService_registerUserIsNull_notOk() {
         User actual = null;
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
-      void register_userWithLoginNull_notOk() {
+      void registrationService_registerUserWithLoginNull_notOk() {
         User user = new User();
         user.setLogin(null);
         user.setPassword(TEST_PASSWORD);
@@ -73,7 +43,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithLoginIsEmpty_notOk() {
+      void registrationService_registerUserWithLoginIsEmpty_notOk() {
         User user = new User();
         String login = "";
         user.setLogin(login);
@@ -84,7 +54,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithLoginTooLong_notOk() {
+      void registrationService_registerUserWithLoginTooLong_notOk() {
         User user = new User();
         String login = "Pan Ataman Grician Tavrichesky Zatmevayuschiy Nebo Nashey Prekrasnoy"
                 + " Strany Velichiem Svoego Razuma Veduschego Chelovechestvo K Pobede Svetloy"
@@ -99,7 +69,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithAgeNull_notOk() {
+      void registrationService_registerUserWithAgeNull_notOk() {
         User user = new User();
         user.setLogin(TEST_LOGIN);
         user.setPassword(TEST_PASSWORD);
@@ -109,7 +79,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithAgeLess_notOk() {
+      void registrationService_registerUserWithAgeLess_notOk() {
         User user = new User();
         Integer age = 4;
         user.setLogin(TEST_LOGIN);
@@ -120,7 +90,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithAgeTooMuch_notOk() {
+      void registrationService_registerUserWithAgeTooMuch_notOk() {
         User user = new User();
         Integer age = 151;
         user.setLogin(TEST_LOGIN);
@@ -131,7 +101,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithPasswordNull_notOk() {
+      void registrationService_registerUserWithPasswordNull_notOk() {
         User user = new User();
         user.setLogin(TEST_LOGIN);
         user.setPassword(null);
@@ -141,7 +111,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithPasswordShort_notOk() {
+      void registrationService_registerUserWithPasswordShort_notOk() {
         User user = new User();
         String password = "abc";
         user.setLogin(TEST_LOGIN);
@@ -152,7 +122,7 @@ public class StorageTest {
     }
 
     @Test
-      void register_userWithPasswordLong_notOk() {
+      void registrationService_registerUserWithPasswordLong_notOk() {
         User user = new User();
         String password = "hrenovy hackery NIKOGDA !@#$%^&*() ne vzlomayut moy parol"
                 + " patamushta YA PRIMenyayu tut $pecialnyye simvoly stochniye i propisnuye"
