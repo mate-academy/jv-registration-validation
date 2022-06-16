@@ -13,12 +13,6 @@ public class HelloWorldTest {
     private static RegistrationService registrationService;
     private static User user;
 
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new core.basesyntax.service.RegistrationServiceImpl();
-        user = new User();
-    }
-
     @BeforeEach
     void setUp() {
         Storage.people.clear();
@@ -26,6 +20,12 @@ public class HelloWorldTest {
         user.setAge(21);
         user.setLogin("validLogin");
         user.setPassword("validPassword");
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new core.basesyntax.service.RegistrationServiceImpl();
+        user = new User();
     }
 
     @Test
