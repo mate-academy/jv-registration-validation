@@ -3,7 +3,10 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,11 +15,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
+    private static StorageDao storageDao;
     private static User john;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
         john = new User();
     }
 
@@ -28,46 +33,45 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void validUser_Ok() {
+    void register_validUser_Ok() {
         registrationService.register(john);
         int expected = 1;
         int actual = Storage.people.size();
         assertEquals(expected, actual);
+        User actuallyGot = storageDao.get(john.getLogin());
+        assertEquals(john, actuallyGot);
     }
 
     @Test
-    void userWithLessAge_Ok() {
+    void register_userWithLessAge_NotOk() {
         john.setAge(17);
-        int actual = Storage.people.size();
-        registrationService.register(john);
-        int expected = Storage.people.size();
-        assertEquals(actual, expected);
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(john);
+        });
     }
 
     @Test
-    void addUserWithSameLogin_Ok() {
-        registrationService.register(john);
+    void register_UserWithSameLogin_NotOk() {
+        storageDao.add(john);
         User vanya = new User();
         vanya.setAge(24);
         vanya.setLogin("John12.03.1993");
         vanya.setPassword("dfsndlfwe19383");
-        int expected = Storage.people.size();
-        registrationService.register(vanya);
-        int actual = Storage.people.size();
-        assertEquals(expected, actual);
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(vanya);
+        });
     }
 
     @Test
-    void lessThanSixSymbolsPassword_Ok() {
+    void register_lessThanSixSymbolsPasswordUser_NotOk() {
         john.setPassword("123");
-        int expected = Storage.people.size();
-        registrationService.register(john);
-        int actual = Storage.people.size();
-        assertEquals(expected, actual);
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(john);
+        });
     }
 
     @Test
-    void nullLoginUser_NotOk() {
+    void register_nullLoginUser_NotOk() {
         john.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(john);
@@ -75,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPasswordUser_NotOk() {
+    void register_nullPasswordUser_NotOk() {
         john.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(john);
@@ -83,7 +87,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullAgeUser_NotOk() {
+    void register_nullAgeUser_NotOk() {
         john.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(john);
@@ -91,7 +95,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullUser_NotOk() {
+    void register_nullUser_NotOk() {
         john = null;
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(john);
@@ -101,8 +105,6 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        for (int i = 0; i < Storage.people.size(); i++) {
-            Storage.people.remove(i);
-        }
+        Storage.people.clear();
     }
 }
