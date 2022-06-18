@@ -9,8 +9,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     public static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
+    public User equals(User user) {
+        if (user != null) {
+            return user;
+        }
+        throw new RuntimeException("User is already exist");
+    }
+
     @Override
     public User register(User user) {
+        equals(user);
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User is already exist");
         }

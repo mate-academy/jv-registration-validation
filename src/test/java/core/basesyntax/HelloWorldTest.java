@@ -3,6 +3,7 @@ package core.basesyntax;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
+import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,6 @@ public class HelloWorldTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        user.setId(1L);
         user.setAge(21);
         user.setLogin("validLogin");
         user.setPassword("validPassword");
@@ -24,7 +24,7 @@ public class HelloWorldTest {
 
     @BeforeAll
     static void beforeAll() {
-        registrationService = new core.basesyntax.service.RegistrationServiceImpl();
+        registrationService = new RegistrationServiceImpl();
         user = new User();
     }
 
@@ -38,17 +38,16 @@ public class HelloWorldTest {
     @Test
     void register_userExist_notOk() {
         registrationService.register(user);
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_usersAgeLessThan18_notOk() {
+    void register_usersAgeLessThanMinAge_notOk() {
         user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_usersPasswordLessThan6symbols_notOk() {
+    void register_usersPasswordLessThanMinPasswordLength_notOk() {
         user.setPassword("12345");
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
