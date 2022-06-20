@@ -22,13 +22,4 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
-
-    public boolean checkForAvailablePassword(User user) {
-        for (User registeredUser : Storage.people) {
-            if (registeredUser.getPassword().equals(user.getPassword())) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

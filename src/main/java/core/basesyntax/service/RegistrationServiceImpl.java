@@ -6,7 +6,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MAX_LOGIN_LENGTH = 20;
-    private static final int ALLOWED_AGE = 18;
+    private static final int MIN_ALLOWED_AGE = 18;
     private final StorageDaoImpl storage = new StorageDaoImpl();
 
     @Override
@@ -18,17 +18,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storage.get(user.getLogin()) != null) {
             throw new RuntimeException("There is such user with the same login already.");
         }
-        if (storage.checkForAvailablePassword(user)) {
-            throw new RuntimeException("Such a password is already existed.");
-        }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Your password length should be more than 6 characters.");
+            throw new RuntimeException("Your password length should be more than "
+                    + MIN_PASSWORD_LENGTH + " characters.");
         }
         if (user.getLogin().length() > MAX_LOGIN_LENGTH) {
-            throw new RuntimeException("Your login length should be less than 20 characters.");
+            throw new RuntimeException("Your login length should be less than "
+                    + MAX_LOGIN_LENGTH + " characters.");
         }
-        if (user.getAge() < ALLOWED_AGE) {
-            throw new RuntimeException("Registration is allowed only for users older than 18.");
+        if (user.getAge() < MIN_ALLOWED_AGE) {
+            throw new RuntimeException("Registration is allowed only for users older than "
+                    + MIN_ALLOWED_AGE + " .");
         } else if (user.getAge() < 0 || user.getAge() > 100) {
             throw new RuntimeException("Invalid user's age. ");
         }
