@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserWithSameLogin_NotOk() {
+    void register_userWithSameLogin_NotOk() {
         storageDao.add(john);
         User vanya = new User();
         vanya.setAge(24);
@@ -96,9 +96,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_NotOk() {
-        john = null;
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(john);
+            registrationService.register(null);
         });
         john = new User();
     }
