@@ -3,27 +3,18 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationServiceImpl service = new RegistrationServiceImpl();
-    private static final StorageDao storage = new StorageDaoImpl();
-    private static final User user = new User();
-    private static final User userAge = new User();
-    private static final User userPassword = new User();
-    private static final User userCheck = new User();
-    private static final User userWithOneField = new User();
-    private static final User emptyFieldsUser = new User();
-    private static final User userLongLogin = new User();
-    private static final User newUser = new User();
+    private static RegistrationServiceImpl service;
 
     @BeforeAll
-    static void beforeAll() {
+     static void init() {
+        User user = new User();
+        service = new RegistrationServiceImpl();
         user.setLogin("User");
         user.setPassword("345678");
         user.setAge(25);
@@ -31,19 +22,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeIsAllowed_NotOk() {
+    void register_NotValidAge_NotOk() {
+        User userAge = new User();
         userAge.setLogin("minorUser");
         userAge.setPassword("123456");
         userAge.setAge(15);
         assertThrows(RuntimeException.class, () -> service.register(userAge));
         userAge.setAge(-1);
         assertThrows(RuntimeException.class, () -> service.register(userAge));
-        userAge.setAge(101);
-        assertThrows(RuntimeException.class, () -> service.register(userAge));
     }
 
     @Test
-    void register_PasswordLessThan6Characters_NotOk() {
+    void register_NotValidPassword_NotOk() {
+        User userPassword = new User();
         userPassword.setLogin("InvalidPasswordUser");
         userPassword.setPassword("23457");
         userPassword.setAge(19);
@@ -51,7 +42,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ExistedUser_NotOk() {
+    void register_ExistingUser_NotOk() {
+        User userCheck = new User();
         userCheck.setLogin("User");
         userCheck.setPassword("567890");
         userCheck.setAge(20);
@@ -59,15 +51,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUserOrEmptyFields_NotOk() {
-        userWithOneField.setLogin("userWithOneField");
-        assertThrows(RuntimeException.class, () -> service.register(userWithOneField));
+    void register_NullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> service.register(null));
-        assertThrows(RuntimeException.class, () -> service.register(emptyFieldsUser));
+
+    }
+
+    @Test
+    void register_EmptyFieldsUser_NotOk() {
+        assertThrows(RuntimeException.class, () -> service.register(new User()));
+
     }
 
     @Test
     void register_LoginIsTooLong_NotOk() {
+        User userLongLogin = new User();
         userLongLogin.setLogin("userWithLongLogin12345");
         userLongLogin.setPassword("12345212");
         userLongLogin.setAge(28);
@@ -75,13 +72,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_IfUserIsAddedAfterRegister_Ok() {
-        User actual = storage.get(user.getLogin());
-        assertEquals(user, actual);
-    }
-
-    @Test
-    void add_SizeOfStorage_Ok() {
+    void register_Ok() {
+        User newUser = new User();
         newUser.setLogin("newUser");
         newUser.setPassword("newUser123");
         newUser.setAge(18);
