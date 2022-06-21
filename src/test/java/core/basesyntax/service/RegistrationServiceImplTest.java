@@ -23,37 +23,36 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NotValidAge_NotOk() {
-        User userAge = new User();
-        userAge.setLogin("minorUser");
-        userAge.setPassword("123456");
-        userAge.setAge(15);
-        assertThrows(RuntimeException.class, () -> service.register(userAge));
-        userAge.setAge(-1);
-        assertThrows(RuntimeException.class, () -> service.register(userAge));
+        User user = new User();
+        user.setLogin("minorUser");
+        user.setPassword("123456");
+        user.setAge(15);
+        assertThrows(RuntimeException.class, () -> service.register(user));
+        user.setAge(-1);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
     void register_NotValidPassword_NotOk() {
-        User userPassword = new User();
-        userPassword.setLogin("InvalidPasswordUser");
-        userPassword.setPassword("23457");
-        userPassword.setAge(19);
-        assertThrows(RuntimeException.class, () -> service.register(userPassword));
+        User user = new User();
+        user.setLogin("InvalidPasswordUser");
+        user.setPassword("23457");
+        user.setAge(19);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
     void register_ExistingUser_NotOk() {
-        User userCheck = new User();
-        userCheck.setLogin("User");
-        userCheck.setPassword("567890");
-        userCheck.setAge(20);
-        assertThrows(RuntimeException.class, () -> service.register(userCheck));
+        User user = new User();
+        user.setLogin("User");
+        user.setPassword("567890");
+        user.setAge(20);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
     void register_NullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> service.register(null));
-
     }
 
     @Test
@@ -64,20 +63,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LoginIsTooLong_NotOk() {
-        User userLongLogin = new User();
-        userLongLogin.setLogin("userWithLongLogin12345");
-        userLongLogin.setPassword("12345212");
-        userLongLogin.setAge(28);
-        assertThrows(RuntimeException.class, () -> service.register(userLongLogin));
+        User user = new User();
+        user.setLogin("userWithLongLogin12345");
+        user.setPassword("12345212");
+        user.setAge(28);
+        assertThrows(RuntimeException.class, () -> service.register(user));
     }
 
     @Test
     void register_Ok() {
-        User newUser = new User();
-        newUser.setLogin("newUser");
-        newUser.setPassword("newUser123");
-        newUser.setAge(18);
-        service.register(newUser);
+        User user = new User();
+        user.setLogin("user");
+        user.setPassword("newUser123");
+        user.setAge(18);
+        service.register(user);
         int actual = Storage.people.size();
         assertEquals(2, actual);
     }
