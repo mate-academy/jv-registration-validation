@@ -29,13 +29,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userValidOk() {
+    void register_userValid_Ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void register_age_NotOk() {
+    void register_notValidAge_NotOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -55,18 +55,18 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginNull_NotOk() {
         user.setLogin(null);
-        assertNotNull(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userNull_NotOk() {
-        assertNotNull(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_passwordNull_NotOk() {
         user.setPassword(null);
-        assertNotNull(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @AfterEach
