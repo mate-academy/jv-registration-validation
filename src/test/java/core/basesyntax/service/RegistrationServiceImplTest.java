@@ -20,7 +20,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkRegister_null_notOk() {
+    void register_nullUser_notOk() {
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
             registerService.register(null);
         });
@@ -28,7 +28,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void validRegister_ok() {
+    void register_ok() {
         User user = new User();
         user.setAge(18);
         user.setId(12L);
@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_emptyLogin_notOk() {
+    void register_emptyLogin_notOk() {
         stepan.setLogin("");
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
             registerService.register(stepan);
@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_loginIsNull_notOk() {
+    void register_loginIsNull_notOk() {
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
             registerService.register(new User());
         });
@@ -55,7 +55,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_loginIsExists_notOk() {
+    void register_loginIsExists_notOk() {
         User user = new User();
         user.setAge(18);
         user.setId(12L);
@@ -69,16 +69,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_ageIsNull_notOk() {
-        stepan.setAge(null);
-        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-            registerService.register(stepan);
-        });
-        Assertions.assertEquals(thrown.getMessage(), "User age can not be null");
-    }
-
-    @Test
-    void check_ageMinAge_notOk() {
+    void register_ageMinAge_notOk() {
         stepan.setAge(15);
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
             registerService.register(stepan);
@@ -87,7 +78,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_passwordIsNull_notOk() {
+    void register_ageIsNull_notOk() {
+        stepan.setLogin("stepan");
+        stepan.setAge(null);
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
+            registerService.register(stepan);
+        });
+        Assertions.assertEquals(thrown.getMessage(), "User age can not be null");
+    }
+
+    @Test
+    void register_passwordIsNull_notOk() {
         stepan.setLogin("stepan");
         stepan.setAge(20);
         stepan.setPassword(null);
@@ -98,16 +99,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_emptyPassword_notOk() {
-        stepan.setPassword("");
-        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-            registerService.register(stepan);
-        });
-        Assertions.assertEquals(thrown.getMessage(), "User password can not be empty");
-    }
-
-    @Test
-    void check_passwordMinLength_notOk() {
+    void register_passwordMinLength_notOk() {
         User user = new User();
         user.setAge(18);
         user.setId(12L);
@@ -117,5 +109,16 @@ class RegistrationServiceImplTest {
             registerService.register(user);
         });
         Assertions.assertEquals(thrown.getMessage(), "Length of password is less than 6");
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        stepan.setLogin("SmallPassword");
+        stepan.setAge(20);
+        stepan.setPassword("");
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
+            registerService.register(stepan);
+        });
+        Assertions.assertEquals(thrown.getMessage(), "User password can not be empty");
     }
 }
