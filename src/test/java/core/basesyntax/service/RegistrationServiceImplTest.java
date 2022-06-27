@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -42,7 +43,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -50,14 +51,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
@@ -65,7 +66,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginAlreadyExists_notOk() {
         user.setLogin("mylogin@gmail.com");
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
