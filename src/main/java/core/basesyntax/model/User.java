@@ -3,7 +3,6 @@ package core.basesyntax.model;
 import java.util.Objects;
 
 public class User {
-    public static final Integer ADULT_AGE = 18;
     private Long id;
     private String login;
     private String password;
