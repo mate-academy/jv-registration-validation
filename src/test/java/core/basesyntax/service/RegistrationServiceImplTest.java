@@ -14,14 +14,6 @@ class RegistrationServiceImplTest {
     private User firstUser = new User();
     private User secondUser = new User();
 
-    private String getPassWithMinLength(int passLength) {
-        StringBuilder pass = new StringBuilder(passLength);
-        for (int i = 0; i < passLength; i++) {
-            pass.append(i);
-        }
-        return pass.toString();
-    }
-
     @BeforeEach
     void setUp() {
         Storage.people.clear();
@@ -67,7 +59,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginExist_NotOk() {
-        registrationService.register(firstUser);
+        Storage.people.add(firstUser);
         secondUser.setLogin(firstUser.getLogin());
         assertThrows(ValidationException.class, () -> registrationService.register(secondUser));
     }
@@ -106,5 +98,13 @@ class RegistrationServiceImplTest {
     void register_NullPassword_NotOk() {
         firstUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
+    }
+
+    private String getPassWithMinLength(int passLength) {
+        StringBuilder pass = new StringBuilder(passLength);
+        for (int i = 0; i < passLength; i++) {
+            pass.append(i);
+        }
+        return pass.toString();
     }
 }
