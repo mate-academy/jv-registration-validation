@@ -11,6 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RuntimeException("User is unCorrect");
+        }
         checkLogin(user.getLogin());
         checkAge(user.getAge());
         checkPassword(user.getPassword());
@@ -27,7 +30,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(login) != null) {
             throw new RuntimeException("This login is already taken");
         }
-
+        if (storageDao.get(login).equals(login)) {
+            throw new RuntimeException("This login is already exict");
+        }
     }
 
     private void checkPassword(String password) {

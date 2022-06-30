@@ -24,11 +24,10 @@ class RegistrationServiceImplTest {
         user.setLogin("Putin@Xlo");
         user.setPassword("password123");
         user.setAge(25);
-
     }
 
     @Test
-    void registerAge_small_than_correct() {
+    void register_ageLessThanMin_NotOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -66,6 +65,12 @@ class RegistrationServiceImplTest {
     @Test
     void registerPassword_null_notOk() {
         user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void thelogin_already_exists() {
+        user.setLogin(user.getLogin());
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
