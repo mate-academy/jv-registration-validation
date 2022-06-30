@@ -14,6 +14,14 @@ class RegistrationServiceImplTest {
     private User firstUser = new User();
     private User secondUser = new User();
 
+    private String getPassWithMinLength(int passLength) {
+        StringBuilder pass = new StringBuilder(passLength);
+        for (int i = 0; i < passLength; i++) {
+            pass.append(i);
+        }
+        return pass.toString();
+    }
+
     @BeforeEach
     void setUp() {
         Storage.people.clear();
@@ -27,6 +35,18 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUserAdd_Ok() {
+        User actualFirstUserReturn = registrationService.register(firstUser);
+        User actualSecondUserReturn = registrationService.register(secondUser);
+        int actual = Storage.people.size();
+        assertEquals(2, actual);
+        assertEquals(firstUser, actualFirstUserReturn);
+        assertEquals(secondUser, actualSecondUserReturn);
+    }
+
+    @Test
+    void register_userMinAge_Ok() {
+        firstUser.setAge(RegistrationServiceImpl.MIN_USER_AGE);
+        secondUser.setAge(RegistrationServiceImpl.MIN_USER_AGE);
         registrationService.register(firstUser);
         registrationService.register(secondUser);
         int actual = Storage.people.size();
@@ -34,19 +54,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAge18_Ok() {
-        firstUser.setAge(18);
-        secondUser.setAge(18);
-        registrationService.register(firstUser);
-        registrationService.register(secondUser);
-        int actual = Storage.people.size();
-        assertEquals(2, actual);
-    }
-
-    @Test
-    void register_userPassSixSymbols_Ok() {
-        firstUser.setPassword("123456");
-        secondUser.setPassword("654321");
+    void register_userMinPasswordLength_Ok() {
+        firstUser.setPassword(getPassWithMinLength(RegistrationServiceImpl
+                .MIN_PASSWORD_LENGTH));
+        secondUser.setPassword(getPassWithMinLength(RegistrationServiceImpl
+                .MIN_PASSWORD_LENGTH));
         registrationService.register(firstUser);
         registrationService.register(secondUser);
         int actual = Storage.people.size();
@@ -56,42 +68,43 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginExist_NotOk() {
         registrationService.register(firstUser);
-        secondUser.setLogin("First");
+        secondUser.setLogin(firstUser.getLogin());
         assertThrows(ValidationException.class, () -> registrationService.register(secondUser));
     }
 
     @Test
-    void register_userToYoung_NotOk() {
-        firstUser.setAge(16);
+    void register_lessThanMinAge_NotOk() {
+        firstUser.setAge(RegistrationServiceImpl.MIN_USER_AGE - 1);
         assertThrows(ValidationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
-    void register_PasswordToShort_NotOk() {
-        firstUser.setPassword("123");
+    void register_passwordLessThanMinLength_NotOk() {
+        firstUser.setPassword(getPassWithMinLength(RegistrationServiceImpl
+                .MIN_PASSWORD_LENGTH - 1));
         assertThrows(ValidationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
     void register_UserIsNull_NotOk() {
-        assertThrows(NullPointerException.class, () -> registrationService.register(null));
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_NullLogin_NotOk() {
         firstUser.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(firstUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
     void register_NullAge_NotOk() {
         firstUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(firstUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
     void register_NullPassword_NotOk() {
         firstUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(firstUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser));
     }
 }
