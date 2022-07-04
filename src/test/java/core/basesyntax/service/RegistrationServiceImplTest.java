@@ -29,13 +29,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAdded_Ok() {
+    void registerUser_Ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual, "The user added was not added, an error occurred");
     }
 
     @Test
-    void userAddedTwoIdentical_NotOk() {
+    void registerTwoIdenticalUser_NotOk() {
         User firstUser = user;
         User secondUser = user;
         registrationService.register(firstUser);
@@ -45,14 +45,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userNull_NotOk() {
+    void registerUserNull_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void userPasswordLength_NotOk() {
+    void registerUserShortPassword_NotOk() {
         user.setPassword("1234");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordNull_NotOk() {
+    void registerUserPasswordNull_NotOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeYoung_NotOk() {
+    void registerUserAgeYoung_NotOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginNull_NotOk() {
+    void registerUserLoginNull_NotOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
