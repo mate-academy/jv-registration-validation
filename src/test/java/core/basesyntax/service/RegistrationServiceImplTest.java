@@ -5,79 +5,96 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static User mickie = new User();
+    private static User mouse = new User();
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @Test
-    void register_validUser_Ok() {
-        User validUser = new User("Mickie", "123456", 18);
-        User actual1 = registrationService.register(validUser);
-        assertTrue(Storage.people.contains(actual1));
-        User validUser2 = new User("Mouse", "123456", 30);
-        User actual2 = registrationService.register(validUser2);
-        assertTrue(Storage.people.contains(actual2));
+    @BeforeEach
+    void setUp() {
+        mickie.setLogin("Mickie");
+        mickie.setPassword("123456");
+        mickie.setAge(18);
+        mouse.setLogin("Mouse");
+        mouse.setPassword("123456");
+        mouse.setAge(30);
     }
 
     @Test
     void register_invalidAge_NotOk() {
-        User invalidUserAge1 = new User("Maxim", "123456", 17);
+        mickie.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(invalidUserAge1);
+            registrationService.register(mickie);
         }, "Should throw an Exception: \"The user should be at least 18 years old.\"");
-        User invalidUserAge2 = new User("Max", "123456", -19);
+        mouse.setAge(-19);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(invalidUserAge2);
+            registrationService.register(mouse);
         }, "Should throw an Exception: \"The user should be at least 18 years old.\"");
     }
 
     @Test
     void register_invalidPassword_notOk() {
-        User invalidUserPassword = new User("Mocko", "12345", 20);
+        mickie.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(invalidUserPassword);
+            registrationService.register(mickie);
         }, "Should throw an Exception: \"Password should be at least 6 characters.\"");
     }
 
     @Test
     void register_theSameUserLogin_notOk() {
-        User theSameUserLogin = new User("Month", "1234567", 20);
-        registrationService.register(theSameUserLogin);
-        User theSameUserLogin2 = new User("Month", "123456", 19);
+        registrationService.register(mickie);
+        mouse.setLogin("Mickie");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(theSameUserLogin2);
+            registrationService.register(mouse);
         }, "Should throw an Exception: \"The user with such login already exists. "
                 + "Please, enter another login.\n\"");
     }
 
     @Test
     void register_nullAge_NotOk() {
-        User nullAgeUser = new User("Stew", "123456", null);
+        mickie.setAge(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(nullAgeUser);
+            registrationService.register(mickie);
         }, "Should throw NullPointerException.");
     }
 
     @Test
     void register_nullPassword_NotOk() {
-        User nullUserPassword = new User("Steins", null, 18);
+        mickie.setPassword(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(nullUserPassword);
+            registrationService.register(mickie);
         }, "Should throw NullPointerException.");
     }
 
     @Test
     void register_nullLogin_NotOk() {
-        User nullUserLogin = new User(null, "123456", 18);
+        mickie.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(nullUserLogin);
+            registrationService.register(mickie);
         }, "Should throw NullPointerException.");
+    }
+
+    @Test
+    void register_validUser_Ok() {
+        User actual1 = registrationService.register(mickie);
+        assertTrue(Storage.people.contains(actual1));
+        User actual2 = registrationService.register(mouse);
+        assertTrue(Storage.people.contains(actual2));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.remove(mickie);
+        Storage.people.remove(mouse);
     }
 }
