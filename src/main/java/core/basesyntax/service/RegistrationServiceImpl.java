@@ -15,9 +15,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("A user equal to null cannot be registered");
         }
-        if (Storage.people.contains(user)) {
-            throw new RuntimeException("Such a user already exists");
-        }
         if (user.getLogin() == null) {
             throw new RuntimeException("Login cannot be null");
         }
@@ -25,7 +22,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Only users over the age of 18");
         }
         if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new RuntimeException("user password is at least 6 characters");
+            throw new RuntimeException("user password is at least "
+                    + "MINIMUM_PASSWORD_LENGTH characters");
+        }
+        if (Storage.people.contains(user)) {
+            throw new RuntimeException("Such a user already exists");
         }
         return storageDao.add(user);
     }
