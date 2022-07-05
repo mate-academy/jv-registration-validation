@@ -35,11 +35,11 @@ class RegistrationServiceImplTest {
         mickie.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(mickie);
-        }, "Should throw an Exception: \"The user should be at least 18 years old.\"");
+        });
         mouse.setAge(-19);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(mouse);
-        }, "Should throw an Exception: \"The user should be at least 18 years old.\"");
+        });
     }
 
     @Test
@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
         mickie.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(mickie);
-        }, "Should throw an Exception: \"Password should be at least 6 characters.\"");
+        });
     }
 
     @Test
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
         mickie.setAge(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(mickie);
-        }, "Should throw NullPointerException.");
+        });
     }
 
     @Test
@@ -73,7 +73,7 @@ class RegistrationServiceImplTest {
         mickie.setPassword(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(mickie);
-        }, "Should throw NullPointerException.");
+        });
     }
 
     @Test
@@ -81,7 +81,7 @@ class RegistrationServiceImplTest {
         mickie.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(mickie);
-        }, "Should throw NullPointerException.");
+        });
     }
 
     @Test
@@ -94,7 +94,6 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        Storage.people.remove(mickie);
-        Storage.people.remove(mouse);
+        Storage.people.clear();
     }
 }
