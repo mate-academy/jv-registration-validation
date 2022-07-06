@@ -42,7 +42,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordShortLength_NotOk() {
+    void register_PasswordShortLength_assertException() {
         threeUser.setAge(20);
         threeUser.setLogin("Alice");
         threeUser.setPassword("1234");
@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ClonedUser_NotOk() {
+    void register_ClonedUser_assertException() {
         fourthUser.setAge(20);
         fourthUser.setLogin("Bob");
         fourthUser.setPassword("123456");

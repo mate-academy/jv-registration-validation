@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         for (User userInStorage: Storage.people) {
             if (userInStorage.equals(user)) {
-                throw new RuntimeException("Cannot register this user!");
+                throw new RuntimeException("This user has already been created!");
             }
         }
         return storageDao.add(user);
