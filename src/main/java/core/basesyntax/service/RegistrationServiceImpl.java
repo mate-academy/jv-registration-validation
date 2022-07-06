@@ -20,8 +20,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + "Minimum password length 6 characters");
         }
         if (Storage.people.contains(user)) {
-                throw new RuntimeException("This user has already been created!");
-            }
+            throw new RuntimeException("This user has already been created!");
+        }
         return storageDao.add(user);
     }
 }
