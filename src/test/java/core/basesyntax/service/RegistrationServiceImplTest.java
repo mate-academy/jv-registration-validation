@@ -53,7 +53,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidlogin_Null() {
+    void invalidlogin_Null_notOK() {
         bob.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(bob);
