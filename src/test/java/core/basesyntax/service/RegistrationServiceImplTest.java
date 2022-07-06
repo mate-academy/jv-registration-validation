@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_TwoIdenticalUser_NotOk() {
+    void register_twoIdenticalUser_NotOk() {
         User firstUser = user;
         User secondUser = user;
         registrationService.register(firstUser);
@@ -45,14 +45,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_NotOk() {
+    void register_nullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void register_ShortPassword_NotOk() {
+    void register_shortPassword_NotOk() {
         user.setPassword("1234");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordNull_NotOk() {
+    void register_passwordNull_NotOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_YoungAgeUser_NotOk() {
+    void register_youngAgeUser_NotOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserLoginNull_NotOk() {
+    void register_userLoginNull_NotOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
