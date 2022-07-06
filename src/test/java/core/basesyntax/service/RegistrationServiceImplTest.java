@@ -36,7 +36,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void thelogin_already_exists_NotOK() {
+    void register_loginAlreadyExists_NotOK() {
         registrationService.register(bob);
         bob.setLogin("Bob");
         assertThrows(RuntimeException.class, () -> {
@@ -45,7 +45,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerPassword_LessThanMin_notOk() {
+    void register_PasswordLessThanMin_notOk() {
         bob.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
