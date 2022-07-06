@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_clonedUser_notOk() {
+    void register_existedUser_notOk() {
         fourthUser.setAge(20);
         fourthUser.setLogin("Bob");
         fourthUser.setPassword("123456");
