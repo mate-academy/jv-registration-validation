@@ -28,7 +28,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidAge_NotOK() {
+    void  register_ageLessThanMin_NotOk() {
         bob.setAge(12);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
@@ -36,7 +36,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void inbalidLogin_NotOK() {
+    void thelogin_already_exists_NotOK() {
         registrationService.register(bob);
         bob.setLogin("Bob");
         assertThrows(RuntimeException.class, () -> {
@@ -45,7 +45,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidPassword_NotOk() {
+    void registerPassword_LessThanMin_notOk() {
         bob.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
@@ -53,7 +53,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidlogin_Null_notOK() {
+    void registerLogin_null_notOk() {
         bob.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(bob);
@@ -77,7 +77,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void containsLogin_Ok() {
+    void register_validUser_Ok() {
         User test1 = registrationService.register(bob);
         assertTrue(Storage.people.contains(test1));
     }
