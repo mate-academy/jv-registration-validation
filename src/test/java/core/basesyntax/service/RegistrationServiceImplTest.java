@@ -28,7 +28,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void  register_ageLessThanMin_NotOk() {
+    void register_ageLessThanMin_NotOk() {
         bob.setAge(12);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
