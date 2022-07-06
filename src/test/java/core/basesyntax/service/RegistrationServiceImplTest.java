@@ -1,11 +1,8 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +25,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_TwoUser_Ok() {
+    void register_twoUser_Ok() {
         firstUser.setAge(20);
         firstUser.setLogin("Bob");
         firstUser.setPassword("123456");
@@ -42,7 +39,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordShortLength_assertException() {
+    void register_passwordShortLength_notOk() {
         threeUser.setAge(20);
         threeUser.setLogin("Alice");
         threeUser.setPassword("1234");
@@ -50,24 +47,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ClonedUser_assertException() {
+    void register_clonedUser_notOk() {
         fourthUser.setAge(20);
         fourthUser.setLogin("Bob");
         fourthUser.setPassword("123456");
         assertThrows(RuntimeException.class, () -> registrationService.register(fourthUser));
-    }
-
-    @Test
-    void storageDao_getUser_Ok() {
-        StorageDao storageDao = new StorageDaoImpl();
-        boolean actual = firstUser.equals(storageDao.get("Bob"));
-        assertTrue(actual);
-    }
-
-    @Test
-    void storageDao_getUser_notOk() {
-        StorageDao storageDao = new StorageDaoImpl();
-        boolean actual = threeUser.equals(storageDao.get("Bob"));
-        assertFalse(actual);
     }
 }
