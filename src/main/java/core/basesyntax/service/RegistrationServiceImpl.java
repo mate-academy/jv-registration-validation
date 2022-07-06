@@ -11,9 +11,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new NullPointerException("Login can't be null!");
-        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("The user with such login already exists. "
                     + "Please, enter another login.");
@@ -25,6 +22,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_SIZE_OF_PASSWORD) {
             throw new RuntimeException("Password should be at least "
                     + MIN_SIZE_OF_PASSWORD + " characters.");
+        }
+        if (user.getLogin() == null) {
+            throw new NullPointerException("Login can't be null!");
         }
         return storageDao.add(user);
 
