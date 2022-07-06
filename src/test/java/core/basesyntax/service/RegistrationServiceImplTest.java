@@ -28,7 +28,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUser_Ok() {
+    void register_TwoUser_Ok() {
         firstUser.setAge(20);
         firstUser.setLogin("Bob");
         firstUser.setPassword("123456");
@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerClonedUser_NotOk() {
+    void register_ClonedUser_NotOk() {
         fourthUser.setAge(20);
         fourthUser.setLogin("Bob");
         fourthUser.setPassword("123456");
@@ -58,17 +58,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void getUser_Ok() {
+    void storageDao_getUser_Ok() {
         StorageDao storageDao = new StorageDaoImpl();
         boolean actual = firstUser.equals(storageDao.get("Bob"));
         assertTrue(actual);
     }
 
     @Test
-    void getUser_null() {
+    void storageDao_getUser_notOk() {
         StorageDao storageDao = new StorageDaoImpl();
         boolean actual = threeUser.equals(storageDao.get("Bob"));
         assertFalse(actual);
     }
-
 }
