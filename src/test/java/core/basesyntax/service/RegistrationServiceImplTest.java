@@ -1,8 +1,7 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.service.RegistrationServiceImpl.getMaxAgeAllowed;
-import static core.basesyntax.service.RegistrationServiceImpl.getMinAgeAllowed;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static core.basesyntax.service.RegistrationServiceImpl.MAX_AGE_ALLOWED;
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_AGE_ALLOWED;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,14 +12,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
-    private StorageDao storageDao;
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
     private User user;
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
         user = new User();
     }
 
@@ -34,7 +31,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        user.setAge(getMinAgeAllowed());
+        user.setAge(MIN_AGE_ALLOWED);
         user.setLogin(null);
         user.setPassword("123456");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -42,7 +39,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
-        user.setAge(getMinAgeAllowed());
+        user.setAge(MIN_AGE_ALLOWED);
         user.setLogin("user");
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -50,7 +47,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordIsTooShort_notOk() {
-        user.setAge(getMinAgeAllowed());
+        user.setAge(MIN_AGE_ALLOWED);
         user.setLogin("user");
         user.setPassword("123");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -58,12 +55,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsTaken_NotOk() {
-        user.setAge(getMinAgeAllowed());
+        user.setAge(MIN_AGE_ALLOWED);
         user.setLogin("user");
         user.setPassword("123456");
         storageDao.add(user);
-        User anotherUser = user;
-        assertSame(user, anotherUser);
     }
 
     @Test
@@ -76,7 +71,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAgeExceedsMaxAgeAllowed_NotOk() {
-        user.setAge(getMaxAgeAllowed() + 1);
+        user.setAge(MAX_AGE_ALLOWED + 1);
         user.setLogin("user");
         user.setPassword("123456");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -84,11 +79,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_Ok() {
-        user.setAge(getMinAgeAllowed());
+        user.setAge(MIN_AGE_ALLOWED);
         user.setLogin("user");
         user.setPassword("123456");
         registrationService.register(user);
-        boolean actual = user.getAge() >= getMinAgeAllowed();
+        boolean actual = user.getAge() >= MIN_AGE_ALLOWED;
         assertTrue(actual);
     }
 }

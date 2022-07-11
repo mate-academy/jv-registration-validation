@@ -5,21 +5,16 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_AGE_ALLOWED = 18;
-    private static final int MAX_AGE_ALLOWED = 125;
+    public static final int MIN_AGE_ALLOWED = 18;
+    public static final int MAX_AGE_ALLOWED = 125;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
-    public static int getMinAgeAllowed() {
-        return MIN_AGE_ALLOWED;
-    }
-
-    public static int getMaxAgeAllowed() {
-        return MAX_AGE_ALLOWED;
-    }
-
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RuntimeException("User can't be null");
+        }
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null");
         }
@@ -29,8 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("Password can't be null");
         }
-        if (storageDao.get(user.getLogin()) != null
-                && user.getLogin().equals(storageDao.get(user.getLogin()).getLogin())) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Can't register user " + user
                     + " User with such login " + user.getLogin()
                     + " already exists");
