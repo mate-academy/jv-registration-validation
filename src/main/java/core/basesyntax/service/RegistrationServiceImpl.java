@@ -11,6 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RuntimeException("Please, insert correct user data");
+        }
         if (user.getLogin() == null) {
             throw new RuntimeException("Please, insert correct login");
         }

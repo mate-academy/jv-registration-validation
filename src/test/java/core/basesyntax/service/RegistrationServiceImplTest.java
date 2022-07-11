@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private User correctUser;
+    private User validUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -22,7 +22,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        correctUser = new User("user1", "passIsOk", 21);
+        validUser = new User("user1", "passIsOk", 21);
     }
 
     @AfterEach
@@ -31,25 +31,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_newCorrectUser_checkSize_OK() {
-        registrationService.register(correctUser);
+    void register_NullUser_notOK() {
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(null);
+        });
+    }
+
+    @Test
+    void register_newValidUser_OK() {
+        assertTrue(registrationService.register(validUser).equals(validUser));
         assertEquals(1, Storage.people.size());
     }
 
     @Test
-    void register_newCorrectUserReturn_OK() {
-        assertTrue(registrationService.register(correctUser).equals(correctUser));
-    }
-
-    @Test
-    void register_newUnCorrectUserPassword_notOK() {
+    void register_passwordLessThanMIn_notOK() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("user5", "111", 21));
         });
     }
 
     @Test
-    void register_newUnCorrectUserAge_notOK() {
+    void register_ageLessThanMin_notOK() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("user6", "123456", 15));
         });
@@ -57,29 +59,28 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserAlreadyExist_notOK() {
-        registrationService.register(correctUser);
-        User equalLoginUser = new User("user1", "passIsOk2", 33);
+        Storage.people.add(validUser);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(equalLoginUser);
+            registrationService.register(validUser);
         });
     }
 
     @Test
-    void register_UserLoginIsNull_notOK() {
+    void register_nullLogin_notOK() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(null, "123456", 18));
         });
     }
 
     @Test
-    void register_UserPasswordIsNull_notOK() {
+    void register_UserNullPassword_notOK() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("user7", null, 20));
         });
     }
 
     @Test
-    void register_UserAgeIsNull_notOK() {
+    void register_UserNullAge_notOK() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("user8", "null123", null));
         });
