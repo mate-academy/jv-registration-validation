@@ -18,13 +18,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("You cannot set ID");
         }
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Age should be at least 18 years old");
+            throw new RuntimeException("Age should be at least " + MIN_AGE + " years old");
         }
         if (user.getPassword() == null) {
             throw new RuntimeException("User should have a password value");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password should have at least 6 symbols");
+            throw new RuntimeException("Password should have at least "
+                    + MIN_PASSWORD_LENGTH + " symbols");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new RuntimeException("Login cannot be null or empty");
@@ -32,7 +33,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already exists with such login: " + user.getLogin());
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }

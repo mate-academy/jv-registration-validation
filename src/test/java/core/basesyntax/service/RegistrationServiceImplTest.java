@@ -2,9 +2,10 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -19,25 +20,20 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD = "start";
     private static final int INVALID_AGE = 17;
     private static RegistrationService registerObject;
-    private static User validUser;
 
     @BeforeAll
     static void beforeAll() {
         registerObject = new RegistrationServiceImpl();
-        validUser = new User();
-        validUser.setAge(VALID_AGE);
-        validUser.setLogin(FIRST_LOGIN);
-        validUser.setPassword(VALID_PASSWORD);
     }
 
     @Test
     void register_validUser_ok() {
-        assertTrue(validUser.getAge() >= MIN_AGE,
-                "Age should be at least 18 years old");
-        assertTrue(validUser.getPassword().length() >= MIN_PASSWORD_SYMBOLS,
-                "Password should have at least " + MIN_PASSWORD_SYMBOLS + " symbols");
+        User validUser = new User();
+        validUser.setAge(VALID_AGE);
+        validUser.setLogin(FIRST_LOGIN);
+        validUser.setPassword(VALID_PASSWORD);
         assertEquals(validUser, registerObject.register(validUser),
-                "User have should to register");
+                "We should register valid user");
     }
 
     @Test
@@ -72,7 +68,7 @@ class RegistrationServiceImplTest {
                 "Cannot registers user with null password!");
         userWithInvalidPassword.setPassword(INVALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> registerObject.register(userWithInvalidPassword),
-                "Password should contain at least 6 symbols");
+                "Password should contain at least " + MIN_PASSWORD_SYMBOLS + " symbols");
     }
 
     @Test
@@ -87,12 +83,22 @@ class RegistrationServiceImplTest {
                 "Age cannot less or equals 0!");
         userWithInvalidAge.setAge(INVALID_AGE);
         assertThrows(RuntimeException.class, () -> registerObject.register(userWithInvalidAge),
-                "User cannot have less than 18 years old!");
+                "User cannot have less than " + MIN_AGE + " years old!");
     }
 
     @Test
     void register_theSameLogin_notOk() {
-        assertThrows(RuntimeException.class, () -> registerObject.register(validUser),
-                "User exists with login:" + validUser.getLogin());
+        User newValidUser = new User();
+        newValidUser.setAge(VALID_AGE);
+        newValidUser.setPassword(VALID_PASSWORD);
+        newValidUser.setLogin(NEW_LOGIN);
+        registerObject.register(newValidUser);
+        assertThrows(RuntimeException.class, () -> registerObject.register(newValidUser),
+                "User exists with login:" + newValidUser.getLogin());
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 }
