@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+
     }
 
     @BeforeEach
@@ -23,10 +25,19 @@ class RegistrationServiceImplTest {
         user.setLogin("abcdef@gmail.com");
         user.setAge(22);
         user.setPassword("abc123");
+
     }
 
     @Test
-    void expectedBehavior_SetLoginNull_NotOk() {
+    void register_sameUserLogin_NotOk() {
+        Storage.people.add(user);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullLogin_NotOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
@@ -36,11 +47,11 @@ class RegistrationServiceImplTest {
     @Test
     void expectedBehaviorValid_SetLogin_Ok() {
         final User actual = registrationService.register(user);
-        assertEquals(user, actual, "error");
+        assertEquals(user, actual, "User is not valid");
     }
 
     @Test
-    void expectedBehavior_SetAgeNull_NotOk() {
+    void register_nullAge_NotOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
@@ -55,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void expectedBehavior_SetPasswordNull_NotOk() {
+    void register_nullPassword_NotOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
