@@ -91,16 +91,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_registerMethodValidCheck_Ok(){
+    void register_registerMethodValidCheck_Ok() {
         User pavel = new User();
-        User anton = new User();
-        User david = new User();
         pavel.setLogin("pavel@gmail.com");
         pavel.setPassword("123456789");
         pavel.setAge(19);
+        User anton = new User();
         anton.setLogin("anton@gmail.com");
         anton.setPassword("123456789");
         anton.setAge(25);
+        User david = new User();
         david.setLogin("david@gmail.com");
         david.setPassword("123456789");
         david.setAge(35);

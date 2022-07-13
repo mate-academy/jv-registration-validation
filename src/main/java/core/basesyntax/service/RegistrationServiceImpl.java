@@ -8,9 +8,9 @@ import core.basesyntax.exceptions.NotCorrectPassword;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MINIMAL_PASSWORD_SIZE = 6;
     private static final int MINIMAL_AGE = 18;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -44,8 +44,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void nullCheck(User user) {
-        if (user == null || user.getAge() == null ||
-                user.getLogin() == null || user.getPassword() == null) {
+        if (user == null || user.getAge() == null
+                || user.getLogin() == null || user.getPassword() == null) {
             throw new NullPointerException("Password or login can not be null");
         }
     }
