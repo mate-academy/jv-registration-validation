@@ -9,6 +9,8 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MINIMAL_PASSWORD_SIZE = 6;
+    private static final int MINIMAL_AGE = 18;
 
     @Override
     public User register(User user) {
@@ -21,14 +23,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void correctPasswordCheck(User user) {
-        if (user.getPassword().length() <= 6) {
+        if (user.getPassword().length() < MINIMAL_PASSWORD_SIZE) {
             throw new NotCorrectPassword("Password to short");
         }
     }
 
     private void sameLoginCheck(User user) {
-        User login = storageDao.get(user.getLogin());
-        if (login != null) {
+        User userFromStorage = storageDao.get(user.getLogin());
+        if (userFromStorage != null) {
             throw new DuplicateAnExistingLoginException("This email "
                     + user.getLogin() + " has already been taken");
         }
@@ -36,13 +38,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void ageCheck(User user) {
-        if (user.getAge() < 18) {
-            throw new NotCorrectAgeException("Ure are to young");
+        if (user.getAge() < MINIMAL_AGE) {
+            throw new NotCorrectAgeException("Ure are to young. Age: " + user.getAge());
         }
     }
 
     private void nullCheck(User user) {
-        if (user.getLogin() == null || user.getPassword() == null) {
+        if (user == null || user.getAge() == null ||
+                user.getLogin() == null || user.getPassword() == null) {
             throw new NullPointerException("Password or login can not be null");
         }
     }
