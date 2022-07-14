@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.DuplicateAnExistingLoginException;
 import core.basesyntax.exceptions.NotCorrectAgeException;
-import core.basesyntax.exceptions.NotCorrectPassword;
+import core.basesyntax.exceptions.NotCorrectPasswordException;
+import core.basesyntax.exceptions.NullUserDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,8 +42,18 @@ class RegistrationServiceImplTest {
         nullPasswordUser.setPassword(null);
         nullPasswordUser.setLogin("nullPasswordUser@gmail.com");
         nullPasswordUser.setAge(22);
-        assertThrows(NullPointerException.class,()
+        assertThrows(NullUserDataException.class,()
                 -> registrationService.register(nullPasswordUser));
+    }
+
+    @Test
+    void register_nullAge_NotOk() {
+        User nullAgeUser = new User();
+        nullAgeUser.setPassword("123456789");
+        nullAgeUser.setLogin("nullPasswordUser@gmail.com");
+        nullAgeUser.setAge(null);
+        assertThrows(NullUserDataException.class,()
+                -> registrationService.register(nullAgeUser));
     }
 
     @Test
@@ -51,7 +62,7 @@ class RegistrationServiceImplTest {
         nullLogin.setPassword("123456789");
         nullLogin.setLogin(null);
         nullLogin.setAge(22);
-        assertThrows(NullPointerException.class,()
+        assertThrows(NullUserDataException.class,()
                 -> registrationService.register(nullLogin));
     }
 
@@ -71,7 +82,7 @@ class RegistrationServiceImplTest {
         vadim.setPassword("12345");
         vadim.setAge(22);
         vadim.setLogin("Vadim@gmail.com");
-        assertThrows(NotCorrectPassword.class,()
+        assertThrows(NotCorrectPasswordException.class,()
                 -> registrationService.register(vadim));
     }
 
@@ -85,35 +96,8 @@ class RegistrationServiceImplTest {
         anotherAnna.setAge(18);
         anotherAnna.setLogin("Anna@gmaol.com");
         anotherAnna.setPassword("123456789");
-        registrationService.register(anna);
+        Storage.people.add(anna);
         assertThrows(DuplicateAnExistingLoginException.class,()
                 -> registrationService.register(anotherAnna));
-    }
-
-    @Test
-    void register_registerMethodValidCheck_Ok() {
-        User pavel = new User();
-        pavel.setLogin("pavel@gmail.com");
-        pavel.setPassword("123456789");
-        pavel.setAge(19);
-        User anton = new User();
-        anton.setLogin("anton@gmail.com");
-        anton.setPassword("123456789");
-        anton.setAge(25);
-        User david = new User();
-        david.setLogin("david@gmail.com");
-        david.setPassword("123456789");
-        david.setAge(35);
-        registrationService.register(pavel);
-        registrationService.register(anton);
-        registrationService.register(david);
-        int actualStorageSize = Storage.people.size();
-        assertEquals(3,actualStorageSize);
-        User actualFirstStorageVisitor = Storage.people.get(0);
-        assertEquals(pavel,actualFirstStorageVisitor);
-        User actualSecondStorageVisitor = Storage.people.get(1);
-        assertEquals(anton,actualSecondStorageVisitor);
-        User actualThirdStorageVisitor = Storage.people.get(2);
-        assertEquals(david,actualThirdStorageVisitor);
     }
 }

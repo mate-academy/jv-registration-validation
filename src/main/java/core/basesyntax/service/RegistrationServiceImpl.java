@@ -4,7 +4,8 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.DuplicateAnExistingLoginException;
 import core.basesyntax.exceptions.NotCorrectAgeException;
-import core.basesyntax.exceptions.NotCorrectPassword;
+import core.basesyntax.exceptions.NotCorrectPasswordException;
+import core.basesyntax.exceptions.NullUserDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -23,8 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void correctPasswordCheck(User user) {
-        if (user.getPassword().length() < MINIMAL_PASSWORD_SIZE) {
-            throw new NotCorrectPassword("Password to short");
+        if (user.getPassword().length() <= MINIMAL_PASSWORD_SIZE) {
+            throw new NotCorrectPasswordException("Password to short");
         }
     }
 
@@ -46,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void nullCheck(User user) {
         if (user == null || user.getAge() == null
                 || user.getLogin() == null || user.getPassword() == null) {
-            throw new NullPointerException("Password or login can not be null");
+            throw new NullUserDataException("Password, login or age can not be null");
         }
     }
 }
