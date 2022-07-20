@@ -26,7 +26,6 @@ public class HelloWorldTest {
     @Test
     void register_nullAge_notOK() {
         user = new User("Bob", "password", null);
-        user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -34,7 +33,7 @@ public class HelloWorldTest {
 
     @Test
     void register_sameLogin_notOK() {
-        user = new User("John", "password", 20);
+        user = new User("Bob", "password", 21);
         service.register(user);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
@@ -43,7 +42,7 @@ public class HelloWorldTest {
 
     @Test
     void register_userAge_notOK() {
-        user = new User("Jimm", "password", 15);
+        user = new User("Bob", "password", 15);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -58,14 +57,19 @@ public class HelloWorldTest {
 
     @Test
     void register_passwordNull_notOK() {
-        user = new User("Katherine", null, 20);
+        user = new User("Bob", null, 22);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
     }
 
     @Test
-    void register_UserAdd_OK() {
+    void register_passwordLength_notOK() {
+        user = new User("Bob", "12345", 23);
+    }
+
+    @Test
+    void register_userAdd_OK() {
         List<User> userList = new ArrayList<>();
         userList.add(new User("Name0", "password", 18));
         userList.add(new User("Name1", "password", 20));
