@@ -45,7 +45,8 @@ public class HelloWorldTest {
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
-        assertEquals("User with this login already exists.", thrown.getMessage());
+        assertEquals("User with login: " + user.getLogin()
+                + " already exists.", thrown.getMessage());
     }
 
     @Test
