@@ -7,14 +7,16 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/**
- * Feel free to remove this class and create your own.
- */
 public class HelloWorldTest {
-    private RegistrationServiceImpl service = new RegistrationServiceImpl();
-    private User user;
+    private static RegistrationServiceImpl service;
+
+    @BeforeAll
+    static void beforeAll() {
+        service = new RegistrationServiceImpl();
+    }
 
     @Test
     void register_nullUser_notOK() {
@@ -25,7 +27,7 @@ public class HelloWorldTest {
 
     @Test
     void register_nullAge_notOK() {
-        user = new User("Bob", "password", null);
+        User user = new User("Bob1", "password", null);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -33,7 +35,7 @@ public class HelloWorldTest {
 
     @Test
     void register_sameLogin_notOK() {
-        user = new User("Bob", "password", 21);
+        User user = new User("Bob", "password", 21);
         service.register(user);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
@@ -42,7 +44,7 @@ public class HelloWorldTest {
 
     @Test
     void register_userAge_notOK() {
-        user = new User("Bob", "password", 15);
+        User user = new User("Bob2", "password", 15);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -57,7 +59,7 @@ public class HelloWorldTest {
 
     @Test
     void register_passwordNull_notOK() {
-        user = new User("Bob", null, 22);
+        User user = new User("Bob3", null, 22);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -65,7 +67,10 @@ public class HelloWorldTest {
 
     @Test
     void register_passwordLength_notOK() {
-        user = new User("Bob", "12345", 23);
+        User user = new User("John", "12345", 23);
+        assertThrows(RuntimeException.class, () -> {
+            service.register(user);
+        });
     }
 
     @Test
