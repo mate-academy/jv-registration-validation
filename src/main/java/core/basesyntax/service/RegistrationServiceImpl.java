@@ -9,11 +9,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        User storagedUser = storageDao.get(user.getLogin());
         if (user == null
-                // if user doesnt exist in storage we can get NPE, check
-                // for login not null.storageDao.get(user.getLogin()).getLogin - could be null
-                || user.getLogin().equals(storageDao.get(user.getLogin()))
-                || (user.getAge() != null && user.getAge() < 18)) {
+                || user.getPassword() == null
+                || user.getLogin() == null
+                || (storagedUser != null && user.getLogin().equals(storagedUser.getLogin()))
+                || user.getAge() == null
+                || user.getAge() < 18) {
             throw new RuntimeException();
         }
 

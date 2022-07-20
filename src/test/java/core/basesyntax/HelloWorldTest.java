@@ -3,11 +3,10 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -15,13 +14,7 @@ import org.junit.jupiter.api.Test;
  */
 public class HelloWorldTest {
     private RegistrationServiceImpl service = new RegistrationServiceImpl();
-    private StorageDao storage = new StorageDaoImpl();
     private User user;
-
-    @BeforeEach
-    void setUp() {
-        user = new User();
-    }
 
     @Test
     void register_nullUser_notOK() {
@@ -32,6 +25,7 @@ public class HelloWorldTest {
 
     @Test
     void register_nullAge_notOK() {
+        user = new User("Bob", "password", null);
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
@@ -40,8 +34,7 @@ public class HelloWorldTest {
 
     @Test
     void register_sameLogin_notOK() {
-        user.setLogin("Bob");
-        user.setAge(20);
+        user = new User("John", "password", 20);
         service.register(user);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
@@ -50,7 +43,7 @@ public class HelloWorldTest {
 
     @Test
     void register_userAge_notOK() {
-        user.setAge(15);
+        user = new User("Jimm", "password", 15);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -58,10 +51,29 @@ public class HelloWorldTest {
 
     @Test
     void register_userAge_OK() {
-        User actual = new User();
-        actual.setAge(19);
-        actual.setLogin("Alice");
+        User actual = new User("Alice", "password", 20);
         User expected = service.register(actual);
         assertTrue(actual.equals(expected));
+    }
+
+    @Test
+    void register_passwordNull_notOK() {
+        user = new User("Katherine", null, 20);
+        assertThrows(RuntimeException.class, () -> {
+            service.register(user);
+        });
+    }
+
+    @Test
+    void register_UserAdd_OK() {
+        List<User> userList = new ArrayList<>();
+        userList.add(new User("Name0", "password", 18));
+        userList.add(new User("Name1", "password", 20));
+        userList.add(new User("Name2", "password", 66));
+        userList.add(new User("Name3", "password", 25));
+        for (User actual: userList) {
+            User expected = service.register(actual);
+            assertTrue(actual.equals(expected));
+        }
     }
 }
