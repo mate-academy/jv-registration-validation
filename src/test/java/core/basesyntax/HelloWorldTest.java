@@ -1,5 +1,8 @@
 package core.basesyntax;
 
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_PASSWORD_LENGTH;
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_USER_AGE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,34 +23,39 @@ public class HelloWorldTest {
 
     @Test
     void register_nullUser_notOK() {
-        assertThrows(RuntimeException.class, () -> {
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             service.register(null);
         });
+        assertEquals("User can't be null.", thrown.getMessage());
     }
 
     @Test
     void register_nullAge_notOK() {
         User user = new User("Bob1", "password", null);
-        assertThrows(RuntimeException.class, () -> {
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
+        assertEquals("User age can't be null.", thrown.getMessage());
     }
 
     @Test
     void register_sameLogin_notOK() {
         User user = new User("Bob", "password", 21);
         service.register(user);
-        assertThrows(RuntimeException.class, () -> {
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
+        assertEquals("User with this login already exists.", thrown.getMessage());
     }
 
     @Test
     void register_userAge_notOK() {
         User user = new User("Bob2", "password", 15);
-        assertThrows(RuntimeException.class, () -> {
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
+        assertEquals("User age can't be less than "
+                + MIN_USER_AGE + " or be negative.", thrown.getMessage());
     }
 
     @Test
@@ -60,17 +68,20 @@ public class HelloWorldTest {
     @Test
     void register_passwordNull_notOK() {
         User user = new User("Bob3", null, 22);
-        assertThrows(RuntimeException.class, () -> {
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
+        assertEquals("Password can't be null.", thrown.getMessage());
     }
 
     @Test
     void register_passwordLength_notOK() {
-        User user = new User("John", "12345", 23);
-        assertThrows(RuntimeException.class, () -> {
+        User user = new User("Bob4", "12345", 23);
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
+        assertEquals("Password can't be less than "
+                + MIN_PASSWORD_LENGTH + " symbols.", thrown.getMessage());
     }
 
     @Test
