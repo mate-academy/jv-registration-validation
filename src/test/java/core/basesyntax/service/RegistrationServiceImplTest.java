@@ -46,7 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordIsTooShort_notOk() {
+    void register_passwordIsTooShort_notOk() {
         user.setAge(MIN_AGE_ALLOWED);
         user.setLogin("user");
         user.setPassword("123");
@@ -85,5 +85,18 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
         boolean actual = user.getAge() >= MIN_AGE_ALLOWED;
         assertTrue(actual);
+    }
+
+    @Test
+    void register_existLogin_NotOk() {
+        user.setLogin("user_expected");
+        user.setPassword("qwerty");
+        user.setAge(MIN_AGE_ALLOWED);
+        registrationService.register(user);
+        User actual = new User();
+        actual.setLogin("user_expected");
+        actual.setPassword("qwerty");
+        actual.setAge(MIN_AGE_ALLOWED);
+        assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 }
