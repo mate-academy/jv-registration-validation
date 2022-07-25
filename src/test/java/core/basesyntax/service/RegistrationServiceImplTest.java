@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -29,9 +28,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_newUser_Ok() {
-        User newUser = registrationService.register(user);
-        assertEquals(user, newUser);
+    void register_validUser_Ok() {
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -41,13 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsAcceptable_Ok() {
-        user.setAge(25);
-        assertTrue(user.getAge() >= 18);
-    }
-
-    @Test
-    void register_usersAgeIsLessThanExpected_NotOk() {
+    void register_usersAgeIsLessThanMin_NotOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -71,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIsShorterThanExpected_NotOk() {
+    void register_passwordIsShorterThanMinLength_NotOk() {
         user.setPassword("4515");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
