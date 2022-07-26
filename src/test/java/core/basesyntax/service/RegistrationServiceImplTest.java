@@ -25,15 +25,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_ok() {
-        registrationService.register(user);
-        int actual = Storage.people.size();
-        assertEquals(1, actual);
+    void register_validUser_ok() {
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
     void register_usersWithTheSameLogin_notOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("bestUser", "123456", 20));
         });
@@ -79,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageUnder18_notOk() {
+    void register_ageUnderUnderMinAge_notOk() {
         user.setAge(14);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
