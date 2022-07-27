@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -12,31 +11,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || user.getLogin() == null || user.getAge() == null
-                || user.getPassword() == null) {
-            throw new RuntimeException();
+        if (user == null || user.getLogin() == null
+                || user.getAge() == null || user.getAge() < 0) {
+            throw new RuntimeException("No valid data!");
         }
-
-        if (checkLogin(user) && checkAge(user) && checkPassword(user)) {
-            return storageDao.add(user);
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Such login already exist!");
         }
-        return null;
-    }
-
-    private boolean checkLogin(User user) {
-        for (User userInStorage : Storage.people) {
-            if (userInStorage.getLogin().equals(user.getLogin())) {
-                return false;
-            }
+        if (user.getAge() < MIN_AGE_USER) {
+            throw new RuntimeException("User age must be not less " + MIN_AGE_USER + "!");
         }
-        return true;
-    }
-
-    private boolean checkAge(User user) {
-        return user.getAge() >= MIN_AGE_USER;
-    }
-
-    private boolean checkPassword(User user) {
-        return user.getPassword().length() >= MIN_LENGT_PATHWORD;
+        if (user.getPassword().length() < MIN_LENGT_PATHWORD) {
+            throw new RuntimeException("Minimal length of the password must be not less"
+                    + MIN_LENGT_PATHWORD + "!");
+        }
+        return storageDao.add(user);
     }
 }

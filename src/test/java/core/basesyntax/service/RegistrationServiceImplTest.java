@@ -1,8 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -50,61 +48,36 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_unique_OK() {
+    void registration_validUser_OK() {
         User user = new User();
         user.setLogin("Alex");
         user.setPassword("kfnvofod");
         user.setAge(22);
         User actual = registrationService.register(user);
-        assertNotNull(actual,
-                "When user is not unique, the method should not return \"null\"");
+        assertEquals(actual, user, "Returned and entered value must be equal!");
         assertEquals(3, Storage.people.size(),
-                "Test failed! The user must be once added to the storage");
+                "Test failed! The user must be once added to the storage.");
     }
 
     @Test
-    void registration_unique_NotOK() {
+    void registration_nonUniqueLogin_NotOK() {
         User user = new User();
         user.setLogin("Mary");
         user.setPassword("kfnvofod");
         user.setAge(22);
-        User actual = registrationService.register(user);
-        assertNull(actual,
-                "When user is not unique, the method should return \"null\"");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        }, "Test failed! The user must not be added to the storage");
         assertEquals(2, Storage.people.size(),
                 "Test failed! The user must not be added to the storage");
     }
 
     @Test
-    void registration_age_OK() {
-        User user = new User();
-        user.setLogin("Ann");
-        user.setPassword("kfnvofod");
-        user.setAge(22);
-        User actual = registrationService.register(user);
-        assertNotNull(actual, "When user's age more or equal then "
-                + RegistrationServiceImpl.MIN_AGE_USER + ", the method should not return \"null\"");
-        assertEquals(3, Storage.people.size(),
-                "Test failed! The user must be once added to the storage");
-    }
-
-    @Test
-    void registration_age_NotOK() {
+    void registration_ageLessThanMin_NotOK() {
         User user = new User();
         user.setLogin("Ann");
         user.setPassword("kfnvofod");
         user.setAge(15);
-        User actual = registrationService.register(user);
-        assertNull(actual, "When user's age less then "
-                + RegistrationServiceImpl.MIN_AGE_USER + ", the method should return \"null\"");
-        assertEquals(2, Storage.people.size(),
-                "Test failed! The user must not be added to the storage");
-    }
-
-    @Test
-    void registration_ageNull_NotOK() {
-        User user = new User();
-        user.setLogin("Ann");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -113,29 +86,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_lengthPassword_OK() {
+    void registration_ageNull_NotOK() {
         User user = new User();
         user.setLogin("Ann");
-        user.setAge(22);
-        user.setPassword("qsc23rf");
-        User actual = registrationService.register(user);
-        assertNotNull(actual, "When user password length is more or equal then "
-                + RegistrationServiceImpl.MIN_LENGT_PATHWORD
-                + ", the method should not return \"null\"");
-        assertEquals(3, Storage.people.size(),
-                "Test failed! The user must be once added to the storage");
+        user.setPassword("dfjdijfo");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+        assertEquals(2, Storage.people.size(),
+                "Test failed! The user must not be added to the storage");
     }
 
     @Test
-    void registration_lengthPassword_NotOK() {
+    void registration_passwordLengthLessThanMin_NotOK() {
         User user = new User();
         user.setLogin("Ann");
         user.setAge(22);
         user.setPassword("qscf");
-        User actual = registrationService.register(user);
-        assertNull(actual, "When user password length is less then "
-                + RegistrationServiceImpl.MIN_LENGT_PATHWORD
-                + ", the method should return \"null\"");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
         assertEquals(2, Storage.people.size(),
                 "Test failed! The user must not be added to the storage");
     }
