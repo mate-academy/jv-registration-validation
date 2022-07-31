@@ -3,8 +3,6 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
     private static RegistrationService service;
-    private static StorageDao storageDao;
     private static List<User> usersList;
     private User alice;
     private User bob;
@@ -27,7 +24,6 @@ public class RegistrationServiceTest {
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
         usersList = new ArrayList<>();
     }
 
@@ -40,61 +36,61 @@ public class RegistrationServiceTest {
 
     @AfterEach
     void tearDown() {
-        int expectedSize = usersList.size();
-        int actualSize = Storage.people.size();
-        assertEquals(expectedSize, actualSize, "Expected size should be "
-                + expectedSize + " but was: " + actualSize);
         Storage.people.clear();
         usersList.clear();
     }
 
     @Test
     void register_validUserCase_Ok() {
-        service.register(alice);
-        usersList.add(alice);
-        service.register(bob);
-        usersList.add(bob);
-        service.register(david);
-        usersList.add(david);
-        User actual = storageDao.get(alice.getLogin());
-        assertEquals(alice, actual, "actual should be " + alice + " , but was: " + actual);
-        actual = storageDao.get(bob.getLogin());
-        assertEquals(bob, actual, "actual should be " + bob + " , but was: " + actual);
-        actual = storageDao.get(david.getLogin());
-        assertEquals(david, actual, "actual should be " + david + " , but was: " + actual);
+        User actualAlice = service.register(alice);
+        User actualBob = service.register(bob);
+        User actualDavid = service.register(david);
+        assertEquals(alice, actualAlice,
+                "actual should be " + alice + " , but was: " + actualAlice);
+        assertEquals(bob, actualBob,
+                "actual should be " + bob + " , but was: " + actualBob);
+        assertEquals(david, actualDavid,
+                "actual should be " + david + " , but was: " + actualDavid);
+        int actualSize = Storage.people.size();
+        assertEquals(3, actualSize, "Expected size should be "
+                + 3 + " but was: " + actualSize);
     }
 
     @Test
     void register_twoUsersWithTheSameLogin_notOk() {
         service.register(alice);
-        usersList.add(alice);
         service.register(bob);
-        usersList.add(bob);
-        User userWithDuplicatedLogin = new User("user22d0j", "dUI789*i", 18);
+        User userWithDuplicatedLogin = new User(bob.getLogin(), "dUI789*i", 18);
         assertThrows(RuntimeException.class,() -> service.register(userWithDuplicatedLogin),
                 "Register should have thrown RuntimeException"
                         + " if the user with this login already exists");
+        int actualSize = Storage.people.size();
+        assertEquals(2, actualSize, "Expected size should be "
+                + 2 + " but was: " + actualSize);
     }
 
     @Test
     void register_userLessThanMinAge_notOk() {
         service.register(bob);
-        usersList.add(bob);
         service.register(david);
-        usersList.add(david);
         User userWithAgeLessThanMinAge = new User("user30ewj", "&*giuKdki", 16);
         assertThrows(RuntimeException.class, () -> service.register(userWithAgeLessThanMinAge),
                 "Register should have thrown RuntimeException if users age is less than min age");
+        int actualSize = Storage.people.size();
+        assertEquals(2, actualSize, "Expected size should be "
+                + 2 + " but was: " + actualSize);
     }
 
     @Test
     void register_userWithNotLongEnoughPassword_notOk() {
         User userWithSmallPassword = new User("userVikaj", "Kdki", 34);
         service.register(bob);
-        usersList.add(bob);
         assertThrows(RuntimeException.class, () -> service.register(userWithSmallPassword),
                 "Register should have thrown RuntimeException"
                         + " if user's password is not long enough");
+        int actualSize = Storage.people.size();
+        assertEquals(1, actualSize, "Expected size should be "
+                + 1 + " but was: " + actualSize);
     }
 
     @Test
@@ -105,7 +101,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_userWithNullInput_notOk() {
+    void register_nullUser_notOk() {
         User nullUser = null;
         assertThrows(RuntimeException.class, () -> service.register(nullUser),
                 "Register should have thrown RuntimeException if user is null");
@@ -134,7 +130,7 @@ public class RegistrationServiceTest {
 
     @Test
     void register_userWithAgeMoreThanMaxAge_notOk() {
-        User userWithAgeMoreThanMaxAge = new User("userQ", "dcesiYhgv6", 121);
+        User userWithAgeMoreThanMaxAge = new User("userQ", "dcesiYhgv6", 1221);
         assertThrows(RuntimeException.class, () -> service.register(userWithAgeMoreThanMaxAge),
                 "Register should have thrown RuntimeException if age more than 100");
     }
