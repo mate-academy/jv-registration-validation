@@ -2,6 +2,8 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService;
     private User DEFAULT_USER;
     private static User USER2;
+    private static User USER2_COPY;
     private static User USER3;
     public static User INVALID_USER;
     private static final String LOGIN_DEFAULT = "Kate";
@@ -43,11 +46,16 @@ class RegistrationServiceImplTest {
         USER3.setLogin(LOGIN_AMY);
         USER3.setAge(EIGHTEEN_AGE);
         USER3.setPassword(GOOD_PASSWORD2);
+        USER2_COPY = new User();
+        USER2_COPY.setLogin(LOGIN_BRUCE);
+        USER2_COPY.setAge(HUNDRED_AGE);
+        USER2_COPY.setPassword(REVERSE_GOOD_PASSWORD);
 
     }
 
     @BeforeEach
      void beforeEach() {
+        registrationService = new RegistrationServiceImpl();
         DEFAULT_USER = new User();
         DEFAULT_USER.setLogin(LOGIN_DEFAULT);
         DEFAULT_USER.setAge(EIGHTEEN_AGE);
@@ -73,9 +81,7 @@ class RegistrationServiceImplTest {
     void addFewUsers_Ok() {
         registrationService.register(DEFAULT_USER);
         registrationService.register(USER2);
-        registrationService.register(INVALID_USER);
         registrationService.register(USER3);
-        registrationService.register(NULL_USER);
         assertEquals(3, Storage.people.size());
     }
 
@@ -112,5 +118,10 @@ class RegistrationServiceImplTest {
     @Test
     void registerNullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(NULL_USER));
+    }
+
+    @AfterEach
+    void cleanStorage() {
+        Storage.people.clear();
     }
 }
