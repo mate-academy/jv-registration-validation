@@ -11,11 +11,11 @@ public class Storage {
         people.add(user);
     }
 
-    public static List<User> getPeople() {
+    public static List<User> getAll() {
         return people;
     }
 
-    public static void setPeople(List<User> people) {
+    public static void set(List<User> people) {
         Storage.people = people;
     }
 }

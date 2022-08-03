@@ -15,7 +15,7 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User get(String login) {
-        for (User user : Storage.getPeople()) {
+        for (User user : Storage.getAll()) {
             if (user.getLogin().equals(login)) {
                 return user;
             }

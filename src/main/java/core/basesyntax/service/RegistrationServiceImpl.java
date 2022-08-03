@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     public RegistrationServiceImpl() {
-        Storage.setPeople(new ArrayList<>());
+        Storage.set(new ArrayList<>());
     }
 
     @Override
