@@ -3,7 +3,9 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +17,11 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.getAll().clear();
     }
 
     @Test

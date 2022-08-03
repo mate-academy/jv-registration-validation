@@ -2,18 +2,12 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH_PASSWORD = 6;
     private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
-
-    public RegistrationServiceImpl() {
-        Storage.set(new ArrayList<>());
-    }
 
     @Override
     public User register(User user) throws RuntimeException {
