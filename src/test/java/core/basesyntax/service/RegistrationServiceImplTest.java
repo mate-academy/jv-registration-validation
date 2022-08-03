@@ -23,15 +23,16 @@ class RegistrationServiceImplTest {
     private static final String GOOD_PASSWORD = "123456";
     private static final String GOOD_PASSWORD2 = "parol2";
     private static final String REVERSE_GOOD_PASSWORD = "654321";
-    private static final User NULL_USER = new User();
+    private static final User EMPTY_USER = new User();
     private static User user2;
     private static User user2Copy;
     private static User user3;
+    private static RegistrationServiceImpl registrationService;
     private User defaultUser;
-    private RegistrationServiceImpl registrationService;
 
     @BeforeAll
     static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
         user2 = new User();
         user2.setLogin(LOGIN_BRUCE);
         user2.setAge(HUNDRED_AGE);
@@ -45,8 +46,6 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
      void beforeEach() {
-        registrationService = new RegistrationServiceImpl();
-
         defaultUser = new User();
         defaultUser.setLogin(LOGIN_DEFAULT);
         defaultUser.setAge(EIGHTEEN_AGE);
@@ -106,7 +105,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNullUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(NULL_USER));
+        assertThrows(RuntimeException.class, () -> registrationService.register(EMPTY_USER));
     }
 
     @AfterEach
