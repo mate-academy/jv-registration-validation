@@ -16,8 +16,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Input data is invalid (null).");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with such login (e-mail)" +
-                    " is already exists in the Storage.");
+            throw new RuntimeException("User with such login (e-mail)"
+                    + " is already exists in the Storage.");
         }
         if (user.getAge() < MIN_USER_AGE) {
             throw new RuntimeException("The age of the user must be at least: "
@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("The user password must be at least: "
                     + MIN_PASSWORD_CHARS + " characters.");
         }
-        if (user.getPassword().chars().filter(ch -> ch == ' ').count() != 0 ) {
+        if (user.getPassword().chars().filter(ch -> ch == ' ').count() != 0) {
             throw new RuntimeException("The password cannot contain space.");
         }
         return storageDao.add(user);
