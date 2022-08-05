@@ -10,16 +10,16 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private User user = new User();
+    private static User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        user = new User();
     }
 
     @BeforeEach
     void setUp() {
-        user = new User();
         user.setLogin("user123@gmail.com");
         user.setPassword("psw123456+");
         user.setAge(18);
@@ -70,13 +70,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_notValidPassword_notOk() {
+    void register_notValidPasswordLength_notOk() {
         user.setPassword("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-        user.setPassword("       ");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
-}
 
+    @Test
+    void register_notValidPasswordWithSpaces_notOk() {
+        user.setPassword("       ");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+}
