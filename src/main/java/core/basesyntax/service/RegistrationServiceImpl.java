@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getAge() == null
                 || user.getPassword().length() < MIN_PASSWORD_SIZE
                 || user.getPassword() == null) {
-            throw new RuntimeException();
+            throw new RuntimeException("Invalid User parameters");
         }
         return storageDao.add(user);
     }

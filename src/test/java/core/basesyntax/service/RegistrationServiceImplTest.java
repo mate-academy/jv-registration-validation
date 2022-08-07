@@ -11,101 +11,99 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String LOGIN_DEFAULT = "Kate";
-    private static final String LOGIN_BRUCE = "Bruce";
-    private static final String LOGIN_AMY = "Amy";
-    private static final int MINUS_AGE = -5;
-    private static final int HUNDRED_AGE = 100;
-    private static final int ZERO_AGE = 0;
-    private static final int EIGHTEEN_AGE = 18;
-    private static final String INVALID_PASSWORD = "H";
-    private static final String EMPTY_PASSWORD = "";
-    private static final String GOOD_PASSWORD = "123456";
-    private static final String GOOD_PASSWORD2 = "parol2";
-    private static final String REVERSE_GOOD_PASSWORD = "654321";
-    private static final User EMPTY_USER = new User();
-    private static User user2;
-    private static User user2Copy;
-    private static User user3;
+    private static User user2 = new User();
+    private static User user3 = new User();
     private static RegistrationServiceImpl registrationService;
     private User defaultUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        user2 = new User();
-        user2.setLogin(LOGIN_BRUCE);
-        user2.setAge(HUNDRED_AGE);
-        user2.setPassword(REVERSE_GOOD_PASSWORD);
-        user3 = new User();
-        user3.setLogin(LOGIN_AMY);
-        user3.setAge(EIGHTEEN_AGE);
-        user3.setPassword(GOOD_PASSWORD2);
-        user2Copy = user2;
+        String loginBruce = "Bruce";
+        int validUser2Age = 100;
+        String reverseGoodPassword = "654321";
+        user2.setLogin(loginBruce);
+        user2.setAge(validUser2Age);
+        user2.setPassword(reverseGoodPassword);
+        String loginAmy = "Amy";
+        int validEighteenAge = 18;
+        String goodPassword = "parol2";
+        user3.setLogin(loginAmy);
+        user3.setAge(validEighteenAge);
+        user3.setPassword(goodPassword);
     }
 
     @BeforeEach
-     void beforeEach() {
+    void beforeEach() {
+        int validDefaultAge = 18;
+        String loginDefault = "Kate";
         defaultUser = new User();
-        defaultUser.setLogin(LOGIN_DEFAULT);
-        defaultUser.setAge(EIGHTEEN_AGE);
-        defaultUser.setPassword(GOOD_PASSWORD);
+        defaultUser.setLogin(loginDefault);
+        defaultUser.setAge(validDefaultAge);
+        String goodPassword = "123456";
+        defaultUser.setPassword(goodPassword);
     }
 
     @Test
-    void addSameLoginUser_NotOk() {
+    void addUser_SameLogin_NotOk() {
         registrationService.register(defaultUser);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void addUser_NullLogin_NotOk() {
         defaultUser.setLogin(null);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void addFewUsers_Ok() {
+    void addUsers_FewUsers_Ok() {
         registrationService.register(defaultUser);
         registrationService.register(user2);
         registrationService.register(user3);
-        assertThrows(RuntimeException.class,() -> registrationService.register(user2Copy));
+        User user2Copy = user2;
+        assertThrows(RuntimeException.class, () -> registrationService.register(user2Copy));
         assertEquals(3, Storage.people.size());
     }
 
     @Test
-    void addUser_Younger18_NotOk() {
-        defaultUser.setAge(MINUS_AGE);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
-        defaultUser.setLogin(LOGIN_BRUCE);
-        defaultUser.setAge(ZERO_AGE);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
+    void register_ageLessThanRequired_NotOk() {
+        int invalidMinusAge = -5;
+        defaultUser.setAge(invalidMinusAge);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
+        defaultUser.setLogin(user2.getLogin());
+        int invalidZeroAge = 0;
+        defaultUser.setAge(invalidZeroAge);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void addUser_NullAge_NotOk() {
         defaultUser.setAge(null);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void addUser_InvalidPassword_NotOk() {
-        defaultUser.setPassword(INVALID_PASSWORD);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
-        defaultUser.setLogin(LOGIN_BRUCE);
-        defaultUser.setPassword(EMPTY_PASSWORD);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
+        String invalidPassword = "H";
+        defaultUser.setPassword(invalidPassword);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
+        defaultUser.setLogin(user2.getLogin());
+        String emptyPassword = "";
+        defaultUser.setPassword(emptyPassword);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void addUser_NullPassword_NotOk() {
         defaultUser.setPassword(null);
-        assertThrows(RuntimeException.class,() -> registrationService.register(defaultUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerNullUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(EMPTY_USER));
+        User emptyUser = new User();
+        assertThrows(RuntimeException.class, () -> registrationService.register(emptyUser));
     }
 
     @AfterEach
