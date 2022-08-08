@@ -8,7 +8,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) {
+        public User register(User user) {
+        if (user == null) {
+            throw new RuntimeException("No user found to be registered!");
+        }
         if (user.getLogin() == null) {
             throw new RuntimeException("User without LOGIN can not be registered!");
         }
@@ -27,7 +30,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < 6) {
             throw new RuntimeException("User`s password is to be at least 6 characters!");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
