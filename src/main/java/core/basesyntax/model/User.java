@@ -8,12 +8,10 @@ public class User {
     private String password;
     private Integer age;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
     }
 
     public String getLogin() {
@@ -41,14 +39,14 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        User user = (User) o;
+        User user = (User) obj;
         return Objects.equals(login, user.login)
                 && Objects.equals(password, user.password)
                 && Objects.equals(age, user.age);
