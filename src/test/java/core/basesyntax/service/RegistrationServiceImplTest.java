@@ -11,57 +11,56 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static User user2 = new User();
-    private static User user3 = new User();
     private static RegistrationServiceImpl registrationService;
+    private final User secondUser = new User();
+    private final User thirdUser = new User();
     private User defaultUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        String loginBruce = "Bruce";
-        int validUser2Age = 100;
-        String reverseGoodPassword = "654321";
-        user2.setLogin(loginBruce);
-        user2.setAge(validUser2Age);
-        user2.setPassword(reverseGoodPassword);
-        String loginAmy = "Amy";
-        int validEighteenAge = 18;
-        String goodPassword = "parol2";
-        user3.setLogin(loginAmy);
-        user3.setAge(validEighteenAge);
-        user3.setPassword(goodPassword);
     }
 
     @BeforeEach
     void beforeEach() {
-        int validDefaultAge = 18;
         String loginDefault = "Kate";
         defaultUser = new User();
         defaultUser.setLogin(loginDefault);
-        defaultUser.setAge(validDefaultAge);
+        defaultUser.setAge(RegistrationServiceImpl.MIN_AGE_VALUE);
         String goodPassword = "123456";
         defaultUser.setPassword(goodPassword);
+        String loginBruce = "Bruce";
+        int validUser2Age = 100;
+        String reverseGoodPassword = "654321";
+        secondUser.setLogin(loginBruce);
+        secondUser.setAge(validUser2Age);
+        secondUser.setPassword(reverseGoodPassword);
     }
 
     @Test
-    void addUser_SameLogin_NotOk() {
+    void register_sameLogin_notOk() {
         registrationService.register(defaultUser);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void addUser_NullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         defaultUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void addUsers_FewUsers_Ok() {
+    void register_fewUsers_ok() {
+        String loginAmy = "Amy";
+        int validEighteenAge = 18;
+        String anotherGoodPassword = "parol2";
+        thirdUser.setLogin(loginAmy);
+        thirdUser.setAge(validEighteenAge);
+        thirdUser.setPassword(anotherGoodPassword);
         registrationService.register(defaultUser);
-        registrationService.register(user2);
-        registrationService.register(user3);
-        User user2Copy = user2;
+        registrationService.register(secondUser);
+        registrationService.register(thirdUser);
+        User user2Copy = secondUser;
         assertThrows(RuntimeException.class, () -> registrationService.register(user2Copy));
         assertEquals(3, Storage.people.size());
     }
@@ -71,39 +70,38 @@ class RegistrationServiceImplTest {
         int invalidMinusAge = -5;
         defaultUser.setAge(invalidMinusAge);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
-        defaultUser.setLogin(user2.getLogin());
+        defaultUser.setLogin(secondUser.getLogin());
         int invalidZeroAge = 0;
         defaultUser.setAge(invalidZeroAge);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void addUser_NullAge_NotOk() {
+    void register_nullAge_notOk() {
         defaultUser.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void addUser_InvalidPassword_NotOk() {
+    void register_invalidPassword_notOk() {
         String invalidPassword = "H";
         defaultUser.setPassword(invalidPassword);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
-        defaultUser.setLogin(user2.getLogin());
+        defaultUser.setLogin(secondUser.getLogin());
         String emptyPassword = "";
         defaultUser.setPassword(emptyPassword);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void addUser_NullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         defaultUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void registerNullUser_NotOk() {
-        User emptyUser = new User();
-        assertThrows(RuntimeException.class, () -> registrationService.register(emptyUser));
+    void register_emptyUser_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(new User()));
     }
 
     @AfterEach
