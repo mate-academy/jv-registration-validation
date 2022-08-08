@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeLessEighteen_NotOK() {
+    void register_userUnderAllowedAge_NotOK() {
         user.setAge(10);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -82,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void uninstallations() {
+    void afterEach() {
         Storage.people.clear();
     }
 }
