@@ -11,24 +11,27 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getAge() == null && user.getAge() < MIN_AGE) {
-            throw new RuntimeException("User age error. " +
-                                       "User age can't be null or less than \"18\".");
-        } else if (user.getLogin() == null) {
-            throw new RuntimeException("The user login is missing, the login can't null.");
-        }else if (!checkUserPresence(user.getLogin())) {
-            throw new RuntimeException("User with this login is already registered.");
-        } else if (user.getPassword() == null
-                   && user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Attention, password entry error!\n" +
-                    "The password must be longer than 6 characters.");
-        } else {
-            storageDao.add(user);
+        if (user.getAge() == null) {
+            throw new RuntimeException("User age can't be null");
         }
-        return user;
-    }
-
-    private boolean checkUserPresence (String login) {
-        return storageDao.get(login) != null;
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("User age can't be less than " + MIN_AGE);
+        }
+        if (user.getLogin() == null) {
+            throw new RuntimeException("The user login is missing, the login can't null.");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with login \""
+                    + user.getLogin() + "\" already exists.");
+        }
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Attention, password entry error!\n" +
+                                       "The password can't be null");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("Attention, password entry error!\n" +
+                    "The password must be "+ MIN_PASSWORD_LENGTH + " or longer than characters.");
+        }
+        return storageDao.add(user);
     }
 }
