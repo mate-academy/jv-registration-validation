@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     public static final int MINIMUM_ALLOWABLE_AGE = 18;
-    private static final String MINIMUM_ALLOWABLE_QNTY_CHARACTERS_PASSWORD = "qwerty";
+    private static final int MINIMUM_ALLOWABLE_QNTY_CHARACTERS_PASSWORD = 6;
     private RegistrationService registrationService = new RegistrationServiceImpl();
 
     @AfterEach
@@ -94,7 +94,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_validUserSixCharactersPassword_Ok() {
         registrationService.register(new User("Bin", 55,
-                MINIMUM_ALLOWABLE_QNTY_CHARACTERS_PASSWORD));
+                "12345" + MINIMUM_ALLOWABLE_QNTY_CHARACTERS_PASSWORD));
     }
 
     @Test

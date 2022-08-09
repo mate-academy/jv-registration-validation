@@ -10,16 +10,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
         public User register(User user) {
         if (user == null) {
-            throw new RuntimeException("No user found to be registered!");
+            throw new RuntimeException("User could not be null!");
         }
         if (user.getLogin() == null) {
-            throw new RuntimeException("User without LOGIN can not be registered!");
+            throw new RuntimeException("User login could not be null! " + user);
         }
         if (user.getAge() == null) {
-            throw new RuntimeException("User without AGE can not be registered!");
+            throw new RuntimeException("User age could not be null! " + user);
         }
         if (user.getPassword() == null) {
-            throw new RuntimeException("User without PASSWORD can not be registered!");
+            throw new RuntimeException("User password could not be null! " + user);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with such login already exists!");
