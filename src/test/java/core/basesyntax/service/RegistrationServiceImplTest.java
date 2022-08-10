@@ -1,7 +1,8 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.service.RegistrationServiceImpl.getMaxAge;
-import static core.basesyntax.service.RegistrationServiceImpl.getMinAge;
+import static core.basesyntax.service.RegistrationServiceImpl.MAX_AGE;
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_AGE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,7 +30,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         testUser.setLogin("Elvis");
-        testUser.setAge(getMinAge());
+        testUser.setAge(MIN_AGE);
         testUser.setPassword("_elviS");
     }
 
@@ -55,7 +56,7 @@ class RegistrationServiceImplTest {
     void register_alreadyExistsUser_NotOK() {
         storageDao.add(testUser);
         testUser.setLogin("Elvis");
-        testUser.setAge(getMaxAge());
+        testUser.setAge(MAX_AGE);
         testUser.setPassword("123456");
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
@@ -63,55 +64,65 @@ class RegistrationServiceImplTest {
     @Test
     void register_validMaxAgeUser_Ok() {
         testUser.setLogin("ElvisMaxAge");
-        testUser.setAge(getMaxAge());
+        testUser.setAge(MAX_AGE);
         testUser.setPassword("123456");
         registrationService.register(testUser);
-        boolean actual = testUser.getAge() >= getMinAge()
-                && testUser.getAge() <= getMaxAge() && getMaxAge() > getMinAge();
-        assertTrue(actual);
+        assertTrue(MAX_AGE > MIN_AGE);
+        User findUser = storageDao.get(testUser.getLogin());
+        assertEquals(testUser.getLogin(), findUser.getLogin());
+        assertEquals(testUser.getAge(), findUser.getAge());
+        assertEquals(testUser.getPassword(), findUser.getPassword());
     }
 
     @Test
     void register_validMinAgeUser_Ok() {
         testUser.setLogin("ElvisMinAge");
-        testUser.setAge(getMinAge());
+        testUser.setAge(MIN_AGE);
         testUser.setPassword("123456");
         registrationService.register(testUser);
-        boolean actual = testUser.getAge() >= getMinAge()
-                && testUser.getAge() <= getMaxAge() && getMaxAge() > getMinAge();
-        assertTrue(actual);
+        assertTrue(MAX_AGE > MIN_AGE);
+        User findUser = storageDao.get(testUser.getLogin());
+        assertEquals(testUser.getLogin(), findUser.getLogin());
+        assertEquals(testUser.getAge(), findUser.getAge());
+        assertEquals(testUser.getPassword(), findUser.getPassword());
     }
 
     @Test
     void register_ageMoreMin_Ok() {
         testUser.setLogin("Elvis2");
-        testUser.setAge(getMinAge() + 1);
+        testUser.setAge(MIN_AGE + 1);
         testUser.setPassword("123456");
         registrationService.register(testUser);
-        assertTrue(getMaxAge() > getMinAge());
-        assertTrue(Storage.people.contains(testUser));
+        assertTrue(MAX_AGE > MIN_AGE);
+        User findUser = storageDao.get(testUser.getLogin());
+        assertEquals(testUser.getLogin(), findUser.getLogin());
+        assertEquals(testUser.getAge(), findUser.getAge());
+        assertEquals(testUser.getPassword(), findUser.getPassword());
     }
 
     @Test
     void register_ageLessMax_Ok() {
         testUser.setLogin("Elvis3");
-        testUser.setAge(getMaxAge() - 1);
+        testUser.setAge(MAX_AGE - 1);
         registrationService.register(testUser);
-        assertTrue(getMaxAge() > getMinAge());
-        assertTrue(Storage.people.contains(testUser));
+        assertTrue(MAX_AGE > MIN_AGE);
+        User findUser = storageDao.get(testUser.getLogin());
+        assertEquals(testUser.getLogin(), findUser.getLogin());
+        assertEquals(testUser.getAge(), findUser.getAge());
+        assertEquals(testUser.getPassword(), findUser.getPassword());
     }
 
     @Test
     void register_ageLessMin_NotOk() {
         testUser.setLogin("youngElvis");
-        testUser.setAge(getMinAge() - 1);
+        testUser.setAge(MIN_AGE - 1);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_ageMoreMax_NotOk() {
         testUser.setLogin("oldElvis");
-        testUser.setAge(getMaxAge() + 1);
+        testUser.setAge(MAX_AGE + 1);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
@@ -131,7 +142,10 @@ class RegistrationServiceImplTest {
     void register_passwordLenMoreMin_Ok() {
         testUser.setPassword("1234567");
         registrationService.register(testUser);
-        assertTrue(Storage.people.contains(testUser));
+        User findUser = storageDao.get(testUser.getLogin());
+        assertEquals(testUser.getLogin(), findUser.getLogin());
+        assertEquals(testUser.getAge(), findUser.getAge());
+        assertEquals(testUser.getPassword(), findUser.getPassword());
     }
 
     @Test
