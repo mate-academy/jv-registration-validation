@@ -1,8 +1,12 @@
 package core.basesyntax.service;
 
+import static core.basesyntax.service.RegistrationServiceImpl.getMaxAge;
+import static core.basesyntax.service.RegistrationServiceImpl.getMinAge;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -12,84 +16,128 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User initUser;
+    private static StorageDao storageDao;
+    private static User testUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        initUser = new User();
+        storageDao = new StorageDaoImpl();
+        testUser = new User();
     }
 
     @BeforeEach
     void setUp() {
-        initUser.setLogin("Elvis");
-        initUser.setAge(18);
-        initUser.setPassword("_elviS");
+        testUser.setLogin("Elvis");
+        testUser.setAge(getMinAge());
+        testUser.setPassword("_elviS");
     }
 
     @Test
-    void registerLogin_is_null_notOk() {
-        initUser.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(initUser));
+    void register_nullUser_notOk() {
+        User nullUser = null;
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullUser));
     }
 
     @Test
-    void registerLogin_is_empty_notOk() {
-        initUser.setLogin("");
-        assertThrows(NullPointerException.class, () -> registrationService.register(initUser));
+    void register_nullLogin_notOk() {
+        testUser.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_user_already_exists_NotOK() {
-        registrationService.register(initUser);
-        initUser.setLogin("Elvis");
-        assertThrows(RuntimeException.class, () -> registrationService.register(initUser));
+    void register_emptyLogin_notOk() {
+        testUser.setLogin("");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_validUser_Ok() {
-        User userTest1 = registrationService.register(initUser);
-        assertTrue(Storage.people.contains(userTest1));
+    void register_alreadyExistsUser_NotOK() {
+        storageDao.add(testUser);
+        testUser.setLogin("Elvis");
+        testUser.setAge(getMaxAge());
+        testUser.setPassword("123456");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_age_more_max_Ok() {
-        initUser.setLogin("Elvis2");
-        initUser.setAge(19);
-        User userTest2 = registrationService.register(initUser);
-        assertTrue(Storage.people.contains(userTest2));
+    void register_validMaxAgeUser_Ok() {
+        testUser.setLogin("ElvisMaxAge");
+        testUser.setAge(getMaxAge());
+        testUser.setPassword("123456");
+        registrationService.register(testUser);
+        boolean actual = testUser.getAge() >= getMinAge()
+                && testUser.getAge() <= getMaxAge() && getMaxAge() > getMinAge();
+        assertTrue(actual);
     }
 
     @Test
-    void register_age_Less_min_NotOk() {
-        initUser.setLogin("youngElvis");
-        initUser.setAge(17);
-        assertThrows(RuntimeException.class, () -> registrationService.register(initUser));
+    void register_validMinAgeUser_Ok() {
+        testUser.setLogin("ElvisMinAge");
+        testUser.setAge(getMinAge());
+        testUser.setPassword("123456");
+        registrationService.register(testUser);
+        boolean actual = testUser.getAge() >= getMinAge()
+                && testUser.getAge() <= getMaxAge() && getMaxAge() > getMinAge();
+        assertTrue(actual);
     }
 
     @Test
-    void register_age_is_null_notOk() {
-        initUser.setAge(null);;
-        assertThrows(NullPointerException.class, () -> registrationService.register(initUser));
+    void register_ageMoreMin_Ok() {
+        testUser.setLogin("Elvis2");
+        testUser.setAge(getMinAge() + 1);
+        testUser.setPassword("123456");
+        registrationService.register(testUser);
+        assertTrue(getMaxAge() > getMinAge());
+        assertTrue(Storage.people.contains(testUser));
     }
 
     @Test
-    void register_password_less_Min_notOk() {
-        initUser.setPassword("55555");
-        assertThrows(RuntimeException.class, () -> registrationService.register(initUser));
+    void register_ageLessMax_Ok() {
+        testUser.setLogin("Elvis3");
+        testUser.setAge(getMaxAge() - 1);
+        registrationService.register(testUser);
+        assertTrue(getMaxAge() > getMinAge());
+        assertTrue(Storage.people.contains(testUser));
     }
 
     @Test
-    void register_passwordLen_more_max_Ok() {
-        initUser.setPassword("1234567");
-        User userTest3 = registrationService.register(initUser);
-        assertTrue(Storage.people.contains(userTest3));
+    void register_ageLessMin_NotOk() {
+        testUser.setLogin("youngElvis");
+        testUser.setAge(getMinAge() - 1);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_ageMoreMax_NotOk() {
+        testUser.setLogin("oldElvis");
+        testUser.setAge(getMaxAge() + 1);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        testUser.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_passwordLenLessMin_notOk() {
+        testUser.setPassword("55555");
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_passwordLenMoreMin_Ok() {
+        testUser.setPassword("1234567");
+        registrationService.register(testUser);
+        assertTrue(Storage.people.contains(testUser));
     }
 
     @Test
     void register_nullPassword_NotOk() {
-        initUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(initUser));
+        testUser.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
     @AfterEach
