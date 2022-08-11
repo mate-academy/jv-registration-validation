@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-//import static core.basesyntax.service.RegistrationServiceImpl.MAX_AGE;
-//import static core.basesyntax.service.RegistrationServiceImpl.MIN_AGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
