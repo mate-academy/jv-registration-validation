@@ -19,12 +19,14 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static User testUser;
+    private static User actual;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         testUser = new User();
+        actual = new User();
     }
 
     @BeforeEach
@@ -66,12 +68,9 @@ class RegistrationServiceImplTest {
         testUser.setLogin("ElvisMaxAge");
         testUser.setAge(MAX_AGE);
         testUser.setPassword("123456");
-        registrationService.register(testUser);
+        actual = registrationService.register(testUser);
         assertTrue(MAX_AGE > MIN_AGE);
-        User findUser = storageDao.get(testUser.getLogin());
-        assertEquals(testUser.getLogin(), findUser.getLogin());
-        assertEquals(testUser.getAge(), findUser.getAge());
-        assertEquals(testUser.getPassword(), findUser.getPassword());
+        assertEquals(testUser, actual);
     }
 
     @Test
@@ -79,12 +78,9 @@ class RegistrationServiceImplTest {
         testUser.setLogin("ElvisMinAge");
         testUser.setAge(MIN_AGE);
         testUser.setPassword("123456");
-        registrationService.register(testUser);
+        actual = registrationService.register(testUser);
         assertTrue(MAX_AGE > MIN_AGE);
-        User findUser = storageDao.get(testUser.getLogin());
-        assertEquals(testUser.getLogin(), findUser.getLogin());
-        assertEquals(testUser.getAge(), findUser.getAge());
-        assertEquals(testUser.getPassword(), findUser.getPassword());
+        assertEquals(testUser, actual);
     }
 
     @Test
@@ -92,24 +88,18 @@ class RegistrationServiceImplTest {
         testUser.setLogin("Elvis2");
         testUser.setAge(MIN_AGE + 1);
         testUser.setPassword("123456");
-        registrationService.register(testUser);
+        actual = registrationService.register(testUser);
         assertTrue(MAX_AGE > MIN_AGE);
-        User findUser = storageDao.get(testUser.getLogin());
-        assertEquals(testUser.getLogin(), findUser.getLogin());
-        assertEquals(testUser.getAge(), findUser.getAge());
-        assertEquals(testUser.getPassword(), findUser.getPassword());
+        assertEquals(testUser, actual);
     }
 
     @Test
     void register_ageLessMax_Ok() {
         testUser.setLogin("Elvis3");
         testUser.setAge(MAX_AGE - 1);
-        registrationService.register(testUser);
+        actual = registrationService.register(testUser);
         assertTrue(MAX_AGE > MIN_AGE);
-        User findUser = storageDao.get(testUser.getLogin());
-        assertEquals(testUser.getLogin(), findUser.getLogin());
-        assertEquals(testUser.getAge(), findUser.getAge());
-        assertEquals(testUser.getPassword(), findUser.getPassword());
+        assertEquals(testUser, actual);
     }
 
     @Test
@@ -141,11 +131,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordLenMoreMin_Ok() {
         testUser.setPassword("1234567");
-        registrationService.register(testUser);
-        User findUser = storageDao.get(testUser.getLogin());
-        assertEquals(testUser.getLogin(), findUser.getLogin());
-        assertEquals(testUser.getAge(), findUser.getAge());
-        assertEquals(testUser.getPassword(), findUser.getPassword());
+        actual = registrationService.register(testUser);
+        assertTrue(MAX_AGE > MIN_AGE);
+        assertEquals(testUser, actual);
     }
 
     @Test
