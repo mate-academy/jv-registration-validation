@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.service.RegistrationServiceImpl.MAX_AGE;
-import static core.basesyntax.service.RegistrationServiceImpl.MIN_AGE;
+//import static core.basesyntax.service.RegistrationServiceImpl.MAX_AGE;
+//import static core.basesyntax.service.RegistrationServiceImpl.MIN_AGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    public static final int MIN_AGE = 18;
+    public static final int MAX_AGE = 123;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static User testUser;
@@ -56,10 +58,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_alreadyExistsUser_NotOK() {
-        storageDao.add(testUser);
         testUser.setLogin("Elvis");
         testUser.setAge(MAX_AGE);
         testUser.setPassword("123456");
+        storageDao.add(testUser);
         assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
     }
 
