@@ -11,36 +11,34 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new NullPointerException("There is no data of user");
+        if (user == null || user.getLogin() == null || user.getAge() == null
+                || user.getPassword() == null) {
+            throw new NullPointerException("Incorrect data!");
         }
         checkLogin(user.getLogin());
         checkAge(user.getAge());
         checkPassword(user.getPassword());
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkLogin(String login) {
-        if (login == null || login.isEmpty()) {
-            throw new RuntimeException("You should create a login!");
+        if (login.isEmpty()) {
+            throw new RuntimeException("User should enter a login");
         }
-        if (storageDao.get(login) != null && login.equals(storageDao.get(login).getLogin())) {
+        if (storageDao.get(login) != null) {
             throw new RuntimeException("User with this login is already registered");
         }
     }
 
     private void checkAge(Integer age) {
-        if (age == null) {
-            throw new RuntimeException("Your should enter your age!");
-        }
         if (age < MIN_AGE) {
             throw new RuntimeException("User should be over 18!");
         }
     }
 
     private void checkPassword(String password) {
-        if (password == null || password.isEmpty()) {
-            throw new RuntimeException("You should create password!");
+        if (password.isEmpty()) {
+            throw new RuntimeException("User should create a password");
         }
         if (password.length() < MIN_PASSWORD) {
             throw new RuntimeException("Minimum password length should be 6");

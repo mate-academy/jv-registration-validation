@@ -1,26 +1,21 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int MIN_AGE = 18;
-    private static final int MIN_PASSWORD = 6;
-    private static RegistrationService registration;
-    private static StorageDao storageDao;
+    private static RegistrationService registration = new RegistrationServiceImpl();
+    private static StorageDao storageDao = new StorageDaoImpl();
     private User user;
-
-    @BeforeAll
-    static void initial() {
-        registration = new RegistrationServiceImpl();
-    }
 
     @BeforeEach
     void setUp() {
@@ -28,6 +23,7 @@ class RegistrationServiceImplTest {
         user.setLogin("Alice");
         user.setAge(22);
         user.setPassword("1234567");
+        storageDao.add(user);
     }
 
     @Test
@@ -49,50 +45,84 @@ class RegistrationServiceImplTest {
 
     @Test
     void userByLoginIsAlreadyExist_NotOK() {
-        storageDao = new StorageDaoImpl();
-        storageDao.add(user);
+        user = new User();
+        user.setLogin("Alice");
+        user.setAge(22);
+        user.setPassword("1234567");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
     void ageOfUserIsNull_NotOk() {
+        user = new User();
+        user.setLogin("Bob");
         user.setAge(null);
+        user.setPassword("123456");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
     void ageOfUser_NotOk() {
+        user = new User();
+        user.setLogin("Bob");
         user.setAge(12);
+        user.setPassword("123456");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
     void ageOfUser_Ok() {
+        user = new User();
+        user.setLogin("Bob");
         user.setAge(18);
-        assertTrue(user.getAge() >= MIN_AGE);
+        user.setPassword("123456");
+        registration.register(user);
+        assertTrue(Storage.people.contains(user));
+        assertEquals(2, Storage.people.size(), "Test failed! Size of Storage should be " + 2
+                + " but it is " + Storage.people.size());
     }
 
     @Test
     void passwordIsNull_NotOk() {
+        user = new User();
+        user.setLogin("Bob");
+        user.setAge(18);
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
     void passwordIsEmpty_NotOk() {
+        user = new User();
+        user.setLogin("Bob");
+        user.setAge(18);
         user.setPassword("");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
     void sizeOfPassword_NotOk() {
+        user = new User();
+        user.setLogin("Bob");
+        user.setAge(18);
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registration.register(user));
     }
 
     @Test
     void sizeOfPassword_Ok() {
+        user = new User();
+        user.setLogin("Bob");
+        user.setAge(18);
         user.setPassword("123456");
-        assertTrue(user.getPassword().length() >= MIN_PASSWORD);
+        registration.register(user);
+        assertTrue(Storage.people.contains(user));
+        assertEquals(2, Storage.people.size(), "Test failed! Size of Storage should be " + 2
+                + " but it is " + Storage.people.size());
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
