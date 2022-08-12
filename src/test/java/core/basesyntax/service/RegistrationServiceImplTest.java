@@ -50,9 +50,55 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_existedUser_notOk() {
+        user1.setAge(25);
+        user1.setLogin("Bob");
+        user1.setPassword("rocket");
+        registrationService.register(user1);
+        try {
+            registrationService.register(user1);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("RuntimeException should be thrown when User is exist");
+    }
+
+    @Test
     void register_nullAgeUser_notOk() {
         user1.setAge(null);
         user1.setLogin("Bob");
         user1.setPassword("rocket");
+        try {
+            registrationService.register(user1);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("RuntimeException should be thrown when Age is null");
+    }
+
+    @Test
+    void register_lowAgeUser_notOk() {
+        user1.setAge(17);
+        user1.setLogin("Bob");
+        user1.setPassword("rocket");
+        try {
+            registrationService.register(user1);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("RuntimeException should be thrown when age less then 18");
+    }
+
+    @Test
+    void register_shortPasswordUser_notOk() {
+        user1.setAge(35);
+        user1.setLogin("Alice");
+        user1.setPassword("apple");
+        try {
+            registrationService.register(user1);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("RuntimeException should be thrown when password shorte then 6");
     }
 }
