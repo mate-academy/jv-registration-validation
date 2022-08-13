@@ -20,6 +20,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Can't add a user, age of user can not be null");
         }
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Can't add a user, login can't be null");
+        }
         if (user.getAge() < THE_LOWEST_AGE) {
             throw new RuntimeException("Can't add a user, the user is younger then "
                     + THE_LOWEST_AGE);

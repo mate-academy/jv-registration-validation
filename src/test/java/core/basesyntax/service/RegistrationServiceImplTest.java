@@ -5,19 +5,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
-    private User user1;
-    private User user2;
+    private static RegistrationService registrationService;
+    private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        user1 = new User();
-        user2 = new User();
+        user = new User();
     }
 
     @Test
@@ -31,55 +34,33 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_Ok() {
-        user1.setAge(25);
-        user1.setLogin("Bob");
-        user1.setPassword("rocket");
-        user2.setAge(18);
-        user2.setLogin("Elise");
-        user2.setPassword("rocket1981");
-        User actual = registrationService.register(user1);
-        User expected = user1;
+    void register_ageOver18User_Ok() {
+        user.setAge(25);
+        user.setLogin("Bob");
+        user.setPassword("rocket");
+        User actual = registrationService.register(user);
+        User expected = user;
         assertTrue(expected.equals(actual));
-        actual = registrationService.register(user2);
-        expected = user2;
+
+    }
+
+    @Test
+    void register_age18User_Ok() {
+        user.setAge(18);
+        user.setLogin("Elise");
+        user.setPassword("rocket1981");
+        User actual = registrationService.register(user);
+        User expected = user;
         assertTrue(expected.equals(actual));
     }
 
     @Test
-    void register_existedUser_notOk() {
-        user1.setAge(25);
-        user1.setLogin("John");
-        user1.setPassword("rocket");
-        registrationService.register(user1);
+    void register_ageLower18User_notOk() {
+        user.setAge(17);
+        user.setLogin("Melody");
+        user.setPassword("rocket");
         try {
-            registrationService.register(user1);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown when User is exist");
-    }
-
-    @Test
-    void register_nullAgeUser_notOk() {
-        user1.setAge(null);
-        user1.setLogin("Patrick");
-        user1.setPassword("rocket");
-        try {
-            registrationService.register(user1);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown when Age is null");
-    }
-
-    @Test
-    void register_lowAgeUser_notOk() {
-        user1.setAge(17);
-        user1.setLogin("Melody");
-        user1.setPassword("rocket");
-        try {
-            registrationService.register(user1);
+            registrationService.register(user);
         } catch (RuntimeException e) {
             return;
         }
@@ -87,12 +68,72 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_negativeAgeUser_notOk() {
+        user.setAge(-1);
+        user.setLogin("Jane");
+        user.setPassword("rocket");
+        try {
+            registrationService.register(user);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("RuntimeException should be thrown when age is negative");
+    }
+
+    @Test
+    void register_nullAgeUser_notOk() {
+        user.setAge(null);
+        user.setLogin("Patrick");
+        user.setPassword("rocket");
+        try {
+            registrationService.register(user);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("RuntimeException should be thrown when Age is null");
+    }
+
+    @Test
+    void register_existedUser_notOk() {
+        user.setAge(25);
+        user.setLogin("John");
+        user.setPassword("rocket");
+        registrationService.register(user);
+        try {
+            registrationService.register(user);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("RuntimeException should be thrown when User is exist");
+    }
+
+    @Test
     void register_shortPasswordUser_notOk() {
-        user1.setAge(35);
-        user1.setLogin("Sindy");
-        user1.setPassword("apple");
+        user.setAge(35);
+        user.setLogin("Sindy");
+        user.setPassword("apple");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullPasswordUser_notOk() {
+        user.setAge(35);
+        user.setLogin("Kate");
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullLoginUser_notOk() {
+        user.setAge(35);
+        user.setLogin(null);
+        user.setPassword("rocket");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
         });
     }
 }
