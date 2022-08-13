@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
         user.setPassword("rocket");
         User actual = registrationService.register(user);
         User expected = user;
-        assertTrue(expected.equals(actual));
+        assertTrue(expected.equals(actual), "User with age over 18 should be registered");
 
     }
 
@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
         user.setPassword("rocket1981");
         User actual = registrationService.register(user);
         User expected = user;
-        assertTrue(expected.equals(actual));
+        assertTrue(expected.equals(actual), "User with age 18 should be registered");
     }
 
     @Test
@@ -114,7 +114,7 @@ class RegistrationServiceImplTest {
         user.setPassword("apple");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, "RuntimeException should be thrown when password is shorter then 6 symbols");
     }
 
     @Test
@@ -124,7 +124,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, "RuntimeException should be thrown when password is null");
     }
 
     @Test
@@ -134,6 +134,6 @@ class RegistrationServiceImplTest {
         user.setPassword("rocket");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        });
+        }, "RuntimeException should be thrown when login is null");
     }
 }
