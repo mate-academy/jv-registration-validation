@@ -6,6 +6,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +14,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService regServ;
+    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         regServ = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -47,15 +50,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingUser_NotOk() {
-        StorageDao object = new StorageDaoImpl();
-        object.get(user.getLogin());
-        object.add(user);
+        storageDao.get(user.getLogin());
+        storageDao.add(user);
         User user2 = new User();
         user2.setLogin(user.getLogin());
         user2.setPassword("UHBU27h!_");
         user2.setAge(19);
         Assertions.assertThrows(RuntimeException.class, () -> regServ.register(user2));
-        Storage.people.clear();
     }
 
     @Test
@@ -80,7 +81,6 @@ class RegistrationServiceImplTest {
     void register_AgeInAcceptableRange_Ok() {
         user.setAge(18);
         assertEquals(user, regServ.register(user));
-        Storage.people.clear();
     }
 
     @Test
@@ -98,5 +98,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_validUser_Ok() {
         assertEquals(user, regServ.register(user));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
