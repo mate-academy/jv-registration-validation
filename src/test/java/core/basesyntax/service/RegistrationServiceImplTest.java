@@ -1,26 +1,23 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    private static User user1;
-    private static User user2;
-    private RegistrationServiceImpl registrationService;
-
-    @BeforeAll
-    static void beforeAll() {
-        user1 = new User();
-        user2 = new User();
-    }
+    private RegistrationService registrationService;
+    private User user1;
+    private User user2;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
+        user1 = new User();
+        user2 = new User();
     }
 
     @Test
@@ -52,7 +49,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_existedUser_notOk() {
         user1.setAge(25);
-        user1.setLogin("Bob");
+        user1.setLogin("John");
         user1.setPassword("rocket");
         registrationService.register(user1);
         try {
@@ -66,7 +63,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAgeUser_notOk() {
         user1.setAge(null);
-        user1.setLogin("Bob");
+        user1.setLogin("Patrick");
         user1.setPassword("rocket");
         try {
             registrationService.register(user1);
@@ -79,7 +76,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_lowAgeUser_notOk() {
         user1.setAge(17);
-        user1.setLogin("Bob");
+        user1.setLogin("Melody");
         user1.setPassword("rocket");
         try {
             registrationService.register(user1);
@@ -92,13 +89,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_shortPasswordUser_notOk() {
         user1.setAge(35);
-        user1.setLogin("Alice");
+        user1.setLogin("Sindy");
         user1.setPassword("apple");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user1);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown when password shorte then 6");
+        });
     }
 }
