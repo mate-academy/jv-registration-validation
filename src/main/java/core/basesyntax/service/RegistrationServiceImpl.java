@@ -12,9 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RuntimeException("User doesn't have any initialized fields");
+            throw new RuntimeException("User can not be null");
         }
-        if (user.getLogin() == null || user.getLogin().length() == 0) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new RuntimeException("The login field can't be empty");
         }
         if (storageDao.get(user.getLogin()) != null) {
