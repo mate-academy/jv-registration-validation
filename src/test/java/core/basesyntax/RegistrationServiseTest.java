@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiseTest {
     private static StorageDao dao;
     private static RegistrationService registrationService;
-    private User firstUser;
+    private User user;
 
     @BeforeAll
     public static void getStorage() {
@@ -25,25 +25,56 @@ public class RegistrationServiseTest {
     }
 
     @BeforeEach
-    public void createUser() {
-        firstUser = new User();
-        firstUser.setLogin("FirstLogin");
-        firstUser.setPassword("password");
-        firstUser.setAge(20);
+    public void createUsers() {
+        user = new User();
+        user.setLogin("FirstLogin");
+        user.setPassword("password");
+        user.setAge(20);
+    }
 
+    @Test
+    public void register_newUser_Ok() {
+        registrationService.register(user);
+        User actualUser = dao.get(user.getLogin());
+        assertEquals(actualUser.getAge(), user.getAge(),
+                "the expacted age value is " + user.getAge()
+                        + ", but the age is " + actualUser.getAge());
+        assertEquals(actualUser.getPassword(), user.getPassword(),
+                "the expected password is " + user.getPassword()
+                        + ", but the password is " + actualUser.getPassword());
     }
 
     @Test
     public void register_NullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null),
-                "In case of null-User should throw RuntimeException."
-        );
+                "In case of null-User should throw RuntimeException.");
+    }
+
+    @Test
+    void register_NullLogin_NotOk() {
+        user.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "In case of null-name of User should throw RuntimeException.");
+    }
+
+    @Test
+    void register_NullPassword_NotOk() {
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "In case of null_password should throw RuntimeException.");
+    }
+
+    @Test
+    void register_NullAge_NotOk() {
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "In case of null_age should throw RuntimeException.");
     }
 
     @Test
     public void register_ExistingUser_NotOk() {
         try {
-            User sameUser = registrationService.register(firstUser);
+            User sameUser = registrationService.register(user);
             registrationService.register(sameUser);
         } catch (RuntimeException e) {
             return;
@@ -53,32 +84,42 @@ public class RegistrationServiseTest {
 
     @Test
     public void register_TooYoungUser_NotOk() {
-        firstUser.setAge(11);
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser),
-                "In case of the User\'s age smaller 18 should throw RuntimeException."
-        );
+        user.setAge(11);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "In case of the User\'s age smaller 18 should throw RuntimeException.");
+    }
+
+    @Test
+    void register_NegativeAge_NotOk() {
+        user.setAge(-1);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "In case of negative age should throw RuntimeException.");
+    }
+
+    @Test
+    void register_18AgeUser_Ok() {
+        user.setAge(18);
+        user.setLogin("18age");
+        registrationService.register(user);
+        User actualUser = dao.get(user.getLogin());
+        assertEquals(actualUser.getAge(), 18,
+                "Expected age is 18, but was " + actualUser.getAge());
     }
 
     @Test
     public void register_ShortPassword_NotOk() {
-        firstUser.setPassword("12345");
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser),
-                "In case of too short password should throw RuntimeException."
-        );
+        user.setPassword("12345");
+        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+                "In case of too short password should throw RuntimeException.");
     }
 
     @Test
-    public void register_newUser_Ok() {
-        registrationService.register(firstUser);
-        User actualUser = dao.get(firstUser.getLogin());
-        assertEquals(actualUser.getAge(), firstUser.getAge(),
-                "the actual age value is " + firstUser.getAge()
-                        + ", but the age is " + actualUser.getAge()
-        );
-        assertEquals(actualUser.getPassword(), firstUser.getPassword(),
-                "the actual password is " + firstUser.getPassword()
-                        + ", but the password is " + actualUser.getPassword()
-        );
+    public void register_6SymbolsOfPassword_Ok() {
+        user.setPassword("123456");
+        user.setLogin("6lettersPassword");
+        registrationService.register(user);
+        User actualUser = dao.get(user.getLogin());
+        assertEquals(actualUser.getPassword(), user.getPassword(),
+                "Expected password is 123456, but was " + actualUser.getPassword());
     }
-
 }
