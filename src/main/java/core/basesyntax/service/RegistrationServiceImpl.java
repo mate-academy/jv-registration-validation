@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -10,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || isContainsLogin(user)) {
+        if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("Error! Checked your login, actual: "
                     + (user.getLogin() == null
                     ? "login is null"
@@ -28,14 +27,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         storageDao.add(user);
         return user;
-    }
-
-    private boolean isContainsLogin(User user) {
-        for (User person : Storage.people) {
-            if (person.getLogin().equals(user.getLogin())) {
-                return true;
-            }
-        }
-        return false;
     }
 }
