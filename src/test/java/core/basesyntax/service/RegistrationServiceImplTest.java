@@ -59,12 +59,9 @@ class RegistrationServiceImplTest {
         user.setAge(17);
         user.setLogin("Melody");
         user.setPassword("rocket");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown when age less then 18");
+        }, "RuntimeException should be thrown when age less then 18");
     }
 
     @Test
@@ -72,12 +69,9 @@ class RegistrationServiceImplTest {
         user.setAge(-1);
         user.setLogin("Jane");
         user.setPassword("rocket");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown when age is negative");
+        }, "RuntimeException should be thrown when age is negative");
     }
 
     @Test
@@ -85,12 +79,9 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         user.setLogin("Patrick");
         user.setPassword("rocket");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown when Age is null");
+        }, "RuntimeException should be thrown when Age is null");
     }
 
     @Test
@@ -99,12 +90,9 @@ class RegistrationServiceImplTest {
         user.setLogin("John");
         user.setPassword("rocket");
         registrationService.register(user);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown when User is exist");
+        }, "RuntimeException should be thrown when User exists");
     }
 
     @Test
