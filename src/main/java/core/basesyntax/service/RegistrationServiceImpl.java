@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.UserAlreadyExistException;
 import core.basesyntax.exceptions.UsersAgeNotValidException;
 import core.basesyntax.exceptions.UsersPasswordNotValidException;
@@ -14,12 +13,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null
-            || user.getPassword() == null
-            || user.getAge() == null) {
+                || user.getPassword() == null
+                || user.getAge() == null) {
             throw new NullPointerException("You must fill all the fields!");
         }
         if (storageDao.get(user.getLogin()) == null) {
-            if (user.getAge() >= 18 ) {
+            if (user.getAge() >= 18) {
                 if (user.getPassword().length() >= 6) {
                     storageDao.add(user);
                     return user;
