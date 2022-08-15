@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -29,6 +30,7 @@ public class RegistrationServiseTest {
         firstUser.setLogin("FirstLogin");
         firstUser.setPassword("password");
         firstUser.setAge(20);
+
     }
 
     @Test
@@ -40,11 +42,13 @@ public class RegistrationServiseTest {
 
     @Test
     public void register_ExistingUser_NotOk() {
-        User sameUser = registrationService.register(firstUser);
-        assertThrows(RuntimeException.class, () -> registrationService.register(sameUser)
-                , "In case of the same User should throw RuntimeException."
-
-        );
+        try {
+            User sameUser = registrationService.register(firstUser);
+            registrationService.register(sameUser);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("In case of the same User should throw RuntimeException.");
     }
 
     @Test
