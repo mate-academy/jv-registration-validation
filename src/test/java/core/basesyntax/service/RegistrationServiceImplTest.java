@@ -11,10 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static RegistrationService registrationService;
-    private static User user1 = new User();
-    private static User user2 = new User();
+    private static User alice = new User();
+    private static User bob = new User();
 
     @BeforeAll
     static void beforeAll() {
@@ -23,56 +22,56 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user1.setLogin("U123");
-        user1.setPassword("123456");
-        user1.setAge(18);
-        user2.setLogin("U456");
-        user2.setPassword("123456");
-        user2.setAge(46);
+        alice.setLogin("Alice");
+        alice.setPassword("123456");
+        alice.setAge(18);
+        bob.setLogin("Bob");
+        bob.setPassword("123456");
+        bob.setAge(46);
     }
 
     @Test
     void register_invalidAge_NotOk() {
-        user1.setAge(17);
+        alice.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(alice);
         });
-        user2.setAge(-19);
+        bob.setAge(-19);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(bob);
         });
     }
 
     @Test
     void register_invalidPassword_notOk() {
-        user1.setPassword("12345");
+        alice.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(alice);
         });
     }
 
     @Test
     void register_theSameUserLogin_notOk() {
-        registrationService.register(user2);
-        user1.setLogin("U456");
+        registrationService.register(bob);
+        alice.setLogin("Bob");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(alice);
         }, "Should throw an Exception");
     }
 
     @Test
     void register_nullAge_NotOk() {
-        user1.setAge(null);
+        alice.setAge(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(alice);
         });
     }
 
     @Test
     void register_validUser_Ok() {
-        User actual1 = registrationService.register(user1);
+        User actual1 = registrationService.register(alice);
         assertTrue(Storage.people.contains(actual1));
-        User actual2 = registrationService.register(user2);
+        User actual2 = registrationService.register(bob);
         assertTrue(Storage.people.contains(actual2));
     }
 
