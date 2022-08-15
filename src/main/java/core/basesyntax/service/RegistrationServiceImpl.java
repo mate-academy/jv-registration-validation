@@ -11,12 +11,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null || isContainsLogin(user)) {
-            throw new RuntimeException("Error! Checked your login, actual: " + user.getLogin());
+            throw new RuntimeException("Error! Checked your login, actual: "
+                    + (user.getLogin() == null
+                    ? "login is null"
+                    : user.getLogin()));
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RuntimeException("Error! Your password too small, actual: "
                     + (user.getPassword() == null
-                    ? "password = null"
+                    ? "password is null"
                     : user.getPassword().length()));
         }
         if (user.getAge() < 18 || user.getAge() > 150) {

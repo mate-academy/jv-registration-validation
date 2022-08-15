@@ -17,9 +17,9 @@ class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
+        service = new RegistrationServiceImpl();
         DEFAULT_USER = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         Storage.people.clear();
-        service = new RegistrationServiceImpl();
     }
 
     @Test
@@ -29,6 +29,7 @@ class RegistrationServiceTest {
             service.register(DEFAULT_USER);
         });
     }
+
     @Test
     void loginNull_notOk() {
         DEFAULT_USER.setLogin(null);
@@ -60,7 +61,6 @@ class RegistrationServiceTest {
         DEFAULT_USER.setAge(5000);
         assertThrows(RuntimeException.class, () -> {
             service.register(DEFAULT_USER);
-            System.out.println(Storage.people.size());
         });
     }
 
