@@ -1,11 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 
 @SuppressWarnings("InstantiationOfUtilityClass")
 class RegistrationServiceTest {
@@ -13,23 +14,23 @@ class RegistrationServiceTest {
     private static final String DEFAULT_PASSWORD = "password";
     private static final Integer DEFAULT_AGE = 20;
     private static User DEFAULT_USER;
-    RegistrationService service;
+    private RegistrationService service;
 
     @BeforeEach
     void setUp() {
-        DEFAULT_USER = new User( DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        DEFAULT_USER = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         Storage.people.clear();
         service = new RegistrationServiceImpl();
     }
 
     @Test
-    void CheckedRegister_Ok() {
+    void checkedRegister_ok() {
         User actual = service.register(DEFAULT_USER);
         assertEquals(DEFAULT_USER, actual);
     }
 
     @Test
-    void CheckedAge_NotOk() {
+    void checkedAge_notOk() {
         DEFAULT_USER.setAge(15);
         assertThrows(RuntimeException.class, () -> {
             service.register(DEFAULT_USER);
@@ -50,7 +51,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void CheckedUserIsExist_NotOk() {
+    void checkedUserIsExist_notOk() {
         service.register(DEFAULT_USER);
         assertThrows(RuntimeException.class, () -> {
             service.register(DEFAULT_USER);
@@ -58,15 +59,15 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void PasswordValid_NotOk() {
+    void passwordValid_NotOk() {
         DEFAULT_USER.setPassword("4aaaa");
         assertThrows(RuntimeException.class, () -> {
-           service.register(DEFAULT_USER);
+            service.register(DEFAULT_USER);
         });
     }
 
     @Test
-    void Register_1000_Users_Ok() {
+    void register1000Users_Ok() {
         for (int i = 1; i <= 1000; i++) {
             User user = new User(DEFAULT_LOGIN + i, DEFAULT_PASSWORD, DEFAULT_AGE);
             service.register(user);

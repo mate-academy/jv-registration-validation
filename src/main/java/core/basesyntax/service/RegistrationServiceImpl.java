@@ -14,10 +14,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Error! Checked your login, actual: " + user.getLogin());
         }
         if (user.getPassword().length() < 6) {
-            throw new RuntimeException("Error! Your password too small, actual: " + user.getPassword().length());
+            throw new RuntimeException("Error! Your password too small, actual: "
+                    + user.getPassword().length());
         }
         if (user.getAge() < 18 || user.getAge() > 150) {
-            throw new RuntimeException("Error! Age must be better then 18, actual: " + user.getAge());
+            throw new RuntimeException("Error! Age must be better then 18, actual: "
+                    + user.getAge());
         }
         storageDao.add(user);
         return user;
