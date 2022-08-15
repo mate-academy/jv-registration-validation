@@ -35,8 +35,8 @@ public class RegistrationServiseTest {
 
     @Test
     public void register_NullUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null)
-                , "In case of null-User should throw RuntimeException."
+        assertThrows(RuntimeException.class, () -> registrationService.register(null),
+                "In case of null-User should throw RuntimeException."
         );
     }
 
@@ -54,16 +54,16 @@ public class RegistrationServiseTest {
     @Test
     public void register_TooYoungUser_NotOk() {
         firstUser.setAge(11);
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser)
-                , "In case of the User\'s age smaller 18 should throw RuntimeException."
+        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser),
+                "In case of the User\'s age smaller 18 should throw RuntimeException."
         );
     }
 
     @Test
     public void register_ShortPassword_NotOk() {
         firstUser.setPassword("12345");
-        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser)
-                , "In case of too short password should throw RuntimeException."
+        assertThrows(RuntimeException.class, () -> registrationService.register(firstUser),
+                "In case of too short password should throw RuntimeException."
         );
     }
 
@@ -71,12 +71,12 @@ public class RegistrationServiseTest {
     public void register_newUser_Ok() {
         registrationService.register(firstUser);
         User actualUser = dao.get(firstUser.getLogin());
-        assertEquals(actualUser.getAge(), firstUser.getAge()
-                , "the actual age value is " + firstUser.getAge()
+        assertEquals(actualUser.getAge(), firstUser.getAge(),
+                "the actual age value is " + firstUser.getAge()
                         + ", but the age is " + actualUser.getAge()
         );
-        assertEquals(actualUser.getPassword(), firstUser.getPassword()
-                , "the actual password is " + firstUser.getPassword()
+        assertEquals(actualUser.getPassword(), firstUser.getPassword(),
+                "the actual password is " + firstUser.getPassword()
                         + ", but the password is " + actualUser.getPassword()
         );
     }
