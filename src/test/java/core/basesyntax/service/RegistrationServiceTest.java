@@ -8,7 +8,6 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("InstantiationOfUtilityClass")
 class RegistrationServiceTest {
     private static final String DEFAULT_LOGIN = "login";
     private static final String DEFAULT_PASSWORD = "password";
@@ -21,6 +20,21 @@ class RegistrationServiceTest {
         DEFAULT_USER = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         Storage.people.clear();
         service = new RegistrationServiceImpl();
+    }
+
+    @Test
+    void passwordNull_notOk() {
+        DEFAULT_USER.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            service.register(DEFAULT_USER);
+        });
+    }
+    @Test
+    void loginNull_notOk() {
+        DEFAULT_USER.setLogin(null);
+        assertThrows(RuntimeException.class, () -> {
+            service.register(DEFAULT_USER);
+        });
     }
 
     @Test
