@@ -1,5 +1,8 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -8,9 +11,6 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RegistrationServiseTest {
     private static StorageDao dao;
@@ -57,7 +57,7 @@ public class RegistrationServiseTest {
 
     @Test
     public void register_ShortPassword_NotOk() {
-        firstUser.setPassword("1234567");
+        firstUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> registrationService.register(firstUser)
                 , "In case of too short password should throw RuntimeException."
         );
