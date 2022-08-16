@@ -8,6 +8,8 @@ import core.basesyntax.exceptions.UsersPasswordNotValidException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_ACCEPT_AGE = 18;
+    private static final int MIN_ACCEPT_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -18,8 +20,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("You must fill all the fields!");
         }
         if (storageDao.get(user.getLogin()) == null) {
-            if (user.getAge() >= 18) {
-                if (user.getPassword().length() >= 6) {
+            if (user.getAge() >= MIN_ACCEPT_AGE) {
+                if (user.getPassword().length() >= MIN_ACCEPT_PASSWORD_LENGTH) {
                     storageDao.add(user);
                     return user;
                 } else {

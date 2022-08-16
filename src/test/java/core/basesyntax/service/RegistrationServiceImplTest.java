@@ -51,78 +51,49 @@ class RegistrationServiceImplTest {
 
     @Test
     void equalsLoginTrue_NotOk() {
-        users.add(new User("marko", "34432fk", 18));
+        User newUser = new User("marko", "34432fk", 18);
         List<User> actual = new ArrayList<>();
-        assertThrows(UserAlreadyExistException.class, () -> {
-            for (User user : users) {
-                User current = registrationService.register(user);
-                actual.add(current);
-            }
-        });
+        assertThrows(UserAlreadyExistException.class, () ->
+                actual.add(registrationService.register(newUser)));
     }
 
     @Test
     void passwordValidation_NotOk() {
-        List<User> users = new ArrayList<>();
-        users.add(new User("alice", "0g4", 18));
+        User newUser = new User("alice", "0g4", 18);
         List<User> actual = new ArrayList<>();
-        assertThrows(UsersPasswordNotValidException.class, () -> {
-            for (User user : users) {
-                User current = registrationService.register(user);
-                actual.add(current);
-            }
-        });
+        assertThrows(UsersPasswordNotValidException.class, () ->
+                actual.add(registrationService.register(newUser)));
     }
 
     @Test
     void ageValidation_NotOk() {
-        List<User> users = new ArrayList<>();
-        users.add(new User("jacob", "34432fk", 10));
+        User newUser = new User("jacob", "34432fk", 10);
         List<User> actual = new ArrayList<>();
-        assertThrows(UsersAgeNotValidException.class, () -> {
-            for (User user : users) {
-                User current = registrationService.register(user);
-                actual.add(current);
-            }
-        });
+        assertThrows(UsersAgeNotValidException.class, () ->
+                actual.add(registrationService.register(newUser)));
     }
 
     @Test
     void register_nullLogin_NotOk() {
-        List<User> users = new ArrayList<>();
-        users.add(new User(null, "34432fk", 18));
+        User newUser = new User(null, "34432fk", 18);
         List<User> actual = new ArrayList<>();
-        assertThrows(NullPointerException.class, () -> {
-            for (User user : users) {
-                User current = registrationService.register(user);
-                actual.add(current);
-            }
-        });
+        assertThrows(NullPointerException.class, () ->
+                actual.add(registrationService.register(newUser)));
     }
 
     @Test
     void register_nullPassword_NotOk() {
-        List<User> users = new ArrayList<>();
-        users.add(new User("philip", null, 18));
+        User newUser = new User("philip", null, 18);
         List<User> actual = new ArrayList<>();
-        assertThrows(NullPointerException.class, () -> {
-            for (User user : users) {
-                User current = registrationService.register(user);
-                actual.add(current);
-            }
-        });
+        assertThrows(NullPointerException.class, () ->
+                actual.add(registrationService.register(newUser)));
     }
 
     @Test
     void register_nullAge_NotOk() {
-        List<User> users = new ArrayList<>();
-        users.add(new User("brandon", "34432fk", null));
+        User newUser = new User("brandon", "34432fk", null);
         List<User> actual = new ArrayList<>();
-        assertThrows(NullPointerException.class, () -> {
-            for (User user : users) {
-                User current = registrationService.register(user);
-                actual.add(current);
-            }
-        });
+        assertThrows(NullPointerException.class, () ->
+                actual.add(registrationService.register(newUser)));
     }
 }
