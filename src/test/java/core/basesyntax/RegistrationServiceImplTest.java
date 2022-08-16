@@ -22,17 +22,13 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_NullUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(null);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_NullLogin_NotOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -42,40 +38,30 @@ public class RegistrationServiceImplTest {
         userToCheckLogin.setPassword("password");
         userToCheckLogin.setAge(18);
         registrationService.register(userToCheckLogin);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_NullPassword_NotOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_PasswordLessThanSixCharacters_NotOk() {
         user.setPassword("pass");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_NullAge_NotOk() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_AgeLessThan18_NotOk() {
         user.setAge(17);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
