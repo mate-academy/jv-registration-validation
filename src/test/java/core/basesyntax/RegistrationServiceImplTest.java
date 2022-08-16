@@ -1,7 +1,10 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -11,6 +14,9 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
+
+    public RegistrationServiceImplTest() {
+    }
 
     @BeforeEach
     void setUp() {
@@ -34,11 +40,11 @@ public class RegistrationServiceImplTest {
     @Test
     void register_LoginAlreadyExist_NotOk() {
         User userToCheckLogin = new User();
-        userToCheckLogin.setLogin("login");
+        userToCheckLogin.setLogin("loginForCheck");
         userToCheckLogin.setPassword("password");
         userToCheckLogin.setAge(18);
         registrationService.register(userToCheckLogin);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userToCheckLogin));
     }
 
     @Test
@@ -49,7 +55,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordLessThanSixCharacters_NotOk() {
-        user.setPassword("pass");
+        user.setPassword("pass1");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -63,5 +69,12 @@ public class RegistrationServiceImplTest {
     void register_AgeLessThan18_NotOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userRegistered_Ok() {
+        StorageDao storageDao = new StorageDaoImpl();
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 }
