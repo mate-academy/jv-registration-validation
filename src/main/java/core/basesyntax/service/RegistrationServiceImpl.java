@@ -10,7 +10,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int ALLOWED_AGE = 18;
-    private static final int MIN_PASSWORD_LENGTH = 7;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new PassworsIsIncorrectException("Password should be filled "
-                    + "and contain at least 7 characters");
+                    + "and contain at least 6 characters");
         }
         storageDao.add(user);
         return user;
