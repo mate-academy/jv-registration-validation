@@ -36,6 +36,18 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_LoginAlreadyExist_NotOk() {
+        User userToCheckLogin = new User();
+        userToCheckLogin.setLogin("login");
+        userToCheckLogin.setPassword("password");
+        userToCheckLogin.setAge(18);
+        registrationService.register(userToCheckLogin);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_NullPassword_NotOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
@@ -44,8 +56,24 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_PasswordLessThanSixCharacters_NotOk() {
+        user.setPassword("pass");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_NullAge_NotOk() {
         user.setAge(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_AgeLessThan18_NotOk() {
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
