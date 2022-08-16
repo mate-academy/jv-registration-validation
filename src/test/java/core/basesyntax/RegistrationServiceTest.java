@@ -22,7 +22,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void registerUserUnderagedUNotOkey() {
+    public void register_userUnderaged_notOkey() {
         user1.setAge(16);
         user1.setLogin("Bob");
         user1.setPassword("123456");
@@ -34,7 +34,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void registerUserPasswordNotOkey() {
+    public void register_userPassword_notOkey() {
         user1.setAge(26);
         user1.setLogin("Tom");
         user1.setPassword("1236");
@@ -47,7 +47,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void registerUserSameLoginNotOkey() {
+    public void register_userSameLogin_notOkey() {
         user1.setAge(26);
         user1.setLogin("Bob");
         user1.setPassword("123456");
@@ -63,7 +63,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void registerdUserAge18Okey() {
+    public void registerd_userAge18_okey() {
         user1.setAge(18);
         user1.setLogin("Jill");
         user1.setPassword("1234567");
@@ -71,7 +71,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void registerdUserAgeOver18Okey() {
+    public void registerd_userAgeOver18_okey() {
         user1.setAge(25);
         user1.setLogin("Jack");
         user1.setPassword("1234567");
