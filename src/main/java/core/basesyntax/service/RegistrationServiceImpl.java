@@ -11,10 +11,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("The user with such login already exists. "
-                    + "Please, enter another login.");
-        }
         if (user.getAge() < MINIMAL_AGE) {
             throw new RuntimeException("The user should be at least "
                     + MINIMAL_AGE + " years old.");
@@ -25,6 +21,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be empty!");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("The user with such login already exists. "
+                    + "Please, enter another login.");
         }
         return storageDao.add(user);
     }

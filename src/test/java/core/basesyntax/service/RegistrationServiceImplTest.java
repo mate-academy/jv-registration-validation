@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User alice = new User();
-    private static User bob = new User();
+    private User alice = new User();
+    private User bob = new User();
 
     @BeforeAll
     static void beforeAll() {
