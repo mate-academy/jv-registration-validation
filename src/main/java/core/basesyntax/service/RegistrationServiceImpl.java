@@ -19,8 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User with Login" + user.getLogin() + "already exists");
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new RuntimeException("Password cannot be null and " +
-                    "must contain 6 or more characters");
+            throw new RuntimeException("Password cannot be null and "
+                    + "must contain 6 or more characters");
         }
         if (user.getAge() == null || user.getAge() < 18) {
             throw new RuntimeException("Age cannot be null and must be over 18 year");
