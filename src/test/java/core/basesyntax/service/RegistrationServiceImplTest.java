@@ -39,7 +39,7 @@ class RegistrationServiceImplTest {
         storageDao.add(john);
         User slava = new User("slava", "qwtrggggg", 23);
         User newUser = registrationService.register(slava);
-        assertEquals(new User("slava", "qwtrggggg", 23, 4L), newUser);
+        assertEquals(new User("slava", "qwtrggggg", 23), newUser);
     }
 
     @Test
