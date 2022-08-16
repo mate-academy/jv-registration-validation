@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Login cannot be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with Login" + user.getLogin() + "already exists");
+            throw new RuntimeException("User with Login " + user.getLogin() + " already exists");
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RuntimeException("Password cannot be null and "
