@@ -33,9 +33,9 @@ class RegistrationServiceImplTest {
         assertEquals(2, user2.getId());
         assertEquals(3,user3.getId());
         assertEquals(3, Storage.people.size());
-        assertTrue(Storage.people.contains(new User("marko", "gjtor3r", 20)));
-        assertTrue(Storage.people.contains(new User("franklin", "34432fk", 18)));
-        assertTrue(Storage.people.contains(new User("Brad","007009", 19)));
+        assertTrue(Storage.people.contains(user1));
+        assertTrue(Storage.people.contains(user2));
+        assertTrue(Storage.people.contains(user3));
     }
 
     @Test
