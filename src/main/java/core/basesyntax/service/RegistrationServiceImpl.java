@@ -11,16 +11,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("This login is already taken");
-        }
+        checkIsNull(user);
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Sorry! You are younger than " + MIN_AGE);
         }
         if (user.getPassword().length() < MIN_LENGTH_OF_PASSWORD) {
             throw new RuntimeException("Password contains less than " + MIN_LENGTH_OF_PASSWORD);
         }
-        checkIsNull(user);
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("This login is already taken");
+        }
         return storageDao.add(user);
     }
 
