@@ -16,7 +16,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void correctDateUser_Ok() {
+    void register_validUser_Ok() {
         User alice = new User();
         alice.setPassword("qwerty");
         alice.setAge(25);
@@ -32,14 +32,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullUser_NotOk() {
-        User nullUser = null;
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, ()
-                -> registrationService.register(nullUser));
+                -> registrationService.register(null));
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         User nullLoginUser = new User();
         nullLoginUser.setPassword("123456");
         nullLoginUser.setAge(18);
@@ -49,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullAge_NotOk() {
+    void register_nullAge_notOk() {
         User nullAgeUser = new User();
         nullAgeUser.setPassword("123456");
         nullAgeUser.setAge(null);
@@ -59,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         User nullPasswordUser = new User();
         nullPasswordUser.setPassword(null);
         nullPasswordUser.setAge(18);
@@ -69,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void lengthPasswordLess_NotOk() {
+    void register_shortPassword_notOk() {
         User lengthPasswordLess = new User();
         lengthPasswordLess.setPassword("12345");
         lengthPasswordLess.setAge(18);
@@ -79,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void valueAgeLess_NotOk() {
+    void register_lessAge_notOk() {
         User youngUser = new User();
         youngUser.setPassword("123456");
         youngUser.setAge(12);
@@ -89,7 +88,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginAlreadyExists_NotOk() {
+    void register_existsLogin_notOk() {
         User aliceUser = new User();
         aliceUser.setPassword("qwerty");
         aliceUser.setAge(25);
@@ -101,15 +100,5 @@ class RegistrationServiceImplTest {
         registrationService.register(aliceUser);
         assertThrows(RuntimeException.class, ()
                 -> registrationService.register(bobUser));
-    }
-
-    @Test
-    void emptyPassword() {
-        User emptyPassword = new User();
-        emptyPassword.setPassword("");
-        emptyPassword.setAge(18);
-        emptyPassword.setLogin("emtyPass21");
-        assertThrows(RuntimeException.class, ()
-                -> registrationService.register(emptyPassword));
     }
 }
