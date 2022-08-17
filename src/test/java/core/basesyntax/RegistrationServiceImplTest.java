@@ -49,7 +49,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordLessThanSixCharacters_NotOk() {
+    void register_ShortPassword_NotOk() {
         user.setPassword("pass1");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -61,7 +61,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeLessThan18_NotOk() {
+    void register_NotEnoughYears_NotOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
