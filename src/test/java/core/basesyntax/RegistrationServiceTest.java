@@ -7,11 +7,17 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
+    private static final String OK_PASSWORD = "123456";
+    private static final String LOGIN = "Dick";
+    private static final int AGE_OK = 25;
+    private static final int MINOR_NOT_OK = 16;
+    private static final String SHORT_PASSWORD_NOT_OK = "1234";
+    private static final int NEGATIVE = -100;
+    private static final int ADULT_AGE_MIN_OK = 18;
     private User user1;
     private User user2;
     private RegistrationService service;
@@ -21,15 +27,15 @@ public class RegistrationServiceTest {
         Storage.people.clear();
         service = new RegistrationServiceImpl();
         user1 = new User();
-        user1.setPassword("123456");
-        user1.setAge(25);
-        user1.setLogin("Dick");
+        user1.setPassword(OK_PASSWORD);
+        user1.setAge(AGE_OK);
+        user1.setLogin(LOGIN);
         user2 = new User();
     }
 
     @Test
     public void register_negativeAge_notOkey() {
-        user1.setAge(-100);
+        user1.setAge(NEGATIVE);
         RuntimeException exception =
                 assertThrows(RuntimeException.class,() -> {
                     service.register(user1);
@@ -40,7 +46,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_userUnderaged_notOkey() {
-        user1.setAge(16);
+        user1.setAge(MINOR_NOT_OK);
         RuntimeException exception =
                 assertThrows(RuntimeException.class,() -> {
                     service.register(user1);
@@ -83,7 +89,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_userPassword_notOkey() {
-        user1.setPassword("1236");
+        user1.setPassword(SHORT_PASSWORD_NOT_OK);
         RuntimeException exception =
                 assertThrows(RuntimeException.class,() -> {
                     service.register(user1);
@@ -105,7 +111,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void registerd_userAge18_okey() {
-        user1.setAge(18);
+        user1.setAge(ADULT_AGE_MIN_OK);
         assertEquals(user1, service.register(user1));
     }
 
