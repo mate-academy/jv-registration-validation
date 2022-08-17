@@ -106,7 +106,7 @@ class RegistrationServiceImplTest {
         User bob = new User();
         bob.setPassword("123456");
         bob.setAge(18);
-        bob.setLogin(bob.getLogin());
+        bob.setLogin(alice.getLogin());
         assertThrows(RuntimeException.class, ()
                 -> registrationService.register(bob));
     }
