@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,126 +7,161 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final RegistrationService REGISTRATION = new RegistrationServiceImpl();
-    private static final String EMPTY = "";
-    private static final int CORRECT_AGE = 18;
-    private static final int INCORRECT_AGE = 16;
-    private static final String INCORRECT_LOGIN_WITH_WHITESPACE = "Log in";
-    private static final String CORRECT_PASSWORD = "passWord6";
-    private static final String INCORRECT_PASSWORD_SHORT = "short";
-    private static final String INCORRECT_PASSWORD_WITH_WHITESPACE = "pass Word6";
-    private static final String INCORRECT_PASSWORD_WITHOUT_DIGIT = "passWord";
-    private static final String INCORRECT_PASSWORD_WITHOUT_UPPERCASE = "password6";
+    private static final int MIN_AGE = 18;
+    private static RegistrationService registration;
 
-    private static final User FIRST_USER = new User();
-    private static final User SECOND_USER = new User();
+    @BeforeAll
+    static void beforeAll() {
+        registration = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-
-        FIRST_USER.setLogin("BestLogin");
-        FIRST_USER.setPassword(CORRECT_PASSWORD);
-        FIRST_USER.setAge(CORRECT_AGE);
-
-        SECOND_USER.setLogin("GoodLogin");
-        SECOND_USER.setPassword(CORRECT_PASSWORD);
-        SECOND_USER.setAge(CORRECT_AGE);
     }
 
     @Test
     void register_additionUsers_ok() {
-        boolean expect = FIRST_USER.equals(REGISTRATION.register(FIRST_USER));
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("passWord1");
+        firstUser.setAge(MIN_AGE);
+
+        User secondUser = new User();
+        secondUser.setLogin("login");
+        secondUser.setPassword("passWord1");
+        secondUser.setAge(MIN_AGE);
+
+        boolean expect = firstUser.equals(registration.register(firstUser));
         assertTrue(expect);
-        expect = SECOND_USER.equals(REGISTRATION.register(SECOND_USER));
+        expect = secondUser.equals(registration.register(secondUser));
         assertTrue(expect);
     }
 
     @Test
-    void register_checkIdIncrease_ok() {
-        REGISTRATION.register(FIRST_USER);
-        REGISTRATION.register(SECOND_USER);
-        assertEquals(FIRST_USER.getId() + 1, (long) SECOND_USER.getId());
+    void register_moreThanMinAge_Ok() {
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("passWord1");
+        firstUser.setAge(MIN_AGE + 1);
+
+        boolean expect = firstUser.equals(registration.register(firstUser));
+        assertTrue(expect);
     }
 
     @Test
     void register_loginIsEmpty_notOk() {
-        FIRST_USER.setLogin(EMPTY);
+        User firstUser = new User();
+        firstUser.setLogin("");
+
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
     void register_loginContainsWhitespaces_notOk() {
-        FIRST_USER.setLogin(INCORRECT_LOGIN_WITH_WHITESPACE);
+        User firstUser = new User();
+        firstUser.setLogin("invalid Login");
+
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
     void register_loginIsNull_notOk() {
-        FIRST_USER.setLogin(null);
+        User firstUser = new User();
+        firstUser.setLogin(null);
+
         assertThrows(NullPointerException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
-    void register_checkPasswordOnDigit_notOk() {
-        FIRST_USER.setPassword(INCORRECT_PASSWORD_WITHOUT_DIGIT);
+    void register_passwordWithoutDigits_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("passWord");
+
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
-    void register_checkPasswordOnWhitespace_notOk() {
-        FIRST_USER.setPassword(INCORRECT_PASSWORD_WITH_WHITESPACE);
+    void register_passwordWithWhitespace_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("pass Word1");
+
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
-    void register_checkPasswordOnUppercaseLetter_notOk() {
-        FIRST_USER.setPassword(INCORRECT_PASSWORD_WITHOUT_UPPERCASE);
+    void register_passwordWithoutUppercaseLetter_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("password1");
+
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
-    void register_checkPasswordLength_notOk() {
-        FIRST_USER.setPassword(INCORRECT_PASSWORD_SHORT);
+    void register_shortPassword_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("short");
+
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
     void register_passwordIsNull_notOk() {
-        FIRST_USER.setPassword(null);
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword(null);
+
         assertThrows(NullPointerException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
-    void register_rangeOfAge_notOk() {
-        FIRST_USER.setAge(INCORRECT_AGE);
+    void register_lessThanMinAge_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("passWord1");
+        firstUser.setAge(MIN_AGE - 1);
+
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
     void register_ageIsNull_notOk() {
-        FIRST_USER.setAge(null);
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("passWord1");
+        firstUser.setAge(null);
+
         assertThrows(NullPointerException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 
     @Test
-    void register_addingExistUser_notOk() {
-        REGISTRATION.register(FIRST_USER);
+    void register_userWithExistingLogin_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin("Login");
+        firstUser.setPassword("passWord1");
+        firstUser.setAge(MIN_AGE);
+
+        registration.register(firstUser);
         assertThrows(RuntimeException.class,
-                () -> REGISTRATION.register(FIRST_USER));
+                () -> registration.register(firstUser));
     }
 }
