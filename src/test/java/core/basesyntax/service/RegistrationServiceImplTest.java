@@ -36,8 +36,8 @@ class RegistrationServiceImplTest {
     void register_validData_Ok() {
         User actualUser = registrationService.register(validUser);
         assertEquals(validUser, actualUser);
-        assertNotNull(validUser.getId());
-        assertTrue(Storage.people.contains(validUser));
+        assertNotNull(actualUser.getId());
+        assertTrue(Storage.people.contains(actualUser));
     }
 
     @Test
@@ -69,7 +69,8 @@ class RegistrationServiceImplTest {
         validUser.setAge(19);
         User actualUser = registrationService.register(validUser);
         assertEquals(validUser, actualUser);
-        assertEquals(validUser.getAge(), actualUser.getAge());
+        assertNotNull(actualUser.getId());
+        assertTrue(Storage.people.contains(actualUser));
     }
 
     @Test
@@ -77,7 +78,8 @@ class RegistrationServiceImplTest {
         validUser.setAge(18);
         User actualUser = registrationService.register(validUser);
         assertEquals(validUser, actualUser);
-        assertEquals(validUser.getAge(), actualUser.getAge());
+        assertNotNull(actualUser.getId());
+        assertTrue(Storage.people.contains(actualUser));
     }
 
     @Test
@@ -101,7 +103,8 @@ class RegistrationServiceImplTest {
         validUser.setPassword("pass12");
         User actualUser = registrationService.register(validUser);
         assertEquals(validUser, actualUser);
-        assertEquals(validUser.getPassword(), actualUser.getPassword());
+        assertNotNull(actualUser.getId());
+        assertTrue(Storage.people.contains(actualUser));
     }
 
     @Test
@@ -109,7 +112,8 @@ class RegistrationServiceImplTest {
         validUser.setPassword("pass123");
         User actualUser = registrationService.register(validUser);
         assertEquals(validUser, actualUser);
-        assertEquals(validUser.getPassword(), actualUser.getPassword());
+        assertNotNull(actualUser.getId());
+        assertTrue(Storage.people.contains(actualUser));
     }
 
     @Test
