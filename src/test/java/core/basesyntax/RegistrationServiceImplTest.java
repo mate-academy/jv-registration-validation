@@ -26,142 +26,112 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_additionUsers_ok() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("passWord1");
-        firstUser.setAge(MIN_AGE);
-
-        User secondUser = new User();
-        secondUser.setLogin("login");
-        secondUser.setPassword("passWord1");
-        secondUser.setAge(MIN_AGE);
-
-        boolean expect = firstUser.equals(registration.register(firstUser));
-        assertTrue(expect);
-        expect = secondUser.equals(registration.register(secondUser));
-        assertTrue(expect);
-    }
-
-    @Test
     void register_moreThanMinAge_Ok() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("passWord1");
-        firstUser.setAge(MIN_AGE + 1);
-
-        boolean expect = firstUser.equals(registration.register(firstUser));
-        assertTrue(expect);
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("passWord1");
+        user.setAge(MIN_AGE + 1);
+        boolean expected = user.equals(registration.register(user));
+        assertTrue(expected);
     }
 
     @Test
     void register_loginIsEmpty_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("");
-
+        User user = new User();
+        user.setLogin("");
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_loginContainsWhitespaces_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("invalid Login");
-
+        User user = new User();
+        user.setLogin("invalid Login");
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_loginIsNull_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin(null);
-
+        User user = new User();
+        user.setLogin(null);
         assertThrows(NullPointerException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_passwordWithoutDigits_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("passWord");
-
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("passWord");
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_passwordWithWhitespace_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("pass Word1");
-
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("pass Word1");
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_passwordWithoutUppercaseLetter_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("password1");
-
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("password1");
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("short");
-
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("short");
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_passwordIsNull_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword(null);
-
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword(null);
         assertThrows(NullPointerException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_lessThanMinAge_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("passWord1");
-        firstUser.setAge(MIN_AGE - 1);
-
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("passWord1");
+        user.setAge(MIN_AGE - 1);
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_ageIsNull_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("passWord1");
-        firstUser.setAge(null);
-
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("passWord1");
+        user.setAge(null);
         assertThrows(NullPointerException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 
     @Test
     void register_userWithExistingLogin_notOk() {
-        User firstUser = new User();
-        firstUser.setLogin("Login");
-        firstUser.setPassword("passWord1");
-        firstUser.setAge(MIN_AGE);
-
-        registration.register(firstUser);
+        User user = new User();
+        user.setLogin("Login");
+        user.setPassword("passWord1");
+        user.setAge(MIN_AGE);
+        registration.register(user);
         assertThrows(RuntimeException.class,
-                () -> registration.register(firstUser));
+                () -> registration.register(user));
     }
 }
