@@ -1,8 +1,8 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -33,9 +33,10 @@ public class RegistrationServiseTest {
     }
 
     @Test
-    public void register_newUser_Ok() {
+    public void register_NewUser_Ok() {
         registrationService.register(user);
         User actualUser = dao.get(user.getLogin());
+        assertNotNull(actualUser, "DAO must return not null user in this case.");
         assertEquals(actualUser.getAge(), user.getAge(),
                 "the expacted age value is " + user.getAge()
                         + ", but the age is " + actualUser.getAge());
@@ -61,32 +62,29 @@ public class RegistrationServiseTest {
     void register_NullPassword_NotOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                "In case of null_password should throw RuntimeException.");
+                "In case of null-password should throw RuntimeException.");
     }
 
     @Test
     void register_NullAge_NotOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                "In case of null_age should throw RuntimeException.");
+                "In case of null-age should throw RuntimeException.");
     }
 
     @Test
     public void register_ExistingUser_NotOk() {
-        try {
-            User sameUser = registrationService.register(user);
-            registrationService.register(sameUser);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("In case of the same User should throw RuntimeException.");
+        user.setLogin("second");
+        User sameUser = registrationService.register(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(sameUser),
+                "In case of the same User should throw RuntimeException.");
     }
 
     @Test
     public void register_TooYoungUser_NotOk() {
         user.setAge(11);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                "In case of the User\'s age smaller 18 should throw RuntimeException.");
+                "In case of the User's age smaller 18 should throw RuntimeException.");
     }
 
     @Test
