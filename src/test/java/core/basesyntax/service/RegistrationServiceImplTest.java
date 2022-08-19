@@ -13,8 +13,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registeredUser;
-    private static StorageDao getUser;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private static final User userGood1 = new User();
     private static final User userGood2 = new User();
     private static final User userGood3 = new User();
@@ -32,8 +32,8 @@ class RegistrationServiceImplTest {
 
     @BeforeAll
     public static void setUp() {
-        registeredUser = new RegistrationServiceImpl();
-        getUser = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
@@ -49,11 +49,11 @@ class RegistrationServiceImplTest {
         userGood2.setAge(70);
         userGood2.setPassword("freedom");
         userGood2.setLogin("Bayraktar");
-        registeredUser.register(userGood1);
-        User expectedUser1 = getUser.get(userGood1.getLogin());
-        registeredUser.register(userGood2);
+        registrationService.register(userGood1);
+        User expectedUser1 = storageDao.get(userGood1.getLogin());
+        registrationService.register(userGood2);
         assertEquals(userGood1, expectedUser1);
-        User expectedUser2 = getUser.get(userGood2.getLogin());
+        User expectedUser2 = storageDao.get(userGood2.getLogin());
         assertEquals(userGood2, expectedUser2);
     }
 
@@ -65,16 +65,16 @@ class RegistrationServiceImplTest {
         userGood2.setAge(70);
         userGood2.setPassword("freedom");
         userGood2.setLogin("Bayraktar");
-        registeredUser.register(userGood1);
-        User expectedUser1 = getUser.get(userGood1.getLogin());
-        User expectedUser2 = getUser.get(userGood2.getLogin());
+        registrationService.register(userGood1);
+        User expectedUser1 = storageDao.get(userGood1.getLogin());
+        User expectedUser2 = storageDao.get(userGood2.getLogin());
         assertNotEquals(expectedUser1, expectedUser2);
     }
 
     @Test
     void userNull_GetExceptionMessage_Ok() {
         try {
-            registeredUser.register(userNull);
+            registrationService.register(userNull);
         } catch (NullPointerException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User should not be null";
@@ -87,11 +87,11 @@ class RegistrationServiceImplTest {
         userGood1.setAge(22);
         userGood1.setPassword("crimeabridgedestroyed");
         userGood1.setLogin("Himars");
-        registeredUser.register(userGood1);
+        registrationService.register(userGood1);
         userGood2.setAge(70);
         userGood2.setPassword("freedom");
         userGood2.setLogin("Bayraktar");
-        registeredUser.register(userGood2);
+        registrationService.register(userGood2);
         userDouble1.setAge(22);
         userDouble1.setPassword("crimeabridgedestroyed");
         userDouble1.setLogin("Himars");
@@ -99,7 +99,7 @@ class RegistrationServiceImplTest {
         userDouble2.setPassword("freedom");
         userDouble2.setLogin("Bayraktar");
         try {
-            registeredUser.register(userDouble1);
+            registrationService.register(userDouble1);
         } catch (RuntimeException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User should have unique login";
@@ -112,19 +112,19 @@ class RegistrationServiceImplTest {
         userGood1.setAge(22);
         userGood1.setPassword("crimeabridgedestroyed");
         userGood1.setLogin("Himars");
-        registeredUser.register(userGood1);
+        registrationService.register(userGood1);
         userGood2.setAge(70);
         userGood2.setPassword("freedom");
         userGood2.setLogin("Bayraktar");
-        registeredUser.register(userGood2);
+        registrationService.register(userGood2);
         userGood3.setAge(56);
         userGood3.setPassword("moscowdrown");
         userGood3.setLogin("Neptune");
-        registeredUser.register(userGood3);
+        registrationService.register(userGood3);
         userDouble2.setAge(70);
         userDouble2.setPassword("freedom");
         userDouble2.setLogin("Bayraktar");
-        assertThrows(RuntimeException.class, () -> registeredUser.register(userDouble2));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userDouble2));
     }
 
     @Test
@@ -132,7 +132,7 @@ class RegistrationServiceImplTest {
         userTooYoung.setAge(10);
         userTooYoung.setPassword("bullet");
         userTooYoung.setLogin("MLRS");
-        assertThrows(RuntimeException.class, () -> registeredUser.register(userTooYoung));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userTooYoung));
     }
 
     @Test
@@ -141,7 +141,7 @@ class RegistrationServiceImplTest {
         userTooYoung.setPassword("bullet");
         userTooYoung.setLogin("MLRS");
         try {
-            registeredUser.register(userTooYoung);
+            registrationService.register(userTooYoung);
         } catch (RuntimeException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User too young!";
@@ -154,7 +154,7 @@ class RegistrationServiceImplTest {
         userTooOld.setAge(100);
         userTooOld.setPassword("machinegewehr");
         userTooOld.setLogin("Atacms");
-        assertThrows(RuntimeException.class, () -> registeredUser.register(userTooOld));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userTooOld));
     }
 
     @Test
@@ -163,7 +163,7 @@ class RegistrationServiceImplTest {
         userTooOld.setPassword("machinegewehr");
         userTooOld.setLogin("Atacms");
         try {
-            registeredUser.register(userTooOld);
+            registrationService.register(userTooOld);
         } catch (RuntimeException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User too old!";
@@ -177,7 +177,7 @@ class RegistrationServiceImplTest {
         userNegativeAge.setPassword("sturmgewehr");
         userNegativeAge.setLogin("mig29");
         try {
-            registeredUser.register(userNegativeAge);
+            registrationService.register(userNegativeAge);
         } catch (RuntimeException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User's age cannot be negative!";
@@ -190,7 +190,7 @@ class RegistrationServiceImplTest {
         userNegativeAge.setAge(-100);
         userNegativeAge.setPassword("sturmgewehr");
         userNegativeAge.setLogin("mig29");
-        assertThrows(RuntimeException.class, () -> registeredUser.register(userNegativeAge));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userNegativeAge));
     }
 
     @Test
@@ -198,7 +198,7 @@ class RegistrationServiceImplTest {
         userNullAge.setAge(null);
         userNullAge.setPassword("kalash");
         userNullAge.setLogin("Nasams");
-        assertThrows(NullPointerException.class, () -> registeredUser.register(userNullAge));
+        assertThrows(NullPointerException.class, () -> registrationService.register(userNullAge));
     }
 
     @Test
@@ -207,7 +207,7 @@ class RegistrationServiceImplTest {
         userNullAge.setPassword("kalash");
         userNullAge.setLogin("Nasams");
         try {
-            registeredUser.register(userNullAge);
+            registrationService.register(userNullAge);
         } catch (NullPointerException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User's age should not be null";
@@ -220,7 +220,7 @@ class RegistrationServiceImplTest {
         userNullPassword.setAge(19);
         userNullPassword.setPassword(null);
         userNullPassword.setLogin("Harpoon");
-        assertThrows(NullPointerException.class, () -> registeredUser.register(userNullPassword));
+        assertThrows(NullPointerException.class, () -> registrationService.register(userNullPassword));
     }
 
     @Test
@@ -229,7 +229,7 @@ class RegistrationServiceImplTest {
         userNullPassword.setPassword(null);
         userNullPassword.setLogin("Harpoon");
         try {
-            registeredUser.register(userNullPassword);
+            registrationService.register(userNullPassword);
         } catch (NullPointerException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "Password should not be null";
@@ -242,7 +242,7 @@ class RegistrationServiceImplTest {
         userNullLogin.setAge(33);
         userNullLogin.setPassword("bavovna");
         userNullLogin.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registeredUser.register(userNullLogin));
+        assertThrows(NullPointerException.class, () -> registrationService.register(userNullLogin));
     }
 
     @Test
@@ -251,7 +251,7 @@ class RegistrationServiceImplTest {
         userNullLogin.setPassword("bavovna");
         userNullLogin.setLogin(null);
         try {
-            registeredUser.register(userNullLogin);
+            registrationService.register(userNullLogin);
         } catch (NullPointerException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "Login should not be null";
@@ -264,7 +264,7 @@ class RegistrationServiceImplTest {
         userWrongPassword.setAge(46);
         userWrongPassword.setPassword("mlrs");
         userWrongPassword.setLogin("Javelin");
-        assertThrows(RuntimeException.class, () -> registeredUser.register(userWrongPassword));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userWrongPassword));
     }
 
     @Test
@@ -273,7 +273,7 @@ class RegistrationServiceImplTest {
         userWrongPassword.setPassword("mlrs");
         userWrongPassword.setLogin("Javelin");
         try {
-            registeredUser.register(userWrongPassword);
+            registrationService.register(userWrongPassword);
         } catch (RuntimeException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "Password too short!";
@@ -286,7 +286,7 @@ class RegistrationServiceImplTest {
         userEmptyLogin.setAge(32);
         userEmptyLogin.setPassword("revenge");
         userEmptyLogin.setLogin("");
-        assertThrows(RuntimeException.class, () -> registeredUser.register(userEmptyLogin));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userEmptyLogin));
     }
 
     @Test
@@ -295,7 +295,7 @@ class RegistrationServiceImplTest {
         userEmptyLogin.setPassword("revenge");
         userEmptyLogin.setLogin("");
         try {
-            registeredUser.register(userEmptyLogin);
+            registrationService.register(userEmptyLogin);
         } catch (RuntimeException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "Login should not be blank!";
@@ -314,9 +314,9 @@ class RegistrationServiceImplTest {
         userGood3.setAge(56);
         userGood3.setPassword("moscowdrown");
         userGood3.setLogin("Neptune");
-        registeredUser.register(userGood1);
-        registeredUser.register(userGood2);
-        registeredUser.register(userGood3);
+        registrationService.register(userGood1);
+        registrationService.register(userGood2);
+        registrationService.register(userGood3);
         int actual = Storage.people.size();
         assertEquals(3, actual);
     }
