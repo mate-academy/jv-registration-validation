@@ -9,11 +9,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Error! Checked your login, actual: "
-                    + (user.getLogin() == null
-                    ? "login is null"
-                    : user.getLogin()));
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Error! User is already exist");
+        }
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Error! Your login is empty");
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RuntimeException("Error! Your password too small, actual: "
@@ -21,8 +21,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                     ? "password is null"
                     : user.getPassword().length()));
         }
-        if (user.getAge() < 18 || user.getAge() > 150) {
-            throw new RuntimeException("Error! Age must be better then 18, actual: "
+        if (user.getAge() == null) {
+            throw new RuntimeException("Error! Checked your age, is empty");
+        }
+        if (user.getAge() < 18) {
+            throw new RuntimeException("Error! Age must be less then 18, actual: "
                     + user.getAge());
         }
         storageDao.add(user);
