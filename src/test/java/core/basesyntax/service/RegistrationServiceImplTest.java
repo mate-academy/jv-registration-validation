@@ -32,24 +32,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_emptyUser_NotOk() {
+    void emptyUser_NotOk() {
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void nullLogin_NotOk() {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_emptyLogin_NotOk() {
+    void emptyLogin_NotOk() {
         user.setLogin("");
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_existingUser_NotOk() {
+    void existingUser_NotOk() {
         storageDao.get(user.getLogin());
         storageDao.add(user);
         User user2 = new User();
@@ -60,43 +60,43 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LowAge_NotOk() {
+    void lowAge_NotOk() {
         user.setAge(15);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullAge_NotOk() {
+    void nullAge_NotOk() {
         user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_negativeAge_NotOk() {
+    void negativeAge_NotOk() {
         user.setAge(-1);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_minAcceptableAge_Ok() {
+    void minAcceptableAge_Ok() {
         user.setAge(18);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_shortPassword_NotOk() {
+    void shortPassword_NotOk() {
         user.setPassword("pass");
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void nullPassword_NotOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_validUser_Ok() {
+    void validUser_Ok() {
         assertEquals(user, registrationService.register(user));
     }
 
