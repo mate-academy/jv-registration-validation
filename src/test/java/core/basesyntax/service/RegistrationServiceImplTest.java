@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.AgeIsIncorrectException;
 import core.basesyntax.exceptions.LoginIsIncorrectException;
-import core.basesyntax.exceptions.PassworsIsIncorrectException;
+import core.basesyntax.exceptions.PasswordIsIncorrectException;
 import core.basesyntax.exceptions.UserIsNullException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -76,7 +78,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsNull_notOk() {
         User slava = new User("Sergey", null, 19);
-        assertThrows(PassworsIsIncorrectException.class, () -> {
+        assertThrows(PasswordIsIncorrectException.class, () -> {
             registrationService.register(slava);
         });
     }
@@ -98,11 +100,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIncorrect() {
+    void register_passwordIncorrect_NotOk() {
         User slava = new User("petr", "wwerr", 19);
-        assertThrows(PassworsIsIncorrectException.class, () -> {
+        assertThrows(PasswordIsIncorrectException.class, () -> {
             registrationService.register(slava);
         });
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
 }
