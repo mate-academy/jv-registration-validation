@@ -9,11 +9,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        StorageDao storageDao = new StorageDaoImpl();
+        storageDao = new StorageDaoImpl();
         storageDao.add(new User("popova", "justpopova", 26));
         storageDao.add(new User("sterniuk", "1123313", 30));
         storageDao.add(new User("pony", "dfyrg6", 17));
@@ -44,6 +45,14 @@ class RegistrationServiceImplTest {
     public void userLoginNull_isNotValid() {
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User(null, "hellokitty", 19));
+        });
+    }
+
+    @Test
+    public void userLoginIsEmpty_isNotValid() {
+        String emptyName = "";
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            registrationService.register(new User(emptyName, "hellokitty", 19));
         });
     }
 

@@ -28,8 +28,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null!");
         }
-        if (user.getLogin().matches(EMPTY_SPACE_REGEX)) {
-            throw new RuntimeException("Login can't contain empty space!");
+        if (user.getLogin().matches(EMPTY_SPACE_REGEX) || user.getLogin().isEmpty()) {
+            throw new RuntimeException("Login can't contain empty space or be empty!");
         }
         if (!Character.isLetter(user.getLogin().charAt(0))) {
             throw new RuntimeException("Login need to begin with letter: " + user.getLogin() + "!");
