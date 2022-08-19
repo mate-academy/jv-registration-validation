@@ -220,7 +220,8 @@ class RegistrationServiceImplTest {
         userNullPassword.setAge(19);
         userNullPassword.setPassword(null);
         userNullPassword.setLogin("Harpoon");
-        assertThrows(NullPointerException.class, () -> registrationService.register(userNullPassword));
+        assertThrows(NullPointerException.class,
+                () -> registrationService.register(userNullPassword));
     }
 
     @Test
