@@ -1,18 +1,23 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registeredUser;
     private static StorageDao getUser;
     private static final User userGood1 = new User();
     private static final User userGood2 = new User();
+    private static final User userGood3 = new User();
     private static final User userDouble1 = new User();
     private static final User userDouble2 = new User();
     private static final User userNull = null;
@@ -20,54 +25,299 @@ class RegistrationServiceImplTest {
     private static final User userTooOld = new User();
     private static final User userNegativeAge = new User();
     private static final User userNullAge = new User();
-    private static final User userWrongLogin = new User();
     private static final User userNullLogin = new User();
-    private static final User userWrongPassword = new User();
     private static final User userNullPassword = new User();
+    private static final User userWrongPassword = new User();
+    private static final User userEmptyLogin = new User();
 
     @BeforeAll
-    public  static void setUp() {
+    public static void setUp() {
         registeredUser = new RegistrationServiceImpl();
         getUser = new StorageDaoImpl();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
+    @Test
+    public void registerAndGetNewUser_Ok() {
         userGood1.setAge(22);
         userGood1.setPassword("crimeabridgedestroyed");
         userGood1.setLogin("Himars");
         userGood2.setAge(70);
         userGood2.setPassword("freedom");
         userGood2.setLogin("Bayraktar");
-        userDouble1.setAge(22);
-        userDouble1.setPassword("crimeabridgedestroyed");
-        userDouble1.setLogin("Himars");
-    }
-
-    @Test
-    public void registerAndGetNewUser_Ok() {
-        User actualUser1 = registeredUser.register(userGood1);
+        registeredUser.register(userGood1);
         User expectedUser1 = getUser.get(userGood1.getLogin());
-        assertEquals(actualUser1, expectedUser1);
-        User actualUser2 = registeredUser.register(userGood2);
+        registeredUser.register(userGood2);
+        assertEquals(userGood1, expectedUser1);
         User expectedUser2 = getUser.get(userGood2.getLogin());
-        assertEquals(actualUser2, expectedUser2);
-        assertNotEquals(actualUser1, actualUser2);
+        assertEquals(userGood2, expectedUser2);
     }
 
     @Test
     void registerAndGetDifferentUsers_Ok() {
-        User actualUser1 = registeredUser.register(userGood1);
-        User expectedUser1 = getUser.get(actualUser1.getLogin());
-        User actualUser2 = registeredUser.register(userGood2);
-        User expectedUser2 = getUser.get(actualUser2.getLogin());
+        userGood1.setAge(22);
+        userGood1.setPassword("crimeabridgedestroyed");
+        userGood1.setLogin("Himars");
+        userGood2.setAge(70);
+        userGood2.setPassword("freedom");
+        userGood2.setLogin("Bayraktar");
+        registeredUser.register(userGood1);
+        User expectedUser1 = getUser.get(userGood1.getLogin());
+        User expectedUser2 = getUser.get(userGood2.getLogin());
         assertNotEquals(expectedUser1, expectedUser2);
     }
 
     @Test
-    void userNull_Ok() {
-        assertThrows(NullPointerException.class, () -> registeredUser.register(userNull));
+    void userNull_GetExceptionMessage_Ok() {
+        try {
+            registeredUser.register(userNull);
+        } catch (NullPointerException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "User should not be null";
+            assertEquals(actualMessage, expectedMessage);
+        }
     }
 
     @Test
-    void userDouble_Exception_Ok() {
-        User actualUser1 = registeredUser.register(userGood1);
-        assertThrows(NullPointerException.class, () -> registeredUser.register(userDouble1));
+    void userOneDouble_ExceptionMessage_Ok() {
+        userGood1.setAge(22);
+        userGood1.setPassword("crimeabridgedestroyed");
+        userGood1.setLogin("Himars");
+        registeredUser.register(userGood1);
+        userGood2.setAge(70);
+        userGood2.setPassword("freedom");
+        userGood2.setLogin("Bayraktar");
+        registeredUser.register(userGood2);
+        userDouble1.setAge(22);
+        userDouble1.setPassword("crimeabridgedestroyed");
+        userDouble1.setLogin("Himars");
+        userDouble2.setAge(70);
+        userDouble2.setPassword("freedom");
+        userDouble2.setLogin("Bayraktar");
+        try {
+            registeredUser.register(userDouble1);
+        } catch (RuntimeException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "User should have unique login";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userTwoDouble_Exception_Ok() {
+        userGood1.setAge(22);
+        userGood1.setPassword("crimeabridgedestroyed");
+        userGood1.setLogin("Himars");
+        registeredUser.register(userGood1);
+        userGood2.setAge(70);
+        userGood2.setPassword("freedom");
+        userGood2.setLogin("Bayraktar");
+        registeredUser.register(userGood2);
+        userGood3.setAge(56);
+        userGood3.setPassword("moscowdrown");
+        userGood3.setLogin("Neptune");
+        registeredUser.register(userGood3);
+        userDouble2.setAge(70);
+        userDouble2.setPassword("freedom");
+        userDouble2.setLogin("Bayraktar");
+        assertThrows(RuntimeException.class, () -> registeredUser.register(userDouble2));
+    }
+
+    @Test
+    void userTooYoung_Exception_Ok() {
+        userTooYoung.setAge(10);
+        userTooYoung.setPassword("bullet");
+        userTooYoung.setLogin("MLRS");
+        assertThrows(RuntimeException.class, () -> registeredUser.register(userTooYoung));
+    }
+
+    @Test
+    void userTooYoung_ExceptionMessage_Ok() {
+        userTooYoung.setAge(10);
+        userTooYoung.setPassword("bullet");
+        userTooYoung.setLogin("MLRS");
+        try {
+            registeredUser.register(userTooYoung);
+        } catch (RuntimeException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "User too young!";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userTooOld_Exception_Ok() {
+        userTooOld.setAge(100);
+        userTooOld.setPassword("machinegewehr");
+        userTooOld.setLogin("Atacms");
+        assertThrows(RuntimeException.class, () -> registeredUser.register(userTooOld));
+    }
+
+    @Test
+    void userTooOld_ExceptionMessage_Ok() {
+        userTooOld.setAge(100);
+        userTooOld.setPassword("machinegewehr");
+        userTooOld.setLogin("Atacms");
+        try {
+            registeredUser.register(userTooOld);
+        } catch (RuntimeException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "User too old!";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userNegativeAge_ExceptionMessage_Ok() {
+        userNegativeAge.setAge(-100);
+        userNegativeAge.setPassword("sturmgewehr");
+        userNegativeAge.setLogin("mig29");
+        try {
+            registeredUser.register(userNegativeAge);
+        } catch (RuntimeException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "User's age cannot be negative!";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userNegativeAge_Exception_Ok() {
+        userNegativeAge.setAge(-100);
+        userNegativeAge.setPassword("sturmgewehr");
+        userNegativeAge.setLogin("mig29");
+        assertThrows(RuntimeException.class, () -> registeredUser.register(userNegativeAge));
+    }
+
+    @Test
+    void userNullAge_Exception_Ok() {
+        userNullAge.setAge(null);
+        userNullAge.setPassword("kalash");
+        userNullAge.setLogin("Nasams");
+        assertThrows(NullPointerException.class, () -> registeredUser.register(userNullAge));
+    }
+
+    @Test
+    void userNullAge_ExceptionMessage_Ok() {
+        userNullAge.setAge(null);
+        userNullAge.setPassword("kalash");
+        userNullAge.setLogin("Nasams");
+        try {
+            registeredUser.register(userNullAge);
+        } catch (NullPointerException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "User's age should not be null";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userNullPassword_Exception_Ok() {
+        userNullPassword.setAge(19);
+        userNullPassword.setPassword(null);
+        userNullPassword.setLogin("Harpoon");
+        assertThrows(NullPointerException.class, () -> registeredUser.register(userNullPassword));
+    }
+
+    @Test
+    void userNullPassword_ExceptionMessage_Ok() {
+        userNullPassword.setAge(19);
+        userNullPassword.setPassword(null);
+        userNullPassword.setLogin("Harpoon");
+        try {
+            registeredUser.register(userNullPassword);
+        } catch (NullPointerException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "Password should not be null";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userNullLogin_Exception_Ok() {
+        userNullLogin.setAge(33);
+        userNullLogin.setPassword("bavovna");
+        userNullLogin.setLogin(null);
+        assertThrows(NullPointerException.class, () -> registeredUser.register(userNullLogin));
+    }
+
+    @Test
+    void userNullLogin_ExceptionMessage_Ok() {
+        userNullLogin.setAge(33);
+        userNullLogin.setPassword("bavovna");
+        userNullLogin.setLogin(null);
+        try {
+            registeredUser.register(userNullLogin);
+        } catch (NullPointerException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "Login should not be null";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userWrongPassword_Exception_Ok() {
+        userWrongPassword.setAge(46);
+        userWrongPassword.setPassword("mlrs");
+        userWrongPassword.setLogin("Javelin");
+        assertThrows(RuntimeException.class, () -> registeredUser.register(userWrongPassword));
+    }
+
+    @Test
+    void userWrongPassword_ExceptionMessage_Ok() {
+        userWrongPassword.setAge(46);
+        userWrongPassword.setPassword("mlrs");
+        userWrongPassword.setLogin("Javelin");
+        try {
+            registeredUser.register(userWrongPassword);
+        } catch (RuntimeException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "Password too short!";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void userEmptyLogin_Exception_Ok() {
+        userEmptyLogin.setAge(32);
+        userEmptyLogin.setPassword("revenge");
+        userEmptyLogin.setLogin("");
+        assertThrows(RuntimeException.class, () -> registeredUser.register(userEmptyLogin));
+    }
+
+    @Test
+    void userEmptyLogin_ExceptionMessage_Ok() {
+        userEmptyLogin.setAge(32);
+        userEmptyLogin.setPassword("revenge");
+        userEmptyLogin.setLogin("");
+        try {
+            registeredUser.register(userEmptyLogin);
+        } catch (RuntimeException e) {
+            String actualMessage = e.getMessage();
+            String expectedMessage = "Login should not be blank!";
+            assertEquals(actualMessage, expectedMessage);
+        }
+    }
+
+    @Test
+    void register_GetBaseSize_Ok() {
+        userGood1.setAge(22);
+        userGood1.setPassword("crimeabridgedestroyed");
+        userGood1.setLogin("Himars");
+        userGood2.setAge(70);
+        userGood2.setPassword("freedom");
+        userGood2.setLogin("Bayraktar");
+        userGood3.setAge(56);
+        userGood3.setPassword("moscowdrown");
+        userGood3.setLogin("Neptune");
+        registeredUser.register(userGood1);
+        registeredUser.register(userGood2);
+        registeredUser.register(userGood3);
+        int actual = Storage.people.size();
+        assertEquals(3, actual);
     }
 }
