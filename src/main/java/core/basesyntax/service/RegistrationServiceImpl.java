@@ -24,14 +24,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                 if (user.getPassword().length() >= MIN_ACCEPT_PASSWORD_LENGTH) {
                     storageDao.add(user);
                     return user;
-                } else {
-                    throw new UsersPasswordNotValidException("Password must be at least 6 symbols");
                 }
-            } else {
-                throw new UsersAgeNotValidException("You should be older!");
+                throw new UsersPasswordNotValidException("Password must be at least 6 symbols");
             }
-        } else {
-            throw new UserAlreadyExistException("This login already exist!");
+            throw new UsersAgeNotValidException("You should be older!");
         }
+        throw new UserAlreadyExistException("This login already exists!");
     }
 }

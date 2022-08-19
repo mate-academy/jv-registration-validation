@@ -23,40 +23,46 @@ class RegistrationServiceImplTest {
 
     @Test
     void validUserCase_Ok() {
-        User user1 = new User("marko", "gjtor3r", 20);
-        User user2 = new User("franklin", "34432fk", 18);
-        User user3 = new User("Brad","007009", 19);
-        registrationService.register(user1);
-        registrationService.register(user2);
-        registrationService.register(user3);
-        assertEquals(1, user1.getId());
-        assertEquals(2, user2.getId());
-        assertEquals(3,user3.getId());
+        User marko = new User("marko", "gjtor3r", 20);
+        User franklin = new User("franklin", "34432fk", 18);
+        User brad = new User("Brad","007009", 19);
+        registrationService.register(marko);
+        registrationService.register(franklin);
+        registrationService.register(brad);
+        assertEquals(1, marko.getId());
+        assertEquals(2, franklin.getId());
+        assertEquals(3, brad.getId());
         assertEquals(3, Storage.people.size());
-        assertTrue(Storage.people.contains(user1));
-        assertTrue(Storage.people.contains(user2));
-        assertTrue(Storage.people.contains(user3));
+        assertTrue(Storage.people.contains(marko));
+        assertTrue(Storage.people.contains(franklin));
+        assertTrue(Storage.people.contains(brad));
+        Storage.people.clear();
     }
 
     @Test
     void equalsLoginTrue_NotOk() {
-        User newUser = new User("marko", "34432fk", 18);
+        User marko1 = new User("marko", "34432fk", 18);
+        User marko2 = new User("marko", "34432fk", 18);
+        registrationService.register(marko1);
         assertThrows(UserAlreadyExistException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(marko2));
+        assertEquals(1, Storage.people.size());
+        assertTrue(Storage.people.contains(marko1));
+        Storage.people.clear();
     }
 
     @Test
     void passwordValidation_NotOk() {
-        User newUser = new User("alice", "0g4", 18);
+        User alice = new User("alice", "0g4", 18);
         assertThrows(UsersPasswordNotValidException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(alice));
     }
 
     @Test
     void ageValidation_NotOk() {
-        User newUser = new User("jacob", "34432fk", 10);
+        User jacob = new User("jacob", "34432fk", 10);
         assertThrows(UsersAgeNotValidException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(jacob));
     }
 
     @Test
@@ -68,15 +74,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_NotOk() {
-        User newUser = new User("philip", null, 18);
+        User philip = new User("philip", null, 18);
         assertThrows(NullPointerException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(philip));
     }
 
     @Test
     void register_nullAge_NotOk() {
-        User newUser = new User("brandon", "34432fk", null);
+        User brandon = new User("brandon", "34432fk", null);
         assertThrows(NullPointerException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(brandon));
     }
 }
