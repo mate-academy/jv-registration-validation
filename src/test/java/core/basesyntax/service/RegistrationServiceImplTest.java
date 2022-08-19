@@ -1,131 +1,153 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
+    private static final String DEFAULT_LOGIN = "tequila";
+    private static final String DEFAULT_PASSWORD = "withLime";
+    private static final int DEFAULT_AGE = 26;
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
+    private static User correctUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-        storageDao.add(new User("popova", "justpopova", 26));
-        storageDao.add(new User("sterniuk", "1123313", 30));
-        storageDao.add(new User("pony", "dfyrg6", 17));
+    }
+
+    @BeforeEach
+    void setUp() {
+        correctUser = new User();
+        correctUser.setLogin(DEFAULT_LOGIN);
+        correctUser.setPassword(DEFAULT_PASSWORD);
+        correctUser.setAge(DEFAULT_AGE);
     }
 
     @Test
-    public void userNull_isNotValid() {
+    public void register_userNull_isNotValid() {
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    public void userSameLogin_isNotValid() {
-        User newUser = new User("popova", "justpopova", 26);
+    public void register_userSameLogin_isNotValid() {
+        registrationService.register(correctUser);
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userLogin_isValid() {
-        User newUser = new User("gabriella", "gabi2000", 22);
-        Assertions.assertEquals(newUser, registrationService.register(newUser));
+    public void register_userLogin_isValid() {
+        User actualUser = registrationService.register(correctUser);
+        Assertions.assertEquals(correctUser, actualUser);
+        Assertions.assertNotNull(actualUser.getId());
+        Assertions.assertTrue(Storage.people.contains(actualUser));
     }
 
     @Test
-    public void userLoginNull_isNotValid() {
+    public void register_userLoginNull_isNotValid() {
+        correctUser.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(null, "hellokitty", 19));
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userLoginIsEmpty_isNotValid() {
-        String emptyName = "";
+    public void register_userLoginIsEmpty_isNotValid() {
+        correctUser.setLogin("");
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(emptyName, "hellokitty", 19));
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userLoginContainsEmptySpace_isNotValid() {
-        String userLogin = "S     ";
+    public void register_userLoginContainsEmptySpace_isNotValid() {
+        correctUser.setLogin("S   ");
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(userLogin, "emptySpaces", 24));
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userLoginStartsWithCharacter_isNotValid() {
-        String userLogin = "1anita";
+    public void register_userLoginStartsWithCharacter_isNotValid() {
+        correctUser.setLogin("1anita");
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User(userLogin, "dreamsaway", 130));
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userLoginStartsWithCharacter_isValid() {
-        String userLogin = "mamasita";
-        Assertions.assertEquals(new User(userLogin, "mamasita1", 20),
-                registrationService.register(new User(userLogin, "mamasita1", 20)));
+    public void register_userLoginStartsWithCharacter_isValid() {
+        correctUser.setLogin(DEFAULT_LOGIN);
+        User newUser = registrationService.register(correctUser);
+        Assertions.assertEquals(correctUser, newUser);
+        Assertions.assertNotNull(newUser.getId());
+        Assertions.assertTrue(Storage.people.contains(newUser));
     }
 
     @Test
-    public void userPasswordNull_isNotValid() {
+    public void register_userPasswordNull_isNotValid() {
+        correctUser.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User("defaultUser", null, 17));
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userPasswordLength_isNotValid() {
-        User newUser = new User("defaultUser", "12345", 17);
+    public void register_userPasswordLength_isNotValid() {
+        correctUser.setPassword("12345");
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userPasswordLength_isValid() {
-        User newUser = new User("florenta", "flora15", 22);
-        Assertions.assertEquals(newUser, registrationService.register(newUser));
+    public void register_userPasswordLength_isValid() {
+        correctUser.setPassword(DEFAULT_PASSWORD);
+        User actualUser = registrationService.register(correctUser);
+        Assertions.assertEquals(correctUser, actualUser);
+        Assertions.assertNotNull(actualUser.getId());
+        Assertions.assertTrue(Storage.people.contains(actualUser));
     }
 
     @Test
-    public void userAgeNull_isNotValid() {
+    public void register_userAgeNull_isNotValid() {
+        correctUser.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User("kristine", "password1", null));
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userAgeLessThanAccepted_isNotValid() {
-        User newUser = new User("pinguin", "blackAndWhite", 15);
+    public void register_userAgeLessThanAccepted_isNotValid() {
+        correctUser.setAge(15);
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userAgeIsLessThanZero_isNotValid() {
-        User newUser = new User("pinguin", "blackAndWhite", -10);
+    public void register_userAgeIsLessThanZero_isNotValid() {
+        correctUser.setAge(-5);
         Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    public void userAge_isValid() {
-        User newUser = new User("hellboy", "hellOfTime", 35);
-        Assertions.assertEquals(newUser, registrationService.register(newUser));
+    public void register_userAge_isValid() {
+        correctUser.setAge(DEFAULT_AGE);
+        User newUser = registrationService.register(correctUser);
+        Assertions.assertEquals(correctUser, newUser);
+        Assertions.assertNotNull(newUser.getId());
+        Assertions.assertTrue(Storage.people.contains(newUser));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
