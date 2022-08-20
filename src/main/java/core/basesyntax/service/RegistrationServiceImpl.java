@@ -20,6 +20,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationServiceException("We already have your namesake!");
         }
+        if (user.getPassword().length() < 6) {
+            throw new RegistrationServiceException("A good password should be longer than 6 characters!");
+        }
         return storageDao.add(user);
     }
 
