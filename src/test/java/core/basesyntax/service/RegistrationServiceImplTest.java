@@ -43,12 +43,8 @@ class RegistrationServiceImplTest {
 
     @Test
     public void registerAndGetNewUser_Ok() {
-        userGoodFirst.setAge(22);
-        userGoodFirst.setPassword("crimeabridgedestroyed");
-        userGoodFirst.setLogin("Himars");
-        userGoodSecond.setAge(70);
-        userGoodSecond.setPassword("freedom");
-        userGoodSecond.setLogin("Bayraktar");
+        createFirstUser();
+        createSecondUser();
         registrationService.register(userGoodFirst);
         User expectedUser1 = storageDao.get(userGoodFirst.getLogin());
         registrationService.register(userGoodSecond);
@@ -59,12 +55,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerAndGetDifferentUsers_Ok() {
-        userGoodFirst.setAge(22);
-        userGoodFirst.setPassword("crimeabridgedestroyed");
-        userGoodFirst.setLogin("Himars");
-        userGoodSecond.setAge(70);
-        userGoodSecond.setPassword("freedom");
-        userGoodSecond.setLogin("Bayraktar");
+        createFirstUser();
+        createSecondUser();
         registrationService.register(userGoodFirst);
         User expectedUser1 = storageDao.get(userGoodFirst.getLogin());
         User expectedUser2 = storageDao.get(userGoodSecond.getLogin());
@@ -84,20 +76,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void userOneDouble_ExceptionMessage_Ok() {
-        userGoodFirst.setAge(22);
-        userGoodFirst.setPassword("crimeabridgedestroyed");
-        userGoodFirst.setLogin("Himars");
+        createFirstUser();
         registrationService.register(userGoodFirst);
-        userGoodSecond.setAge(70);
-        userGoodSecond.setPassword("freedom");
-        userGoodSecond.setLogin("Bayraktar");
+        createSecondUser();
         registrationService.register(userGoodSecond);
-        userDoubleFirst.setAge(22);
-        userDoubleFirst.setPassword("crimeabridgedestroyed");
-        userDoubleFirst.setLogin("Himars");
-        userDoubleSecond.setAge(70);
-        userDoubleSecond.setPassword("freedom");
-        userDoubleSecond.setLogin("Bayraktar");
+        createFirstDoubleUser();
+        createSecondDoubleUser();
         try {
             registrationService.register(userDoubleFirst);
         } catch (RuntimeException e) {
@@ -109,37 +93,25 @@ class RegistrationServiceImplTest {
 
     @Test
     void userTwoDouble_Exception_Ok() {
-        userGoodFirst.setAge(22);
-        userGoodFirst.setPassword("crimeabridgedestroyed");
-        userGoodFirst.setLogin("Himars");
+        createFirstUser();
         registrationService.register(userGoodFirst);
-        userGoodSecond.setAge(70);
-        userGoodSecond.setPassword("freedom");
-        userGoodSecond.setLogin("Bayraktar");
+        createSecondUser();
         registrationService.register(userGoodSecond);
-        userGoodThird.setAge(56);
-        userGoodThird.setPassword("moscowdrown");
-        userGoodThird.setLogin("Neptune");
+        createThirdUser();
         registrationService.register(userGoodThird);
-        userDoubleSecond.setAge(70);
-        userDoubleSecond.setPassword("freedom");
-        userDoubleSecond.setLogin("Bayraktar");
+        createSecondDoubleUser();
         assertThrows(RuntimeException.class, () -> registrationService.register(userDoubleSecond));
     }
 
     @Test
     void userTooYoung_Exception_Ok() {
-        userTooYoung.setAge(10);
-        userTooYoung.setPassword("bullet");
-        userTooYoung.setLogin("MLRS");
+        createTooYoungUser();
         assertThrows(RuntimeException.class, () -> registrationService.register(userTooYoung));
     }
 
     @Test
     void userTooYoung_ExceptionMessage_Ok() {
-        userTooYoung.setAge(10);
-        userTooYoung.setPassword("bullet");
-        userTooYoung.setLogin("MLRS");
+        createTooYoungUser();
         try {
             registrationService.register(userTooYoung);
         } catch (RuntimeException e) {
@@ -151,17 +123,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void userTooOld_Exception_Ok() {
-        userTooOld.setAge(100);
-        userTooOld.setPassword("machinegewehr");
-        userTooOld.setLogin("Atacms");
+        createTooOldUser();
         assertThrows(RuntimeException.class, () -> registrationService.register(userTooOld));
     }
 
     @Test
     void userTooOld_ExceptionMessage_Ok() {
-        userTooOld.setAge(100);
-        userTooOld.setPassword("machinegewehr");
-        userTooOld.setLogin("Atacms");
+        createTooOldUser();
         try {
             registrationService.register(userTooOld);
         } catch (RuntimeException e) {
@@ -173,9 +141,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userNegativeAge_ExceptionMessage_Ok() {
-        userNegativeAge.setAge(-100);
-        userNegativeAge.setPassword("sturmgewehr");
-        userNegativeAge.setLogin("mig29");
+        createUserWithNegativeAge();
         try {
             registrationService.register(userNegativeAge);
         } catch (RuntimeException e) {
@@ -187,25 +153,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void userNegativeAge_Exception_Ok() {
-        userNegativeAge.setAge(-100);
-        userNegativeAge.setPassword("sturmgewehr");
-        userNegativeAge.setLogin("mig29");
+        createUserWithNegativeAge();
         assertThrows(RuntimeException.class, () -> registrationService.register(userNegativeAge));
     }
 
     @Test
     void userNullAge_Exception_Ok() {
-        userNullAge.setAge(null);
-        userNullAge.setPassword("kalash");
-        userNullAge.setLogin("Nasams");
+        createUserWithNullAge();
         assertThrows(NullPointerException.class, () -> registrationService.register(userNullAge));
     }
 
     @Test
     void userNullAge_ExceptionMessage_Ok() {
-        userNullAge.setAge(null);
-        userNullAge.setPassword("kalash");
-        userNullAge.setLogin("Nasams");
+        createUserWithNullAge();
         try {
             registrationService.register(userNullAge);
         } catch (NullPointerException e) {
@@ -217,18 +177,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void userNullPassword_Exception_Ok() {
-        userNullPassword.setAge(19);
-        userNullPassword.setPassword(null);
-        userNullPassword.setLogin("Harpoon");
+        createUserWithNullPsswd();
         assertThrows(NullPointerException.class,
                 () -> registrationService.register(userNullPassword));
     }
 
     @Test
     void userNullPassword_ExceptionMessage_Ok() {
-        userNullPassword.setAge(19);
-        userNullPassword.setPassword(null);
-        userNullPassword.setLogin("Harpoon");
+        createUserWithNullPsswd();
         try {
             registrationService.register(userNullPassword);
         } catch (NullPointerException e) {
@@ -240,17 +196,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void userNullLogin_Exception_Ok() {
-        userNullLogin.setAge(33);
-        userNullLogin.setPassword("bavovna");
-        userNullLogin.setLogin(null);
+        createUserWithNullLogin();
         assertThrows(NullPointerException.class, () -> registrationService.register(userNullLogin));
     }
 
     @Test
     void userNullLogin_ExceptionMessage_Ok() {
-        userNullLogin.setAge(33);
-        userNullLogin.setPassword("bavovna");
-        userNullLogin.setLogin(null);
+        createUserWithNullLogin();
         try {
             registrationService.register(userNullLogin);
         } catch (NullPointerException e) {
@@ -262,17 +214,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void userWrongPassword_Exception_Ok() {
-        userWrongPassword.setAge(46);
-        userWrongPassword.setPassword("mlrs");
-        userWrongPassword.setLogin("Javelin");
+        createUserWithWrongPsswd();
         assertThrows(RuntimeException.class, () -> registrationService.register(userWrongPassword));
     }
 
     @Test
     void userWrongPassword_ExceptionMessage_Ok() {
-        userWrongPassword.setAge(46);
-        userWrongPassword.setPassword("mlrs");
-        userWrongPassword.setLogin("Javelin");
+        createUserWithWrongPsswd();
         try {
             registrationService.register(userWrongPassword);
         } catch (RuntimeException e) {
@@ -284,17 +232,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void userEmptyLogin_Exception_Ok() {
-        userEmptyLogin.setAge(32);
-        userEmptyLogin.setPassword("revenge");
-        userEmptyLogin.setLogin("");
+        createUserWithEmptyLogin();
         assertThrows(RuntimeException.class, () -> registrationService.register(userEmptyLogin));
     }
 
     @Test
     void userEmptyLogin_ExceptionMessage_Ok() {
-        userEmptyLogin.setAge(32);
-        userEmptyLogin.setPassword("revenge");
-        userEmptyLogin.setLogin("");
+        createUserWithEmptyLogin();
         try {
             registrationService.register(userEmptyLogin);
         } catch (RuntimeException e) {
@@ -306,19 +250,91 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_GetBaseSize_Ok() {
-        userGoodFirst.setAge(22);
-        userGoodFirst.setPassword("crimeabridgedestroyed");
-        userGoodFirst.setLogin("Himars");
-        userGoodSecond.setAge(70);
-        userGoodSecond.setPassword("freedom");
-        userGoodSecond.setLogin("Bayraktar");
-        userGoodThird.setAge(56);
-        userGoodThird.setPassword("moscowdrown");
-        userGoodThird.setLogin("Neptune");
+        createFirstUser();
+        createSecondUser();
+        createThirdUser();
         registrationService.register(userGoodFirst);
         registrationService.register(userGoodSecond);
         registrationService.register(userGoodThird);
         int actual = Storage.people.size();
         assertEquals(3, actual);
+    }
+
+    private void createFirstUser() {
+        userGoodFirst.setAge(22);
+        userGoodFirst.setPassword("crimeabridgedestroyed");
+        userGoodFirst.setLogin("Himars");
+    }
+
+    private void createSecondUser() {
+        userGoodSecond.setAge(70);
+        userGoodSecond.setPassword("freedom");
+        userGoodSecond.setLogin("Bayraktar");
+    }
+
+    private void createThirdUser() {
+        userGoodThird.setAge(56);
+        userGoodThird.setPassword("moscowdrown");
+        userGoodThird.setLogin("Neptune");
+    }
+
+    private void createFirstDoubleUser() {
+        userDoubleFirst.setAge(22);
+        userDoubleFirst.setPassword("crimeabridgedestroyed");
+        userDoubleFirst.setLogin("Himars");
+    }
+
+    private void createSecondDoubleUser() {
+        userDoubleSecond.setAge(70);
+        userDoubleSecond.setPassword("freedom");
+        userDoubleSecond.setLogin("Bayraktar");
+    }
+
+    private void createTooYoungUser() {
+        userTooYoung.setAge(10);
+        userTooYoung.setPassword("bullet");
+        userTooYoung.setLogin("MLRS");
+    }
+
+    private void createTooOldUser() {
+        userTooOld.setAge(100);
+        userTooOld.setPassword("machinegewehr");
+        userTooOld.setLogin("Atacms");
+    }
+
+    private void createUserWithNegativeAge() {
+        userNegativeAge.setAge(-100);
+        userNegativeAge.setPassword("sturmgewehr");
+        userNegativeAge.setLogin("mig29");
+    }
+
+    private void createUserWithNullAge() {
+        userNullAge.setAge(null);
+        userNullAge.setPassword("kalash");
+        userNullAge.setLogin("Nasams");
+    }
+
+    private void createUserWithNullPsswd() {
+        userNullPassword.setAge(19);
+        userNullPassword.setPassword(null);
+        userNullPassword.setLogin("Harpoon");
+    }
+
+    private void createUserWithNullLogin() {
+        userNullLogin.setAge(33);
+        userNullLogin.setPassword("bavovna");
+        userNullLogin.setLogin(null);
+    }
+
+    private void createUserWithEmptyLogin() {
+        userEmptyLogin.setAge(32);
+        userEmptyLogin.setPassword("revenge");
+        userEmptyLogin.setLogin("");
+    }
+
+    private void createUserWithWrongPsswd() {
+        userWrongPassword.setAge(46);
+        userWrongPassword.setPassword("mlrs");
+        userWrongPassword.setLogin("Javelin");
     }
 }
