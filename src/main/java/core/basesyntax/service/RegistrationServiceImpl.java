@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user == null || user.getAge() == null || user.getPassword() == null
                 || user.getLogin() == null || user.getAge() < 0) {
-            throw new RegistrationServiceException("Invalid data? how? why? ehhhh....");
+            throw new RegistrationServiceException("Invalid data? how? why? eh-hhh....");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationServiceException("A few years missing! Come next year!");
