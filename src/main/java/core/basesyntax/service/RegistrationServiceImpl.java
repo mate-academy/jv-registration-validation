@@ -11,15 +11,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getAge() == null || user.getPassword() == null
-                || user.getLogin() == null || user.getAge() < MIN_AGE) {
+                || user.getLogin() == null || user.getAge() < 0) {
             throw new RegistrationServiceException("Invalid data? how? why? ehhhh....");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationServiceException("A few years missing! Come next year!");
         }
         return storageDao.add(user);
     }
 
     public static void main(String[] args) {
-        User user = new User("login", "password", null);
+        User user = new User("login", "password", 18);
         RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-        registrationService.register(user);
+        System.out.println(registrationService.register(user));
     }
 }
