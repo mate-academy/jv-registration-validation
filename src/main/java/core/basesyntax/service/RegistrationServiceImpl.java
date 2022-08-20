@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -25,10 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new NullPointerException("Password should not be null");
         }
-        for (User userLogin : Storage.people) {
-            if (userLogin.getLogin().equals(user.getLogin())) {
-                throw new RuntimeException("User should have unique login");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User should have unique login");
         }
         if (user.getAge() < MIN_AGE && user.getAge() >= 0) {
             throw new RuntimeException("User too young!");
