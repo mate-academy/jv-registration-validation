@@ -12,8 +12,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null || user.getLogin() == null || user.getPassword() == null
-                || user.getAge() == null || user.getAge() < 0 || user.getLogin().isEmpty()) {
+                || user.getAge() == null) {
             throw new RegistrationServiceException("User fields can't be null/empty/negative");
+        }
+        if (user.getAge() < 0 || user.getLogin().isEmpty()) {
+            throw new RegistrationServiceException("User age can't be neither negative nor empty");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationServiceException("User with login "

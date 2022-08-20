@@ -88,13 +88,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkSameLogins_notOk() {
-        User actual = new User(DEFAULT_USER_LOGIN, "anotherPAsswrod", DEFAULT_USER_MIN_AGE);
-        registerService.register(actual);
-    }
-
-    @Test
-    void register_checkingForTheSameLogins_notOk() {
+    void register_userSameLogin_notOk() {
         User sameUser = user;
         User actual = new User(DEFAULT_USER_LOGIN, "uaesrPassword", DEFAULT_USER_MIN_AGE);
         registerService.register(sameUser);
