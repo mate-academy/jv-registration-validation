@@ -5,12 +5,12 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user.getAge() == null || user.getPassword() == null
+        if (user == null || user.getAge() == null || user.getPassword() == null
                 || user.getLogin() == null || user.getAge() < 0) {
             throw new RegistrationServiceException("Invalid data? how? why? ehhhh....");
         }
@@ -21,14 +21,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceException("We already have your namesake!");
         }
         if (user.getPassword().length() < 6) {
-            throw new RegistrationServiceException("A good password should be longer than 6 characters!");
+            throw new RegistrationServiceException(
+                    "A good password should be longer than 6 characters!");
         }
         return storageDao.add(user);
-    }
-
-    public static void main(String[] args) {
-        User user = new User("login", "password", 18);
-        RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-        System.out.println(registrationService.register(user));
     }
 }
