@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     public static final String DEFAULT_USER_LOGIN = "userNameLogin";
     public static final String DEFAULT_USER_PASSWORD = "nS0$ek0)D";
+    public static final int DEFAULT_USER_MIN_AGE = 18;
     private static RegistrationService registerService;
     private User user;
 
@@ -24,7 +25,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(DEFAULT_USER_LOGIN, DEFAULT_USER_PASSWORD, 18);
+        user = new User(DEFAULT_USER_LOGIN, DEFAULT_USER_PASSWORD, DEFAULT_USER_MIN_AGE);
     }
 
     @AfterEach
@@ -34,7 +35,13 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_userAgeLess18_notOk() {
-        user.setAge(10);
+        user.setAge(16);
+        throwRegisterServiceException(user);
+    }
+
+    @Test
+    void register_userAgeMore110_notOk() {
+        user.setAge(160);
         throwRegisterServiceException(user);
     }
 
@@ -82,14 +89,14 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_checkSameLogins_notOk() {
-        User actual = new User(DEFAULT_USER_LOGIN, "userPassword", 18);
+        User actual = new User(DEFAULT_USER_LOGIN, "anotherPAsswrod", DEFAULT_USER_MIN_AGE);
         registerService.register(actual);
     }
 
     @Test
     void register_checkingForTheSameLogins_notOk() {
         User sameUser = user;
-        User actual = new User(DEFAULT_USER_LOGIN, "anotherPassword", 18);
+        User actual = new User(DEFAULT_USER_LOGIN, "uaesrPassword", DEFAULT_USER_MIN_AGE);
         registerService.register(sameUser);
         throwRegisterServiceException(actual);
     }

@@ -19,8 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceException("User with login "
                     + user.getLogin() + " exists");
         }
-        if (user.getAge() < USER_MINIMUM_AGE) {
-            throw new RegistrationServiceException("User age must be at least 18 years old, "
+        if (user.getAge() < USER_MINIMUM_AGE || user.getAge() > 110) {
+            throw new RegistrationServiceException("User age must be 18-110 years old, "
                     + "but was " + user.getAge());
         }
         if (user.getPassword().length() < PASSWORD_MINIMUM_LENGTH) {
