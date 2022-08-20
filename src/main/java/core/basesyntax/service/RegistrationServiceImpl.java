@@ -17,6 +17,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationServiceException("A few years missing! Come next year!");
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationServiceException("We already have your namesake!");
+        }
         return storageDao.add(user);
     }
 
