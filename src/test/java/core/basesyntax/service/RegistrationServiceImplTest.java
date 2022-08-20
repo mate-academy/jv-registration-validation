@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.model.User;
@@ -40,8 +40,7 @@ class RegistrationServiceImplTest {
         user.setPassword("rocket");
         User actual = registrationService.register(user);
         User expected = user;
-        assertTrue(expected.equals(actual), "User with age over 18 should be registered");
-
+        assertEquals(expected, actual, "User with age over 18 should be registered");
     }
 
     @Test
@@ -51,7 +50,7 @@ class RegistrationServiceImplTest {
         user.setPassword("rocket1981");
         User actual = registrationService.register(user);
         User expected = user;
-        assertTrue(expected.equals(actual), "User with age 18 should be registered");
+        assertEquals(expected, actual, "User with age 18 should be registered");
     }
 
     @Test
@@ -85,7 +84,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_existedUser_notOk() {
+    void register_existingUser_notOk() {
         user.setAge(25);
         user.setLogin("John");
         user.setPassword("rocket");
