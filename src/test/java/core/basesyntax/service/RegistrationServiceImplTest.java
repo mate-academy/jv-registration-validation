@@ -15,11 +15,11 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private static final User userGood1 = new User();
-    private static final User userGood2 = new User();
-    private static final User userGood3 = new User();
-    private static final User userDouble1 = new User();
-    private static final User userDouble2 = new User();
+    private static final User userGoodFirst = new User();
+    private static final User userGoodSecond = new User();
+    private static final User userGoodThird = new User();
+    private static final User userDoubleFirst = new User();
+    private static final User userDoubleSecond = new User();
     private static final User userNull = null;
     private static final User userTooYoung = new User();
     private static final User userTooOld = new User();
@@ -43,31 +43,31 @@ class RegistrationServiceImplTest {
 
     @Test
     public void registerAndGetNewUser_Ok() {
-        userGood1.setAge(22);
-        userGood1.setPassword("crimeabridgedestroyed");
-        userGood1.setLogin("Himars");
-        userGood2.setAge(70);
-        userGood2.setPassword("freedom");
-        userGood2.setLogin("Bayraktar");
-        registrationService.register(userGood1);
-        User expectedUser1 = storageDao.get(userGood1.getLogin());
-        registrationService.register(userGood2);
-        assertEquals(userGood1, expectedUser1);
-        User expectedUser2 = storageDao.get(userGood2.getLogin());
-        assertEquals(userGood2, expectedUser2);
+        userGoodFirst.setAge(22);
+        userGoodFirst.setPassword("crimeabridgedestroyed");
+        userGoodFirst.setLogin("Himars");
+        userGoodSecond.setAge(70);
+        userGoodSecond.setPassword("freedom");
+        userGoodSecond.setLogin("Bayraktar");
+        registrationService.register(userGoodFirst);
+        User expectedUser1 = storageDao.get(userGoodFirst.getLogin());
+        registrationService.register(userGoodSecond);
+        assertEquals(userGoodFirst, expectedUser1);
+        User expectedUser2 = storageDao.get(userGoodSecond.getLogin());
+        assertEquals(userGoodSecond, expectedUser2);
     }
 
     @Test
     void registerAndGetDifferentUsers_Ok() {
-        userGood1.setAge(22);
-        userGood1.setPassword("crimeabridgedestroyed");
-        userGood1.setLogin("Himars");
-        userGood2.setAge(70);
-        userGood2.setPassword("freedom");
-        userGood2.setLogin("Bayraktar");
-        registrationService.register(userGood1);
-        User expectedUser1 = storageDao.get(userGood1.getLogin());
-        User expectedUser2 = storageDao.get(userGood2.getLogin());
+        userGoodFirst.setAge(22);
+        userGoodFirst.setPassword("crimeabridgedestroyed");
+        userGoodFirst.setLogin("Himars");
+        userGoodSecond.setAge(70);
+        userGoodSecond.setPassword("freedom");
+        userGoodSecond.setLogin("Bayraktar");
+        registrationService.register(userGoodFirst);
+        User expectedUser1 = storageDao.get(userGoodFirst.getLogin());
+        User expectedUser2 = storageDao.get(userGoodSecond.getLogin());
         assertNotEquals(expectedUser1, expectedUser2);
     }
 
@@ -84,22 +84,22 @@ class RegistrationServiceImplTest {
 
     @Test
     void userOneDouble_ExceptionMessage_Ok() {
-        userGood1.setAge(22);
-        userGood1.setPassword("crimeabridgedestroyed");
-        userGood1.setLogin("Himars");
-        registrationService.register(userGood1);
-        userGood2.setAge(70);
-        userGood2.setPassword("freedom");
-        userGood2.setLogin("Bayraktar");
-        registrationService.register(userGood2);
-        userDouble1.setAge(22);
-        userDouble1.setPassword("crimeabridgedestroyed");
-        userDouble1.setLogin("Himars");
-        userDouble2.setAge(70);
-        userDouble2.setPassword("freedom");
-        userDouble2.setLogin("Bayraktar");
+        userGoodFirst.setAge(22);
+        userGoodFirst.setPassword("crimeabridgedestroyed");
+        userGoodFirst.setLogin("Himars");
+        registrationService.register(userGoodFirst);
+        userGoodSecond.setAge(70);
+        userGoodSecond.setPassword("freedom");
+        userGoodSecond.setLogin("Bayraktar");
+        registrationService.register(userGoodSecond);
+        userDoubleFirst.setAge(22);
+        userDoubleFirst.setPassword("crimeabridgedestroyed");
+        userDoubleFirst.setLogin("Himars");
+        userDoubleSecond.setAge(70);
+        userDoubleSecond.setPassword("freedom");
+        userDoubleSecond.setLogin("Bayraktar");
         try {
-            registrationService.register(userDouble1);
+            registrationService.register(userDoubleFirst);
         } catch (RuntimeException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User should have unique login";
@@ -109,22 +109,22 @@ class RegistrationServiceImplTest {
 
     @Test
     void userTwoDouble_Exception_Ok() {
-        userGood1.setAge(22);
-        userGood1.setPassword("crimeabridgedestroyed");
-        userGood1.setLogin("Himars");
-        registrationService.register(userGood1);
-        userGood2.setAge(70);
-        userGood2.setPassword("freedom");
-        userGood2.setLogin("Bayraktar");
-        registrationService.register(userGood2);
-        userGood3.setAge(56);
-        userGood3.setPassword("moscowdrown");
-        userGood3.setLogin("Neptune");
-        registrationService.register(userGood3);
-        userDouble2.setAge(70);
-        userDouble2.setPassword("freedom");
-        userDouble2.setLogin("Bayraktar");
-        assertThrows(RuntimeException.class, () -> registrationService.register(userDouble2));
+        userGoodFirst.setAge(22);
+        userGoodFirst.setPassword("crimeabridgedestroyed");
+        userGoodFirst.setLogin("Himars");
+        registrationService.register(userGoodFirst);
+        userGoodSecond.setAge(70);
+        userGoodSecond.setPassword("freedom");
+        userGoodSecond.setLogin("Bayraktar");
+        registrationService.register(userGoodSecond);
+        userGoodThird.setAge(56);
+        userGoodThird.setPassword("moscowdrown");
+        userGoodThird.setLogin("Neptune");
+        registrationService.register(userGoodThird);
+        userDoubleSecond.setAge(70);
+        userDoubleSecond.setPassword("freedom");
+        userDoubleSecond.setLogin("Bayraktar");
+        assertThrows(RuntimeException.class, () -> registrationService.register(userDoubleSecond));
     }
 
     @Test
@@ -306,18 +306,18 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_GetBaseSize_Ok() {
-        userGood1.setAge(22);
-        userGood1.setPassword("crimeabridgedestroyed");
-        userGood1.setLogin("Himars");
-        userGood2.setAge(70);
-        userGood2.setPassword("freedom");
-        userGood2.setLogin("Bayraktar");
-        userGood3.setAge(56);
-        userGood3.setPassword("moscowdrown");
-        userGood3.setLogin("Neptune");
-        registrationService.register(userGood1);
-        registrationService.register(userGood2);
-        registrationService.register(userGood3);
+        userGoodFirst.setAge(22);
+        userGoodFirst.setPassword("crimeabridgedestroyed");
+        userGoodFirst.setLogin("Himars");
+        userGoodSecond.setAge(70);
+        userGoodSecond.setPassword("freedom");
+        userGoodSecond.setLogin("Bayraktar");
+        userGoodThird.setAge(56);
+        userGoodThird.setPassword("moscowdrown");
+        userGoodThird.setLogin("Neptune");
+        registrationService.register(userGoodFirst);
+        registrationService.register(userGoodSecond);
+        registrationService.register(userGoodThird);
         int actual = Storage.people.size();
         assertEquals(3, actual);
     }
