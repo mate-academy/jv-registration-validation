@@ -16,7 +16,6 @@ class RegistrationServiceImplTest {
     public static final int DEFAULT_TEST_AGE = 57;
     private static RegistrationService registrationService;
     private User user;
-    public static final String STRING = "ss";
 
     @BeforeAll
     static void beforeAll() {
