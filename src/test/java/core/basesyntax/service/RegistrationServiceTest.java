@@ -22,7 +22,7 @@ class RegistrationServiceTest {
     private static final String PASSWORD_TOO_LONG = "abcdefghijklmnopqrstuvwxyzABCDE";
     private static final Integer AGE = 18;
     private static final Integer AGE_TOO_SMALL = 17;
-    private static final Integer AGE_IS_TOO_OLD = 151;
+    private static final Integer AGE_TOO_OLD = 151;
 
     private static RegistrationService registrationService;
     private User newUser;
@@ -99,7 +99,7 @@ class RegistrationServiceTest {
     @Test
     @Order(4)
     void register_userAgeIsTooOld_notOk() {
-        newUser.setAge(AGE_IS_TOO_OLD);
+        newUser.setAge(AGE_TOO_OLD);
         assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
