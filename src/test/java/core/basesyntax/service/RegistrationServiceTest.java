@@ -126,6 +126,14 @@ class RegistrationServiceTest {
     }
 
     @Test
+    void register_negativeAge_NotOk() {
+        expectedUser.setAge(-18);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(expectedUser);
+        });
+    }
+
+    @Test
     void register_lessMinimalAge_NotOk() {
         expectedUser.setAge(17);
         assertThrows(RuntimeException.class, () -> {
