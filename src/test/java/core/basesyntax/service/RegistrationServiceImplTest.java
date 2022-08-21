@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,13 @@ class RegistrationServiceImplTest {
     private static User user;
     private static final String VALID_LOGIN = "SomeLogin";
     private static final String VALID_PASSWORD = "password";
-    private static final int VALID_AGE = 18;
+    private static final String SHORT_PASSWORD = "pass";
+    private static final String EMPTY_STRING = "";
+    private static final int SMALLEST_VALID_AGE = 18;
+    private static final int SMALL_AGE = 10;
+    private static final int ZERO_VALUE = 0;
+    private static final int NEGATIVE_VALUE = -10;
+    private static final int BIGGER_VALID_AGE = 60;
 
     @BeforeAll
     static void beforeAll() {
@@ -24,10 +31,9 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
+        user.setAge(SMALLEST_VALID_AGE);
     }
 
     @Test
@@ -44,7 +50,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void age_Ok() {
-        user.setAge(VALID_AGE);
+        user.setAge(SMALLEST_VALID_AGE);
         assertEquals(service.register(user), user);
     }
 
@@ -58,7 +64,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void zeroValueAge_NotOk() {
-        user.setAge(0);
+        user.setAge(ZERO_VALUE);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -66,7 +72,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void negativeValueAge_NotOk() {
-        user.setAge(-10);
+        user.setAge(NEGATIVE_VALUE);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -74,7 +80,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void smallAge_NotOk() {
-        user.setAge(10);
+        user.setAge(SMALL_AGE);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -82,7 +88,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void largeAge_Ok() {
-        user.setAge(60);
+        user.setAge(BIGGER_VALID_AGE);
         assertEquals(user, service.register(user));
     }
 
@@ -108,7 +114,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shortPassword_NotOk() {
-        user.setPassword("pass");
+        user.setPassword(SHORT_PASSWORD);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -116,7 +122,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void emptyPassword_NotOk() {
-        user.setPassword("");
+        user.setPassword(EMPTY_STRING);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -132,7 +138,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void emptyLogin_NotOk() {
-        user.setLogin("");
+        user.setLogin(EMPTY_STRING);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -144,5 +150,10 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
