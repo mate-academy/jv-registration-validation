@@ -1,4 +1,4 @@
-package core.basesyntax.db;
+package core.basesyntax.service.db;
 
 import core.basesyntax.model.User;
 import java.util.ArrayList;
