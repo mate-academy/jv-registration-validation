@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -19,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getPassword() == null
                 || user.getId() == null
                 || user.getAge() == null) {
-            throw new ValidationException("Invalid data, check all user values");
+            throw new RuntimeException("Invalid data, check all user values");
         }
         return user;
     }
@@ -29,7 +28,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && (user.getAge() >= MIN_AGE)
                 && (user.getPassword().length() >= MIN_PASSWORD_LENGTH)) {
             return true;
+        } else {
+            throw new RuntimeException("Invalid data, check some fields");
         }
-        return false;
     }
 }

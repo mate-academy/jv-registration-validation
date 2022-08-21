@@ -1,10 +1,10 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,8 +33,30 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_Ok() {
+    void validUser_Ok() {
         assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
+    void register_differentUsers_Ok() {
+        User user1 = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN);
+        User user2 = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN + "a");
+        registrationService.register(user);
+        registrationService.register(user2);
+        User expectedUser1 = Storage.people.get(0);
+        User expectedUser2 = Storage.people.get(1);
+        assertNotEquals(expectedUser1, expectedUser2);
+    }
+
+    @Test
+    void register_userIsNull_NotOk() {
+        checkException(null);
+    }
+
+    @Test
+    void register_NullAge_NotOk() {
+        user.setAge(null);
+        checkException(user);
     }
 
     @Test
@@ -45,14 +67,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_moreThenMinAge_Ok() {
-        user.setAge(MIN_AGE);
+        user.setAge(MIN_AGE + 1);
         assertEquals(user, registrationService.register(user));
-    }
-
-    @Test
-    void register_nullAge_NotOk() {
-        user.setAge(0);
-        checkException(user);
     }
 
     @Test
@@ -102,8 +118,16 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 
+    private User createUser(Integer age, String password, String login) {
+        User user = new User();
+        user.setAge(age);
+        user.setPassword(password);
+        user.setLogin(login);
+        return user;
+    }
+
     private void checkException(User currentUser) {
-        assertThrows(ValidationException.class,
-                () -> registrationService.register(user));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(currentUser));
     }
 }
