@@ -12,9 +12,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    public static final String DEFAULT_USER_LOGIN = "userNameLogin";
-    public static final String DEFAULT_USER_PASSWORD = "nS0$ek0)D";
-    public static final int DEFAULT_USER_MIN_AGE = 18;
+    private static final String DEFAULT_USER_LOGIN = "userNameLogin";
+    private static final String DEFAULT_USER_PASSWORD = "nS0$ek0)D";
+    private static final int DEFAULT_USER_MIN_AGE = 18;
+    private static final Integer NEGATIVE_AGE = -12;
+    private static final String WRONG_PASSWORD = "12345";
     private static RegistrationService registerService;
     private User user;
 
@@ -35,56 +37,50 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_userAgeLess18_notOk() {
-        user.setAge(16);
-        throwRegisterServiceException(user);
-    }
-
-    @Test
-    void register_userAgeMore110_notOk() {
-        user.setAge(160);
-        throwRegisterServiceException(user);
+        user.setAge(DEFAULT_USER_MIN_AGE - 1);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
     void register_userAgeNull_notOk() {
         user.setAge(null);
-        throwRegisterServiceException(user);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
     void register_userNegativeAge_notOk() {
-        user.setAge(-12);
-        throwRegisterServiceException(user);
+        user.setAge(NEGATIVE_AGE);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
     void register_userIsNull_notOk() {
         user = null;
-        throwRegisterServiceException(user);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
     void register_userLoginNull_notOk() {
         user.setLogin(null);
-        throwRegisterServiceException(user);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
     void register_userLoginEmpty_notOk() {
         user.setLogin("");
-        throwRegisterServiceException(user);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
     void register_userPasswordNull_notOk() {
         user.setPassword(null);
-        throwRegisterServiceException(user);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
     void register_userPasswordSize6_notOk() {
-        user.setPassword("12345");
-        throwRegisterServiceException(user);
+        user.setPassword(WRONG_PASSWORD);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
@@ -92,19 +88,13 @@ public class RegistrationServiceImplTest {
         User sameUser = user;
         User actual = new User(DEFAULT_USER_LOGIN, "uaesrPassword", DEFAULT_USER_MIN_AGE);
         registerService.register(sameUser);
-        throwRegisterServiceException(actual);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(actual));
     }
 
     @Test
     void register_ExistingUser_notOk() {
-        try {
-            User sameUser = registerService.register(user);
-            registerService.register(sameUser);
-            throwRegisterServiceException(sameUser);
-        } catch (RegistrationServiceException e) {
-            return;
-        }
-        fail("User with login " + user.getLogin() + " exists");
+        registerService.register(user);
+        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 
     @Test
@@ -119,9 +109,5 @@ public class RegistrationServiceImplTest {
         User actual = new User(DEFAULT_USER_LOGIN, DEFAULT_USER_PASSWORD, 24);
         User expected = registerService.register(actual);
         assertEquals(expected, actual);
-    }
-
-    private void throwRegisterServiceException(User user) {
-        assertThrows(RegistrationServiceException.class, () -> registerService.register(user));
     }
 }
