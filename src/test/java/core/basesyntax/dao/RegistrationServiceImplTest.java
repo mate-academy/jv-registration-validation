@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class StorageDaoImplTest {
+class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "UserLogin";
     private static final String DEFAULT_PASSWORD = "123456";
     private static final int DEFAULT_AGE = 20;
