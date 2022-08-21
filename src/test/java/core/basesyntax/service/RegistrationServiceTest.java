@@ -28,13 +28,11 @@ class RegistrationServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-        System.out.println("BeforeAll");
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
     void setUp() {
-        System.out.println("BeforeEach");
         newUser = new User();
         newUser.setLogin(LOGIN);
         newUser.setPassword(PASSWORD);
