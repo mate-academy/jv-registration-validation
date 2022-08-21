@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("There is already user with that login");
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
-            throw new RuntimeException("Invalid User password value: " + user.getPassword());
+            throw new RuntimeException("Invalid User password value");
         }
         return storageDao.add(user);
     }
