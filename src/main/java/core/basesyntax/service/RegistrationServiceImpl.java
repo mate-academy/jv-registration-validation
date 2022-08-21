@@ -13,13 +13,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getAge() == null) {
-            throw new RuntimeException("Null age");
+            throw new RuntimeException("Age can't be null");
         }
         if (user.getPassword() == null) {
-            throw new RuntimeException("Null Password");
+            throw new RuntimeException("Password can't be null");
         }
         if (user.getLogin() == null) {
-            throw new RuntimeException("login null");
+            throw new RuntimeException("Login can't be null");
         }
         if (!(Storage.people.contains(user)) && user.getAge() >= MAX_AGE
                 && user.getPassword().length() >= MAX_LONG_PASSWORD) {
