@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -105,9 +106,15 @@ class RegistrationServiceTest {
     @Test
     @Order(5)
     void register_UserAlreadyExists_notOk() {
+        int expected = 0;
+        int actual = Storage.people.size();
+        assertEquals(expected, actual);
         registrationService.register(newUser);
-        String loginOfUserThatAleadyExists = Storage.people.get(0).getLogin();
-        newUser.setLogin(loginOfUserThatAleadyExists);
+        expected = 1;
+        actual = Storage.people.size();
+        assertEquals(expected, actual);
+        String loginOfAnExistingUser = Storage.people.get(0).getLogin();
+        newUser.setLogin(loginOfAnExistingUser);
         assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 }
