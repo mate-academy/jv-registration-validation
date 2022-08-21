@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceTest {
     private static StorageDao defaultStorage;
     private static RegistrationServiceImpl registrationService;
-    private static final String NOT_EXIST_LOGIN = "forth";
 
     @BeforeAll
     static void beforeAll() {
@@ -46,79 +44,85 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void check_userNotExist_ok() {
-        assertNull(defaultStorage.get(NOT_EXIST_LOGIN));
+    void registerValidUser_ok() {
+        User correctUser = new User();
+        correctUser.setId(4L);
+        correctUser.setLogin("correctUser");
+        correctUser.setPassword("444444");
+        correctUser.setAge(18);
+        assertNotNull(registrationService.register(correctUser));
     }
 
     @Test
-    void check_register_ok() {
-        User testUserOk = new User();
-        testUserOk.setId(4L);
-        testUserOk.setLogin("testUserOk");
-        testUserOk.setPassword("444444");
-        testUserOk.setAge(18);
-        assertNotNull(registrationService.register(testUserOk));
-    }
-
-    @Test
-    void check_repeatRegister() {
-        assertThrows(NullPointerException.class,
+    void registerExistingUser_notOk() {
+        assertThrows(RuntimeException.class,
                 () -> registrationService.register(Storage.people.get(0)));
     }
 
     @Test
-    void check_registerUserInvalidLogin() {
-        User testUserNullLogin = new User();
-        testUserNullLogin.setId(4L);
-        testUserNullLogin.setLogin(null);
-        testUserNullLogin.setPassword("444444");
-        testUserNullLogin.setAge(21);
+    void registerUserNullLogin_notOk() {
+        User incorrectUserNullLogin = new User();
+        incorrectUserNullLogin.setId(4L);
+        incorrectUserNullLogin.setLogin(null);
+        incorrectUserNullLogin.setPassword("444444");
+        incorrectUserNullLogin.setAge(21);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(testUserNullLogin));
+                () -> registrationService.register(incorrectUserNullLogin));
     }
 
     @Test
-    void check_registerUserInvalidPassword() {
-        User testUserNullPassword = new User();
-        testUserNullPassword.setId(4L);
-        testUserNullPassword.setLogin("testUserNullPassword");
-        testUserNullPassword.setPassword(null);
-        testUserNullPassword.setAge(21);
-        assertNull(registrationService.register(testUserNullPassword));
-
-        User testUserShortPassword = new User();
-        testUserShortPassword.setId(4L);
-        testUserShortPassword.setLogin("testUserShortPassword");
-        testUserShortPassword.setPassword("444");
-        testUserShortPassword.setAge(21);
-        assertNull(registrationService.register(testUserShortPassword));
+    void registerUserNullPassword_notOk() {
+        User incorrectUserNullPassword = new User();
+        incorrectUserNullPassword.setId(4L);
+        incorrectUserNullPassword.setLogin("testUserNullPassword");
+        incorrectUserNullPassword.setPassword(null);
+        incorrectUserNullPassword.setAge(21);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(incorrectUserNullPassword));
     }
 
     @Test
-    void check_registerUserInvalidAge() {
-        User testUserLessAge = new User();
-        testUserLessAge.setId(4L);
-        testUserLessAge.setLogin("testUserLessAge");
-        testUserLessAge.setPassword("444444");
-        testUserLessAge.setAge(15);
-        assertThrows(NullPointerException.class,
-                () -> registrationService.register(testUserLessAge));
+    void registerUserShortPassword_notOk() {
+        User incorrectUserShortPassword = new User();
+        incorrectUserShortPassword.setId(4L);
+        incorrectUserShortPassword.setLogin("testUserShortPassword");
+        incorrectUserShortPassword.setPassword("444");
+        incorrectUserShortPassword.setAge(21);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(incorrectUserShortPassword));
+    }
 
-        User testUserNullAge = new User();
-        testUserNullAge.setId(4L);
-        testUserNullAge.setLogin("testUserNullAge");
-        testUserNullAge.setPassword("444444");
-        testUserNullAge.setAge(null);
-        assertThrows(NullPointerException.class,
-                () -> registrationService.register(testUserNullAge));
+    @Test
+    void registerUserLessAge_notOk() {
+        User incorrectUserLessAge = new User();
+        incorrectUserLessAge.setId(4L);
+        incorrectUserLessAge.setLogin("testUserLessAge");
+        incorrectUserLessAge.setPassword("444444");
+        incorrectUserLessAge.setAge(15);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(incorrectUserLessAge));
+    }
 
-        User testUserNegativeAge = new User();
-        testUserNegativeAge.setId(4L);
-        testUserNegativeAge.setLogin("testUserNegativeAge");
-        testUserNegativeAge.setPassword("444444");
-        testUserNegativeAge.setAge(-15);
+    @Test
+    void registerUserNullAge_notOk() {
+        User incorrectUserNullAge = new User();
+        incorrectUserNullAge.setId(4L);
+        incorrectUserNullAge.setLogin("testUserNullAge");
+        incorrectUserNullAge.setPassword("444444");
+        incorrectUserNullAge.setAge(null);
         assertThrows(NullPointerException.class,
-                () -> registrationService.register(testUserNegativeAge));
+                () -> registrationService.register(incorrectUserNullAge));
+    }
+
+    @Test
+    void registerUserNegativeAge_notOk() {
+        User incorrectUserNegativeAge = new User();
+        incorrectUserNegativeAge.setId(4L);
+        incorrectUserNegativeAge.setLogin("testUserNegativeAge");
+        incorrectUserNegativeAge.setPassword("444444");
+        incorrectUserNegativeAge.setAge(-15);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(incorrectUserNegativeAge));
     }
 
     @Test

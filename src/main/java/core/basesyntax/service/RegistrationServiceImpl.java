@@ -11,48 +11,41 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        user = checkUserNotNull(user);
-        user = checkUserLogin(user);
-        user = checkUserAge(user);
-        user = checkUserPassword(user);
-        if (user != null) {
-            storageDao.add(user);
-            return user;
-        }
-        return null;
-    }
-
-    private User checkUserNotNull(User user) {
-        if (user == null) {
-            throw new RuntimeException("user cannot be null");
-        }
+        checkUser(user);
+        checkUserLogin(user);
+        checkUserAge(user);
+        checkUserPassword(user);
+        storageDao.add(user);
         return user;
     }
 
-    private User checkUserLogin(User user) {
+    private void checkUser(User user) {
+        if (user == null) {
+            throw new RuntimeException("user cannot be null");
+        }
+    }
+
+    private void checkUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("user login cannot be null");
         }
-        if (storageDao.get(user.getLogin()) == null) {
-            return user;
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("a user with this login already exists");
         }
-        return null;
     }
 
-    private User checkUserAge(User user) {
-        if (user.getAge() >= MINIMUM_USER_AGE) {
-            return user;
+    private void checkUserAge(User user) {
+        if (user.getAge() < MINIMUM_USER_AGE) {
+            throw new RuntimeException("user age is incorrect");
         }
-        return null;
     }
 
-    private User checkUserPassword(User user) {
+    private void checkUserPassword(User user) {
         if (user.getPassword() == null) {
-            return null;
+            throw new RuntimeException("user password cannot be null");
         }
-        if (user.getPassword().length() >= MINIMUM_PASSWORD_LENGTH) {
-            return user;
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new RuntimeException("user password cannot be less than six characters");
         }
-        return null;
     }
 }
