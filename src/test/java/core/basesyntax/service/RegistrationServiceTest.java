@@ -45,81 +45,63 @@ class RegistrationServiceTest {
     @Order(1)
     void register_userLoginIsNull_notOk() {
         newUser.setLogin(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(NullPointerException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(2)
     void register_userLoginLengthTooShort_notOk() {
         newUser.setLogin(LOGIN_TOO_SHORT);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(2)
     void register_userLoginLengthTooLong_notOk() {
         newUser.setLogin(LOGIN_TOO_LONG);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(1)
     void register_userPasswordIsNull_notOk() {
         newUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(NullPointerException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(3)
     void register_userPasswordIsTooShort_notOk() {
         newUser.setPassword(PASSWORD_TOO_SHORT);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(3)
     void register_userPasswordIsTooLong_notOk() {
         newUser.setPassword(PASSWORD_TOO_LONG);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(1)
     void register_userAgeIsNull_notOk() {
         newUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(NullPointerException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(4)
     void register_userAgeIsTooSmall_notOk() {
         newUser.setAge(AGE_TOO_SMALL);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     @Order(4)
     void register_userAgeIsTooOld_notOk() {
         newUser.setAge(AGE_IS_TOO_OLD);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
@@ -128,8 +110,6 @@ class RegistrationServiceTest {
         registrationService.register(newUser);
         String loginOfUserThatAleadyExists = Storage.people.get(0).getLogin();
         newUser.setLogin(loginOfUserThatAleadyExists);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 }
