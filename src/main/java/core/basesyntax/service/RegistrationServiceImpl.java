@@ -25,11 +25,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Age can't be null");
         }
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isEmpty()) {
             throw new RuntimeException("Login can't be empty");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with the same login already exists");
+            throw new RuntimeException("User with the same login " + user.getLogin()
+                    + " already exists");
         }
         if (user.getLogin().length() < LOGIN_MINIMAL_LENGTH) {
             throw new RuntimeException("Login should be " + LOGIN_MINIMAL_LENGTH
