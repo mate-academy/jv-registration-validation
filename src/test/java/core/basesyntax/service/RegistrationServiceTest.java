@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -22,11 +23,18 @@ class RegistrationServiceTest {
     private static final Integer AGE_TOO_SMALL = 17;
     private static final Integer AGE_IS_TOO_OLD = 151;
 
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
     private User newUser;
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("BeforeAll");
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
+        System.out.println("BeforeEach");
         newUser = new User();
         newUser.setLogin(LOGIN);
         newUser.setPassword(PASSWORD);
@@ -35,7 +43,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(1)
-    void userLoginIsNull_notOk() {
+    void register_userLoginIsNull_notOk() {
         newUser.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(newUser);
@@ -44,7 +52,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(2)
-    void userLoginLengthTooShort_notOk() {
+    void register_userLoginLengthTooShort_notOk() {
         newUser.setLogin(LOGIN_TOO_SHORT);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -53,7 +61,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(2)
-    void userLoginLengthTooLong_notOk() {
+    void register_userLoginLengthTooLong_notOk() {
         newUser.setLogin(LOGIN_TOO_LONG);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -62,7 +70,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(1)
-    void userPasswordIsNull_notOk() {
+    void register_userPasswordIsNull_notOk() {
         newUser.setPassword(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(newUser);
@@ -71,7 +79,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(3)
-    void userPasswordIsTooShort_notOk() {
+    void register_userPasswordIsTooShort_notOk() {
         newUser.setPassword(PASSWORD_TOO_SHORT);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -80,7 +88,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(3)
-    void userPasswordIsTooLong_notOk() {
+    void register_userPasswordIsTooLong_notOk() {
         newUser.setPassword(PASSWORD_TOO_LONG);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -89,7 +97,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(1)
-    void userAgeIsNull_notOk() {
+    void register_userAgeIsNull_notOk() {
         newUser.setAge(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(newUser);
@@ -98,7 +106,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(4)
-    void userAgeIsTooSmall_notOk() {
+    void register_userAgeIsTooSmall_notOk() {
         newUser.setAge(AGE_TOO_SMALL);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -107,7 +115,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(4)
-    void userAgeIsTooOld_notOk() {
+    void register_userAgeIsTooOld_notOk() {
         newUser.setAge(AGE_IS_TOO_OLD);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(newUser);
@@ -116,7 +124,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(5)
-    void registerUserThatAlreadyExists_notOk() {
+    void register_UserAlreadyExists_notOk() {
         registrationService.register(newUser);
         String loginOfUserThatAleadyExists = Storage.people.get(0).getLogin();
         newUser.setLogin(loginOfUserThatAleadyExists);
