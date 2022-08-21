@@ -113,8 +113,7 @@ class RegistrationServiceTest {
         expected = 1;
         actual = Storage.people.size();
         assertEquals(expected, actual);
-        String loginOfAnExistingUser = Storage.people.get(0).getLogin();
-        newUser.setLogin(loginOfAnExistingUser);
         assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertEquals(expected, actual);
     }
 }
