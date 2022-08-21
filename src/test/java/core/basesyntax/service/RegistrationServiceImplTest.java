@@ -56,8 +56,6 @@ class RegistrationServiceImplTest {
     void register_ageMoreThanMin_Ok() {
         validUser.setAge(46);
         assertEquals(validUser,registrationService.register(validUser));
-        assertNotNull(validUser.getId());
-        assertTrue(Storage.people.contains(validUser));
     }
 
     @Test
@@ -72,16 +70,12 @@ class RegistrationServiceImplTest {
     void register_minLengthPassword_Ok() {
         validUser.setPassword("123456");
         assertEquals(validUser,registrationService.register(validUser));
-        assertNotNull(validUser.getId());
-        assertTrue(Storage.people.contains(validUser));
     }
 
     @Test
     void register_moreThanMinPassword_Ok() {
         validUser.setPassword("123456password654321");
         assertEquals(validUser,registrationService.register(validUser));
-        assertNotNull(validUser.getId());
-        assertTrue(Storage.people.contains(validUser));
     }
 
     @Test

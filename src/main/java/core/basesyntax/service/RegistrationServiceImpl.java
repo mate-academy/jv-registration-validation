@@ -15,18 +15,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User is null");
         }
         if (user.getAge() == null || user.getAge() < MIN_USER_AGE) {
-            throw new RuntimeException("Invalid User age value");
+            throw new RuntimeException("Invalid User age value: " + user.getAge());
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new RuntimeException("Invalid User login value");
+            throw new RuntimeException("Invalid User login value: " + user.getLogin());
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("There is already user with that login");
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_USER_PASSWORD_LENGTH) {
-            throw new RuntimeException("Invalid User password value");
+            throw new RuntimeException("Invalid User password value: " + user.getPassword());
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
