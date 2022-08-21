@@ -1,17 +1,22 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
     public static final String DEFAULT_LOGIN = "jesus";
     public static final String DEFAULT_PASSWORD = "christ";
     public static final int DEFAULT_AGE = 33;
     private static RegistrationService registrationService;
-    private User expected_user;
+    private User expectedUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -20,37 +25,37 @@ class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
-        expected_user = new User();
-        expected_user.setLogin(DEFAULT_LOGIN);
-        expected_user.setPassword(DEFAULT_PASSWORD);
-        expected_user.setAge(DEFAULT_AGE);
+        expectedUser = new User();
+        expectedUser.setLogin(DEFAULT_LOGIN);
+        expectedUser.setPassword(DEFAULT_PASSWORD);
+        expectedUser.setAge(DEFAULT_AGE);
     }
 
     @Test
     void setDefaultUser_Ok() {
-        User actual_user = registrationService.register(expected_user);
-        assertEquals(expected_user, actual_user);
+        User actualUser = registrationService.register(expectedUser);
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
     void minimalLoginLength_Ok() {
-        expected_user.setLogin("ab");
-        User actual_user = registrationService.register(expected_user);
-        assertEquals(expected_user, actual_user);
+        expectedUser.setLogin("ab");
+        User actualUser = registrationService.register(expectedUser);
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
     void minimalValidAge_OK() {
-        expected_user.setAge(18);
-        User actual_user = registrationService.register(expected_user);
-        assertEquals(expected_user, actual_user);
+        expectedUser.setAge(18);
+        User actualUser = registrationService.register(expectedUser);
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
     void maximumValidAge_Ok() {
-        expected_user.setAge(122);
-        User actual_user = registrationService.register(expected_user);
-        assertEquals(expected_user, actual_user);
+        expectedUser.setAge(122);
+        User actualUser = registrationService.register(expectedUser);
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
@@ -59,9 +64,9 @@ class RegistrationServiceTest {
         user.setLogin("login");
         user.setPassword("password");
         user.setAge(30);
-        registrationService.register(expected_user);
+        registrationService.register(expectedUser);
         registrationService.register(user);
-        assertTrue(Storage.people.contains(expected_user));
+        assertTrue(Storage.people.contains(expectedUser));
         assertTrue(Storage.people.contains(user));
     }
 
@@ -74,73 +79,73 @@ class RegistrationServiceTest {
 
     @Test
     void loginNull_NotOk() {
-        expected_user.setLogin(null);
+        expectedUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void passwordNull_NotOk() {
-        expected_user.setPassword(null);
+        expectedUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void ageNull_NotOt() {
-        expected_user.setAge(null);
+        expectedUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void emptyLogin_NotOk() {
-        expected_user.setLogin("");
+        expectedUser.setLogin("");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void shortLogin_NotOk() {
-        expected_user.setLogin("a");
+        expectedUser.setLogin("a");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void shortPassword_NotOk() {
-        expected_user.setLogin("five5");
+        expectedUser.setLogin("five5");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void lessMinimalAge_NotOk() {
-        expected_user.setAge(17);
+        expectedUser.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void moreMaximumAge_NotOk() {
-        expected_user.setAge(123);
+        expectedUser.setAge(123);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 
     @Test
     void sameLogin_NotOk() {
-        registrationService.register(expected_user);
+        registrationService.register(expectedUser);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expected_user);
+            registrationService.register(expectedUser);
         });
     }
 

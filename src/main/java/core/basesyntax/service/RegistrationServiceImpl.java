@@ -32,10 +32,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User with the same login already exists");
         }
         if (user.getLogin().length() < LOGIN_MINIMAL_LENGTH) {
-            throw new RuntimeException("Login should be " + LOGIN_MINIMAL_LENGTH + " symbols or more");
+            throw new RuntimeException("Login should be " + LOGIN_MINIMAL_LENGTH
+                    + " symbols or more");
         }
         if (user.getPassword().length() < PASSWORD_MINIMAL_LENGTH) {
-            throw new RuntimeException("Password should be " + PASSWORD_MINIMAL_LENGTH + " symbols or more");
+            throw new RuntimeException("Password should be " + PASSWORD_MINIMAL_LENGTH
+                    + " symbols or more");
         }
         if (user.getAge() < MINIMAL_AGE) {
             throw new RuntimeException("Users age can't be less than " + MINIMAL_AGE);
