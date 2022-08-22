@@ -3,13 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationServiceException;
 import core.basesyntax.model.User;
-
-import java.util.List;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -28,14 +23,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserWithNullLogin_NotOk() {
-        User userWithNullLogin = new User( null, "password12345678", 20);
+        User userWithNullLogin = new User(null, "password12345678", 20);
         assertThrows(RegistrationServiceException.class,
                 () -> registrationService.register(userWithNullLogin));
     }
 
     @Test
     void register_UserWithNegativeAge_NotOk() {
-        User userWithNegativeAge = new User( "nineLogin@gmail.com", "ninethPassword", -6);
+        User userWithNegativeAge = new User("nineLogin@gmail.com", "ninethPassword", -6);
         assertThrows(RegistrationServiceException.class,
                 () -> registrationService.register(userWithNegativeAge));
     }
@@ -51,7 +46,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_ExistedUser_NotOk() {
         User secondUser =
-                new User( "secondLogin@gamil.com", "secondPassword", 30);
+                new User("secondLogin@gamil.com", "secondPassword", 30);
         registrationService.register(secondUser);
         assertThrows(RegistrationServiceException.class,
                 () -> registrationService.register(secondUser));
@@ -70,7 +65,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_UserWithShortPassword_NotOk() {
         User newUser =
-                new User( "fifthLogin@gmail.com", "fifth", 67);
+                new User("fifthLogin@gmail.com", "fifth", 67);
         assertThrows(RegistrationServiceException.class,
                 () -> registrationService.register(newUser));
     }
@@ -86,7 +81,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_YoungUserWithShortPassword_NotOk() {
         User youngUserWithShortPassword =
-                new User( "seventhLogin@gmail.com", "seven", 10);
+                new User("seventhLogin@gmail.com", "seven", 10);
         assertThrows(RegistrationServiceException.class,
                 () -> registrationService.register(youngUserWithShortPassword));
     }
