@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLengthIsNormal_notOk() {
+    void register_passwordLengthIsShort_notOk() {
         userOne.setPassword("1w2Dr");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userOne),
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsCorrect_notOk() {
+    void register_underAge_notOk() {
         userOne.setAge(17);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userOne),
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsInStorage_ok() {
+    void register_userNotInStorage_ok() {
         assertEquals(userOne, registrationService.register(userOne),
                 "Verifying is failed. User can be added. No user with nickname "
                         + userOne.getLogin() + " in the storage.");
