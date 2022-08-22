@@ -22,15 +22,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null || user.getAge() < ALLOWED_USERS_AGE) {
             throw new RegistrationServiceException("Allowed users age is " + ALLOWED_USERS_AGE);
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationServiceException("Short password length "
-                    + user.getPassword().length()
-                    + " needed length at least " + MIN_PASSWORD_LENGTH);
+        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationServiceException("Short password length, "
+                    + " expected length at least " + MIN_PASSWORD_LENGTH);
         }
         if (user.getLogin() == null) {
             throw new RegistrationServiceException("User login is null");
         }
-        storageDao.add(user);
-        return storageDao.get(user.getLogin());
+        return storageDao.add(user);
     }
 }
