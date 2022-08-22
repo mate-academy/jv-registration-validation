@@ -13,11 +13,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (!nullChecker(user).equals("Ok")) {
-            exeptionTrows("nullChecker", nullChecker(user));
+            throw new RuntimeException(user + "have null parameters");
         }
         userAgeCheck(user.getAge());
         userLoginCheck(user.getLogin());
-        userPasswordLengthCheck(user.getPassword());
+        userPasswordCheck(user.getPassword());
         storageDao.add(user);
         return user;
     }
@@ -31,33 +31,24 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     }
 
-    private boolean exeptionTrows(String method, String argument) {
-        switch (method) {
-            case "userPasswordLengthCheck" :
-                throw new RuntimeException("The password " + argument + " is incorrect");
-            case "userLoginCheck" :
-                throw new RuntimeException("Login " + argument + " is wrong");
-            case "userAgeCheck" :
-                throw new RuntimeException("Age " + argument + " is lass than 18");
-            case "nullChecker" :
-                throw new RuntimeException(argument + " is null");
-            default:
-                return false;
+    private void userPasswordCheck(String password) {
+        if (password.matches(REGEX_PASSWORD)) {
+            return;
         }
+        throw new RuntimeException("The password " + password + " is incorrect");
     }
 
-    private boolean userPasswordLengthCheck(String password) {
-        return password.matches(REGEX_PASSWORD) ? true :
-                exeptionTrows("userPasswordLengthCheck", password);
+    private void userLoginCheck(String login) {
+        if (storageDao.get(login) == null && !login.contains(" ")) {
+            return;
+        }
+        throw new RuntimeException("Login " + login + " is wrong");
     }
 
-    private boolean userLoginCheck(String login) {
-        return storageDao.get(login) == null && !login.contains(" ") ? true
-                : exeptionTrows("userLoginCheck", login);
-    }
-
-    private boolean userAgeCheck(int age) {
-        return age >= MAX_AGE ? true :
-                exeptionTrows("userAgeCheck", String.valueOf(age));
+    private void userAgeCheck(int age) {
+        if (age >= MAX_AGE) {
+            return;
+        }
+        throw new RuntimeException("Age " + age + " is lass than 18");
     }
 }
