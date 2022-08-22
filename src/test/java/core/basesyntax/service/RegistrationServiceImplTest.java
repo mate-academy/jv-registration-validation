@@ -30,7 +30,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
+        user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         user.setAge(DEFAULT_AGE);
         user.setLogin(DEFAULT_LOGIN);
         user.setPassword(DEFAULT_PASSWORD);
@@ -43,8 +43,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_differentUsers_Ok() {
-        User userFirst = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN);
-        User userSecond = createUser(DEFAULT_AGE + 1, DEFAULT_PASSWORD + "1", DEFAULT_LOGIN + "a");
+        User userFirst = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User userSecond = new User(DEFAULT_LOGIN + "a", DEFAULT_PASSWORD + "1", DEFAULT_AGE + 1);
         registrationService.register(userFirst);
         registrationService.register(userSecond);
         User expectedUser1 = storageDao.get(DEFAULT_LOGIN);
@@ -120,14 +120,6 @@ class RegistrationServiceImplTest {
     @AfterEach
     void tearDown() {
         Storage.people.clear();
-    }
-
-    private User createUser(Integer age, String password, String login) {
-        User user = new User();
-        user.setAge(age);
-        user.setPassword(password);
-        user.setLogin(login);
-        return user;
     }
 
     private void checkException(User currentUser) {
