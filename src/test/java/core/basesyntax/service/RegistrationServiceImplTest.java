@@ -99,6 +99,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existsLogin_notOk() {
+        User maks = new User();
+        maks.setPassword("123456");
+        maks.setAge(23);
+        maks.setLogin(user.getLogin());
         registrationService.register(user);
+        assertThrows(RuntimeException.class, ()
+                -> registrationService.register(maks));
     }
 }
