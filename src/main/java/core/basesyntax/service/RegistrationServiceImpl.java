@@ -13,12 +13,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         checkIfDataIsNull(user);
-        checkIfAdd(user);
+        storageDao.add(checkIfAdd(user));
         return user;
     }
 
     private void checkIfDataIsNull(User user) {
-        if (user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new RuntimeException("Login can not be null");
         }
 
@@ -29,12 +29,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Age can not be null");
         }
+
+        if (user == null) {
+            throw new RuntimeException("User can not be null");
+        }
     }
 
-    private void checkIfAdd(User user) {
+    private User checkIfAdd(User user) {
         if (!(Storage.people.contains(user)) && user.getAge() >= MIN_AGE
                 && user.getPassword().length() >= MIN_LENGTH) {
-            storageDao.add(user);
+            return user;
         } else {
             throw new RuntimeException("Invalid data");
         }

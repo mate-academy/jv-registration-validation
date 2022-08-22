@@ -49,10 +49,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsEmpty_notOk() {
-        user.setLogin(" ");
+    void register_loginIsEmpty_notOk() {
+        user.setLogin("");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordIsEmpty_notOk() {
+        user.setPassword("");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
+    void register_ageIsZero_notOk() {
         user.setAge(0);
-        user.setPassword(" ");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
@@ -84,7 +96,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsInValid() {
+    void register_ageIsIntValid() {
         user.setAge(-1);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
