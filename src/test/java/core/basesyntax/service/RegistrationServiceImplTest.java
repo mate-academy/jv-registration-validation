@@ -36,6 +36,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_passwordIsNull_notOk() {
+        userOne.setPassword(null);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(userOne),
+                "Password can't be null.");
+    }
+
+    @Test
     void register_passwordLengthIsNormal_ok() {
         User userReturned = registrationService.register(userOne);
         assertEquals(userOne, userReturned,
@@ -51,6 +59,13 @@ class RegistrationServiceImplTest {
                 "Verifying is failed. Too shot password.");
     }
 
+    @Test
+    void register_ageIsNull_notOk() {
+        userOne.setAge(null);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(userOne),
+                "Age can't be null.");
+    }
     @Test
     void register_ageIsCorrect_ok() {
         User userReturned = registrationService.register(userOne);
