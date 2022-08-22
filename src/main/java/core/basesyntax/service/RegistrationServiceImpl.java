@@ -27,6 +27,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new NullPointerException("User age can not be NULL");
         }
+        if (storageDao.get(login) != null) {
+            throw new RuntimeException("The user already exists in the storage");
+        }
         if (login.length() < MINIMUM_LOGIN_LENGTH || login.length() > MAXIMUM_LOGIN_LENGTH) {
             throw new RuntimeException("User login must be between " + MINIMUM_LOGIN_LENGTH
                     + " and " + MAXIMUM_LOGIN_LENGTH + " letters but is " + login.length());
@@ -40,9 +43,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User age can not be least " + MINIMUM_AGE
                     + " years old and can not be greater than " + MAXIMUM_AGE
                     + " years old but is " + age);
-        }
-        if (storageDao.get(login) != null) {
-            throw new RuntimeException("The user already exists in the storage");
         }
         storageDao.add(user);
         return user;
