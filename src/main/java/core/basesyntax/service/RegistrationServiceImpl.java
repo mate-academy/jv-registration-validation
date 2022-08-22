@@ -26,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new NullPointerException("Password field can't be null");
         } else if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password length must be at least 6");
+            throw new RuntimeException("Password length must be at least " + MIN_PASSWORD_LENGTH);
         }
     }
 
@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new NullPointerException("User age can not be Null!");
         } else if (age < MIN_USER_AGE) {
-            throw new RuntimeException("User is under 18 years old");
+            throw new RuntimeException("User is under " + MIN_USER_AGE + " years old");
         }
     }
 
