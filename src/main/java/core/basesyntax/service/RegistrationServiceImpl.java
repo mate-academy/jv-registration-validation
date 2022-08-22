@@ -26,6 +26,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already exists");
         }
+        if (user.getLogin().length() == 0) {
+            throw new RuntimeException("Login is empty");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age is less than " + MIN_AGE);
         }
