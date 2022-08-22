@@ -82,7 +82,7 @@ public class RegistrationServiseTest {
 
     @Test
     public void register_TooYoungUser_NotOk() {
-        user.setAge(11);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "In case of the User's age smaller 18 should throw RuntimeException.");
     }
