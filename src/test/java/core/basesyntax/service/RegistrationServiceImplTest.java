@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessEighteen_NotOk() {
-        User user = new User(VALID_LOGIN, VALID_PASSWORD, 5);
+        User user = new User(VALID_LOGIN, VALID_PASSWORD, 17);
         checkRegistrationException(user);
     }
 
