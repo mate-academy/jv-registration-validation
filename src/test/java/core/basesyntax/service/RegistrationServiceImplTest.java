@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLengthLessThen6_notOk() {
+    void register_passwordLengthLessThenMin_notOk() {
         newUser.setLogin("Tony");
         newUser.setPassword("12345");
         newUser.setAge(18);
