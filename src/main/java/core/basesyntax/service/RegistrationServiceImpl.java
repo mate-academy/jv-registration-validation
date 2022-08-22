@@ -6,6 +6,8 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int AGE = 18;
+    private static final int PASSWORD_LENGTH = 6;
 
     @Override
     public User register(User user) {
@@ -16,20 +18,36 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    private void checkAge (User user) {
-        if (user.getAge() < 18) {
-            throw new RuntimeException("Age user least 18 years");
+    private void checkAge(User user) {
+        if (user.getAge() == null) {
+            throw new NullPointerException("Age cannot be null");
         }
-    }
-    private void checkPassword (User user) {
-        if (user.getPassword().length() < 6) {
-            throw new RuntimeException("User password is least 6 characters");
-        }
-    }
-    private void checkLogin (User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("the user already exists");
+        if (user.getAge() < AGE) {
+            throw new RuntimeException("Age user must be over 18 years");
         }
     }
 
+    private void checkPassword(User user) {
+        if (user.getPassword().isEmpty()) {
+            throw new RuntimeException("Password cannot be is empty");
+        }
+        if (user.getPassword() == null) {
+            throw new NullPointerException("Password cannot be is null");
+        }
+        if (user.getPassword().length() < PASSWORD_LENGTH) {
+            throw new RuntimeException("User password must be over 6 characters");
+        }
+    }
+
+    private void checkLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new NullPointerException("Login cannot be null");
+        }
+        if (user.getLogin().isEmpty()) {
+            throw new RuntimeException("User login cannot be empty");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("The user already exists");
+        }
+    }
 }
