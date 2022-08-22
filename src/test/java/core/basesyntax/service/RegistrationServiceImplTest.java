@@ -62,6 +62,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginLengthLess6_NotOk() {
+        User actual = new User(CORRECT_LOGIN, "passw", 18);
+        checkException(actual);
+    }
+
+    @Test
+    void register_loginAlreadyExist_NotOk() {
         User expected = new User(CORRECT_LOGIN, CORRECT_PASSWORD, 18);
         User actual = new User(CORRECT_LOGIN, CORRECT_PASSWORD, 18);
         assertEquals(expected, actual);
