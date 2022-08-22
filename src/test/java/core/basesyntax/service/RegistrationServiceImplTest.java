@@ -39,7 +39,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThanValid_notOk() {
-        user.setAge(5);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
@@ -68,8 +68,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_isEmpty_notOK() {
         user.setLogin("");
-        user.setAge(0);
-        user.setPassword("");
+        user.setAge(18);
+        user.setPassword("sdsjfsdhf");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
