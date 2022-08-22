@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +13,18 @@ class RegistrationServiceTest {
     private static final String DEFAULT_LOGIN = "login";
     private static final String DEFAULT_PASSWORD = "password";
     private static final Integer DEFAULT_AGE = 20;
+    private static RegistrationService service;
     private User defaultUser;
-    private RegistrationService service = new RegistrationServiceImpl();
 
     @BeforeEach
     void setUp() {
         defaultUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         Storage.people.clear();
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        service = new RegistrationServiceImpl();
     }
 
     @Test
@@ -47,13 +53,13 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void checkedRegister_ok() {
+    void register_checkedRegister_ok() {
         User actual = service.register(defaultUser);
         assertEquals(defaultUser, actual);
     }
 
     @Test
-    void loginNull_notOk() {
+    void register_loginNull_notOk() {
         defaultUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             service.register(defaultUser);
@@ -69,8 +75,8 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void checkedAge_notOk() {
-        defaultUser.setAge(15);
+    void register_checkedAge_notOk() {
+        defaultUser.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             service.register(defaultUser);
         });
@@ -78,6 +84,10 @@ class RegistrationServiceTest {
         assertThrows(RuntimeException.class, () -> {
             service.register(defaultUser);
         });
+    }
+
+    @Test
+    void register_checkedNullAge_notOk() {
         defaultUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             service.register(defaultUser);
