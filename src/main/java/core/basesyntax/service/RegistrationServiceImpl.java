@@ -11,8 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getPassword() == null || user.getLogin() == null || user.getAge() == null) {
-            throw new NullPointerException("Value cant be null");
+        if (user.getPassword() == null || user.getLogin() == null
+                || user.getAge() == null || user == null) {
+            throw new RuntimeException("Value cant be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User " + user.getLogin() + " already exist");

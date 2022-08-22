@@ -2,6 +2,8 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -36,14 +38,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageIsNull_notOk() {
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> registration.register(user),
+        assertThrows(RuntimeException.class, () -> registration.register(user),
                 "User age can`t be null");
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registration.register(user),
+        assertThrows(RuntimeException.class, () -> registration.register(user),
                 "User password can`t be null");
     }
 
@@ -57,7 +59,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registration.register(user),
+        assertThrows(RuntimeException.class, () -> registration.register(user),
                 "User login can`t be null");
     }
 
@@ -70,9 +72,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingLogin_notOk() {
-        registration.register(user);
+        StorageDao storageDao = new StorageDaoImpl();
+        storageDao.add(user);
         assertThrows(RuntimeException.class, () -> registration.register(user),
                 "User already exist");
+    }
+
+    @Test
+    void register_userEqualsNull_notOk() {
+        assertThrows(RuntimeException.class, () -> registration.register(null),
+                "User can`t be null");
     }
 
     @AfterEach
