@@ -49,13 +49,6 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_maximumValidAge_Ok() {
-        expectedUser.setAge(123);
-        User actualUser = registrationService.register(expectedUser);
-        assertEquals(expectedUser, actualUser);
-    }
-
-    @Test
     void register_twoDifferentUsers_Ok() {
         User user = new User();
         user.setLogin("login");
