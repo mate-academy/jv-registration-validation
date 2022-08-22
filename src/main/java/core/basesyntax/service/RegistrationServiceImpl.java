@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             case "userPasswordLengthCheck" :
                 throw new RuntimeException("The password " + argument + " is incorrect");
             case "userLoginCheck" :
-                throw new RuntimeException("Login " + argument + "is wrong");
+                throw new RuntimeException("Login " + argument + " is wrong");
             case "userAgeCheck" :
                 throw new RuntimeException("Age " + argument + " is lass than 18");
             case "null" :
