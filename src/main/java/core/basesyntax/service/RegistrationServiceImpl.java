@@ -18,6 +18,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("Can`t add user with parameter null");
         }
+        checkUserLogin(user);
+        checkUserPassword(user);
+        checkUserAge(user);
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Can`t add user. User with the same login already exist!");
+        }
+        storageDao.add(user);
+        return user;
+    }
+
+    private void checkUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("Can`t add user with null login");
         }
@@ -28,6 +39,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MAXIMUM_USER_LOGIN_LENGTH + ", your login length is "
                     + user.getLogin().length());
         }
+    }
+
+    private void checkUserPassword(User user) {
         if (user.getPassword() == null) {
             throw new RuntimeException("Can`t add user with null password");
         }
@@ -38,6 +52,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MAXIMUM_USER_PASSWORD_LENGTH + ", your login length is "
                     + user.getPassword().length());
         }
+    }
+
+    private void checkUserAge(User user) {
         if (user.getAge() == null) {
             throw new RuntimeException("Can`t add user with null age");
         }
@@ -46,10 +63,5 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MINIMUM_USER_AGE + " and more than "
                     + MAXIMUM_USER_AGE + ", your login length is " + user.getAge());
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Can`t add user. User with the same login already exist!");
-        }
-        storageDao.add(user);
-        return user;
     }
 }

@@ -13,16 +13,8 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_USER_LOGIN = "login123";
-    private static final String INVALID_SHORTER_LOGIN_LENGTH = "log12";
-    private static final String INVALID_LONGER_LOGIN_LENGTH = "login123456";
     private static final String VALID_USER_PASSWORD = "password123";
-    private static final String VALID_OLD_USER_PASSWORD = "password12345";
-    private static final String INVALID_SHORTER_PASSWORD_LENGTH = "pass1";
-    private static final String INVALID_LONGER_PASSWORD_LENGTH = "password12345678";
     private static final Integer VALID_USER_AGE = 25;
-    private static final Integer VALID_OLD_USER_AGE = 30;
-    private static final Integer INVALID_LOWER_USER_AGE = 10;
-    private static final Integer INVALID_HIGHER_USER_AGE = 110;
     private static RegistrationService registrationService;
     private User user;
 
@@ -32,7 +24,7 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void initializationValidUser() {
         user = new User();
         user.setLogin(VALID_USER_LOGIN);
         user.setPassword(VALID_USER_PASSWORD);
@@ -61,7 +53,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ShorterUserLogin_NotOk() {
-        user.setLogin(INVALID_SHORTER_LOGIN_LENGTH);
+        user.setLogin("log12");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -69,7 +61,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LongerUserLogin_NotOk() {
-        user.setLogin(INVALID_LONGER_LOGIN_LENGTH);
+        user.setLogin("login123456");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -90,7 +82,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ShorterUserPassword_NotOk() {
-        user.setPassword(INVALID_SHORTER_PASSWORD_LENGTH);
+        user.setPassword("pass1");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -98,7 +90,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LongerUserPassword_NotOk() {
-        user.setPassword(INVALID_LONGER_PASSWORD_LENGTH);
+        user.setPassword("password12345678");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -124,7 +116,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LowerUserAge_NotOk() {
-        user.setAge(INVALID_LOWER_USER_AGE);
+        user.setAge(10);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -132,7 +124,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_HigherUserAge_NotOk() {
-        user.setAge(INVALID_HIGHER_USER_AGE);
+        user.setAge(110);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -142,8 +134,8 @@ class RegistrationServiceImplTest {
     void register_UserWithTheSameLoginExist_NotOk() {
         User oldUser = new User();
         oldUser.setLogin(VALID_USER_LOGIN);
-        oldUser.setPassword(VALID_OLD_USER_PASSWORD);
-        oldUser.setAge(VALID_OLD_USER_AGE);
+        oldUser.setPassword("password12345");
+        oldUser.setAge(30);
         registrationService.register(oldUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
