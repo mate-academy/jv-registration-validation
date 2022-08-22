@@ -11,9 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int VALID_AGE = 20;
-    private static final String VALID_PASSWORD = "password";
-    private static final String VALID_LOGIN = "login";
     private static RegistrationServiceImpl registrationService;
     private static User user;
 
@@ -25,9 +22,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(VALID_AGE);
-        user.setPassword(VALID_PASSWORD);
-        user.setLogin(VALID_LOGIN);
+        user.setAge(20);
+        user.setPassword("password");
+        user.setLogin("login");
     }
 
     @Test
@@ -62,22 +59,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_allDataIsValid_Ok() {
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
-        user.setLogin(VALID_LOGIN);
         assertEquals(registrationService.register(user), user);
     }
 
     @Test
     void register_ageIsInvalid_notOk() {
-        user.setAge(10);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_passwordIsInvalid_notOk() {
-        user.setPassword("fail");
+        user.setPassword("passw");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
@@ -99,7 +93,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userIsNull_notOk() {
         assertThrows(RuntimeException.class, () ->
-                registrationService.register(new User()));
+                registrationService.register(null));
     }
 
     @AfterEach

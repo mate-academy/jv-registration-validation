@@ -12,16 +12,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getPassword() == null
-                || user.getAge() == null) {
-            throw new RuntimeException("Data can not be null");
+        checkIfDataIsNull(user);
+        checkIfAdd(user);
+        return user;
+    }
+
+    private void checkIfDataIsNull(User user) {
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Login can not be null");
         }
+
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Password can not be null");
+        }
+
+        if (user.getAge() == null) {
+            throw new RuntimeException("Age can not be null");
+        }
+    }
+
+    private void checkIfAdd(User user) {
         if (!(Storage.people.contains(user)) && user.getAge() >= MIN_AGE
                 && user.getPassword().length() >= MIN_LENGTH) {
             storageDao.add(user);
         } else {
             throw new RuntimeException("Invalid data");
         }
-        return user;
     }
 }
