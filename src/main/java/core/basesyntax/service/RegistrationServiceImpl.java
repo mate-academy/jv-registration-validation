@@ -19,16 +19,16 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getAge() == null) {
             throw new NullPointerException("You must fill all the fields!");
         }
-        if (storageDao.get(user.getLogin()) == null) {
-            if (user.getAge() >= MIN_ACCEPT_AGE) {
-                if (user.getPassword().length() >= MIN_ACCEPT_PASSWORD_LENGTH) {
-                    storageDao.add(user);
-                    return user;
-                }
-                throw new UsersPasswordNotValidException("Password must be at least 6 symbols");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserAlreadyExistException("This login already exists!");
+        }
+        if (user.getAge() < MIN_ACCEPT_AGE) {
             throw new UsersAgeNotValidException("You should be older!");
         }
-        throw new UserAlreadyExistException("This login already exists!");
+        if (user.getPassword().length() < MIN_ACCEPT_PASSWORD_LENGTH) {
+            throw new UsersPasswordNotValidException("Password must be at least 6 symbols");
+        }
+        storageDao.add(user);
+        return user;
     }
 }

@@ -9,6 +9,7 @@ import core.basesyntax.exceptions.UserAlreadyExistException;
 import core.basesyntax.exceptions.UsersAgeNotValidException;
 import core.basesyntax.exceptions.UsersPasswordNotValidException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -20,26 +21,27 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @Test
-    void validUserCase_Ok() {
-        User marko = new User("marko", "gjtor3r", 20);
-        User franklin = new User("franklin", "34432fk", 18);
-        User brad = new User("Brad","007009", 19);
-        registrationService.register(marko);
-        registrationService.register(franklin);
-        registrationService.register(brad);
-        assertEquals(1, marko.getId());
-        assertEquals(2, franklin.getId());
-        assertEquals(3, brad.getId());
-        assertEquals(3, Storage.people.size());
-        assertTrue(Storage.people.contains(marko));
-        assertTrue(Storage.people.contains(franklin));
-        assertTrue(Storage.people.contains(brad));
+    @AfterEach
+    void afterEach() {
         Storage.people.clear();
     }
 
     @Test
-    void equalsLoginTrue_NotOk() {
+    void register_validUserCase_Ok() {
+        User franklin = new User("franklin", "34432fk", 18);
+        User marko = new User("marko", "gjtor3", 20);
+        User brad = new User("Brad","007009", 19);
+        registrationService.register(franklin);
+        registrationService.register(marko);
+        registrationService.register(brad);
+        assertEquals(3, Storage.people.size());
+        assertTrue(Storage.people.contains(franklin));
+        assertTrue(Storage.people.contains(marko));
+        assertTrue(Storage.people.contains(brad));
+    }
+
+    @Test
+    void register_userExist_NotOk() {
         User marko1 = new User("marko", "34432fk", 18);
         User marko2 = new User("marko", "34432fk", 18);
         registrationService.register(marko1);
@@ -47,19 +49,18 @@ class RegistrationServiceImplTest {
                 registrationService.register(marko2));
         assertEquals(1, Storage.people.size());
         assertTrue(Storage.people.contains(marko1));
-        Storage.people.clear();
     }
 
     @Test
-    void passwordValidation_NotOk() {
-        User alice = new User("alice", "0g4", 18);
+    void register_passwordValidation_NotOk() {
+        User alice = new User("alice", "passw", 18);
         assertThrows(UsersPasswordNotValidException.class, () ->
                 registrationService.register(alice));
     }
 
     @Test
-    void ageValidation_NotOk() {
-        User jacob = new User("jacob", "34432fk", 10);
+    void register_ageValidation_NotOk() {
+        User jacob = new User("jacob", "34432fk", 17);
         assertThrows(UsersAgeNotValidException.class, () ->
                 registrationService.register(jacob));
     }
