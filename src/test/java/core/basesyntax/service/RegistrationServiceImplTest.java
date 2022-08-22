@@ -82,9 +82,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_userSameLogin_notOk() {
-        User sameUser = user;
         User actual = new User(DEFAULT_USER_LOGIN, "uaesrPassword", DEFAULT_USER_MIN_AGE);
-        registerService.register(sameUser);
+        registerService.register(actual);
         assertThrows(RuntimeException.class, () -> registerService.register(actual));
     }
 
@@ -96,8 +95,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_userAge18_ok() {
-        User actual = user;
-        User expected = registerService.register(actual);
+        User expected = user;
+        User actual = registerService.register(expected);
         assertEquals(expected, actual);
     }
 
