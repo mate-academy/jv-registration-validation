@@ -48,6 +48,15 @@ public class RegistrationTests {
     }
 
     @Test
+    void register_addUserTwice_notOK() {
+        userTest.setLogin("Login");
+        userTest.setAge(180);
+        userTest.setPassword("13@shitHappens");
+        registrationService.register(userTest);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userTest));
+    }
+
+    @Test
     void register_addAge_Ok() {
         userTest.setLogin("Login");
         userTest.setPassword("passWord1");
