@@ -50,12 +50,6 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_userLoginLengthTooLong_notOk() {
-        newUser.setLogin("abcdefghijklmnopqrstuvwxyzABCDE");
-        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
-    }
-
-    @Test
     void register_userPasswordIsNull_notOk() {
         newUser.setPassword(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(newUser));
@@ -64,12 +58,6 @@ class RegistrationServiceTest {
     @Test
     void register_userPasswordIsTooShort_notOk() {
         newUser.setPassword("abcde");
-        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
-    }
-
-    @Test
-    void register_userPasswordIsTooLong_notOk() {
-        newUser.setPassword("abcdefghijklmnopqrstuvwxyzABCDE");
         assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
@@ -112,7 +100,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_addUserAndAddUserAlreadyExists_notOk() {
+    void register_addUserAlreadyExists_notOk() {
         int expectedSize = 0;
         int actualSize = Storage.people.size();
         assertEquals(expectedSize, actualSize);

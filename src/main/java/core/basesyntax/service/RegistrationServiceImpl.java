@@ -6,10 +6,8 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_LOGIN_LENGTH = 4;
-    private static final int MAXIMUM_LOGIN_LENGTH = 30;
     private static final int MINIMUM_AGE = 18;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
-    private static final int MAXIMUM_PASSWORD_LENGTH = 30;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -29,19 +27,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("The user already exists in the storage");
         }
-        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH
-                || user.getLogin().length() > MAXIMUM_LOGIN_LENGTH) {
-            throw new RuntimeException("User login must be between "
-                    + MINIMUM_LOGIN_LENGTH
-                    + " and " + MAXIMUM_LOGIN_LENGTH
-                    + " letters but is " + user.getLogin().length());
+        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
+            throw new RuntimeException("User login length must be minimum "
+                    + MINIMUM_LOGIN_LENGTH + " letters but is " + user.getLogin().length());
         }
-        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH
-                || user.getPassword().length() > MAXIMUM_PASSWORD_LENGTH) {
-            throw new RuntimeException("User password must be between "
-                    + MINIMUM_PASSWORD_LENGTH
-                    + " and " + MAXIMUM_PASSWORD_LENGTH
-                    + " letters but is " + user.getPassword().length());
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new RuntimeException("User password length must be minimum "
+                    + MINIMUM_PASSWORD_LENGTH + " letters but is " + user.getPassword().length());
         }
         if (user.getAge() < MINIMUM_AGE) {
             throw new RuntimeException("User age can not be least " + MINIMUM_AGE
