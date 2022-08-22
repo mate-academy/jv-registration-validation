@@ -7,7 +7,6 @@ import core.basesyntax.service.db.Storage;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 500;
     private static final int PASSWORD_MIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -40,8 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean checkAge(User user) {
         if (user.getAge() != null
-                && user.getAge() >= MIN_AGE
-                && user.getAge() < MAX_AGE) {
+                && user.getAge() >= MIN_AGE) {
             return true;
         }
         return false;

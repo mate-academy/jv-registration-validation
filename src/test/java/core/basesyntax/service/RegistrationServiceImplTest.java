@@ -36,14 +36,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_veryOldUser_notOk() {
-        user.setLogin("example9");
-        user.setPassword("123456");
-        user.setAge(546);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
     void registration_userNullLogin_notOk() {
         user.setLogin(null);
         user.setPassword("123456");
