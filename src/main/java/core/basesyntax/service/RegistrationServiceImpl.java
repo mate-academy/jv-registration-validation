@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void checkUser(User user) {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age lower than min age: " + MIN_AGE
-                    + "\nbut it was: " + user.getAge());
+                    + "\nBut it was: " + user.getAge());
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password shorter than min length"
