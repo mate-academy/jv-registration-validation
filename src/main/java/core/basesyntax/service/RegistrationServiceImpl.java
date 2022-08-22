@@ -17,17 +17,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("User login is null");
         }
-        if (user.getLogin().length() == 0) {
+        if (user.getLogin().isEmpty()) {
             throw new RuntimeException("User login length = 0");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already exists");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("User age under " + MIN_AGE);
-        }
         if (user.getAge() == null) {
             throw new RuntimeException("User age is null");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("User age under " + MIN_AGE);
         }
         if (user.getPassword() == null) {
             throw new RuntimeException("User password is null");
