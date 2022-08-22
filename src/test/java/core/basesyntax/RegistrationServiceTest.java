@@ -46,6 +46,15 @@ public class RegistrationServiceTest {
                 });
         assertEquals("User must be 18 years old or older", exception.getMessage());
     }
+    @Test
+    public void register_userUnderagedCorner_notOkey() {
+        firstUser.setAge(17);
+        RuntimeException exception =
+                assertThrows(RuntimeException.class,() -> {
+                    service.register(firstUser);
+                });
+        assertEquals("User must be 18 years old or older", exception.getMessage());
+    }
 
     @Test
     public void register_nullLogin_notOkey() {
@@ -94,9 +103,9 @@ public class RegistrationServiceTest {
     @Test
     public void register_userSameLogin_notOkey() {
         secondUser = firstUser;
+        service.register(firstUser);
         RuntimeException exception =
                 assertThrows(RuntimeException.class,() -> {
-                    service.register(firstUser);
                     service.register(secondUser);
                 });
         assertEquals("There is already user with such login", exception.getMessage());
