@@ -7,17 +7,20 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -26,6 +29,11 @@ class RegistrationServiceImplTest {
         user.setLogin("BobBlink");
         user.setAge(25);
         user.setPassword("123456789");
+    }
+
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
     }
 
     @Test
@@ -42,13 +50,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void checkAgeIsLessThanNormal_NotOk() {
-        user.setAge(-5);
+        user.setAge(17);
         checkException(user, "Age can't be less than 18");
     }
 
     @Test
     void checkLoginTheSame_NotOk() {
-        Storage.people.clear();
         registrationService.register(user);
         checkException(user, "Login can't be the same");
     }
@@ -61,14 +68,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void checkPasswordSmall_NotOk() {
-        user.setPassword("123");
-        checkException(user, "Login can't be lower than 6 characters");
+        user.setPassword("12345");
+        checkException(user, "Password can't be lower than 6 characters");
     }
 
     @Test
     void checkAddUser_Ok() {
         registrationService.register(user);
-        StorageDao storageDao = new StorageDaoImpl();
         assertEquals(user,storageDao.get(user.getLogin()), "User not added");
     }
 
