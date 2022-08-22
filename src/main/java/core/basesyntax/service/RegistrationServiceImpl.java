@@ -10,7 +10,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_USER_PASSWORD_LENGTH = 6;
     private static final int MAXIMUM_USER_PASSWORD_LENGTH = 15;
     private static final int MINIMUM_USER_AGE = 18;
-    private static final int MAXIMUM_USER_AGE = 100;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -49,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getPassword().length() > MAXIMUM_USER_PASSWORD_LENGTH) {
             throw new RuntimeException("Can`t add user with password length less than "
                     + MINIMUM_USER_PASSWORD_LENGTH + " and more than "
-                    + MAXIMUM_USER_PASSWORD_LENGTH + ", your login length is "
+                    + MAXIMUM_USER_PASSWORD_LENGTH + ", your password length is "
                     + user.getPassword().length());
         }
     }
@@ -58,10 +57,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Can`t add user with null age");
         }
-        if (user.getAge() < MINIMUM_USER_AGE || user.getAge() > MAXIMUM_USER_AGE) {
+        if (user.getAge() < MINIMUM_USER_AGE) {
             throw new RuntimeException("Can`t add user with age less than "
-                    + MINIMUM_USER_AGE + " and more than "
-                    + MAXIMUM_USER_AGE + ", your login length is " + user.getAge());
+                    + MINIMUM_USER_AGE + ", your age is " + user.getAge());
         }
     }
 }
