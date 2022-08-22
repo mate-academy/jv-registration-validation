@@ -15,29 +15,23 @@ class RegistrationServiceImplTest {
     private static User user;
     private static final String VALID_LOGIN = "SomeLogin";
     private static final String VALID_PASSWORD = "password";
-    private static final String SHORT_PASSWORD = "pass";
-    private static final String EMPTY_STRING = "";
-    private static final int SMALLEST_VALID_AGE = 18;
-    private static final int SMALL_AGE = 10;
-    private static final int ZERO_VALUE = 0;
-    private static final int NEGATIVE_VALUE = -10;
-    private static final int BIGGER_VALID_AGE = 60;
+    private static final int VALID_AGE = 18;
 
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
-        user = new User();
     }
 
     @BeforeEach
     void setUp() {
+        user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
-        user.setAge(SMALLEST_VALID_AGE);
+        user.setAge(VALID_AGE);
     }
 
     @Test
-    void user_Ok() {
+    void register_user_Ok() {
         assertEquals(service.register(user), user);
     }
 
@@ -50,7 +44,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void age_Ok() {
-        user.setAge(SMALLEST_VALID_AGE);
+        user.setAge(VALID_AGE);
         assertEquals(service.register(user), user);
     }
 
@@ -64,7 +58,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void zeroValueAge_NotOk() {
-        user.setAge(ZERO_VALUE);
+        user.setAge(0);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -72,7 +66,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void negativeValueAge_NotOk() {
-        user.setAge(NEGATIVE_VALUE);
+        user.setAge(-10);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -80,7 +74,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void smallAge_NotOk() {
-        user.setAge(SMALL_AGE);
+        user.setAge(10);
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -88,7 +82,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void largeAge_Ok() {
-        user.setAge(BIGGER_VALID_AGE);
+        user.setAge(60);
         assertEquals(user, service.register(user));
     }
 
@@ -114,7 +108,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shortPassword_NotOk() {
-        user.setPassword(SHORT_PASSWORD);
+        user.setPassword("pass");
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -122,7 +116,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void emptyPassword_NotOk() {
-        user.setPassword(EMPTY_STRING);
+        user.setPassword("");
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
@@ -138,7 +132,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void emptyLogin_NotOk() {
-        user.setLogin(EMPTY_STRING);
+        user.setLogin("");
         assertThrows(RuntimeException.class, () -> {
             service.register(user);
         });
