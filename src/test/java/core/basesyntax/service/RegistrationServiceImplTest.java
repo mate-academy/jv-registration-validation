@@ -95,12 +95,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsInStorage_notOk() {
-        User userTwo = new User();
-        userTwo.setAge(21);
-        userTwo.setLogin("Asdfghg");
-        userTwo.setPassword("7hD3k9L75");
-        Storage.people.add(userOne);
-        Storage.people.add(userTwo);
+        registrationService.register(userOne);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(userOne),
                 "Verifying is failed. There is a user with this username " + userOne);
