@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lessThanMinPassword_NotOk() {
-        validUser.setPassword("pass");
+        validUser.setPassword("pass5");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(validUser);
         });
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserAlreadyExist_NotOk() {
+    void register_userAlreadyExist_NotOk() {
         registrationService.register(validUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(validUser);
