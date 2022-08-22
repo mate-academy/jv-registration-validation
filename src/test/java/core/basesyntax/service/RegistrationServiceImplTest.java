@@ -8,11 +8,17 @@ import core.basesyntax.exception.RegistrationServiceException;
 import core.basesyntax.model.User;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void beforeEach() {
