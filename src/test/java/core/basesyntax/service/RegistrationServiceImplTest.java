@@ -1,14 +1,18 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    User user;
-    static RegistrationService registrationService;
+    private static RegistrationService registrationService;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -31,19 +35,22 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(NullPointerException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(NullPointerException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
     void register_underAge_notOk() {
         user.setAge(15);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
@@ -56,41 +63,43 @@ class RegistrationServiceImplTest {
     @Test
     void register_negativeAge_NotOk() {
         user.setAge(-1);
-        assertThrows(
-                RuntimeException.class,
-                () -> {
-                    registrationService.register(user);
-                });
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_emptyPassword_notOk() {
         user.setPassword("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
     void register_emptyLogin_notOk() {
         user.setLogin("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
     void register_cloneLogin_notOk() {
         registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
     void register_minLengthPassword_notOk() {
         user.setPassword("test");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
