@@ -88,7 +88,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPassword_NotOk() {
-        user.setPassword("pass");
+        user.setPassword("passw");
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
