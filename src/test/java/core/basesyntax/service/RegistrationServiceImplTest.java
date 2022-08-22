@@ -1,14 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import core.basesyntax.service.Exceptions.RegistrationServiceException;
+import core.basesyntax.service.exceptions.RegistrationServiceException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private static final String DEFAULT_CORRECT_LOGIN = "login";
@@ -35,7 +35,6 @@ class RegistrationServiceImplTest {
     void register_nullAge_notOk() {
         User user = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, null);
         detectionCheckException(user);
-
     }
 
     @Test
@@ -70,8 +69,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_two_users_sameLogin_notOK() {
-        User user1 = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
-        User user2 = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD + "s", DEFAULT_CORRECT_AGE);
+        User user1 = new User(DEFAULT_CORRECT_LOGIN,
+                DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
+        User user2 = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD
+                + "s", DEFAULT_CORRECT_AGE);
         registrationService.register(user1);
         detectionCheckException(user2);
     }
@@ -92,8 +93,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_two_users_OK() {
-        User expected1 = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
-        User expected2 = new User(DEFAULT_CORRECT_LOGIN + "s", DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
+        User expected1 = new User(DEFAULT_CORRECT_LOGIN,
+                DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
+        User expected2 = new User(DEFAULT_CORRECT_LOGIN
+                + "s", DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
         User actual1 = registrationService.register(expected1);
         User actual2 = registrationService.register(expected2);
         assertEquals(expected1, actual1);

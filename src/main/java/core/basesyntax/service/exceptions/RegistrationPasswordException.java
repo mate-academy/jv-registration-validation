@@ -1,4 +1,4 @@
-package core.basesyntax.service.Exceptions;
+package core.basesyntax.service.exceptions;
 
 public class RegistrationPasswordException extends RegistrationServiceException {
     public RegistrationPasswordException(String message) {

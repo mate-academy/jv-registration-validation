@@ -2,12 +2,11 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import core.basesyntax.service.Exceptions.RegistrationDataException;
-import core.basesyntax.service.Exceptions.RegistrationPasswordException;
-import core.basesyntax.service.Exceptions.RegistrationSameUserException;
-import core.basesyntax.service.Exceptions.RegistrationSmallAgeException;
+import core.basesyntax.service.exceptions.RegistrationDataException;
+import core.basesyntax.service.exceptions.RegistrationPasswordException;
+import core.basesyntax.service.exceptions.RegistrationSameUserException;
+import core.basesyntax.service.exceptions.RegistrationSmallAgeException;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
