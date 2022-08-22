@@ -11,13 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static final String OK_PASSWORD = "123456";
-    private static final String LOGIN = "Dick";
-    private static final int AGE_OK = 25;
-    private static final int TOO_YOUNG = 16;
-    private static final String SHORT_PASSWORD_NOT_OK = "1234";
-    private static final int NEGATIVE_AGE = -100;
-    private static final int ADULT_AGE_MIN_OK = 18;
     private User firstUser;
     private User secondUser;
     private RegistrationService service = new RegistrationServiceImpl();
@@ -26,15 +19,15 @@ public class RegistrationServiceTest {
     void setUp() {
         Storage.people.clear();
         firstUser = new User();
-        firstUser.setPassword(OK_PASSWORD);
-        firstUser.setAge(AGE_OK);
-        firstUser.setLogin(LOGIN);
+        firstUser.setPassword("123456");
+        firstUser.setAge(25);
+        firstUser.setLogin("Dick");
         secondUser = new User();
     }
 
     @Test
     public void register_negativeAge_notOkey() {
-        firstUser.setAge(NEGATIVE_AGE);
+        firstUser.setAge(-100);
         RuntimeException exception =
                 assertThrows(RuntimeException.class,() -> {
                     service.register(firstUser);
@@ -45,7 +38,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_userUnderaged_notOkey() {
-        firstUser.setAge(TOO_YOUNG);
+        firstUser.setAge(16);
         RuntimeException exception =
                 assertThrows(RuntimeException.class,() -> {
                     service.register(firstUser);
@@ -88,7 +81,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_userPassword_notOkey() {
-        firstUser.setPassword(SHORT_PASSWORD_NOT_OK);
+        firstUser.setPassword("1234");
         RuntimeException exception =
                 assertThrows(RuntimeException.class,() -> {
                     service.register(firstUser);
@@ -110,7 +103,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_userAge18_okey() {
-        firstUser.setAge(ADULT_AGE_MIN_OK);
+        firstUser.setAge(18);
         assertEquals(firstUser, service.register(firstUser));
     }
 
