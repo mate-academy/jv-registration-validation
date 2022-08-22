@@ -28,43 +28,43 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addNullUser_NotOk() {
-        detectionCheckException(null);
+        CheckException(null);
     }
 
     @Test
     void register_nullAge_notOk() {
         User user = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, null);
-        detectionCheckException(user);
+        CheckException(user);
     }
 
     @Test
     void register_nullPassword_notOK() {
         User user = new User(DEFAULT_CORRECT_LOGIN, null, DEFAULT_CORRECT_AGE);
-        detectionCheckException(user);
+        CheckException(user);
     }
 
     @Test
     void register_nullLogin_notOK() {
         User user = new User(null, DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
-        detectionCheckException(user);
+        CheckException(user);
     }
 
     @Test
     void register_smallPassword_notOK() {
         User actual = new User(DEFAULT_CORRECT_LOGIN, "12", DEFAULT_CORRECT_AGE);
-        detectionCheckException(actual);
+        CheckException(actual);
     }
 
     @Test
     void register_user_ageLess18_notOK() {
-        User user = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, 13);
-        detectionCheckException(user);
+        User user = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, 17);
+        CheckException(user);
     }
 
     @Test
     void register_ageIsNegative_notOK() {
         User user = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, -9);
-        detectionCheckException(user);
+        CheckException(user);
     }
 
     @Test
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
         User user2 = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD
                 + "s", DEFAULT_CORRECT_AGE);
         registrationService.register(user1);
-        detectionCheckException(user2);
+        CheckException(user2);
     }
 
     @Test
@@ -104,7 +104,7 @@ class RegistrationServiceImplTest {
         assertEquals(expected2, actual2);
     }
 
-    private void detectionCheckException(User actual) {
+    private void CheckException(User actual) {
         assertThrows(RegistrationServiceException.class,
                 () -> registrationService.register(actual));
     }
