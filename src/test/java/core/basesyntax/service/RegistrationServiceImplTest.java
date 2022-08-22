@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,14 +29,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullFields_NotOk() {
-        List<User> nullFieldUsers = new ArrayList<>();
-        nullFieldUsers.add(new User(null, "davidbekham", 23));
-        nullFieldUsers.add(new User("Anna", null, 30));
-        nullFieldUsers.add(new User("Greg", "greg342", null));
-        for (User user : nullFieldUsers) {
-            assertThrows(RuntimeException.class, () -> registrationService.register(user));
-        }
+    void register_nullLoginUser_NotOk() {
+        User nullLoginUser = new User(null, "davidbekham", 23);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullLoginUser));
+    }
+
+    @Test
+    void register_nullPasswordUser_NotOk() {
+        User nullPasswordUser = new User("Anna", null, 30);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullPasswordUser));
+    }
+
+    @Test
+    void register_nullAgeUser_NotOk() {
+        User nullAgeUser = new User("Greg", "greg342", null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullAgeUser));
     }
 
     @Test
