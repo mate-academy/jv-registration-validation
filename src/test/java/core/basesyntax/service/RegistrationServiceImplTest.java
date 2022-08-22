@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -17,11 +19,13 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "admin";
     private static final String DEFAULT_PASSWORD = "12345678";
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -39,23 +43,22 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_differentUsers_Ok() {
-        User user1 = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN);
-        User user2 = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN + "a");
-        registrationService.register(user1);
-        registrationService.register(user2);
-        User expectedUser1 = Storage.people.get(0);
-        User expectedUser2 = Storage.people.get(1);
+        User userFirst = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN);
+        User userSecond = createUser(DEFAULT_AGE + 1, DEFAULT_PASSWORD + "1", DEFAULT_LOGIN + "a");
+        registrationService.register(userFirst);
+        registrationService.register(userSecond);
+        User expectedUser1 = storageDao.get(DEFAULT_LOGIN);
+        User expectedUser2 = storageDao.get(DEFAULT_LOGIN + "a");
         assertNotEquals(expectedUser1, expectedUser2);
-        assertNotEquals(expectedUser2, expectedUser1);
     }
 
     @Test
-    void register_userIsNull_NotOk() {
+    void register_userIsNull_notOk() {
         checkException(null);
     }
 
     @Test
-    void register_NullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         checkException(user);
     }
@@ -67,55 +70,55 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_moreThenMinAge_Ok() {
+    void register_moreThenMinAge_ok() {
         user.setAge(MIN_AGE + 1);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_lessThenMinAge_NotOk() {
+    void register_lessThenMinAge_notOk() {
         user.setAge(MIN_AGE - 1);
         checkException(user);
     }
 
     @Test
-    void register_negativeAge_NotOk() {
+    void register_negativeAge_notOk() {
         user.setAge(-1);
         checkException(user);
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         checkException(user);
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         checkException(user);
     }
 
     @Test
-    void register_emptyPassword_NotOk() {
+    void register_emptyPassword_notOk() {
         user.setPassword("");
         checkException(user);
     }
 
     @Test
-    void register_shortPassword_NotOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("passw");
         checkException(user);
     }
 
     @Test
-    void register_minPasswordLength_Ok() {
+    void register_minPasswordLength_ok() {
         user.setPassword("passwo");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_MoreThenMinPasswordLength_Ok() {
+    void register_moreThenMinPasswordLength_ok() {
         user.setPassword(DEFAULT_PASSWORD);
         assertEquals(user, registrationService.register(user));
     }
