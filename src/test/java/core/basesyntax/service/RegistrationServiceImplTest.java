@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLengthLessThenSix_NotOk() {
-        User user = new User(VALID_LOGIN, "123", VALID_AGE);
+        User user = new User(VALID_LOGIN, "12345", VALID_AGE);
         checkRegistrationException(user);
     }
 
