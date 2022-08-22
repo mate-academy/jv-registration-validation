@@ -33,7 +33,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void validUser_Ok() {
+    void register_validUser_Ok() {
         assertEquals(user, registrationService.register(user));
     }
 
@@ -41,11 +41,12 @@ class RegistrationServiceImplTest {
     void register_differentUsers_Ok() {
         User user1 = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN);
         User user2 = createUser(DEFAULT_AGE, DEFAULT_PASSWORD, DEFAULT_LOGIN + "a");
-        registrationService.register(user);
+        registrationService.register(user1);
         registrationService.register(user2);
         User expectedUser1 = Storage.people.get(0);
         User expectedUser2 = Storage.people.get(1);
         assertNotEquals(expectedUser1, expectedUser2);
+        assertNotEquals(expectedUser2, expectedUser1);
     }
 
     @Test
@@ -90,6 +91,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullPassword_NotOk() {
+        user.setPassword(null);
+        checkException(user);
+    }
+
+    @Test
     void register_emptyPassword_NotOk() {
         user.setPassword("");
         checkException(user);
@@ -97,7 +104,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPassword_NotOk() {
-        user.setPassword("p");
+        user.setPassword("passw");
         checkException(user);
     }
 

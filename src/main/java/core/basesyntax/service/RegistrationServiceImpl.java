@@ -11,14 +11,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkUserNull(user);
+        checkLoginNull(user);
+        checkPasswordNull(user);
+        checkAgeNull(user);
         if (checkUser(user)) {
             storageDao.add(user);
-        }
-        if (user.getLogin() == null
-                || user.getPassword() == null
-                || user.getId() == null
-                || user.getAge() == null) {
-            throw new RuntimeException("Invalid data, check all user values");
         }
         return user;
     }
@@ -28,8 +26,31 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && (user.getAge() >= MIN_AGE)
                 && (user.getPassword().length() >= MIN_PASSWORD_LENGTH)) {
             return true;
-        } else {
-            throw new RuntimeException("Invalid data, check some fields");
+        }
+        throw new RuntimeException("Invalid data, check some fields");
+    }
+
+    private void checkUserNull(User user) {
+        if (user == null) {
+            throw new RuntimeException("Invalid data, user is null");
+        }
+    }
+
+    private void checkLoginNull(User user) {
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Invalid data, login is null");
+        }
+    }
+
+    private void checkPasswordNull(User user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Invalid data, password is null");
+        }
+    }
+
+    private void checkAgeNull(User user) {
+        if (user.getAge() == null) {
+            throw new RuntimeException("Invalid data, age is null");
         }
     }
 }
