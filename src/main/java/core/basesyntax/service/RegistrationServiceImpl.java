@@ -10,7 +10,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RuntimeException {
+    public User register(User user) {
         if (user == null || user.getLogin() == null || user.getAge() == null
                 || user.getAge() < 0 || user.getPassword() == null) {
             throw new RegistrationException("Invalid data!");
