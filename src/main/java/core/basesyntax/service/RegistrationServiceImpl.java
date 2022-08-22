@@ -24,7 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateUserPassword(String password) {
         if (password == null) {
             throw new NullPointerException("Password field can't be null");
-        } else if (password.length() < MIN_PASSWORD_LENGTH) {
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password length must be at least " + MIN_PASSWORD_LENGTH);
         }
     }
@@ -32,7 +33,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateUserAge(Integer age) {
         if (age == null) {
             throw new NullPointerException("User age can not be Null!");
-        } else if (age < MIN_USER_AGE) {
+        }
+        if (age < MIN_USER_AGE) {
             throw new RuntimeException("User is under " + MIN_USER_AGE + " years old");
         }
     }
@@ -40,11 +42,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateUserLogin(String login) {
         if (login == null) {
             throw new NullPointerException("User login can not be Null!");
-        } else if (login.isEmpty()) {
+        }
+        if (login.isEmpty()) {
             throw new RuntimeException("User login can not be empty!");
-        } else if (login.contains(" ")) {
+        }
+        if (login.contains(" ")) {
             throw new RuntimeException("User login can not contain white spaces!");
-        } else if (storageDao.get(login) != null) {
+        }
+        if (storageDao.get(login) != null) {
             throw new RuntimeException("Such user has already exist!!!");
         }
     }

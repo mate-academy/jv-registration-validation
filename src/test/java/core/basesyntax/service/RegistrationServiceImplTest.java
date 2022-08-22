@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -11,10 +12,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDaoImpl storageDao;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
@@ -28,9 +31,9 @@ class RegistrationServiceImplTest {
         user.setLogin("User_1");
         user.setAge(22);
         user.setPassword("123456");
-        registrationService.register(user);
-        boolean actual = user.equals(Storage.people.get(0));
-        Assertions.assertTrue(actual);
+        User actual = registrationService.register(user);
+        User expected = storageDao.get(user.getLogin());
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -39,9 +42,9 @@ class RegistrationServiceImplTest {
         user.setLogin("User_1");
         user.setAge(18);
         user.setPassword("123456");
-        registrationService.register(user);
-        boolean actual = user.equals(Storage.people.get(0));
-        Assertions.assertTrue(actual);
+        User actual = registrationService.register(user);
+        User expected = storageDao.get(user.getLogin());
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -78,7 +81,7 @@ class RegistrationServiceImplTest {
     void register_lessThanMinAge_NotOk() {
         User user = new User();
         user.setLogin("User_1");
-        user.setAge(10);
+        user.setAge(17);
         user.setPassword("123456");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
@@ -99,7 +102,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("User_1");
         user.setAge(20);
-        user.setPassword("123");
+        user.setPassword("12345");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
@@ -110,9 +113,9 @@ class RegistrationServiceImplTest {
         user.setLogin("User_1");
         user.setAge(20);
         user.setPassword("123456");
-        registrationService.register(user);
-        boolean actual = user.equals(Storage.people.get(0));
-        Assertions.assertTrue(actual);
+        User actual = registrationService.register(user);
+        User expected = storageDao.get(user.getLogin());
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -141,8 +144,9 @@ class RegistrationServiceImplTest {
         user2.setLogin("User_1");
         user2.setAge(21);
         user2.setPassword("123456");
+        registrationService.register(user1);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(null));
+                () -> registrationService.register(user2));
     }
 
     @Test
@@ -155,11 +159,11 @@ class RegistrationServiceImplTest {
         user2.setLogin("User_2");
         user2.setAge(20);
         user2.setPassword("123456");
-        registrationService.register(user1);
-        registrationService.register(user2);
-        boolean actual1 = user1.equals(Storage.people.get(0));
-        boolean actual2 = user2.equals(Storage.people.get(1));
-        Assertions.assertTrue(actual1);
-        Assertions.assertTrue(actual2);
+        User actual1 = registrationService.register(user1);
+        User actual2 = registrationService.register(user2);
+        User expected1 = storageDao.get(user1.getLogin());
+        User expected2 = storageDao.get(user2.getLogin());
+        Assertions.assertEquals(expected1, actual1);
+        Assertions.assertEquals(expected2, actual2);
     }
 }
