@@ -37,19 +37,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_NotOk() {
         User user = new User(null, DEFAULT_PASSWORD, DEFAULT_AGE);
-        nullPointerExceptionDetection(user);
+        runtimeExceptionDetection(user);
     }
 
     @Test
     void register_nullPassword_NotOk() {
         User user = new User(DEFAULT_LOGIN, null, DEFAULT_AGE);
-        nullPointerExceptionDetection(user);
+        runtimeExceptionDetection(user);
     }
 
     @Test
     void register_nullAge_NotOk() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, null);
-        nullPointerExceptionDetection(user);
+        runtimeExceptionDetection(user);
     }
 
     @Test
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_addNullUser_NotOk() {
         User user = null;
-        nullPointerExceptionDetection(null);
+        runtimeExceptionDetection(null);
     }
 
     @Test
@@ -88,11 +88,6 @@ class RegistrationServiceImplTest {
         User secondUser = new User(DEFAULT_LOGIN, "666666", 66);
         registrationService.register(firstUser);
         runtimeExceptionDetection(secondUser);
-    }
-
-    private void nullPointerExceptionDetection(User user) {
-        assertThrows(NullPointerException.class,
-                () -> registrationService.register(user));
     }
 
     private void runtimeExceptionDetection(User user) {

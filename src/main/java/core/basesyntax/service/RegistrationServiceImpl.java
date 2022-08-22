@@ -12,16 +12,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null");
+            throw new RuntimeException("User is null");
         }
         if (user.getLogin() == null) {
-            throw new NullPointerException("Login is null");
+            throw new RuntimeException("Login is null");
         }
         if (user.getPassword() == null) {
-            throw new NullPointerException("Password is null");
+            throw new RuntimeException("Password is null");
         }
         if (user.getAge() == null) {
-            throw new NullPointerException("Age is null");
+            throw new RuntimeException("Age is null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already exists");
@@ -35,7 +35,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password is less than " + MIN_PASSWORD_LENGTH);
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
