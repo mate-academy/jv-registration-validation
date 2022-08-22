@@ -36,7 +36,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Password is less than "
                     + MIN_PASSWORD_LENGTH + " characters");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }

@@ -92,8 +92,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_usersWithSameLogins_NotOK() {
+        User newUser = new User();
+        newUser.setLogin("UserLogin");
+        newUser.setAge(96);
+        newUser.setPassword("123456789");
         registrationService.register(validUser);
-        assertThrows(RuntimeException.class, () -> registrationService.register(validUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
