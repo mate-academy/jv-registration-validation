@@ -46,6 +46,7 @@ public class RegistrationServiceTest {
                 });
         assertEquals("User must be 18 years old or older", exception.getMessage());
     }
+
     @Test
     public void register_userUnderagedCorner_notOkey() {
         firstUser.setAge(17);
