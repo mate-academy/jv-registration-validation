@@ -19,7 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkForNull(User user) {
-        if (user.getLogin() == null || user.getAge() == null || user.getPassword() == null) {
+        if (user == null || user.getLogin() == null
+                || user.getAge() == null || user.getPassword() == null) {
             throw new RuntimeException("Can't registered User");
         }
     }
