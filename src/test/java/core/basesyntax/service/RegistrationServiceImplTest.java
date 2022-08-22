@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String CORRECT_LOGIN = "login";
     private static final String CORRECT_PASSWORD = "password";
-    private RegistrationServiceImpl registrationService;
+    private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
-    void setUp() {
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
