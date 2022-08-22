@@ -16,6 +16,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
             throw new RuntimeException("Can't be NULL");
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Login already exist");
+        }
         if (user.getPassword().length() < PASS_LENGTH_LIMIT) {
             throw new RuntimeException("Password less than 6 characters, it should be 6 or more");
         }
@@ -25,9 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() > LOGIN_LENGTH_LIMIT) {
             throw new RuntimeException("Login more than 20 characters");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Login already exist");
-        }
+
         return storageDao.add(user);
     }
 }

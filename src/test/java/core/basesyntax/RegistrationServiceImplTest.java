@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User user;
-    private User user2;
 
     @BeforeAll
     static void beforeAll() {
@@ -24,11 +23,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void beforeEach() {
         user = new User();
-        user2 = new User();
         user.setLogin("BobBlink");
         user.setAge(25);
         user.setPassword("123456789");
-        user2 = user;
     }
 
     @Test
@@ -49,11 +46,12 @@ class RegistrationServiceImplTest {
         checkException(user, "Age can't be less than 18");
     }
 
-    /*@Test
+    @Test
     void checkLoginTheSame_NotOk() {
-        registrationService.register(user2);
+        Storage.people.clear();
+        registrationService.register(user);
         checkException(user, "Login can't be the same");
-    }*/
+    }
 
     @Test
     void checkLoginHuge_NotOk() {
