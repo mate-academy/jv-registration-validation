@@ -25,11 +25,6 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     public void register_nullUser_notOk() {
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(null));
@@ -98,4 +93,10 @@ class RegistrationServiceImplTest {
         user.setAge(17);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
 }
