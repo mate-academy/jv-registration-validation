@@ -1,18 +1,17 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import core.basesyntax.service.db.Storage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationServiceImpl registrationService;
-    private static User user;
+    private static RegistrationService registrationService;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -21,22 +20,23 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         user = new User();
     }
 
     @Test
-    void registration_UserValid_ok() {
+    void registration_userValid_ok() {
+        assertEquals(0, Storage.people.size());
         user.setLogin("example1");
         user.setPassword("123456");
         user.setAge(18);
         registrationService.register(user);
-        StorageDao storageDao = new StorageDaoImpl();
-        User actual = storageDao.get(user.getLogin());
-        assertNotNull(actual);
+        int actual = Storage.people.size();
+        assertEquals(1,actual);
     }
 
     @Test
-    void registration_VeryOldUser_notOk() {
+    void registration_veryOldUser_notOk() {
         user.setLogin("example9");
         user.setPassword("123456");
         user.setAge(546);
@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserNullLogin_notOk() {
+    void registration_userNullLogin_notOk() {
         user.setLogin(null);
         user.setPassword("123456");
         user.setAge(20);
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserWithEmptyLogin_notOk() {
+    void registration_userWithEmptyLogin_notOk() {
         user.setLogin("");
         user.setPassword("123456");
         user.setAge(20);
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserInvalidPassword_notOk() {
+    void registration_userInvalidPassword_notOk() {
         user.setLogin("example2");
         user.setPassword("12345");
         user.setAge(20);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserWithNullPassword_notOk() {
+    void registration_userWithNullPassword_notOk() {
         user.setLogin("example3");
         user.setPassword(null);
         user.setAge(20);
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserWithEmptyPassword_notOk() {
+    void registration_userWithEmptyPassword_notOk() {
         user.setLogin("example4");
         user.setPassword("");
         user.setAge(20);
@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserInvalidAge_notOk() {
+    void registration_userInvalidAge_notOk() {
         user.setLogin("example5");
         user.setPassword("123456");
         user.setAge(16);
@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserWithNullAge_notOk() {
+    void registration_userWithNullAge_notOk() {
         user.setLogin("example6");
         user.setPassword("123456");
         user.setAge(null);
@@ -100,20 +100,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserWithSameLogins_notOk() {
+    void registration_userWithSameLogins_notOk() {
         user.setLogin("example7");
         user.setPassword("123456");
         user.setAge(20);
         registrationService.register(user);
-        User user = new User();
-        user.setLogin("example7");
-        user.setPassword("2368994");
-        user.setAge(21);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registration_UserNull_notOk() {
+    void registration_userNull_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
