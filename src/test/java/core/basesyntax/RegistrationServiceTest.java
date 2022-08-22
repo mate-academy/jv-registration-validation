@@ -13,10 +13,11 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceTest {
     private User firstUser;
     private User secondUser;
-    private RegistrationService service = new RegistrationServiceImpl();
+    private RegistrationService service;
 
     @BeforeEach
     void setUp() {
+        service = new RegistrationServiceImpl();
         Storage.people.clear();
         firstUser = new User();
         firstUser.setPassword("123456");
