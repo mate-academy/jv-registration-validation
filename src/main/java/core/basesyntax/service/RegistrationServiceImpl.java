@@ -9,7 +9,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getAge() < 18 || user.getAge() == null) {
+        if (user == null) {
+            throw new RuntimeException("User can't be null");
+        } else if (user.getAge() < 18 || user.getAge() == null) {
             throw new RuntimeException("Your age must be at least 18");
         } else if (user.getPassword().length() < 6 || user.getPassword() == null) {
             throw new RuntimeException("Your password must be at least 18");
