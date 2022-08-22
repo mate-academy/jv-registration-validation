@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static final User userNull = null;
     private static final String DEFAULT_LOGIN_FIRST = "Himars";
     private static final String DEFAULT_LOGIN_SECOND = "Bayraktar";
     private static final String DEFAULT_PASSWORD_FIRST = "crimeabridgedestroyed";
@@ -54,7 +53,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userNullGetExceptionMessage_Ok() {
         try {
-            registrationService.register(userNull);
+            registrationService.register(null);
         } catch (NullPointerException e) {
             String actualMessage = e.getMessage();
             String expectedMessage = "User should not be null";
@@ -102,42 +101,6 @@ class RegistrationServiceImplTest {
             String expectedMessage = "User too young!";
             assertEquals(actualMessage, expectedMessage);
         }
-    }
-
-    @Test
-    void register_userTooOldException_notOk() {
-        User userTooOld = createUser(100, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userTooOld));
-    }
-
-    @Test
-    void register_userTooOldExceptionMessage_Ok() {
-        User userTooOld = createUser(100, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        try {
-            registrationService.register(userTooOld);
-        } catch (RuntimeException e) {
-            String actualMessage = e.getMessage();
-            String expectedMessage = "User too old!";
-            assertEquals(actualMessage, expectedMessage);
-        }
-    }
-
-    @Test
-    void register_userNegativeAgeExceptionMessage_notOk() {
-        User userNegativeAge = createUser(-100, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        try {
-            registrationService.register(userNegativeAge);
-        } catch (RuntimeException e) {
-            String actualMessage = e.getMessage();
-            String expectedMessage = "User's age cannot be negative!";
-            assertEquals(actualMessage, expectedMessage);
-        }
-    }
-
-    @Test
-    void register_userNegativeAgeException_notOk() {
-        User userNegativeAge = createUser(-100, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userNegativeAge));
     }
 
     @Test
@@ -244,11 +207,7 @@ class RegistrationServiceImplTest {
     }
 
     private User createUser(Integer age, String password, String login) {
-        User user = new User();
-        user.setAge(age);
-        user.setPassword(password);
-        user.setLogin(login);
-        return user;
+        return new User(login, password, age);
     }
 }
 

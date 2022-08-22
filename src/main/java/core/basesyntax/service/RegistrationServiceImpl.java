@@ -6,7 +6,6 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 99;
     private static final int MIN_PSSWD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -27,19 +26,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User should have unique login");
         }
-        if (user.getAge() < MIN_AGE && user.getAge() >= 0) {
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User too young!");
-        }
-        if (user.getAge() > MAX_AGE) {
-            throw new RuntimeException("User too old!");
-        }
-        if (user.getAge() < 0) {
-            throw new RuntimeException("User's age cannot be negative!");
         }
         if (user.getPassword().length() < MIN_PSSWD_LENGTH) {
             throw new RuntimeException("Password too short!");
         }
-        if (user.getLogin().length() == 0) {
+        if (user.getLogin().isBlank()) {
             throw new RuntimeException("Login should not be blank!");
         }
         return storageDao.add(user);
