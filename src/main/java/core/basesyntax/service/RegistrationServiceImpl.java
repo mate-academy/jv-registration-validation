@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         isInvalidData(user);
-       return storageDao.add(user);
+        return storageDao.add(user);
     }
 
     private void isInvalidData(User user) {
