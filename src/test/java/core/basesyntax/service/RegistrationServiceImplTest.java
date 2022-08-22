@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -19,14 +17,20 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
+
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         userOne = new User();
         userOne.setAge(33);
         userOne.setLogin("qwerty");
         userOne.setPassword("1r3T41e4");
     }
+
+    @AfterEach
+    void setUP() {
+        Storage.people.clear();
+    }
+
 
     @Test
     void register_userIsNull_notOk() {
