@@ -38,16 +38,6 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_userUnderaged_notOkey() {
-        firstUser.setAge(16);
-        RuntimeException exception =
-                assertThrows(RuntimeException.class,() -> {
-                    service.register(firstUser);
-                });
-        assertEquals("User must be 18 years old or older", exception.getMessage());
-    }
-
-    @Test
     public void register_userUnderagedCorner_notOkey() {
         firstUser.setAge(17);
         RuntimeException exception =
