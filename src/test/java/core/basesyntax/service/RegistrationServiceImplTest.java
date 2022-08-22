@@ -15,18 +15,22 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-        user1.setLogin("Henry");
-        user1.setPassword("3452345");
-        user1.setAge(19);
-        registrationService.register(user1);
+        User user = new User();
+        user.setLogin("Henry");
+        user.setPassword("3452345");
+        user.setAge(19);
+        registrationService.register(user);
     }
 
     @BeforeEach
     void setUp() {
         newUser = new User();
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        newUser = null;
+        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
     @Test
@@ -83,7 +87,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userRegister_Ok() {
+    void register_validUserRegister_Ok() {
         newUser.setLogin("Bob");
         newUser.setPassword("123456");
         newUser.setAge(18);
