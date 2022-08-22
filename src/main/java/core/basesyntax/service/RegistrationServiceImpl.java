@@ -20,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(User user) {
         if (user.getAge() == null) {
-            throw new NullPointerException("Age cannot be null");
+            throw new NullPointerException("Age can't be null");
         }
         if (user.getAge() < AGE) {
             throw new RuntimeException("Age user must be over 18 years");
@@ -29,10 +29,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkPassword(User user) {
         if (user.getPassword().isEmpty()) {
-            throw new RuntimeException("Password cannot be is empty");
+            throw new RuntimeException("Password can't be empty");
         }
         if (user.getPassword() == null) {
-            throw new NullPointerException("Password cannot be is null");
+            throw new NullPointerException("Password can't be null");
         }
         if (user.getPassword().length() < PASSWORD_LENGTH) {
             throw new RuntimeException("User password must be over 6 characters");
@@ -41,10 +41,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkLogin(User user) {
         if (user.getLogin() == null) {
-            throw new NullPointerException("Login cannot be null");
+            throw new NullPointerException("Login can't be null");
         }
         if (user.getLogin().isEmpty()) {
-            throw new RuntimeException("User login cannot be empty");
+            throw new RuntimeException("User login can't be empty");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("The user already exists");
