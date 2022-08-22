@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private User validUser;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -22,10 +22,10 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        validUser = new User();
-        validUser.setAge(19);
-        validUser.setLogin("javalogin");
-        validUser.setPassword("password");
+        user = new User();
+        user.setAge(19);
+        user.setLogin("javalogin");
+        user.setPassword("password");
     }
 
     @Test
@@ -37,89 +37,89 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_emptyPassword_NotOk() {
-        validUser.setPassword("");
+        user.setPassword("");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_validUser_Ok() {
-        User actual = registrationService.register(validUser);
-        assertEquals(validUser, actual);
-        assertTrue(people.contains(validUser));
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
+        assertTrue(people.contains(user));
     }
 
     @Test
     void register_loginNull_NotOk() {
-        validUser.setLogin(null);
+        user.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
 
     }
 
     @Test
     void register_loginIsInStorage_NotOk() {
-        people.add(validUser);
+        people.add(user);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_emptyLogin_NotOk() {
-        validUser.setLogin("");
+        user.setLogin("");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_lessMinAge_NotOk() {
-        validUser.setAge(17);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_negativeAge_NotOk() {
-        validUser.setAge(-1);
+        user.setAge(-1);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_nullAge_NotOk() {
-        validUser.setAge(null);
+        user.setAge(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void register_zeroAge() {
-        validUser.setAge(0);
+    void register_zeroAge_NotOk() {
+        user.setAge(0);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_passwordNull_NotOk() {
-        validUser.setPassword(null);
+        user.setPassword(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_passwordLessMinLength_NotOk() {
-        validUser.setPassword("notok");
+        user.setPassword("notok");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 
