@@ -5,33 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
 
     private static RegistrationService registrationService;
-    private static List<User> validUsers;
-    private static List<User> nullFieldUsers;
-
-    @BeforeAll
-    static void beforeAll() {
-        validUsers = new ArrayList<>();
-        validUsers.add(new User("Sofia", "sofasofa", 24));
-        validUsers.add(new User("Bogdan", "bogdanchik", 19));
-        validUsers.add(new User("Oleg", "olejik", 27));
-        validUsers.add(new User("Ksenia", "kseniyaa", 24));
-        validUsers.add(new User("Dima", "demon228", 27));
-
-        nullFieldUsers = new ArrayList<>();
-        nullFieldUsers.add(new User(null, "davidbekham", 23));
-        nullFieldUsers.add(new User("Anna", null, 30));
-        nullFieldUsers.add(new User("Greg", "greg342", null));
-    }
 
     @BeforeEach
     void setUp() {
@@ -44,27 +24,32 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullFields_NotOk() {
-        for (User user : nullFieldUsers) {
-            assertThrows(RuntimeException.class, () -> registrationService.register(user));
-        }
+    void register_inputUserIsNull_NotOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_unValidLogin_NotOk() {
-        User valid = new User("Valid", "validpassword", 25);
-        assertEquals(valid, registrationService.register(valid));
-        User sameLoginUser = new User("Valid", "bogdanchik", 19);
-        assertThrows(RuntimeException.class, () -> registrationService.register(sameLoginUser));
-        User emptyLoginUser = new User("", "demon228", 27);
-        assertThrows(RuntimeException.class, () -> registrationService.register(emptyLoginUser));
+    void register_nullFields_NotOk() {
+        User nullLogin = new User(null, "davidbekham", 23);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullLogin));
+        User nullPassword = new User("Anna", null, 30);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullPassword));
+        User nullAge = new User("Greg", "greg342", null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(nullAge));
     }
 
     @Test
     void register_fiveValidUsers_Ok() {
-        for (User valid : validUsers) {
-            assertEquals(valid, registrationService.register(valid));
-        }
+        User sofia = new User("Sofia", "sofasofa", 24);
+        assertEquals(sofia, registrationService.register(sofia));
+        User bogdan = new User("Bogdan", "bogdanchik", 19);
+        assertEquals(bogdan, registrationService.register(bogdan));
+        User oleg = new User("Oleg", "olejik", 27);
+        assertEquals(oleg, registrationService.register(oleg));
+        User ksenia = new User("Ksenia", "kseniyaa", 24);
+        assertEquals(ksenia, registrationService.register(ksenia));
+        User dima = new User("Dima", "demon228", 27);
+        assertEquals(dima, registrationService.register(dima));
     }
 
     @Test
@@ -72,33 +57,58 @@ class RegistrationServiceImplTest {
         User bob = new User("Bob", "bobikbobik", 20);
         registrationService.register(bob);
         assertThrows(RuntimeException.class, () -> registrationService.register(bob));
-        User secondBob = new User("Bob", "bobobo123", 19);
-        assertThrows(RuntimeException.class, () -> registrationService.register(secondBob));
     }
 
     @Test
-    void register_inputUserIsNull_NotOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+    void register_blankLoginUser_NotOk() {
+        User blankLoginUser = new User("    ", "demon228", 27);
+        assertThrows(RuntimeException.class, () -> registrationService.register(blankLoginUser));
     }
 
     @Test
-    void register_userAgeIsUnValid_NotOk() {
-        User kevin = new User("Kevin", "kevinz12", -23);
+    void register_emptyLoginUser_NotOk() {
+        User emptyLoginUser = new User("", "demon228", 27);
+        assertThrows(RuntimeException.class, () -> registrationService.register(emptyLoginUser));
+    }
+
+    @Test
+    void register_theSameLoginUser_NotOk() {
+        User andriy = new User("Andriy", "validpassword", 25);
+        assertEquals(andriy, registrationService.register(andriy));
+        User secondAndriy = new User("Andriy", "andreyko", 19);
+        assertThrows(RuntimeException.class, () -> registrationService.register(secondAndriy));
+    }
+
+    @Test
+    void register_passwordLengthLessThanSix_NotOk() {
+        User john = new User("John", "hello", 35);
+        assertThrows(RuntimeException.class, () -> registrationService.register(john));
+    }
+
+    @Test
+    void register_emptyPasswordUser() {
+        User jeremy = new User("Jeremy", "", 23);
+        assertThrows(RuntimeException.class, () -> registrationService.register(jeremy));
+    }
+
+    @Test
+    void register_blankPasswordUser() {
+        User lucia = new User("Lucia", "       ", 27);
+        assertThrows(RuntimeException.class, () -> registrationService.register(lucia));
+    }
+
+    @Test
+    void register_userAgeIsIllegal_NotOk() {
         User alice = new User("Alice", "alice321", 16);
         User andriy = new User("Andriy", "andriy2000", 185);
-        assertThrows(RuntimeException.class, () -> registrationService.register(kevin));
         assertThrows(RuntimeException.class, () -> registrationService.register(andriy));
         assertThrows(RuntimeException.class, () -> registrationService.register(alice));
     }
 
     @Test
-    void register_userPasswordIsUnValid_NotOk() {
-        User john = new User("John", "hello", 35);
-        User jeremy = new User("Jeremy", "", 23);
-        User johny = new User("Johny", "johnydeppjohnydepp2211", 20);
-        assertThrows(RuntimeException.class, () -> registrationService.register(john));
-        assertThrows(RuntimeException.class, () -> registrationService.register(jeremy));
-        assertThrows(RuntimeException.class, () -> registrationService.register(johny));
+    void register_negativeAgeUser_NotOk() {
+        User kevin = new User("Kevin", "kevinz12", -23);
+        assertThrows(RuntimeException.class, () -> registrationService.register(kevin));
     }
 
     @Test
