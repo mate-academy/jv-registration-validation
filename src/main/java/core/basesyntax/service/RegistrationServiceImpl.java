@@ -9,6 +9,19 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        validateLogin(user);
+        return user;
+    }
+
+    private void validateLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new NullPointerException("User login can not be Null!");
+        } else if (user.getLogin().isEmpty()) {
+            throw new RuntimeException("User login can not be empty!");
+        } else if (user.getLogin().contains(" ")) {
+            throw new RuntimeException("User login can not contain white spaces!");
+        } else if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Such user has already exist!!!");
+        }
     }
 }
