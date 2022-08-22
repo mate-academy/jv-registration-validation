@@ -7,29 +7,27 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String DEFAULT_LOGIN = "userLogin";
-    private static final String DEFAULT_PASSWORD = "userPassword";
-    private static final int DEFAULT_AGE = 99;
-    private static final String WRONG_LOGIN = "";
-    private static final String WRONG_PASSWORD = "small";
-    private static final int WRONG_AGE = 17;
+    private static RegistrationService registrationService;
+    private static User emptyUser;
+    private static User user;
 
-    private RegistrationService registrationService;
-    private User user;
-    private User emptyUser;
-
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void init() {
         registrationService = new RegistrationServiceImpl();
         emptyUser = new User();
         user = new User();
-        user.setAge(DEFAULT_AGE);
-        user.setPassword(DEFAULT_PASSWORD);
-        user.setLogin(DEFAULT_LOGIN);
+    }
+
+    @BeforeEach
+    void setUp() {
+        user.setAge(99);
+        user.setPassword("userPassword");
+        user.setLogin("userLogin");
     }
 
     @AfterEach
@@ -90,7 +88,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_youngUser_notOk() {
-        user.setAge(WRONG_AGE);
+        user.setAge(17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -98,7 +96,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_smallPassword_notOk() {
-        user.setPassword(WRONG_PASSWORD);
+        user.setPassword("small");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -106,7 +104,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_loginLengthZero_notOk() {
-        user.setLogin(WRONG_LOGIN);
+        user.setLogin("");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
