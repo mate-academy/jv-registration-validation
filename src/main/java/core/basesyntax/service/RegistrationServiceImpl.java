@@ -6,6 +6,8 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.db.Storage;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -13,18 +15,27 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (Storage.people.size() >= 1) {
             for (User ifLogin : Storage.people) {
                 if (ifLogin.getLogin().equals(user.getLogin())) {
-                    return null;
+                    throw new RuntimeException("The user with login "
+                            + user.getLogin() + "has already been created");
                 }
             }
         }
-        if (user.getLogin() != null
+        if (checkLogin(user) == true
                 && user.getPassword() != null
                 && user.getAge() != null
-                && user.getAge() >= 18
-                && user.getPassword().length() >= 6) {
+                && user.getAge() >= MIN_AGE
+                && user.getPassword().length() >= MIN_LENGTH) {
             storageDao.add(user);
             return user;
         }
         throw new RuntimeException("Invalid data for register user");
     }
+
+    private boolean checkLogin(User user) {
+        if (user.getLogin() != null && !user.getLogin().equals("")) {
+            return true;
+        }
+        return false;
+    }
+
 }

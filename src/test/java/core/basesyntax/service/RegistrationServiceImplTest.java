@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -25,7 +24,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserValid() {
+    void registration_UserValid_ok() {
         user.setLogin("example");
         user.setPassword("123456");
         user.setAge(18);
@@ -35,7 +34,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserNullLogin() {
+    void registration_UserNullLogin_notOk() {
         user.setLogin(null);
         user.setPassword("123456");
         user.setAge(20);
@@ -43,7 +42,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserInvalidPassword() {
+    void registration_UserWithEmptyLogin_notOk() {
+        user.setLogin("");
+        user.setPassword("123456");
+        user.setAge(20);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void registration_UserInvalidPassword_notOk() {
         user.setLogin("example");
         user.setPassword("12345");
         user.setAge(20);
@@ -51,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNullPassword() {
+    void registration_UserWithNullPassword_notOk() {
         user.setLogin("example");
         user.setPassword(null);
         user.setAge(20);
@@ -59,15 +66,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserInvalidAge() {
+    void registration_UserWithEmptyPassword_notOk() {
         user.setLogin("example");
-        user.setPassword("123456");
-        user.setAge(17);
+        user.setPassword("");
+        user.setAge(20);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithNullAge() {
+    void registration_UserInvalidAge_notOk() {
+        user.setLogin("example");
+        user.setPassword("123456");
+        user.setAge(16);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void registration_UserWithNullAge_notOk() {
         user.setLogin("example");
         user.setPassword("123456");
         user.setAge(null);
@@ -75,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithSameLogins() {
+    void registration_UserWithSameLogins_notOk() {
         user.setLogin("example");
         user.setPassword("123456");
         user.setAge(20);
@@ -84,15 +99,12 @@ class RegistrationServiceImplTest {
         user.setLogin("example");
         user.setPassword("2368994");
         user.setAge(21);
-        registrationService.register(user);
-        int actual = Storage.people.size();
-        int expected = 1;
-        assertEquals(expected, actual);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registrationUserNull() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    void registration_UserNull_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
 }
