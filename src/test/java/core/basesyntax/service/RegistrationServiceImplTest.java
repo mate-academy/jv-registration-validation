@@ -59,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThen18_notOk() {
+    void register_ageLessThenMin_notOk() {
         newUser.setLogin("Tony");
         newUser.setPassword("123456");
         newUser.setAge(17);
