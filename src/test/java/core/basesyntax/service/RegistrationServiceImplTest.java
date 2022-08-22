@@ -31,8 +31,8 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_GetNewUser_Ok() {
-        User userFirst = createUser(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        User userSecond = createUser(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
+        User userFirst = new User(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
+        User userSecond = new User(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
         registrationService.register(userFirst);
         User expectedUser1 = storageDao.get(DEFAULT_LOGIN_FIRST);
         assertEquals(userFirst, expectedUser1);
@@ -54,9 +54,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userOneDoubleExceptionMessage_Ok() {
-        User userFirst = createUser(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
+        User userFirst = new User(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         registrationService.register(userFirst);
-        User userDoubleFirst = createUser(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
+        User userDoubleFirst = new User(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         try {
             registrationService.register(userDoubleFirst);
         } catch (RuntimeException e) {
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userTooYoungExceptionMessage_Ok() {
-        User userTooYoung = createUser(10, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
+        User userTooYoung = new User(10, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         try {
             registrationService.register(userTooYoung);
         } catch (RuntimeException e) {
@@ -80,7 +80,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userNullAgeExceptionMessage_Ok() {
-        User userNullAge = createUser(null, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
+        User userNullAge = new User(null, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         try {
             registrationService.register(userNullAge);
         } catch (NullPointerException e) {
@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userNullPasswordExceptionMessage_Ok() {
-        User userNullPassword = createUser(80, null, DEFAULT_LOGIN_FIRST);
+        User userNullPassword = new User(80, null, DEFAULT_LOGIN_FIRST);
         try {
             registrationService.register(userNullPassword);
         } catch (NullPointerException e) {
@@ -104,7 +104,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userNullLoginExceptionMessage_Ok() {
-        User userNullLogin = createUser(80, DEFAULT_PASSWORD_FIRST, null);
+        User userNullLogin = new User(80, DEFAULT_PASSWORD_FIRST, null);
         try {
             registrationService.register(userNullLogin);
         } catch (NullPointerException e) {
@@ -116,7 +116,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWrongPasswordExceptionMessage_Ok() {
-        User userWrongPassword = createUser(20, "cri", DEFAULT_LOGIN_FIRST);
+        User userWrongPassword = new User(20, "cri", DEFAULT_LOGIN_FIRST);
         try {
             registrationService.register(userWrongPassword);
         } catch (RuntimeException e) {
@@ -128,7 +128,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userEmptyLoginExceptionMessage_Ok() {
-        User userEmptyLogin = createUser(20, DEFAULT_PASSWORD_FIRST, "");
+        User userEmptyLogin = new User(20, DEFAULT_PASSWORD_FIRST, "");
         try {
             registrationService.register(userEmptyLogin);
         } catch (RuntimeException e) {
@@ -140,18 +140,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_GetBaseSize_Ok() {
-        User userGoodFirst = createUser(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        User userGoodSecond = createUser(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
-        User userGoodThird = createUser(30, "counterattack", "Javelin");
+        User userGoodFirst = new User(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
+        User userGoodSecond = new User(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
+        User userGoodThird = new User(30, "counterattack", "Javelin");
         registrationService.register(userGoodFirst);
         registrationService.register(userGoodSecond);
         registrationService.register(userGoodThird);
         int actual = Storage.people.size();
         assertEquals(3, actual);
     }
-
-    private User createUser(Integer age, String password, String login) {
-        return new User(login, password, age);
-    }
 }
-
