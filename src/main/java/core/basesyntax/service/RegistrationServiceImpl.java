@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Invalid data for register user");
         }
         if (Storage.people.size() > 0) {
-            if (storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
+            if (storageDao.get(user.getLogin()) != null) {
                 throw new RuntimeException("The user with login "
                         + user.getLogin() + "has already been created");
             }

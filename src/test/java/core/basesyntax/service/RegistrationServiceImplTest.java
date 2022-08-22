@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     void registration_userInvalidAge_notOk() {
         user.setLogin("example5");
         user.setPassword("123456");
-        user.setAge(16);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
