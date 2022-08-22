@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void  register_nullLogin_notOK() {
+    void register_nullLogin_notOK() {
         User user = new User(null, DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
         detectionCheckException(user);
     }
@@ -86,7 +86,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_age18_OK() {
-        User expected = new User(DEFAULT_CORRECT_LOGIN, DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
+        User expected = new User(DEFAULT_CORRECT_LOGIN,
+                DEFAULT_CORRECT_PASSWORD, DEFAULT_CORRECT_AGE);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
     }
