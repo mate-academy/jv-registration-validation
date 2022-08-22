@@ -3,11 +3,10 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -22,19 +21,18 @@ class RegistrationServiceImplTest {
     private static final User NULL_USER = null;
     private static RegistrationService registrationService;
     private static User user;
-    private static User user2;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         user = new User();
-        user2 = new User();
+    }
+
+    @BeforeEach
+    void beforeEach() {
         user.setLogin(VALID_LOGIN);
         user.setAge(VALID_AGE);
         user.setPassword(VALID_PASSWORD);
-        user2.setLogin(VALID_LOGIN);
-        user2.setAge(VALID_AGE);
-        user2.setPassword(VALID_PASSWORD);
     }
 
     @Test
@@ -45,7 +43,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void checkPasswordIsNull_NotOk() {
-        user.setLogin(VALID_LOGIN);
         user.setPassword(NULL_VALUE);
         tryToRegisterException(user, "Password can't be NULL");
     }
@@ -53,7 +50,6 @@ class RegistrationServiceImplTest {
     @Test
     void checkAgeIsLessThanNormal_NotOk() {
         user.setAge(LESS_AGE);
-        user.setPassword(VALID_PASSWORD);
         tryToRegisterException(user, "Age can't be less than 18");
     }
 
@@ -65,9 +61,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void checkLoginTheSame_NotOk() {
-        user.setAge(VALID_AGE);
         registrationService.register(user);
-        registrationService.register(user2);
+        registrationService.register(user);
         assertEquals(1,Storage.people.size(), "The same login can't be able");
     }
 
@@ -79,28 +74,27 @@ class RegistrationServiceImplTest {
 
     @Test
     void checkPasswordSmall_NotOk() {
-        user.setLogin(VALID_LOGIN);
         user.setPassword(NOT_VALID_PASSWORD);
         tryToRegisterException(user, "Login can't be lower than 6 characters");
     }
 
     @Test
     void checkAddUser_Ok() {
-        StorageDao userTest = new StorageDaoImpl();
-        user.setPassword(VALID_PASSWORD);
-        userTest.add(user);
+        Storage.people.add(user);
         assertEquals(user,Storage.people.get(0), "User not added");
     }
 
     @Test
     void checkGetUser_Ok() {
-        user.setLogin(VALID_LOGIN);
-        user.setAge(VALID_AGE);
-        user.setPassword(VALID_PASSWORD);
-        StorageDao userTest = new StorageDaoImpl();
-        userTest.add(user);
-        User getUser = userTest.get(VALID_LOGIN);
+        Storage.people.add(user);
+        User getUser = Storage.people.get(0);
         assertEquals(user,getUser, "User not added");
+    }
+
+    @Test
+    void checkAgeIsNull_NotOk() {
+        user.setAge(null);
+        tryToRegisterException(user, "Age can't be null");
     }
 
     @Test
