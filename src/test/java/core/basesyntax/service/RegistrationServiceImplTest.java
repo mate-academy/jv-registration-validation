@@ -6,15 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class RegistrationServiceImplTest {
 
     private static RegistrationService registrationService;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -30,26 +33,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullFields_NotOk() {
-        User nullLogin = new User(null, "davidbekham", 23);
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullLogin));
-        User nullPassword = new User("Anna", null, 30);
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullPassword));
-        User nullAge = new User("Greg", "greg342", null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullAge));
+        List<User> nullFieldUsers = new ArrayList<>();
+        nullFieldUsers.add(new User(null, "davidbekham", 23));
+        nullFieldUsers.add(new User("Anna", null, 30));
+        nullFieldUsers.add(new User("Greg", "greg342", null));
+        for (User user : nullFieldUsers) {
+            assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        }
     }
 
     @Test
-    void register_fiveValidUsers_Ok() {
-        User sofia = new User("Sofia", "sofasofa", 24);
-        assertEquals(sofia, registrationService.register(sofia));
+    void register_validUser_Ok() {
         User bogdan = new User("Bogdan", "bogdanchik", 19);
         assertEquals(bogdan, registrationService.register(bogdan));
-        User oleg = new User("Oleg", "olejik", 27);
-        assertEquals(oleg, registrationService.register(oleg));
-        User ksenia = new User("Ksenia", "kseniyaa", 24);
-        assertEquals(ksenia, registrationService.register(ksenia));
-        User dima = new User("Dima", "demon228", 27);
-        assertEquals(dima, registrationService.register(dima));
     }
 
     @Test
@@ -98,10 +94,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsIllegal_NotOk() {
-        User alice = new User("Alice", "alice321", 16);
-        User andriy = new User("Andriy", "andriy2000", 185);
-        assertThrows(RuntimeException.class, () -> registrationService.register(andriy));
+    void register_userAgeIsLessThanEighteen_NotOk() {
+        User alice = new User("Alice", "alice321", 17);
         assertThrows(RuntimeException.class, () -> registrationService.register(alice));
     }
 
@@ -112,15 +106,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LegalAgeUsers_Ok() {
-        int minAge = RegistrationServiceImpl.MIN_REGISTRATION_AGE;
-        int maxAge = RegistrationServiceImpl.MAX_REGISTRATION_AGE;
-        User expected;
-        User actual;
-        for (int i = minAge; i <= maxAge; i++) {
-            expected = new User("User" + i, "validpassword", i);
-            actual = registrationService.register(expected);
-            assertEquals(expected, actual);
-        }
+    void register_userAgeIsEighteen() {
+        User bony = new User("Bony", "bonypony", 18);
+        assertEquals(bony, registrationService.register(bony));
     }
 }
