@@ -8,13 +8,17 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    public static final String DEFAULT_LOGIN = "Alex";
-    public static final String DEFAULT_PASSWORD = "123456";
-    public static final int DEFAULT_AGE = 18;
     private static RegistrationService registrationService;
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        user = new User("Alex", "123456", 18);
+    }
 
     @BeforeAll
     static void beforeAll() {
@@ -28,7 +32,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validData_Ok() {
-        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         registrationService.register(user);
         assertEquals(Storage.people.get(0), user);
         assertNotNull(Storage.people.get(0).getId());
@@ -36,43 +39,43 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_NotOk() {
-        User user = new User(null, DEFAULT_PASSWORD, DEFAULT_AGE);
+        user.setLogin(null);
         runtimeExceptionDetection(user);
     }
 
     @Test
     void register_nullPassword_NotOk() {
-        User user = new User(DEFAULT_LOGIN, null, DEFAULT_AGE);
+        user.setPassword(null);
         runtimeExceptionDetection(user);
     }
 
     @Test
     void register_nullAge_NotOk() {
-        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, null);
+        user.setAge(null);
         runtimeExceptionDetection(user);
     }
 
     @Test
     void register_ageLess18_NotOk() {
-        User actual = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, 17);
-        runtimeExceptionDetection(actual);
+        user.setAge(17);
+        runtimeExceptionDetection(user);
     }
 
     @Test
     void register_negativeAge_NotOk() {
-        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, -33);
+        user.setAge(-33);
         runtimeExceptionDetection(user);
     }
 
     @Test
     void register_emptyLogin_NotOk() {
-        User user = new User("", DEFAULT_PASSWORD, DEFAULT_AGE);
+        user.setLogin("");
         runtimeExceptionDetection(user);
     }
 
     @Test
     void register_lessThanMinLengthPassword_NotOk() {
-        User user = new User(DEFAULT_LOGIN, "55555", DEFAULT_AGE);
+        user.setPassword("55555");
         runtimeExceptionDetection(user);
     }
 
@@ -84,10 +87,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_usersWithSameLogins_NotOk() {
-        User firstUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
-        User secondUser = new User(DEFAULT_LOGIN, "666666", 66);
-        registrationService.register(firstUser);
-        runtimeExceptionDetection(secondUser);
+        User sameLoginUser = new User(user.getLogin(), "666666", 66);
+        registrationService.register(user);
+        runtimeExceptionDetection(sameLoginUser);
     }
 
     private void runtimeExceptionDetection(User user) {
