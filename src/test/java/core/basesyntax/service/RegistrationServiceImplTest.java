@@ -11,9 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    public static final String DEFAULT_TEST_LOGIN = "George_Washington";
-    public static final String DEFAULT_TEST_PASSWORD = "AmericanFather";
-    public static final int DEFAULT_TEST_AGE = 57;
+    private static final String DEFAULT_TEST_LOGIN = "George_Washington";
+    private static final String DEFAULT_TEST_PASSWORD = "AmericanFather";
+    private static final int DEFAULT_TEST_AGE = 57;
     private static RegistrationService registrationService;
     private User user;
 
