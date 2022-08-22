@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDaoImpl storageDao;
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void beforeAll() {
@@ -119,7 +120,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginWithWhiteSpace_NotOk() {
+    void register_loginWithWhiteSpace_NotOk() {
         User user = new User();
         user.setLogin("User 1");
         user.setAge(20);
