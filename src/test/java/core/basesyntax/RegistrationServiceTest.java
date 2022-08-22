@@ -10,16 +10,14 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RegistrationServiceTest {
+    private static RegistrationService service;
     private User firstUser;
     private User secondUser;
-    private RegistrationService service;
 
     @BeforeAll
-    void init() {
+    static void init() {
         service = new RegistrationServiceImpl();
     }
 
