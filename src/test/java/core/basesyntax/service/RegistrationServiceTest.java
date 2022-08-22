@@ -105,7 +105,7 @@ class RegistrationServiceTest {
 
     @Test
     @Order(5)
-    void register_UserAlreadyExists_notOk() {
+    void register_addUserAndAddUserAlreadyExists_notOk() {
         int expected = 0;
         int actual = Storage.people.size();
         assertEquals(expected, actual);
