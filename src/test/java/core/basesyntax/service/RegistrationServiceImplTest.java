@@ -56,13 +56,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIsEmpty_notOk() {
-        user.setPassword("");
-        assertThrows(RuntimeException.class, () ->
-                registrationService.register(user));
-    }
-
-    @Test
     void register_ageIsZero_notOk() {
         user.setAge(0);
         assertThrows(RuntimeException.class, () ->

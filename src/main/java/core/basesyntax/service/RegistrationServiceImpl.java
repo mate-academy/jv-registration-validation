@@ -18,6 +18,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkIfDataIsNull(User user) {
+        if (user == null) {
+            throw new RuntimeException("User can not be null");
+        }
+
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new RuntimeException("Login can not be null");
         }
@@ -28,10 +32,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         if (user.getAge() == null) {
             throw new RuntimeException("Age can not be null");
-        }
-
-        if (user == null) {
-            throw new RuntimeException("User can not be null");
         }
     }
 
