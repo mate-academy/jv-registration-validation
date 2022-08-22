@@ -25,6 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private String nullChecker(User user) {
         return user.getPassword() == null ? "Password"
                 : user.getLogin() == null ? "Login"
+                : user.getLogin().isBlank() ? "Login"
                 : user.getAge() == null ? "Age"
                 : "Ok";
 
@@ -38,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 throw new RuntimeException("Login " + argument + " is wrong");
             case "userAgeCheck" :
                 throw new RuntimeException("Age " + argument + " is lass than 18");
-            case "null" :
+            case "nullChecker" :
                 throw new RuntimeException(argument + " is null");
             default:
                 return false;
