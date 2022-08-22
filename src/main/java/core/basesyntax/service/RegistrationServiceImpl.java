@@ -20,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age must be more than " + MIN_AGE + " years");
         }
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isEmpty()) {
             throw new RuntimeException("This field can`t be empty");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
