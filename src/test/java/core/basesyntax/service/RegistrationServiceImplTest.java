@@ -126,7 +126,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void getLogin_loginIsNull_notOk() {
+    void register_loginIsNull_notOk() {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () ->
                 registrationService.register(user)
@@ -134,7 +134,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void getLogin_loginIsEmpty_notOk() {
+    void register_loginIsEmpty_notOk() {
         user.setLogin("");
         Assertions.assertThrows(RuntimeException.class, () ->
                 registrationService.register(user)
@@ -142,7 +142,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void getPassword_passwordIsNull_notOk() {
+    void register_passwordIsNull_notOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () ->
                 registrationService.register(user)
