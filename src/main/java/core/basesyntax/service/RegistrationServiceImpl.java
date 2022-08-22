@@ -15,7 +15,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (!isValidData(user)) {
+       isInvalidData(user);
+        return storageDao.add(user);
+    }
+
+    private void isInvalidData(User user) {
+        if (user == null || user.getLogin() == null
+                || user.getAge() == null || user.getAge() < 0
+                || user.getPassword() == null
+                || user.getPassword().length() <= 6) {
             throw new RegistrationDataException("Invalid input data");
         }
         if (storageDao.get(user.getLogin()) != null) {
@@ -30,16 +38,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationPasswordException("Password must be more than 6 "
                     + "symbols! Actual length: " + user.getPassword().length());
         }
-        return storageDao.add(user);
-    }
-
-    private boolean isValidData(User user) {
-        if (user == null || user.getLogin() == null
-                || user.getAge() == null || user.getAge() < 0
-                || user.getPassword() == null
-                || user.getPassword().length() <= 6) {
-            return false;
-        }
-        return true;
     }
 }
