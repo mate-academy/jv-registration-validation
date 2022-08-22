@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Password can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("This login is already exist");
+            throw new RuntimeException("This login is already exist " + user.getLogin());
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password must be longer then 6 character");
