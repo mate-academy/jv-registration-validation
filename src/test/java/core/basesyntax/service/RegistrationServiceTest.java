@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,8 +32,7 @@ class RegistrationServiceTest {
 
     @Test
     void register_userIsNull_notOk() {
-        newUser = null;
-        assertThrows(NullPointerException.class, () -> registrationService.register(newUser));
+        assertThrows(NullPointerException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -101,21 +99,7 @@ class RegistrationServiceTest {
 
     @Test
     void register_addUserAlreadyExists_notOk() {
-        int expectedSize = 0;
-        int actualSize = Storage.people.size();
-        assertEquals(expectedSize, actualSize);
-
         registrationService.register(newUser);
-        StorageDaoImpl storageDao = new StorageDaoImpl();
-        User userFromStorage = storageDao.get(newUser.getLogin());
-        assertEquals(newUser, userFromStorage);
-
-        expectedSize = 1;
-        actualSize = Storage.people.size();
-        assertEquals(expectedSize, actualSize);
-
         assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
-
-        assertEquals(expectedSize, actualSize);
     }
 }
