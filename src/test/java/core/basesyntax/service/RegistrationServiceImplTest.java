@@ -9,9 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String DEFAULT_LOGIN = "tequila";
-    private static final String DEFAULT_PASSWORD = "withLime";
-    private static final int DEFAULT_AGE = 26;
+    private static final int MIN_AGE = 18;
     private static RegistrationService registrationService;
     private static User correctUser;
 
@@ -23,9 +21,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         correctUser = new User();
-        correctUser.setLogin(DEFAULT_LOGIN);
-        correctUser.setPassword(DEFAULT_PASSWORD);
-        correctUser.setAge(DEFAULT_AGE);
+        correctUser.setLogin("tequila");
+        correctUser.setPassword("withLime");
+        correctUser.setAge(26);
     }
 
     @Test
@@ -52,7 +50,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_userLoginNull_isNotValid() {
+    public void register_LoginNull_isNotValid() {
         correctUser.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(correctUser);
@@ -85,7 +83,6 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_userLoginStartsWithCharacter_isValid() {
-        correctUser.setLogin(DEFAULT_LOGIN);
         User newUser = registrationService.register(correctUser);
         Assertions.assertEquals(correctUser, newUser);
         Assertions.assertNotNull(newUser.getId());
@@ -110,7 +107,6 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_userPasswordLength_isValid() {
-        correctUser.setPassword(DEFAULT_PASSWORD);
         User actualUser = registrationService.register(correctUser);
         Assertions.assertEquals(correctUser, actualUser);
         Assertions.assertNotNull(actualUser.getId());
@@ -127,7 +123,7 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_userAgeLessThanAccepted_isNotValid() {
-        correctUser.setAge(15);
+        correctUser.setAge(MIN_AGE - 1);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(correctUser);
         });
@@ -143,7 +139,6 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_userAge_isValid() {
-        correctUser.setAge(DEFAULT_AGE);
         User newUser = registrationService.register(correctUser);
         Assertions.assertEquals(correctUser, newUser);
         Assertions.assertNotNull(newUser.getId());

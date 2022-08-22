@@ -8,7 +8,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MAX_PASSWORD_LENGTH = 20;
-    private static final String EMPTY_SPACE_REGEX = ".*\\s+.*";
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -28,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null!");
         }
-        if (user.getLogin().matches(EMPTY_SPACE_REGEX) || user.getLogin().isEmpty()) {
+        if (user.getLogin().contains(" ") || user.getLogin().isEmpty()) {
             throw new RuntimeException("Login can't contain empty space or be empty!");
         }
         if (!Character.isLetter(user.getLogin().charAt(0))) {
