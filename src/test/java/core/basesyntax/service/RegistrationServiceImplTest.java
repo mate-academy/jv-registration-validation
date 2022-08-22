@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -34,13 +34,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_appropriateUser_Ok() {
-        assertTrue(registrationService.register(user),
-                "A user with the relevant criteria must be registered.");
+        User actual = user;
+        User expected = registrationService.register(actual);
+        assertEquals(expected, actual, "A user with the relevant criteria must be registered.");
     }
 
     @Test
     void register_incorrectAge_NotOk() {
-        user.setAge(14);
+        user.setAge(17);
         expectException(user);
     }
 

@@ -10,10 +10,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public boolean register(User user) {
+    public User register(User user) {
         checkExceptions(user);
         storageDao.add(user);
-        return true;
+        return user;
     }
 
     private void checkExceptions(User user) {
@@ -29,12 +29,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() == null) {
             throw new RegistrationServiceException("Age not specified.");
-        } else if (user.getAge() < MIN_PERMISSIBLE_AGE) {
+        }
+        if (user.getAge() < MIN_PERMISSIBLE_AGE) {
             throw new RegistrationServiceException("Invalid user age.");
         }
         if (user.getPassword() == null) {
             throw new RegistrationServiceException("Password not specified.");
-        } else if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationServiceException("Invalid user password.");
         }
     }
