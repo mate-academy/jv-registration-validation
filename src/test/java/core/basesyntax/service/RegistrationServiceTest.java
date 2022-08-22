@@ -12,9 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
-    public static final String DEFAULT_LOGIN = "jesus";
-    public static final String DEFAULT_PASSWORD = "christ";
-    public static final int DEFAULT_AGE = 33;
     private static RegistrationService registrationService;
     private User expectedUser;
 
@@ -26,9 +23,9 @@ class RegistrationServiceTest {
     @BeforeEach
     void setUp() {
         expectedUser = new User();
-        expectedUser.setLogin(DEFAULT_LOGIN);
-        expectedUser.setPassword(DEFAULT_PASSWORD);
-        expectedUser.setAge(DEFAULT_AGE);
+        expectedUser.setLogin("Jesus");
+        expectedUser.setPassword("Christ");
+        expectedUser.setAge(33);
     }
 
     @Test
@@ -136,14 +133,6 @@ class RegistrationServiceTest {
     @Test
     void register_lessMinimalAge_NotOk() {
         expectedUser.setAge(17);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expectedUser);
-        });
-    }
-
-    @Test
-    void register_moreMaximumAge_NotOk() {
-        expectedUser.setAge(124);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(expectedUser);
         });
