@@ -62,7 +62,7 @@ class RegistrationServiceTest {
     @Test
     @Order(3)
     void register_userPasswordIsTooShort_notOk() {
-        newUser.setPassword("abc");
+        newUser.setPassword("abcde");
         assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
     }
 
@@ -101,19 +101,21 @@ class RegistrationServiceTest {
     @Test
     @Order(5)
     void register_addUserAndAddUserAlreadyExists_notOk() {
-        int expected = 0;
-        int actual = Storage.people.size();
-        assertEquals(expected, actual);
+        int expectedSize = 0;
+        int actualSize = Storage.people.size();
+        assertEquals(expectedSize, actualSize);
+
         registrationService.register(newUser);
         StorageDaoImpl storageDao = new StorageDaoImpl();
         User userFromStorage = storageDao.get(newUser.getLogin());
         assertEquals(newUser, userFromStorage);
 
-        expected = 1;
-        actual = Storage.people.size();
-        assertEquals(expected, actual);
+        expectedSize = 1;
+        actualSize = Storage.people.size();
+        assertEquals(expectedSize, actualSize);
 
         assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
-        assertEquals(expected, actual);
+
+        assertEquals(expectedSize, actualSize);
     }
 }
