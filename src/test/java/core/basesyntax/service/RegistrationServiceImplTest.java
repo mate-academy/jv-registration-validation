@@ -1,9 +1,9 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private static final String DEFAULT_LOGIN_FIRST = "Himars";
     private static final String DEFAULT_LOGIN_SECOND = "Bayraktar";
     private static final String DEFAULT_PASSWORD_FIRST = "crimeabridgedestroyed";
@@ -20,6 +21,7 @@ class RegistrationServiceImplTest {
     @BeforeAll
     public static void setUp() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
@@ -32,22 +34,11 @@ class RegistrationServiceImplTest {
         User userFirst = createUser(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         User userSecond = createUser(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
         registrationService.register(userFirst);
-        User expectedUser1 = Storage.people.get(0);
+        User expectedUser1 = storageDao.get(DEFAULT_LOGIN_FIRST);
         assertEquals(userFirst, expectedUser1);
         registrationService.register(userSecond);
-        User expectedUser2 = Storage.people.get(1);
+        User expectedUser2 = storageDao.get(DEFAULT_LOGIN_SECOND);
         assertEquals(userSecond, expectedUser2);
-    }
-
-    @Test
-    void register_GetDifferentUsers_Ok() {
-        User userFirst = createUser(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        User userSecond = createUser(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
-        registrationService.register(userFirst);
-        registrationService.register(userSecond);
-        User expectedUser1 = Storage.people.get(0);
-        User expectedUser2 = Storage.people.get(1);
-        assertNotEquals(expectedUser1, expectedUser2);
     }
 
     @Test
@@ -76,22 +67,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userTwoDoubleException_notOk() {
-        User userFirst = createUser(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        User userSecond = createUser(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
-        registrationService.register(userFirst);
-        registrationService.register(userSecond);
-        User userDoubleSecond = createUser(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userDoubleSecond));
-    }
-
-    @Test
-    void register_userTooYoungException_notOk() {
-        User userTooYoung = createUser(10, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userTooYoung));
-    }
-
-    @Test
     void register_userTooYoungExceptionMessage_Ok() {
         User userTooYoung = createUser(10, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         try {
@@ -101,12 +76,6 @@ class RegistrationServiceImplTest {
             String expectedMessage = "User too young!";
             assertEquals(actualMessage, expectedMessage);
         }
-    }
-
-    @Test
-    void register_userNullAgeException_notOk() {
-        User userNullAge = createUser(null, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
-        assertThrows(NullPointerException.class, () -> registrationService.register(userNullAge));
     }
 
     @Test
@@ -122,13 +91,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userNullPasswordException_notOk() {
-        User userNullPassword = createUser(80, null, DEFAULT_LOGIN_FIRST);
-        assertThrows(NullPointerException.class,
-                () -> registrationService.register(userNullPassword));
-    }
-
-    @Test
     void register_userNullPasswordExceptionMessage_Ok() {
         User userNullPassword = createUser(80, null, DEFAULT_LOGIN_FIRST);
         try {
@@ -138,12 +100,6 @@ class RegistrationServiceImplTest {
             String expectedMessage = "Password should not be null";
             assertEquals(actualMessage, expectedMessage);
         }
-    }
-
-    @Test
-    void register_userNullLoginException_notOk() {
-        User userNullLogin = createUser(80, DEFAULT_PASSWORD_FIRST, null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(userNullLogin));
     }
 
     @Test
@@ -159,12 +115,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWrongPasswordException_notOk() {
-        User userWrongPassword = createUser(20, "cri", DEFAULT_LOGIN_FIRST);
-        assertThrows(RuntimeException.class, () -> registrationService.register(userWrongPassword));
-    }
-
-    @Test
     void register_userWrongPasswordExceptionMessage_Ok() {
         User userWrongPassword = createUser(20, "cri", DEFAULT_LOGIN_FIRST);
         try {
@@ -174,12 +124,6 @@ class RegistrationServiceImplTest {
             String expectedMessage = "Password too short!";
             assertEquals(actualMessage, expectedMessage);
         }
-    }
-
-    @Test
-    void register_userEmptyLoginException_notOk() {
-        User userEmptyLogin = createUser(20, DEFAULT_PASSWORD_FIRST, "");
-        assertThrows(RuntimeException.class, () -> registrationService.register(userEmptyLogin));
     }
 
     @Test
