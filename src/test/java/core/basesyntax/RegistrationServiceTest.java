@@ -7,17 +7,24 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RegistrationServiceTest {
     private User firstUser;
     private User secondUser;
     private RegistrationService service;
 
+    @BeforeAll
+    void init() {
+        service = new RegistrationServiceImpl();
+    }
+
     @BeforeEach
     void setUp() {
-        service = new RegistrationServiceImpl();
         Storage.people.clear();
         firstUser = new User();
         firstUser.setPassword("123456");
