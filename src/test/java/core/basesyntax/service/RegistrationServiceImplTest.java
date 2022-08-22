@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -12,7 +12,7 @@ class RegistrationServiceImplTest {
     private static final String CORRECT_PASSWORD = "password";
     private RegistrationServiceImpl registrationService;
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
