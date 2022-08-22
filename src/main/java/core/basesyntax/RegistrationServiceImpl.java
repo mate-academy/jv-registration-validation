@@ -2,11 +2,11 @@ package core.basesyntax;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int AGE_MIN = 18;
-    private static final int AGE_MAX = 99;
     private static final int PASS_LENGTH_LIMIT = 6;
     private static final int LOGIN_LENGTH_LIMIT = 20;
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -22,14 +22,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < AGE_MIN) {
             throw new RuntimeException("User is younger than 18 years");
         }
-        if (user.getAge() > AGE_MAX) {
-            throw new RuntimeException("User is older than 99 years");
-        }
-        if (storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
-            return null;
-        }
         if (user.getLogin().length() > LOGIN_LENGTH_LIMIT) {
             throw new RuntimeException("Login more than 20 characters");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Login already exist");
         }
         return storageDao.add(user);
     }
