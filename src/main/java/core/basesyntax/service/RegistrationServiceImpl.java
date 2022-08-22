@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -27,11 +26,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_USER_AGE) {
             throw new RuntimeException("User can't be less " + MIN_USER_AGE + " years old.");
         }
-        for (User person : Storage.people) {
-            if (person.getLogin().equals(user.getLogin())) {
-                throw new RuntimeException("There is a user with this username "
-                        + user.getLogin() + " .");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("There is a user with this username "
+                    + user.getLogin() + " .");
         }
         return storageDao.add(user);
     }

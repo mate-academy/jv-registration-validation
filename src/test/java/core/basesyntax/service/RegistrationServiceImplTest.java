@@ -5,7 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -16,7 +19,6 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
-
 
     @BeforeEach
     void setUp() {
@@ -30,7 +32,6 @@ class RegistrationServiceImplTest {
     void setUP() {
         Storage.people.clear();
     }
-
 
     @Test
     void register_userIsNull_notOk() {
