@@ -110,8 +110,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void getAge_ageIsNull_notOk() {
+    void register_ageIsNull_notOk() {
         user.setAge(null);
+        Assertions.assertThrows(RuntimeException.class, () ->
+                registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_ageIsNegative_notOk() {
+        user.setAge(-DEFAULT_AGE);
         Assertions.assertThrows(RuntimeException.class, () ->
                 registrationService.register(user)
         );
