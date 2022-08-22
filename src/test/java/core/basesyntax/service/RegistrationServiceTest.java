@@ -19,7 +19,6 @@ class RegistrationServiceTest {
 
     @BeforeAll
     static void beforeAll() {
-
         registrationService = new RegistrationServiceImpl();
     }
 
