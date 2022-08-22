@@ -47,16 +47,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_underAge_notOk() {
-        user.setAge(15);
+        user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_underAge_Ok() {
-        user.setAge(18);
-        boolean expected = user.equals(registrationService.register(user));
-        assertTrue(expected);
+        User actualUser = registrationService.register(user);
+        assertEquals(user, actualUser);
     }
 
     @Test

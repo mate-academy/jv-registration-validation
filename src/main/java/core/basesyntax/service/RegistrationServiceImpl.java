@@ -28,11 +28,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkPassword(User user) {
-        if (user.getPassword().isEmpty()) {
-            throw new RuntimeException("Password can't be empty");
-        }
         if (user.getPassword() == null) {
             throw new NullPointerException("Password can't be null");
+        }
+        if (user.getPassword().isEmpty()) {
+            throw new RuntimeException("Password can't be empty");
         }
         if (user.getPassword().length() < PASSWORD_LENGTH) {
             throw new RuntimeException("User password must be over 6 characters");
