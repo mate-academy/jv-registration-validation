@@ -66,6 +66,7 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(userOne),
                 "Age can't be null.");
     }
+
     @Test
     void register_ageIsCorrect_ok() {
         User userReturned = registrationService.register(userOne);
