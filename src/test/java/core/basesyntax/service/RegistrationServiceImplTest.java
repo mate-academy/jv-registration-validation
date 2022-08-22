@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLengthLess6_NotOk() {
+    void register_passwordLengthLess6_NotOk() {
         User actual = new User(CORRECT_LOGIN, "passw", 18);
         checkException(actual);
     }
