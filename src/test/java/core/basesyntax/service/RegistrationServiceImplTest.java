@@ -68,13 +68,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAlreadyExist_NotOk() {
-        User newUser = new User();
-        newUser.setAge(30);
-        newUser.setLogin("newUser_login");
-        newUser.setPassword("asdfghj");
-        registrationService.register(newUser);
+        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(newUser);
+            registrationService.register(user);
         });
     }
 
