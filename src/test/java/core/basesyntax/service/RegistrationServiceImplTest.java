@@ -30,7 +30,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_GetNewUser_Ok() {
+    public void register_getNewUser_Ok() {
         User userFirst = new User(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         User userSecond = new User(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
         registrationService.register(userFirst);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userTooYoungExceptionMessage_Ok() {
-        User userTooYoung = new User(10, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
+        User userTooYoung = new User(17, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         try {
             registrationService.register(userTooYoung);
         } catch (RuntimeException e) {
@@ -139,7 +139,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_GetBaseSize_Ok() {
+    void register_getBaseSize_Ok() {
         User userGoodFirst = new User(22, DEFAULT_PASSWORD_FIRST, DEFAULT_LOGIN_FIRST);
         User userGoodSecond = new User(70, DEFAULT_PASSWORD_SECOND, DEFAULT_LOGIN_SECOND);
         User userGoodThird = new User(30, "counterattack", "Javelin");
