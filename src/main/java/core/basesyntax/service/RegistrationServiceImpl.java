@@ -12,10 +12,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null");
+            throw new RuntimeException("User is null");
         }
         if (user.getLogin() == null) {
-            throw new NullPointerException("Login is null");
+            throw new RuntimeException("Login is null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already registered");
