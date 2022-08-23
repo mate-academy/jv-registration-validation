@@ -91,6 +91,6 @@ class RegistrationServiceImplTest {
         newUser.setLogin("Bob");
         newUser.setPassword("123456");
         newUser.setAge(18);
-        assertDoesNotThrow(() -> registrationService.register(newUser));
+        assertEquals(newUser, storageDao.get(newUser.getLogin()));
     }
 }
