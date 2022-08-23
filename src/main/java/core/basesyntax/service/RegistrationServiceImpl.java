@@ -12,43 +12,39 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (!nullChecker(user).equals("Ok")) {
-            throw new RuntimeException(user + "have null parameters");
-        }
-        userAgeCheck(user.getAge());
-        userLoginCheck(user.getLogin());
+        checkNull(user);
+        checkUserAge(user.getAge());
+        checkUserLogin(user.getLogin());
         userPasswordCheck(user.getPassword());
         storageDao.add(user);
         return user;
     }
 
-    private String nullChecker(User user) {
-        return user.getPassword() == null ? "Password"
-                : user.getLogin() == null ? "Login"
-                : user.getLogin().isBlank() ? "Login"
-                : user.getAge() == null ? "Age"
-                : "Ok";
-
+    private void checkNull(User user) {
+        if (user == null
+                || user.getLogin().isBlank()
+                || user.getLogin() == null
+                || user.getAge() == null
+                || user.getPassword() == null) {
+            throw new RuntimeException(user + "have null parameters");
+        }
     }
 
     private void userPasswordCheck(String password) {
-        if (password.matches(REGEX_PASSWORD)) {
-            return;
+        if (!password.matches(REGEX_PASSWORD)) {
+            throw new RuntimeException("The password " + password + " is incorrect");
         }
-        throw new RuntimeException("The password " + password + " is incorrect");
     }
 
-    private void userLoginCheck(String login) {
-        if (storageDao.get(login) == null && !login.contains(" ")) {
-            return;
+    private void checkUserLogin(String login) {
+        if (storageDao.get(login) != null || login.contains(" ")) {
+            throw new RuntimeException("Login " + login + " is wrong");
         }
-        throw new RuntimeException("Login " + login + " is wrong");
     }
 
-    private void userAgeCheck(int age) {
-        if (age >= MAX_AGE) {
-            return;
+    private void checkUserAge(int age) {
+        if (age < MAX_AGE) {
+            throw new RuntimeException("Age " + age + " is lass than 18");
         }
-        throw new RuntimeException("Age " + age + " is lass than 18");
     }
 }
