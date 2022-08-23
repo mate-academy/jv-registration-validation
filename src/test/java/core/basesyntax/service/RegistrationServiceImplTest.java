@@ -4,13 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
 
     private User createUser(String login, String password, Integer age) {
         User newUser = new User();
@@ -20,51 +21,44 @@ class RegistrationServiceImplTest {
         return newUser;
     }
 
+    @BeforeAll
+    static void setUp() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
     @Test
     void register_nullUser_notOk() {
-        try {
-            User registeredUser = registrationService.register(null);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException have to thrown if user is null ");
+        assertThrows(RuntimeException.class, () -> {
+            User registeredUser = registrationService.register(null);;
+        });
     }
 
     @Test
     void register_nullLoginUser_notOk() {
         User user = createUser(null, "password", 21);
-        try {
-            User registeredUser = registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException have to thrown if user is null ");
+        assertThrows(RuntimeException.class, () -> {
+            User registeredUser = registrationService.register(user);;
+        });
     }
 
     @Test
     void register_nullPasswordUser_notOk() {
         User user = createUser("login", null, 21);
-        try {
-            User registeredUser = registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException have to thrown if user is null ");
+        assertThrows(RuntimeException.class, () -> {
+            User registeredUser = registrationService.register(user);;
+        });
     }
 
     @Test
     void register_nullAgeUser_notOk() {
         User user = createUser("login", "password", null);
-        try {
-            User registeredUser = registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException have to thrown if user is null ");
+        assertThrows(RuntimeException.class, () -> {
+            User registeredUser = registrationService.register(user);;
+        });
     }
 
     @Test
-    void register_addUserWithExistingLogin_notOk() {
+    void register_existingLoginUser_notOk() {
         User user1 = createUser("login", "password1", 18);
         User user2 = createUser("login", "password2", 19);
         User registeredUser1 = registrationService.register(user1);
@@ -74,17 +68,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addUserWithAgeLessEighteen_notOk() {
-        User user = createUser("login1", "password1", 17);
-        User registeredUser = registrationService.register(user);
-        assertNull(registeredUser);
+    void register_emptyLoginUser_notOk() {
+        User user = createUser("", "password1", 21);
+        assertThrows(RuntimeException.class, () -> {
+            User registeredUser = registrationService.register(user);;
+        });
     }
 
     @Test
-    void register_addUserWithPasswordLessSix_notOk() {
+    void register_ageLessEighteenUser_notOk() {
+        User user = createUser("login1", "password1", 17);
+        assertThrows(RuntimeException.class, () -> {
+            User registeredUser = registrationService.register(user);;
+        });
+    }
+
+    @Test
+    void register_passwordLessSixCharactersUser_notOk() {
         User user = createUser("login1", "passw", 20);
-        User registeredUser = registrationService.register(user);
-        assertNull(registeredUser);
+        assertThrows(RuntimeException.class, () -> {
+            User registeredUser = registrationService.register(user);;
+        });
     }
 
     @Test
