@@ -36,6 +36,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASS_LENGTH) {
             throw new RuntimeException("You can't add the user with password is less 6 characters");
         }
-        return storageDao.get(user.getLogin()) == null ? storageDao.add(user) : null;
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User by login " + user.getLogin() + " already exists");
+        }
+        return storageDao.add(user);
     }
 }
