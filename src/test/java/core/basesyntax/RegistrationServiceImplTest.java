@@ -11,11 +11,6 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
 
-    private static final int EIGHTEEN_AGE = 18;
-    private static final int SEVENTEEN_AGE = 17;
-    private static final String LOGIN = "login";
-    private static final String CORRECT_PASSWORD = "1234567";
-
     private static RegistrationService registrationService;
 
     @BeforeAll
@@ -24,11 +19,11 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerWithAllDataOk() {
+    void register_WithAllData_Ok() {
         User inputUser = new User();
-        inputUser.setAge(EIGHTEEN_AGE);
-        inputUser.setLogin(LOGIN);
-        inputUser.setPassword(CORRECT_PASSWORD);
+        inputUser.setAge(18);
+        inputUser.setLogin("login");
+        inputUser.setPassword("12345678");
 
         User created = registrationService.register(inputUser);
 
@@ -36,57 +31,47 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerWithAllDataNullNotOk() {
+    void register_WithAgeLessThenEighteen_NotOk() {
         User inputUser = new User();
-        inputUser.setPassword(null);
-        inputUser.setLogin(null);
-        inputUser.setAge(null);
+        inputUser.setAge(17);
+        inputUser.setLogin("login");
+        inputUser.setPassword("12345678");
 
         assertThrows(RuntimeException.class, () -> registrationService.register(inputUser));
     }
 
     @Test
-    void registerWithAgeLessThenEighteenNotOk() {
-        User inputUser = new User();
-        inputUser.setAge(SEVENTEEN_AGE);
-        inputUser.setLogin(LOGIN);
-        inputUser.setPassword(CORRECT_PASSWORD);
-
-        assertThrows(RuntimeException.class, () -> registrationService.register(inputUser));
-    }
-
-    @Test
-    void registerUserWhenAgeIsNullNotOk() {
+    void register_UserWhenAgeIsNull_NotOk() {
         User inputUser = new User();
         inputUser.setAge(null);
-        inputUser.setLogin(LOGIN);
-        inputUser.setPassword(CORRECT_PASSWORD);
+        inputUser.setLogin("login");
+        inputUser.setPassword("12345678");
 
         assertThrows(RuntimeException.class, () -> registrationService.register(inputUser));
     }
 
     @Test
-    void registerUserWhenPasswordIsNullNotOk() {
+    void register_UserWhenPasswordIsNull_NotOk() {
         User inputUser = new User();
-        inputUser.setAge(EIGHTEEN_AGE);
-        inputUser.setLogin(LOGIN);
+        inputUser.setAge(18);
+        inputUser.setLogin("login");
         inputUser.setPassword(null);
 
         assertThrows(RuntimeException.class, () -> registrationService.register(inputUser));
     }
 
     @Test
-    void registerUserWhenLoginAlreadyTakenNotOk() {
-        final String repeatLogin = "repeat-login";
+    void register_UserWhenLoginAlreadyTaken_NotOk() {
+        String repeatLogin = "repeat-login";
         User firstUser = new User();
-        firstUser.setAge(EIGHTEEN_AGE);
+        firstUser.setAge(18);
         firstUser.setLogin(repeatLogin);
-        firstUser.setPassword(CORRECT_PASSWORD);
+        firstUser.setPassword("12345678");
 
         User inputUser = new User();
-        inputUser.setAge(EIGHTEEN_AGE);
+        inputUser.setAge(18);
         inputUser.setLogin(repeatLogin);
-        inputUser.setPassword(CORRECT_PASSWORD);
+        inputUser.setPassword("12345678");
 
         registrationService.register(firstUser);
 
@@ -94,21 +79,21 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWhenLoginIsNullNotOk() {
+    void register_UserWhenLoginIsNull_NotOk() {
         User inputUser = new User();
-        inputUser.setAge(EIGHTEEN_AGE);
+        inputUser.setAge(18);
         inputUser.setLogin(null);
-        inputUser.setPassword(CORRECT_PASSWORD);
+        inputUser.setPassword("12345678");
 
         assertThrows(RuntimeException.class, () -> registrationService.register(inputUser));
     }
 
     @Test
-    void registerWithPasswordLengthLessThenSixNotOk() {
+    void register_WithPasswordLengthLessThenSix_NotOk() {
         final String incorrectPassword = "12345";
         User inputUser = new User();
-        inputUser.setAge(EIGHTEEN_AGE);
-        inputUser.setLogin(LOGIN);
+        inputUser.setAge(18);
+        inputUser.setLogin("login");
         inputUser.setPassword(incorrectPassword);
 
         assertThrows(RuntimeException.class, () -> registrationService.register(inputUser));

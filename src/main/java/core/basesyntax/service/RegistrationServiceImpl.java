@@ -11,13 +11,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user == null) {
             throw new RuntimeException("User can't be null");
-        } else if (user.getAge() < 18 || user.getAge() == null) {
+        }
+        if (user.getAge() < 18 || user.getAge() == null) {
             throw new RuntimeException("Your age must be at least 18");
-        } else if (user.getPassword().length() < 6 || user.getPassword() == null) {
+        }
+        if (user.getPassword().length() < 6 || user.getPassword() == null) {
             throw new RuntimeException("Your password must be at least 18");
-        } else if (storageDao.get(user.getLogin()) != null) {
+        }
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with login: " + user.getLogin() + " already created");
-        } else if (user.getLogin() == null) {
+        }
+        if (user.getLogin() == null) {
             throw new RuntimeException("Please fill the login field");
         }
         return storageDao.add(user);
