@@ -26,8 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().isBlank()) {
             throw new RuntimeException("Password can't bee empty!");
         }
-        if (user.getPassword() != null
-                && user.getPassword().length() < MINIMUM_ALLOWED_PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MINIMUM_ALLOWED_PASSWORD_LENGTH) {
             throw new RuntimeException("Invalid password length");
         }
         if (user.getAge() < MINIMUM_ALLOWED_AGE || user.getAge() == null) {
