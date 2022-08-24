@@ -26,17 +26,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().isBlank()) {
             throw new RuntimeException("Password can't bee empty!");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User already exist");
-        }
-        if (user.getAge() < MINIMUM_ALLOWED_AGE) {
-            throw new RuntimeException("User age is under 18");
-        }
         if (user.getPassword() != null
                 && user.getPassword().length() < MINIMUM_ALLOWED_PASSWORD_LENGTH) {
             throw new RuntimeException("Invalid password length");
         }
-        storageDao.add(user);
-        return user;
+        if (user.getAge() < MINIMUM_ALLOWED_AGE || user.getAge() == null) {
+            throw new RuntimeException("User should be 18+");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User already exist");
+        }
+        return storageDao.add(user);
     }
 }
