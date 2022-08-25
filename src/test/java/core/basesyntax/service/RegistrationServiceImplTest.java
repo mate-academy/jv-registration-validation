@@ -36,7 +36,6 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        registrationService = new RegistrationServiceImpl();
         assertThrows(NullPointerException.class,
                 () -> registrationService.register(null));
     }
