@@ -3,14 +3,16 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        Objects.requireNonNull(user, "User required");
+        if (user == null) {
+            throw new RuntimeException("Can't register user. Current user: null");
+        }
         validateLogin(user.getLogin());
         validatePassword(user.getPassword());
         validateAge(user.getAge());
@@ -18,7 +20,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(String login) {
-        Objects.requireNonNull(login, "Login required");
+        if (login == null) {
+            throw new RuntimeException("Can't register user with login: null");
+        }
         if (login.isEmpty() || login.isBlank()) {
             throw new RuntimeException("Login is empty");
         }
@@ -28,15 +32,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validatePassword(String password) {
-        Objects.requireNonNull(password, "Password required");
-        if (password.length() < 6) {
+        if (password == null) {
+            throw new RuntimeException("Can't register user with password: null");
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password length must be at least 6 characters. "
                     + "Current password length: " + password.length());
         }
     }
 
     private void validateAge(Integer age) {
-        Objects.requireNonNull(age, "Age required");
+        if (age == null) {
+            throw new RuntimeException("Can't register user with age: null");
+        }
         if (age <= 0 || age > 100) {
             throw new RuntimeException("Invalid age. Value can't be: " + age);
         }
