@@ -11,11 +11,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkUser(user);
-        return user;
+        return checkUser(user);
     }
 
-    private void checkUser(User user) {
+    private User checkUser(User user) {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age lower than min age: " + MIN_AGE
                     + "\nBut it was: " + user.getAge());
@@ -31,6 +30,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with this Login Exist");
         }
-        storageDao.add(user);
+        return storageDao.add(user);
     }
 }
