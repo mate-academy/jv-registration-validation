@@ -29,9 +29,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MINIMUM_ALLOWED_PASSWORD_LENGTH) {
             throw new RuntimeException("Invalid password length");
         }
-        if (user.getAge() < MINIMUM_ALLOWED_AGE || user.getAge() == null) {
+        if (user.getAge() == null || user.getAge() < MINIMUM_ALLOWED_AGE) {
             throw new RuntimeException("User should be 18+");
         }
+
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already exist");
         }
