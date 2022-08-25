@@ -1,8 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -10,20 +7,22 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
 
-    private static RegistrationServiceImpl registrationService;
-    private static User user;
+    private static RegistrationService registrationService;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-        user = new User();
+        registrationService = new RegistrationService();
     }
 
     @BeforeEach
     void beforeEach() {
+        user = new User();
         user.setLogin("User");
         user.setPassword("123456");
         user.setAge(MIN_AGE);
@@ -35,12 +34,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() {
-        assertThrows(NullPointerException.class,
-                () -> registrationService.register(null));
-    }
-
-    @Test
     void register_minAge_ok() {
         user.setAge(MIN_AGE);
         boolean expected = user.equals(registrationService.register(user));
@@ -48,10 +41,9 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoverAgeThanMinAge_notOk() {
-        user.setAge(MIN_AGE - 1);
-        assertThrows(RuntimeException.class,
-                () -> registrationService.register(user));
+    void register_loverAgeThanMinAge_notOk() {
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -70,28 +62,28 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ShorterThanMinLengthPassword_notOk() {
+    void register_shorterThanMinLengthPassword_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_NullPassword_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_NotExistLogin_ok() {
+    void register_notExistLogin_ok() {
         user.setLogin("User");
         boolean expected = user.equals(registrationService.register(user));
         assertTrue(expected);
     }
 
     @Test
-    void register_ExistLogin_notOk() {
+    void register_existLogin_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
