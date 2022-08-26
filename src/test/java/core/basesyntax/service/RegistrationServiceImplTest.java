@@ -38,8 +38,8 @@ public class RegistrationServiceImplTest {
     @Test
     void register_minAge_ok() {
         user.setAge(MIN_AGE);
-        boolean expected = user.equals(registrationServiceImpl.register(user));
-        assertTrue(expected);
+        User actual = registrationServiceImpl.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
