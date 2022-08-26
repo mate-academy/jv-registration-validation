@@ -6,17 +6,25 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int ZERO = 0;
+    private static final int MIN_VALID_AGE = 18;
+    private static final int MAX_VALID_AGE = 100;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RuntimeException("Can't register user. Current user: null");
-        }
+        checkUserNotNull(user);
         validateLogin(user.getLogin());
         validatePassword(user.getPassword());
         validateAge(user.getAge());
         return storageDao.add(user);
+    }
+
+
+    private void checkUserNotNull(User user) {
+        if (user == null) {
+            throw new RuntimeException("Can't register user. Current user: null");
+        }
     }
 
     private void validateLogin(String login) {
@@ -45,10 +53,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new RuntimeException("Can't register user with age: null");
         }
-        if (age <= 0 || age > 100) {
+        if (age <= ZERO || age > MAX_VALID_AGE) {
             throw new RuntimeException("Invalid age. Value can't be: " + age);
         }
-        if (age < 18) {
+        if (age < MIN_VALID_AGE) {
             throw new RuntimeException("User must be at least 18 years old. Current age: " + age);
         }
     }

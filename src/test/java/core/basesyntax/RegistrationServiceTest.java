@@ -2,31 +2,21 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(PER_CLASS)
 public class RegistrationServiceTest {
-    private RegistrationServiceImpl registrationService;
-    private StorageDaoImpl storageDao;
+    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();;
+    private StorageDaoImpl storageDao = new StorageDaoImpl();;
 
-    @BeforeAll
-    public void setup() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-    }
-
-    @AfterAll
-    public void close() {
+    @AfterEach
+    public void clearStorage() {
         Storage.people.clear();
     }
 
