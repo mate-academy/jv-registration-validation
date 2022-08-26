@@ -10,10 +10,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkUserService.checkNullRegister(user);
+        checkUserService.checkNullUser(user);
         checkUserService.checkUserAge(user);
         checkUserService.checkUserPassword(user);
-        checkUserService.checkSameUserLogin(user);
+        checkUserService.checkUserLogin(user);
         storageDao.add(user);
         return user;
     }

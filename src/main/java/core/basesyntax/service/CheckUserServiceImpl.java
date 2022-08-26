@@ -10,7 +10,7 @@ public class CheckUserServiceImpl implements CheckUserService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public Boolean checkNullRegister(User user) {
+    public Boolean checkNullUser(User user) {
         if (user == null
                 || user.getLogin() == null
                 || user.getPassword() == null
@@ -30,7 +30,7 @@ public class CheckUserServiceImpl implements CheckUserService {
     }
 
     @Override
-    public Boolean checkSameUserLogin(User user) {
+    public Boolean checkUserLogin(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("\n Your date is Invalid (Login is already registred)");
         }
