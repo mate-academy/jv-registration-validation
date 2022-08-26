@@ -12,13 +12,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private User defaultUser = new User();
-
     private final int minAge = 18;
     private final int minPasswordLength = 6;
     private final String login = "Ivanov";
     private final String password = "Hello_World";
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private User defaultUser = new User();
 
     @BeforeEach
     void setUp() {

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
-    private StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
     private User defaultUser = new User();
     private final int age = 18;
     private final String login = "Ivanov";
@@ -40,7 +40,7 @@ class StorageDaoImplTest {
     @Test
     void add_increaseCapacityStorage_Ok() {
         int expected = Storage.people.size();
-        int countUsers = 19;
+        int countUsers = 109;
         User[] users = new User[countUsers];
         for (int i = 0; i < users.length; i++) {
             users[i] = new User();
@@ -57,9 +57,12 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void get_nullLogin_NotOk() {
-        assertThrows(RuntimeException.class, () -> storageDao.get(null),
-                "Login can not be null");
+    void addAndGet_newUser_Ok() {
+        User expected = defaultUser;
+        storageDao.add(defaultUser);
+        User actual = storageDao.get(defaultUser.getLogin());
+        assertEquals(expected,actual,"Expected add in storage and get user should be "
+                + defaultUser);
     }
 
     @Test
