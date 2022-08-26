@@ -4,7 +4,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
-public class CheckUserServiceImpl implements CheckUserService{
+public class CheckUserServiceImpl implements CheckUserService {
     private static final int LIMIT_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
