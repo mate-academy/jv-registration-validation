@@ -12,8 +12,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();;
-    private StorageDaoImpl storageDao = new StorageDaoImpl();;
+    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @AfterEach
     public void clearStorage() {

@@ -20,7 +20,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-
     private void checkUserNotNull(User user) {
         if (user == null) {
             throw new RuntimeException("Can't register user. Current user: null");
