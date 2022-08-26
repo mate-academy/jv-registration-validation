@@ -8,12 +8,27 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RegistrationServiceTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private StorageDaoImpl storageDao = new StorageDaoImpl();
+    private RegistrationServiceImpl registrationService;
+    private StorageDaoImpl storageDao;
+
+    @BeforeAll
+    public void setup() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
+
+    @AfterAll
+    public void close() {
+
+    }
 
     @AfterEach
     public void clearStorage() {
