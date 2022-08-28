@@ -17,11 +17,11 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        user = new User();
     }
 
     @BeforeEach
     void setUp() {
-        user = new User();
         user.setAge(22);
         user.setPassword("password");
         user.setLogin("login");
