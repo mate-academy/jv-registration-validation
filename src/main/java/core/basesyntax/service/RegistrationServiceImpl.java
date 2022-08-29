@@ -15,17 +15,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User shouldn't be null.");
         }
         String login = user.getLogin();
-        String password = user.getPassword();
-        Integer age = user.getAge();
         if (login.isBlank()) {
             throw new RuntimeException("User login shouldn't be null or empty.");
         }
         if (storageDao.get(login) != null) {
             throw new RuntimeException("User already exists.");
         }
+        Integer age = user.getAge();
         if (age == null || age < MIN_USER_AGE) {
             throw new RuntimeException("User's age shouldn't be null and less than 18.");
         }
+        String password = user.getPassword();
         if (password.isBlank() || password.length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("User's password shouldn't be null and less than 6 chars.");
         }
