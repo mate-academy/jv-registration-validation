@@ -23,11 +23,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         Integer age = user.getAge();
         if (age == null || age < MIN_USER_AGE) {
-            throw new RuntimeException("User's age shouldn't be null and less than 18.");
+            throw new RuntimeException("User's age shouldn't be null and less than "
+                    + MIN_USER_AGE + ".");
         }
         String password = user.getPassword();
         if (password.isBlank() || password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("User's password shouldn't be null and less than 6 chars.");
+            throw new RuntimeException("User's password shouldn't be null and less than "
+                    + MIN_USER_AGE + " chars.");
         }
         return storageDao.add(user);
     }
