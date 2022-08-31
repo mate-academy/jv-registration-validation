@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationServiceImpl registrationService;
+    private static RegistrationService registrationService;
     private static User user;
 
     @BeforeAll
@@ -57,44 +57,44 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ageLessThan18_NotOk() {
+    void register_ageLessThan18_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ageMoreThan18_Ok() {
+    void register_ageMoreThan18_ok() {
         User expected = registrationService.register(user);
         assertEquals(user, expected);
     }
 
     @Test
-    void register_age18_Ok() {
+    void register_age18_ok() {
         user.setAge(18);
         User expected = registrationService.register(user);
         assertEquals(user, expected);
     }
 
     @Test
-    void register_negativeAge_NotOk() {
+    void register_negativeAge_notOk() {
         user.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_allDataIsValid_notOk() {
+    void register_userAlreadyExists_notOk() {
         assertEquals(registrationService.register(user), user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
