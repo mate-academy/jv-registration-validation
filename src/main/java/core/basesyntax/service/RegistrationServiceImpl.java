@@ -11,8 +11,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (!isValid(user)) {
-            throw new RuntimeException();
+        if (!isValid(user) || storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("The user data is not correct!");
         }
         storageDao.add(user);
         return user;
@@ -24,8 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin() == null
                 || user.getId() < 0
                 || user.getAge() < MINIMUM_AGE_FOR_REGISTRATION
-                || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH
-                || storageDao.get(user.getLogin()) != null) {
+                || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
             return false;
         }
         return true;

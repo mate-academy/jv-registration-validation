@@ -1,8 +1,13 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationServiceImpl;
+    private static StorageDao storageDao;
     private User defaultUser;
     private User userWithSameLogin;
 
     @BeforeAll
     static void beforeAll() {
         registrationServiceImpl = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -26,9 +33,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void validationUser_Ok() {
+        assertFalse(registrationServiceImpl.isValid(new User()), "Incorrect user!");
+        boolean actual = registrationServiceImpl.isValid(defaultUser);
+        assertTrue(actual);
+    }
+
+    @Test
     void register_UserWithCorrectParameters_Ok() {
         registrationServiceImpl.register(defaultUser);
         assertEquals(1, Storage.people.size());
+        assertNotNull(storageDao.get(defaultUser.getLogin()));
     }
 
     @Test
@@ -53,13 +68,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_NullPassword_NotOk() {
         defaultUser.setPassword(null);
-        assertThrows(RuntimeException.class, ()
-                -> registrationServiceImpl.register(defaultUser));
-    }
-
-    @Test
-    void register_EmptyPassword_NotOk() {
-        defaultUser.setPassword("");
         assertThrows(RuntimeException.class, ()
                 -> registrationServiceImpl.register(defaultUser));
     }
@@ -90,7 +98,7 @@ class RegistrationServiceImplTest {
         defaultUser.setId(1L);
         defaultUser.setPassword("Password");
         defaultUser.setLogin("Login");
-        defaultUser.setAge(18);
+        defaultUser.setAge(19);
 
     }
 
