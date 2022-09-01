@@ -17,12 +17,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age can't be null or less than 18");
         }
-        if (user.getLogin().isBlank() || user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().isBlank()) {
             throw new RuntimeException("Login can't be null or empty");
         }
-        if (user.getPassword().length() < MIN_LENGTH
-                || user.getPassword().isBlank()
-                || user.getPassword() == null) {
+        if (user.getPassword() == null
+                || user.getPassword().length() < MIN_LENGTH
+                || user.getPassword().isBlank()) {
             throw new RuntimeException("Password can't be null or empty "
                     + "and less than 6 characters");
         }
