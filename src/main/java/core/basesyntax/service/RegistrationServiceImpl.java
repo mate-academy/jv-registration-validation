@@ -5,10 +5,51 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_CHARACTERS_PASSWORD = 6;
+    private static final int MIN_USER_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        return null;
+        if (user == null) {
+            throw new RuntimeException("User data entered incorrectly");
+        }
+        checkLogin(user.getLogin());
+        checkAge(user.getAge());
+        checkPassword(user.getPassword());
+        return storageDao.add(user);
+    }
+
+    private void checkLogin(String login) {
+        if (login == null || login.isEmpty()) {
+            throw new RuntimeException("login entered with error");
+        }
+        if (!login.contains("@")) {
+            throw new RuntimeException("login entered with error");
+        }
+        if (storageDao.get(login) != null) {
+            throw new RuntimeException("This login is already taken");
+        }
+        if (storageDao.get(login).equals(login)) {
+            throw new RuntimeException("This login is already exict");
+        }
+    }
+
+    private void checkPassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new RuntimeException("Password entered with error");
+        }
+        if (password.length() < MIN_CHARACTERS_PASSWORD) {
+            throw new RuntimeException("Your password must be at least 6 characters");
+        }
+    }
+
+    private void checkAge(Integer age) {
+        if (age == null) {
+            throw new RuntimeException("You need to enter your age");
+        }
+        if (age < MIN_USER_AGE) {
+            throw new RuntimeException("Your age must be not less 18");
+        }
     }
 }
