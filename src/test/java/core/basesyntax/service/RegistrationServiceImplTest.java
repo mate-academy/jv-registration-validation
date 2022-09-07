@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static final User USER_VALID = new User("Badcannon", "password1", 39);
-    private static final User USER_WITH_SHORT_PASS = new User("Sam", "12345", 39);
+    private static final User USER_WITH_SHORT_PASSWORD = new User("Sam", "12345", 39);
     private static final User USER_WITH_EMPTY_LOGIN = new User("", "123456", 39);
-    private static final User USER_WITH_NULL_LOGIN = new User("", "123456", 39);
-    private static final User USER_AGE_LESS_18 = new User("John_junior", "password4", 15);
+    private static final User USER_WITH_NULL_LOGIN = new User(null, "123456", 39);
+    private static final User USER_AGE_LESS_THAN_REQUIRED = new User("John", "password4", 15);
 
     @BeforeAll
     static void beforeAll() {
@@ -36,16 +36,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithAgeLess18_NotOK() {
+    void register_userWithAgeLessRequired_NotOK() {
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(USER_AGE_LESS_18);
+            registrationService.register(USER_AGE_LESS_THAN_REQUIRED);
         });
     }
 
     @Test
     void register_userWithPassLessThanSixSymbol_notOK() {
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(USER_WITH_SHORT_PASS);
+            registrationService.register(USER_WITH_SHORT_PASSWORD);
         });
     }
 
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     void register_userWithEmptyLogin_notOk() {
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(USER_WITH_EMPTY_LOGIN),
-                "Expected register() to throw, but it didn't");
+                "Expected register() to throw an exception, but it didn't");
         assertTrue(thrown.getMessage().contains("Login is empty"));
     }
 
