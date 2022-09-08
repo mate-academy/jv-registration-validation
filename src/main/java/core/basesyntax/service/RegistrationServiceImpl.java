@@ -5,7 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_CHARACTERS_PASSWORD = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_USER_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -22,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkLogin(String login) {
         if (login == null || login.isEmpty()) {
-            throw new RuntimeException("login entered with error");
+            throw new RuntimeException("login can not be null or empty");
         }
         if (!login.contains("@")) {
             throw new RuntimeException("login entered with error");
@@ -30,16 +30,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(login) != null) {
             throw new RuntimeException("This login is already taken");
         }
-        if (storageDao.get(login).equals(login)) {
-            throw new RuntimeException("This login is already exict");
-        }
     }
 
     private void checkPassword(String password) {
         if (password == null || password.isEmpty()) {
             throw new RuntimeException("Password entered with error");
         }
-        if (password.length() < MIN_CHARACTERS_PASSWORD) {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Your password must be at least 6 characters");
         }
     }

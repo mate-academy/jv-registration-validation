@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -9,8 +7,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService;
+    private static RegistrationServiceImpl registrationService;
     private User user;
 
     @BeforeAll
@@ -27,14 +28,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_validUser_Ok() {
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
+    }
+    
+    @Test
     void register_ageLessThanMin_NotOk() {
         user.setAge(11);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void registerPassword_LessThan() {
-        user.setPassword("pas321");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -65,12 +66,6 @@ class RegistrationServiceImplTest {
     @Test
     void registerPassword_null_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void thelogin_already_exists() {
-        user.setLogin(user.getLogin());
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
