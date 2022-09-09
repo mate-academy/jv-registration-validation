@@ -13,18 +13,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null");
-        } else if (user.getLogin() == null || user.getAge() == null
+            throw new RuntimeException("User is null");
+        }
+        if (user.getLogin() == null || user.getAge() == null
                 || user.getPassword() == null) {
             throw new RuntimeException("Fields can not be null. Check your login, "
                     + "password and age");
-        } else if (user.getLogin().isEmpty()) {
+        }
+        if (user.getLogin().isEmpty()) {
             throw new RuntimeException("Login is empty");
-        } else if (user.getLogin().length() < MIN_REQUIRE_LENGTH_PASS) {
+        }
+        if (user.getLogin().length() < MIN_REQUIRE_LENGTH_PASS) {
             throw new RuntimeException("Password contains less than six symbol");
-        } else if (user.getAge() < MIN_REQUIRE_AGE) {
+        }
+        if (user.getAge() < MIN_REQUIRE_AGE) {
             throw new RuntimeException("User age is least 18");
-        } else if (storageDao.get(user.getLogin()) != null) {
+        }
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with login: " + user.getLogin() + " - exist in base");
         }
         return storageDao.add(user);

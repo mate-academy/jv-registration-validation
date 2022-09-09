@@ -1,9 +1,10 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.db.Storage.people;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,10 +13,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static final User USER_VALID = new User("Badcannon", "password1", 39);
-    private static final User USER_WITH_SHORT_PASSWORD = new User("Sam", "12345", 39);
-    private static final User USER_WITH_EMPTY_LOGIN = new User("", "123456", 39);
-    private static final User USER_WITH_NULL_LOGIN = new User(null, "123456", 39);
-    private static final User USER_AGE_LESS_THAN_REQUIRED = new User("John", "password4", 15);
 
     @BeforeAll
     static void beforeAll() {
@@ -24,7 +21,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOK() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
@@ -32,48 +29,53 @@ class RegistrationServiceImplTest {
     @Test
     void register_validUser_OK() {
         User actual = registrationService.register(USER_VALID);
-        assertTrue(people.contains(actual));
+        assertTrue(Storage.people.contains(actual));
+        assertEquals(USER_VALID, actual);
     }
 
     @Test
     void register_userWithAgeLessRequired_NotOK() {
+        User user = new User("login", "1234266", 12);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(USER_AGE_LESS_THAN_REQUIRED);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_userWithPassLessThanSixSymbol_notOK() {
+        User user = new User("login", "1234", 39);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(USER_WITH_SHORT_PASSWORD);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_userWithEmptyLogin_notOk() {
-        RuntimeException thrown = assertThrows(RuntimeException.class,
-                () -> registrationService.register(USER_WITH_EMPTY_LOGIN),
-                "Expected register() to throw an exception, but it didn't");
-        assertTrue(thrown.getMessage().contains("Login is empty"));
+        User user = new User("", "123456", 39);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+
     }
 
     @Test
     void register_userWithNullLogin_NotOk() {
+        User user = new User(null, "123456", 39);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(USER_WITH_NULL_LOGIN);
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_userWithSameLogin_NotOK() {
-        User actual = registrationService.register(USER_VALID);
+        Storage.people.add(USER_VALID);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(actual);
+            registrationService.register(USER_VALID);
         });
     }
 
     @AfterEach
     void tearDown() {
-        people.clear();
+        Storage.people.clear();
     }
 }
