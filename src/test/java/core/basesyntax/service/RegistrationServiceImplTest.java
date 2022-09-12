@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -30,14 +30,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationNormal_OK() {
+    void register_Normal_OK() {
         User user = registrationService.register(bobFirst);
         assertEquals(bobFirst, user);
         assertEquals(Storage.people.size(), 1);
     }
 
     @Test
-    void registrationAgeMax_OK() {
+    void register_AgeMax_OK() {
         bobFirst.setAge(Integer.MAX_VALUE);
         User user = registrationService.register(bobFirst);
         assertEquals(bobFirst, user);
@@ -45,91 +45,70 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationNameNull_NotOk() {
+    void register_NameNull_NotOk() {
         bobFirst.setLogin(null);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("Null cannot be registered because it is not a name");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @Test
-    void registrationNameEmpty_NotOk() {
+    void register_NameEmpty_NotOk() {
         bobFirst.setLogin("");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("An empty name cannot be registered");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @Test
-    void registrationPasswordNull_NotOk() {
+    void register_PasswordNull_NotOk() {
         bobFirst.setPassword(null);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("Null cannot be a password in user");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @Test
-    void registrationPasswordEmpty_NotOk() {
+    void register_PasswordEmpty_NotOk() {
         bobFirst.setPassword("");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("Empty cannot be a password in user");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @Test
-    void registrationPasswordSmall_NotOk() {
+    void register_PasswordSmall_NotOk() {
         bobFirst.setPassword("12345");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("Small password in user");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @Test
-    void registrationAge0_NotOk() {
+    void register_Age0_NotOk() {
         bobFirst.setAge(0);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("age cannot be less than 18");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @Test
-    void registrationAgeNegative_NotOk() {
+    void register_AgeNegative_NotOk() {
         bobFirst.setAge(Integer.MIN_VALUE);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("age cannot be less than 18");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @Test
-    void registrationTwoDifferentBobs_OK() {
+    void register_TwoDifferentBobs_OK() {
         User user = registrationService.register(bobFirst);
         assertEquals(bobFirst, user);
         assertEquals(Storage.people.size(), 1);
@@ -139,29 +118,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationIdenticalBobs_NotOK() {
+    void register_IdenticalBobs_NotOK() {
         User user = registrationService.register(bobFirst);
         assertEquals(bobFirst, user);
         assertEquals(Storage.people.size(), 1);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             User user1 = registrationService.register(bobFirst);
-
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 1);
-            return;
-        }
-        fail("You cannot register a user again with the same data!");
+        });
+        assertEquals(Storage.people.size(), 1);
     }
 
     @Test
-    void registrationNotInitialized_NotOk() {
-        try {
+    void register_NotInitialized_NotOk() {
+        assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(alice);
-        } catch (RuntimeException e) {
-            assertEquals(Storage.people.size(), 0);
-            return;
-        }
-        fail("age cannot be less than 18");
+        });
+        assertEquals(Storage.people.size(), 0);
     }
 
     @AfterEach
