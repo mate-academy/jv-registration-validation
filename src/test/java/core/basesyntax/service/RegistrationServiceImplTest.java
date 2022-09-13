@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NameNull_NotOk() {
+    void register_LoginNull_NotOk() {
         bobFirst.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NameEmpty_NotOk() {
+    void register_LoginEmpty_NotOk() {
         bobFirst.setLogin("");
         assertThrows(RuntimeException.class, () -> {
             User user = registrationService.register(bobFirst);
@@ -108,7 +108,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_TwoDifferentBobs_OK() {
+    void register_TwoDifferentLogins_OK() {
         User user = registrationService.register(bobFirst);
         assertEquals(bobFirst, user);
         assertEquals(Storage.people.size(), 1);
@@ -118,7 +118,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_IdenticalBobs_NotOK() {
+    void register_IdenticalLogins_NotOK() {
         User user = registrationService.register(bobFirst);
         assertEquals(bobFirst, user);
         assertEquals(Storage.people.size(), 1);

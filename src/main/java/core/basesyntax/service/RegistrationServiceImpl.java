@@ -13,14 +13,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
 
         if (user == null) {
-            throw new RuntimeException("The user cannot have a null name");
+            throw new RuntimeException("User cannot be null");
         }
-        if (user.getLogin().isEmpty()) {
-            throw new RuntimeException("Name cannot be empty");
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new RuntimeException("Login cannot be empty");
         }
-
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("The user is already in the database");
+            throw new RuntimeException("The Login is already in the database");
         }
         if (user.getAge() < REQUIRED_MIN_AGE) {
             throw new RuntimeException("The user is under 18 years of age");
