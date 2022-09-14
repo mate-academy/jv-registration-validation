@@ -7,9 +7,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 class RegistrationServiceImplTest {
     private static final String SHORT_PASSWORD = "12345";
@@ -85,6 +86,9 @@ class RegistrationServiceImplTest {
     void minPassword_OK() {
         testUser1.setPassword(MIN_PASSWORD);
         registrationService.register(testUser1);
+        assertNotNull(testUser1.getId());
+        assertNotNull(testUser1.getPassword());
+        assertTrue(Storage.people.contains(testUser1));
         assertEquals(1, Storage.people.size());
     }
 
@@ -92,6 +96,9 @@ class RegistrationServiceImplTest {
     void minAge_OK() {
         testUser1.setAge(MIN_AGE);
         registrationService.register(testUser1);
+        assertNotNull(testUser1.getId());
+        assertNotNull(testUser1.getAge());
+        assertTrue(Storage.people.contains(testUser1));
         assertEquals(1, Storage.people.size());
     }
 
