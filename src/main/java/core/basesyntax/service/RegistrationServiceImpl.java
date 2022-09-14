@@ -4,6 +4,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int USER_MIN_AGE = 18;
@@ -12,7 +13,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin().isEmpty()) {
+        if (user == null) {
+            new RuntimeException("User do not exist");
+        }
+        if (user.getLogin().isEmpty() || user.getLogin() == null) {
             new RuntimeException("User login can not be empty");
         }
         if (user.getAge() < USER_MIN_AGE) {
