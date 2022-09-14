@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (isLoginIsNull(user)) {
-            throw new NullPointerException("Password can't be null");
+            throw new NullPointerException("Login can't be null");
         }
         if (isNotCorrectPassword(user)) {
             throw new RuntimeException("Password should be 6 or more symbols");
