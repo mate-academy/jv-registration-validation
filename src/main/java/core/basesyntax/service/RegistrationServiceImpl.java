@@ -19,8 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Password should be 6 or more symbols");
         }
         if (isNotCorrectAge(user)) {
-            throw new RuntimeException("User can't be register because " +
-                    "his age less than 18 years");
+            throw new RuntimeException("User can't be register because "
+                    + "his age less than 18 years");
         }
         if (Storage.people.size() != 0) {
             checkExistingUser(user);
@@ -36,6 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
         }
     }
+
     private boolean isNotCorrectAge(User user) {
         return user.getAge() < MIN_AGE;
     }

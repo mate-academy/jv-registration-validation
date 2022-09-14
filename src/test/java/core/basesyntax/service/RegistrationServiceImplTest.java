@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class RegistrationServiceImplTest {
     private static final String SHORT_PASSWORD = "12345";
@@ -19,7 +21,6 @@ class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private User testUser1;
     private User testUser2;
-
 
     @BeforeAll
     static void beforeAll() {
