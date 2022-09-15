@@ -14,7 +14,7 @@ class RegistrationServiceImplTest {
     private static final int AGE_IS_OK = 18;
     private static RegistrationServiceImpl registrationService;
 
-    private User userAppropriate = new User(LOGIN_IS_OK,PASSWORD_IS_OK,AGE_IS_OK);
+    private User userAppropriate = new User(LOGIN_IS_OK ,PASSWORD_IS_OK ,AGE_IS_OK);
 
     @BeforeAll
     static void beforeAll() {
