@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             new RuntimeException("User login can not be empty");
         }
         if (user.getAge() < USER_MIN_AGE) {
-            new RuntimeException("User must be older 18");
+            new RuntimeException("User must be older " + USER_MIN_AGE);
         }
         if (user.getPassword() != null && user.getPassword().length() < PASSWORD_MIN_LENGTH) {
             new RuntimeException("User login is too short, password must be at least 6 characters");
