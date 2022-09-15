@@ -7,22 +7,23 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int USER_MIN_AGE = 18;
-    private static final int PASSWORD_MIN_LENGTH = 18;
+    private static final int PASSWORD_MIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         if (user == null) {
-            new RuntimeException("User do not exist");
+            throw new NullPointerException("User do not exist");
         }
         if (user.getLogin().isEmpty() || user.getLogin() == null) {
-            new RuntimeException("User login can not be empty");
+            throw new NullPointerException("User login can not be empty");
         }
         if (user.getAge() < USER_MIN_AGE) {
-            new RuntimeException("User must be older " + USER_MIN_AGE);
+            throw new RuntimeException("User must be older " + USER_MIN_AGE);
         }
         if (user.getPassword() != null && user.getPassword().length() < PASSWORD_MIN_LENGTH) {
-            new RuntimeException("User login is too short, password must be at least 6 characters");
+            throw new RuntimeException("User password is too short,"
+                    + " password must be at least 6 characters");
         }
         if (Storage.people.size() != 0) {
             checkUserLogin(user);
