@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new NullPointerException("User do not exist");
         }
-        if (user.getLogin().isEmpty() || user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new NullPointerException("User login can not be empty");
         }
         if (user.getAge() < USER_MIN_AGE) {
