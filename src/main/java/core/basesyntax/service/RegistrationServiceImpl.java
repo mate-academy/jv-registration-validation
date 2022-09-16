@@ -28,12 +28,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Password must be longer than "
                     + MIN_PASSWORD_LENGTH + " characters");
         }
-        if (!user.getLogin().contains("@")) {
-            throw new RuntimeException("'@' must be present");
-        }
-        if (!user.getLogin().endsWith("@gmail.com")) {
-            throw new RuntimeException("User login is not correct");
-        }
         return storageDao.add(user);
     }
 }
