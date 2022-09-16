@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     void register_emptyLogin_notOk() {
         userAppropriate.setLogin("");
         System.out.println(userAppropriate.getLogin().isEmpty());
-        assertThrows(NullPointerException.class,
+        assertThrows(RuntimeException.class,
                 () -> registrationService.register(userAppropriate));
     }
 
