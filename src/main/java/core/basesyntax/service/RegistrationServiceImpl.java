@@ -35,10 +35,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkUserLogin(User user) {
-        for (User newUser : Storage.people) {
-            if (newUser.getLogin().equals(user.getLogin())) {
-                throw new RuntimeException("User with such login already register");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with such login already register");
         }
     }
 }
