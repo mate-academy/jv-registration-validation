@@ -25,13 +25,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User password is too short,"
                     + " password must be at least 6 characters");
         }
-        if (Storage.people.size() != 0) {
-            checkUserLogin(user);
-
-        } else {
-            storageDao.add(user);
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with such login already register");
         }
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkUserLogin(User user) {
