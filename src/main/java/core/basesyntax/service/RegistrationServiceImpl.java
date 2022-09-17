@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User do not exist");
+            throw new RuntimeException("User do not exist");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new RuntimeException("User login can not be empty");
