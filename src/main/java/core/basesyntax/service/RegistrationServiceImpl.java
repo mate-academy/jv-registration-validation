@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -16,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("User do not exist");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new RuntimeException("User login can not be empty");
+            throw new NullPointerException("User login can not be empty");
         }
         if (user.getAge() < USER_MIN_AGE) {
             throw new RuntimeException("User must be older " + USER_MIN_AGE);
