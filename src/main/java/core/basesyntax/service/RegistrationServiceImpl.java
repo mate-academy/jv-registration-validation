@@ -22,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User can't be register because "
                     + "his age less than 18 years");
         }
-        if (!isStorageEmpty(user)) {
+        if (!isStorageEmpty()) {
             checkExistingUser(user);
         }
         storageDao.add(user);
@@ -49,7 +49,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user.getLogin().isEmpty();
     }
 
-    private boolean isStorageEmpty(User user) {
+    private boolean isStorageEmpty() {
         return Storage.people.size() == 0;
     }
 }
