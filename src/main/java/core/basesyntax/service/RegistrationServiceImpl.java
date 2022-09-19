@@ -15,14 +15,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (isLoginIsNull(user)) {
             throw new NullPointerException("Login can't be null");
         }
-        if (isNotCorrectPassword(user)) {
+        if (!isCorrectPassword(user)) {
             throw new RuntimeException("Password should be 6 or more symbols");
         }
-        if (isNotCorrectAge(user)) {
+        if (!isCorrectAge(user)) {
             throw new RuntimeException("User can't be register because "
                     + "his age less than 18 years");
         }
-        if (Storage.people.size() != 0) {
+        if (!isStorageEmpty(user)) {
             checkExistingUser(user);
         }
         storageDao.add(user);
@@ -37,15 +37,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private boolean isNotCorrectAge(User user) {
-        return user.getAge() < MIN_AGE;
+    private boolean isCorrectAge(User user) {
+        return user.getAge() >= MIN_AGE;
     }
 
-    private boolean isNotCorrectPassword(User user) {
-        return user.getPassword().length() < MIN_LENGTH_OF_PASSWORD;
+    private boolean isCorrectPassword(User user) {
+        return user.getPassword().length() >= MIN_LENGTH_OF_PASSWORD;
     }
 
     private boolean isLoginIsNull(User user) {
         return user.getLogin().isEmpty();
+    }
+
+    private boolean isStorageEmpty(User user) {
+        return Storage.people.size() == 0;
     }
 }

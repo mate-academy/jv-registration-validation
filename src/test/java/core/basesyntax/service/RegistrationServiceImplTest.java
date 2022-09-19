@@ -35,6 +35,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void nullUser_NotOk() {
+        User nullUser = new User();
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(nullUser);
+        });
+    }
+
+    @Test
     void nullLogin_NotOk() {
         testUser1.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
@@ -71,6 +79,14 @@ class RegistrationServiceImplTest {
         registrationService.register(testUser1);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser2);
+        });
+    }
+
+    @Test
+    void negativeAge_NotOk() {
+        testUser1.setAge(-19);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(testUser1);
         });
     }
 
