@@ -23,9 +23,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Age login is null.");
         }
-        if (user.getAge() < 0) {
-            throw new RuntimeException("Age must be positive");
-        }
         if (user.getAge() < AGE_BOUND) {
             throw new RuntimeException("Age must be equal or more than " + AGE_BOUND + ".");
         }
