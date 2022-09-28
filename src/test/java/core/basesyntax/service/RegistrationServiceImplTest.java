@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static User userToRegistrate;
     private RegistrationService registrationService;
 
@@ -79,8 +78,28 @@ class RegistrationServiceImplTest {
         userToRegistrate.setId((long) 123);
         userToRegistrate.setLogin("test");
         userToRegistrate.setPassword("password");
-        User actual = userToRegistrate;
-        assertEquals(actual, registrationService.register(userToRegistrate));
+        registrationService.register(userToRegistrate);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(userToRegistrate));
+    }
+
+    @Test
+    void register_userNormalCase_Ok() {
+        User secondUserToRegistrate = new User();
+        secondUserToRegistrate.setAge(25);
+        secondUserToRegistrate.setId((long) 456);
+        secondUserToRegistrate.setLogin("test2");
+        secondUserToRegistrate.setPassword("password");
+        User expected = secondUserToRegistrate;
+        assertEquals(expected, registrationService.register(secondUserToRegistrate));
+    }
+
+    @Test
+    void register_userPasswordToShort_notOk() {
+        userToRegistrate.setAge(20);
+        userToRegistrate.setId((long) 123);
+        userToRegistrate.setLogin("test");
+        userToRegistrate.setPassword("short");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(userToRegistrate));
     }
