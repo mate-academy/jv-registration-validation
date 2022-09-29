@@ -32,15 +32,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("password must contain at least 8 characters");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("user must be over 18 years old");
+            throw new RuntimeException("user must be at least 18 years old");
         }
         if (user.getAge() > MAX_AGE) {
             throw new RuntimeException("Incorrect age");
         }
-        User checkedUser = new User();
-        checkedUser.setAge(user.getAge());
-        checkedUser.setLogin(user.getLogin().trim());
-        checkedUser.setPassword(user.getPassword());
-        return storageDao.add(checkedUser);
+        return storageDao.add(user);
     }
 }
