@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (isLoginIsNull(user)) {
+        if (isLoginEmpty(user)) {
             throw new RuntimeException("Login can't be null");
         }
         if (user == null) {
@@ -48,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user.getPassword().length() >= MIN_LENGTH_OF_PASSWORD;
     }
 
-    private boolean isLoginIsNull(User user) {
+    private boolean isLoginEmpty(User user) {
         return user.getLogin().isEmpty();
     }
 
