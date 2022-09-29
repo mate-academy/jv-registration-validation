@@ -13,25 +13,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("user is null");
+            throw new RuntimeException("user is null");
         }
         if (user.getLogin() == null
-                || user.getLogin() == ""
+                || user.getLogin().isEmpty()
                 || !Character.isLetter(user.getLogin().charAt(0))
                 || user.getLogin().contains("\\W")) {
             throw new RuntimeException("incorrect login");
-        } else {
-            if (storageDao.get(user.getLogin()) != null) {
-                throw new RuntimeException("login already exists");
-            }
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("login already exists");
         }
         if (user.getPassword() == null
-                || user.getPassword() == "") {
+                || user.getPassword().isEmpty()) {
             throw new RuntimeException("password cannot be empty");
-        } else {
-            if (user.getPassword().length() < MINIUM_PASSWORD_LENGTH) {
-                throw new RuntimeException("password must contain at least 8 characters");
-            }
+        }
+        if (user.getPassword().length() < MINIUM_PASSWORD_LENGTH) {
+            throw new RuntimeException("password must contain at least 8 characters");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("user must be over 18 years old");
