@@ -15,12 +15,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static User testUser;
     private static RegistrationService testRegistration;
+    private User testUser;
 
     @BeforeAll
     static void atStartOnce() {
-        StorageDao testStorage = new StorageDaoImpl();
         testRegistration = new RegistrationServiceImpl();
     }
 
@@ -38,12 +37,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkingForNonExistentUser_Ok() {
+    void register_nonExistentUser_ok() {
         assertEquals(testUser, testRegistration.register(testUser));
     }
 
     @Test
-    void register_gotNullUser_notOk() {
+    void register_nullUser_notOk() {
         testUser = null;
         assertThrows(RuntimeException.class, ()
                 -> testRegistration.register(testUser));
@@ -51,9 +50,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_gotExistingUsername_notOk() {
-        testRegistration.register(testUser);
-        assertThrows(RuntimeException.class, ()
-                -> testRegistration.register(testUser));
+        StorageDao storage = new StorageDaoImpl();
+        User newUser1 = testRegistration.register(testUser);
+        User newUser2 = storage.get(testUser.getLogin());
+        assertEquals(newUser1, newUser2);
     }
 
     @Test
@@ -86,9 +86,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_gotNullAge_notOk() {
-        testUser.setAge(null);
         assertThrows(RuntimeException.class, ()
-                -> testRegistration.register(testUser));
+                -> testRegistration.register(null));
     }
 
     @Test
@@ -98,5 +97,3 @@ class RegistrationServiceImplTest {
                 -> testRegistration.register(testUser));
     }
 }
-
-
