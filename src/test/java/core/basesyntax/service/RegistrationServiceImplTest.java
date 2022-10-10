@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullUser_NotOk() {
+    void register_NullUser_NotOk() {
         User nullUser = null;
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(nullUser);
@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void register_setNullLogin_NotOk() {
         testUser1.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(testUser1);
@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void lessThanMinAge_NotOk() {
+    void register_ageLessThanMinAge_NotOk() {
         testUser1.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser1);
@@ -59,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void register_setNullPassword_NotOk() {
         testUser1.setPassword(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(testUser1);
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void tooShortPassword_NotOk() {
+    void register_passwordToShort_NotOk() {
         testUser1.setPassword(SHORT_PASSWORD);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser1);
@@ -75,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userWithExistingLogin_NotOk() {
+    void register_hasUserWithExistingLogin_NotOk() {
         registrationService.register(testUser1);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser2);
@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void negativeAge_NotOk() {
+    void register_steNegativeAge_NotOk() {
         testUser1.setAge(-19);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser1);
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userWithUniqueLogin_OK() {
+    void register_addUserWithUniqueLogin_OK() {
         registrationService.register(testUser1);
         testUser2.setLogin("Unique Name");
         registrationService.register(testUser2);
@@ -99,7 +99,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void minPassword_OK() {
+    void register_setMinPassword_OK() {
         testUser1.setPassword(MIN_PASSWORD);
         registrationService.register(testUser1);
         assertNotNull(testUser1.getId());
@@ -109,7 +109,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void minAge_OK() {
+    void register_setUserMinAge_OK() {
         testUser1.setAge(MIN_AGE);
         registrationService.register(testUser1);
         assertNotNull(testUser1.getId());
