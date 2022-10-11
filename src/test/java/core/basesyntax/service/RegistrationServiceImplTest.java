@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_setNullLogin_NotOk() {
+    void register_NullLogin_NotOk() {
         testUser1.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(testUser1);
@@ -59,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_setNullPassword_NotOk() {
+    void register_NullPassword_NotOk() {
         testUser1.setPassword(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(testUser1);
@@ -75,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_hasUserWithExistingLogin_NotOk() {
+    void register_UserWithExistingLogin_NotOk() {
         registrationService.register(testUser1);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser2);
@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_steNegativeAge_NotOk() {
+    void register_NegativeAge_NotOk() {
         testUser1.setAge(-19);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser1);
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addUserWithUniqueLogin_OK() {
+    void register_UserWithUniqueLogin_OK() {
         registrationService.register(testUser1);
         testUser2.setLogin("Unique Name");
         registrationService.register(testUser2);
@@ -99,7 +99,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_setMinPassword_OK() {
+    void register_MinPassword_OK() {
         testUser1.setPassword(MIN_PASSWORD);
         registrationService.register(testUser1);
         assertNotNull(testUser1.getId());
@@ -109,7 +109,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_setUserMinAge_OK() {
+    void register_UserMinAge_OK() {
         testUser1.setAge(MIN_AGE);
         registrationService.register(testUser1);
         assertNotNull(testUser1.getId());
