@@ -20,8 +20,8 @@ class RegistrationServiceImplTest {
     private static final int DEFAULT_AGE = 20;
     private static final int MIN_AGE = 18;
     private static RegistrationServiceImpl registrationService;
-    private User testUser1;
-    private User testUser2;
+    private User firstTestUser;
+    private User secondTestUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -30,8 +30,8 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        testUser1 = new User(DEFAULT_USER_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
-        testUser2 = new User(DEFAULT_USER_LOGIN, MIN_PASSWORD,DEFAULT_AGE);
+        firstTestUser = new User(DEFAULT_USER_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        secondTestUser = new User(DEFAULT_USER_LOGIN, MIN_PASSWORD,DEFAULT_AGE);
     }
 
     @Test
@@ -44,77 +44,77 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        testUser1.setLogin(null);
+        firstTestUser.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(testUser1);
+            registrationService.register(firstTestUser);
         });
     }
 
     @Test
     void register_ageLessThanMinAge_notOk() {
-        testUser1.setAge(17);
+        firstTestUser.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(testUser1);
+            registrationService.register(firstTestUser);
         });
     }
 
     @Test
     void register_nullPassword_notOk() {
-        testUser1.setPassword(null);
+        firstTestUser.setPassword(null);
         assertThrows(NullPointerException.class, () -> {
-            registrationService.register(testUser1);
+            registrationService.register(firstTestUser);
         });
     }
 
     @Test
     void register_passwordToShort_notOk() {
-        testUser1.setPassword(SHORT_PASSWORD);
+        firstTestUser.setPassword(SHORT_PASSWORD);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(testUser1);
+            registrationService.register(firstTestUser);
         });
     }
 
     @Test
     void register_userWithExistingLogin_notOk() {
-        registrationService.register(testUser1);
+        registrationService.register(firstTestUser);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(testUser2);
+            registrationService.register(secondTestUser);
         });
     }
 
     @Test
     void register_negativeAge_notOk() {
-        testUser1.setAge(-19);
+        firstTestUser.setAge(-19);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(testUser1);
+            registrationService.register(firstTestUser);
         });
     }
 
     @Test
     void register_userWithUniqueLogin_ok() {
-        registrationService.register(testUser1);
-        testUser2.setLogin("Unique Name");
-        registrationService.register(testUser2);
+        registrationService.register(firstTestUser);
+        secondTestUser.setLogin("Unique Name");
+        registrationService.register(secondTestUser);
         assertEquals(2, Storage.people.size());
     }
 
     @Test
     void register_minPassword_ok() {
-        testUser1.setPassword(MIN_PASSWORD);
-        registrationService.register(testUser1);
-        assertNotNull(testUser1.getId());
-        assertNotNull(testUser1.getPassword());
-        assertTrue(Storage.people.contains(testUser1));
+        firstTestUser.setPassword(MIN_PASSWORD);
+        registrationService.register(firstTestUser);
+        assertNotNull(firstTestUser.getId());
+        assertNotNull(firstTestUser.getPassword());
+        assertTrue(Storage.people.contains(firstTestUser));
         assertEquals(1, Storage.people.size());
     }
 
     @Test
     void register_userMinAge_ok() {
-        testUser1.setAge(MIN_AGE);
-        registrationService.register(testUser1);
-        assertNotNull(testUser1.getId());
-        assertNotNull(testUser1.getAge());
-        assertTrue(Storage.people.contains(testUser1));
+        firstTestUser.setAge(MIN_AGE);
+        registrationService.register(firstTestUser);
+        assertNotNull(firstTestUser.getId());
+        assertNotNull(firstTestUser.getAge());
+        assertTrue(Storage.people.contains(firstTestUser));
         assertEquals(1, Storage.people.size());
     }
 
