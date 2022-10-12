@@ -28,8 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!isStorageEmpty()) {
             checkExistingUser(user);
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkExistingUser(User user) {
