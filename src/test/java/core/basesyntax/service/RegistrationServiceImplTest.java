@@ -1,19 +1,19 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import org.junit.Before;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private User user = new User();
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private final User user = new User();
+    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
 
-    @Before
+    @BeforeEach
     public void setUser() {
         user.setAge(19);
         user.setLogin("Genareb");
@@ -21,73 +21,61 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() throws RuntimeException {
-        try {
-            registrationService.register(null);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown in user == null case");
+    public void register_nullUser_notOk() {
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> registrationService.register(null),
+                "RuntimeException should be thrown in user == null case");
+        assertEquals("User shouldn't be a null", exception.getMessage());
     }
 
     @Test
     void register_nullAge_notOk() {
-        setUser();
         user.setAge(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown in age == null case");
+        Exception exception = assertThrows(NullPointerException.class,
+                () -> registrationService.register(user),
+                "NullPointerException should be thrown if age == null");
+        assertEquals("Users age should be more than "
+                + RegistrationServiceImpl.MIN_USERS_AGE + " y.o", exception.getMessage());
     }
 
     @Test
     void register_ageLessMinAge_notOk() {
-        setUser();
         user.setAge(17);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown in user age less MIN_USERS_AGE case");
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user),
+                "RuntimeException should be thrown if age less then MIN_USERS_AGE");
+        assertEquals("Users age should be more than "
+                + RegistrationServiceImpl.MIN_USERS_AGE + " y.o", exception.getMessage());
     }
 
     @Test
     void register_nullLogin_notOk() {
-        setUser();
         user.setLogin(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown in user login == null case");
+        Exception exception = assertThrows(NullPointerException.class,
+                () -> registrationService.register(user),
+                "NullPointerException should be thrown in user == null case");
+        assertEquals("Users login shouldn't be a null", exception.getMessage());
     }
 
     @Test
     void register_passwordLessMinChars_notOk() {
-        setUser();
         user.setPassword("nullo");
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown in user password less MIN_PASSWORDS_LENGTH case");
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> registrationService.register(user),
+                "RuntimeException should be thrown in user "
+                        + "password less MIN_PASSWORDS_LENGTH case");
+        assertEquals("Users password should have more than "
+                + RegistrationServiceImpl.MIN_PASSWORDS_LENGTH
+                + " characters", exception.getMessage());
     }
 
     @Test
     void register_nullPassword_notOk() {
-        setUser();
         user.setPassword(null);
-        try {
-            registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown in user password == null case");
+        Exception exception = assertThrows(NullPointerException.class,
+                () -> registrationService.register(user),
+                "NullPointerException should be thrown in user password == null case");
+        assertEquals("Users password shouldn't be a null ", exception.getMessage());
     }
 
     @Test
@@ -96,21 +84,24 @@ class RegistrationServiceImplTest {
         user2.setAge(18);
         user2.setPassword("yeoyreoyuoe");
         user2.setLogin("Genareb");
-        try {
+        Exception exception = assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
             registrationService.register(user2);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown in case when users login already busy");
+        },
+                "RuntimeException should be thrown if user with this login already exist");
+        assertEquals("User with such login already exist."
+                + " Users login should have unique value", exception.getMessage());
     }
 
     @Test
     void register_idealUser_Ok() {
+        User user2 = new User();
+        user2.setAge(23);
+        user2.setLogin("Genareb2");
+        user2.setPassword("asdfgher");
+        registrationService.register(user2);
         StorageDao storageDao = new StorageDaoImpl();
-        setUser();
-        registrationService.register(user);
-        User gottenUser = storageDao.get(user.getLogin());
-        Assertions.assertEquals(gottenUser,user, "Gotten user should be equal added user");
+        User gottenUser = storageDao.get(user2.getLogin());
+        assertEquals(gottenUser,user2, "Gotten user should be equal added user");
     }
 }
