@@ -1,6 +1,9 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,10 +18,15 @@ class RegistrationServiceImplTest {
     private static final String CORRECT_PASSWORD_8_CHARS = "1234qwer";
     private static final String CORRECT_PASSWORD_10_CHARS = "j48fb*&%mf";
     private static final String CORRECT_PASSWORD_15_CHARS = "J&gf9Jg3IOj5La2";
+    private static final String INCORRECT_PASSWORD_1_CHAR = "g";
+    private static final String INCORRECT_PASSWORD_4_CHAR = "hfdl";
+    private static final String INCORRECT_PASSWORD_5_CHAR = "12345";
     private static final int CORRECT_AGE_1 = 20;
     private static final int CORRECT_AGE_2 = 25;
     private static final int CORRECT_MINIMUM_AGE = 18;
     private static final int INCORRECT_AGE_UNDER_MINIMUM = 16;
+    private static final int INCORRECT_AGE_ZERO = 0;
+    private static final int INCORRECT_AGE_LESS_ZERO = Integer.MIN_VALUE;
     private static RegistrationServiceImpl registrationService;
 
 
@@ -26,10 +34,15 @@ class RegistrationServiceImplTest {
     private User correctUser1;
     private User correctUser2;
     private User correctUser3;
-    private User incorrectUserAgeUnderMinimum;
     private User nullUserAge;
     private User nullUserLogin;
     private User nullUserPassword;
+    private User incorrectUserAgeUnderMinimum1;
+    private User incorrectUserAgeUnderMinimum2;
+    private User incorrectUserAgeUnderMinimum3;
+    private User incorrectUserPasswordLess1;
+    private User incorrectUserPasswordLess2;
+    private User incorrectUserPasswordLess3;
 
 
     @BeforeAll
@@ -37,16 +50,31 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @BeforeEach
     void setUp() {
+
         nullUser = null;
 
         correctUser1 = getPreparedUser(NAME_1, CORRECT_PASSWORD_8_CHARS, CORRECT_AGE_1);
         correctUser2 = getPreparedUser(NAME_2, CORRECT_PASSWORD_10_CHARS, CORRECT_AGE_2);
         correctUser3 = getPreparedUser(NAME_3, CORRECT_PASSWORD_15_CHARS, CORRECT_MINIMUM_AGE);
 
-        incorrectUserAgeUnderMinimum = getPreparedUser(
+        incorrectUserAgeUnderMinimum1 = getPreparedUser(
                 NAME_1, CORRECT_PASSWORD_8_CHARS, INCORRECT_AGE_UNDER_MINIMUM);
+        incorrectUserAgeUnderMinimum2 = getPreparedUser(
+                NAME_2, CORRECT_PASSWORD_8_CHARS, INCORRECT_AGE_ZERO);
+        incorrectUserAgeUnderMinimum3 = getPreparedUser(
+                NAME_3, CORRECT_PASSWORD_15_CHARS, INCORRECT_AGE_LESS_ZERO);
+
+
+        incorrectUserPasswordLess1 = getPreparedUser(NAME_1, INCORRECT_PASSWORD_1_CHAR, CORRECT_AGE_1);
+        incorrectUserPasswordLess2 = getPreparedUser(NAME_2, INCORRECT_PASSWORD_5_CHAR, CORRECT_MINIMUM_AGE);
+        incorrectUserPasswordLess3 = getPreparedUser(NAME_3, INCORRECT_PASSWORD_4_CHAR, CORRECT_AGE_2);
 
         nullUserAge = getPreparedUser(NAME_1, CORRECT_PASSWORD_8_CHARS, 0);
         nullUserAge.setAge(null);
@@ -55,19 +83,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_alreadyRegisteredUser_NotOk() {
+        String message = "When user already registered you must throw exception";
+        registrationService.register(correctUser1);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(correctUser1), message);
+    }
+
+    @Test
     void register_incorrectUserAge_NotOk() {
+        String message = "When age under 6, you must throw exception";
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(incorrectUserAgeUnderMinimum1), message);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(incorrectUserAgeUnderMinimum2), message);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(incorrectUserAgeUnderMinimum3), message);
+    }
+
+    @Test
+    void register_incorrectUserPassword_NotOk() {
+        String message = "When password less than 6, you must throw exception";
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(incorrectUserPasswordLess1), message);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(incorrectUserPasswordLess2), message);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(incorrectUserPasswordLess3), message);
+    }
+
+    @Test
+    void register_incorrectUserAgeException_Ok() {
         try {
-            registrationService.register(incorrectUserAgeUnderMinimum);
+            registrationService.register(incorrectUserAgeUnderMinimum1);
         } catch (RuntimeException e) {
             assertEquals("User must be at least " + CORRECT_MINIMUM_AGE + " years old",
                     e.getMessage());
             return;
         }
-        fail("If age less than \" + CORRECT_MINIMUM_AGE + \" you must throw exception");
+        fail("If age less than " + CORRECT_MINIMUM_AGE + " you must throw exception");
     }
 
     @Test
-    void register_nullUserPassword_NotOk() {
+    void register_nullUserPasswordException_Ok() {
         try {
             registrationService.register(nullUserPassword);
         } catch (RuntimeException e) {
@@ -79,7 +137,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUserLogin_NotOk() {
+    void register_nullUserLoginException_Ok() {
         try {
             registrationService.register(nullUserLogin);
         } catch (RuntimeException e) {
@@ -138,7 +196,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_notOk() {
         assertThrows(NullPointerException.class, () -> registrationService.register(nullUser),
-                "You must return NullPointerException when User in null");
+                "You must return NullPointerException when User is null");
     }
 
     User getPreparedUser(String login, String password, int age) {
