@@ -31,20 +31,15 @@ class RegistrationServiceTest {
         user.setAge(25);
     }
 
-    @AfterEach
-    void clearStorage() {
-        Storage.people.clear();
-    }
-
     @Test
-    void nullUser_NotOK() {
+    void nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> {
             User register = registrationService.register(null);
         });
     }
 
     @Test
-    void nullLogin_NotOK() {
+    void nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -52,7 +47,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void emptyLogin_NotOK() {
+    void emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -60,7 +55,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void nullPassword_NotOK() {
+    void nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -68,7 +63,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void nullAge_NotOK() {
+    void nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -76,7 +71,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void invalidAge_NotOK() {
+    void invalidAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -84,7 +79,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void invalidPassword_NotOK() {
+    void invalidPassword_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -92,8 +87,8 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void registerAnotherUserWithSameLogin_NotOK() {
-        registrationService.register(user);
+    void registerAnotherUserWithSameLogin_notOk() {
+        Storage.people.add(user);
         User secondUser = new User();
         secondUser.setLogin("User login");
         secondUser.setPassword("Second user password");
@@ -104,30 +99,35 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void reRegisterUser_NotOK() {
-        registrationService.register(user);
+    void reRegisterUser_notOk() {
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void registerWithMinAge_OK() {
+    void registerWithMinAge_ok() {
         user.setAge(18);
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
-    void registerWithMinPasswordLength_OK() {
+    void registerWithMinPasswordLength_ok() {
         user.setPassword("123456");
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
-    void validAllData_OK() {
+    void validAllData_ok() {
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 }
