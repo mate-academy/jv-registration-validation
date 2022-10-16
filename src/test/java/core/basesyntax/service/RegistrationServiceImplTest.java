@@ -1,6 +1,9 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDaoImpl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -8,10 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-
     private static final String NAME_1 = "Adam";
     private static final String NAME_2 = "Bob";
     private static final String NAME_3 = "Kate";
@@ -29,7 +29,6 @@ class RegistrationServiceImplTest {
     private static final int INCORRECT_AGE_LESS_ZERO = Integer.MIN_VALUE;
     private static RegistrationServiceImpl registrationService;
 
-
     private User nullUser;
     private User correctUser1;
     private User correctUser2;
@@ -44,7 +43,6 @@ class RegistrationServiceImplTest {
     private User incorrectUserPasswordLess2;
     private User incorrectUserPasswordLess3;
 
-
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
@@ -57,12 +55,14 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-
         nullUser = null;
 
-        correctUser1 = getPreparedUser(NAME_1, CORRECT_PASSWORD_8_CHARS, CORRECT_AGE_1);
-        correctUser2 = getPreparedUser(NAME_2, CORRECT_PASSWORD_10_CHARS, CORRECT_AGE_2);
-        correctUser3 = getPreparedUser(NAME_3, CORRECT_PASSWORD_15_CHARS, CORRECT_MINIMUM_AGE);
+        correctUser1 = getPreparedUser(
+                NAME_1, CORRECT_PASSWORD_8_CHARS, CORRECT_AGE_1);
+        correctUser2 = getPreparedUser(
+                NAME_2, CORRECT_PASSWORD_10_CHARS, CORRECT_AGE_2);
+        correctUser3 = getPreparedUser(
+                NAME_3, CORRECT_PASSWORD_15_CHARS, CORRECT_MINIMUM_AGE);
 
         incorrectUserAgeUnderMinimum1 = getPreparedUser(
                 NAME_1, CORRECT_PASSWORD_8_CHARS, INCORRECT_AGE_UNDER_MINIMUM);
@@ -71,10 +71,12 @@ class RegistrationServiceImplTest {
         incorrectUserAgeUnderMinimum3 = getPreparedUser(
                 NAME_3, CORRECT_PASSWORD_15_CHARS, INCORRECT_AGE_LESS_ZERO);
 
-
-        incorrectUserPasswordLess1 = getPreparedUser(NAME_1, INCORRECT_PASSWORD_1_CHAR, CORRECT_AGE_1);
-        incorrectUserPasswordLess2 = getPreparedUser(NAME_2, INCORRECT_PASSWORD_5_CHAR, CORRECT_MINIMUM_AGE);
-        incorrectUserPasswordLess3 = getPreparedUser(NAME_3, INCORRECT_PASSWORD_4_CHAR, CORRECT_AGE_2);
+        incorrectUserPasswordLess1 = getPreparedUser(
+                NAME_1, INCORRECT_PASSWORD_1_CHAR, CORRECT_AGE_1);
+        incorrectUserPasswordLess2 = getPreparedUser(
+                NAME_2, INCORRECT_PASSWORD_5_CHAR, CORRECT_MINIMUM_AGE);
+        incorrectUserPasswordLess3 = getPreparedUser(
+                NAME_3, INCORRECT_PASSWORD_4_CHAR, CORRECT_AGE_2);
 
         nullUserAge = getPreparedUser(NAME_1, CORRECT_PASSWORD_8_CHARS, 0);
         nullUserAge.setAge(null);
@@ -164,7 +166,7 @@ class RegistrationServiceImplTest {
     void register_correctUser_Ok() {
         String errorMessage = "You fail adding correct user: ";
         assertEquals(correctUser1, registrationService.register(correctUser1),
-               errorMessage + correctUser1.getLogin());
+                errorMessage + correctUser1.getLogin());
         assertEquals(correctUser2, registrationService.register(correctUser2),
                 errorMessage + correctUser2.getLogin());
         assertEquals(correctUser3, registrationService.register(correctUser3),
