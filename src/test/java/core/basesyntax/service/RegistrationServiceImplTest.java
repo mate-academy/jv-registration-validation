@@ -161,28 +161,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_correctAddingToStorage_Ok() {
-        Long expectedFirstUserId = 1L;
-        Long expectedSecondUserId = 2L;
-        Long expectedThirdUserId = 3L;
-
-        registrationService.register(correctUser1);
-        registrationService.register(correctUser2);
-        registrationService.register(correctUser3);
-
-        Long currentFirstUserId = correctUser1.getId();
-        Long currentSecondUserId = correctUser2.getId();
-        Long currentThirdUserId = correctUser3.getId();
-
-        assertEquals(expectedFirstUserId, currentFirstUserId,
-                "You must add first user to storage");
-        assertEquals(expectedSecondUserId, currentSecondUserId,
-                "You must add second user to storage");
-        assertEquals(expectedThirdUserId, currentThirdUserId,
-                "You must add third user to storage");
-    }
-
-    @Test
     void register_correctUser_Ok() {
         String errorMessage = "You fail adding correct user: ";
         assertEquals(correctUser1, registrationService.register(correctUser1),
