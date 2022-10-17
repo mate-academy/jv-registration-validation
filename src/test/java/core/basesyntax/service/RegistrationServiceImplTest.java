@@ -10,15 +10,15 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String USER_LOGIN = "Bob12345";
-    private static final String USER_PASSWORD = "54321boB";
+    private static final String USER_PASSWORD = "54321paSs";
     private static final int USER_AGE = 21;
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Test
     public void register_userWithSameLoginAlreadyExist_notOk() {
-        User firstUser = createUser(USER_LOGIN, USER_PASSWORD, USER_AGE);
+        String userLogin = "Ali852";
+        User firstUser = createUser(userLogin, USER_PASSWORD, USER_AGE);
         storageDao.add(firstUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(firstUser);
@@ -35,7 +35,8 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_passwordIsNull_notOk() {
-        User userWithPasswordIsNull = createUser(USER_LOGIN, null, USER_AGE);
+        String userLogin = "Lina960";
+        User userWithPasswordIsNull = createUser(userLogin, null, USER_AGE);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithPasswordIsNull);
         });
@@ -43,7 +44,8 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_ageIsNull_notOk() {
-        User userWithAgeIsNull = createUser(USER_LOGIN, USER_PASSWORD, null);
+        String userLogin = "Mik01";
+        User userWithAgeIsNull = createUser(userLogin, USER_PASSWORD, null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithAgeIsNull);
         });
@@ -51,8 +53,9 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_userIsYoung_notOk() {
+        String userLogin = "Alex985";
         int age = 16;
-        User youngUser = createUser(USER_LOGIN, USER_PASSWORD, age);
+        User youngUser = createUser(userLogin, USER_PASSWORD, age);
         youngUser.setAge(age);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(youngUser);
@@ -61,8 +64,9 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_userIsOfSufficientAge_ok() {
+        String userLogin = "Ali002";
         int age = 18;
-        User olderUser = createUser(USER_LOGIN, USER_PASSWORD, age);
+        User olderUser = createUser(userLogin, USER_PASSWORD, age);
         olderUser.setAge(age);
         assertDoesNotThrow(() -> {
             registrationService.register(olderUser);
@@ -71,8 +75,9 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_passwordsLengthIsTooShort_notOk() {
+        String userLogin = "Bee9641";
         String shortPassword = "12345";
-        User userWithShortPassword = createUser(USER_LOGIN, shortPassword, USER_AGE);
+        User userWithShortPassword = createUser(userLogin, shortPassword, USER_AGE);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithShortPassword);
         });
@@ -80,9 +85,10 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_passwordsLengthIsNormal_ok() {
+        String userLogin = "Nik88852";
         String normalPassword = "123456789";
-        User userWithNormalPassword = createUser(USER_LOGIN, normalPassword, USER_AGE);
-        assertThrows(RuntimeException.class, () -> {
+        User userWithNormalPassword = createUser(userLogin, normalPassword, USER_AGE);
+        assertDoesNotThrow(() -> {
             registrationService.register(userWithNormalPassword);
         });
     }
