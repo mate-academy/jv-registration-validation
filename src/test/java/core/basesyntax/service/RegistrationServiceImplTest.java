@@ -31,9 +31,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        Exception exception = assertThrows(NullPointerException.class,
+        Exception exception = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
-                "NullPointerException should be thrown if age == null");
+                "RuntimeException should be thrown if age == null");
         assertEquals("Users age should be more than "
                 + RegistrationServiceImpl.MIN_USERS_AGE + " y.o", exception.getMessage());
     }
@@ -51,9 +51,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        Exception exception = assertThrows(NullPointerException.class,
+        Exception exception = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
-                "NullPointerException should be thrown in user == null case");
+                "RuntimeException should be thrown in user == null case");
         assertEquals("Users login shouldn't be a null", exception.getMessage());
     }
 
@@ -72,9 +72,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        Exception exception = assertThrows(NullPointerException.class,
+        Exception exception = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
-                "NullPointerException should be thrown in user password == null case");
+                "RuntimeException should be thrown in user password == null case");
         assertEquals("Users password shouldn't be a null ", exception.getMessage());
     }
 

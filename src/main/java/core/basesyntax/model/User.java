@@ -1,5 +1,7 @@
 package core.basesyntax.model;
 
+import java.util.Objects;
+
 public class User {
     private Long id;
     private String login;
@@ -46,27 +48,14 @@ public class User {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         User user = (User) o;
-
-        if (id != null ? !id.equals(user.id) : user.id != null) {
-            return false;
-        }
-        if (login != null ? !login.equals(user.login) : user.login != null) {
-            return false;
-        }
-        if (password != null ? !password.equals(user.password) : user.password != null) {
-            return false;
-        }
-        return age != null ? age.equals(user.age) : user.age == null;
+        return Objects.equals(login, user.login)
+                && Objects.equals(password, user.password)
+                && Objects.equals(age, user.age);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (age != null ? age.hashCode() : 0);
-        return result;
+        return Objects.hash(login, password, age);
     }
 }

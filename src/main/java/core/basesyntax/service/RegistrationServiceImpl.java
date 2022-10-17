@@ -17,11 +17,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getLogin() == null) {
-            throw new NullPointerException("Users login shouldn't be a null");
+            throw new RuntimeException("Users login shouldn't be a null");
         }
 
         if (user.getAge() == null) {
-            throw new NullPointerException("Users age should be more than "
+            throw new RuntimeException("Users age should be more than "
                     + MIN_USERS_AGE + " y.o");
         }
 
@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getPassword() == null) {
-            throw new NullPointerException("Users password shouldn't be a null ");
+            throw new RuntimeException("Users password shouldn't be a null ");
         }
 
         if (user.getPassword().length() < MIN_PASSWORDS_LENGTH) {
