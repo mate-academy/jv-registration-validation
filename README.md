@@ -22,4 +22,7 @@ names and be consistent along with other developers in your team. For this task 
 user's age the test method name should be `register_nullAge_notOk`. notOk is because
 the test expects the register method to throw an exception.
 
-#### [Try to avoid these common mistakes, while solving task](https://mate-academy.github.io/jv-program-common-mistakes/java-core/junit/registration-validation)
+#### [Try to avoid these common mistakes, while solving task](
+
+
+)
