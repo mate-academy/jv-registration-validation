@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
@@ -22,19 +21,19 @@ class RegistrationServiceImplTest {
         User user1 = new User("Alice", "123456", 19);
         User user2 = new User("Alice", "654321", 22);
         assertNotNull(regService.register(user1));
-        assertNull(regService.register(user2));
+        assertThrows(RuntimeException.class, () -> regService.register(user2));
     }
 
     @Test
     void userAgeIsLessThanMustBe_NotOk() {
         User user = new User("Alice", "123456", 16);
-        assertNull(regService.register(user));
+        assertThrows(RuntimeException.class, () -> regService.register(user));
     }
 
     @Test
     void userPasswordIsLessThanMustBe_NotOk() {
         User user = new User("Alice", "12345", 19);
-        assertNull(regService.register(user));
+        assertThrows(RuntimeException.class, () -> regService.register(user));
     }
 
     @Test

@@ -1,28 +1,29 @@
 package core.basesyntax.service;
 
-import core.basesyntax.db.dao.StorageDao;
-import core.basesyntax.db.dao.StorageDaoImpl;
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_SIZE = 6;
     private static final int MIN_AGE_FOR_REGISTER = 18;
-    private static final int MIN_AGE = 0;
     private static final int MAX_AGE = 125;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         checkNull(user);
-        checkAge(user);
+        checkCorrectAge(user);
         return userAdd(user);
     }
 
     private User userAdd(User user) {
         User findUser = storageDao.get(user.getLogin());
-        if (findUser != null || user.getAge() < MIN_AGE_FOR_REGISTER
-                || user.getPassword().length() < MIN_PASSWORD_SIZE) {
-            return null;
+        if (findUser != null) {
+            throw new RuntimeException("User login is already taken");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_SIZE) {
+            throw new RuntimeException("User password must be is at least 6 characters");
         }
         storageDao.add(user);
         return user;
@@ -43,8 +44,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkAge(User user) {
-        if (user.getAge() <= MIN_AGE || user.getAge() > MAX_AGE) {
+    private void checkCorrectAge(User user) {
+        if (user.getAge() < MIN_AGE_FOR_REGISTER) {
+            throw new RuntimeException("User age must be greater 18");
+        }
+        if (user.getAge() > MAX_AGE) {
             throw new RuntimeException("Invalid user age - " + user.getAge());
         }
     }

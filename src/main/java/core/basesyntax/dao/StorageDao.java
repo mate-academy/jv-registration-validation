@@ -1,4 +1,4 @@
-package core.basesyntax.db.dao;
+package core.basesyntax.dao;
 
 import core.basesyntax.model.User;
 
