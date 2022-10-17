@@ -12,12 +12,12 @@ class RegistrationServiceImplTest {
     private static RegistrationServiceImpl regService;
 
     @BeforeAll
-    static void initialize() {
+    static void init() {
         regService = new RegistrationServiceImpl();
     }
 
     @Test
-    void loginIsAlreadyInStorage_NotOk() {
+    void register_loginAlreadyTaken_notOk() {
         User user1 = new User("Alice", "123456", 19);
         User user2 = new User("Alice", "654321", 22);
         assertNotNull(regService.register(user1));
@@ -25,49 +25,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeIsLessThanMustBe_NotOk() {
+    void register_ageIsLessThanMustBe_notOk() {
         User user = new User("Alice", "123456", 16);
         assertThrows(RuntimeException.class, () -> regService.register(user));
     }
 
     @Test
-    void userPasswordIsLessThanMustBe_NotOk() {
+    void register_passwordIsLessThanMustBe_notOk() {
         User user = new User("Alice", "12345", 19);
         assertThrows(RuntimeException.class, () -> regService.register(user));
     }
 
     @Test
-    void validUser_Ok() {
+    void register_validUser_ok() {
         User actual = new User("Bob", "BobSlave123", 19);
         assertEquals(actual, regService.register(actual));
     }
 
     @Test
-    void addNullUser_NotOk() {
+    void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> regService.register(null));
     }
 
     @Test
-    void addUserWithNullAge_NotOk() {
+    void register_nullAge_notOk() {
         User nullAge = new User("Alice", "123456", null);
         assertThrows(RuntimeException.class, () -> regService.register(nullAge));
     }
 
     @Test
-    void addUserWithNullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         User nullPassword = new User("Alice", null, 19);
         assertThrows(RuntimeException.class, () -> regService.register(nullPassword));
     }
 
     @Test
-    void addUserWithNullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         User nullLogin = new User(null, "123456", 19);
         assertThrows(RuntimeException.class, () -> regService.register(nullLogin));
     }
 
     @Test
-    void addUserWithInvalidAge_NotOk() {
-        User invalidAge = new User("Alice", "123456", -412);
+    void register_invalidAge_notOk() {
+        User invalidAge = new User("Alice", "123456", 1);
         assertThrows(RuntimeException.class, () -> regService.register(invalidAge));
     }
 }
