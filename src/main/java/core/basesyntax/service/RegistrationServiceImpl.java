@@ -14,6 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         checkNull(user);
         checkCorrectAge(user);
+        checkCorrectPassword(user);
         return userAdd(user);
     }
 
@@ -21,9 +22,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         User findUser = storageDao.get(user.getLogin());
         if (findUser != null) {
             throw new RuntimeException("User login is already taken");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_SIZE) {
-            throw new RuntimeException("User password must be is at least 6 characters");
         }
         storageDao.add(user);
         return user;
@@ -41,6 +39,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword() == null) {
             throw new RuntimeException("Invalid user password. Password can't be read");
+        }
+    }
+
+    private void checkCorrectPassword(User user) {
+        if (user.getPassword().length() < MIN_PASSWORD_SIZE) {
+            throw new RuntimeException("User password must be is at least 6 characters");
         }
     }
 
