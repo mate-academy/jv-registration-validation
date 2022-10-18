@@ -12,11 +12,10 @@ public class User {
 
     }
 
-    public User(Long id, String login, String password, Integer age) {
-        this.age = age;
+    public User(String login, String password, Integer age) {
         this.login = login;
-        this.id = id;
         this.password = password;
+        this.age = age;
     }
 
     public Long getId() {
