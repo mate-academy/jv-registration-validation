@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -39,18 +38,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_alreadyRegisteredUser_NotOk() {
+    void register_alreadyRegisteredUser_notOk() {
         User correctUser1 = getPreparedUser(
                 NAME_1, CORRECT_PASSWORD_8_CHARS, CORRECT_AGE_1);
 
         String message = "When user already registered you must throw exception";
-        registrationService.register(correctUser1);
+        Storage.people.add(correctUser1);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(correctUser1), message);
     }
 
     @Test
-    void register_incorrectUserAge_NotOk() {
+    void register_incorrectUserAge_notOk() {
         User incorrectUserAgeUnderMinimum1 = getPreparedUser(
                 NAME_1, CORRECT_PASSWORD_8_CHARS, INCORRECT_AGE_UNDER_MINIMUM);
         User incorrectUserAgeUnderMinimum2 = getPreparedUser(
@@ -68,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_incorrectUserPassword_NotOk() {
+    void register_incorrectUserPassword_notOk() {
         User incorrectUserPasswordLess1 = getPreparedUser(
                 NAME_1, INCORRECT_PASSWORD_1_CHAR, CORRECT_AGE_1);
         User incorrectUserPasswordLess2 = getPreparedUser(
@@ -86,62 +85,41 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_incorrectUserAgeException_Ok() {
+    void register_incorrectUserAgeException_ok() {
         User incorrectUserAgeUnderMinimum1 = getPreparedUser(
                 NAME_1, CORRECT_PASSWORD_8_CHARS, INCORRECT_AGE_UNDER_MINIMUM);
-
-        try {
-            registrationService.register(incorrectUserAgeUnderMinimum1);
-        } catch (RuntimeException e) {
-            assertEquals("User must be at least " + CORRECT_MINIMUM_AGE + " years old",
-                    e.getMessage());
-            return;
-        }
-        fail("If age less than " + CORRECT_MINIMUM_AGE + " you must throw exception");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(incorrectUserAgeUnderMinimum1),
+                "If age less than " + CORRECT_MINIMUM_AGE + " you must throw exception");
     }
 
     @Test
-    void register_nullUserPasswordException_Ok() {
+    void register_nullUserPasswordException_ok() {
         User nullUserPassword = getPreparedUser(NAME_1, null, CORRECT_MINIMUM_AGE);
-        try {
-            registrationService.register(nullUserPassword);
-        } catch (RuntimeException e) {
-            assertEquals("For registration User must be set password",
-                    e.getMessage());
-            return;
-        }
-        fail("If password is null you must throw RuntimeException with info");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(nullUserPassword),
+                "If password is null you must throw RuntimeException with info");
     }
 
     @Test
-    void register_nullUserLoginException_Ok() {
+    void register_nullUserLoginException_ok() {
         User nullUserLogin = getPreparedUser(null, CORRECT_PASSWORD_8_CHARS, CORRECT_MINIMUM_AGE);
-        try {
-            registrationService.register(nullUserLogin);
-        } catch (RuntimeException e) {
-            assertEquals("For registration User must be set login",
-                    e.getMessage());
-            return;
-        }
-        fail("If login is null you must throw RuntimeException with info");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(nullUserLogin),
+                "If login is null you must throw RuntimeException with info");
     }
 
     @Test
-    void register_nullUserAge_NotOk() {
+    void register_nullUserAge_notOk() {
         User nullUserAge = getPreparedUser(NAME_1, CORRECT_PASSWORD_8_CHARS, 0);
         nullUserAge.setAge(null);
-        try {
-            registrationService.register(nullUserAge);
-        } catch (RuntimeException e) {
-            assertEquals("For registration User must be set age",
-                    e.getMessage());
-            return;
-        }
-        fail("If age is null you must throw RuntimeException with info");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(nullUserAge),
+                "If age is null you must throw RuntimeException with info");
     }
 
     @Test
-    void register_correctUser_Ok() {
+    void register_correctUser_ok() {
         User correctUser1 = getPreparedUser(
                 NAME_1, CORRECT_PASSWORD_8_CHARS, CORRECT_AGE_1);
         User correctUser2 = getPreparedUser(
