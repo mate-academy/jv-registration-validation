@@ -13,8 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (nullCheck(user) && !isUserExist(user)
                 && isAgeCorrect(user) && isPasswordCorrect(user)) {
-            storageDao.add(user);
-            return user;
+            return storageDao.add(user);
         }
         throw new RuntimeException("Something went wrong");
     }
