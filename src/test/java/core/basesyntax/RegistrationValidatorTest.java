@@ -46,63 +46,63 @@ class RegistrationValidatorTest {
     }
 
     @Test
-    void emailDoesNotContainAt_NotOk() {
+    void email_DoesNot_Contain_At_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithoutAtInLogin);
         });
     }
 
     @Test
-    void passwordIsLessThan6_NotOk() {
+    void password_Is_Less_Than_6_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithInvalidPass);
         });
     }
 
     @Test
-    void startWithNumber_NotOk() {
+    void start_With_Number_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithEmailNumberStart);
         });
     }
 
     @Test
-    void startWithSymbol_NotOk() {
+    void start_With_Symbol_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithEmailSymbolStart);
         });
     }
 
     @Test
-    void loginContainsUppercaseLetters_NotOk() {
+    void login_Contains_Uppercase_Letters_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithUppercaseLettersInEmail);
         });
     }
 
     @Test
-    void invalidAge_NotOk() {
+    void invalid_Age_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithInvalidAge);
         });
     }
 
     @Test
-    void userIsNull_NotOk() {
+    void user_IsNull_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userNull);
         });
     }
 
     @Test
-    void loginIsNull_NotOk() {
+    void login_IsNull_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(userWithNullLogin);
         });
     }
 
     @Test
-    void twoUsersWithTheSameLogins_NotOk() {
+    void two_Users_With_TheSameLogins_NotOk() {
         storageDao.add(new User("login321@gmail.com", "1234567", 31));
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(validUser);
@@ -110,7 +110,7 @@ class RegistrationValidatorTest {
     }
 
     @Test
-    void storageDaoGetAndAddAreValid_OK() {
+    void storageDao_Get_And_Add_Valid_OK() {
         storageDao.add(new User("first123@gmail.com", "1234567", 22));
         storageDao.add(new User("second123@gmail.com", "1234567", 22));
         User firstUser = storageDao.get("first123@gmail.com");
@@ -120,7 +120,7 @@ class RegistrationValidatorTest {
     }
 
     @Test
-    void usersAreEqual_Ok() {
+    void users_Are_Equal_Ok() {
         boolean expected = validUser.equals(validUserCopy);
         assertTrue(expected);
         expected = validUser.hashCode() == validUserCopy.hashCode();
@@ -128,7 +128,7 @@ class RegistrationValidatorTest {
     }
 
     @Test
-    void settersAreCorrect_Ok() {
+    void setters_Are_Correct_Ok() {
         defaultUser.setPassword("vavelon321");
         defaultUser.setLogin("sebastianmckinly1993@gmail.com");
         defaultUser.setAge(29);
@@ -139,7 +139,7 @@ class RegistrationValidatorTest {
     }
 
     @Test
-    void userEqualsObject_NotOk() {
+    void user_Equals_Object_NotOk() {
         boolean expected = validUser.equals(object);
         assertFalse(expected);
     }

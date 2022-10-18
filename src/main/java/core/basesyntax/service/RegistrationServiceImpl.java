@@ -14,27 +14,43 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("User equals null");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Invalid age");
+        if (loginIsValid(user.getLogin()) && ageIsValid(user.getAge())
+                && passwordIsValid(user.getPassword())) {
+            storageDao.add(user);
+            return user;
         }
-        if (user.getPassword().length() < MIN_LENGTH) {
-            throw new RuntimeException("The password is too short");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("There is already such login in the system");
-        }
-        if (!user.getLogin().contains("@")) {
+        return null;
+    }
+
+    private boolean loginIsValid(String login) {
+        if (!login.contains("@")) {
             throw new RuntimeException("Login should contain @");
         }
-        if (!Character.isLetter(user.getLogin().charAt(0))) {
+        if (!Character.isLetter(login.charAt(0))) {
             throw new RuntimeException("No numerals at the start of the email");
         }
-        for (int i = 0; i < user.getLogin().length(); i++) {
-            if (Character.isUpperCase(user.getLogin().charAt(i))) {
+        for (int i = 0; i < login.length(); i++) {
+            if (Character.isUpperCase(login.charAt(i))) {
                 throw new RuntimeException("No uppercase letters in email");
             }
         }
-        storageDao.add(user);
-        return user;
+        if (storageDao.get(login) != null) {
+            throw new RuntimeException("There is already such login in the system");
+        }
+        return true;
+    }
+
+    private boolean passwordIsValid(String pass) {
+        if (pass.length() < MIN_LENGTH) {
+            throw new RuntimeException("The password is too short");
+        }
+        return true;
+    }
+
+    private boolean ageIsValid(Integer age) {
+        if (age < MIN_AGE) {
+            throw new RuntimeException("Invalid age");
+        }
+        return true;
     }
 }
