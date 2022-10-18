@@ -15,30 +15,39 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User can't be null");
         }
 
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with this login: "
-                    + user.getLogin() + " already exists");
-        }
-
-        if (user.getLogin() == null) {
-            throw new RuntimeException("Login can't be null");
-        }
-        if (user.getPassword() == null) {
-            throw new RuntimeException("Password can't be null");
-        }
-        if (user.getAge() == null) {
-            throw new RuntimeException("Age can't be null");
-        }
-
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Age should be 18 and older, but is: " + user.getAge());
-        }
-
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password`s length should be " + MIN_PASSWORD_LENGTH
-                    + " or more, but is: " + user.getPassword().length());
-        }
+        loginValidation(user.getLogin());
+        passwordValidation(user.getPassword());
+        ageValidation(user.getAge());
 
         return storageDao.add(user);
+    }
+
+    private void loginValidation(String login) {
+        if (login == null) {
+            throw new RuntimeException("Login can't be null");
+        }
+        if (storageDao.get(login) != null) {
+            throw new RuntimeException("User with this login: "
+                    + login + " already exists");
+        }
+    }
+
+    private void passwordValidation(String password) {
+        if (password == null) {
+            throw new RuntimeException("Password can't be null");
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("Password`s length should be " + MIN_PASSWORD_LENGTH
+                    + " or more, but is: " + password.length());
+        }
+    }
+
+    private void ageValidation(Integer age) {
+        if (age == null) {
+            throw new RuntimeException("Age can't be null");
+        }
+        if (age < MIN_AGE) {
+            throw new RuntimeException("Age should be 18 and older, but is: " + age);
+        }
     }
 }
