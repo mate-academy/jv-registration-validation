@@ -14,11 +14,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("User can't be null");
         }
-
         loginValidation(user.getLogin());
         passwordValidation(user.getPassword());
         ageValidation(user.getAge());
-
         return storageDao.add(user);
     }
 
