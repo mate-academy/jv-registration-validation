@@ -12,22 +12,41 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (isUserDataValid(user)) {
+            storageDao.add(user);
+        }
+        return user;
+    }
+
+    private boolean isUserDataValid(User user) {
         if (Objects.isNull(user)) {
             throw new RuntimeException("User cannot be null");
         }
-        if (Objects.isNull(user.getLogin()) || user.getLogin().length() == 0) {
-            throw new RuntimeException("Login cannot be empty");
-        }
-        if (Objects.nonNull(storageDao.get(user.getLogin()))) {
-            throw new RuntimeException("User already exists in DB");
-        }
-        if (Objects.isNull(user.getAge()) || user.getAge() < MINIMUM_USER_AGE) {
-            throw new RuntimeException("User must be adult (18+)");
-        }
-        if (Objects.isNull(user.getPassword())
-                || user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+        checkLogin(user.getLogin());
+        checkUserAge(user.getAge());
+        checkPassword(user.getPassword());
+        return true;
+    }
+
+    private void checkPassword(String password) {
+        if (Objects.isNull(password) || password.length() < MINIMUM_PASSWORD_LENGTH) {
             throw new RuntimeException("Password must be 6 symbols at least");
         }
-        return storageDao.add(user);
     }
+
+    private void checkUserAge(Integer age) {
+        if (Objects.isNull(age) || age < MINIMUM_USER_AGE) {
+            throw new RuntimeException("User must be adult (18+)");
+        }
+    }
+
+    private void checkLogin(String login) {
+        if (Objects.isNull(login) || login.length() == 0) {
+            throw new RuntimeException("Login cannot be empty");
+        }
+        if (Objects.nonNull(storageDao.get(login))) {
+            throw new RuntimeException("User already exists in DB with login " + login);
+        }
+    }
+
 }
