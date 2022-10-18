@@ -31,20 +31,18 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public User validatingUserAge(User user) {
+    public void validatingUserAge(User user) {
         if (user.getAge() < 18) {
             throw new RuntimeException("User younger than 18 years old");
         }
-        return user;
     }
 
-    public User validatingUserPassword(User user) {
+    public void validatingUserPassword(User user) {
         if (user.getPassword() == null) {
             throw new RuntimeException("Password can not be null");
         }
         if (user.getPassword().length() < 6) {
             throw new RuntimeException("User password is less than 6 symbols");
         }
-        return user;
     }
 }
