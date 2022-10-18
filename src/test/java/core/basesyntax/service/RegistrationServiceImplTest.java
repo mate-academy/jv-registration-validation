@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,6 @@ class RegistrationServiceImplTest {
         rightUserExist.setAge(RIGHT_AGE);
         rightUserExist.setPassword(RIGHT_PASSWORD);
         new StorageDaoImpl().add(rightUserExist);
-
         wrongUser = new User();
     }
 
@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userWillBeNull() {
+    void validate_UserIsNull() {
         assertThrows(RuntimeException.class, () -> registration.validatingUser(null));
     }
 
@@ -97,7 +97,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordLessThanSix() {
+    void userPasswordLessThanMinimum() {
         wrongUser.setPassword(WRONG_PASSWORD);
         assertThrows(RuntimeException.class, () -> registration.validatingUserPassword(wrongUser));
     }
@@ -106,5 +106,10 @@ class RegistrationServiceImplTest {
     void userPasswordIsNull() {
         wrongUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> registration.validatingUserPassword(wrongUser));
+    }
+
+    @AfterAll
+    static void afterAll() {
+        Storage.people.clear();
     }
 }

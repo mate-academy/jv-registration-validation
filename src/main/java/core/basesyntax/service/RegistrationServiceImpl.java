@@ -5,6 +5,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_SYMBOLS_AMOUNT = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -32,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void validatingUserAge(User user) {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User younger than 18 years old");
         }
     }
@@ -41,7 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("Password can not be null");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_SYMBOLS_AMOUNT) {
             throw new RuntimeException("User password is less than 6 symbols");
         }
     }
