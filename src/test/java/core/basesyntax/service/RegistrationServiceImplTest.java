@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,10 +29,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        rightUserExist = new User();
-        rightUserExist.setLogin(RIGHT_LOGIN_EXIST);
-        rightUserExist.setAge(RIGHT_AGE);
-        rightUserExist.setPassword(RIGHT_PASSWORD);
+        rightUserExist = new User(RIGHT_LOGIN_EXIST, RIGHT_PASSWORD, RIGHT_AGE);
         new StorageDaoImpl().add(rightUserExist);
         wrongUser = new User();
     }
@@ -44,72 +40,64 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userExistTest() {
+    void register_userExist_notOk() {
         assertThrows(RuntimeException.class, () -> registration.register(rightUserExist));
     }
 
     @Test
-    void register_userIsRight_And_DoesNotExist() {
-        User rightDoesNotExist = new User();
-        rightDoesNotExist.setLogin(LOGIN_DOES_NOT_EXIST);
-        rightDoesNotExist.setAge(RIGHT_AGE);
-        rightDoesNotExist.setPassword(RIGHT_PASSWORD);
+    void register_userIsRightAndDoesNotExist_ok() {
+        User rightDoesNotExist = new User(LOGIN_DOES_NOT_EXIST, RIGHT_PASSWORD, RIGHT_AGE);
         assertDoesNotThrow(() -> registration.register(rightDoesNotExist));
     }
 
     @Test
-    void validate_UserIsNull() {
-        assertThrows(RuntimeException.class, () -> registration.validatingUser(null));
+    void validateUser_UserIsNull_notOk() {
+        assertThrows(RuntimeException.class, () -> registration.validateUser(null));
     }
 
     @Test
-    void userLoginDoesNotExist() {
+    void validateUserLogin_userLoginDoesNotExist_ok() {
         wrongUser.setLogin(LOGIN_DOES_NOT_EXIST);
-        assertDoesNotThrow(() -> registration.validatingUserLogin(wrongUser));
+        assertDoesNotThrow(() -> registration.validateUserLogin(wrongUser));
     }
 
     @Test
-    void userLoginExist() {
+    void validateUserLogin_userLoginExist_notOk() {
         assertThrows(RuntimeException.class,
-                () -> registration.validatingUserLogin(rightUserExist));
+                () -> registration.validateUserLogin(rightUserExist));
     }
 
     @Test
-    void userLoginNull() {
+    void validateUserLogin_userLoginNull_notOk() {
         wrongUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registration.validatingUserLogin(wrongUser));
+        assertThrows(RuntimeException.class, () -> registration.validateUserLogin(wrongUser));
     }
 
     @Test
-    void userAgeIsOk() {
-        assertDoesNotThrow(() -> registration.validatingUserAge(rightUserExist));
+    void validateUserAge_userAgeIsMinimum_ok() {
+        assertDoesNotThrow(() -> registration.validateUserAge(rightUserExist));
     }
 
     @Test
-    void userAgeLessThanMinimum() {
+    void validateUserAge_userAgeLessThanMinimum_notOk() {
         wrongUser.setAge(WRONG_AGE);
-        assertThrows(RuntimeException.class, () -> registration.validatingUserAge(wrongUser));
+        assertThrows(RuntimeException.class, () -> registration.validateUserAge(wrongUser));
     }
 
     @Test
-    void userPasswordIsOK() {
-        assertDoesNotThrow(() -> registration.validatingUserPassword(rightUserExist));
+    void validateUserPassword_passwordIsMinimumLength_oK() {
+        assertDoesNotThrow(() -> registration.validateUserPassword(rightUserExist));
     }
 
     @Test
-    void userPasswordLessThanMinimum() {
+    void validateUserPassword_userPasswordLessThanMinimum_notOk() {
         wrongUser.setPassword(WRONG_PASSWORD);
-        assertThrows(RuntimeException.class, () -> registration.validatingUserPassword(wrongUser));
+        assertThrows(RuntimeException.class, () -> registration.validateUserPassword(wrongUser));
     }
 
     @Test
-    void userPasswordIsNull() {
+    void validateUserPassword_userPasswordIsNull_notOk() {
         wrongUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registration.validatingUserPassword(wrongUser));
-    }
-
-    @AfterAll
-    static void afterAll() {
-        Storage.people.clear();
+        assertThrows(RuntimeException.class, () -> registration.validateUserPassword(wrongUser));
     }
 }

@@ -11,20 +11,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validatingUser(user);
-        validatingUserLogin(user);
-        validatingUserAge(user);
-        validatingUserPassword(user);
+        validateUser(user);
+        validateUserLogin(user);
+        validateUserAge(user);
+        validateUserPassword(user);
         return storageDao.add(user);
     }
 
-    public void validatingUser(User user) {
+    public void validateUser(User user) {
         if (user == null) {
             throw new RuntimeException("User can not be null");
         }
     }
 
-    public void validatingUserLogin(User user) {
+    public void validateUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can not be null");
         }
@@ -33,13 +33,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void validatingUserAge(User user) {
+    public void validateUserAge(User user) {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User younger than 18 years old");
         }
     }
 
-    public void validatingUserPassword(User user) {
+    public void validateUserPassword(User user) {
         if (user.getPassword() == null) {
             throw new RuntimeException("Password can not be null");
         }
