@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void resister_NullAge_NotOk() {
+    void resister_nullAge_notOk() {
         expectedUser.setAge(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(expectedUser);
@@ -100,7 +100,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUserArgument_NotOk() {
+    void register_nullUserArgument_notOk() {
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(null);
         });
