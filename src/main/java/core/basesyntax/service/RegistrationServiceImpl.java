@@ -24,8 +24,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new NullPointerException("Password is null");
         }
-        if (Storage.people.contains(user)) {
-            throw new RuntimeException("User already exist");
+        for (User u : Storage.people) {
+            if (u.getLogin().equals(user.getLogin())) {
+                throw new RuntimeException("User with this email already exist");
+            }
         }
         if (user.getAge() < EIGHTEEN_YEARS_OLD) {
             throw new RuntimeException("User to young");
