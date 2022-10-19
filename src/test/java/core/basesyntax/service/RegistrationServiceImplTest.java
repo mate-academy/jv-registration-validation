@@ -28,7 +28,23 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_NotOk() {
-        user = null;
+        user.setLogin(null);
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullPass_NotOk() {
+        user.setPassword(null);
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullAge_NotOk() {
+        user.setAge(null);
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(user);
         });
