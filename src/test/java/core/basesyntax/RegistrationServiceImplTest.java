@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private User user1 = new User("spider@gmail.com", "qwerty12345", 25);
+    private static User user1;
 
     @BeforeAll
     public static void setUp() {
@@ -19,6 +19,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_AlreadyExistedUser_notOk() {
+        user1 = new User("spider@gmail.com", "qwerty12345", 25);
         registrationService.register(user1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
     }
@@ -31,25 +32,35 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_adult_notOk() {
+        user1 = new User("spider@gmail.com", "qwerty12345", 25);
         user1.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
     }
 
     @Test
     public void register_adult_isOk() {
+        user1 = new User("spider@gmail.com", "qwerty12345", 25);
         user1.setAge(19);
         assertEquals(user1, registrationService.register(user1));
     }
 
     @Test
     public void register_lengthOfPassword_notOk() {
+        user1 = new User("spider@gmail.com", "qwerty12345", 25);
         user1.setPassword("sdfsd");
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
     }
 
     @Test
     public void register_lengthOfPassword_isOk() {
+        user1 = new User("spider@gmail.com", "qwerty12345", 25);
         user1.setPassword("sdfsddd");
         assertEquals(user1, registrationService.register(user1));
+    }
+
+    @Test
+    void register_nullFieldsInUser_notOk() {
+        user1 = new User();
+        assertThrows(NullPointerException.class, () -> registrationService.register(user1));
     }
 }
