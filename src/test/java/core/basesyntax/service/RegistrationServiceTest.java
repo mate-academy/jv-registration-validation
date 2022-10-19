@@ -3,7 +3,9 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,11 @@ class RegistrationServiceTest {
     @BeforeEach
     void setUp() {
         actualUser = new User(VALID_NAME, VALID_PASSWORD, VALID_AGE);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -89,9 +96,14 @@ class RegistrationServiceTest {
     }
 
     @Test
+    void registerValidUser_isOk() {
+        assertEquals(actualUser, registrationService.register(actualUser));
+    }
+
+    @Test
     void twoUsersSameLogin_notOk() {
         registrationService.register(actualUser);
-        User secondUser = new User(VALID_NAME, "AnotherPas3", VALID_AGE);
+        User secondUser = new User(VALID_NAME, "AnotherPas3", 29);
         assertThrows(RuntimeException.class, () -> registrationService.register(secondUser));
     }
 
