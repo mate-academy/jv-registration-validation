@@ -11,21 +11,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (nullCheck(user) && !isUserExist(user)
-                && isAgeCorrect(user) && isPasswordCorrect(user)) {
-            return storageDao.add(user);
-        }
-        return null;
+        nullCheck(user);
+        userExistCheck(user);
+        ageCheck(user);
+        passwordCheck(user);
+        return storageDao.add(user);
     }
 
-    private boolean isUserExist(User user) {
-        if (storageDao.get(user.getLogin()) == null) {
-            return false;
+    private void userExistCheck(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User with login " + user.getLogin() + " exists");
         }
-        throw new RuntimeException("User with login " + user.getLogin() + " exists");
     }
 
-    private boolean nullCheck(User user) {
+    private void nullCheck(User user) {
         if (user == null) {
             throw new RuntimeException("User is null");
         }
@@ -38,20 +37,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("Password is null");
         }
-        return true;
     }
 
-    private boolean isAgeCorrect(User user) {
-        if (user.getAge() >= MIN_AGE) {
-            return true;
+    private void ageCheck(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("Age is less than 18");
         }
-        throw new RuntimeException("Age is less than 18");
     }
 
-    private boolean isPasswordCorrect(User user) {
-        if (user.getPassword().length() >= MIN_NUMBER_OF_CHARACTERS) {
-            return true;
+    private void passwordCheck(User user) {
+        if (user.getPassword().length() < MIN_NUMBER_OF_CHARACTERS) {
+            throw new RuntimeException("Password length is less than 6 characters");
         }
-        throw new RuntimeException("Password length is less than 6 characters");
     }
 }
