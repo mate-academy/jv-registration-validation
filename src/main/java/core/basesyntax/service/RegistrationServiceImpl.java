@@ -15,6 +15,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new NullPointerException("User can't be Null");
         }
+        if (user.getLogin() == null) {
+            throw new NullPointerException("Login is null");
+        }
+        if (user.getAge() == null) {
+            throw new NullPointerException("Age is null");
+        }
+        if (user.getPassword() == null) {
+            throw new NullPointerException("Password is null");
+        }
         if (Storage.people.contains(user)) {
             throw new RuntimeException("User already exist");
         }
@@ -25,7 +34,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User's password to short, it mast consist of 6 character");
         }
         storageDao.add(user);
-
         return user;
     }
 }

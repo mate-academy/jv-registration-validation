@@ -59,8 +59,26 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullFieldsInUser_notOk() {
+    void register_nullLoginInUser_notOk() {
         user1 = new User();
+        user1.setPassword("456789dsfs");
+        user1.setAge(54);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user1));
+    }
+
+    @Test
+    void register_nullPasswordInUser_notOk() {
+        user1 = new User();
+        user1.setLogin("6465s4dfsdf");
+        user1.setAge(54);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user1));
+    }
+
+    @Test
+    void register_nullAgeInUser_notOk() {
+        user1 = new User();
+        user1.setPassword("456789dsfs");
+        user1.setLogin("5467654sdfsdf");
         assertThrows(NullPointerException.class, () -> registrationService.register(user1));
     }
 }
