@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
@@ -22,113 +21,79 @@ class RegistrationServiceTest {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @BeforeEach
-    void setUp() {
-        actualUser = new User();
-    }
-
     @Test
     void userNotNullCheck() {
-        actualUser.setLogin(NULL_VALUE);
-        actualUser.setPassword(VALID_PASSWORD);
-        actualUser.setAge(VALID_AGE);
+        actualUser = new User(NULL_VALUE, VALID_PASSWORD, VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void userPassNotNullCheck() {
-        actualUser.setLogin("Tom123");
-        actualUser.setPassword(NULL_VALUE);
+        actualUser = new User("Tom123", NULL_VALUE, VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void userPassLengthValidation() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword("Pas12");
-        actualUser.setAge(VALID_AGE);
+        actualUser = new User(VALID_NAME, "Pas12", VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void userAgeNotNullCheck() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword("abs123");
-        actualUser.setAge(null);
+        actualUser = new User(VALID_NAME, VALID_PASSWORD, null);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
 
     }
 
     @Test
     void userAgeValidation() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword(VALID_PASSWORD);
-        actualUser.setAge(11);
+        actualUser = new User(VALID_NAME, VALID_PASSWORD, 11);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void userWithNegativeAge() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword(VALID_PASSWORD);
-        actualUser.setAge(-19);
+        actualUser = new User(VALID_NAME, VALID_PASSWORD, -19);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void pasWithoutUppercase_notOk() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword("1aad32");
-        actualUser.setAge(VALID_AGE);
+        actualUser = new User(VALID_NAME, "1aad32", VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void passWithoutLowerCase_notOk() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword("132AAA45");
-        actualUser.setAge(VALID_AGE);
+        actualUser = new User(VALID_NAME, "132AAA45", VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void passWithoutNumber_notOk() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword("passWithoutNum");
-        actualUser.setAge(VALID_AGE);
+        actualUser = new User(VALID_NAME, "passWithoutNum", VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void passWithoutLetters_notOk() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword("1113233");
-        actualUser.setAge(VALID_AGE);
+        actualUser = new User(VALID_NAME,"1113233", VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void twoUsersSameLoginCheck() {
-        actualUser.setLogin(VALID_NAME);
-        actualUser.setPassword(VALID_PASSWORD);
-        actualUser.setAge(VALID_AGE);
+        actualUser = new User(VALID_NAME, VALID_PASSWORD, VALID_AGE);
         registrationService.register(actualUser);
-        User secondUser = new User();
-        secondUser.setLogin(VALID_NAME);
-        secondUser.setPassword("AnotherPas3");
-        secondUser.setAge(28);
+        User secondUser = new User(VALID_NAME, "AnotherPas3", VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(secondUser));
     }
 
     @Test
     void twoUniqUsers() {
-        actualUser.setLogin("Gregory_House");
-        actualUser.setPassword("Md15051959");
-        actualUser.setAge(63);
-        User secondUser = new User();
-        secondUser.setLogin("Jack15");
-        secondUser.setPassword("mrJack22");
-        secondUser.setAge(55);
+        actualUser = new User("Gregory_House", "Md15051959", 63);
+        User secondUser = new User("Jack15", "mrJack22", 55);
         assertEquals(actualUser, registrationService.register(actualUser));
         assertEquals(secondUser, registrationService.register(secondUser));
     }

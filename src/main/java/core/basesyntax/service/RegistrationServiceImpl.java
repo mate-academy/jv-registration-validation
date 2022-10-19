@@ -13,25 +13,29 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getPassword() == null || user.getPassword().length() < PASS_MIN_LENGTH) {
+        passwordValidation(user.getPassword());
+        loginValidation(user.getLogin());
+        ageValidation(user.getAge());
+        return storageDao.add(user);
+    }
+
+    private void passwordValidation(String pass) {
+        if (pass == null || !pass.matches(PASS_VALID_REGEX)) {
             throw new RuntimeException("Please enter your password. "
-                    + "It should be at least 6 characters");
+                    + "It should be at least 6 characters and contains at least"
+                    + "one uppercase, one lowercase, one number");
         }
-        if (user.getLogin() == null) {
-            throw new RuntimeException("Please enter your login");
+    }
+
+    private void loginValidation(String log) {
+        if (log == null || storageDao.get(log) != null) {
+            throw new RuntimeException("Incorrect login or user is already exist");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+    }
+
+    private void ageValidation(Integer age) {
+        if (age == null || age < MIN_AGE) {
             throw new RuntimeException("You should be at least 18 years old");
-        }
-        StorageDaoImpl storageDao1 = new StorageDaoImpl();
-        if (storageDao1.get(user.getLogin()) != null) {
-            throw new RuntimeException("This user is already exist");
-        }
-        if (user.getPassword().matches(PASS_VALID_REGEX)) {
-            return storageDao1.add(user);
-        } else {
-            throw new RuntimeException("Your password should contain at least 1"
-                    + " uppercase letter, 1 lowercase letter and one digit");
         }
     }
 }
