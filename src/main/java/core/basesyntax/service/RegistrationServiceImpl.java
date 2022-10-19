@@ -15,14 +15,14 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && isAgeCorrect(user) && isPasswordCorrect(user)) {
             return storageDao.add(user);
         }
-        throw new RuntimeException("Something went wrong");
+        return null;
     }
 
     private boolean isUserExist(User user) {
         if (storageDao.get(user.getLogin()) == null) {
             return false;
         }
-        throw new RuntimeException("User with login" + user.getLogin() + " exists");
+        throw new RuntimeException("User with login " + user.getLogin() + " exists");
     }
 
     private boolean nullCheck(User user) {
