@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
@@ -21,70 +22,74 @@ class RegistrationServiceTest {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @BeforeEach
+    void setUp() {
+        actualUser = new User(VALID_NAME, VALID_PASSWORD, VALID_AGE);
+    }
+
     @Test
-    void userNotNullCheck() {
-        actualUser = new User(NULL_VALUE, VALID_PASSWORD, VALID_AGE);
+    void userLoginNull_notOk() {
+        actualUser.setLogin(NULL_VALUE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
-    void userPassNotNullCheck() {
-        actualUser = new User("Tom123", NULL_VALUE, VALID_AGE);
+    void userPassNull_notOk() {
+        actualUser.setPassword(NULL_VALUE);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
-    void userPassLengthValidation() {
-        actualUser = new User(VALID_NAME, "Pas12", VALID_AGE);
+    void shortUserPass_notOk() {
+        actualUser.setPassword("Pas12");
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
-    void userAgeNotNullCheck() {
-        actualUser = new User(VALID_NAME, VALID_PASSWORD, null);
+    void userAgeNull_notOk() {
+        actualUser.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
 
     }
 
     @Test
-    void userAgeValidation() {
-        actualUser = new User(VALID_NAME, VALID_PASSWORD, 11);
+    void userAgeLower18_notOk() {
+        actualUser.setAge(11);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
-    void userWithNegativeAge() {
-        actualUser = new User(VALID_NAME, VALID_PASSWORD, -19);
+    void userAgeNegativeValue_notOk() {
+        actualUser.setAge(-18);
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void pasWithoutUppercase_notOk() {
-        actualUser = new User(VALID_NAME, "1aad32", VALID_AGE);
+        actualUser.setPassword("1aad32");
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void passWithoutLowerCase_notOk() {
-        actualUser = new User(VALID_NAME, "132AAA45", VALID_AGE);
+        actualUser.setPassword("132AAA45");
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void passWithoutNumber_notOk() {
-        actualUser = new User(VALID_NAME, "passWithoutNum", VALID_AGE);
+        actualUser.setPassword("passWithoutNum");
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
     void passWithoutLetters_notOk() {
-        actualUser = new User(VALID_NAME,"1113233", VALID_AGE);
+        actualUser.setPassword("123331224");
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
     @Test
-    void twoUsersSameLoginCheck() {
-        actualUser = new User(VALID_NAME, VALID_PASSWORD, VALID_AGE);
+    void twoUsersSameLogin_notOk() {
         registrationService.register(actualUser);
         User secondUser = new User(VALID_NAME, "AnotherPas3", VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(secondUser));
