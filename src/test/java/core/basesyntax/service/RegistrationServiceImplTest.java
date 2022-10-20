@@ -27,7 +27,7 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD = "12345";
 
     @BeforeAll
-    public static void setUp() {
+    public static void beforeAll() {
         service = new RegistrationServiceImpl();
     }
 
