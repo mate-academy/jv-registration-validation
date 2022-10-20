@@ -19,11 +19,9 @@ class RegistrationServiceImplTest {
     private static final String FOURTH_LOGIN = "FOURTH_LOGIN";
     private static final String FIFTH_LOGIN = "FIFTH_LOGIN";
     private static final String SIXTH_LOGIN = "SIXTH_LOGIN";
-    private static final String SEVENTH_LOGIN = "SEVENTH_LOGIN";
     private static final int MIN_VALID_AGE = 18;
     private static final int VALID_AGE = 60;
     private static final int MAX_INVALID_AGE = 17;
-    private static final int NEGATIVE_AGE = -1;
     private static final String VALID_PASSWORD = "123456";
     private static final String INVALID_PASSWORD = "12345";
 
@@ -118,14 +116,5 @@ class RegistrationServiceImplTest {
         assertTrue(Storage.people.contains(validUser),
                 "Test failed! Expected storage people contains "
                         + validUser + " = true, but was false");
-    }
-
-    @Test
-    public void register_negativeAge_notOk() {
-        User negativeAgeUser = new User();
-        negativeAgeUser.setLogin(SEVENTH_LOGIN);
-        negativeAgeUser.setAge(NEGATIVE_AGE);
-        negativeAgeUser.setPassword(VALID_PASSWORD);
-        assertThrows(UserValidationException.class, () -> service.register(negativeAgeUser));
     }
 }
