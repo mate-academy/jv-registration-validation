@@ -115,14 +115,7 @@ class RegistrationServiceImplTest {
         validUser.setLogin(SIXTH_LOGIN);
         validUser.setAge(VALID_AGE);
         validUser.setPassword(VALID_PASSWORD);
-        int expectedSize = Storage.people.size() + 1;
         service.register(validUser);
-        int actualSize = Storage.people.size();
-        assertEquals(expectedSize, Storage.people.size(), "Test failed!"
-                + " Size of storage after adding valid user should be "
-                + expectedSize + ", but was "
-                + actualSize
-        );
         assertTrue(Storage.people.contains(validUser),
                 "Test failed! Expected storage people contains "
                         + validUser + " = true, but was false");
