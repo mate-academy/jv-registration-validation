@@ -1,5 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -7,13 +10,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class RegistrationServiceImplTest {
     private static RegistrationService service;
-    private final static String DEFAULT_USER_LOGIN = "John";
-    private final static String DEFAULT_USER_PASSWORD = "123456";
-    private final static Integer DEFAULT_USER_AGE = 18;
+    private static final String DEFAULT_USER_LOGIN = "John";
+    private static final String DEFAULT_USER_PASSWORD = "123456";
+    private static final Integer DEFAULT_USER_AGE = 18;
     private User defaultTestUser;
 
     @BeforeAll
