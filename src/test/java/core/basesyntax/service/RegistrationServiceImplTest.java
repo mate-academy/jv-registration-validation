@@ -70,16 +70,12 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_duplicateLogin_notOk() {
-        User originalUser = new User();
-        originalUser.setLogin(THIRD_LOGIN);
-        originalUser.setAge(MIN_VALID_AGE);
-        originalUser.setPassword(VALID_PASSWORD);
-        User duplicateLoginUser = new User();
-        duplicateLoginUser.setLogin(THIRD_LOGIN);
-        duplicateLoginUser.setAge(MIN_VALID_AGE);
-        duplicateLoginUser.setPassword(VALID_PASSWORD);
-        service.register(originalUser);
-        assertThrows(UserExistsException.class, () -> service.register(duplicateLoginUser));
+        User user = new User();
+        user.setLogin(THIRD_LOGIN);
+        user.setAge(MIN_VALID_AGE);
+        user.setPassword(VALID_PASSWORD);
+        service.register(user);
+        assertThrows(UserExistsException.class, () -> service.register(user));
     }
 
     @Test
