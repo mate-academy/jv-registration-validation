@@ -19,6 +19,7 @@ class RegistrationServiceImplTest {
     private static final String FOURTH_LOGIN = "FOURTH_LOGIN";
     private static final String FIFTH_LOGIN = "FIFTH_LOGIN";
     private static final String SIXTH_LOGIN = "SIXTH_LOGIN";
+    private static final String SEVENTH_LOGIN = "SEVENTH_LOGIN";
     private static final int MIN_VALID_AGE = 18;
     private static final int VALID_AGE = 60;
     private static final int MAX_INVALID_AGE = 17;
@@ -36,6 +37,18 @@ class RegistrationServiceImplTest {
         validUser.setLogin(FIRST_LOGIN);
         validUser.setAge(MIN_VALID_AGE);
         validUser.setPassword(VALID_PASSWORD);
+        service.register(validUser);
+        assertTrue(Storage.people.contains(validUser),
+                "Test failed! Expected storage people contains "
+                + validUser + " = true, but was false");
+    }
+
+    @Test
+    public void register_validUser_sizeIncreased_ok() {
+        User validUser = new User();
+        validUser.setLogin(SEVENTH_LOGIN);
+        validUser.setAge(MIN_VALID_AGE);
+        validUser.setPassword(VALID_PASSWORD);
         int expectedSize = Storage.people.size() + 1;
         service.register(validUser);
         int actualSize = Storage.people.size();
@@ -44,9 +57,6 @@ class RegistrationServiceImplTest {
                 + expectedSize + ", but was "
                 + actualSize
         );
-        assertTrue(Storage.people.contains(validUser),
-                "Test failed! Expected storage people contains "
-                + validUser + " = true, but was false");
     }
 
     @Test
