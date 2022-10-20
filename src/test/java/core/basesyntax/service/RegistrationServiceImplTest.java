@@ -61,12 +61,35 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_duplicateLogin_notOk() {
+        User originalUser = new User();
+        originalUser.setLogin(THIRD_LOGIN);
+        originalUser.setAge(MIN_VALID_AGE);
+        originalUser.setPassword(VALID_PASSWORD);
+        User duplicateLoginUser = new User();
+        duplicateLoginUser.setLogin(THIRD_LOGIN);
+        duplicateLoginUser.setAge(MIN_VALID_AGE);
+        duplicateLoginUser.setPassword(VALID_PASSWORD);
+        service.register(originalUser);
+        assertThrows(UserExistsException.class, () -> service.register(duplicateLoginUser));
+    }
+
+    @Test
     public void register_passwordIsNull_notOk() {
         User nullPassUser = new User();
         nullPassUser.setLogin(SECOND_LOGIN);
         nullPassUser.setAge(MIN_VALID_AGE);
         nullPassUser.setPassword(null);
         assertThrows(UserValidationException.class, () -> service.register(nullPassUser));
+    }
+
+    @Test
+    public void register_passwordLessThan6CharsLong_notOk() {
+        User invPassUser = new User();
+        invPassUser.setLogin(FIFTH_LOGIN);
+        invPassUser.setAge(MIN_VALID_AGE);
+        invPassUser.setPassword(INVALID_PASSWORD);
+        assertThrows(UserValidationException.class, () -> service.register(invPassUser));
     }
 
     @Test
@@ -104,28 +127,5 @@ class RegistrationServiceImplTest {
         negativeAgeUser.setAge(NEGATIVE_AGE);
         negativeAgeUser.setPassword(VALID_PASSWORD);
         assertThrows(UserValidationException.class, () -> service.register(negativeAgeUser));
-    }
-
-    @Test
-    public void register_duplicateLogin_notOk() {
-        User originalUser = new User();
-        originalUser.setLogin(THIRD_LOGIN);
-        originalUser.setAge(MIN_VALID_AGE);
-        originalUser.setPassword(VALID_PASSWORD);
-        User duplicateLoginUser = new User();
-        duplicateLoginUser.setLogin(THIRD_LOGIN);
-        duplicateLoginUser.setAge(MIN_VALID_AGE);
-        duplicateLoginUser.setPassword(VALID_PASSWORD);
-        service.register(originalUser);
-        assertThrows(UserExistsException.class, () -> service.register(duplicateLoginUser));
-    }
-
-    @Test
-    public void register_passwordLessThan6CharsLong_notOk() {
-        User invPassUser = new User();
-        invPassUser.setLogin(FIFTH_LOGIN);
-        invPassUser.setAge(MIN_VALID_AGE);
-        invPassUser.setPassword(INVALID_PASSWORD);
-        assertThrows(UserValidationException.class, () -> service.register(invPassUser));
     }
 }
