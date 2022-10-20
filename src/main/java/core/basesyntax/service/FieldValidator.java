@@ -1,7 +1,9 @@
 package core.basesyntax.service;
 
 public interface FieldValidator<T> {
-    void validate(T field, String fieldName);
+    String IS_NULL_MESSAGE = " can't be null";
+
+    void validate(T field, UserFields fieldName);
 
     default boolean fieldIsNull(T field) {
         return field == null;
