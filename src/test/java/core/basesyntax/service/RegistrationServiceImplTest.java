@@ -9,48 +9,62 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.exception.UserExistsException;
 import core.basesyntax.service.exception.UserValidationException;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService service;
+    private static final String DEFAULT_LOGIN = "DEFAULT_LOGIN";
     private static final String FIRST_LOGIN = "FIRST_LOGIN";
     private static final String SECOND_LOGIN = "SECOND_LOGIN";
     private static final String THIRD_LOGIN = "THIRD_LOGIN";
     private static final String FOURTH_LOGIN = "FOURTH_LOGIN";
     private static final String FIFTH_LOGIN = "FIFTH_LOGIN";
     private static final String SIXTH_LOGIN = "SIXTH_LOGIN";
-    private static final String SEVENTH_LOGIN = "SEVENTH_LOGIN";
+    private static final String DUPLICATE_LOGIN = "DUPLICATE_LOGIN";
     private static final int MIN_VALID_AGE = 18;
     private static final int VALID_AGE = 60;
     private static final int MAX_INVALID_AGE = 17;
     private static final String VALID_PASSWORD = "123456";
     private static final String INVALID_PASSWORD = "12345";
+    private User defaultUser;
 
     @BeforeAll
     public static void beforeAll() {
         service = new RegistrationServiceImpl();
     }
 
+    @BeforeEach
+    public void setUp() {
+        defaultUser = new User();
+        defaultUser.setLogin(DEFAULT_LOGIN);
+        defaultUser.setPassword(VALID_PASSWORD);
+        defaultUser.setAge(MIN_VALID_AGE);
+    }
+
     @Test
     public void register_validUser_ok() {
-        User validUser = new User();
-        validUser.setLogin(FIRST_LOGIN);
-        validUser.setAge(MIN_VALID_AGE);
-        validUser.setPassword(VALID_PASSWORD);
-        service.register(validUser);
-        assertTrue(Storage.people.contains(validUser),
+        service.register(defaultUser);
+        assertTrue(Storage.people.contains(defaultUser),
                 "Test failed! Expected storage people contains "
-                + validUser + " = true, but was false");
+                + defaultUser + " = true, but was false");
+    }
+
+    @Test
+    public void register_validUser_returnedEqualUser_ok() {
+        defaultUser.setLogin(THIRD_LOGIN);
+        User expectedUser = defaultUser;
+        User actualUser = service.register(defaultUser);
+        assertEquals(expectedUser, actualUser, "Test failed!"
+                + "Expected return value " + expectedUser
+                + ", but was " + actualUser);
     }
 
     @Test
     public void register_validUser_sizeIncreased_ok() {
-        User validUser = new User();
-        validUser.setLogin(SEVENTH_LOGIN);
-        validUser.setAge(MIN_VALID_AGE);
-        validUser.setPassword(VALID_PASSWORD);
+        defaultUser.setLogin(FIRST_LOGIN);
         int expectedSize = Storage.people.size() + 1;
-        service.register(validUser);
+        service.register(defaultUser);
         int actualSize = Storage.people.size();
         assertEquals(expectedSize, Storage.people.size(), "Test failed!"
                 + " Size of storage after adding valid user should be "
@@ -61,59 +75,45 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_loginIsNull_notOk() {
-        User nullLoginUser = new User();
-        nullLoginUser.setLogin(null);
-        nullLoginUser.setAge(MIN_VALID_AGE);
-        nullLoginUser.setPassword(VALID_PASSWORD);
-        assertThrows(UserValidationException.class, () -> service.register(nullLoginUser));
+        defaultUser.setLogin(null);
+        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
     }
 
     @Test
     public void register_duplicateLogin_notOk() {
-        User user = new User();
-        user.setLogin(THIRD_LOGIN);
-        user.setAge(MIN_VALID_AGE);
-        user.setPassword(VALID_PASSWORD);
-        service.register(user);
-        assertThrows(UserExistsException.class, () -> service.register(user));
+        defaultUser.setLogin(DUPLICATE_LOGIN);
+        service.register(defaultUser);
+        assertThrows(UserExistsException.class, () -> service.register(defaultUser));
     }
 
     @Test
     public void register_passwordIsNull_notOk() {
-        User nullPassUser = new User();
-        nullPassUser.setLogin(SECOND_LOGIN);
-        nullPassUser.setAge(MIN_VALID_AGE);
-        nullPassUser.setPassword(null);
-        assertThrows(UserValidationException.class, () -> service.register(nullPassUser));
+        defaultUser.setLogin(SECOND_LOGIN);
+        defaultUser.setPassword(null);
+        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
     }
 
     @Test
     public void register_passwordLessThan6CharsLong_notOk() {
-        User invPassUser = new User();
-        invPassUser.setLogin(FIFTH_LOGIN);
-        invPassUser.setAge(MIN_VALID_AGE);
-        invPassUser.setPassword(INVALID_PASSWORD);
-        assertThrows(UserValidationException.class, () -> service.register(invPassUser));
+        defaultUser.setLogin(FOURTH_LOGIN);
+        defaultUser.setPassword(INVALID_PASSWORD);
+        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
     }
 
     @Test
     public void register_ageLessThan18_notOk() {
-        User invAgeUser = new User();
-        invAgeUser.setLogin(FOURTH_LOGIN);
-        invAgeUser.setAge(MAX_INVALID_AGE);
-        invAgeUser.setPassword(VALID_PASSWORD);
-        assertThrows(UserValidationException.class, () -> service.register(invAgeUser));
+        defaultUser.setLogin(FIFTH_LOGIN);
+        defaultUser.setAge(MAX_INVALID_AGE);
+        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
     }
 
     @Test
     public void register_ageIsGreaterThan18_ok() {
-        User validUser = new User();
-        validUser.setLogin(SIXTH_LOGIN);
-        validUser.setAge(VALID_AGE);
-        validUser.setPassword(VALID_PASSWORD);
-        service.register(validUser);
-        assertTrue(Storage.people.contains(validUser),
+        defaultUser.setLogin(SIXTH_LOGIN);
+        defaultUser.setAge(VALID_AGE);
+        service.register(defaultUser);
+        assertTrue(Storage.people.contains(defaultUser),
                 "Test failed! Expected storage people contains "
-                        + validUser + " = true, but was false");
+                        + defaultUser + " = true, but was false");
     }
 }
