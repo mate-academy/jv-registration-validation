@@ -21,12 +21,6 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        User defaultUser = new User();
-        defaultUser.setLogin("defaultLogin");
-        defaultUser.setPassword("defaultPassword");
-        defaultUser.setAge(20);
-        defaultUser.setId(0L);
-        Storage.people.add(defaultUser);
         expectedUser = new User();
         expectedUser.setLogin("someLogin");
         expectedUser.setPassword("somePassword");
@@ -41,10 +35,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_containsUserLoginInStorage_notOk() {
-        expectedUser.setLogin("defaultLogin");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expectedUser);
-        });
+        User defaultUser = new User();
+        defaultUser.setLogin("defaultLogin");
+        defaultUser.setPassword("defaultPassword");
+        defaultUser.setAge(20);
+        registrationService.register(defaultUser);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
@@ -56,9 +52,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAge_notOk() {
         expectedUser.setAge(10);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expectedUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(expectedUser));
     }
 
     @Test
@@ -70,40 +64,30 @@ class RegistrationServiceImplTest {
     @Test
     void register_userPasswordLength_notOk() {
         expectedUser.setPassword("NotOk");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(expectedUser);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(expectedUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
         expectedUser.setLogin(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(expectedUser);
-        });
+        assertThrows(NullPointerException.class, () -> registrationService.register(expectedUser));
     }
 
     @Test
     void register_nullPassword_notOk() {
         expectedUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(expectedUser);
-        });
+        assertThrows(NullPointerException.class, () -> registrationService.register(expectedUser));
     }
 
     @Test
     void resister_nullAge_notOk() {
         expectedUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(expectedUser);
-        });
+        assertThrows(NullPointerException.class, () -> registrationService.register(expectedUser));
     }
 
     @Test
     void register_nullUserArgument_notOk() {
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(null);
-        });
+        assertThrows(NullPointerException.class, () -> registrationService.register(null));
     }
 
     @AfterEach
