@@ -63,7 +63,8 @@ class RegistrationServiceImplTest {
     @Test
     public void register_loginIsNull_notOk() {
         defaultUser.setLogin(null);
-        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(defaultUser));
     }
 
     @Test
@@ -75,19 +76,22 @@ class RegistrationServiceImplTest {
     @Test
     public void register_passwordIsNull_notOk() {
         defaultUser.setPassword(null);
-        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_passwordLessThan6CharsLong_notOk() {
         defaultUser.setPassword(INVALID_PASSWORD);
-        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_ageLessThan18_notOk() {
         defaultUser.setAge(MAX_INVALID_AGE);
-        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(defaultUser));
     }
 
     @Test
