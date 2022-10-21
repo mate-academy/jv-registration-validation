@@ -11,11 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
     private User user;
 
     @BeforeAll
      static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
         User bob = new User();
         bob.setLogin("bob");
         bob.setAge(19);
@@ -45,7 +46,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageUser18Years_Ok() {
+    void minRequiredAge_Ok() {
         user.setLogin("vova");
         user.setAge(18);
         User actual = registrationService.register(user);
@@ -55,13 +56,13 @@ public class RegistrationServiceImplTest {
     @Test
     void userIsNull_NotOk() {
         User userNull = new User();
-        assertThrows(NullPointerException.class, () -> registrationService.register(userNull));
+        assertThrows(RuntimeException.class, () -> registrationService.register(userNull));
     }
 
     @Test
     void loginIsNull_NotOk() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -73,11 +74,11 @@ public class RegistrationServiceImplTest {
     @Test
     void passwordIsNull_NotOk() {
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void lightPasswordSixCharters_Ok() {
+    void minRequiredLightPassword_Ok() {
         user.setPassword("12345678");
         User actual = registrationService.register(user);
         assertEquals(actual, user);
@@ -90,13 +91,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageUserLess18_NotOk() {
+    void ageLessThanRequired_NotOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void passwordUserLess6Charters_NotOk() {
+    void passwordLessThanRequired_NotOk() {
         user.setPassword("4582");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
