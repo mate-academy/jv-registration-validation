@@ -8,7 +8,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 1;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_USER_AGE = 18;
-    private static final StorageDao STORAGE_DAO = new StorageDaoImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user.getLogin());
         checkAge(user.getAge());
         checkPassword(user.getPassword());
-        return STORAGE_DAO.add(user);
+        return storageDao.add(user);
     }
 
     private void checkLogin(String login) {
@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login.length() < MIN_LOGIN_LENGTH) {
             throw new RuntimeException("User's login must be 1 character's or more");
         }
-        if (STORAGE_DAO.get(login) != null) {
+        if (storageDao.get(login) != null) {
             throw new RuntimeException("This User already exists in Storage");
         }
     }
