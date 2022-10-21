@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static final String DEFAULT_LOGIN = "DEFAULT_LOGIN";
-    private static final String DUPLICATE_LOGIN = "DUPLICATE_LOGIN";
     private static final int MIN_VALID_AGE = 18;
     private static final int VALID_AGE = 60;
     private static final int MAX_INVALID_AGE = 17;
@@ -69,8 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_duplicateLogin_notOk() {
-        defaultUser.setLogin(DUPLICATE_LOGIN);
-        registrationService.register(defaultUser);
+        Storage.people.add(defaultUser);
         assertThrows(UserExistsException.class, () -> registrationService.register(defaultUser));
     }
 
