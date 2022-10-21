@@ -44,31 +44,21 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_validUser_ok() {
-        registrationService.register(defaultUser);
-        assertTrue(Storage.people.contains(defaultUser),
-                "Test failed! Expected storage people contains "
-                + defaultUser + " = true, but was false");
-    }
-
-    @Test
-    public void register_validUser_returnedEqualUser_ok() {
         User expectedUser = defaultUser;
+        int expectedSize = Storage.people.size() + 1;
         User actualUser = registrationService.register(defaultUser);
         assertEquals(expectedUser, actualUser, "Test failed!"
                 + "Expected return value " + expectedUser
                 + ", but was " + actualUser);
-    }
-
-    @Test
-    public void register_validUser_sizeIncreased_ok() {
-        int expectedSize = Storage.people.size() + 1;
-        registrationService.register(defaultUser);
         int actualSize = Storage.people.size();
         assertEquals(expectedSize, Storage.people.size(), "Test failed!"
                 + " Size of storage after adding valid user should be "
                 + expectedSize + ", but was "
                 + actualSize
         );
+        assertTrue(Storage.people.contains(expectedUser),
+                "Test failed! Expected storage people contains "
+                        + expectedUser + " = true, but was false");
     }
 
     @Test
