@@ -30,11 +30,6 @@ public class RegistrationServiceImplTest {
         defaultTestUser.setPassword(DEFAULT_USER_PASSWORD);
     }
 
-    @AfterEach
-    public void cleanUpStorage() {
-        Storage.people.remove(defaultTestUser);
-    }
-
     @Test
     public void register_correctUser_ok() {
         User actualUser = service.register(defaultTestUser);
@@ -107,4 +102,10 @@ public class RegistrationServiceImplTest {
         Storage.people.add(defaultTestUser);
         assertThrows(RuntimeException.class, () -> service.register(defaultTestUser));
     }
+
+    @AfterEach
+    public void cleanUpStorage() {
+        Storage.people.remove(defaultTestUser);
+    }
+
 }
