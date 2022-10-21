@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService service;
+    private static RegistrationService registrationService;
     private static final String DEFAULT_LOGIN = "DEFAULT_LOGIN";
     private static final String DUPLICATE_LOGIN = "DUPLICATE_LOGIN";
     private static final int MIN_VALID_AGE = 18;
@@ -26,7 +26,7 @@ class RegistrationServiceImplTest {
 
     @BeforeAll
     public static void beforeAll() {
-        service = new RegistrationServiceImpl();
+        registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_validUser_ok() {
-        service.register(defaultUser);
+        registrationService.register(defaultUser);
         assertTrue(Storage.people.contains(defaultUser),
                 "Test failed! Expected storage people contains "
                 + defaultUser + " = true, but was false");
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     @Test
     public void register_validUser_returnedEqualUser_ok() {
         User expectedUser = defaultUser;
-        User actualUser = service.register(defaultUser);
+        User actualUser = registrationService.register(defaultUser);
         assertEquals(expectedUser, actualUser, "Test failed!"
                 + "Expected return value " + expectedUser
                 + ", but was " + actualUser);
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     @Test
     public void register_validUser_sizeIncreased_ok() {
         int expectedSize = Storage.people.size() + 1;
-        service.register(defaultUser);
+        registrationService.register(defaultUser);
         int actualSize = Storage.people.size();
         assertEquals(expectedSize, Storage.people.size(), "Test failed!"
                 + " Size of storage after adding valid user should be "
@@ -74,38 +74,38 @@ class RegistrationServiceImplTest {
     @Test
     public void register_loginIsNull_notOk() {
         defaultUser.setLogin(null);
-        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
+        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_duplicateLogin_notOk() {
         defaultUser.setLogin(DUPLICATE_LOGIN);
-        service.register(defaultUser);
-        assertThrows(UserExistsException.class, () -> service.register(defaultUser));
+        registrationService.register(defaultUser);
+        assertThrows(UserExistsException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_passwordIsNull_notOk() {
         defaultUser.setPassword(null);
-        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
+        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_passwordLessThan6CharsLong_notOk() {
         defaultUser.setPassword(INVALID_PASSWORD);
-        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
+        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_ageLessThan18_notOk() {
         defaultUser.setAge(MAX_INVALID_AGE);
-        assertThrows(UserValidationException.class, () -> service.register(defaultUser));
+        assertThrows(UserValidationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_ageIsGreaterThan18_ok() {
         defaultUser.setAge(VALID_AGE);
-        service.register(defaultUser);
+        registrationService.register(defaultUser);
         assertTrue(Storage.people.contains(defaultUser),
                 "Test failed! Expected storage people contains "
                         + defaultUser + " = true, but was false");
