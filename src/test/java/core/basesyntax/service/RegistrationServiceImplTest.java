@@ -107,5 +107,4 @@ public class RegistrationServiceImplTest {
     public void cleanUpStorage() {
         Storage.people.remove(defaultTestUser);
     }
-
 }
