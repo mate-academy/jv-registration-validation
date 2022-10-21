@@ -1,5 +1,7 @@
 package core.basesyntax.service;
 
+import java.util.Objects;
+
 public class UserIntegerFieldValidator implements FieldValidator<Integer> {
     private static final int MINIMUM_AGE_REQUIRED = 18;
     private static final String TOO_YOUNG_MESSAGE = "User age should be greater then "
@@ -7,7 +9,7 @@ public class UserIntegerFieldValidator implements FieldValidator<Integer> {
 
     @Override
     public void validate(Integer field, UserFields fieldName) {
-        if (fieldIsNull(field)) {
+        if (!Objects.nonNull(field)) {
             throw new RuntimeException(fieldName + IS_NULL_MESSAGE);
         }
         if (fieldName.equals(UserFields.AGE)) {

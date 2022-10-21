@@ -18,11 +18,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException(USER_IS_NULL_MESSAGE);
         }
         String login = user.getLogin();
-        String password = user.getPassword();
-        Integer age = user.getAge();
         stringFieldValidator.validate(login, UserFields.LOGIN);
-        stringFieldValidator.validate(password, UserFields.PASSWORD);
-        integerFieldValidator.validate(age, UserFields.AGE);
+        stringFieldValidator.validate(user.getPassword(), UserFields.PASSWORD);
+        integerFieldValidator.validate(user.getAge(), UserFields.AGE);
         if (isRegistered(login)) {
             throw new RuntimeException(IS_REGISTERED_MESSAGE);
         }
@@ -30,7 +28,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean isRegistered(String login) {
-        User check = storageDao.get(login);
-        return check != null;
+        return storageDao.get(login) != null;
     }
 }

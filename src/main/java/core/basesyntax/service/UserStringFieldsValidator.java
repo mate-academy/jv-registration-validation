@@ -1,5 +1,7 @@
 package core.basesyntax.service;
 
+import java.util.Objects;
+
 public class UserStringFieldsValidator implements FieldValidator<String> {
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
     private static final String IS_BLANK_MESSAGE = " can't be blank";
@@ -11,7 +13,7 @@ public class UserStringFieldsValidator implements FieldValidator<String> {
 
     @Override
     public void validate(String field, UserFields fieldName) {
-        if (fieldIsNull(field)) {
+        if (!Objects.nonNull(field)) {
             throw new RuntimeException(fieldName + IS_NULL_MESSAGE);
         }
         if (field.isBlank()) {

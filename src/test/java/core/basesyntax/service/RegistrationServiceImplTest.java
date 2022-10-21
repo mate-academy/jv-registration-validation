@@ -36,7 +36,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_correctUser_Ok() {
+    public void register_correctUser_ok() {
         User actualUser = service.register(defaultTestUser);
         assertEquals(defaultTestUser, actualUser);
     }
@@ -104,7 +104,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_userIsAlreadyRegistered_notOk() {
-        User registeredUser = service.register(defaultTestUser);
-        assertThrows(RuntimeException.class, () -> service.register(registeredUser));
+        Storage.people.add(defaultTestUser);
+        assertThrows(RuntimeException.class, () -> service.register(defaultTestUser));
     }
 }
