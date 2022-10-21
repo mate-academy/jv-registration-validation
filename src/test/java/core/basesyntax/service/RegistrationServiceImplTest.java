@@ -7,122 +7,107 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User validUser = new User();
-    private static final Integer validAge = 18;
-    private static final Integer invalidAge = 17;
-    private static final String validLogin = "B";
-    private static final String invalidLogin = "";
-    private static final String validPassword = "password";
-    private static final String invalidPassword = "passw";
-    private static final RegistrationService registrationService = new RegistrationServiceImpl();
-    private static final StorageDao storageDao = new StorageDaoImpl();
+    private static final User VALID_USER = new User();
+    private static final Integer VALID_AGE = 18;
+    private static final Integer INVALID_AGE = 17;
+    private static final String VALID_LOGIN = "B";
+    private static final String INVALID_LOGIN = "";
+    private static final String VALID_PASSWORD = "password";
+    private static final String INVALID_PASSWORD = "passw";
+    private static final RegistrationService REGISTRATION_SERVICE = new RegistrationServiceImpl();
+    private static final StorageDao STORAGE_DAO = new StorageDaoImpl();
 
     @BeforeAll
     static void beforeAll() {
-        validUser.setAge(validAge);
-        validUser.setLogin(validLogin);
-        validUser.setPassword(validPassword);
+        VALID_USER.setAge(VALID_AGE);
+        VALID_USER.setLogin(VALID_LOGIN);
+        VALID_USER.setPassword(VALID_PASSWORD);
     }
 
-    @BeforeEach
-    void setUp() {
+    @AfterEach
+    void tearDown() {
         Storage.people.clear();
     }
 
     @Test
     void register_userIsNull_notOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(null);
-        });
+        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(null));
     }
 
     @Test
     void register_loginIsNull_notOk() {
         User userWithNullLogin = new User();
-        userWithNullLogin.setAge(validAge);
+        userWithNullLogin.setAge(VALID_AGE);
         userWithNullLogin.setLogin(null);
-        userWithNullLogin.setPassword(validPassword);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userWithNullLogin);
-        });
+        userWithNullLogin.setPassword(VALID_PASSWORD);
+        assertThrows(RuntimeException.class,
+                () -> REGISTRATION_SERVICE.register(userWithNullLogin));
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         User userWithNullPassword = new User();
-        userWithNullPassword.setAge(validAge);
-        userWithNullPassword.setLogin(validLogin);
+        userWithNullPassword.setAge(VALID_AGE);
+        userWithNullPassword.setLogin(VALID_LOGIN);
         userWithNullPassword.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userWithNullPassword);
-        });
+        assertThrows(RuntimeException.class,
+                () -> REGISTRATION_SERVICE.register(userWithNullPassword));
     }
 
     @Test
     void register_ageIsNull_notOk() {
         User userWithNullAge = new User();
         userWithNullAge.setAge(null);
-        userWithNullAge.setLogin(validLogin);
-        userWithNullAge.setPassword(validPassword);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userWithNullAge);
-        });
+        userWithNullAge.setLogin(VALID_LOGIN);
+        userWithNullAge.setPassword(VALID_PASSWORD);
+        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(userWithNullAge));
     }
 
     @Test
-    void register_validUser_Ok() {
-        String expected = registrationService.register(validUser).getLogin();
-        String actual = storageDao.get(validUser.getLogin()).getLogin();
+    void register_validUser_ok() {
+        String expected = REGISTRATION_SERVICE.register(VALID_USER).getLogin();
+        String actual = STORAGE_DAO.get(VALID_USER.getLogin()).getLogin();
         assertEquals(expected, actual);
     }
 
     @Test
     void register_userWithWrongPassword_notOk() {
         User userWithWrongPassword = new User();
-        userWithWrongPassword.setAge(validAge);
-        userWithWrongPassword.setLogin(validLogin);
-        userWithWrongPassword.setPassword(invalidPassword);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userWithWrongPassword);
-        });
+        userWithWrongPassword.setAge(VALID_AGE);
+        userWithWrongPassword.setLogin(VALID_LOGIN);
+        userWithWrongPassword.setPassword(INVALID_PASSWORD);
+        assertThrows(RuntimeException.class,
+                () -> REGISTRATION_SERVICE.register(userWithWrongPassword));
     }
 
     @Test
     void register_userWithWrongAge_notOk() {
         User userWithWrongAge = new User();
-        userWithWrongAge.setAge(invalidAge);
-        userWithWrongAge.setLogin(validLogin);
-        userWithWrongAge.setPassword(validPassword);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userWithWrongAge);
-        });
+        userWithWrongAge.setAge(INVALID_AGE);
+        userWithWrongAge.setLogin(VALID_LOGIN);
+        userWithWrongAge.setPassword(VALID_PASSWORD);
+        assertThrows(RuntimeException.class,
+                () -> REGISTRATION_SERVICE.register(userWithWrongAge));
     }
 
     @Test
     void register_userWithExistingLogin_notOk() {
-        registrationService.register(validUser);
-        User otherUser = new User();
-        otherUser.setAge(validAge);
-        otherUser.setLogin(validLogin);
-        otherUser.setPassword(validPassword);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(otherUser);
-        });
+        Storage.people.add(VALID_USER);
+        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(VALID_USER));
     }
 
     @Test
     void register_userWithInvalidLogin_notOk() {
         User userWithWrongLogin = new User();
-        userWithWrongLogin.setAge(validAge);
-        userWithWrongLogin.setLogin(invalidLogin);
-        userWithWrongLogin.setPassword(validPassword);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userWithWrongLogin);
-        });
+        userWithWrongLogin.setAge(VALID_AGE);
+        userWithWrongLogin.setLogin(INVALID_LOGIN);
+        userWithWrongLogin.setPassword(VALID_PASSWORD);
+        assertThrows(RuntimeException.class,
+                () -> REGISTRATION_SERVICE.register(userWithWrongLogin));
     }
 }

@@ -8,34 +8,46 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 1;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_USER_AGE = 18;
-    private static final StorageDao storageDao = new StorageDaoImpl();
+    private static final StorageDao STORAGE_DAO = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         if (user == null) {
             throw new RuntimeException("User can't be null");
         }
-        if (user.getLogin() == null) {
+        checkLogin(user.getLogin());
+        checkAge(user.getAge());
+        checkPassword(user.getPassword());
+        return STORAGE_DAO.add(user);
+    }
+
+    private void checkLogin(String login) {
+        if (login == null) {
             throw new RuntimeException("User's login can't be null");
         }
-        if (user.getAge() == null) {
-            throw new RuntimeException("User's age can't be null");
-        }
-        if (user.getPassword() == null) {
-            throw new RuntimeException("User's password can't be null");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("User's password must be 6 characters or more");
-        }
-        if (user.getAge() < MIN_USER_AGE) {
-            throw new RuntimeException("User's age must be 18 or more");
-        }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+        if (login.length() < MIN_LOGIN_LENGTH) {
             throw new RuntimeException("User's login must be 1 character's or more");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (STORAGE_DAO.get(login) != null) {
             throw new RuntimeException("This User already exists in Storage");
         }
-        return storageDao.add(user);
+    }
+
+    private void checkAge(Integer age) {
+        if (age == null) {
+            throw new RuntimeException("User's age can't be null");
+        }
+        if (age < MIN_USER_AGE) {
+            throw new RuntimeException("User's age must be 18 or more");
+        }
+    }
+
+    private void checkPassword(String password) {
+        if (password == null) {
+            throw new RuntimeException("User's password can't be null");
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("User's password must be 6 characters or more");
+        }
     }
 }
