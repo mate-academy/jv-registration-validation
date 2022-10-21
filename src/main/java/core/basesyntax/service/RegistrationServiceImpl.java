@@ -9,6 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        storageDao.add(user);
+        return user;
     }
 }
