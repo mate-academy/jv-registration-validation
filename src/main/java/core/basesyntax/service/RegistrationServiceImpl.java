@@ -5,51 +5,78 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final int LOG_MIN_LEN = 0;
+    public static final int LOG_MIN_LEN = 1;
     public static final int PASS_MIN_LEN = 6;
     public static final int AGE_MIN = 18;
-    public static final String USER_ALREADY_EXISTS =
-            "the user already exists in the storage";
-    public static final String USER_LOGIN_INVALID =
-            "the user has invalid login";
-    public static final String USER_PASS_INVALID =
-            "the user has invalid password";
-    public static final String USER_AGE_INVALID =
-            "the user has invalid age";
     public static final String THE_USER_IS_NULL =
             "the user is null";
+    public static final String USER_HAS_NO_LOGIN =
+            "the user has no login";
+    public static final String USER_LOGIN_IS_SHORTER_THEN_1 =
+            "the user has short login";
+    public static final String USER_PASS_IS_NULL =
+            "the user password is null";
+    public static final String USER_PASS_LENGTH_IS_SHORT =
+            "the user password length is short";
+    public static final String USER_AGE_IS_NULL =
+            "the user age is null";
+    public static final String USER_AGE_IS_LESS_THEN_18 =
+            "the user age is less then 18";
+    public static final String USER_ALREADY_EXISTS =
+            "the user already exists in the storage";
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RuntimeException(THE_USER_IS_NULL);
-        }
-        if (!isLoginValid(user.getLogin())) {
-            throw new RuntimeException(USER_LOGIN_INVALID);
-        }
-        if (!isPassValid(user.getPassword())) {
-            throw new RuntimeException(USER_PASS_INVALID);
-        }
-        if (!isAgeValid(user.getAge())) {
-            throw new RuntimeException(USER_AGE_INVALID);
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException(USER_ALREADY_EXISTS);
-        }
+        checkUserNotNull(user);
+        checkLogin(user.getLogin());
+        checkPass(user.getPassword());
+        checkAge(user.getAge());
+        checkUserAlreadyExists(user);
         storageDao.add(user);
         return user;
     }
 
-    private boolean isLoginValid(String login) {
-        return login != null && login.length() != LOG_MIN_LEN;
+    private void checkUserNotNull(User user) {
+        if (user == null) {
+            showException(THE_USER_IS_NULL);
+        }
     }
 
-    private boolean isPassValid(String pass) {
-        return pass != null && pass.length() >= PASS_MIN_LEN;
+    private void checkLogin(String login) {
+        if (login == null) {
+            showException(USER_HAS_NO_LOGIN);
+        }
+        if (login.length() < LOG_MIN_LEN) {
+            showException(USER_LOGIN_IS_SHORTER_THEN_1);
+        }
     }
 
-    private boolean isAgeValid(Integer age) {
-        return age != null && age >= AGE_MIN;
+    private void checkPass(String pass) {
+        if (pass == null) {
+            showException(USER_PASS_IS_NULL);
+        }
+        if (pass.length() < PASS_MIN_LEN) {
+            showException(USER_PASS_LENGTH_IS_SHORT);
+        }
+    }
+
+    private void checkAge(Integer age) {
+        if (age == null) {
+            showException(USER_AGE_IS_NULL);
+        }
+        if (age < AGE_MIN) {
+            showException(USER_AGE_IS_LESS_THEN_18);
+        }
+    }
+
+    private void checkUserAlreadyExists(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            showException(USER_ALREADY_EXISTS);
+        }
+    }
+
+    private void showException(String errorMessage) {
+        throw new RuntimeException(errorMessage);
     }
 }
