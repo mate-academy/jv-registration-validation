@@ -13,6 +13,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    public static final String NAME1 = "oleg";
+    public static final String NAME2 = "stepan";
+    public static final String NAME3 = "oleksiy";
+    public static final String PASS1_VALID = "123456";
+    public static final String PASS2_VALID = "6543210";
+    public static final String PASS3_VALID = "123456123";
+    public static final int AGE1_VALID = 28;
+    public static final int AGE2_VALID = 22;
+    public static final int AGE3_VALID = 40;
     private static RegistrationService service;
     private User testUser;
 
@@ -26,22 +35,22 @@ class RegistrationServiceImplTest {
         final StorageDao storageDao = new StorageDaoImpl();
 
         User validUser1 = new User();
-        validUser1.setLogin("oleg");
-        validUser1.setPassword("123456");
-        validUser1.setAge(28);
+        validUser1.setLogin(NAME1);
+        validUser1.setPassword(PASS1_VALID);
+        validUser1.setAge(AGE1_VALID);
 
         User validUser2 = new User();
-        validUser2.setLogin("stepan");
-        validUser2.setPassword("6543210");
-        validUser2.setAge(18);
+        validUser2.setLogin(NAME2);
+        validUser2.setPassword(PASS2_VALID);
+        validUser2.setAge(AGE2_VALID);
 
         storageDao.add(validUser1);
         storageDao.add(validUser2);
 
         testUser = new User();
-        testUser.setLogin("oleksiy");
-        testUser.setPassword("123456123");
-        testUser.setAge(40);
+        testUser.setLogin(NAME3);
+        testUser.setPassword(PASS3_VALID);
+        testUser.setAge(AGE3_VALID);
     }
 
     @AfterEach

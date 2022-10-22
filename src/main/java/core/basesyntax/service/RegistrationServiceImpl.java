@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().length() == 0) {
             throw new RuntimeException(USER_HAS_NO_LOGIN);
         }
         if (storageDao.get(user.getLogin()) != null) {
