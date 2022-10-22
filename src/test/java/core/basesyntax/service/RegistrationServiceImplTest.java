@@ -1,14 +1,16 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private static RegistrationService service;
@@ -21,7 +23,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        StorageDao storageDao = new StorageDaoImpl();
+        final StorageDao storageDao = new StorageDaoImpl();
 
         User validUser1 = new User();
         validUser1.setLogin("oleg");
@@ -42,6 +44,11 @@ class RegistrationServiceImplTest {
         testUser.setAge(40);
     }
 
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
+    }
+
     @Test
     void register_validUser_Ok() {
         User actual = service.register(testUser);
@@ -57,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAlreadyExists_NotOk() {
+    void register_userLoginAlreadyExists_NotOk() {
         testUser.setLogin("oleg");
         assertThrows(RuntimeException.class, () -> {
             service.register(testUser);
