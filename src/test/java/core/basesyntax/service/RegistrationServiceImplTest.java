@@ -43,24 +43,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginNull_Ok() {
-        testUser.setLogin(null);
+    void register_validUser_Ok() {
         User actual = service.register(testUser);
         assertEquals(testUser, actual);
     }
 
     @Test
-    void register_userLoginNullButSuchUserExists_NotOk() {
+    void register_userLoginNull_NotOk() {
         testUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             service.register(testUser);
         });
-    }
-
-    @Test
-    void register_validUser_Ok() {
-        User actual = service.register(testUser);
-        assertEquals(testUser, actual);
     }
 
     @Test
