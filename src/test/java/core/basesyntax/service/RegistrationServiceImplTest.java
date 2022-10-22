@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAge_Ok() {
+    void userAge_ok() {
         user.setAge(18);
         registrationService.register(user);
         Long actual = user.getId();
@@ -97,5 +97,13 @@ class RegistrationServiceImplTest {
         Long actual = user.getId();
         Long expected = 1L;
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void user_same_notOk() {
+        user.setLogin("Login");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
