@@ -11,13 +11,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getPassword() == null) {
-            throw new RuntimeException("We can't have null values");
+        if (user.getLogin() == null) {
+            throw new RuntimeException("We can't have null login");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with this name already exists");
         }
-        if (user.getAge() < MIN_AGE_FOR_REGISTRATION || user.getAge() == null) {
+        if (user.getAge() < MIN_AGE_FOR_REGISTRATION) {
             throw new RuntimeException("User under minimum age");
         }
         if (user.getPassword().length() < MIN_LIGHT_PASSWORD) {
