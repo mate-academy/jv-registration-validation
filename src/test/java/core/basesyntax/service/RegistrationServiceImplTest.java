@@ -17,7 +17,7 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_PASSWORD = "test_Passwrd1";
     private static final int DEFAULT_ACCEPTED_AGE = 18;
     private static final int MAX_AGE = 150;
-    private static final int NEGATIVE_AGE = -20;
+    private static final int UNACCEPTED_AGE = 17;
     private static final String REPEATED_SPACE_LOGIN = "Test  User";
     private static final String SHORT_LOGIN = "A";
     private static final String SHORT_PASSWORD = "test1";
@@ -101,8 +101,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_negativeAge_NotOk() {
-        user.setAge(NEGATIVE_AGE);
+    void register_unacceptedAge_NotOk() {
+        user.setAge(UNACCEPTED_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
