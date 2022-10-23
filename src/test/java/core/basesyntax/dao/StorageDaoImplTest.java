@@ -1,15 +1,17 @@
 package core.basesyntax.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class StorageDaoImplTest {
     private static StorageDao storageDao;
-    User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -43,11 +45,11 @@ class StorageDaoImplTest {
             temp.setLogin("" + i);
             storageDao.add(temp);
         }
-        for (int i = 0 ; i < 38; i++) {
+        for (int i = 0; i < 38; i++) {
             User temp = new User();
             temp.setLogin("" + i);
-            assertEquals(storageDao.get("" + i), temp
-                    , "User " + i + "must be equal " + temp);
+            assertEquals(storageDao.get("" + i), temp,
+                    "User " + i + "must be equal " + temp);
         }
     }
 

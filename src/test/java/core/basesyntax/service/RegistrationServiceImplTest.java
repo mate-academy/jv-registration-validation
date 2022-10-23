@@ -1,11 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final int MIN_PASSWORD_LENGTH = 6;
@@ -15,11 +16,6 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
-        User user = new User();
-        user.setLogin("Jack");
-        user.setPassword("qwertyu");
-        user.setAge(21);
-        service.register(user);
     }
 
     @BeforeEach
@@ -71,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registeredUser() {
+    void registeredSameUser_notOk() {
         user.setLogin("Jack");
         user.setPassword("qwertyu");
         user.setAge(21);

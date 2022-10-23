@@ -4,8 +4,6 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
-import java.util.Objects;
-
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
@@ -28,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User is too young.");
         }
-        if (user.equals(storageDao.get(user.getLogin()))) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This user is already registered.");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
@@ -36,5 +34,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         storageDao.add(user);
         return user;
-        }
+    }
 }
