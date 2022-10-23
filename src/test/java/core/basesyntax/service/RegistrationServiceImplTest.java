@@ -1,10 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -28,7 +32,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void Register_age_less_than_18_notOk() {
+    void register_age_less_than_18_notOk() {
         alice.setAge(15);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(alice);
@@ -41,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void Register_password_least_6_characters_notOk() {
+    void register_password_least_6_characters_notOk() {
         bob.setPassword("abcda");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
@@ -49,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void Register_nullAge_notOk() {
+    void register_nullAge_notOk() {
         bob.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
@@ -57,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void Register_the_same_login_notOk() {
+    void register_the_same_login_notOk() {
         registrationService.register(alice);
         bob.setLogin("Alice");
         assertThrows(RuntimeException.class, () -> {
@@ -66,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void Register_user_name_Ok() {
+    void register_user_name_Ok() {
         User actual1 = registrationService.register(alice);
         assertTrue(Storage.people.contains(actual1));
         User actual2 = registrationService.register(bob);
@@ -74,7 +78,8 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void Register_clean_storage() {
+    void register_clean_storage() {
         Storage.people.clear();
     }
 }
+
