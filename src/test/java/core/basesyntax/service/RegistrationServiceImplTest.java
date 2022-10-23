@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -71,7 +71,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_emtyUserName_notOk() {
+    void register_emtyUserLogin_notOk() {
         user.setLogin(EMPTY_STRING);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -83,19 +83,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_postfixSpaceUserName_notOk() {
+    void register_postfixSpaceUserLogin_notOk() {
         user.setLogin(SPACE + DEFAULT_LOGIN);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_repeatedSpacesUserName_notOk() {
+    void register_repeatedSpacesUserLogin_notOk() {
         user.setLogin(REPEATED_SPACE_LOGIN);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_minLengthUserName_notOk() {
+    void register_minLengthUserLogin_notOk() {
         user.setLogin(SHORT_LOGIN);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
