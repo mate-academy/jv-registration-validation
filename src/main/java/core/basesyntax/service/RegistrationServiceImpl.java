@@ -11,11 +11,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkForNull(user);
+        checkForAge(user);
+        passwordCheck(user);
+        reintroductionCheck(user);
+        return storageDao.add(user);
+    }
+
+    private User checkForNull(User user) {
         if (user == null) {
             throw new RuntimeException("User can't be null.");
-        }
-        if (user.getAge() < 0) {
-            throw new RuntimeException("Not valid age.");
         }
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null");
@@ -23,15 +28,30 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("Password can't be null");
         }
+        return user;
+    }
+
+    private User checkForAge(User user) {
+        if (user.getAge() < 0) {
+            throw new RuntimeException("Not valid age.");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User is too young.");
         }
+        return user;
+    }
+
+    private User reintroductionCheck(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This user is already registered.");
         }
+        return user;
+    }
+
+    private User passwordCheck(User user) {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password is not valid.");
         }
-        return storageDao.add(user);
+        return user;
     }
 }
