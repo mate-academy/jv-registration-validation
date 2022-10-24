@@ -30,49 +30,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AddUserAsNull_NotOk() {
+    void register_addUserAsNull_notOk() {
         user = null;
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "User can't be null");
     }
 
     @Test
-    void register_UserAgeIsNegative_NotOk() {
+    void register_userAgeIsNegative_notOk() {
         user.setAge(-1);
         assertThrows(RuntimeException.class, () ->
                  service.register(user), "Age can't be negative");
     }
 
     @Test
-    void register_UserLoginIsNull_NotOk() {
+    void register_userLoginIsNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "Login can't be null");
     }
 
     @Test
-    void register_UserPasswordIsNull_NotOk() {
+    void register_userPasswordIsNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "Password can't be null");
     }
 
     @Test
-    void register_UserAgeIsTooYoung_NotOk() {
+    void register_userAgeIsTooYoung_notOk() {
         user.setAge(MIN_AGE - 1);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "User is too young: age" + user.getAge());
     }
 
     @Test
-    void register_AddSameUser_notOk() {
+    void register_addSameUser_notOk() {
         Storage.people.add(user);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "We can't register same user");
     }
 
     @Test
-    void register_UserPasswordIsTooShort_NotOk() {
+    void register_userPasswordIsTooShort_notOk() {
         user.setPassword("12345");
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "Password must be at least "
@@ -80,7 +80,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NormalUser_Ok() {
+    void register_normalUser_ok() {
         assertEquals(service.register(user), user,
                     "User " + user + " must be registered");
     }
