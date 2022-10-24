@@ -18,8 +18,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User with this login already exists: " + user.getLogin());
         }
         if (user.getAge() < MIN_AGE_FOR_REGISTRATION) {
-            throw new RuntimeException("User age " + user.getAge() +
-                    " less MIN_AGE_FOR_REGISTRATION: " + MIN_AGE_FOR_REGISTRATION);
+            throw new RuntimeException("User age " + user.getAge()
+                    + " less MIN_AGE_FOR_REGISTRATION: " + MIN_AGE_FOR_REGISTRATION);
         }
         if (user.getPassword().length() < MIN_LIGHT_PASSWORD) {
             throw new RuntimeException("Password must be at least MIN_LIGHT_PASSWORD: "
