@@ -13,15 +13,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    public static final String NAME1 = "oleg";
-    public static final String NAME2 = "stepan";
-    public static final String NAME3 = "oleksiy";
-    public static final String PASS1_VALID = "123456";
-    public static final String PASS2_VALID = "6543210";
-    public static final String PASS3_VALID = "123456123";
-    public static final int AGE1_VALID = 28;
-    public static final int AGE2_VALID = 22;
-    public static final int AGE3_VALID = 40;
+    private static final String OLEG_NAME = "oleg";
+    private static final String STEPAN_NAME = "stepan";
+    private static final String OLEKSIY_NAME = "oleksiy";
+    private static final String PASS_FIVE_SYMBOLS = "12345";
+    private static final String PASS_SIX_SYMBOLS = "123456";
+    private static final String PASS_SEVEN_SYMBOLS = "6543210";
+    private static final String PASS_NINE_SYMBOLS = "123456123";
+    private static final int AGE_SEVENTEEN = 17;
+    private static final int AGE_EIGHTEEN = 18;
+    private static final int AGE_NINETEEN = 19;
+    private static final int AGE_TWENTY_EIGHT = 28;
+    private static final int AGE_FORTY = 40;
     private static RegistrationService service;
     private User testUser;
 
@@ -35,116 +38,102 @@ class RegistrationServiceImplTest {
         final StorageDao storageDao = new StorageDaoImpl();
 
         User validUser1 = new User();
-        validUser1.setLogin(NAME1);
-        validUser1.setPassword(PASS1_VALID);
-        validUser1.setAge(AGE1_VALID);
+        validUser1.setLogin(OLEG_NAME);
+        validUser1.setPassword(PASS_SIX_SYMBOLS);
+        validUser1.setAge(AGE_TWENTY_EIGHT);
 
         User validUser2 = new User();
-        validUser2.setLogin(NAME2);
-        validUser2.setPassword(PASS2_VALID);
-        validUser2.setAge(AGE2_VALID);
+        validUser2.setLogin(STEPAN_NAME);
+        validUser2.setPassword(PASS_SEVEN_SYMBOLS);
+        validUser2.setAge(AGE_NINETEEN);
 
         storageDao.add(validUser1);
         storageDao.add(validUser2);
 
         testUser = new User();
-        testUser.setLogin(NAME3);
-        testUser.setPassword(PASS3_VALID);
-        testUser.setAge(AGE3_VALID);
+        testUser.setLogin(OLEKSIY_NAME);
+        testUser.setPassword(PASS_NINE_SYMBOLS);
+        testUser.setAge(AGE_FORTY);
+    }
+
+    @Test
+    void register_userValid_ok() {
+        User actual = service.register(testUser);
+        assertEquals(testUser, actual);
+    }
+
+    @Test
+    void register_userNull_notOk() {
+        testUser = null;
+        assertThrows(RuntimeException.class, () -> service.register(testUser));
+    }
+
+    @Test
+    void register_loginNull_notOk() {
+        testUser.setLogin(null);
+        assertThrows(RuntimeException.class, () -> service.register(testUser));
+    }
+
+    @Test
+    void register_loginAlreadyExists_notOk() {
+        testUser.setLogin(OLEG_NAME);
+        assertThrows(RuntimeException.class, () -> service.register(testUser));
+    }
+
+    @Test
+    void register_passIsNull_notOk() {
+        testUser.setPassword(null);
+        assertThrows(RuntimeException.class, () -> service.register(testUser));
+    }
+
+    @Test
+    void register_passShorterThenMin_notOk() {
+        testUser.setPassword(PASS_FIVE_SYMBOLS);
+        assertThrows(RuntimeException.class, () -> service.register(testUser));
+    }
+
+    @Test
+    void register_minValidPassLength_ok() {
+        testUser.setPassword(PASS_SIX_SYMBOLS);
+        User actual = service.register(testUser);
+        assertEquals(testUser, actual);
+    }
+
+    @Test
+    void register_passLongerMoreThenMin_ok() {
+        testUser.setPassword(PASS_SEVEN_SYMBOLS);
+        User actual = service.register(testUser);
+        assertEquals(testUser, actual);
+    }
+
+    @Test
+    void register_ageIsNull_notOk() {
+        testUser.setAge(null);
+        assertThrows(RuntimeException.class, () -> service.register(testUser));
+    }
+
+    @Test
+    void register_ageLessThenMin_notOk() {
+        testUser.setAge(AGE_SEVENTEEN);
+        assertThrows(RuntimeException.class, () -> service.register(testUser));
+    }
+
+    @Test
+    void register_minValidAge_ok() {
+        testUser.setAge(AGE_EIGHTEEN);
+        User actual = service.register(testUser);
+        assertEquals(testUser, actual);
+    }
+
+    @Test
+    void register_ageMoreThenMin_ok() {
+        testUser.setAge(AGE_NINETEEN);
+        User actual = service.register(testUser);
+        assertEquals(testUser, actual);
     }
 
     @AfterEach
     void afterEach() {
         Storage.people.clear();
-    }
-
-    @Test
-    void register_validUser_Ok() {
-        User actual = service.register(testUser);
-        assertEquals(testUser, actual);
-    }
-
-    @Test
-    void register_nullUser_NotOk() {
-        testUser = null;
-        assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
-        });
-    }
-
-    @Test
-    void register_userLoginNull_NotOk() {
-        testUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
-        });
-    }
-
-    @Test
-    void register_userLoginAlreadyExists_NotOk() {
-        testUser.setLogin("oleg");
-        assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
-        });
-    }
-
-    @Test
-    void register_userPassIsNull_NotOk() {
-        testUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
-        });
-    }
-
-    @Test
-    void register_userPassShorterThen_6_NotOk() {
-        testUser.setPassword("123");
-        assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
-        });
-    }
-
-    @Test
-    void register_userPassEquals_6_Ok() {
-        testUser.setPassword("123456");
-        User actual = service.register(testUser);
-        assertEquals(testUser, actual);
-    }
-
-    @Test
-    void register_userPassMoreThen_6_Ok() {
-        testUser.setPassword("1234567");
-        User actual = service.register(testUser);
-        assertEquals(testUser, actual);
-    }
-
-    @Test
-    void register_userAgeIsNull_NotOk() {
-        testUser.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
-        });
-    }
-
-    @Test
-    void register_userAgeLessThen_18_NotOk() {
-        testUser.setAge(16);
-        assertThrows(RuntimeException.class, () -> {
-            service.register(testUser);
-        });
-    }
-
-    @Test
-    void register_userAgeEquals_18_Ok() {
-        testUser.setAge(18);
-        User actual = service.register(testUser);
-        assertEquals(testUser, actual);
-    }
-
-    @Test
-    void register_userAgeMoreThen_18_Ok() {
-        testUser.setAge(31);
-        User actual = service.register(testUser);
-        assertEquals(testUser, actual);
     }
 }

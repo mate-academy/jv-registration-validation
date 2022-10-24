@@ -5,24 +5,24 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final int LOG_MIN_LEN = 1;
-    public static final int PASS_MIN_LEN = 6;
-    public static final int AGE_MIN = 18;
-    public static final String THE_USER_IS_NULL =
-            "the user is null";
-    public static final String USER_HAS_NO_LOGIN =
+    private static final int LOG_MIN_LENGTH = 1;
+    private static final int PASS_MIN_LENGTH = 6;
+    private static final int AGE_MIN = 18;
+    private static final String USER_IS_NULL_MESSAGE =
+            "the instance of User class is null";
+    private static final String USER_HAS_NO_LOGIN_MESSAGE =
             "the user has no login";
-    public static final String USER_LOGIN_IS_SHORTER_THEN_1 =
+    private static final String LOGIN_IS_SHORTER_THEN_1_MESSAGE =
             "the user has short login";
-    public static final String USER_PASS_IS_NULL =
+    private static final String PASS_IS_NULL_MESSAGE =
             "the user password is null";
-    public static final String USER_PASS_LENGTH_IS_SHORT =
+    private static final String PASS_LENGTH_IS_SHORT_MESSAGE =
             "the user password length is short";
-    public static final String USER_AGE_IS_NULL =
+    private static final String AGE_IS_NULL_MESSAGE =
             "the user age is null";
-    public static final String USER_AGE_IS_LESS_THEN_18 =
+    private static final String AGE_IS_LESS_THEN_18_MESSAGE =
             "the user age is less then 18";
-    public static final String USER_ALREADY_EXISTS =
+    private static final String USER_ALREADY_EXISTS_MESSAGE =
             "the user already exists in the storage";
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -39,40 +39,40 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUserNotNull(User user) {
         if (user == null) {
-            showException(THE_USER_IS_NULL);
+            showException(USER_IS_NULL_MESSAGE);
         }
     }
 
     private void checkLogin(String login) {
         if (login == null) {
-            showException(USER_HAS_NO_LOGIN);
+            showException(USER_HAS_NO_LOGIN_MESSAGE);
         }
-        if (login.length() < LOG_MIN_LEN) {
-            showException(USER_LOGIN_IS_SHORTER_THEN_1);
+        if (login.length() < LOG_MIN_LENGTH) {
+            showException(LOGIN_IS_SHORTER_THEN_1_MESSAGE);
         }
     }
 
     private void checkPass(String pass) {
         if (pass == null) {
-            showException(USER_PASS_IS_NULL);
+            showException(PASS_IS_NULL_MESSAGE);
         }
-        if (pass.length() < PASS_MIN_LEN) {
-            showException(USER_PASS_LENGTH_IS_SHORT);
+        if (pass.length() < PASS_MIN_LENGTH) {
+            showException(PASS_LENGTH_IS_SHORT_MESSAGE);
         }
     }
 
     private void checkAge(Integer age) {
         if (age == null) {
-            showException(USER_AGE_IS_NULL);
+            showException(AGE_IS_NULL_MESSAGE);
         }
         if (age < AGE_MIN) {
-            showException(USER_AGE_IS_LESS_THEN_18);
+            showException(AGE_IS_LESS_THEN_18_MESSAGE);
         }
     }
 
     private void checkUserAlreadyExists(User user) {
         if (storageDao.get(user.getLogin()) != null) {
-            showException(USER_ALREADY_EXISTS);
+            showException(USER_ALREADY_EXISTS_MESSAGE);
         }
     }
 
