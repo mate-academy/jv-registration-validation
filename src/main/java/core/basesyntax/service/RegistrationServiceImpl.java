@@ -15,13 +15,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("We can't have null login");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with this name already exists");
+            throw new RuntimeException("User with this login already exists: " + user.getLogin());
         }
         if (user.getAge() < MIN_AGE_FOR_REGISTRATION) {
-            throw new RuntimeException("User under minimum age");
+            throw new RuntimeException("User age " + user.getAge() +
+                    " less MIN_AGE_FOR_REGISTRATION: " + MIN_AGE_FOR_REGISTRATION);
         }
         if (user.getPassword().length() < MIN_LIGHT_PASSWORD) {
-            throw new RuntimeException("Password must be at least 6 characters");
+            throw new RuntimeException("Password must be at least MIN_LIGHT_PASSWORD: "
+                    + MIN_LIGHT_PASSWORD + " characters");
         }
         return storageDao.add(user);
     }
