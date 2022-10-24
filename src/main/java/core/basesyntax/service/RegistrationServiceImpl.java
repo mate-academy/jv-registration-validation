@@ -22,12 +22,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("User Can't be null!");
         }
-    }
-
-    public void validLogin(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User already exist!");
         }
+    }
+
+    public void validLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null!");
         }
