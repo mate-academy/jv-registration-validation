@@ -42,7 +42,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsNullExceptionMessage() {
+    void register_userIsNullExceptionMessage_notOk() {
         try {
             user = null;
             registrationService.register(user);
@@ -59,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginIsNullExceptionMessage() {
+    void register_userLoginIsNullExceptionMessage_notOk() {
         try {
             user.setLogin(null);
             registrationService.register(user);
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsNullExceptionMessage() {
+    void register_userPasswordIsNullExceptionMessage_notOk() {
         try {
             user.setPassword(null);
             registrationService.register(user);
@@ -93,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsNullExceptionMessage() {
+    void register_userAgeIsNullExceptionMessage_notOk() {
         try {
             user.setAge(null);
             registrationService.register(user);
@@ -110,7 +110,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userShortPasswordExceptionMessage() {
+    void register_userShortPasswordExceptionMessage_notOk() {
         try {
             user.setPassword(SHORT_PASSWORD);
             registrationService.register(user);
@@ -122,7 +122,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserValidPassword() {
+    void register_UserValidPassword_ok() {
         assertDoesNotThrow(() -> registrationService.register(user));
         assertTrue(Storage.people.contains(user), "Storage should contains registered user");
     }
@@ -134,7 +134,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeBelowThresholdExceptionMessage() {
+    void register_userAgeBelowThresholdExceptionMessage_notOk() {
         try {
             user.setAge(BELOW_ADULT_AGE);
             registrationService.register(user);
@@ -146,14 +146,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeAboveThreshold() {
+    void register_userAgeAboveThreshold_ok() {
         user.setAge(ABOVE_ADULT_AGE);
         assertDoesNotThrow(() -> registrationService.register(user));
         assertTrue(Storage.people.contains(user), "Storage should contains registered user");
     }
 
     @Test
-    void register_userExactAdultAge() {
+    void register_userExactAdultAge_ok() {
         user.setAge(ADULT_AGE);
         assertDoesNotThrow(() -> registrationService.register(user));
         assertTrue(Storage.people.contains(user), "Storage should contains registered user");
@@ -166,7 +166,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_sameUserExceptionMessage() {
+    void register_sameUserExceptionMessage_notOk() {
         try {
             Storage.people.add(user);
             registrationService.register(user);
