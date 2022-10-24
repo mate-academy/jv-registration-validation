@@ -1,13 +1,13 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -27,7 +27,6 @@ class RegistrationServiceImplTest {
         user.setAge(20);
     }
 
-
     @Test
     void register_noExistUserLogin_Ok() {
         assertEquals(user, registrationService.register(user));
@@ -36,9 +35,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_containsUserLogin_NotOk() {
         Storage.people.add(user);
-        try{
+        try {
             registrationService.register(user);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return;
         }
         fail("User already exist!");
@@ -47,9 +46,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUserLogin_NotOk() {
         user.setLogin(null);
-        try{
+        try {
             registrationService.register(user);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return;
         }
         fail("Login can't be null!");
@@ -58,9 +57,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_NotOk() {
         user = null;
-        try{
+        try {
             registrationService.register(user);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return;
         }
         fail("User can't be null!");
@@ -69,9 +68,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_smallPassword_NotOk() {
         user.setPassword("123");
-        try{
+        try {
             registrationService.register(user);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return;
         }
         fail("Password less than 6 symbols!");
@@ -80,9 +79,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_NotOk() {
         user.setPassword(null);
-        try{
+        try {
             registrationService.register(user);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return;
         }
         fail("Password can't be null!");
@@ -91,9 +90,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_lowAge_NotOk() {
         user.setAge(15);
-        try{
+        try {
             registrationService.register(user);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return;
         }
         fail("Age less than 18 years old!");
