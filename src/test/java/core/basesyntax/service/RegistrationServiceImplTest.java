@@ -16,15 +16,12 @@ class RegistrationServiceImplTest {
     private static final String OLEG_NAME = "oleg";
     private static final String STEPAN_NAME = "stepan";
     private static final String OLEKSIY_NAME = "oleksiy";
-    private static final String PASS_FIVE_SYMBOLS = "12345";
-    private static final String PASS_SIX_SYMBOLS = "123456";
-    private static final String PASS_SEVEN_SYMBOLS = "6543210";
-    private static final String PASS_NINE_SYMBOLS = "123456123";
-    private static final int AGE_SEVENTEEN = 17;
-    private static final int AGE_EIGHTEEN = 18;
-    private static final int AGE_NINETEEN = 19;
-    private static final int AGE_TWENTY_EIGHT = 28;
-    private static final int AGE_FORTY = 40;
+    private static final String PASS_LESS_THEN_MIN_LENGTH = "12345";
+    private static final String PASS_MIN_LENGTH = "123456";
+    private static final String PASS_MORE_THEN_MIN_LENGTH = "6543210";
+    private static final int AGE_LESS_THEN_MIN = 17;
+    private static final int AGE_MIN = 18;
+    private static final int AGE_MORE_THEN_MIN = 19;
     private static RegistrationService service;
     private User testUser;
 
@@ -39,21 +36,21 @@ class RegistrationServiceImplTest {
 
         User validUser1 = new User();
         validUser1.setLogin(OLEG_NAME);
-        validUser1.setPassword(PASS_SIX_SYMBOLS);
-        validUser1.setAge(AGE_TWENTY_EIGHT);
+        validUser1.setPassword(PASS_MIN_LENGTH);
+        validUser1.setAge(AGE_MORE_THEN_MIN);
 
         User validUser2 = new User();
         validUser2.setLogin(STEPAN_NAME);
-        validUser2.setPassword(PASS_SEVEN_SYMBOLS);
-        validUser2.setAge(AGE_NINETEEN);
+        validUser2.setPassword(PASS_MORE_THEN_MIN_LENGTH);
+        validUser2.setAge(AGE_MIN);
 
         storageDao.add(validUser1);
         storageDao.add(validUser2);
 
         testUser = new User();
         testUser.setLogin(OLEKSIY_NAME);
-        testUser.setPassword(PASS_NINE_SYMBOLS);
-        testUser.setAge(AGE_FORTY);
+        testUser.setPassword(PASS_MORE_THEN_MIN_LENGTH);
+        testUser.setAge(AGE_MORE_THEN_MIN);
     }
 
     @Test
@@ -88,20 +85,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passShorterThenMin_notOk() {
-        testUser.setPassword(PASS_FIVE_SYMBOLS);
+        testUser.setPassword(PASS_LESS_THEN_MIN_LENGTH);
         assertThrows(RuntimeException.class, () -> service.register(testUser));
     }
 
     @Test
     void register_minValidPassLength_ok() {
-        testUser.setPassword(PASS_SIX_SYMBOLS);
+        testUser.setPassword(PASS_MIN_LENGTH);
         User actual = service.register(testUser);
         assertEquals(testUser, actual);
     }
 
     @Test
     void register_passLongerMoreThenMin_ok() {
-        testUser.setPassword(PASS_SEVEN_SYMBOLS);
+        testUser.setPassword(PASS_MORE_THEN_MIN_LENGTH);
         User actual = service.register(testUser);
         assertEquals(testUser, actual);
     }
@@ -114,20 +111,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThenMin_notOk() {
-        testUser.setAge(AGE_SEVENTEEN);
+        testUser.setAge(AGE_LESS_THEN_MIN);
         assertThrows(RuntimeException.class, () -> service.register(testUser));
     }
 
     @Test
     void register_minValidAge_ok() {
-        testUser.setAge(AGE_EIGHTEEN);
+        testUser.setAge(AGE_MIN);
         User actual = service.register(testUser);
         assertEquals(testUser, actual);
     }
 
     @Test
     void register_ageMoreThenMin_ok() {
-        testUser.setAge(AGE_NINETEEN);
+        testUser.setAge(AGE_MORE_THEN_MIN);
         User actual = service.register(testUser);
         assertEquals(testUser, actual);
     }
