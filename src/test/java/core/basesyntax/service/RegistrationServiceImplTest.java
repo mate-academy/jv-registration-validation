@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -35,66 +35,48 @@ class RegistrationServiceImplTest {
     @Test
     void register_containsUserLogin_NotOk() {
         Storage.people.add(user);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("User already exist!");
+        });
     }
 
     @Test
     void register_nullUserLogin_NotOk() {
         user.setLogin(null);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Login can't be null!");
+        });
     }
 
     @Test
     void register_nullUser_NotOk() {
         user = null;
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("User can't be null!");
+        });
     }
 
     @Test
     void register_smallPassword_NotOk() {
         user.setPassword("123");
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Password less than 6 symbols!");
+        });
     }
 
     @Test
     void register_nullPassword_NotOk() {
         user.setPassword(null);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Password can't be null!");
+        });
     }
 
     @Test
     void register_lowAge_NotOk() {
         user.setAge(15);
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Age less than 18 years old!");
+        });
     }
 }
