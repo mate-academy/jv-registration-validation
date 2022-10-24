@@ -1,26 +1,33 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static User user1;
 
-    @BeforeAll
-    public static void setUp() {
+    @BeforeEach
+    public void init() {
         registrationService = new RegistrationServiceImpl();
         user1 = new User("spider@gmail.com", "qwerty12345", 25);
-        registrationService.register(new User("spider@gmail.com", "465s4df6", 35));
+    }
+
+    @AfterEach
+    public void clear() {
+        user1 = null;
+        Storage.people.clear();
     }
 
     @Test
-    public void register_AlreadyExistedUser_notOk() {
+    public void register_alreadyExistedUser_notOk() {
+        Storage.people.add(user1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
     }
 
@@ -37,44 +44,27 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_adult_isOk() {
-        user1.setAge(19);
-        assertEquals(user1, registrationService.register(user1));
-    }
-
-    @Test
     public void register_lengthOfPassword_notOk() {
-        user1.setPassword("sdfsd");
+        user1.setPassword("sdf");
         assertThrows(RuntimeException.class, () -> registrationService.register(user1));
     }
 
     @Test
-    public void register_lengthOfPassword_isOk() {
-        user1.setPassword("sdfsddd");
-        assertEquals(user1, registrationService.register(user1));
-    }
-
-    @Test
     void register_nullLoginInUser_notOk() {
-        user1 = new User();
-        user1.setPassword("456789dsfs");
-        user1.setAge(54);
+        user1.setLogin(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user1));
     }
 
     @Test
     void register_nullPasswordInUser_notOk() {
-        user1 = new User();
-        user1.setLogin("6465s4dfsdf");
-        user1.setAge(54);
+        user1.setPassword(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user1));
     }
 
     @Test
     void register_nullAgeInUser_notOk() {
-        user1 = new User();
-        user1.setPassword("456789dsfs");
-        user1.setLogin("5467654sdfsdf");
+        user1.setAge(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user1));
+        clear();
     }
 }
