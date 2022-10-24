@@ -16,7 +16,6 @@ class RegistrationServiceImplTest {
     public static final String INCORRECT_PASSWORD = "pass";
     public static final int CORRECT_AGE = 77;
     public static final int INCORRECT_AGE = 17;
-    public static final int NEGATIVE_AGE = -1;
     public static final long CORRECT_ID = 777777L;
     private static RegistrationService registrationService;
     private User user;
@@ -73,12 +72,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_age_notOk() {
         user.setAge(INCORRECT_AGE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_negativeAge_notOk() {
-        user.setAge(NEGATIVE_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
