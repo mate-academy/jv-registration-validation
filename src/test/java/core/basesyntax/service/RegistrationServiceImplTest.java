@@ -3,12 +3,12 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
+    private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static RegistrationService service;
     private User user;
@@ -21,6 +21,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        user.setLogin("Jack");
+        user.setPassword("qwertyu");
+        user.setAge(20);
     }
 
     @Test
@@ -32,8 +35,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void addNegativeAge_NotOk() {
-        user.setLogin("Jack");
-        user.setPassword("qwertyu");
         user.setAge(-1);
         assertThrows(RuntimeException.class, () ->
                  service.register(user), "Age can't be negative");
@@ -42,44 +43,34 @@ class RegistrationServiceImplTest {
     @Test
     void addNullLogin_NotOk() {
         user.setLogin(null);
-        user.setPassword("qwertyu");
-        user.setAge(21);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "Login can't be null");
     }
 
     @Test
     void addNullPassword_NotOk() {
-        user.setLogin("Jack");
         user.setPassword(null);
-        user.setAge(21);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "Password can't be null");
     }
 
     @Test
     void userIsTooYoung_NotOk() {
-        user.setLogin("Jack");
-        user.setPassword("qwertyu");
-        user.setAge(10);
+        user.setAge(MIN_AGE - 1);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "User is too young: age" + user.getAge());
     }
 
     @Test
     void registeredSameUser_notOk() {
-        user.setLogin("Jack");
-        user.setPassword("qwertyu");
-        user.setAge(21);
+        service.register(user);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "We can't register same user");
     }
 
     @Test
     void tooShortPassword_NotOk() {
-        user.setLogin("Jack");
         user.setPassword("12345");
-        user.setAge(21);
         assertThrows(RuntimeException.class, () ->
                 service.register(user), "Password must be at least "
                 + MIN_PASSWORD_LENGTH + " chars length");
@@ -95,5 +86,10 @@ class RegistrationServiceImplTest {
             assertEquals(service.register(temp), temp,
                     "User " + user + " must be registered");
         }
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
