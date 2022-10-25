@@ -1,7 +1,10 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -19,11 +22,12 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
+        final StorageDao storageDao = new StorageDaoImpl();
         User registeredUser = new User();
         registeredUser.setLogin(DEFAULT_LOGIN);
         registeredUser.setPassword(DEFAULT_PASSWORD);
         registeredUser.setAge(DEFAULT_AGE);
-        service.register(registeredUser);
+        storageDao.add(registeredUser);
     }
 
     @BeforeEach
@@ -41,7 +45,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void validLoginPasswordAge_Ok() {
-        service.register(testUser);
+        User expected = testUser;
+        User actual = service.register(testUser);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -71,7 +77,7 @@ class RegistrationServiceImplTest {
     @Test
     void loginIsNull_NotOk() {
         testUser.setLogin(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             service.register(testUser);
         });
     }
@@ -79,7 +85,7 @@ class RegistrationServiceImplTest {
     @Test
     void passwordIsNull_NotOk() {
         testUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             service.register(testUser);
         });
     }
@@ -87,14 +93,14 @@ class RegistrationServiceImplTest {
     @Test
     void ageIsNull_NotOk() {
         testUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             service.register(testUser);
         });
     }
 
     @Test
     void userIsNull_NotOk() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             service.register(null);
         });
     }
