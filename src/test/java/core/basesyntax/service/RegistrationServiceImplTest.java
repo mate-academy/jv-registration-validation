@@ -8,68 +8,68 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User nullUser = null;
-    private static final User nullLoginUser = new User(null, "1234567", 11);
-    private static final User nullPasswordUser = new User("????", null, 16);
-    private static final User nullAgeUser = new User("????", "????????", null);
-    private static final User illegalAgeUser = new User("Pudj2008", "asdfg2002", 13);
-    private static final User illegalAgeSecondUser = new User("Phgedsa8", "asdhdr", -124);
-    private static final User illegalPasswordLengthUser = new User("Pudj2002", "asd", 18);
     private static final User Bohdan = new User("Bohdan", "password", 58);
     private static final User Dan = new User("Dan", "NothingPassword", 68);
-    private static final User Igor = new User("ar1n04cka", "ytrewq1236", 27);
-    private static final User anotherIgor = new User("Igor1992", "Igor123456", 24);
+    private User defaultUser;
+    private RegistrationService service;
+
+    @BeforeEach
+    void getService() {
+        RegistrationService service = new RegistrationServiceImpl();
+        User defaultUser = new User("artemk", "12345678", 18);
+    }
 
     @Test
     void setNullUser_notOk() {
-        RegistrationService service = new RegistrationServiceImpl();
         assertThrows(RuntimeException.class, () -> {
-            service.register(nullUser);
+            service.register(null);
         });
         assertTrue(Storage.people.isEmpty());
     }
 
     @Test
     void setNullLoginUser_notOk() {
-        RegistrationService service = new RegistrationServiceImpl();
         assertThrows(RuntimeException.class, () -> {
-            service.register(nullLoginUser);
+            defaultUser.setLogin(null);
+            service.register(defaultUser);
         });
     }
 
     @Test
     void setNullPasswordUser_notOk() {
-        RegistrationService service = new RegistrationServiceImpl();
         assertThrows(RuntimeException.class, () -> {
-            service.register(nullPasswordUser);
+            defaultUser.setPassword(null);
+            service.register(defaultUser);
         });
     }
 
     @Test
     void setNullAgeUser_notOk() {
-        RegistrationService service = new RegistrationServiceImpl();
         assertThrows(RuntimeException.class, () -> {
-            service.register(nullAgeUser);
+            defaultUser.setAge(null);
+            service.register(defaultUser);
         });
     }
 
     @Test
     void setMinorUser_notOk() {
-        RegistrationService service = new RegistrationServiceImpl();
         assertThrows(RuntimeException.class, () -> {
-            service.register(illegalAgeUser);
-            service.register(illegalAgeSecondUser);
+            defaultUser.setAge(17);
+            service.register(defaultUser);
+            defaultUser.setAge(-17);
+            service.register(defaultUser);
         });
     }
 
     @Test
-    void setIllegalPasswordUser_noOk() {
-        RegistrationService service = new RegistrationServiceImpl();
+    void setIllegalPasswordUser_notOk() {
         assertThrows(RuntimeException.class, () -> {
-            service.register(illegalPasswordLengthUser);
+            defaultUser.setPassword("123");
+            service.register(defaultUser);
         });
     }
 
@@ -78,10 +78,8 @@ class RegistrationServiceImplTest {
         RegistrationService service = new RegistrationServiceImpl();
         service.register(Bohdan);
         service.register(Dan);
-        service.register(Igor);
-        service.register(anotherIgor);
         assertFalse(Storage.people.isEmpty());
-        List<User> users = List.of(Bohdan, Dan, Igor, anotherIgor);
+        List<User> users = List.of(Bohdan, Dan);
         assertEquals(users.size(), Storage.people.size());
     }
 }

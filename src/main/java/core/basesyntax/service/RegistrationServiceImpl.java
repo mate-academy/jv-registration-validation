@@ -11,6 +11,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        workWithNull(user);
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("you are not of legal age");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("Your password length shod be more or equals: "
+                    + MIN_PASSWORD_LENGTH);
+        }
+        return storageDao.add(user);
+    }
+
+    public void workWithNull(User user) {
         if (user == null) {
             throw new RuntimeException("User can not be: " + user);
         }
@@ -27,13 +39,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException(String.format("User with login: %s already created",
                     user.getLogin()));
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("you are not of legal age");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Your password length shod be more or equals: "
-                    + MIN_PASSWORD_LENGTH);
-        }
-        return storageDao.add(user);
     }
 }
