@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -12,11 +14,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
+    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void createService() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -28,9 +32,24 @@ class RegistrationServiceImplTest {
         user.setPassword("Yulichka12");
     }
 
-    @AfterEach
-    void deleteUsersInStorage() {
-        Storage.people.clear();
+    @Test
+    void register_withMinAge_ok() {
+        user.setAge(18);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
+    }
+
+    @Test
+    void register_withMinPassword_length_ok() {
+        user.setPassword("mypass");
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
+    }
+
+    @Test
+    void valid_allData_ok() {
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
@@ -40,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_WrongPass_NotOk() {
+    void register_wrongPass_notOk() {
         user.setPassword("1234");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -48,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_WrongAge_NotOk() {
+    void register_wrongAge_notOk() {
         user.setAge(12);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -56,8 +75,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AlreadyExist_NotOk() {
-        registrationService.register(user);
+    void register_alreadyExist_notOk() {
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -92,5 +111,10 @@ class RegistrationServiceImplTest {
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @AfterEach
+    void deleteUsersInStorage() {
+        Storage.people.clear();
     }
 }
