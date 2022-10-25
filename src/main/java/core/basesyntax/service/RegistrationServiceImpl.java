@@ -46,6 +46,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age less than 18 years old!");
         }
+        if (user.getAge() == null) {
+            throw new RuntimeException("Age can't be null!");
+        }
     }
 
 }

@@ -29,7 +29,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_noExistUserLogin_Ok() {
-        assertEquals(user, registrationService.register(user));
+        if (Storage.people.size() != 0) {
+            assertEquals(user, registrationService.register(user));
+        }
     }
 
     @Test
@@ -75,6 +77,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_lowAge_NotOk() {
         user.setAge(15);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullAge_NotOk() {
+        user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
