@@ -3,7 +3,9 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,72 +35,77 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserIsNull_NotOk() {
+    void register_nullUser_notOk() {
         user = null;
         assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserLoginIsNull_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserPasswordIsNull_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserAgeIsNull_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserAgeBelowLimit_NotOk() {
+    void register_ageBelowLimit_notOk() {
         user.setAge(BELOW_VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserAgeIsAboveLimit_Ok() {
+    void register_ageAboveLimit_ok() {
         user.setAge(ABOVE_VALID_AGE);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void registerUserPasswordShort_NotOk() {
+    void register_shortPassword_notOk() {
         user.setPassword(SHORT_VALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserPasswordLong_Ok() {
+    void register_longPassword_ok() {
         user.setPassword(LONG_VALID_PASSWORD);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void registerUserValidPassword_Ok() {
+    void register_validPassword_ok() {
         user.setPassword(DEFAULT_VALID_PASSWORD);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void registerUserIsAdult_Ok() {
+    void register_adultUser_ok() {
         user.setAge(DEFAULT_VALID_AGE);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void registerUserWithSameLogin_NotOk() {
+    void register_sameLogin_notOk() {
         User sameLogin = new User();
         user.setPassword(DEFAULT_VALID_PASSWORD);
         registrationService.register(user);
         sameLogin.setPassword(LONG_VALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(sameLogin));
 
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
