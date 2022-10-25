@@ -22,4 +22,9 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
+
+    @Override
+    public boolean remove(User user) {
+        return Storage.people.remove(user);
+    }
 }
