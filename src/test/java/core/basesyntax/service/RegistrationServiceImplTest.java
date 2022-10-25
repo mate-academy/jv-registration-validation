@@ -38,8 +38,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RuntimeException.class,() -> {
-            registrationService.register(new User()); });
+        user = null;
+        Throwable thrown = assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user); });
+        assertEquals("User can’t be null", thrown.getMessage());
     }
 
     @Test
