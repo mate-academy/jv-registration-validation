@@ -145,7 +145,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void setPasswordWithSymbols_Ok() {
-        bob.setPassword("!@#@$#$!&*^*_-");
+        bob.setPassword("!@#@$#$!&*^*_");
         assertEquals(bob, registrationService.register(bob));
     }
 
