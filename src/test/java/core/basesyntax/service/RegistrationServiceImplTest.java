@@ -28,65 +28,65 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginNull_notOk() {
+    void register_userWithLoginNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordNull_notOk() {
+    void register_userWithPasswordNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeNull_notOk() {
+    void register_userWithAgeNull_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeLessThanMinAge_notOk() {
+    void register_userWithAgeLessThanMinAge_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeCanRegister_ok() {
+    void register_userWithExistAge_ok() {
         user.setAge(18);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void userNegativeAge_notOk() {
+    void register_userWithNegativeAge_notOk() {
         user.setAge(-18);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPassword_notOk() {
+    void register_userWithNonExistPasswordLength_notOk() {
         user.setPassword("55555");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userNull_notOk() {
+    void register_userNull_notOk() {
         user = null;
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userRegister_ok() {
+    void register_userWithExistLogin_ok() {
         user.setLogin("Login");
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void user_same_notOk() {
+    void register_userWithSameLogin_notOk() {
         user.setLogin("Login");
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
