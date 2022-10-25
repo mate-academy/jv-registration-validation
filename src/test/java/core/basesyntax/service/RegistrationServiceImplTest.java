@@ -11,6 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String DEFAULT_LOGIN = "nobodyReadsIt";
+    private static final String DEFAULT_PASSWORD = "itsTo123";
+    private static final String NON_VALID_PASSWORD = "Mate";
+    private static final String EMPTY_FIELD = "";
+    private static final int DEFAULT_AGE = 27;
+    private static final int NON_VALID_AGE = 16;
     private static RegistrationServiceImpl testService;
     private User testUser;
 
@@ -22,9 +28,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setAge(27);
-        testUser.setLogin("nobodyReadsIt");
-        testUser.setPassword("itsTo123");
+        testUser.setAge(DEFAULT_AGE);
+        testUser.setLogin(DEFAULT_LOGIN);
+        testUser.setPassword(DEFAULT_PASSWORD);
     }
 
     @AfterEach
@@ -57,7 +63,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ToSmallAge_NotOk() {
-        testUser.setAge(16);
+        testUser.setAge(NON_VALID_AGE);
         assertThrows(RuntimeException.class, () -> testService.register(testUser));
     }
 
@@ -69,7 +75,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_EmptyLogin_NotOk() {
-        testUser.setLogin("");
+        testUser.setLogin(EMPTY_FIELD);
         assertThrows(RuntimeException.class, () -> testService.register(testUser));
     }
 
@@ -86,7 +92,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ShortPassword_NotOk() {
-        testUser.setPassword("Mate");
+        testUser.setPassword(NON_VALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> testService.register(null));
     }
 }
