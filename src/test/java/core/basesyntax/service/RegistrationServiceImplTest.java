@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -42,31 +41,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsNullExceptionMessage_notOk() {
-        try {
-            user = null;
-            registrationService.register(user);
-        } catch (Exception exception) {
-            assertEquals("Can't register null user!", exception.getMessage(),
-                    "Your exception should have message: \"Can't register null user!\"");
-        }
-    }
-
-    @Test
     void register_userLoginIsNullThrowsException_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_userLoginIsNullExceptionMessage_notOk() {
-        try {
-            user.setLogin(null);
-            registrationService.register(user);
-        } catch (Exception exception) {
-            assertEquals("User login shouldn't be empty!", exception.getMessage(),
-                    "Your exception should have message: \"User login shouldn't be empty!\"");
-        }
     }
 
     @Test
@@ -76,49 +53,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsNullExceptionMessage_notOk() {
-        try {
-            user.setPassword(null);
-            registrationService.register(user);
-        } catch (Exception exception) {
-            assertEquals("User password shouldn't be empty!", exception.getMessage(),
-                    "Your exception should have message: \"User password shouldn't be empty!\"");
-        }
-    }
-
-    @Test
     void register_userAgeIsNullThrowsException_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_userAgeIsNullExceptionMessage_notOk() {
-        try {
-            user.setAge(null);
-            registrationService.register(user);
-        } catch (Exception exception) {
-            assertEquals("User age shouldn't be empty!", exception.getMessage(),
-                    "Your exception should have message: \"User age shouldn't be empty!\"");
-        }
-    }
-
-    @Test
     void register_userShortPasswordThrowsException_notOk() {
         user.setPassword(SHORT_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_userShortPasswordExceptionMessage_notOk() {
-        try {
-            user.setPassword(SHORT_PASSWORD);
-            registrationService.register(user);
-        } catch (Exception exception) {
-            assertEquals("User password should at least 6 characters long!", exception.getMessage(),
-                    "Your exception should have message: "
-                            + "\"User password should at least 6 characters long!\"");
-        }
     }
 
     @Test
@@ -131,18 +74,6 @@ class RegistrationServiceImplTest {
     void register_userAgeBelowThresholdThrowsException_notOk() {
         user.setAge(BELOW_ADULT_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_userAgeBelowThresholdExceptionMessage_notOk() {
-        try {
-            user.setAge(BELOW_ADULT_AGE);
-            registrationService.register(user);
-        } catch (Exception exception) {
-            assertEquals("User age should be at least 18 years old!", exception.getMessage(),
-                    "Your exception should have message: "
-                            + "\"User age should be at least 18 years old!\"");
-        }
     }
 
     @Test
@@ -163,17 +94,6 @@ class RegistrationServiceImplTest {
     void register_sameUserThrowsException_notOk() {
         Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_sameUserExceptionMessage_notOk() {
-        try {
-            Storage.people.add(user);
-            registrationService.register(user);
-        } catch (Exception exception) {
-            assertEquals("User with this login already exists!", exception.getMessage(),
-                    "Your exception should have message: \"User with this login already exists!\"");
-        }
     }
 
     @Test
