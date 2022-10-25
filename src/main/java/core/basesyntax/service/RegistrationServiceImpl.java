@@ -26,10 +26,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUserFields(User user) {
-        if (user.getLogin() == null || user.getAge() == null || user.getPassword() == null) {
-            throw new RuntimeException(DEFAULT_EXCEPTION_TEXT
-                    + "User login/password/age can't be null");
-        }
         validateLogin(user);
         validatePassword(user);
         validateUserAge(user);
@@ -40,9 +36,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException(DEFAULT_EXCEPTION_TEXT
                     + "Login can't be empty");
         }
+        if (user.getLogin() == null) {
+            throw new RuntimeException(DEFAULT_EXCEPTION_TEXT
+                    + "User login can't be null");
+        }
     }
 
     private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException(DEFAULT_EXCEPTION_TEXT
+                    + "User password can't be null");
+        }
         if (user.getPassword().equals(EMPTY_STRING)) {
             throw new RuntimeException(DEFAULT_EXCEPTION_TEXT
                     + "Password can't be empty");
@@ -54,6 +58,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUserAge(User user) {
+        if (user.getAge() == null) {
+            throw new RuntimeException(DEFAULT_EXCEPTION_TEXT
+                    + "User age can't be null");
+        }
         if (user.getAge() < MIN_USER_AGE) {
             throw new RuntimeException(DEFAULT_EXCEPTION_TEXT
                     + "User must be of legal age");
