@@ -33,20 +33,15 @@ class RegistrationServiceImplTest {
         testUser.setAge(VALID_AGE);
     }
 
-    @AfterEach
-    void afterEach() {
-        Storage.people.clear();
-    }
-
     @Test
-    void register_userIsNull_NotOk() {
+    void register_userIsNull_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void register_userAgeIsNull_NotOk() {
+    void register_userAgeIsNull_notOk() {
         testUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -54,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginIsNull_NotOk() {
+    void register_userLoginIsNull_notOk() {
         testUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -62,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsNull_NotOk() {
+    void register_userPasswordIsNull_notOk() {
         testUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -70,15 +65,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_withExistingLogin_NotOk() {
-        registrationService.register(testUser);
+    void register_withExistingLogin_notOk() {
+        Storage.people.add(testUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_userAgeLessThen18_NotOk() {
+    void register_userAgeInvalid_notOk() {
         testUser.setAge(INVALID_AGE);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -86,7 +81,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsNegative_NotOk() {
+    void register_userAgeIsNegative_notOk() {
         testUser.setAge(NEGATIVE_AGE);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -94,7 +89,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIsInvalid_NotOk() {
+    void register_passwordIsInvalid_notOk() {
         testUser.setPassword(INVALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -102,7 +97,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_withValidData_Ok() {
+    void register_withValidData_ok() {
         assertEquals(testUser, registrationService.register(testUser));
+    }
+
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
     }
 }
