@@ -11,6 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String DEFAULT_LOGIN = "Life_Pool";
+    private static final String DEFAULT_PASSWORD = "qwerty123";
+    private static final String NON_VALID_PASSWORD = "short";
+    private static final String EMPTY_FIELD = "";
+    private static final int DEFAULT_AGE = 22;
+    private static final int NON_VALID_AGE = 14;
     private static RegistrationService registrationService;
     private User user;
 
@@ -22,14 +28,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(22);
-        user.setLogin("Life_Pool");
-        user.setPassword("qwerty123");
-    }
-
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
+        user.setAge(DEFAULT_AGE);
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(DEFAULT_PASSWORD);
     }
 
     @Test
@@ -62,19 +63,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_emptyLogin_notOk() {
-        user.setLogin("");
+        user.setLogin(EMPTY_FIELD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_emptyPassword_notOk() {
-        user.setPassword("");
+        user.setPassword(EMPTY_FIELD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        user.setPassword("short");
+        user.setPassword(NON_VALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -86,7 +87,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lowAge_notOk() {
-        user.setAge(14);
+        user.setAge(NON_VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
