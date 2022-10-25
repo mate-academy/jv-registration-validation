@@ -3,20 +3,29 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static StorageDao storageDao;
+    private static RegistrationService service;
     private User defaultUser;
-    private RegistrationService service;
     private User bohdan;
     private User dan;
 
+    @BeforeAll
+    static void beforeAll() {
+        storageDao = new StorageDaoImpl();
+        service = new RegistrationServiceImpl();
+    }
+
     @BeforeEach
     void getService() {
-        service = new RegistrationServiceImpl();
         defaultUser = new User("artemk", "12345678", 18);
         bohdan = new User("Bohdan", "password", 58);
         dan = new User("Dan", "NothingPassword", 68);
@@ -80,11 +89,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void typicalExample_Ok() {
+    void registerWithValidParams_Ok() {
         service.register(bohdan);
         service.register(dan);
-        assertEquals(bohdan, Storage.people.get(0));
-        assertEquals(dan, Storage.people.get(1));
+        assertEquals(bohdan, storageDao.get(bohdan.getLogin()));
+        assertEquals(dan, storageDao.get(dan.getLogin()));
     }
 
     @Test

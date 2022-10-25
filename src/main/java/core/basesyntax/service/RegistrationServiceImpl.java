@@ -14,13 +14,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("User can not be: " + user);
         }
-        workWithLogin(user.getLogin());
-        workWithPassword(user.getPassword());
-        workWithAge(user.getAge());
+        loginCheck(user.getLogin());
+        passwordCheck(user.getPassword());
+        ageCheck(user.getAge());
         return storageDao.add(user);
     }
 
-    private void workWithLogin(String login) {
+    private void loginCheck(String login) {
         if (login == null) {
             throw new RuntimeException("User login can not be: " + login);
         }
@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void workWithPassword(String password) {
+    private void passwordCheck(String password) {
         if (password == null) {
             throw new RuntimeException("User password can not be: " + password);
         }
@@ -40,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void workWithAge(Integer age) {
+    private void ageCheck(Integer age) {
         if (age == null) {
             throw new RuntimeException("User age can not be: " + age);
         }
