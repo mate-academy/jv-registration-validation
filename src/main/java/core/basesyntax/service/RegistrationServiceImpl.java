@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -24,7 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("User password can not be: " + user.getPassword());
         }
-        if (Storage.people.contains(user.getLogin())) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException(String.format("User with login: %s already created",
                     user.getLogin()));
         }
