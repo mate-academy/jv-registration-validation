@@ -43,14 +43,14 @@ class RegistrationServiceImplTest {
         userDuplicate.setPassword(validUser.getPassword());
         userDuplicate.setAge(validUser.getAge());
         assertThrows(RuntimeException.class, () ->
-            registrationServiceImpl.register(userDuplicate));
+                  registrationServiceImpl.register(userDuplicate));
     }
 
     @Test
     void register_ageCheck_notOk() {
         validUser.setAge(NOT_VALID_USER_AGE);
         assertThrows(RuntimeException.class, () ->
-            registrationServiceImpl.register(validUser));
+                registrationServiceImpl.register(validUser));
     }
 
     @Test
