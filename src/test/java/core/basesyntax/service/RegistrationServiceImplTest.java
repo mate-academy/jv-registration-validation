@@ -55,12 +55,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nonExistsUser_ok() {
-        registrationService.register(user);
-        assertEquals(user, storageDao.get(user.getLogin()));
-    }
-
-    @Test
     void register_alreadyExistsUser_notOk() {
         Storage.people.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
@@ -70,6 +64,17 @@ class RegistrationServiceImplTest {
     void register_age_notOk() {
         user.setAge(INCORRECT_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_nonExistsUser_ok() {
+        registrationService.register(user);
+    }
+
+    @Test
+    void register_successfulRegistration_ok() {
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
