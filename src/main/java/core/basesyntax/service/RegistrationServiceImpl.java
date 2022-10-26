@@ -11,6 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RuntimeException("User can't be NULL");
+        }
         checkAge(user);
         checkLogin(user);
         checkPassword(user);
