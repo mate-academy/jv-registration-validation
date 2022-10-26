@@ -41,59 +41,59 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_notOk() {
         actualUser = null;
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_nullUserLogin_notOk() {
         actualUser.setLogin(null);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_emptyUserLoginString_notOk() {
         actualUser.setLogin(EMPTY_STRING);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_whitespaceOnlyUserLoginString_notOk() {
         actualUser.setLogin(WHITESPACE_CHARACTERS_STRING);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_sameUserAlreadyExistAndRegistered_notOk() {
         Storage.people.add(actualUser);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_nullPassword_notOk() {
         actualUser.setPassword(null);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_passwordMinLength_notOk() {
         actualUser.setPassword(INVALID_PASSWORD_ABCDE);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_minAge_notOk() {
         actualUser.setAge(INVALID_AGE);
-        runAssertThrows();
+        runAssertThrows(actualUser);
         actualUser.setAge(INVALID_AGE_2);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_maxAge_notOk() {
         actualUser.setAge(INVALID_AGE_3);
-        runAssertThrows();
+        runAssertThrows(actualUser);
         actualUser.setAge(INVALID_AGE_4);
-        runAssertThrows();
+        runAssertThrows(actualUser);
     }
 
     @Test
@@ -139,7 +139,7 @@ class RegistrationServiceImplTest {
         assertDoesNotThrow(() -> registrationService.register(actualUser));
     }
 
-    private void runAssertThrows() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+    private void runAssertThrows(User user) {
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
