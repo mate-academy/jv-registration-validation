@@ -17,13 +17,14 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_PASSWORD = "password";
     private static final int DEFAULT_AGE = 18;
     private static RegistrationService service;
+    private static StorageDao storageDao;
     private User testUser;
 
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
-        final StorageDao storageDao = new StorageDaoImpl();
-        User registeredUser = new User();
+        storageDao = new StorageDaoImpl();
+        final User registeredUser = new User();
         registeredUser.setLogin(DEFAULT_LOGIN);
         registeredUser.setPassword(DEFAULT_PASSWORD);
         registeredUser.setAge(DEFAULT_AGE);
@@ -47,6 +48,8 @@ class RegistrationServiceImplTest {
     void validLoginPasswordAge_Ok() {
         User expected = testUser;
         User actual = service.register(testUser);
+        assertEquals(expected, actual);
+        expected = storageDao.get(testUser.getLogin());
         assertEquals(expected, actual);
     }
 
