@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String DEFAULT_PASSWORD = "123456";
+    private static final String WRONG_PASSWORD = "123456";
     private static final String DEFAULT_LOGIN = "Login";
     private static final int DEFAULT_AGE = 18;
     private User user;
@@ -26,21 +27,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsNotOk() {
-        user.setPassword("12345");
+    void register_passwordIsNotOk() {
+        user.setPassword(WRONG_PASSWORD);
         assertThrows(RuntimeException.class, () ->
                 service.register(user)
         );
     }
 
     @Test
-    void userIsOk() {
+    void register_userIsOk() {
         User actual = service.register(user);
-        assertTrue(actual == user);
+        assertTrue(actual.equals(user));
     }
 
     @Test
-    void ageIsNotOk() {
+    void register_ageIsNotOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () ->
                 service.register(user)
@@ -48,14 +49,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsNull() {
+    void register_userIsNullNotOk() {
         assertThrows(RuntimeException.class, () ->
                 service.register(null)
         );
     }
 
     @Test
-    void addSameUserNotOk() {
+    void register_addSameUserNotOk() {
         service.register(user);
         assertThrows(RuntimeException.class, () ->
                 service.register(user)
