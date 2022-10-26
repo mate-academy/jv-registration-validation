@@ -28,8 +28,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkLogin(String login) {
-        if (login == null || storageDao.get(login) != null) {
-            throw new RuntimeException("Empty login or user with same login is exist");
+        if (login == null) {
+            throw new RuntimeException("Empty login is not allowed");
+        } else if (storageDao.get(login) != null) {
+            throw new RuntimeException("User with same login is exist");
         }
     }
 

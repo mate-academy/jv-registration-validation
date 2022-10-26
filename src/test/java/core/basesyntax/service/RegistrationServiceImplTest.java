@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_registerAndGetUser_ok() {
+    void register_validUser_ok() {
         User expected = user;
         registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
@@ -55,49 +55,37 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_loginIsAlreadyExist_notOk() {
         storageDao.add(user);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_invalidPassword_notOK() {
         user.setPassword(ILLEGAL_PASSWORD_LENGTH);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_ageBelow18_notOk() {
         user.setAge(ILLEGAL_AGE);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
 
