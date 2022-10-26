@@ -40,8 +40,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        actualUser = null;
-        runAssertThrows(actualUser);
+        runAssertThrows(null);
     }
 
     @Test
