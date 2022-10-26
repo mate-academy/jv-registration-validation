@@ -5,25 +5,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User validUser = new User();
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private User actualUser;
 
-    @BeforeAll
-    static void beforeAll() {
-        validUser.setLogin("Bob");
-        validUser.setPassword("123456");
-        validUser.setAge(18);
-    }
-
     @BeforeEach
     void setUp() {
-        actualUser = validUser.clone();
+        actualUser = new User();
+        actualUser.setLogin("Bob");
+        actualUser.setPassword("123456");
+        actualUser.setAge(18);
         Storage.people.clear();
     }
 
