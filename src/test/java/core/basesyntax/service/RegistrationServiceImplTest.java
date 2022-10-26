@@ -13,6 +13,11 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static User user;
+    private static final String TEST_LOGIN = "Oleg";
+    private static final String TEST_PASSWORD = "123456";
+    private static final int TEST_AGE = 19;
+    private static final String INVALID_TEST_PASSWORD = "12345";
+    private static final int INVALID_TEST_AGE = 17;
 
     @BeforeAll
     static void createService() {
@@ -22,9 +27,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin("Oleg");
-        user.setPassword("123456");
-        user.setAge(19);
+        user.setLogin(TEST_LOGIN);
+        user.setPassword(TEST_PASSWORD);
+        user.setAge(TEST_AGE);
     }
 
     @AfterEach
@@ -65,7 +70,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void lengthOfPassword_notOk() {
-        user.setPassword("abcde");
+        user.setPassword(INVALID_TEST_PASSWORD);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -73,7 +78,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void toLowAge_notOk() {
-        user.setAge(17);
+        user.setAge(INVALID_TEST_AGE);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
