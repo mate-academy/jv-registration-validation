@@ -12,6 +12,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static final String ALICE_PASSWORD = "123Alice";
+    private static final String ALICE_LOGIN = "Alice";
+    private static final int ALICE_AGE = 18;
+    private static final String BOB_PASSWORD = "123Bob";
+    private static final String BOB_PASSWORD_NOTOK = "abcda";
+    private static final String BOB_LOGIN = "Bob";
+    private static final int BOB_AGE = 22;
     private User alice = new User();
     private User bob = new User();
 
@@ -22,13 +29,13 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        alice.setLogin("Alice");
-        alice.setPassword("123Alice");
-        alice.setAge(18);
+        alice.setLogin(ALICE_LOGIN);
+        alice.setPassword(ALICE_PASSWORD);
+        alice.setAge(ALICE_AGE);
 
-        bob.setLogin("Bob");
-        bob.setPassword("123Bob");
-        bob.setAge(22);
+        bob.setLogin(BOB_LOGIN);
+        bob.setPassword(BOB_PASSWORD);
+        bob.setAge(BOB_AGE);
     }
 
     @Test
@@ -49,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullPassword_notOk() {
+    void register_nullPassword_notOk() {
         bob.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
@@ -58,7 +65,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLeastMinNumbersOfCharacters_notOk() {
-        bob.setPassword("abcda");
+        bob.setPassword(BOB_PASSWORD_NOTOK);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(bob));
     }
