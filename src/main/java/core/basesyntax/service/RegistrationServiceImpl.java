@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Password can`t be null");
         }
         if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password short that 6");
+            throw new RuntimeException("Password shorter that " + MINIMAL_PASSWORD_LENGTH);
         }
     }
 

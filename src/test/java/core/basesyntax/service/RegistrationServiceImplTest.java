@@ -39,19 +39,32 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLogin_notOk() {
+    void register_NullUser_NotOk() {
+        testUser = null;
+        assertThrows(RuntimeException.class, () -> testService.register(testUser));
+    }
+
+    @Test
+    void register_NullPassword_NotOk() {
+        testUser.setPassword(null);
+        assertThrows(RuntimeException.class, () -> testService.register(testUser));
+    }
+
+    @Test
+    void register_NullLogin_NotOk() {
         testUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> testService.register(testUser));
     }
 
     @Test
-    void register_NormalUserAdding_Ok() {
-        assertEquals(testUser, testService.register(testUser));
+    void register_NullAge_NotOk() {
+        testUser.setAge(null);
+        assertThrows(RuntimeException.class, () -> testService.register(testUser));
     }
 
     @Test
-    void register_NullUser_NotOk() {
-        testUser = null;
+    void register_ShortPassword_NotOk() {
+        testUser.setPassword(NON_VALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> testService.register(testUser));
     }
 
@@ -68,31 +81,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullPassword_NotOk() {
-        testUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> testService.register(testUser));
-    }
-
-    @Test
     void register_EmptyLogin_NotOk() {
         testUser.setLogin(EMPTY_FIELD);
         assertThrows(RuntimeException.class, () -> testService.register(testUser));
     }
 
     @Test
-    void register_NullLogin_NotOk() {
-        testUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> testService.register(testUser));
-    }
-
-    @Test
-    void register_NullAge_NotOk() {
-        assertThrows(RuntimeException.class, () -> testService.register(null));
-    }
-
-    @Test
-    void register_ShortPassword_NotOk() {
-        testUser.setPassword(NON_VALID_PASSWORD);
-        assertThrows(RuntimeException.class, () -> testService.register(null));
+    void register_NormalUserAdding_Ok() {
+        assertEquals(testUser, testService.register(testUser));
     }
 }
