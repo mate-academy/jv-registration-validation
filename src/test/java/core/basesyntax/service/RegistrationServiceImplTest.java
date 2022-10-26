@@ -8,16 +8,23 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String PASSWORD_WITH_LESS_THAN_SIX_CHARACTERS = "abc";
+    private static final String PASSWORD_WITH_LESS_THAN_SIX_CHARACTERS = "abcde";
     private static final String LOGIN_FOR_USER_IN_STORAGE = "uniqueLogin";
-    private static final int AGE_UNDER_EIGHTEEN = 15;
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao = new StorageDaoImpl();
+    private static final int AGE_UNDER_EIGHTEEN = 17;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @BeforeEach
     void setUp() {
@@ -29,20 +36,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        user = new User();
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(null);
         });
     }
 
     @Test
-    void register_uniqueLogin_ok() {
+    void register_validUser_ok() {
         User actual = registrationService.register(user);
-        assertEquals(actual.getLogin(), user.getLogin());
+        assertEquals(actual, user);
     }
 
     @Test
-    void register_notUniqueLogin_notOk() {
+    void register_invalidLogin_notOk() {
         User userInStorage = new User();
         userInStorage.setLogin(LOGIN_FOR_USER_IN_STORAGE);
         storageDao.add(userInStorage);
@@ -60,13 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_correctPassword_ok() {
-        User actual = registrationService.register(user);
-        assertEquals(actual.getPassword(), user.getPassword());
-    }
-
-    @Test
-    void register_passwordLessThanSixCharacters_notOk() {
+    void register_invalidPassword_notOk() {
         user.setPassword(PASSWORD_WITH_LESS_THAN_SIX_CHARACTERS);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -82,13 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_correctAge_ok() {
-        User actual = registrationService.register(user);
-        assertEquals(actual.getAge(), user.getAge());
-    }
-
-    @Test
-    void register_ageUnderEighteen_notOk() {
+    void register_invalidAge_notOk() {
         user.setAge(AGE_UNDER_EIGHTEEN);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);

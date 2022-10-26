@@ -39,9 +39,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateAge(int age) {
-        if (age == 0) {
-            throw new RuntimeException("Age can't be 0");
-        }
         if (age < MIN_AGE) {
             throw new RuntimeException("Your age should be at least 18");
         }
