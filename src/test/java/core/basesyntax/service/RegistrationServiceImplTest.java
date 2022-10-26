@@ -13,41 +13,40 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String bobLogin = "Bob";
-    private static final String johnLogin = "John";
-    private static final String aliceLogin = "Alice";
-    private static final String validPassword = "4567891";
-    private static final String shortPassword = "45678";
-    private static final int validAge = 19;
-    private static final int thresholdAge = 18;
-    private static final int nonValidAge = 17;
+    private static final String BOB_LOGIN = "Bob";
+    private static final String JOHN_LOGIN = "John";
+    private static final String VALID_PASSWORD = "4567891";
+    private static final String SHORT_PASSWORD = "45678";
+    private static final int VALID_AGE = 19;
+    private static final int THRESHOLD_AGE = 18;
+    private static final int NEGATIVE_THRESHOLD_AGE = -18;
+
+    private static final int NON_VALID_AGE = 17;
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(validAge);
-        user.setLogin(bobLogin);
-        user.setPassword(validPassword);
+        user.setAge(VALID_AGE);
+        user.setLogin(BOB_LOGIN);
+        user.setPassword(VALID_PASSWORD);
     }
 
     @Test
     void registerValidUser_Ok() {
-        User actual = storageDao.add(user);
+        User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
     void lessThanMinAge_NotOk() {
-        user.setAge(nonValidAge);
+        user.setAge(NON_VALID_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -82,29 +81,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNormalLogin_ok() {
-        user.setLogin(aliceLogin);
-        User actual = storageDao.add(user);
-        assertEquals(user, actual);
-    }
-
-    @Test
     void userWithMinAge_Ok() {
-        user.setLogin(johnLogin);
-        user.setAge(thresholdAge);
-        User actual = storageDao.add(user);
+        user.setLogin(JOHN_LOGIN);
+        user.setAge(THRESHOLD_AGE);
+        User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
     void tooShortPass_NotOk() {
-        user.setPassword(shortPassword);
+        user.setPassword(SHORT_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void negativeAgeUser_NotOk() {
-        user.setAge(-18);
+        user.setAge(NEGATIVE_THRESHOLD_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
