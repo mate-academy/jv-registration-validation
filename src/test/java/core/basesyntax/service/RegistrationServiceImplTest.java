@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,13 +16,13 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static User defaultUser;
-    private static String correctLogin;
-    private static String checkLogin;
-    private static int correctAge;
-    private static int youngAge;
-    private static int incorrectAge;
-    private static String correctPassword;
-    private static String wrongPassword;
+
+    private static final String CORRECT_LOGIN = "Johnson";
+    private static final int CORRECT_AGE = 20;
+    private static final int YOUNG_AGE = 17;
+    private static final int INCORRECT_AGE = -5;
+    private static final String CORRECT_PASSWORD = "John328";
+    private static final String WRONG_PASSWORD = "lol";
 
     @BeforeAll
     static void beforeAll() {
@@ -32,75 +33,54 @@ class RegistrationServiceImplTest {
     void beforeEach() {
         storageDao = new StorageDaoImpl();
         defaultUser = new User();
-        correctLogin = "Johnson";
-        checkLogin = "Lara";
-        correctAge = 20;
-        youngAge = 17;
-        incorrectAge = -5;
-        correctPassword = "John328";
-        wrongPassword = "lol";
+        defaultUser.setLogin(CORRECT_LOGIN);
+        defaultUser.setAge(CORRECT_AGE);
+        defaultUser.setPassword(CORRECT_PASSWORD);
     }
 
     @Test
     void correctData_ok() {
-        defaultUser.setLogin(checkLogin);
-        defaultUser.setAge(correctAge);
-        defaultUser.setPassword(correctPassword);
         assertEquals(defaultUser, registrationService.register(defaultUser));
     }
 
     @Test
     public void checkAlreadyExistedUser_notOk() {
-        User user = new User();
-        user.setLogin(correctLogin);
-        user.setPassword(correctPassword);
-        user.setAge(correctAge);
-        storageDao.add(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        storageDao.add(defaultUser);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithNullLogin_notOk() {
         defaultUser.setLogin(null);
-        defaultUser.setAge(correctAge);
-        defaultUser.setPassword(correctPassword);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithNullAge_notOk() {
-        defaultUser.setLogin(correctLogin);
         defaultUser.setAge(null);
-        defaultUser.setPassword(correctPassword);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithSmallAge_notOk() {
-        defaultUser.setLogin(correctLogin);
-        defaultUser.setAge(youngAge);
-        defaultUser.setPassword(correctPassword);
+        defaultUser.setAge(YOUNG_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithInvalidAge_notOk() {
-        defaultUser.setLogin(correctLogin);
-        defaultUser.setAge(incorrectAge);
-        defaultUser.setPassword(correctPassword);
+        defaultUser.setAge(INCORRECT_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithSmallPassword_notOk() {
-        defaultUser.setLogin(correctLogin);
-        defaultUser.setAge(correctAge);
-        defaultUser.setPassword(wrongPassword);
+        defaultUser.setPassword(WRONG_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @AfterEach
     void afterEach() {
-        storageDao = null;
+        Storage.people.clear();
     }
 }
