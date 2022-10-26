@@ -1,5 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -7,16 +10,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User alice = new User();
     private User bob = new User();
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -32,32 +32,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThan18_notOk() {
+    void register_ageLessThanMinAge_notOk() {
         alice.setAge(15);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(alice);
-        });
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(alice));
         bob.setAge(-1);
-        assertThrows(RuntimeException.class,
-                () -> {
-                    registrationService.register(bob);
-                });
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(bob));
     }
 
     @Test
-    void register_passwordLeast6Characters_notOk() {
+    void register_passwordLeastMinNumbersOfCharacters_notOk() {
         bob.setPassword("abcda");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(bob));
     }
 
     @Test
     void register_nullAge_notOk() {
         bob.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        });
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(bob));
     }
 
     @Test
@@ -70,16 +65,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_NullPassword_notOk() {
+        bob.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(bob);
+        }, "The password can not be null!");
+    }
+
+    @Test
     void register_userName_Ok() {
-        User actual1 = registrationService.register(alice);
-        assertTrue(Storage.people.contains(actual1));
-        User actual2 = registrationService.register(bob);
-        assertTrue(Storage.people.contains(actual2));
+        User aliceActual = registrationService.register(alice);
+        assertTrue(Storage.people.contains(aliceActual));
+        User bobActual = registrationService.register(bob);
+        assertTrue(Storage.people.contains(bobActual));
     }
 
     @AfterEach
-    void register_cleanStorage()
-    {
+    void cleanStorage() {
         Storage.people.clear();
     }
 }

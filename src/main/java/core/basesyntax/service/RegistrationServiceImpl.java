@@ -14,13 +14,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("The user must be older than " + MIN_AGE);
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("The password length must be longer than "
-                    + MIN_PASSWORD_LENGTH);
-        }
 
         if (user.getLogin() == null) {
             throw new RuntimeException("The login can not be null!");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("The password length must be longer than "
+                    + MIN_PASSWORD_LENGTH);
         }
 
         if (user.getPassword() == null) {
