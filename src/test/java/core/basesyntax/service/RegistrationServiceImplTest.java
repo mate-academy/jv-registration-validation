@@ -23,73 +23,74 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        runAssertThrows(null);
+        actualUser = null;
+        runAssertThrows();
     }
 
     @Test
     void register_nullUserLogin_notOk() {
         actualUser.setLogin(null);
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
     void register_emptyUserLoginString_notOk() {
         actualUser.setLogin("");
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
     void register_whitespaceOnlyUserLoginString_notOk() {
         actualUser.setLogin(" ");
-        runAssertThrows(actualUser);
+        runAssertThrows();
         actualUser.setLogin("  \n");
-        runAssertThrows(actualUser);
+        runAssertThrows();
         actualUser.setLogin("  \t\n");
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
     void register_sameUserAlreadyExistAndRegistered_notOk() {
         Storage.people.add(actualUser);
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
     void register_nullPassword_notOk() {
         actualUser.setPassword(null);
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
     void register_passwordMinLength_notOk() {
         actualUser.setPassword("0");
-        runAssertThrows(actualUser);
+        runAssertThrows();
         actualUser.setPassword("12345");
-        runAssertThrows(actualUser);
+        runAssertThrows();
         actualUser.setPassword("abcde");
-        runAssertThrows(actualUser);
+        runAssertThrows();
         actualUser.setPassword("!@#$%");
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
     void register_minAge_notOk() {
         for (int i = -9999; i < 17; i++) {
             actualUser.setAge(i);
-            runAssertThrows(actualUser);
+            runAssertThrows();
         }
         actualUser.setAge(Integer.MIN_VALUE);
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
     void register_maxAge_notOk() {
         for (int i = 121; i < 9999; i++) {
             actualUser.setAge(i);
-            runAssertThrows(actualUser);
+            runAssertThrows();
         }
         actualUser.setAge(Integer.MIN_VALUE);
-        runAssertThrows(actualUser);
+        runAssertThrows();
     }
 
     @Test
@@ -97,7 +98,7 @@ class RegistrationServiceImplTest {
         assertDoesNotThrow(() -> registrationService.register(actualUser));
     }
 
-    private void runAssertThrows(User actualUser) {
+    private void runAssertThrows() {
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 }
