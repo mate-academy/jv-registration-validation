@@ -7,7 +7,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exseption.InvalidUserException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -19,11 +19,11 @@ class RegistrationServiceImplTest {
     private static final Integer AGE_OVER_MIN = 22;
     private static final Integer AGE_UNDER_MIN = 17;
     private static final Integer MIN_AGE = 18;
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
 
-    @BeforeEach
-    void beforeEach() {
-        Storage.people.add(new User(LOGIN_IN_DB, VALID_PASSWORD, AGE_OVER_MIN));
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
@@ -35,8 +35,8 @@ class RegistrationServiceImplTest {
     void register_validUser_ok() {
         User user = new User(FIRST_LOGIN, VALID_PASSWORD, AGE_OVER_MIN);
         User actual = registrationService.register(user);
-        assertEquals(Storage.people.size(), 2);
-        assertEquals(Storage.people.get(1), user);
+        assertEquals(Storage.people.size(), 1);
+        assertEquals(Storage.people.get(0), user);
     }
 
     @Test
@@ -73,25 +73,26 @@ class RegistrationServiceImplTest {
     void register_minAge_ok() {
         User user = new User(FIRST_LOGIN, VALID_PASSWORD, MIN_AGE);
         registrationService.register(user);
-        assertEquals(Storage.people.size(), 2);
-        assertEquals(Storage.people.get(1), user);
+        assertEquals(Storage.people.size(), 1);
+        assertEquals(Storage.people.get(0), user);
     }
 
     @Test
     void register_twoDifferentUsers_ok() {
-        User user1 = new User(FIRST_LOGIN, VALID_PASSWORD, MIN_AGE);
-        User user2 = new User(SECOND_LOGIN, VALID_PASSWORD, AGE_OVER_MIN);
-        registrationService.register(user1);
-        registrationService.register(user2);
-        assertEquals(Storage.people.size(), 3);
-        assertEquals(Storage.people.get(1), user1);
-        assertEquals(Storage.people.get(2), user2);
+        User firstUser = new User(FIRST_LOGIN, VALID_PASSWORD, MIN_AGE);
+        User secondUser = new User(SECOND_LOGIN, VALID_PASSWORD, AGE_OVER_MIN);
+        registrationService.register(firstUser);
+        registrationService.register(secondUser);
+        assertEquals(Storage.people.size(), 2);
+        assertEquals(Storage.people.get(0), firstUser);
+        assertEquals(Storage.people.get(1), secondUser);
     }
 
     @Test
     void register_existedLogin_notOk() {
+        User expectedUser = new User(LOGIN_IN_DB, VALID_PASSWORD, AGE_OVER_MIN);
+        Storage.people.add(expectedUser);
         User user = new User(LOGIN_IN_DB, VALID_PASSWORD, MIN_AGE);
-        User expectedUser = Storage.people.get(0);
         assertThrows(InvalidUserException.class, () -> registrationService.register(user));
         assertEquals(Storage.people.size(), 1);
         assertEquals(Storage.people.get(0), expectedUser);
