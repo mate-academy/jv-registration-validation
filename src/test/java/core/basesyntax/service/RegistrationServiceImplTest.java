@@ -64,19 +64,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLeastMinNumbersOfCharacters_notOk() {
-        bob.setPassword(BOB_PASSWORD_NOTOK);
-        assertThrows(RuntimeException.class, () ->
-                registrationService.register(bob));
-    }
-
-    @Test
     void register_theSameLogin_notOk() {
         registrationService.register(alice);
         bob.setLogin("Alice");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
         }, "The same login! Exception!");
+    }
+
+    @Test
+    void register_passwordLeastMinNumbersOfCharacters_notOk() {
+        bob.setPassword(BOB_PASSWORD_NOTOK);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(bob));
     }
 
     @Test
