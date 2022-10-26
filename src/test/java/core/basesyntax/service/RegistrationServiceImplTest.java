@@ -24,11 +24,6 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         service = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-        final User registeredUser = new User();
-        registeredUser.setLogin(DEFAULT_LOGIN);
-        registeredUser.setPassword(DEFAULT_PASSWORD);
-        registeredUser.setAge(DEFAULT_AGE);
-        storageDao.add(registeredUser);
     }
 
     @BeforeEach
@@ -37,6 +32,7 @@ class RegistrationServiceImplTest {
         testUser.setLogin("testLogin");
         testUser.setPassword("testPassword");
         testUser.setAge(19);
+
     }
 
     @AfterEach
@@ -70,16 +66,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginAlreadyAdded_NotOk() {
-        testUser.setLogin(DEFAULT_LOGIN);
+    void loginIsNull_NotOk() {
+        testUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             service.register(testUser);
         });
     }
 
     @Test
-    void loginIsNull_NotOk() {
-        testUser.setLogin(null);
+    void loginAlreadyAdded_NotOk() {
+        final User registeredUser = new User();
+        registeredUser.setLogin(DEFAULT_LOGIN);
+        registeredUser.setPassword(DEFAULT_PASSWORD);
+        registeredUser.setAge(DEFAULT_AGE);
+        storageDao.add(registeredUser);
+        testUser.setLogin(DEFAULT_LOGIN);
         assertThrows(RuntimeException.class, () -> {
             service.register(testUser);
         });
