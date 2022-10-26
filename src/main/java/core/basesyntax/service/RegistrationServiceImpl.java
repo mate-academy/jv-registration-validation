@@ -43,7 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Age can't be empty");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Invalid age");
         }
     }
