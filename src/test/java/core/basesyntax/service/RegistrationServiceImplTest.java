@@ -88,5 +88,3 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
-
-
