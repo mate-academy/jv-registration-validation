@@ -88,7 +88,7 @@ class RegistrationServiceImplTest {
             actualUser.setAge(i);
             runAssertThrows(actualUser);
         }
-        actualUser.setAge(Integer.MIN_VALUE);
+        actualUser.setAge(Integer.MAX_VALUE);
         runAssertThrows(actualUser);
     }
 
