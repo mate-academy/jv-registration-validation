@@ -14,6 +14,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
+    private static final String DEFAULT_EMAIL = "spider@gmail.com";
+    private static final String DEFAULT_PASSWORD = "qwerty12345";
+    private static final String NOT_REQUIRED_PASSWORD = "sdf";
+    private static final int DEFAULT_AGE = 25;
+    private static final int NOT_REQUIRED_AGE = 17;
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storage;
     private User user;
@@ -26,7 +31,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     public void init() {
-        user = new User("spider@gmail.com", "qwerty12345", 25);
+        user = new User(DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_AGE);
     }
 
     @AfterEach
@@ -49,13 +54,13 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_underMinAge_notOk() {
-        user.setAge(17);
+        user.setAge(NOT_REQUIRED_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     public void register_lengthOfPasswordTooShort_notOk() {
-        user.setPassword("sdf");
+        user.setPassword(NOT_REQUIRED_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
