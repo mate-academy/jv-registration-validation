@@ -21,14 +21,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < ADULT_AGE) {
             throw new RuntimeException("Can't register user age under 18");
         }
-        if (user.getAge() >= ADULT_AGE) {
-            storageDao.add(user);
-        }
     }
 
     private void checkLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be NULL");
+        }
+        if (user.getLogin().isEmpty()) {
+            throw new RuntimeException("Login can't be empty");
         }
         if (user.equals(storageDao.get(user.getLogin()))) {
             throw new RuntimeException("User with such login already exists");

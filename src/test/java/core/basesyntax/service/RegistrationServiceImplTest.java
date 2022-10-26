@@ -16,6 +16,7 @@ class RegistrationServiceImplTest {
     private static final String LOGIN_2 = "user2";
     private static final String VALID_PASSWORD = "12345qwe";
     private static final String INVALID_PASSWORD = "12345";
+    private static final String EMPTY_LINE = "";
     private static final int VALID_AGE = 18;
     private static final int INVALID_AGE = 17;
     private static RegistrationService registrationService;
@@ -48,8 +49,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_adultUser_ok() {
-        Storage.people.add(defaultUser);
-        assertEquals(defaultUser, Storage.people.get(Storage.people.size() - 1));
+        assertEquals(defaultUser, registrationService.register(defaultUser));
     }
 
     @Test
@@ -67,6 +67,12 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithNullLogin_notOk() {
         defaultUser.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
+    }
+
+    @Test
+    void register_userWithEmptyLogin() {
+        defaultUser.setLogin(EMPTY_LINE);
         assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
@@ -99,7 +105,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithEmptyLinePassword_notOk() {
-        defaultUser.setPassword("");
+        defaultUser.setPassword(EMPTY_LINE);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(defaultUser));
     }
@@ -112,7 +118,7 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void clearStorage() {
         Storage.people.clear();
     }
 }
