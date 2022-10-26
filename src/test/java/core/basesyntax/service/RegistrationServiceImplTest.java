@@ -41,10 +41,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_whitespaceOnlyUserLoginString_notOk() {
-        actualUser.setLogin(" ");
-        runAssertThrows();
-        actualUser.setLogin("  \n");
-        runAssertThrows();
         actualUser.setLogin("  \t\n");
         runAssertThrows();
     }
@@ -63,32 +59,22 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordMinLength_notOk() {
-        actualUser.setPassword("0");
-        runAssertThrows();
-        actualUser.setPassword("12345");
-        runAssertThrows();
         actualUser.setPassword("abcde");
-        runAssertThrows();
-        actualUser.setPassword("!@#$%");
         runAssertThrows();
     }
 
     @Test
     void register_minAge_notOk() {
-        for (int i = -9999; i < 17; i++) {
-            actualUser.setAge(i);
-            runAssertThrows();
-        }
+        actualUser.setAge(17);
+        runAssertThrows();
         actualUser.setAge(Integer.MIN_VALUE);
         runAssertThrows();
     }
 
     @Test
     void register_maxAge_notOk() {
-        for (int i = 121; i < 9999; i++) {
-            actualUser.setAge(i);
-            runAssertThrows();
-        }
+        actualUser.setAge(121);
+        runAssertThrows();
         actualUser.setAge(Integer.MIN_VALUE);
         runAssertThrows();
     }
