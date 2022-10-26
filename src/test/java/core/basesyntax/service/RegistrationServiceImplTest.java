@@ -1,14 +1,14 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_less_than_18_notOk() {
+    void register_ageLessThan18_notOk() {
         alice.setAge(15);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(alice);
@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_least_6_characters_notOk() {
+    void register_passwordLeast6Characters_notOk() {
         bob.setPassword("abcda");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_the_same_login_notOk() {
+    void register_theSameLogin_notOk() {
         registrationService.register(alice);
         bob.setLogin("Alice");
         assertThrows(RuntimeException.class, () -> {
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_name_Ok() {
+    void register_userName_Ok() {
         User actual1 = registrationService.register(alice);
         assertTrue(Storage.people.contains(actual1));
         User actual2 = registrationService.register(bob);
@@ -78,7 +78,8 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void register_clean_storage() {
+    void register_cleanStorage()
+    {
         Storage.people.clear();
     }
 }
