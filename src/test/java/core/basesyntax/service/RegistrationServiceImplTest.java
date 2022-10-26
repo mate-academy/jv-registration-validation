@@ -7,6 +7,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +27,11 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationServiceImpl = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
         user = new User();
         user.setAge(VALID_AGE);
         user.setLogin(VALID_LOGIN);
@@ -87,11 +88,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_testUser_isOk() {
-        User testUser = new User();
-        testUser.setAge(VALID_AGE);
-        testUser.setPassword(VALID_PASSWORD);
-        testUser.setLogin(VALID_NEW_LOGIN);
-        User registeredUser = registrationServiceImpl.register(testUser);
-        assertEquals(2, Storage.people.size());
+        user.setAge(VALID_AGE);
+        user.setPassword(VALID_PASSWORD);
+        user.setLogin(VALID_NEW_LOGIN);
+        User registeredUser = registrationServiceImpl.register(user);
+        assertEquals(user, storageDao.get(VALID_NEW_LOGIN));
+        assertEquals(1, Storage.people.size());
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
