@@ -113,7 +113,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_oneUserStoredCorrectly_ok() {
-        Storage.people.add(actualUser);
+        registrationService.register(actualUser);
         assertTrue(Storage.people.contains(actualUser));
         assertEquals(actualUser, Storage.people.get(0));
     }
@@ -125,7 +125,7 @@ class RegistrationServiceImplTest {
         validUser1.setPassword(USER_PASSWORD_2);
         validUser1.setAge(USER_AGE_2);
         Storage.people.add(validUser1);
-        Storage.people.add(actualUser);
+        registrationService.register(actualUser);
         User validUser2 = new User();
         validUser1.setLogin(USER_LOGIN_3);
         validUser1.setPassword(USER_PASSWORD_3);
