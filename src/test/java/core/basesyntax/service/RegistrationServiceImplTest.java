@@ -14,13 +14,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService = new RegistrationServiceImpl();
-    private static String LOGIN = "PERSON";
-    private static String PASSWORD = "11111111";
-    private static String SHORT_PASSWORD = "1111";
-    private static String EMPTY_LOGIN = "";
-    private static int AGE = 30;
-    private static int MINOR_AGE = 10;
-    private static int TALE_AGE = 300;
+    private static final String LOGIN = "PERSON";
+    private static final String PASSWORD = "11111111";
+    private static final String SHORT_PASSWORD = "1111";
+    private static final String EMPTY_LOGIN = "";
+    private static final int AGE = 30;
+    private static final int MINOR_AGE = 10;
+    private static final int TALE_AGE = 300;
 
     @Test
     void nullUser_NotOk() {

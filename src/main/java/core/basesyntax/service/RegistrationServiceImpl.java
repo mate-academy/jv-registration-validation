@@ -19,6 +19,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new NullPointerException("User can't be a null.");
         }
+        checkUserLogin(user);
+        checkUserAge(user);
+        checkUserPassword(user);
+        return storageDao.add(user);
+    }
+
+    public void checkUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new InvalidLoginException("Your login isn't correct. Login can't be a null.");
         }
@@ -28,6 +35,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new DuplicateUserException("This user already exists");
         }
+    }
+
+    public void checkUserAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidAgeException("Your age isn't correct. Age can't be a null");
         }
@@ -38,10 +48,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidAgeException("The oldest person in the world is 116 years old,"
                     + " how old are you?");
         }
+    }
+
+    public void checkUserPassword(User user) {
         if (user.getPassword().length() < PASSWORD_LENGTH_MINIMUM) {
             throw new InvalidPasswordException("Your password isn't correct. "
                     + "Please enter password 8 symbols minimum.");
         }
-        return storageDao.add(user);
     }
 }
