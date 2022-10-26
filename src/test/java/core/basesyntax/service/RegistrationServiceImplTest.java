@@ -32,13 +32,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_noExistUserLogin_ok() {
-        assertEquals(user, registrationService.register(user));
-    }
-
-    @Test
     void register_successfulRegistration_ok() {
-        registrationService.register(user);
+        assertEquals(user, registrationService.register(user));
         assertEquals(user, storageDao.get(user.getLogin()));
     }
 
