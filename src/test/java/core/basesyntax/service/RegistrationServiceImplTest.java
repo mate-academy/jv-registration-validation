@@ -1,15 +1,14 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -22,7 +21,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user =new User();
+        user = new User();
         user.setLogin("Oleg");
         user.setPassword("123456");
         user.setAge(19);
@@ -51,7 +50,7 @@ class RegistrationServiceImplTest {
     @Test
     void nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class,() -> {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -60,7 +59,7 @@ class RegistrationServiceImplTest {
     void nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
-           registrationService.register(user);
+            registrationService.register(user);
         });
     }
 
@@ -68,7 +67,7 @@ class RegistrationServiceImplTest {
     void lengthOfPassword_notOk() {
         user.setPassword("abcde");
         assertThrows(RuntimeException.class, () -> {
-           registrationService.register(user);
+            registrationService.register(user);
         });
     }
 
@@ -102,5 +101,10 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void registerNewUser_ok() {
+        assertEquals(user, registrationService.register(user));
     }
 }
