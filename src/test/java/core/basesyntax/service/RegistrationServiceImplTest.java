@@ -18,6 +18,8 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "YuliaTsariv";
     private static final String DEFAULT_PASSWORD = "Yulia123";
     private static final int DEFAULT_AGE = 20;
+    private static final int MIN_USER_AGE = 18;
+    private static final int UNDER_MIN_AGE = 12;
 
     private User user;
 
@@ -37,7 +39,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_withMinAge_ok() {
-        user.setAge(18);
+        user.setAge(MIN_USER_AGE);
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
     }
@@ -66,7 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_underMinAge_notOk() {
-        user.setAge(12);
+        user.setAge(UNDER_MIN_AGE);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });

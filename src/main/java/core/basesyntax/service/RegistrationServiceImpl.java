@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private static void checkPassword(User user) {
+    private void checkPassword(User user) {
         if (user.getPassword() == null) {
             throw new RuntimeException("Password cannot be null");
         }
@@ -26,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void checkAge(User user) {
+    private void checkAge(User user) {
         if (user.getAge() == null) {
             throw new RuntimeException("Age connot be null");
         }
