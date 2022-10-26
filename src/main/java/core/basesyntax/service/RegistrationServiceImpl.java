@@ -11,8 +11,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkLogin(user);
         checkNullValues(user);
+        checkLogin(user);
         checkAge(user);
         checkPassword(user);
         return storageDao.add(user);
@@ -25,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAge(User user) {
-        if (user.getAge() < 0 || user.getAge() < MIN_AGE) {
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User age under age or wrong input");
         }
     }
