@@ -88,6 +88,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NormalUserAdding_Ok() {
+        int oldStorageSize = Storage.people.size();
         assertEquals(testUser, testService.register(testUser));
+        assertEquals(Storage.people.size(), oldStorageSize + 1);
     }
 }
