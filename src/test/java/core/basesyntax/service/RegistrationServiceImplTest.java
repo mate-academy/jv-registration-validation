@@ -89,7 +89,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_twoIdenticalUsers_notOk() {
+    void register_existedLogin_notOk() {
         User user = new User(LOGIN_IN_DB, VALID_PASSWORD, MIN_AGE);
         User expectedUser = Storage.people.get(0);
         assertThrows(InvalidUserException.class, () -> registrationService.register(user));

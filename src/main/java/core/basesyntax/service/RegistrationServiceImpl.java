@@ -15,28 +15,36 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidUserException("User can't be null");
         }
+        checkIsLoginInvalid(user);
+        checkIsPasswordInvalid(user);
+        checkIsAgeInvalid(user);
+        return storageDao.add(user);
+    }
+
+    private void checkIsLoginInvalid(User user) {
         if (user.getLogin() == null) {
             throw new InvalidUserException("Login can't be null");
         }
-        if (user.getPassword() == null) {
-            throw new InvalidUserException("Password can't be null");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidUserException("This login already exists");
         }
+    }
+
+    private void checkIsAgeInvalid(User user) {
         if (user.getAge() == null) {
-            throw new InvalidUserException("Password can't be null");
-        }
-        if (user.getPassword().length() < MIN_NUMBER_OF_SYMBOLS) {
             throw new InvalidUserException("Password can't be null");
         }
         if (user.getAge() < MIN_AGE) {
             throw new InvalidUserException("Invalid age");
         }
-        if (isLoginExists(user)) {
-            throw new InvalidUserException("This login already exists");
-        }
-        return storageDao.add(user);
     }
 
-    private boolean isLoginExists(User user) {
-        return storageDao.get(user.getLogin()) != null;
+    private void checkIsPasswordInvalid(User user) {
+        if (user.getPassword() == null) {
+            throw new InvalidUserException("Password can't be null");
+        }
+        if (user.getPassword().length() < MIN_NUMBER_OF_SYMBOLS) {
+            throw new InvalidUserException("Password can't be null");
+        }
     }
 }
