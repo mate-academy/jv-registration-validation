@@ -7,8 +7,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
-    private User user = new User();
-    private StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -30,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkLogin(String login) {
         if (login == null || storageDao.get(login) != null) {
-            throw new RuntimeException("User with same login is exist");
+            throw new RuntimeException("Empty login or user with same login is exist");
         }
     }
 
@@ -42,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(Integer age) {
         if (age == null || age < MIN_AGE) {
-            throw new RuntimeException("Your age must be below 18");
+            throw new RuntimeException("Your age must be below " + MIN_AGE);
         }
     }
 }

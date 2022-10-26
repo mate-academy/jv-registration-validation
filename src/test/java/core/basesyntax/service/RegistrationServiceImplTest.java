@@ -37,68 +37,67 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() {
-        user = null;
-        Throwable thrown = assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user); });
-        assertEquals("User can’t be null", thrown.getMessage());
+    void register_andGetUser_ok() {
+        User expected = user;
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
+        assertEquals(expected, actual);
     }
 
     @Test
-    void register_returnUser_Ok() {
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
+    void register_nullUser_notOk() {
+        user = null;
+        Throwable thrown = assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
+        assertEquals("User can’t be null", thrown.getMessage());
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class,() -> {
-            registrationService.register(user); });
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_loginIsAlreadyExist_notOk() {
         storageDao.add(user);
-        assertThrows(RuntimeException.class,() -> {
-            registrationService.register(user); });
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_invalidPassword_notOK() {
         user.setPassword(ILLEGAL_PASSWORD_LENGTH);
-        assertThrows(RuntimeException.class,() -> {
-            registrationService.register(user); });
-    }
-
-    @Test
-    void register_passwordNull_notOk() {
-        user.setPassword(null);
-        assertThrows(RuntimeException.class,() -> {
-            registrationService.register(user); });
-    }
-
-    @Test
-    void register_ageIsNull_notOk() {
-        user.setAge(null);
-        assertThrows(RuntimeException.class,() -> {
-            registrationService.register(user); });
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_ageBelow18_notOk() {
         user.setAge(ILLEGAL_AGE);
-        assertThrows(RuntimeException.class,() -> {
-            registrationService.register(user); });
-    }
-
-    @Test
-    void register_getUser_ok() {
-        storageDao.add(user);
-        User expected = user;
-        User actual = storageDao.get(user.getLogin());
-        assertEquals(expected,actual, "Cant find user by this login");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
 
