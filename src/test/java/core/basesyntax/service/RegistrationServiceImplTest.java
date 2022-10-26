@@ -1,8 +1,10 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -15,13 +17,16 @@ class RegistrationServiceImplTest {
     private static final String WRONG_PASSWORD = "12345";
     private static final String DEFAULT_LOGIN = "Login";
     private static final int DEFAULT_AGE = 18;
+    private static final int WRONG_AGE = 17;
     private static final int WRONG_NEGATIVE_AGE = -1;
     private User user;
     private RegistrationService service;
+    private StorageDao storage;
 
     @BeforeEach
     void beforeAll() {
         service = new RegistrationServiceImpl();
+        storage = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -44,13 +49,13 @@ class RegistrationServiceImplTest {
     void register_rightUser_Ok() {
         User actual = service.register(user);
         assertTrue(actual == user);
-        User getByLogin = new StorageDaoImpl().get(actual.getLogin());
-        assertTrue(getByLogin == user);
+        User userGettedByLogin = storage.get(actual.getLogin());
+        assertEquals(userGettedByLogin,user);
     }
 
     @Test
     void register_ageIsTooSmall_NotOk() {
-        user.setAge(17);
+        user.setAge(WRONG_AGE);
         assertThrows(RuntimeException.class, () ->
                 service.register(user)
         );
@@ -65,7 +70,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addSameUser_NotOk() {
-        new StorageDaoImpl().add(user);
+        storage.add(user);
         assertThrows(RuntimeException.class, () ->
                 service.register(user)
         );
