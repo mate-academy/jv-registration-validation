@@ -114,7 +114,6 @@ class RegistrationServiceImplTest {
     void register_oneUserStoredCorrectly_ok() {
         registrationService.register(actualUser);
         assertTrue(Storage.people.contains(actualUser));
-        assertEquals(actualUser, Storage.people.get(0));
     }
 
     @Test
