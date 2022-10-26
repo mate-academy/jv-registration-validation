@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private static RegistrationService registrationService;
-    private User mark;
+    private User testUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -26,115 +26,115 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        mark = new User("Mark","123456", 18);
+        testUser = new User("Mark","123456", 18);
     }
 
     @Test
-    void register_setNullUser_NotOk() {
+    void register_SetNullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void register_setNullLogin_NotOk() {
-        mark.setLogin(null);
+    void register_SetNullLogin_NotOk() {
+        testUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(mark);
+            registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_setNullAge_NotOk() {
-        mark.setAge(null);
+    void register_SetNullAge_NotOk() {
+        testUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(mark);
+            registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_setNullPassword_NotOk() {
-        mark.setPassword(null);
+    void register_SetNullPassword_NotOk() {
+        testUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(mark);
+            registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_userAlreadyExistWithSuchLogin_NotOk() {
-        storageDao.add(mark);
+    void register_UserAlreadyExistWithSuchLogin_NotOk() {
+        storageDao.add(testUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("Mark", "654321", 20));
         });
     }
 
     @Test
-    void register_userNotExistWithSuchLogin_Ok() {
+    void register_UserNotExistWithSuchLogin_Ok() {
         User expected = new User("Mark", "asdq123", 20);
-        User actual = registrationService.register(mark);
+        User actual = registrationService.register(testUser);
         assertNotEquals(expected, actual);
     }
 
     @Test
-    void register_setNotValidAge_NotOk() {
-        mark.setAge(17);
+    void register_SetNotValidAge_NotOk() {
+        testUser.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(mark);
+            registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_setNegativeAge_NotOk() {
-        mark.setAge(-18);
+    void register_SetNegativeAge_NotOk() {
+        testUser.setAge(-18);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(mark);
+            registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_setAgeEqualsAllowAge_Ok() {
-        mark.setAge(18);
-        storageDao.add(mark);
-        assertEquals(mark, storageDao.get(mark.getLogin()));
+    void register_SetAgeEqualsAllowAge_Ok() {
+        testUser.setAge(18);
+        storageDao.add(testUser);
+        assertEquals(testUser, storageDao.get(testUser.getLogin()));
     }
 
     @Test
-    void register_setAgeBiggerAgeThanAllow_Ok() {
-        mark.setAge(20);
-        storageDao.add(mark);
-        assertEquals(mark, storageDao.get(mark.getLogin()));
+    void register_SetAgeBiggerAgeThanAllow_Ok() {
+        testUser.setAge(20);
+        storageDao.add(testUser);
+        assertEquals(testUser, storageDao.get(testUser.getLogin()));
     }
 
     @Test
-    void register_setPasswordWithLengthLessThanAllow_NotOk() {
-        mark.setPassword("12345");
+    void register_SetPasswordWithLengthLessThanAllow_NotOk() {
+        testUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(mark);
+            registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_setPasswordWithLengthMoreThanAllow_Ok() {
-        mark.setPassword("tooLong123435132412346");
-        assertEquals(mark, registrationService.register(mark));
+    void register_SetPasswordWithLengthMoreThanAllow_Ok() {
+        testUser.setPassword("tooLong123435132412346");
+        assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_setPasswordWithLengthAllow_Ok() {
-        mark.setPassword("123456");
-        assertEquals(mark, registrationService.register(mark));
+    void register_SetPasswordWithLengthAllow_Ok() {
+        testUser.setPassword("123456");
+        assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_setPasswordWithSymbols_Ok() {
-        mark.setPassword("!@#@$#$!&*^*_");
-        assertEquals(mark, registrationService.register(mark));
+    void register_SetPasswordWithSymbols_Ok() {
+        testUser.setPassword("!@#@$#$!&*^*_");
+        assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_setUserWithValidParameters_Ok() {
-        storageDao.add(mark);
-        assertEquals(mark, storageDao.get(mark.getLogin()));
+    void register_SetUserWithValidParameters_Ok() {
+        storageDao.add(testUser);
+        assertEquals(testUser, storageDao.get(testUser.getLogin()));
     }
 
     @AfterEach

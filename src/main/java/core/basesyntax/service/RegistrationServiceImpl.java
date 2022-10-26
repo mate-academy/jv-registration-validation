@@ -39,6 +39,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void passwordLengthCheck(Integer passwordLength) {
+        if (passwordLength == null) {
+            throw new RuntimeException("Age can't be null!");
+        }
         if (passwordLength < LENGTH_ALLOW) {
             throw new RuntimeException("Your password has less than 6 characters");
         }

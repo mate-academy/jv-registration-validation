@@ -9,7 +9,6 @@ public class User {
     private Integer age;
 
     public User(String login, String password, Integer age) {
-        this.id = id;
         this.login = login;
         this.password = password;
         this.age = age;
