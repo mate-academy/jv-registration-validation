@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -78,12 +77,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUserWithExistingLogin_NotOk() {
-        Storage.people.add(defaultUser);
-        assertThrows(RuntimeException.class, () ->
-                registrationService.register(new User(22L,
-                        defaultUser.getLogin(),
-                        VALID_PASSWORD,
-                        VALID_AGE)));
+        registrationService.register(defaultUser);
+        User userWithSameLogin = new User(
+                defaultUser.getLogin(),
+                VALID_PASSWORD,
+                VALID_AGE);
+        assertThrows(RuntimeException.class, () -> registrationService.register(userWithSameLogin));
     }
 
     @Test
@@ -94,7 +93,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithValidPassword_ok() {
-        assertTrue(Storage.people.add(defaultUser));
+        assertEquals(defaultUser, registrationService.register(defaultUser));
     }
 
     @Test
@@ -106,14 +105,15 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithEmptyLinePassword_notOk() {
         defaultUser.setPassword(EMPTY_LINE);
-        assertThrows(RuntimeException.class, () ->
-                registrationService.register(defaultUser));
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void checkStorageSizeAfterAddingTwoUsers() {
-        Storage.people.add(new User(1L,LOGIN, VALID_PASSWORD, VALID_AGE));
-        Storage.people.add(new User(1L,LOGIN_2, VALID_PASSWORD, VALID_AGE));
+        User validUser1 = new User(LOGIN, VALID_PASSWORD, VALID_AGE);
+        User validUser2 = new User(LOGIN_2, VALID_PASSWORD, VALID_AGE);
+        registrationService.register(validUser1);
+        registrationService.register(validUser2);
         assertEquals(2, Storage.people.size());
     }
 
