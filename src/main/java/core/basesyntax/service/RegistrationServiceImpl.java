@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateLogin(User user) {
         if (user.getLogin() == null) {
-            throw new RuntimeException("Password can't be null!");
+            throw new RuntimeException("Username can't be null!");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This username isn't allowed!");
