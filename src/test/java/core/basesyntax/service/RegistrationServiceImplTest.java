@@ -15,6 +15,10 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storageDao;
+    private static final String DEFAULT_LOGIN = "YuliaTsariv";
+    private static final String DEFAULT_PASSWORD = "Yulia123";
+    private static final int DEFAULT_AGE = 20;
+
     private User user;
 
     @BeforeAll
@@ -26,9 +30,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin("YuliaTsariv");
-        user.setAge(20);
-        user.setPassword("Yulichka12");
+        user.setLogin(DEFAULT_LOGIN);
+        user.setAge(DEFAULT_AGE);
+        user.setPassword(DEFAULT_PASSWORD);
     }
 
     @Test
@@ -47,8 +51,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void valid_allData_ok() {
-        registrationService.register(user);
+        User validUser = registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
+        assertEquals(user,validUser);
     }
 
     @Test

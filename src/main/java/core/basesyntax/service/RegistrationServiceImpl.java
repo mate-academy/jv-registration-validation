@@ -26,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public static void checkAge(User user) {
+    private static void checkAge(User user) {
         if (user.getAge() == null) {
             throw new RuntimeException("Age connot be null");
         }
@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void checkLogin(User user) {
+    private void checkLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login cannot be null");
         }
