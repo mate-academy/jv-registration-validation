@@ -2,10 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.DuplicateUserException;
-import core.basesyntax.exception.InvalidAgeException;
-import core.basesyntax.exception.InvalidLoginException;
-import core.basesyntax.exception.InvalidPasswordException;
+import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -17,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User can't be a null.");
+            throw new InvalidDataException("User can't be a null.");
         }
         checkUserLogin(user);
         checkUserAge(user);
@@ -27,33 +24,33 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void checkUserLogin(User user) {
         if (user.getLogin() == null) {
-            throw new InvalidLoginException("Your login isn't correct. Login can't be a null.");
+            throw new InvalidDataException("Your login isn't correct. Login can't be a null.");
         }
         if (user.getLogin().equals("")) {
-            throw new InvalidLoginException("Your login isn't correct. Login can't be a empty.");
+            throw new InvalidDataException("Your login isn't correct. Login can't be a empty.");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new DuplicateUserException("This user already exists");
+            throw new InvalidDataException("This user already exists");
         }
     }
 
     public void checkUserAge(User user) {
         if (user.getAge() == null) {
-            throw new InvalidAgeException("Your age isn't correct. Age can't be a null");
+            throw new InvalidDataException("Your age isn't correct. Age can't be a null");
         }
         if (user.getAge() < ADULT_AGE) {
-            throw new InvalidAgeException("Your age isn't correct. You must be over 18");
+            throw new InvalidDataException("Your age isn't correct. You must be over 18");
         }
         if (user.getAge() > OLDER_AGE) {
-            throw new InvalidAgeException("The oldest person in the world is 116 years old,"
+            throw new InvalidDataException("The oldest person in the world is 116 years old,"
                     + " how old are you?");
         }
     }
 
     public void checkUserPassword(User user) {
         if (user.getPassword().length() < PASSWORD_LENGTH_MINIMUM) {
-            throw new InvalidPasswordException("Your password isn't correct. "
-                    + "Please enter password 8 symbols minimum.");
+            throw new InvalidDataException("Your password isn't correct. "
+                    + "Please enter password 6 symbols minimum.");
         }
     }
 }

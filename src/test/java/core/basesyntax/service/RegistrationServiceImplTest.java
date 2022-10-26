@@ -4,80 +4,102 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.DuplicateUserException;
-import core.basesyntax.exception.InvalidAgeException;
-import core.basesyntax.exception.InvalidLoginException;
-import core.basesyntax.exception.InvalidPasswordException;
+import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
     private static final String LOGIN = "PERSON";
-    private static final String PASSWORD = "11111111";
-    private static final String SHORT_PASSWORD = "1111";
+    private static final String PASSWORD = "111111";
+    private static final String SHORT_PASSWORD = "11111";
     private static final String EMPTY_LOGIN = "";
-    private static final int AGE = 30;
-    private static final int MINOR_AGE = 10;
-    private static final int TALE_AGE = 300;
+    private static final int AGE = 18;
+    private static final int MINOR_AGE = 17;
+    private static final int TALE_AGE = 121;
+    private User user;
+    private User nullUser;
+    private User userWithNullLogin;
+    private User userWithEmptyLogin;
+    private User userWithNullAge;
+    private User userWithMinorAge;
+    private User userWithTaleAge;
+    private User userWithShortPassword;
 
-    @Test
-    void nullUser_NotOk() {
-        User user = null;
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
+        user = new User(LOGIN, PASSWORD, AGE);
+        nullUser = null;
+        userWithNullLogin = new User(null, PASSWORD, AGE);
+        userWithEmptyLogin = new User(EMPTY_LOGIN, PASSWORD, AGE);
+        userWithNullAge = new User(LOGIN, PASSWORD, null);
+        userWithMinorAge = new User(LOGIN, PASSWORD, MINOR_AGE);
+        userWithTaleAge = new User(LOGIN, PASSWORD, TALE_AGE);
+        userWithShortPassword = new User(LOGIN, SHORT_PASSWORD, AGE);
     }
 
     @Test
-    void userWithNullLogin_NotOk() {
-        User user = new User(null, PASSWORD, AGE);
-        assertThrows(InvalidLoginException.class, () -> registrationService.register(user));
+    void nullUser_notOk() {
+        assertThrows(InvalidDataException.class, () -> registrationService.register(nullUser));
     }
 
     @Test
-    void userWithEmptyLogin_NotOk() {
-        User user = new User(EMPTY_LOGIN, PASSWORD, AGE);
-        assertThrows(InvalidLoginException.class, () -> registrationService.register(user));
+    void userWithNullLogin_notOk() {
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(userWithNullLogin));
     }
 
     @Test
-    void duplicateUser_NotOk() {
-        User user = new User(LOGIN, PASSWORD, AGE);
+    void userWithEmptyLogin_notOk() {
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(userWithEmptyLogin));
+    }
+
+    @Test
+    void duplicateUser_notOk() {
         registrationService.register(user);
-        assertThrows(DuplicateUserException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(user));
         assertEquals(Storage.people.size(), 1);
     }
 
     @Test
-    void userWithNullAge_NotOk() {
-        User user = new User(LOGIN, PASSWORD, null);
-        assertThrows(InvalidAgeException.class, () -> registrationService.register(user));
+    void userWithNullAge_notOk() {
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(userWithNullAge));
     }
 
     @Test
-    void userWithMinorAge_NotOk() {
-        User user = new User(LOGIN, PASSWORD, MINOR_AGE);
-        assertThrows(InvalidAgeException.class, () -> registrationService.register(user));
+    void userWithMinorAge_notOk() {
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(userWithMinorAge));
     }
 
     @Test
-    void userWithTaleAge_NotOk() {
-        User user = new User(LOGIN, PASSWORD, TALE_AGE);
-        assertThrows(InvalidAgeException.class, () -> registrationService.register(user));
+    void userWithTaleAge_notOk() {
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(userWithTaleAge));
     }
 
     @Test
-    void userWithShortPassword_NotOk() {
-        User user = new User(LOGIN, SHORT_PASSWORD, AGE);
-        assertThrows(InvalidPasswordException.class, () -> registrationService.register(user));
+    void userWithShortPassword_notOk() {
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(userWithShortPassword));
     }
 
     @Test
-    void userWithValidParameters_Ok() {
-        User user = new User(LOGIN, PASSWORD, AGE);
-        User actual = registrationService.register(user);
-        assertEquals(Storage.people.size(), 1);
-        assertEquals(Storage.people.get(0), user);
+    void userWithValidParameters_ok() {
+        Storage.people.add(user);
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(user));
     }
 
     @AfterEach
