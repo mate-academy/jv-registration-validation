@@ -49,6 +49,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_NullPassword_notOk() {
+        bob.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(bob);
+        }, "The password can not be null!");
+    }
+
+    @Test
     void register_passwordLeastMinNumbersOfCharacters_notOk() {
         bob.setPassword("abcda");
         assertThrows(RuntimeException.class, () ->
@@ -62,14 +70,6 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(bob);
         }, "The same login! Exception!");
-    }
-
-    @Test
-    void register_NullPassword_notOk() {
-        bob.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
-        }, "The password can not be null!");
     }
 
     @Test

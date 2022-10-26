@@ -18,15 +18,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("The login can not be null!");
         }
+        if (user.getPassword() == null) {
+            throw new RuntimeException("The password can not be null!");
+        }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("The password length must be longer than "
                     + MIN_PASSWORD_LENGTH);
         }
 
-        if (user.getPassword() == null) {
-            throw new RuntimeException("The password can not be null!");
-
-        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("The user already axist! Please, enter another email.");
         }
