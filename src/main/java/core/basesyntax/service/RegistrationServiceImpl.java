@@ -16,6 +16,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         loginCheck(user.getLogin());
         ageCheck(user.getAge());
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Password can't be null!");
+        }
         passwordLengthCheck(user.getPassword().length());
         return storageDao.add(user);
     }
@@ -39,9 +42,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void passwordLengthCheck(Integer passwordLength) {
-        if (passwordLength == null) {
-            throw new RuntimeException("Age can't be null!");
-        }
         if (passwordLength < LENGTH_ALLOW) {
             throw new RuntimeException("Your password has less than 6 characters");
         }

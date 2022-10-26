@@ -30,14 +30,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_SetNullUser_NotOk() {
+    void register_setNullUser_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void register_SetNullLogin_NotOk() {
+    void register_setNullLogin_notOk() {
         testUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_SetNullAge_NotOk() {
+    void register_setNullAge_notOk() {
         testUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_SetNullPassword_NotOk() {
+    void register_setNullPassword_notOk() {
         testUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserAlreadyExistWithSuchLogin_NotOk() {
+    void register_userAlreadyExistWithSuchLogin_notOk() {
         storageDao.add(testUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("Mark", "654321", 20));
@@ -69,14 +69,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserNotExistWithSuchLogin_Ok() {
+    void register_userNotExistWithSuchLogin_ok() {
         User expected = new User("Mark", "asdq123", 20);
         User actual = registrationService.register(testUser);
         assertNotEquals(expected, actual);
     }
 
     @Test
-    void register_SetNotValidAge_NotOk() {
+    void register_setNotValidAge_notOk() {
         testUser.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_SetNegativeAge_NotOk() {
+    void register_setNegativeAge_notOk() {
         testUser.setAge(-18);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -92,21 +92,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_SetAgeEqualsAllowAge_Ok() {
+    void register_setAgeEqualsAllowAge_ok() {
         testUser.setAge(18);
         storageDao.add(testUser);
         assertEquals(testUser, storageDao.get(testUser.getLogin()));
     }
 
     @Test
-    void register_SetAgeBiggerAgeThanAllow_Ok() {
+    void register_setAgeBiggerAgeThanAllow_ok() {
         testUser.setAge(20);
         storageDao.add(testUser);
         assertEquals(testUser, storageDao.get(testUser.getLogin()));
     }
 
     @Test
-    void register_SetPasswordWithLengthLessThanAllow_NotOk() {
+    void register_setPasswordWithLengthLessThanAllow_notOk() {
         testUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
@@ -114,25 +114,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_SetPasswordWithLengthMoreThanAllow_Ok() {
+    void register_setPasswordWithLengthMoreThanAllow_ok() {
         testUser.setPassword("tooLong123435132412346");
         assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_SetPasswordWithLengthAllow_Ok() {
+    void register_setPasswordWithLengthAllow_ok() {
         testUser.setPassword("123456");
         assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_SetPasswordWithSymbols_Ok() {
+    void register_setPasswordWithSymbols_ok() {
         testUser.setPassword("!@#@$#$!&*^*_");
         assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_SetUserWithValidParameters_Ok() {
+    void register_setUserWithValidParameters_ok() {
         storageDao.add(testUser);
         assertEquals(testUser, storageDao.get(testUser.getLogin()));
     }
