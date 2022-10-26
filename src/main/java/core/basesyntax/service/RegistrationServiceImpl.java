@@ -29,7 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("User's password cannot be empty");
         }
         if (user.getPassword().length() < MIN_VALID_PASSWORD_LENGTH) {
-            throw new RuntimeException("User's password length cannot be less then " + MIN_VALID_PASSWORD_LENGTH);
+            throw new RuntimeException("User's password length cannot be less then "
+                    + MIN_VALID_PASSWORD_LENGTH);
         }
     }
 
