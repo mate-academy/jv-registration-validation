@@ -23,7 +23,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     public void userInit() {
-        user = new User(12121212L, "testUser", "123user", 20);
+        user = new User("testUser", "123user", 20);
     }
 
     @Test
@@ -33,20 +33,8 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_nullUser_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
-    }
-
-    @Test
     public void register_loginExists_notOk() {
-        User user2 = new User(12958212L, "testUser", "123user123", 47);
         registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user2));
-    }
-
-    @Test
-    public void register_nullLogin_notOk() {
-        user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -57,15 +45,30 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_invalidAge_notOk() {
+        user.setAge(15);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_nullUser_notOk() {
+        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+    }
+
+    @Test
+    public void register_nullLogin_notOk() {
+        user.setLogin(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     public void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_invalidAge_notOk() {
-        user.setAge(15);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    public void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
