@@ -84,6 +84,7 @@ class RegistrationServiceImplTest {
         User actualUser = new User();
         actualUser.setLogin(CORRECT_LOGIN);
         actualUser.setAge(40);
+        actualUser.setPassword("passssssword");
         assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 
