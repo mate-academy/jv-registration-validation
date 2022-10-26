@@ -15,6 +15,34 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RuntimeException("User can't be null");
         }
+        validateLogin(user);
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("There is an user with such login in the Storage already");
+        }
+        validatePassword(user);
+        validateAge(user);
+        return storageDao.add(user);
+    }
+
+    private static void validateAge(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("Not valid age. Age is less than minimum: " + MIN_AGE);
+        }
+        if (user.getAge() > MAX_AGE) {
+            throw new RuntimeException("Not valid age. Age is bigger than maximum" + MAX_AGE);
+        }
+    }
+
+    private static void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RuntimeException("Password can't be null");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RuntimeException("User password is less than 6 characters");
+        }
+    }
+
+    private static void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null");
         }
@@ -24,21 +52,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().isBlank()) {
             throw new RuntimeException("Login can't be full of whitespace characters");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("There is an user with such login in the Storage already");
-        }
-        if (user.getPassword() == null) {
-            throw new RuntimeException("Password can't be null");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("User password is less than 6 characters");
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Not valid age. Age is less than minimum: " + MIN_AGE);
-        }
-        if (user.getAge() > MAX_AGE) {
-            throw new RuntimeException("Not valid age. Age is bigger than maximum" + MAX_AGE);
-        }
-        return storageDao.add(user);
     }
 }
