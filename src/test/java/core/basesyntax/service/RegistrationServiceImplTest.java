@@ -6,75 +6,101 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationService REGISTRATION_SERVICE = new RegistrationServiceImpl();
-    private static final StorageDao STORAGE_DAO = new StorageDaoImpl();
-    private static final User DEFAULT_USER = new User();
-    private static final String CORRECT_LOGIN = "Johnson";
-    private static final String CHECK_LOGIN = "Lara";
-    private static final int CORRECT_AGE = 20;
-    private static final int YOUNG_AGE = 10;
-    private static final int INCORRECT_AGE = -5;
-    private static final String CORRECT_PASSWORD = "John328";
-    private static final String WRONG_PASSWORD = "lol";
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
+    private static User defaultUser;
+    private static String correctLogin;
+    private static String checkLogin;
+    private static int correctAge;
+    private static int youngAge;
+    private static int incorrectAge;
+    private static String correctPassword;
+    private static String wrongPassword;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        storageDao = new StorageDaoImpl();
+        defaultUser = new User();
+        correctLogin = "Johnson";
+        checkLogin = "Lara";
+        correctAge = 20;
+        youngAge = 17;
+        incorrectAge = -5;
+        correctPassword = "John328";
+        wrongPassword = "lol";
+    }
 
     @Test
     void correctData_ok() {
-        DEFAULT_USER.setLogin(CHECK_LOGIN);
-        DEFAULT_USER.setAge(CORRECT_AGE);
-        DEFAULT_USER.setPassword(CORRECT_PASSWORD);
-        assertEquals(DEFAULT_USER, REGISTRATION_SERVICE.register(DEFAULT_USER));
+        defaultUser.setLogin(checkLogin);
+        defaultUser.setAge(correctAge);
+        defaultUser.setPassword(correctPassword);
+        assertEquals(defaultUser, registrationService.register(defaultUser));
     }
 
     @Test
     public void checkAlreadyExistedUser_notOk() {
         User user = new User();
-        user.setLogin(CORRECT_LOGIN);
-        user.setPassword(CORRECT_PASSWORD);
-        user.setAge(CORRECT_AGE);
-        STORAGE_DAO.add(user);
-        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(user));
+        user.setLogin(correctLogin);
+        user.setPassword(correctPassword);
+        user.setAge(correctAge);
+        storageDao.add(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUserWithNullLogin_notOk() {
-        DEFAULT_USER.setLogin(null);
-        DEFAULT_USER.setAge(CORRECT_AGE);
-        DEFAULT_USER.setPassword(CORRECT_PASSWORD);
-        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(DEFAULT_USER));
+        defaultUser.setLogin(null);
+        defaultUser.setAge(correctAge);
+        defaultUser.setPassword(correctPassword);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithNullAge_notOk() {
-        DEFAULT_USER.setLogin(CORRECT_LOGIN);
-        DEFAULT_USER.setAge(null);
-        DEFAULT_USER.setPassword(CORRECT_PASSWORD);
-        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(DEFAULT_USER));
+        defaultUser.setLogin(correctLogin);
+        defaultUser.setAge(null);
+        defaultUser.setPassword(correctPassword);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithSmallAge_notOk() {
-        DEFAULT_USER.setLogin(CORRECT_LOGIN);
-        DEFAULT_USER.setAge(YOUNG_AGE);
-        DEFAULT_USER.setPassword(CORRECT_PASSWORD);
-        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(DEFAULT_USER));
+        defaultUser.setLogin(correctLogin);
+        defaultUser.setAge(youngAge);
+        defaultUser.setPassword(correctPassword);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithInvalidAge_notOk() {
-        DEFAULT_USER.setLogin(CORRECT_LOGIN);
-        DEFAULT_USER.setAge(INCORRECT_AGE);
-        DEFAULT_USER.setPassword(CORRECT_PASSWORD);
-        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(DEFAULT_USER));
+        defaultUser.setLogin(correctLogin);
+        defaultUser.setAge(incorrectAge);
+        defaultUser.setPassword(correctPassword);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
     void registerUserWithSmallPassword_notOk() {
-        DEFAULT_USER.setLogin(CORRECT_LOGIN);
-        DEFAULT_USER.setAge(CORRECT_AGE);
-        DEFAULT_USER.setPassword(WRONG_PASSWORD);
-        assertThrows(RuntimeException.class, () -> REGISTRATION_SERVICE.register(DEFAULT_USER));
+        defaultUser.setLogin(correctLogin);
+        defaultUser.setAge(correctAge);
+        defaultUser.setPassword(wrongPassword);
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
+    }
+
+    @AfterEach
+    void afterEach() {
+        storageDao = null;
     }
 }

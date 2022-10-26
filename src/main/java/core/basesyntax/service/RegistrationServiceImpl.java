@@ -5,7 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_AGE = 20;
+    private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH_OF_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
