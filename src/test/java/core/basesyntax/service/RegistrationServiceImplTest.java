@@ -42,15 +42,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLeastMinNumbersOfCharacters_notOk() {
-        bob.setPassword("abcda");
+    void register_nullAge_notOk() {
+        bob.setAge(null);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(bob));
     }
 
     @Test
-    void register_nullAge_notOk() {
-        bob.setAge(null);
+    void register_passwordLeastMinNumbersOfCharacters_notOk() {
+        bob.setPassword("abcda");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(bob));
     }
