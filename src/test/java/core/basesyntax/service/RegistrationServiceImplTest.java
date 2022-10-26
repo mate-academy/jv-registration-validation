@@ -23,77 +23,81 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+        runAssertThrows(null);
     }
 
     @Test
     void register_nullUserLogin_notOk() {
         actualUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_emptyUserLoginString_notOk() {
         actualUser.setLogin("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_whitespaceOnlyUserLoginString_notOk() {
         actualUser.setLogin(" ");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
         actualUser.setLogin("  \n");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
         actualUser.setLogin("  \t\n");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_sameUserAlreadyExistAndRegistered_notOk() {
         Storage.people.add(actualUser);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_nullPassword_notOk() {
         actualUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_passwordMinLength_notOk() {
         actualUser.setPassword("0");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
         actualUser.setPassword("12345");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
         actualUser.setPassword("abcde");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
         actualUser.setPassword("!@#$%");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_minAge_notOk() {
         for (int i = -9999; i < 17; i++) {
             actualUser.setAge(i);
-            assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+            runAssertThrows(actualUser);
         }
         actualUser.setAge(Integer.MIN_VALUE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_maxAge_notOk() {
         for (int i = 121; i < 9999; i++) {
             actualUser.setAge(i);
-            assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+            runAssertThrows(actualUser);
         }
         actualUser.setAge(Integer.MIN_VALUE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
+        runAssertThrows(actualUser);
     }
 
     @Test
     void register_everything_isOk() {
         assertDoesNotThrow(() -> registrationService.register(actualUser));
+    }
+
+    private void runAssertThrows(User actualUser) {
+        assertThrows(RuntimeException.class, () -> registrationService.register(actualUser));
     }
 }
