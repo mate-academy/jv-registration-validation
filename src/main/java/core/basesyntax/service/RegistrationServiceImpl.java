@@ -11,6 +11,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        return (dataIsNullCheck(user)
+                && ageCheck(user)
+                && loginCheck(user)
+                && passwordCheck(user)) ? storageDao.add(user) : null;
+    }
+
+    private boolean dataIsNullCheck(User user) {
         if (user.getAge() == null) {
             throw new RuntimeException("User age can't be null");
         }
@@ -20,20 +27,27 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null");
         }
+        return true;
+    }
+
+    private boolean ageCheck(User user) {
         if (user.getAge() < MIN_USER_AGE) {
             throw new RuntimeException("Age is not valid");
         }
+        return true;
+    }
+
+    private boolean loginCheck(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This login is already exist");
         }
+        return true;
+    }
+
+    private boolean passwordCheck(User user) {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password length should be 6 or more symbols");
         }
-        return storageDao.add(user);
+        return true;
     }
 }
-/*
-if (user.getPassword().length() == 0) {
-            throw new RuntimeException("Password field is empty!");
-        }
- */
