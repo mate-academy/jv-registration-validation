@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String DEFAULT_PASSWORD = "123456";
-    private static final String WRONG_PASSWORD = "123456";
+    private static final String WRONG_PASSWORD = "12345";
     private static final String DEFAULT_LOGIN = "Login";
     private static final int DEFAULT_AGE = 18;
     private User user;
@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userIsOk() {
         User actual = service.register(user);
-        assertTrue(actual.equals(user));
+        assertTrue(actual == user);
     }
 
     @Test
