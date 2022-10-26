@@ -36,6 +36,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) == user) {
             throw new RuntimeException("User with this email already exist");
         }
+        if (storageDao.get(user.getLogin()) != null && storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
+            throw new RuntimeException("User with this email already exist");
+        }
         return storageDao.add(user);
     }
 }

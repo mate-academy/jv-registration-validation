@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static int INCREMENT_ON_ONE = 1;
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storage;
     private User user;
@@ -69,8 +68,8 @@ public class RegistrationServiceImplTest {
     @Test
     void register_theSameUserWithDifferentAge_notOk() {
         storage.add(user);
-        user.setAge(27);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        User anotherUser = new User("spider@gmail.com", "qwerty12345", 27);
+        assertThrows(RuntimeException.class, () -> registrationService.register(anotherUser));
     }
 
     @Test
@@ -95,6 +94,6 @@ public class RegistrationServiceImplTest {
     void register_registerValidUser_isOk() {
         int storageCapacityBefore = Storage.people.size();
         assertEquals(user, registrationService.register(user));
-        assertEquals(Storage.people.size(), storageCapacityBefore + INCREMENT_ON_ONE);
+        assertEquals(Storage.people.size(), storageCapacityBefore + 1);
     }
 }
