@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_andGetUser_ok() {
+    void register_registerandGetUser_ok() {
         User expected = user;
         registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
