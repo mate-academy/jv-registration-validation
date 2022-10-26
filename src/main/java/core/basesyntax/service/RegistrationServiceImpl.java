@@ -44,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validatePassword(User user) {
         if (user.getPassword() == null) {
-            throw new RuntimeException("Pass can't be null");
+            throw new RuntimeException("Password can't be null");
         }
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new RuntimeException("Password have to contain at least "

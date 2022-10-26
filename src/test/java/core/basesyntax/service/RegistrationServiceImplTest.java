@@ -7,6 +7,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,6 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         user = new User();
         user.setLogin(LOGIN);
         user.setPassword(VALID_PASSWORD);
@@ -96,5 +96,10 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 }
