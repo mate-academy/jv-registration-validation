@@ -17,10 +17,6 @@ class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private static RegistrationService registrationService;
     private User mark;
-    private User sasha;
-    private User bob;
-    private User alice;
-    private User denis;
 
     @BeforeAll
     static void beforeAll() {
@@ -31,21 +27,17 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         mark = new User("Mark","123456", 18);
-        sasha = new User("Sasha","ValidPassword", 20);
-        bob = new User("Bob","short", 21);
-        denis = new User("Denis","isValid", 17);
-        alice = new User("Alice","PASSWORD", 19);
     }
 
     @Test
-    void setNullUser_NotOk() {
+    void register_setNullUser_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void setNullLogin_NotOk() {
+    void register_setNullLogin_NotOk() {
         mark.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(mark);
@@ -53,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void setNullAge_NotOk() {
+    void register_setNullAge_NotOk() {
         mark.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(mark);
@@ -61,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void setNullPassword_NotOk() {
+    void register_setNullPassword_NotOk() {
         mark.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(mark);
@@ -69,92 +61,80 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAlreadyExistWithSuchLogin_NotOk() {
+    void register_userAlreadyExistWithSuchLogin_NotOk() {
         storageDao.add(mark);
-        storageDao.add(sasha);
-        storageDao.add(bob);
-        storageDao.add(alice);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(new User("Mark", "654321", 20));
-        });
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User("Sasha","qwerty", 22));
-        });
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User("Bob", "asdfGH", 19));
-        });
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(new User("Alice", "LARGE_LETTERS", 18));
         });
     }
 
     @Test
-    void userNotExistWithSuchLogin_Ok() {
+    void register_userNotExistWithSuchLogin_Ok() {
         User expected = new User("Mark", "asdq123", 20);
         User actual = registrationService.register(mark);
         assertNotEquals(expected, actual);
     }
 
     @Test
-    void setNotValidAge_NotOk() {
+    void register_setNotValidAge_NotOk() {
+        mark.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(denis);
+            registrationService.register(mark);
         });
     }
 
     @Test
-    void setNegativeAge_NotOk() {
-        denis.setAge(-18);
+    void register_setNegativeAge_NotOk() {
+        mark.setAge(-18);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(denis);
+            registrationService.register(mark);
         });
     }
 
     @Test
-    void setAgeEqualsAllowAge_Ok() {
-        denis.setAge(18);
-        storageDao.add(denis);
-        assertEquals(denis, storageDao.get(denis.getLogin()));
+    void register_setAgeEqualsAllowAge_Ok() {
+        mark.setAge(18);
+        storageDao.add(mark);
+        assertEquals(mark, storageDao.get(mark.getLogin()));
     }
 
     @Test
-    void setAgeBiggerAgeThanAllow_Ok() {
-        denis.setAge(20);
-        storageDao.add(denis);
-        assertEquals(denis, storageDao.get(denis.getLogin()));
+    void register_setAgeBiggerAgeThanAllow_Ok() {
+        mark.setAge(20);
+        storageDao.add(mark);
+        assertEquals(mark, storageDao.get(mark.getLogin()));
     }
 
     @Test
-    void setPasswordWithLengthLessThanAllow_NotOk() {
+    void register_setPasswordWithLengthLessThanAllow_NotOk() {
+        mark.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(bob);
+            registrationService.register(mark);
         });
     }
 
     @Test
-    void setPasswordWithLengthMoreThanAllow_Ok() {
-        bob.setPassword("tooLong123435132412346");
-        assertEquals(bob, registrationService.register(bob));
+    void register_setPasswordWithLengthMoreThanAllow_Ok() {
+        mark.setPassword("tooLong123435132412346");
+        assertEquals(mark, registrationService.register(mark));
     }
 
     @Test
-    void setPasswordWithLengthThatEqualsAllow_Ok() {
-        bob.setPassword("123456");
-        assertEquals(bob, registrationService.register(bob));
+    void register_setPasswordWithLengthAllow_Ok() {
+        mark.setPassword("123456");
+        assertEquals(mark, registrationService.register(mark));
     }
 
     @Test
-    void setPasswordWithSymbols_Ok() {
-        bob.setPassword("!@#@$#$!&*^*_");
-        assertEquals(bob, registrationService.register(bob));
+    void register_setPasswordWithSymbols_Ok() {
+        mark.setPassword("!@#@$#$!&*^*_");
+        assertEquals(mark, registrationService.register(mark));
     }
 
     @Test
-    void setUserWithValidParameters_Ok() {
-        storageDao.add(sasha);
-        storageDao.add(alice);
-        assertEquals(sasha, storageDao.get(sasha.getLogin()));
-        assertEquals(alice, storageDao.get(alice.getLogin()));
+    void register_setUserWithValidParameters_Ok() {
+        storageDao.add(mark);
+        assertEquals(mark, storageDao.get(mark.getLogin()));
     }
 
     @AfterEach
