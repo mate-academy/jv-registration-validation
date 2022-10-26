@@ -8,13 +8,20 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User testUser;
+
+    @BeforeAll
+    static void beforeStart() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @BeforeEach
     void setUp() {
@@ -22,11 +29,6 @@ class RegistrationServiceImplTest {
         testUser.setLogin("DreamFERAL");
         testUser.setPassword("Qwerty7940813");
         testUser.setAge(34);
-    }
-
-    @AfterEach
-    void clearStorage() {
-        Storage.people.clear();
     }
 
     @Test
@@ -78,7 +80,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordIsShort_notOK() {
-        testUser.setPassword("777");
+        testUser.setPassword("77777");
         assertThrows(RuntimeException.class, ()
                 -> registrationService.register(testUser));
     }
@@ -95,5 +97,10 @@ class RegistrationServiceImplTest {
         testUser.setAge(17);
         assertThrows(RuntimeException.class, ()
                 -> registrationService.register(testUser));
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 }
