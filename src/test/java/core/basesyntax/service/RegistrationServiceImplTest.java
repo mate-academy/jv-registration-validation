@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,15 +36,11 @@ class RegistrationServiceImplTest {
         invalidUser.setPassword("validPassword");
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
-    void register_userIsNull_notOk() {
+    void register_userNull_notOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(null);
-        },"register(user) with user == null should throw RuntimeException.");
+        },"register(user) with user == null must throw RuntimeException.");
     }
 
     @Test
@@ -53,30 +48,26 @@ class RegistrationServiceImplTest {
         invalidUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with user.Age == null should throw RuntimeException.");
+        },"register(user) with user.Age == null must throw RuntimeException.");
     }
 
     @Test
-    void register_userInvalidAgeThrowExceptionAboutAge_Ok() {
+    void register_userAgeInvalidExceptionMessageAboutAge_Ok() {
         invalidUser.setAge(0);
-        try {
+        Exception exception = assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        } catch (RuntimeException e) {
-            boolean exceptionMessageContainsAge = e.getMessage().toLowerCase().contains("age");
-            assertTrue(exceptionMessageContainsAge,
-                    "register(user) with invalid age should throw RuntimeException "
-                            + "with message contains \"age\".");
-            return;
-        }
-        fail("register(user) with invalid age should throw RuntimeException.");
+        },"register(user) with invalid age must throw RuntimeException.");
+        boolean exceptionMessageContainsAge = exception.getMessage().toLowerCase().contains("age");
+        assertTrue(exceptionMessageContainsAge, "register(user) with invalid age must throw "
+                + "RuntimeException with message, contains \"age\".");
     }
 
     @Test
-    void register_userAge16_NotOk() {
+    void register_userAgeFrom0toLeast_NotOk() {
         invalidUser.setAge(16);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with user.Age == 16 should throw RuntimeException.");
+        },"register(user) with user.Age 0 < 18 must throw RuntimeException.");
     }
 
     @Test
@@ -84,41 +75,34 @@ class RegistrationServiceImplTest {
         invalidUser.setAge(-30);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with negative age should throw RuntimeException.");
+        },"register(user) with negative age should must RuntimeException.");
     }
 
     @Test
-    void register_userAge18_Ok() {
-        validUser.setLogin("validUserForAge18Test");
+    void register_userAgeAtLeast_Ok() {
+        validUser.setLogin("validUserForAgeAtLeastTest");
         validUser.setAge(18);
-        try {
-            registrationService.register(validUser);
-        } catch (RuntimeException e) {
-            fail("register(validUser) with user.Age >= 18 should NOT throw RuntimeException.");
-        }
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser),
+                "Storage.people must contains valid user with Age>=18 after it registration.");
     }
 
     @Test
-    void register_userAge25_Ok() {
-        validUser.setLogin("validUserForAge25Test");
+    void register_userAgeAboveLeast_Ok() {
+        validUser.setLogin("validUserForAgeAboveLeastTest");
         validUser.setAge(25);
-        try {
-            registrationService.register(validUser);
-        } catch (RuntimeException e) {
-            fail("register(validUser) with user.Age >= 18 should NOT throw RuntimeException.");
-        }
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser),
+                "Storage.people must contains valid user with Age>=18 after it registration.");
     }
 
     @Test
     void register_userAgeIntegerMaxValue_Ok() {
-        validUser.setLogin("validUserForAgeBigIntegerTest");
+        validUser.setLogin("validUserForAgeIntegerMaxValueTest");
         validUser.setAge(Integer.MAX_VALUE);
-        try {
-            registrationService.register(validUser);
-        } catch (RuntimeException e) {
-            fail("register(validUser) with user.Age == Integer.MAX_VALUE "
-                    + "should NOT throw RuntimeException.");
-        }
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser), "Storage.people must contains valid User "
+                + "with Age == Integer.MAX_VALUE after it registration.");
     }
 
     @Test
@@ -126,23 +110,20 @@ class RegistrationServiceImplTest {
         invalidUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with user.Password == null  should throw RuntimeException.");
+        },"register(user) with user.Password == null must throw RuntimeException.");
     }
 
     @Test
-    void register_userInvalidPasswordThrowExceptionAboutPassword_Ok() {
+    void register_userPasswordInvalidExceptionMessageAboutPassword_Ok() {
         invalidUser.setPassword("0");
-        try {
+        Exception exception = assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        } catch (RuntimeException e) {
-            boolean exceptionMessageContainsPassword =
-                    e.getMessage().toLowerCase().contains("password");
-            assertTrue(exceptionMessageContainsPassword,
-                    "register(user) with invalid password should throw RuntimeException "
-                            + "with message contains \"password\".");
-            return;
-        }
-        fail("register(user) with invalid password should throw RuntimeException.");
+        },"register(user) with invalid password must throw RuntimeException.");
+        boolean exceptionMessageContainsPassword
+                = exception.getMessage().toLowerCase().contains("password");
+        assertTrue(exceptionMessageContainsPassword,
+                "register(user) with invalid password must throw RuntimeException "
+                + "with message, contains \"password\".");
     }
 
     @Test
@@ -150,27 +131,24 @@ class RegistrationServiceImplTest {
         invalidUser.setPassword("");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with empty user.Password should throw RuntimeException.");
+        },"register(user) with empty user.Password must throw RuntimeException.");
     }
 
     @Test
-    void register_userPasswordLength5_NotOk() {
+    void register_userPasswordLengthLessMin_NotOk() {
         invalidUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with user.Password.length() < 6  should throw RuntimeException.");
+        },"register(user) with user.Password.length() < 6 must throw RuntimeException.");
     }
 
     @Test
-    void register_userPasswordLength6_Ok() {
-        validUser.setLogin("validUserForPasswordLength6Test");
+    void register_userPasswordLengthAtLeass_Ok() {
+        validUser.setLogin("validUserForPasswordLengthAtLeassTest");
         validUser.setPassword("a2c4e6");
-        try {
-            registrationService.register(validUser);
-        } catch (RuntimeException e) {
-            fail("register(validUser) with user.Password.length() >= 6 "
-                    + "should NOT throw RuntimeException.");
-        }
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser), "Storage.people must contains valid user "
+                + "with user.Password.length() >= 6 and <= 65535 after it registration.");
     }
 
     @Test
@@ -179,12 +157,9 @@ class RegistrationServiceImplTest {
         String symbol = "a";
         String passwordVeryLong = symbol.repeat(1 << 16);
         validUser.setPassword(passwordVeryLong);
-        try {
-            registrationService.register(validUser);
-        } catch (RuntimeException e) {
-            fail("register(validUser) with user.Password.length() <= 65535 "
-                    + "should NOT throw RuntimeException.");
-        }
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser), "Storage.people must contains valid user "
+                + "with user.Password.length() >= 6 and <= 65535 after it registration.");
     }
 
     @Test
@@ -192,7 +167,7 @@ class RegistrationServiceImplTest {
         invalidUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with user.Login == null should throw RuntimeException.");
+        },"register(user) with user.Login == null must throw RuntimeException.");
     }
 
     @Test
@@ -200,24 +175,22 @@ class RegistrationServiceImplTest {
         invalidUser.setLogin("");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with empty user.Login should throw RuntimeException.");
+        },"register(user) with empty user.Login must throw RuntimeException.");
     }
 
     @Test
-    void register_userExistingLoginThrowExceptionAboutLogin_Ok() {
-        validUser.setLogin("validUserForLoginTest");
+    void register_userLoginExistingExceptionMessageAboutLogin_Ok() {
+        validUser.setLogin("validUserForLoginMessageTest");
         registrationService.register(validUser);
-        invalidUser.setLogin("validUserForLoginTest");
-        try {
+        invalidUser.setLogin(validUser.getLogin());
+        Exception exception = assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        } catch (RuntimeException e) {
-            boolean exceptionMessageContainsLogin = e.getMessage().toLowerCase().contains("login");
-            assertTrue(exceptionMessageContainsLogin,
-                    "register(user) with existing login should throw RuntimeException "
-                            + "with message contains \"login\".");
-            return;
-        }
-        fail("register(user) with existing login should throw RuntimeException.");
+        },"register(user) with existing login must throw RuntimeException.");
+        boolean exceptionMessageContainsLogin
+                = exception.getMessage().toLowerCase().contains("login");
+        assertTrue(exceptionMessageContainsLogin,
+                "register(user) with existing login must throw RuntimeException "
+                + "with message, contains \"login\".");
     }
 
     @Test
@@ -225,21 +198,18 @@ class RegistrationServiceImplTest {
         String symbol = "a";
         String loginVeryLong = symbol.repeat(1 << 16);
         validUser.setLogin(loginVeryLong);
-        try {
-            registrationService.register(validUser);
-        } catch (RuntimeException e) {
-            fail("register(validUser) with user.Login.length() <= 65535 "
-                    + "should NOT throw RuntimeException.");
-        }
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser), "Storage.people must contains valid user "
+                + "with user.Login.length() <= 65535 after it registration.");
     }
 
     @Test
-    void register_validUserShouldNotThrowRuntimeException_Ok() {
+    void register_validUserMustNotThrowRuntimeException_Ok() {
         validUser.setLogin("validUserForExceptionTest");
         try {
             registrationService.register(validUser);
         } catch (RuntimeException e) {
-            fail("register(validUser) should NOT throw RuntimeException.");
+            fail("register(validUser) must NOT throw RuntimeException.");
         }
     }
 
@@ -247,7 +217,7 @@ class RegistrationServiceImplTest {
     void register_validUserAddedToStorage_Ok() {
         validUser.setLogin(validUser.getLogin() + "0"); // for get unique login
         int expectedSize = Storage.people.size() + 1;
-        User actualUser = registrationService.register(validUser);
+        registrationService.register(validUser);
         int actualSize = Storage.people.size();
         assertTrue(Storage.people.contains(validUser),
                 "Storage.people must contains validUser after it registration.");
@@ -266,9 +236,9 @@ class RegistrationServiceImplTest {
         } finally {
             int actualSize = Storage.people.size();
             assertFalse(Storage.people.contains(invalidUser),
-                    "Storage.people must not contains invalidUser after try it registration.");
+                    "Storage.people must NOT contains invalidUser after try it registration.");
             assertEquals(expectedSize, actualSize,
-                    "Storage.people.size() must be not changed "
+                    "Storage.people.size() must be NOT changed "
                             + "after try registration invalidUser.");
         }
     }
