@@ -5,44 +5,44 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int DEFAULT_VALID_AGE = 18;
-    private static final int DEFAULT_VALID_PASSWORD = 6;
+    private static final int MIN_VALID_AGE = 18;
+    private static final int MIN_VALID_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        userValidator(user);
-        loginValidator(user);
-        ageValidator(user);
-        passwordValidator(user);
+        validateUser(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void userValidator(User user) {
+    private void validateUser(User user) {
         if (user == null) {
             throw new NullPointerException("Can't register null user!");
         }
     }
 
-    private void passwordValidator(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new NullPointerException("User's password cannot be empty");
         }
-        if (user.getPassword().length() < DEFAULT_VALID_PASSWORD) {
-            throw new RuntimeException("User's password cannot be less then 6 symbols");
+        if (user.getPassword().length() < MIN_VALID_PASSWORD_LENGTH) {
+            throw new RuntimeException("User's password length cannot be less then " + MIN_VALID_PASSWORD_LENGTH);
         }
     }
 
-    private void ageValidator(User user) {
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new NullPointerException("User's age cannot be empty");
         }
-        if (user.getAge() < DEFAULT_VALID_AGE) {
-            throw new RuntimeException("User's age cannot be less then 18");
+        if (user.getAge() < MIN_VALID_AGE) {
+            throw new RuntimeException("User's age cannot be less then " + MIN_VALID_AGE);
         }
     }
 
-    private void loginValidator(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new NullPointerException("User's login cannot be empty");
         }
