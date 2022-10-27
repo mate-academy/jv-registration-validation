@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeNull_NotOk() {
+    void register_userAgeNull_notOk() {
         invalidUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeInvalidExceptionMessageAboutAge_Ok() {
+    void register_userAgeInvalidExceptionMessageAboutAge_ok() {
         invalidUser.setAge(0);
         Exception exception = assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -63,15 +63,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeFrom0toLeast_NotOk() {
+    void register_userAgeLessThenMinAge_notOk() {
         invalidUser.setAge(16);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        },"register(user) with user.Age 0 < 18 must throw RuntimeException.");
+        },"register(user) with  age less than 18 must throw RuntimeException.");
     }
 
     @Test
-    void register_userAgeNegative_NotOk() {
+    void register_userAgeNegative_notOk() {
         invalidUser.setAge(-30);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -79,8 +79,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeAtLeast_Ok() {
-        validUser.setLogin("validUserForAgeAtLeastTest");
+    void register_userAgeValidAtMinAge_ok() {
+        validUser.setLogin("validUserForAgeValidAtMinTest");
         validUser.setAge(18);
         registrationService.register(validUser);
         assertTrue(Storage.people.contains(validUser),
@@ -88,8 +88,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeAboveLeast_Ok() {
-        validUser.setLogin("validUserForAgeAboveLeastTest");
+    void register_userWithValidAge_ok() {
+        validUser.setLogin("validUserWithValidAgeTest");
         validUser.setAge(25);
         registrationService.register(validUser);
         assertTrue(Storage.people.contains(validUser),
@@ -97,7 +97,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIntegerMaxValue_Ok() {
+    void register_userAgeIntegerMaxValue_ok() {
         validUser.setLogin("validUserForAgeIntegerMaxValueTest");
         validUser.setAge(Integer.MAX_VALUE);
         registrationService.register(validUser);
@@ -106,7 +106,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordNull_NotOk() {
+    void register_userPasswordNull_notOk() {
         invalidUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -114,7 +114,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordInvalidExceptionMessageAboutPassword_Ok() {
+    void register_userPasswordInvalidExceptionMessageAboutPassword_ok() {
         invalidUser.setPassword("0");
         Exception exception = assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -127,7 +127,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordEmpty_NotOk() {
+    void register_userPasswordEmpty_notOk() {
         invalidUser.setPassword("");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -135,7 +135,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordLengthLessMin_NotOk() {
+    void register_userPasswordLengthLessMin_notOk() {
         invalidUser.setPassword("12345");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -143,8 +143,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordLengthAtLeass_Ok() {
-        validUser.setLogin("validUserForPasswordLengthAtLeassTest");
+    void register_userPasswordLengthAtMinimum_ok() {
+        validUser.setLogin("validUserForPasswordLengthAtMinimumTest");
         validUser.setPassword("a2c4e6");
         registrationService.register(validUser);
         assertTrue(Storage.people.contains(validUser), "Storage.people must contains valid user "
@@ -152,7 +152,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordVeryLong_Ok() {
+    void register_userPasswordVeryLong_ok() {
         validUser.setLogin("validUserForPasswordVeryLongTest");
         String symbol = "a";
         String passwordVeryLong = symbol.repeat(1 << 16);
@@ -163,7 +163,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginNull_NotOk() {
+    void register_userLoginNull_notOk() {
         invalidUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -171,7 +171,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginEmpty_NotOk() {
+    void register_userLoginEmpty_notOk() {
         invalidUser.setLogin("");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
@@ -179,7 +179,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginExistingExceptionMessageAboutLogin_Ok() {
+    void register_userLoginExistingThrowExceptionMessageAboutLogin_ok() {
         validUser.setLogin("validUserForLoginMessageTest");
         registrationService.register(validUser);
         invalidUser.setLogin(validUser.getLogin());
@@ -194,7 +194,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginVeryLong_Ok() {
+    void register_userLoginVeryLong_ok() {
         String symbol = "a";
         String loginVeryLong = symbol.repeat(1 << 16);
         validUser.setLogin(loginVeryLong);
@@ -204,8 +204,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserMustNotThrowRuntimeException_Ok() {
-        validUser.setLogin("validUserForExceptionTest");
+    void register_validUserNotThrowRuntimeException_ok() {
+        validUser.setLogin("validUserForNotThrowExceptionTest");
         try {
             registrationService.register(validUser);
         } catch (RuntimeException e) {
@@ -214,32 +214,45 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserAddedToStorage_Ok() {
-        validUser.setLogin(validUser.getLogin() + "0"); // for get unique login
+    void register_validUserAddedToStorage_ok() {
+        validUser.setLogin("validUserForAddedToStorageTest");
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser),
+                "Storage.people must contains validUser after it registration.");
+    }
+
+    @Test
+    void register_validUserAddedToStorageIncrementStorageSize_ok() {
+        validUser.setLogin("validUserForAddedToStorageIncrementStorageSize");
         int expectedSize = Storage.people.size() + 1;
         registrationService.register(validUser);
         int actualSize = Storage.people.size();
-        assertTrue(Storage.people.contains(validUser),
-                "Storage.people must contains validUser after it registration.");
         assertEquals(expectedSize, actualSize,
                 "Storage.people.size() must be incremented after registration validUser.");
     }
 
     @Test
-    void register_invalidUserAddedToStorage_NotOk() {
+    void register_invalidUserAddedToStorage_notOk() {
+        invalidUser.setLogin("invalidUserForAddedToStorageTest");
         invalidUser.setAge(1);
-        int expectedSize = Storage.people.size();
-        try {
+        assertThrows(RuntimeException.class, () -> {
             registrationService.register(invalidUser);
-        } catch (RuntimeException e) {
-            String exceptionMessage = e.getMessage();
-        } finally {
-            int actualSize = Storage.people.size();
-            assertFalse(Storage.people.contains(invalidUser),
-                    "Storage.people must NOT contains invalidUser after try it registration.");
-            assertEquals(expectedSize, actualSize,
-                    "Storage.people.size() must be NOT changed "
-                            + "after try registration invalidUser.");
-        }
+        },"register(invalidUser) must throw RuntimeException.");
+        assertFalse(Storage.people.contains(invalidUser),
+                "Storage.people must NOT contains invalidUser after try it registration.");
+    }
+
+    @Test
+    void register_invalidUserAddedToStorageIncrementStorageSize_notOk() {
+        invalidUser.setLogin("invalidUserForAddedToStorageIncrementStorageSizeTest");
+        invalidUser.setAge(2);
+        int expectedSize = Storage.people.size();
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(invalidUser);
+        },"register(invalidUser) must throw RuntimeException.");
+        int actualSize = Storage.people.size();
+        assertEquals(expectedSize, actualSize,
+                "Storage.people.size() must be NOT changed "
+                        + "after try registration invalidUser.");
     }
 }
