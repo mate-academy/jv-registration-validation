@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Login is null");
         }
 
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isEmpty()) {
             throw new RuntimeException("Login is empty");
         }
 
@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Password is null");
         }
 
-        if (user.getPassword().equals("")) {
+        if (user.getPassword().isEmpty()) {
             throw new RuntimeException("Password is empty");
         }
 
