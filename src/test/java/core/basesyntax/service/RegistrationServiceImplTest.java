@@ -14,8 +14,8 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
 
-    private User user;
-    private User user2;
+    private User firstUser;
+    private User secondUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -25,62 +25,58 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId(133L);
-        user.setAge(22);
-        user.setLogin("login");
-        user.setPassword("password");
-        user2 = new User();
-        user2.setId(133L);
-        user2.setAge(22);
-        user2.setLogin("secondLogin");
-        user2.setPassword("password");
+        firstUser = new User();
+        firstUser.setId(133L);
+        firstUser.setAge(22);
+        firstUser.setLogin("login");
+        firstUser.setPassword("password");
+        secondUser = new User();
+        secondUser.setId(133L);
+        secondUser.setAge(22);
+        secondUser.setLogin("secondLogin");
+        secondUser.setPassword("password");
     }
 
     @Test
-    void register_validUserOlderThen18years_Ok() {
-        User registeredUser = registrationService.register(user);
+    void register_validUserOlderThen18years_ok() {
+        User registeredUser = registrationService.register(firstUser);
         User userFromStorage = storageDao.get("login");
-        assertEquals(user, registeredUser,
+        assertEquals(firstUser, registeredUser,
                 "User returned from register method not equals the registered user");
-        assertEquals(user, userFromStorage, "Can't find registered user in the storage");
+        assertEquals(firstUser, userFromStorage, "Can't find registered user in the storage");
     }
 
     @Test
-    void register_validUser18years_Ok() {
-        user.setLogin("user18years");
-        user.setAge(18);
-        User registeredUser = registrationService.register(user);
+    void register_validUser18years_ok() {
+        firstUser.setLogin("user18years");
+        firstUser.setAge(18);
+        User registeredUser = registrationService.register(firstUser);
         User userFromStorage = storageDao.get("user18years");
-        assertEquals(user, registeredUser,
+        assertEquals(firstUser, registeredUser,
                 "User returned from register method not equals the registered user");
-        assertEquals(user, userFromStorage, "Can't find registered user in the storage");
+        assertEquals(firstUser, userFromStorage, "Can't find registered user in the storage");
     }
 
     @Test
-    void register_validUserPasswordSixLetters_Ok() {
-        user.setLogin("user6letters");
-        user.setPassword("123456");
-        User registeredUser = registrationService.register(user);
+    void register_validUserPasswordSixLetters_ok() {
+        firstUser.setLogin("user6letters");
+        firstUser.setPassword("123456");
+        User registeredUser = registrationService.register(firstUser);
         User userFromStorage = storageDao.get("user6letters");
-        assertEquals(user, registeredUser,
+        assertEquals(firstUser, registeredUser,
                 "User returned from register method not equals the registered user");
-        assertEquals(user, userFromStorage, "Can't find registered user in the storage");
+        assertEquals(firstUser, userFromStorage, "Can't find registered user in the storage");
     }
 
     @Test
-    void register_addTwoValidUses_Ok() {
-        user.setLogin("firstUserLogin");
-        User registeredUser = registrationService.register(user);
+    void register_addTwoValidUses_ok() {
+        firstUser.setLogin("firstUserLogin");
+        registrationService.register(firstUser);
         User userFromStorage = storageDao.get("firstUserLogin");
-        assertEquals(user, registeredUser,
-                "User returned from register method not equals the registered user");
-        assertEquals(user, userFromStorage, "Can't find registered user in the storage");
-        User secondRegisteredUser = registrationService.register(user2);
+        assertEquals(firstUser, userFromStorage, "Can't find first registered user in the storage");
+        registrationService.register(secondUser);
         User secondUserFromStorage = storageDao.get("secondLogin");
-        assertEquals(user2, secondRegisteredUser,
-                "User returned from register method not equals the registered user");
-        assertEquals(user2, secondUserFromStorage, "Can't find registered user in the storage");
+        assertEquals(secondUser, secondUserFromStorage, "Can't find socond registered user in the storage");
     }
 
     @Test
@@ -92,71 +88,75 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        user.setLogin(null);
+        firstUser.setLogin("loginWithNullLogin");
+        firstUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         },"RuntimeException should be thrown if login is null");
     }
 
     @Test
     void register_emptyLogin_notOk() {
-        user.setLogin("");
+        firstUser.setLogin("loginWithEmptyLogin");
+        firstUser.setLogin("");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         }, "RuntimeException should be thrown if login is empty");
     }
 
     @Test
     void register_nullId_notOk() {
-        user.setId(null);
+        firstUser.setLogin("loginWithNullId");
+        firstUser.setId(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         }, "RuntimeException should be thrown if id is null");
     }
 
     @Test
     public void register_nullPassword_notOk() {
-        user.setPassword(null);
+        firstUser.setLogin("loginWithNullPassword");
+        firstUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         }, "RuntimeException should be thrown if password is null");
     }
 
     @Test
     public void register_notValidAge_notOk() {
-        user.setAge(17);
+        firstUser.setLogin("loginWithAge17");
+        firstUser.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         }, "RuntimeException should be thrown if age is less then 18");
-        user.setAge(0);
+        firstUser.setLogin("loginWithZeroAge");
+        firstUser.setAge(0);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         }, "RuntimeException should be thrown if age is 0");
-        user.setAge(-12);
+        firstUser.setLogin("loginWithLessThenZeroAge");
+        firstUser.setAge(-12);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         }, "RuntimeException should be thrown if age is less then 0");
     }
 
     @Test
     public void register_shortPassword_notOk() {
-        user.setPassword("pass");
+        firstUser.setLogin("loginWithShortPassword");
+        firstUser.setPassword("pass");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(firstUser);
         }, "RuntimeException should be thrown if password is shorter then 6 characters.");
-        user.setPassword("");
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        }, "RuntimeException should be thrown if password is empty.");
     }
 
     @Test
     void register_userWithSuchLogin_NotOk() {
-        user.setLogin("such_login");
-        user2.setLogin("such_login");
-        registrationService.register(user);
+        firstUser.setLogin("such_login");
+        secondUser.setLogin("such_login");
+        registrationService.register(firstUser);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(secondUser);
         }, "RuntimeException should be thrown if user with such login already exist.");
     }
 }
