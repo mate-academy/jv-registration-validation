@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserOlderThen18years_ok() {
+    void register_validUser_ok() {
         User registeredUser = registrationService.register(firstUser);
         User userFromStorage = storageDao.get("login");
         assertEquals(firstUser, registeredUser,
@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser18years_ok() {
+    void register_validUserMinRequiredAge_ok() {
         firstUser.setLogin("user18years");
         firstUser.setAge(18);
         User registeredUser = registrationService.register(firstUser);
@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserPasswordSixLetters_ok() {
+    void register_validUserPassword_ok() {
         firstUser.setLogin("user6letters");
         firstUser.setPassword("123456");
         User registeredUser = registrationService.register(firstUser);
@@ -69,7 +69,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addTwoValidUses_ok() {
+    void register_addSeveralValidUses_ok() {
         firstUser.setLogin("firstUserLogin");
         registrationService.register(firstUser);
         User userFromStorage = storageDao.get("firstUserLogin");
