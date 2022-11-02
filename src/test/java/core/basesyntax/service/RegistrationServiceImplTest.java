@@ -10,21 +10,17 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static final User bob = new User("bob12345@gmail.com", "6h6%m3dS2jAy", 19);
-    private static final User alice = new User("alice23145@gmail.com", "6g!RO008ry^8", 20);
-    private static final User mike = new User("mike2352@gmail.com", "h760BVS1wh!n", 18);
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        User bob = new User("bob12345@gmail.com", "6h6%m3dS2jAy", 19);
+        User alice = new User("alice23145@gmail.com", "6g!RO008ry^8", 20);
+        User mike = new User("mike2352@gmail.com", "h760BVS1wh!n", 18);
         registrationService.register(bob);
         registrationService.register(alice);
         registrationService.register(mike);
-        int expectedSize = 3;
-        int actualSize = Storage.people.size();
-        assertEquals(expectedSize, actualSize, "Something went wrong, "
-                + "the size of list should be " + expectedSize
-                + " but was " + actualSize);
+
     }
 
     @Test
@@ -66,5 +62,14 @@ class RegistrationServiceImplTest {
     void register_existedPassword_notOk() {
         User anotherBob = new User("bob12345@gmail.com", "01V@8Y6Jj3Vc", 20);
         assertThrows(RuntimeException.class, () -> registrationService.register(anotherBob));
+    }
+
+    @Test
+    void register_checkValidUsers_Ok() {
+        int expectedSize = 3;
+        int actualSize = Storage.people.size();
+        assertEquals(expectedSize, actualSize, "Something went wrong, "
+                + "the size of list should be " + expectedSize
+                + " but was " + actualSize);
     }
 }
