@@ -76,7 +76,8 @@ class RegistrationServiceImplTest {
         assertEquals(firstUser, userFromStorage, "Can't find first registered user in the storage");
         registrationService.register(secondUser);
         User secondUserFromStorage = storageDao.get("secondLogin");
-        assertEquals(secondUser, secondUserFromStorage, "Can't find socond registered user in the storage");
+        assertEquals(secondUser, secondUserFromStorage,
+                "Can't find second registered user in the storage");
     }
 
     @Test
