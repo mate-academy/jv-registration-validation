@@ -33,7 +33,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_theSameLogin_notOk() {
+    void register_SameLogin_notOk() {
         user.setLogin("vasylenko");
         user.setAge(20);
         user.setPassword("123456");
