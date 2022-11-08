@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         if (user.getAge() == null) {
             callRuntimeException("Age can't be null");
-        } else if (user.getAge() < 18 && user.getAge() < 120) {
+        } else if (user.getAge() < 18 || user.getAge() > 120) {
             callRuntimeException("Age have be wright");
         }
 

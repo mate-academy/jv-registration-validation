@@ -7,6 +7,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 /**
@@ -15,10 +16,18 @@ import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
     private static RegistrationService registrationService;
+    private static final int THREE_ELEMENTS = 3;
+    private static final int ONE_ELEMENTS = 1;
+
 
     @BeforeAll
     static void create() {
         registrationService = new RegistrationServiceImpl();
+    }
+
+    @AfterEach
+    void nullList() {
+        Storage.people.clear();
     }
 
     @Test
@@ -28,7 +37,7 @@ public class HelloWorldTest {
         userLess18.setPassword("UserLess18");
         userLess18.setAge(17);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userLess18); }, "Age has to be unless 18 ");
+            registrationService.register(userLess18); }, "Age has to be between 18 and 120");
     }
 
     @Test
@@ -48,7 +57,7 @@ public class HelloWorldTest {
         user.setPassword("User@12345");
         user.setAge(25);
         registrationService.register(user);
-        assertEquals(4, Storage.people.size(), "Size not equals");
+        assertEquals(ONE_ELEMENTS, Storage.people.size(), "Size not equals");
         User user2 = new User();
         user2.setLogin("User12345");
         user2.setPassword("User@12345");
@@ -109,6 +118,6 @@ public class HelloWorldTest {
         user3.setPassword("User@333");
         user3.setAge(60);
         assertEquals(user3, registrationService.register(user3));
-        assertEquals(3, Storage.people.size(), "Sizes not equals");
+        assertEquals(THREE_ELEMENTS, Storage.people.size(), "Sizes not equals");
     }
 }
