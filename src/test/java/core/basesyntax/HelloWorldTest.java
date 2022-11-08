@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
     private static RegistrationService registrationService;
-    private static final int ONE_ELEMENTS = 1;
 
     @BeforeAll
     static void create() {
@@ -57,7 +56,7 @@ public class HelloWorldTest {
         user.setPassword("User@12345");
         user.setAge(25);
         registrationService.register(user);
-        assertEquals(ONE_ELEMENTS, Storage.people.size(), "Size not equals");
+        assertEquals(1, Storage.people.size(), "Size not equals");
         User user2 = new User();
         user2.setLogin("User12345");
         user2.setPassword("User@12345");
