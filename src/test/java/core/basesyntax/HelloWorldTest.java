@@ -28,7 +28,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_ageLess18_NotOk() {
+    void register_youngAge_NotOk() {
         User userLess18 = new User();
         userLess18.setLogin("UserLess18");
         userLess18.setPassword("UserLess18");
