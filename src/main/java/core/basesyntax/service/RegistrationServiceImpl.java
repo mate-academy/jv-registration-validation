@@ -6,38 +6,38 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    static private final int MIN_AGE = 18;
+    static private final int MAX_AGE = 120;
+    static private final int MIN_LETTERS = 6;
+
 
     @Override
     public User register(User user) {
         if (user == null) {
-            callRuntimeException("User can't be null");
+            throwRuntimeException("User can't be null");
         }
-
         if (user.getAge() == null) {
-            callRuntimeException("Age can't be null");
-        } else if (user.getAge() < 18 || user.getAge() > 120) {
-            callRuntimeException("Age have be wright");
+            throwRuntimeException("Age can't be null");
+        } else if (user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
+            throwRuntimeException("Age have be wright");
         }
-
         if (user.getLogin() == null) {
-            callRuntimeException("Login can't be null");
+            throwRuntimeException("Login can't be null");
         } else if (user.getLogin().isEmpty()) {
-            callRuntimeException("Login can't be empty");
+            throwRuntimeException("Login can't be empty");
         }
-
         if (user.getPassword() == null) {
-            callRuntimeException("Password can't be null");
-        } else if (user.getPassword().length() < 7) {
-            callRuntimeException("Password have be more symbols");
+            throwRuntimeException("Password can't be null");
+        } else if (user.getPassword().length() <= MIN_LETTERS) {
+            throwRuntimeException("Password have be more symbols");
         }
-
         if (storageDao.get(user.getLogin()) != null) {
-            callRuntimeException("There is same user");
+            throwRuntimeException("There is same user");
         }
         return storageDao.add(user);
     }
 
-    void callRuntimeException(String string) {
+    private void throwRuntimeException(String string) {
         throw new RuntimeException(string);
     }
 }

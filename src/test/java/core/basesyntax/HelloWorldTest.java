@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
     private static RegistrationService registrationService;
-    private static final int THREE_ELEMENTS = 3;
     private static final int ONE_ELEMENTS = 1;
 
     @BeforeAll
@@ -25,7 +24,7 @@ public class HelloWorldTest {
     }
 
     @AfterEach
-    void nullList() {
+    void clearList() {
         Storage.people.clear();
     }
 
@@ -104,21 +103,10 @@ public class HelloWorldTest {
 
     @Test
     void registration_PutCorrectDate_Ok() {
-        User user1 = new User();
-        user1.setLogin("User111");
-        user1.setPassword("User@111");
-        user1.setAge(30);
-        assertEquals(user1, registrationService.register(user1));
-        User user2 = new User();
-        user2.setLogin("User222");
-        user2.setPassword("User@222");
-        user2.setAge(45);
-        assertEquals(user2, registrationService.register(user2));
-        User user3 = new User();
-        user3.setLogin("User333");
-        user3.setPassword("User@333");
-        user3.setAge(60);
-        assertEquals(user3, registrationService.register(user3));
-        assertEquals(THREE_ELEMENTS, Storage.people.size(), "Sizes not equals");
+        User user = new User();
+        user.setLogin("User111");
+        user.setPassword("User@111");
+        user.setAge(30);
+        assertEquals(user, registrationService.register(user));
     }
 }
