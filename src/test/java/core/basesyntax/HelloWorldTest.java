@@ -66,7 +66,7 @@ public class HelloWorldTest {
 	}
 
 	@Test
-	void register_NullFieldUser_NotOK() {
+	void register_NullFields_NotOK() {
 		User user = new User();
 		user.setPassword("User@12345");
 		user.setAge(25);
@@ -77,6 +77,11 @@ public class HelloWorldTest {
 		user.setAge(25);
 		assertThrows(RuntimeException.class, () -> { registrationService.register(user); }
 				, "User has null password");
+		user.setLogin("User12345");
+		user.setPassword("User12345");
+		user.setAge(null);
+		assertThrows(RuntimeException.class, () -> { registrationService.register(user); }
+				, "User has null age");
 	}
 
 	@Test
