@@ -19,17 +19,17 @@ public class HelloWorldTest {
     private static RegistrationService registrationService;
 
     @BeforeAll
-    static void create() {
+    public static void create() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @AfterEach
-    void clearList() {
+    public void clearList() {
         Storage.people.clear();
     }
 
     @Test
-    void register_youngAge_NotOk() {
+    public void register_youngAge_NotOk() {
         User userLess18 = new User();
         userLess18.setLogin("UserLess18");
         userLess18.setPassword("UserLess18");
@@ -40,7 +40,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_shortPassword_NotOk() {
+    public void register_shortPassword_NotOk() {
         User user = new User();
         user.setLogin("User");
         user.setPassword("User");
@@ -51,7 +51,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_AlreadyExist_NotOk() {
+    public void register_AlreadyExist_NotOk() {
         User user = new User();
         user.setLogin("User12345");
         user.setPassword("User@12345");
@@ -63,13 +63,13 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_nullUser_NotOk() {
+    public void register_nullUser_NotOk() {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(null), "Came null user");
     }
 
     @Test
-    void register_NullAge_NotOK() {
+    public void register_NullAge_NotOK() {
         User user = new User();
         user.setLogin("User12345");
         user.setPassword("User12345");
@@ -78,7 +78,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_NullLogin_NotOK() {
+    public void register_NullLogin_NotOK() {
         User user = new User();
         user.setPassword("User@12345");
         user.setAge(25);
@@ -87,7 +87,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_NullPassword_NotOK() {
+    public void register_NullPassword_NotOK() {
         User user = new User();
         user.setLogin("User12345");
         user.setAge(25);
@@ -96,7 +96,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_UnhapenedAge_NotOk() {
+    public void register_UnhapenedAge_NotOk() {
         User user = new User();
         user.setLogin("User12345");
         user.setPassword("User@12345");
@@ -106,7 +106,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void registration_PutCorrectDate_Ok() {
+    public void registration_PutCorrectDate_Ok() {
         User user = new User();
         user.setLogin("User111");
         user.setPassword("User@111");
