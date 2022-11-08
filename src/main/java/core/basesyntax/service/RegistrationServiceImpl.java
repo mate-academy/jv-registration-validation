@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         if (user.getAge() == null) {
             callRuntimeException("Age can't be null");
-        } else if (user.getAge() >= 18 && user.getAge() < 120) {
+        } else if (user.getAge() < 18 && user.getAge() < 120) {
             callRuntimeException("Age have be wright");
         }
 
@@ -25,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             callRuntimeException("Login can't be empty");
         }
 
-        if (user.getPassword() != null) {
+        if (user.getPassword() == null) {
             callRuntimeException("Password can't be null");
         } else if (user.getPassword().length() < 7) {
             callRuntimeException("Password have be more symbols");
