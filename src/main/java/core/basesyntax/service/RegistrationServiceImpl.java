@@ -5,11 +5,10 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 120;
+    private static final int MIN_LETTERS = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
-    static private final int MIN_AGE = 18;
-    static private final int MAX_AGE = 120;
-    static private final int MIN_LETTERS = 6;
-
 
     @Override
     public User register(User user) {
