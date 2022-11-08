@@ -50,7 +50,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_IfExist_NotOk() {
+    void register_AlreadyExist_NotOk() {
         User user = new User();
         user.setLogin("User12345");
         user.setPassword("User@12345");
