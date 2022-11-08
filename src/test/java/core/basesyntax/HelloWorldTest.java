@@ -3,6 +3,7 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -55,14 +56,10 @@ public class HelloWorldTest {
         user.setLogin("User12345");
         user.setPassword("User@12345");
         user.setAge(25);
-        registrationService.register(user);
+        new StorageDaoImpl().add(user);
         assertEquals(1, Storage.people.size(), "Size not equals");
-        User newUser = new User();
-        newUser.setLogin("User12345");
-        newUser.setPassword("User@12345");
-        newUser.setAge(25);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(newUser), "Same user was putted in storage");
+                () -> registrationService.register(user), "Same user was putted in storage");
     }
 
     @Test
