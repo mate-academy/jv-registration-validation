@@ -3,6 +3,8 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -100,17 +102,17 @@ public class HelloWorldTest {
 		user1.setLogin("User111");
 		user1.setPassword("User@111");
 		user1.setAge(30);
-		assertDoesNotThrow(() -> { registrationService.register(user1); });
+		assertEquals(user1, registrationService.register(user1));
 		User user2 = new User();
 		user1.setLogin("User222");
 		user1.setPassword("User@222");
 		user1.setAge(45);
-		assertDoesNotThrow(() -> { registrationService.register(user2); });
+		assertEquals(user2, registrationService.register(user2));
 		User user3 = new User();
 		user1.setLogin("User333");
 		user1.setPassword("User@333");
 		user1.setAge(60);
-		assertDoesNotThrow(() -> { registrationService.register(user3); });
+		assertEquals(user3, registrationService.register(user3));
 		assertEquals(3, Storage.people.size(), "Sizes not equals");
 	}
 }
