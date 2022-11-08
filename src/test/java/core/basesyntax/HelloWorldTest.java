@@ -19,7 +19,6 @@ public class HelloWorldTest {
     private static final int THREE_ELEMENTS = 3;
     private static final int ONE_ELEMENTS = 1;
 
-
     @BeforeAll
     static void create() {
         registrationService = new RegistrationServiceImpl();
@@ -36,8 +35,9 @@ public class HelloWorldTest {
         userLess18.setLogin("UserLess18");
         userLess18.setPassword("UserLess18");
         userLess18.setAge(17);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(userLess18); }, "Age has to be between 18 and 120");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(userLess18),
+                "Age has to be between 18 and 120");
     }
 
     @Test
@@ -46,8 +46,9 @@ public class HelloWorldTest {
         user.setLogin("User");
         user.setPassword("User");
         user.setAge(30);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user); }, "Password less 6 symbols is input");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user),
+                "Password less 6 symbols is input");
     }
 
     @Test
@@ -62,14 +63,14 @@ public class HelloWorldTest {
         user2.setLogin("User12345");
         user2.setPassword("User@12345");
         user2.setAge(25);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user2); }, "Same user was putted in storage");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user2), "Same user was putted in storage");
     }
 
     @Test
     void register_EmptyUser_NotOk() {
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(null); }, "Came null user");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(null), "Came null user");
     }
 
     @Test
@@ -77,18 +78,18 @@ public class HelloWorldTest {
         User user = new User();
         user.setPassword("User@12345");
         user.setAge(25);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user); }, "User has null or empty name");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user), "User has null or empty name");
         user.setLogin("User12345");
         user.setPassword(null);
         user.setAge(25);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user); }, "User has null password");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user), "User has null password");
         user.setLogin("User12345");
         user.setPassword("User12345");
         user.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user); }, "User has null age");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user), "User has null age");
     }
 
     @Test
@@ -97,8 +98,8 @@ public class HelloWorldTest {
         user.setLogin("User12345");
         user.setPassword("User@12345");
         user.setAge(125);
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user); }, "User with age. It's can't be");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user), "User with age. It's can't be");
     }
 
     @Test
