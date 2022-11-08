@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    void callRuntimeException(String string) {
+    private void throwRuntimeException(String string) {
         throw new RuntimeException(string);
     }
 }
