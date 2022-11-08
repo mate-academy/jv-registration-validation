@@ -57,12 +57,12 @@ public class HelloWorldTest {
         user.setAge(25);
         registrationService.register(user);
         assertEquals(1, Storage.people.size(), "Size not equals");
-        User user2 = new User();
-        user2.setLogin("User12345");
-        user2.setPassword("User@12345");
-        user2.setAge(25);
+        User newUser = new User();
+        newUser.setLogin("User12345");
+        newUser.setPassword("User@12345");
+        newUser.setAge(25);
         assertThrows(RuntimeException.class,
-                () -> registrationService.register(user2), "Same user was putted in storage");
+                () -> registrationService.register(newUser), "Same user was putted in storage");
     }
 
     @Test
@@ -72,22 +72,30 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_NullFields_NotOK() {
+    void register_NullAge_NotOK() {
+        User user = new User();
+        user.setLogin("User12345");
+        user.setPassword("User12345");
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user), "User has null age");
+    }
+
+    @Test
+    void register_NullLogin_NotOK() {
         User user = new User();
         user.setPassword("User@12345");
         user.setAge(25);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user), "User has null or empty name");
+    }
+
+    @Test
+    void register_NullPassword_NotOK() {
+        User user = new User();
         user.setLogin("User12345");
-        user.setPassword(null);
         user.setAge(25);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user), "User has null password");
-        user.setLogin("User12345");
-        user.setPassword("User12345");
-        user.setAge(null);
-        assertThrows(RuntimeException.class,
-                () -> registrationService.register(user), "User has null age");
     }
 
     @Test
