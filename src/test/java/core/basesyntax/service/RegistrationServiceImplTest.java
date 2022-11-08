@@ -35,7 +35,6 @@ class RegistrationServiceImplTest {
         user.setId(123L);
         user.setLogin("sdhgs5s");
         user.setPassword("qwerds");
-
         user.setAge(28);
         assertEquals(user, REGISTRATIONSERVICE.register(user));
     }
