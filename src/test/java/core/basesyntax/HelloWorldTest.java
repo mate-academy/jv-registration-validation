@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
-	Feel free to remove this class and create your own.
+Feel free to remove this class and create your own.
 */
 public class HelloWorldTest {
 	private static RegistrationService registrationService;
