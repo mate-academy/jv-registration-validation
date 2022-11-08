@@ -39,7 +39,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_PasswordLess6Numbers_NotOk() {
+    void register_shortPassword_NotOk() {
         User user = new User();
         user.setLogin("User");
         user.setPassword("User");
