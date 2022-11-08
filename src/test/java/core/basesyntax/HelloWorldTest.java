@@ -66,7 +66,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_EmptyUser_NotOk() {
+    void register_nullUser_NotOk() {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(null), "Came null user");
     }
