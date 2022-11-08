@@ -9,14 +9,35 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user != null && user.getAge() >= 18 && user.getAge() < 120
-                && user.getLogin() != null && !user.getLogin().isEmpty()
-                && user.getPassword() != null && user.getPassword().length() > 6
-                && storageDao.get(user.getLogin()) == null) {
-            storageDao.add(user);
-        } else {
-            throw new RuntimeException();
+        if (user == null) {
+            callRuntimeException("User can't be null");
         }
-        return user;
+
+        if (user.getAge() == null) {
+            callRuntimeException("Age can't be null");
+        } else if (user.getAge() >= 18 && user.getAge() < 120) {
+            callRuntimeException("Age have be wright");
+        }
+
+        if (user.getLogin() == null) {
+            callRuntimeException("Login can't be null");
+        } else if (user.getLogin().isEmpty()) {
+            callRuntimeException("Login can't be empty");
+        }
+
+        if (user.getPassword() != null) {
+            callRuntimeException("Password can't be null");
+        } else if (user.getPassword().length() < 7) {
+            callRuntimeException("Password have be more symbols");
+        }
+
+        if (storageDao.get(user.getLogin()) != null) {
+            callRuntimeException("There is same user");
+        }
+        return storageDao.add(user);
+    }
+
+    void callRuntimeException(String string) {
+        throw new RuntimeException(string);
     }
 }
