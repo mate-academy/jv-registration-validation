@@ -25,7 +25,7 @@ public class HelloWorldTest {
     }
 
     @AfterEach
-    void nullList() {
+    void clearList() {
         Storage.people.clear();
     }
 
