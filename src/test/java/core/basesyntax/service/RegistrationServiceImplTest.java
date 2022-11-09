@@ -1,24 +1,23 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final int USER_OVER_MAX_AGE = 125;
     private static final int USER_UNDER_MIN_AGE = 17;
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao;
     private static User user;
+    private RegistrationService registrationService;
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
+        StorageDao storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
         user = new User();
         user.setId(3478700L);
         user.setLogin("newUserLogin");
@@ -51,8 +50,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerSameUserTwice_NotOk() {
-        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
             registrationService.register(user);
         });
     }
@@ -92,7 +91,6 @@ class RegistrationServiceImplTest {
     @Test
     void registerUserShortPassword_NotOk() {
         user.setPassword("12345");
-        registrationService.register(user);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -100,6 +98,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUserNullPassword_NotOk() {
-
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
