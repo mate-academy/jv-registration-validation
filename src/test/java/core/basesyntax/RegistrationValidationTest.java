@@ -35,14 +35,14 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void userAge_Ok() {
+    void register_age_ok() {
         user.setAge(19);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void userAge_NotOk() {
+    void register_age_notOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
@@ -50,39 +50,39 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void nullUserAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPassword_Ok() {
+    void register_password_ok() {
         user.setPassword("112233");
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void userPassword_NotOk() {
+    void register_password_notOk() {
         user.setPassword("1111");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void nullUserPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLogin_Ok() {
+    void register_login_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void userLogin_NotOk() {
+    void register_login_notOk() {
         registrationService.register(user);
         User user1 = new User();
         user1.setAge(25);
@@ -93,8 +93,8 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void nullUserLogin_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
