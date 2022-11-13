@@ -15,19 +15,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User FIRST_VALID_USER = new User("john8989", "maximus", 20);
-    private static final User SECOND_VALID_USER = new User("ann_25", "sweet_angel", 18);
-    private static final int SIZE_OF_STORAGE_WITH_VALID_USERS = 2;
+    private static final User VALID_USER = new User("ann_25", "maximus", 20);
     private static final String VALID_PASSWORD = "lviv4_4";
     private static final String VALID_LOGIN = "bob_255";
-    private static final int VALID_AGE = 25;
-    private static final String INVALID_PASSWORD = "hfgeu";
+    private static final int VALID_AGE = 18;
+    private static final String INVALID_PASSWORD_LESS_THEN_SIX_CHARACTERS = "hfgeu";
     private static final String LOGIN_ALREADY_EXISTS = "ann_25";
-    private static final int AGE_LESS_THEN_18 = 17;
+    private static final int AGE_LESS_THEN_MIN = 17;
 
-    private static final int AGE_MORE_THEN_120 = 125;
+    private static final int AGE_MORE_THEN_MAX = 125;
     private static final int NEGATIVE_AGE = - 5;
     private static final String EMPTY_STRING = "";
+    private static final String SEVERAL_WHITE_SPACES = "      ";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User testUser;
@@ -40,37 +39,46 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        storageDao.add(FIRST_VALID_USER);
-        storageDao.add(SECOND_VALID_USER);
+        storageDao.add(VALID_USER);
         testUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-
     }
 
     @Test
     void register_validUser_ok() {
         User registeredValidUser = registrationService.register(testUser);
-        assertEquals(3, Storage.people.size());
-        assertTrue(Storage.people.contains(registeredValidUser));
         assertEquals(registeredValidUser, testUser);
+        assertEquals(2, Storage.people.size());
+        assertTrue(Storage.people.contains(registeredValidUser));
     }
 
     @Test
-    void register_ageLessThen18_notOk() {
-        testUser.setAge(AGE_LESS_THEN_18);
-        assertThrows(RuntimeException.class, () -> {
+    void register_nullUser_notOk() {
+        testUser = null;
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals("User cant be null", thrown.getMessage());
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
     @Test
-    void register_ageMoreThen120_notOk() {
-        testUser.setAge(AGE_MORE_THEN_120);
+    void register_ageLessThenMin_notOk() {
+        testUser.setAge(AGE_LESS_THEN_MIN);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
+        assertFalse(Storage.people.contains(testUser));
+    }
+
+    @Test
+    void register_ageMoreThenMax_notOk() {
+        testUser.setAge(AGE_MORE_THEN_MAX);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(testUser);
+        });
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
@@ -80,7 +88,7 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
@@ -91,17 +99,17 @@ class RegistrationServiceImplTest {
             registrationService.register(testUser);
         });
         assertEquals("Age can't be null", thrown.getMessage());
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
     @Test
-    void register_passwordLessThenSixCharacters_notOk() {
-        testUser.setPassword(INVALID_PASSWORD);
+    void register_invalidPassword_notOk() {
+        testUser.setPassword(INVALID_PASSWORD_LESS_THEN_SIX_CHARACTERS);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
@@ -112,7 +120,7 @@ class RegistrationServiceImplTest {
             registrationService.register(testUser);
         });
         assertEquals("Password can't be null", thrown.getMessage());
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
@@ -122,7 +130,17 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
+        assertFalse(Storage.people.contains(testUser));
+    }
+
+    @Test
+    void register_invalidPasswordWhiteSpaces_notOk() {
+        testUser.setPassword(SEVERAL_WHITE_SPACES);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(testUser);
+        });
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
@@ -132,7 +150,7 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
@@ -143,7 +161,7 @@ class RegistrationServiceImplTest {
             registrationService.register(testUser);
         });
         assertEquals("Login can't be null", thrown.getMessage());
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
@@ -153,7 +171,17 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(SIZE_OF_STORAGE_WITH_VALID_USERS, Storage.people.size());
+        assertEquals(1, Storage.people.size());
+        assertFalse(Storage.people.contains(testUser));
+    }
+
+    @Test
+    void register_LoginWhiteSpaces_notOk() {
+        testUser.setLogin(SEVERAL_WHITE_SPACES);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(testUser);
+        });
+        assertEquals(1, Storage.people.size());
         assertFalse(Storage.people.contains(testUser));
     }
 
