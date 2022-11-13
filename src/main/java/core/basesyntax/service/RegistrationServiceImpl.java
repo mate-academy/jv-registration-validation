@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("this login is already registered, use another login");
         }
         if (user.getPassword().length() < 5) {
-            throw new RuntimeException("password must be at least 6 character");
+            throw new RuntimeException("password must be at least 6  character");
         }
         return storageDao.add(user);
     }
