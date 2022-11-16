@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int DEFAULT_AGE = 18;
-    private static final int DEFAULT_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int STORAGE_SIZE_FOR_TEST = 2;
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
@@ -27,7 +27,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check18_years_old_NotOk() {
+    void register_lowAge_notOk() {
         user.setAge(15);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
     @Test
     void check18_years_old_Ok() {
         User actualUser = registrationService.register(user);
-        assertTrue(actualUser.getAge() > DEFAULT_AGE,"Fine");
+        assertTrue(actualUser.getAge() > MIN_AGE,"Fine");
     }
 
     @Test
@@ -71,7 +71,7 @@ class RegistrationServiceImplTest {
     @Test
     void correct_password() {
         User actualUser = registrationService.register(user);
-        assertTrue(actualUser.getPassword().length() >= DEFAULT_PASSWORD_LENGTH,"Fine");
+        assertTrue(actualUser.getPassword().length() >= MIN_PASSWORD_LENGTH,"Fine");
     }
 
     @Test
@@ -87,7 +87,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void newRegister_User() {
+    void addNewRegister_User() {
         User user2 = new User();
         user2.setId(354L);
         user2.setLogin("Roman");
