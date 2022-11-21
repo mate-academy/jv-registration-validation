@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD = 6;
     private static final int STORAGE_LIST_SIZE = 2;
@@ -27,59 +28,59 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkAge_Young_IsNotOk() {
+    void register_Young_IsNotOk() {
         user.setAge(16);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user),
-                "Young person, try older");
+                "Expected exception when user age is less than required");
     }
 
     @Test
-    void checkAge_Old_IsOk() {
+    void register_Old_IsOk() {
         User register = registrationService.register(user);
         assertTrue(register.getAge() > MIN_AGE, "Good! You age perfect for registration");
     }
 
     @Test
-    void checkAge_Null_IsNotOk() {
+    void registerAge_Null_IsNotOk() {
         user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Age is null. Give some age for user");
     }
 
     @Test
-    void checkPassword_SizeIsOk() {
+    void registerPassword_SizeIsOk() {
         User register = registrationService.register(user);
         assertTrue(register.getPassword().length() > MIN_PASSWORD, "Good! Password have nice size");
     }
 
     @Test
-    void checkPassword_Size_IsNotOk() {
+    void registerPassword_Size_IsNotOk() {
         user.setPassword("abc");
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Password to small. Try agan");
     }
 
     @Test
-    void checkPassword_Null_IsNotOk() {
+    void registerPassword_Null_IsNotOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Password is null. Give some password for user");
     }
 
     @Test
-    void checkUserId_Null_IsNotOk() {
+    void registerUserId_Null_IsNotOk() {
         user.setId(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void checkUser_Null_IsNotOk() {
+    void registerUser_Null_IsNotOk() {
         user = null;
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void checkLogin_Null_IsNotOk() {
+    void registerLogin_Null_IsNotOk() {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user),
                 "Login is null. Give some login for user");

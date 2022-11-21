@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Not valid password");
         }
         if (user.getId() == null) {
-            throw new RuntimeException("Not valid age");
+            throw new RuntimeException("ID can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("The same login");
