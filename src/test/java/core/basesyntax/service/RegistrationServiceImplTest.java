@@ -23,7 +23,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_isUnder_18() {
+    void register_ageLessThen18_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -31,7 +31,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_isNegative() {
+    void register_ageIsNegative_notOk() {
         user.setAge(-17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -39,21 +39,21 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_isMore_18() {
+    void register_ageIsMoreThen18_Ok() {
         user.setAge(19);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void age_is_18() {
+    void register_ageIs18_Ok() {
         user.setAge(18);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void age_isNull() {
+    void register_ageIsNull_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -61,7 +61,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void password_isShort() {
+    void register_passwordIsShort_notOk() {
         user.setAge(20);
         user.setPassword("123");
         assertThrows(RuntimeException.class, () -> {
@@ -70,14 +70,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void password_Ok() {
+    void register_passwordIsCorrect_Ok() {
         user.setPassword("qwerty");
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void password_isNull() {
+    void register_passwordIsNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -85,7 +85,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void login_isNull() {
+    void register_login_IsNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -93,7 +93,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAlreadyInStorage() {
+    void register_userAlreadyInStorage() {
         User user2 = new User();
         user2.setLogin("test@mail");
         user2.setPassword("123456");
