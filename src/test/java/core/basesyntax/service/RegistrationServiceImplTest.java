@@ -23,7 +23,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThen18_notOk() {
+    void register_ageLessThenMinimal_notOk() {
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -39,14 +39,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsMoreThen18_Ok() {
+    void register_ageIsMoreThenMinimal_Ok() {
         user.setAge(19);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void register_ageIs18_Ok() {
+    void register_ageIsMinimal_Ok() {
         user.setAge(18);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
@@ -94,11 +94,11 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_userAlreadyInStorage() {
-        User user2 = new User();
-        user2.setLogin("test@mail");
-        user2.setPassword("123456");
-        user2.setAge(18);
-        Storage.people.add(user2);
+        User secondUser = new User();
+        secondUser.setLogin("test@mail");
+        secondUser.setPassword("123456");
+        secondUser.setAge(18);
+        Storage.people.add(secondUser);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
