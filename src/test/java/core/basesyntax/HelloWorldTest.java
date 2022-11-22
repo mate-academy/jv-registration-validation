@@ -43,12 +43,12 @@ public class HelloWorldTest {
     @Test
     void register_login_notOk() {
         registrationService.register(user);
-        User user1 = new User();
-        user1.setAge(23);
-        user1.setLogin("test@gmail.com");
-        user1.setPassword("898989898989");
+        User anotherUser = new User();
+        anotherUser.setAge(23);
+        anotherUser.setLogin("test@gmail.com");
+        anotherUser.setPassword("898989898989");
         assertThrows(RuntimeException.class, () ->
-                registrationService.register(user1));
+                registrationService.register(anotherUser));
     }
 
     @Test
