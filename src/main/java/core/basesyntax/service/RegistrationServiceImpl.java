@@ -21,14 +21,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Age can`t be null");
         }
+        if (user.getPassword() == null) {
+            throw new RuntimeException("User password can`t be null");
+        }
         if (user.getPassword().length() < MIN_LENGTH_OF_PASSWORD) {
             throw new RuntimeException("User password must be at least "
                     + MIN_LENGTH_OF_PASSWORD + " characters");
         }
-        if (user.getPassword() == null) {
-            throw new RuntimeException("User password can`t be null");
-        }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
