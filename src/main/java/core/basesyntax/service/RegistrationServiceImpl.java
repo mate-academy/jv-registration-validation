@@ -13,18 +13,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
 
         if (user.getLogin() == null || user.getAge() == null || user.getPassword() == null) {
-        throw new RuntimeException("Value cannot be null!");
+            throw new RuntimeException("Value cannot be null!");
         }
 
         if (storageDao.get(user.getLogin()) != null) {
-             throw new RuntimeException("User with such login already exists.");
+            throw new RuntimeException("User with such login already exists.");
         }
 
-        if (user.getAge() < MIN_AGE)  {
+        if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("Age cannot be less than 18.");
         }
 
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH ) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RuntimeException("Password length cannot be snaller than 6 symbols.");
         }
         storageDao.add(user);
