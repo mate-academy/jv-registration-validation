@@ -11,14 +11,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("Not valid age");
+        }
+        if (user.getAge() == null) {
+            throw new RuntimeException("Not valid age");
+        }
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null");
         }
         if (user.getPassword() == null) {
             throw new RuntimeException("Password can't be null");
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Not valid age");
         }
         if (user.getPassword().length() < MIN_PASSWORD) {
             throw new RuntimeException("Not valid password");
