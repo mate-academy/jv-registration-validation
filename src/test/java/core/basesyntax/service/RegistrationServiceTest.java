@@ -63,6 +63,12 @@ class RegistrationServiceTest {
     }
 
     @Test
+    void register_nullUserAge_notOk() {
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_shortPassword_notOk() {
         user.setPassword(INVALID_PASSWORD);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
