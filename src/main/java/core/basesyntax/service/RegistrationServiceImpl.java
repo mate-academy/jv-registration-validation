@@ -26,5 +26,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("This login is not available");
         }
         return storageDao.add(user);
-        }
     }
+}

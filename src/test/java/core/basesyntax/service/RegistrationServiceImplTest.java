@@ -1,11 +1,11 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService = new RegistrationServiceImpl();
@@ -23,6 +23,7 @@ class RegistrationServiceImplTest {
     public void register_Ok() {
         registrationService.register(defaultUser());
     }
+
     @Test
     public void register_ageLess_notOk() {
         User user = new User();
@@ -32,6 +33,7 @@ class RegistrationServiceImplTest {
         user.setId(458962L);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_passwordLengthLess_notOk() {
         User user = new User();
@@ -41,6 +43,7 @@ class RegistrationServiceImplTest {
         user.setId(458962L);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_nullPassword_notOk() {
         User user = new User();
@@ -50,6 +53,7 @@ class RegistrationServiceImplTest {
         user.setId(45987654L);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_nullLogin_notOk() {
         User user = new User();
@@ -59,6 +63,7 @@ class RegistrationServiceImplTest {
         user.setId(451234564L);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_nullAge_notOk() {
         User user = new User();
@@ -68,9 +73,10 @@ class RegistrationServiceImplTest {
         user.setId(451234564L);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_StorageContainsLogin_notOk() {
-        StorageDao storage = new StorageDaoImpl();
+        final StorageDao storage = new StorageDaoImpl();
         User user1 = new User();
         user1.setId(1234567L);
         user1.setLogin("user1");
