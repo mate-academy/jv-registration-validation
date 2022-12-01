@@ -5,23 +5,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static User defaultUser;
     private RegistrationService registrationService = new RegistrationServiceImpl();
 
-    public User defaultUser() {
-        User user = new User();
-        user.setPassword("password1234");
-        user.setAge(22);
-        user.setLogin("user1");
-        user.setId(451232L);
-        return user;
+    @BeforeAll
+    static void beforeAll() {
+        defaultUser = new User();
+        defaultUser.setAge(22);
+        defaultUser.setPassword("123password123");
+        defaultUser.setLogin("user1");
+        defaultUser.setId(451232L);
     }
 
     @Test
     public void register_Ok() {
-        registrationService.register(defaultUser());
+        registrationService.register(defaultUser);
     }
 
     @Test
@@ -83,6 +85,6 @@ class RegistrationServiceImplTest {
         user1.setAge(25);
         user1.setPassword("password1111");
         storage.add(user1);
-        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser()));
+        assertThrows(RuntimeException.class, () -> registrationService.register(defaultUser));
     }
 }
