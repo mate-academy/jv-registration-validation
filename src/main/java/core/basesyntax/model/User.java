@@ -7,6 +7,7 @@ public class User {
     private String login;
     private String password;
     private Integer age;
+    private String name;
 
     public Long getId() {
         return id;
@@ -40,6 +41,14 @@ public class User {
         this.age = age;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -51,11 +60,13 @@ public class User {
         User user = (User) o;
         return Objects.equals(login, user.login)
                 && Objects.equals(password, user.password)
+                && Objects.equals(name, user.name)
                 && Objects.equals(age, user.age);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, password, age);
+        return Objects.hash(login, password, age, name);
     }
+
 }
