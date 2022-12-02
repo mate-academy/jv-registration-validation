@@ -15,8 +15,6 @@ class RegistrationServiceImplTest {
     private static final String PASSWORD_OK = "asdfjkl";
     private static final String PASSWORD_NOT_OK = "asdf";
     private static final String LOGIN_OK = "Login";
-    private static final String NAME_OK = "Alina";
-    private static final String NAME_NOT_OK = "Maksym";
 
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
@@ -34,11 +32,10 @@ class RegistrationServiceImplTest {
         user.setAge(AGE_OK);
         user.setPassword(PASSWORD_OK);
         user.setLogin(LOGIN_OK);
-        user.setName(NAME_OK);
     }
 
     @Test
-    void user_Not_Ok() {
+    void register_nullUser_notOk() {
         user = null;
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -46,23 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void young_Name_Not_Ok() {
-        user.setName(NAME_NOT_OK);
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void null_Name_Not_Ok() {
-        user.setName(null);
-        Assertions.assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void young_Age_Not_Ok() {
+    void register_youngAge_notOk() {
         user.setAge(AGE_NOT_OK);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -70,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void null_Age_Not_Ok() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -78,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void unavailable_Login_Not_Ok() {
+    void register_unavailableLogin_notOk() {
         Storage.people.add(user);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -86,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void null_Login_Not_Ok() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -94,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void short_Password_Not_Ok() {
+    void register_shortPassword_notOk() {
         user.setPassword(PASSWORD_NOT_OK);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -102,7 +83,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-      void null_Password_Not_Ok() {
+      void register_nullPassword_notOk() {
         user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
