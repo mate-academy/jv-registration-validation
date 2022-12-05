@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -16,8 +15,8 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDaoImpl storageDao;
-    private static User user1;
-    private static User user2;
+    private static User newUser;
+    private static User userWithExistedLogin;
 
     @BeforeAll
     static void beforeAll() {
@@ -27,14 +26,14 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new User();
-        user1.setAge(28);
-        user1.setLogin("BorysenkoDanyl");
-        user1.setPassword("Danyl5555");
-        user2 = new User();
-        user2.setAge(25);
-        user2.setLogin("BorysenkoDanyl");
-        user2.setPassword("Borysenko");
+        newUser = new User();
+        newUser.setAge(28);
+        newUser.setLogin("BorysenkoDanyl");
+        newUser.setPassword("Danyl5555");
+        userWithExistedLogin = new User();
+        userWithExistedLogin.setAge(25);
+        userWithExistedLogin.setLogin("BorysenkoDanyl");
+        userWithExistedLogin.setPassword("Borysenko");
     }
 
     @AfterEach
@@ -51,84 +50,81 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_NotOk() {
-        user1.setLogin(null);
+        newUser.setLogin(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(newUser);
         });
     }
 
     @Test
     void register_nullAge_NotOk() {
-        user1.setAge(null);
+        newUser.setAge(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(newUser);
         });
     }
 
     @Test
     void register_nullPassword_NotOk() {
-        user1.setPassword(null);
+        newUser.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(newUser);
         });
     }
 
     @Test
     void register_newUser_Ok() {
-        registrationService.register(user1);
-        assertTrue(Storage.people.contains(user1));
+        registrationService.register(newUser);
+        assertTrue(Storage.people.contains(newUser));
     }
 
     @Test
     void register_existedUser_NotOk() {
-        storageDao.add(user1);
-        try {
-            registrationService.register(user2);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("RuntimeException should be thrown if user with such login is already exists");
+        storageDao.add(newUser);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(userWithExistedLogin);
+        });
     }
 
     @Test
     void register_invalidAge_NotOk() {
-        user1.setAge(15);
+        newUser.setAge(15);
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(newUser);
         });
     }
 
     @Test
     void register_minAge_Ok() {
-        user1.setAge(18);
-        User actual = registrationService.register(user1);
-        assertEquals(user1, actual);
+        newUser.setAge(18);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
     }
 
     @Test
     void register_validAge_Ok() {
-        User actual = registrationService.register(user1);
-        assertEquals(user1, actual);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
     }
 
     @Test
     void register_invalidPassword_NotOk() {
-        user1.setPassword("user");
+        newUser.setPassword("user");
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(newUser);
         });
     }
 
     @Test
     void register_minLengthPassword_Ok() {
-        user1.setPassword("Danyl@");
-        User actual = registrationService.register(user1);
-        assertEquals(user1, actual);
+        newUser.setPassword("Danyl@");
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
     }
 
     @Test
     void register_validPassword_Ok() {
-        User actual = registrationService.register(user1);
-        assertEquals(user1, actual);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
     }
 }
