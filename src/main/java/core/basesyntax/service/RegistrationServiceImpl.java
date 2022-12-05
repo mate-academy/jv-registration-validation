@@ -32,7 +32,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User age must be over " + MIN_AGE + ".");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters.");
+            throw new RuntimeException("Password must be at least " + MIN_PASSWORD_LENGTH
+                    + " characters.");
         }
         storageDao.add(user);
         return user;

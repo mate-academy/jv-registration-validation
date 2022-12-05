@@ -31,12 +31,13 @@ class RegistrationServiceImplTest {
     void tearDown() {
         Storage.people.clear();
     }
+
     @Test
     void register_AddToBase_Ok() {
-
         rs.register(testUser);
         Assertions.assertTrue(Storage.people.contains(testUser));
     }
+
     @Test
     void register_loginExistInBase_notOk() {
         Storage.people.add(testUser);
