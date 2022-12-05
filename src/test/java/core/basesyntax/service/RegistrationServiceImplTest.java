@@ -31,7 +31,12 @@ class RegistrationServiceImplTest {
     void tearDown() {
         Storage.people.clear();
     }
+    @Test
+    void register_AddToBase_Ok() {
 
+        rs.register(testUser);
+        Assertions.assertTrue(Storage.people.contains(testUser));
+    }
     @Test
     void register_loginExistInBase_notOk() {
         Storage.people.add(testUser);
@@ -51,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageUnder18_NotOk() {
+    void register_ageUnderMinAge_NotOk() {
         testUser.setAge(MIN_AGE - 1);
         Assertions.assertThrows(RuntimeException.class, () -> rs.register(testUser));
     }
@@ -63,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordNotMore6_NotOk() {
+    void register_passwordUnderMinSize_NotOk() {
         testUser.setPassword("qwert");
         Assertions.assertThrows(RuntimeException.class, () -> rs.register(testUser));
     }
