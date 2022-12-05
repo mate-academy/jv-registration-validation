@@ -1,21 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-
     private static final User user = new User();
     private static final User actual = new User();
     private static RegistrationServiceImpl registrationService;
@@ -79,6 +72,4 @@ class RegistrationServiceImplTest {
         actual.setPassword("01234");
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
-
-
 }
