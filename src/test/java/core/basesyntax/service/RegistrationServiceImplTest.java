@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -32,44 +33,62 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_null_pas_NotOk() {
+    void register_nullPassword_NotOk() {
         actual.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void register_null_log_NotOk() {
+    void register_nullLogin_NotOk() {
         actual.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void register_null_age_NotOk() {
+    void register_nullAge_NotOk() {
         actual.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void register_negativ_age_NotOk() {
+    void register_negativAge_NotOk() {
         actual.setAge(-1);
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void register_small_age_NotOk() {
+    void register_smallAge_NotOk() {
         actual.setAge(12);
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void register_theSame_login_NotOk() {
+    void register_theSameLogin_NotOk() {
         actual.setLogin("FirstPerson");
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void register_short_pass_NotOk() {
+    void register_shortPassword_NotOk() {
         actual.setPassword("01234");
         assertThrows(RuntimeException.class, () -> registrationService.register(actual));
+    }
+
+    @Test
+    void register_Login_IsOk() {
+        actual.setLogin(user.getLogin());
+        assertTrue(storageDao.get(user.getLogin()) != null, " User isn`t add");
+    }
+
+    @Test
+    void register_Age_IsOk() {
+        actual.setAge(user.getAge());
+        assertTrue(storageDao.get(user.getLogin()) != null, " User isn`t add");
+    }
+
+    @Test
+    void register_Password_IsOk() {
+        actual.setPassword(user.getPassword());
+        assertTrue(storageDao.get(user.getLogin()) != null, " User isn`t add");
     }
 }
