@@ -24,7 +24,7 @@ public class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-        void setUp() {
+    void setUp() {
         user = new User();
     }
 
