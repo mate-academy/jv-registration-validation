@@ -19,14 +19,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputDataException("Age can't be null");
         }
         if (user.getAge() < VALID_AGE) {
-            throw new InvalidInputDataException("Age should be 18 or higher");
+            throw new InvalidInputDataException(String.format("Age should be %d or higher",
+                    VALID_AGE));
         }
         if (user.getPassword() == null) {
             throw new InvalidInputDataException("Password can't be null");
         }
         if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
             throw new InvalidInputDataException(
-                    "Password length should be at least 6 characters long");
+                    String.format("Password length should be at least %d characters long",
+                            VALID_PASSWORD_LENGTH));
         }
         if (user.getLogin() == null) {
             throw new InvalidInputDataException("Login can't be null");
