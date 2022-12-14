@@ -1,17 +1,15 @@
 package core.basesyntax.service;
 
-import core.basesyntax.Exception.InvalidInputDataException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.InvalidInputDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final int VALID_AGE = 18;
@@ -20,7 +18,8 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN_TWO = "SecondLogin";
     private static final String VALID_LOGIN_NEW = "NewLogin";
     private static final String VALID_PASSWORD = "#".repeat(VALID_PASSWORD_LENGTH);
-    private static final String EXPECTED_EXCEPTION = InvalidInputDataException.class.getSimpleName();
+    private static final String EXPECTED_EXCEPTION =
+            InvalidInputDataException.class.getSimpleName();
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
 
@@ -33,10 +32,10 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         User userOne = new User();
-        User userTwo = new User();
         userOne.setAge(VALID_AGE);
         userOne.setLogin(VALID_LOGIN_ONE);
         userOne.setPassword(VALID_PASSWORD);
+        User userTwo = new User();
         userTwo.setAge(VALID_AGE);
         userTwo.setLogin(VALID_LOGIN_TWO);
         userTwo.setPassword(VALID_PASSWORD);
@@ -76,7 +75,8 @@ class RegistrationServiceImplTest {
         newUser.setPassword(VALID_PASSWORD);
         Assertions.assertThrows(InvalidInputDataException.class,
                 () -> registrationService.register(newUser),
-                String.format("Should throw %s when user with the same login already exists", EXPECTED_EXCEPTION));
+                String.format("Should throw %s when user with the same login already exists",
+                        EXPECTED_EXCEPTION));
     }
 
     @Test
@@ -111,7 +111,8 @@ class RegistrationServiceImplTest {
         newUser.setPassword(VALID_PASSWORD);
         Assertions.assertThrows(InvalidInputDataException.class,
                 () -> registrationService.register(newUser),
-                String.format("Should throw %s when age is lower then %d", EXPECTED_EXCEPTION, VALID_AGE));
+                String.format("Should throw %s when age is lower then %d",
+                        EXPECTED_EXCEPTION, VALID_AGE));
     }
 
     @Test
@@ -172,7 +173,8 @@ class RegistrationServiceImplTest {
         registrationService.register(newUser);
         User actual = storageDao.get(newUser.getLogin());
         Assertions.assertEquals(newUser, actual,
-                String.format("User should be added if password length equals %d", VALID_PASSWORD_LENGTH));
+                String.format("User should be added if password length equals %d",
+                        VALID_PASSWORD_LENGTH));
     }
 
     @Test
@@ -185,7 +187,8 @@ class RegistrationServiceImplTest {
         registrationService.register(newUser);
         User actual = storageDao.get(newUser.getLogin());
         Assertions.assertEquals(newUser, actual,
-                String.format("User should be added if password length greater then %d", VALID_PASSWORD_LENGTH));
+                String.format("User should be added if password length greater then %d",
+                        VALID_PASSWORD_LENGTH));
     }
 
     @Test

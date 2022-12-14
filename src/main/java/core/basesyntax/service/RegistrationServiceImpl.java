@@ -1,8 +1,8 @@
 package core.basesyntax.service;
 
-import core.basesyntax.Exception.InvalidInputDataException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.InvalidInputDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -23,7 +23,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputDataException("Password can't be null");
         }
         if (user.getPassword().length() < 6) {
-            throw new InvalidInputDataException("Password length should be at least 6 characters long");
+            throw new InvalidInputDataException(
+                    "Password length should be at least 6 characters long");
         }
         if (user.getLogin() == null) {
             throw new InvalidInputDataException("Login can't be null");
