@@ -15,6 +15,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidInputDataException("User can't be null");
         }
+        checkAge(user);
+        checkPassword(user);
+        checkLogin(user);
+        return storageDao.add(user);
+    }
+
+    private void checkAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidInputDataException("Age can't be null");
         }
@@ -22,6 +29,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputDataException(String.format("Age should be %d or higher",
                     VALID_AGE));
         }
+    }
+
+    private void checkPassword(User user) {
         if (user.getPassword() == null) {
             throw new InvalidInputDataException("Password can't be null");
         }
@@ -30,12 +40,14 @@ public class RegistrationServiceImpl implements RegistrationService {
                     String.format("Password length should be at least %d characters long",
                             VALID_PASSWORD_LENGTH));
         }
+    }
+
+    private void checkLogin(User user) {
         if (user.getLogin() == null) {
             throw new InvalidInputDataException("Login can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidInputDataException("User with such login already exists");
         }
-        return storageDao.add(user);
     }
 }
