@@ -9,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public static final int MIN_LENGTH_FOR_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
-    public void validateAge(User user) {
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidDataException("The field for age is equal null");
         }
@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void validatePassword(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new InvalidDataException("The field for password is equal null");
         }
@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void validateLogin(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new InvalidDataException("The field for login is equal null");
         }

@@ -5,10 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private RegistrationServiceImpl registrationService;
+
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @Test
     void register_incorrectAge_NotOk() {
