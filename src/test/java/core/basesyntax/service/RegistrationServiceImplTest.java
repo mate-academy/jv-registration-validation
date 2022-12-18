@@ -32,37 +32,37 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginNull_notOk() {
         user.setLogin(null);
-        checkAssert(user);
+        assertThrows(ValidationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_loginEmpty_notOk() {
         user.setLogin("");
-        checkAssert(user);
+        assertThrows(ValidationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_passwordNull_notOk() {
         user.setPassword(null);
-        checkAssert(user);
+        assertThrows(ValidationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_passwordMoreFive_notOk() {
         user.setPassword("12345");
-        checkAssert(user);
+        assertThrows(ValidationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_ageNull_notOk() {
         user.setAge(null);
-        checkAssert(user);
+        assertThrows(ValidationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_ageMoreSeventeen_notOk() {
         user.setAge(0);
-        checkAssert(user);
+        assertThrows(ValidationException.class, () -> registration.register(user));
     }
 
     @Test
@@ -72,11 +72,5 @@ class RegistrationServiceImplTest {
         user.setAge(19);
         registration.register(user);
         assertEquals(user, storageDao.get("Don"));
-    }
-
-    private void checkAssert(User user) {
-        assertThrows(ValidationException.class, () -> {
-            registration.register(user);
-        });
     }
 }
