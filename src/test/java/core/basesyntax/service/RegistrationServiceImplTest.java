@@ -125,9 +125,9 @@ class RegistrationServiceImplTest {
         testUser.setAge(30);
         testUser.setLogin("testUserLogin");
         User actual = registrationService.register(testUser);
-        assertEquals("testUserPassword", testUser.getPassword());
-        assertEquals(30, testUser.getAge());
-        assertEquals("testUserLogin", testUser.getLogin());
+        assertEquals("testUserPassword", actual.getPassword());
+        assertEquals(30, actual.getAge());
+        assertEquals("testUserLogin", actual.getLogin());
     }
 
     @AfterEach
