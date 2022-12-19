@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -20,7 +18,7 @@ class RegistrationServiceImplTest {
             InvalidDataException.class.getSimpleName();
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private static InvalidDataException invalidDataException;
+    //private static InvalidDataException invalidDataException;
 
     @BeforeAll
     static void beforeAll() {
@@ -44,7 +42,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        invalidDataException = assertThrows(InvalidDataException.class,
+        Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(null),
                 String.format("Should throw %s when user is null", EXPECTED_EXCEPTION));
     }
@@ -72,8 +70,7 @@ class RegistrationServiceImplTest {
         userTwo.setAge(19);
         userTwo.setPassword("123456");
         userTwo.setLogin("User");
-        invalidDataException
-                = assertThrows(InvalidDataException
+        Assertions.assertThrows(InvalidDataException
                         .class, () -> registrationService.register(userTwo),
                 String.format("Should throw %s when login is already exists",
                         EXPECTED_EXCEPTION));
@@ -85,8 +82,8 @@ class RegistrationServiceImplTest {
         user.setAge(19);
         user.setPassword("123456");
         user.setLogin(null);
-        invalidDataException
-                = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
+        Assertions.assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
                 String.format("Should throw %s when login is null", EXPECTED_EXCEPTION));
     }
 
@@ -108,8 +105,8 @@ class RegistrationServiceImplTest {
         user.setLogin("User");
         user.setPassword("123456");
         user.setAge(null);
-        invalidDataException
-                = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
+        Assertions.assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
                 String.format("Should throw %s when age is null", EXPECTED_EXCEPTION));
     }
 
@@ -119,8 +116,8 @@ class RegistrationServiceImplTest {
         user.setLogin("User");
         user.setPassword("123456");
         user.setAge(Integer.MIN_VALUE);
-        invalidDataException
-                = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
+        Assertions.assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
                 String.format("Should throw %s when age "
                         + "is less than %d years", EXPECTED_EXCEPTION, MIN_AGE));
     }
@@ -131,8 +128,8 @@ class RegistrationServiceImplTest {
         user.setLogin("User");
         user.setPassword("123456");
         user.setAge(Integer.MAX_VALUE);
-        invalidDataException
-                = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
+        Assertions.assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
                 String.format("Should throw %s when age"
                         + " is less than %d years", EXPECTED_EXCEPTION, MAX_AGE));
     }
@@ -143,9 +140,8 @@ class RegistrationServiceImplTest {
         user.setLogin("User");
         user.setPassword("123456");
         user.setAge(17);
-        invalidDataException
-                = assertThrows(InvalidDataException
-                        .class, () -> registrationService.register(user),
+        Assertions.assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
                 String.format("Should throw %s when age under %d",
                         EXPECTED_EXCEPTION, MIN_AGE));
     }
@@ -168,8 +164,8 @@ class RegistrationServiceImplTest {
         user.setLogin("User");
         user.setPassword("12345");
         user.setAge(19);
-        invalidDataException
-                = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
+        Assertions.assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
                 String.format("Should throw %s when password less than %d chars",
                         EXPECTED_EXCEPTION, MIN_PASSWORD_LENGTH));
     }
@@ -179,14 +175,10 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("User");
         user.setAge(19);
-        try {
-            user.setPassword(null);
-        } catch (NullPointerException e) {
-            invalidDataException
-                    = assertThrows(InvalidDataException
-                            .class, () -> registrationService.register(user),
+        user.setPassword(null);
+        Assertions.assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
                     String.format("Should throw %s when age is null",
                             EXPECTED_EXCEPTION));
-        }
     }
 }

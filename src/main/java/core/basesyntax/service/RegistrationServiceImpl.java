@@ -37,11 +37,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private static void passwordVerify(User user) {
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidDataException("Password can't be less than " + MIN_PASSWORD_LENGTH);
-        }
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password can't be null");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new InvalidDataException("Password can't be less than " + MIN_PASSWORD_LENGTH);
         }
     }
 
