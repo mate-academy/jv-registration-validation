@@ -18,7 +18,6 @@ class RegistrationServiceImplTest {
             InvalidDataException.class.getSimpleName();
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    //private static InvalidDataException invalidDataException;
 
     @BeforeAll
     static void beforeAll() {
