@@ -8,11 +8,13 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.except.InvalidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 100;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final String EXPECTED_EXCEPTION =
             InvalidDataException.class.getSimpleName();
@@ -22,7 +24,6 @@ class RegistrationServiceImplTest {
 
     @BeforeAll
     static void beforeAll() {
-        RegistrationServiceImplTest registrationServiceImplTest = new RegistrationServiceImplTest();
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
@@ -46,6 +47,18 @@ class RegistrationServiceImplTest {
         invalidDataException = assertThrows(InvalidDataException.class,
                 () -> registrationService.register(null),
                 String.format("Should throw %s when user is null", EXPECTED_EXCEPTION));
+    }
+
+    @Test
+    void register_newLogin_Ok() {
+        User user = new User();
+        user.setLogin("User");
+        user.setPassword("123456");
+        user.setAge(21);
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
+        Assertions.assertEquals(user, actual,
+                "User should be added if user login doesnt exist");
     }
 
     @Test
@@ -78,15 +91,48 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_over18Age_Ok() {
+        User user = new User();
+        user.setLogin("User");
+        user.setPassword("123456");
+        user.setAge(21);
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
+        Assertions.assertEquals(user, actual,
+                "User should be added if user age is valid");
+    }
+
+    @Test
     void register_nullAge_notOk() {
         User user = new User();
-        user.setId(1L);
         user.setLogin("User");
         user.setPassword("123456");
         user.setAge(null);
         invalidDataException
                 = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                 String.format("Should throw %s when age is null", EXPECTED_EXCEPTION));
+    }
+
+    @Test
+    void register_minValueIntegerAge_notOk() {
+        User user = new User();
+        user.setLogin("User");
+        user.setPassword("123456");
+        user.setAge(Integer.MIN_VALUE);
+        invalidDataException
+                = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
+                String.format("Should throw %s when age is less than %d years", EXPECTED_EXCEPTION, MIN_AGE));
+    }
+
+    @Test
+    void register_maxValueIntegerAge_notOk() {
+        User user = new User();
+        user.setLogin("User");
+        user.setPassword("123456");
+        user.setAge(Integer.MAX_VALUE);
+        invalidDataException
+                = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
+                String.format("Should throw %s when age is less than %d years", EXPECTED_EXCEPTION, MAX_AGE));
     }
 
     @Test
@@ -100,6 +146,18 @@ class RegistrationServiceImplTest {
                         .class, () -> registrationService.register(user),
                 String.format("Should throw %s when age under %d",
                         EXPECTED_EXCEPTION, MIN_AGE));
+    }
+
+    @Test
+    void register_validPassword_Ok() {
+        User user = new User();
+        user.setLogin("User");
+        user.setPassword("12345678910");
+        user.setAge(21);
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
+        Assertions.assertEquals(user, actual,
+                "User should be added if user password is valid");
     }
 
     @Test
