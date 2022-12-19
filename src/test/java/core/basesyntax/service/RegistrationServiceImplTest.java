@@ -121,7 +121,8 @@ class RegistrationServiceImplTest {
         user.setAge(Integer.MIN_VALUE);
         invalidDataException
                 = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
-                String.format("Should throw %s when age is less than %d years", EXPECTED_EXCEPTION, MIN_AGE));
+                String.format("Should throw %s when age "
+                        + "is less than %d years", EXPECTED_EXCEPTION, MIN_AGE));
     }
 
     @Test
@@ -132,7 +133,8 @@ class RegistrationServiceImplTest {
         user.setAge(Integer.MAX_VALUE);
         invalidDataException
                 = assertThrows(InvalidDataException.class, () -> registrationService.register(user),
-                String.format("Should throw %s when age is less than %d years", EXPECTED_EXCEPTION, MAX_AGE));
+                String.format("Should throw %s when age"
+                        + " is less than %d years", EXPECTED_EXCEPTION, MAX_AGE));
     }
 
     @Test

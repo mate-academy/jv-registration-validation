@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.except.InvalidDataException;
 import core.basesyntax.model.User;
 
@@ -28,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private static void loginVerify(User user) {
-        if (storageDao.get(user.getLogin()) != null){
+        if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("User with the same login already exists");
 
         }
@@ -51,10 +50,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Null age is not valid");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new InvalidDataException("Not valid age. Age is less than minimum required age: " + MIN_AGE);
+            throw new InvalidDataException("Not valid age."
+                    + " Age is less than minimum required age: " + MIN_AGE);
         }
         if (user.getAge() > MAX_AGE) {
-            throw new InvalidDataException("Not valid age. Age is more than maximum required age: " + MAX_AGE);
+            throw new InvalidDataException("Not valid age."
+                    + " Age is more than maximum required age: " + MAX_AGE);
         }
     }
 }
