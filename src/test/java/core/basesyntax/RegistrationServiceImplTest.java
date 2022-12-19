@@ -12,25 +12,25 @@ import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final User CORRECT_USER = new User();
-
     private static RegistrationService regService;
     private static StorageDao storageDao;
-
-    private static void resetUserToDefault() {
-        CORRECT_USER.setAge(20);
-        CORRECT_USER.setLogin("userlogin");
-        CORRECT_USER.setPassword("userpassword123");
-    }
+    private User correctUser = new User();
 
     @BeforeAll
-    static void usersInitialization() {
+    static void initialization() {
         regService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-        resetUserToDefault();
+    }
+
+    @BeforeEach
+    void resetUserToDefault() {
+        correctUser.setAge(20);
+        correctUser.setLogin("userlogin");
+        correctUser.setPassword("userpassword123");
     }
 
     @Test
@@ -40,62 +40,61 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_notOk() {
-        CORRECT_USER.setAge(null);
-        assertThrows(InvalidDataException.class, () -> regService.register(CORRECT_USER));
+        correctUser.setAge(null);
+        assertThrows(InvalidDataException.class, () -> regService.register(correctUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
-        CORRECT_USER.setLogin(null);
-        assertThrows(InvalidDataException.class, () -> regService.register(CORRECT_USER));
+        correctUser.setLogin(null);
+        assertThrows(InvalidDataException.class, () -> regService.register(correctUser));
     }
 
     @Test
     void register_nullPassword_notOk() {
-        CORRECT_USER.setPassword(null);
-        assertThrows(InvalidDataException.class, () -> regService.register(CORRECT_USER));
+        correctUser.setPassword(null);
+        assertThrows(InvalidDataException.class, () -> regService.register(correctUser));
     }
 
     @Test
     void register_negativeAge_notOk() {
-        CORRECT_USER.setAge(-1);
-        assertThrows(InvalidDataException.class, () -> regService.register(CORRECT_USER));
+        correctUser.setAge(-1);
+        assertThrows(InvalidDataException.class, () -> regService.register(correctUser));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        CORRECT_USER.setPassword("abcd");
-        assertThrows(InvalidDataException.class, () -> regService.register(CORRECT_USER));
+        correctUser.setPassword("abcd");
+        assertThrows(InvalidDataException.class, () -> regService.register(correctUser));
     }
 
     @Test
     void register_emptyLogin_notOk() {
-        CORRECT_USER.setLogin("");
-        assertThrows(InvalidDataException.class, () -> regService.register(CORRECT_USER));
+        correctUser.setLogin("");
+        assertThrows(InvalidDataException.class, () -> regService.register(correctUser));
     }
 
     @Test
     void register_checkAddingToDB_Ok() {
-        regService.register(CORRECT_USER);
-        User actualUser = storageDao.get(CORRECT_USER.getLogin());
-        assertEquals(CORRECT_USER, actualUser);
+        regService.register(correctUser);
+        User actualUser = storageDao.get(correctUser.getLogin());
+        assertEquals(correctUser, actualUser);
     }
 
     @Test
     void register_checkReturnedValue_Ok() {
-        User actualUser = regService.register(CORRECT_USER);
-        assertEquals(CORRECT_USER, actualUser);
+        User actualUser = regService.register(correctUser);
+        assertEquals(correctUser, actualUser);
     }
 
     @Test
     void register_addingAlreadyExistingUser_NotOk() {
-        storageDao.add(CORRECT_USER);
-        assertThrows(InvalidDataException.class, () -> regService.register(CORRECT_USER));
+        storageDao.add(correctUser);
+        assertThrows(InvalidDataException.class, () -> regService.register(correctUser));
     }
 
     @AfterEach
     void setDefaults() {
         Storage.people.clear();
-        resetUserToDefault();
     }
 }
