@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.InvalidInputException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -14,29 +15,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidInputException("User can not be null");
         }
-        if (user.getLogin() == null) {
-            throw new InvalidInputException("User login can not be null");
-        }
-        if (user.getAge() == null) {
-            throw new InvalidInputException("User age can not be null");
-        }
-        if (user.getId() == null) {
-            throw new InvalidInputException("User ID can not be null");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidInputException("User password can not be null");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidInputException(
-                    "User password length can not be less than "
-                            + MIN_PASSWORD_LENGTH + " characters");
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidInputException("User age can not be less than " + MIN_AGE);
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidInputException("User is already exists!");
-        }
+        checkUserLogin(user.getLogin());
+        checkUserAge(user.getAge());
+        checkUserPassword(user.getPassword());
         storageDao.add(user);
         return user;
     }
@@ -47,5 +28,34 @@ public class RegistrationServiceImpl implements RegistrationService {
             return null;
         }
         return user;
+    }
+
+    private void checkUserPassword(String password) {
+        if (password == null) {
+            throw new InvalidInputException("User password can not be null");
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new InvalidInputException(
+                    "User password length can not be less than "
+                            + MIN_PASSWORD_LENGTH + " characters");
+        }
+    }
+
+    private void checkUserAge(Integer age) {
+        if (age == null) {
+            throw new InvalidInputException("User age can not be null");
+        }
+        if (age < MIN_AGE) {
+            throw new InvalidInputException("User age can not be less than " + MIN_AGE);
+        }
+    }
+
+    private void checkUserLogin(String login) {
+        if (login == null) {
+            throw new InvalidInputException("User login can not be null");
+        }
+        if (storageDao.get(login) != null) {
+            throw new InvalidInputException("User is already exists!");
+        }
     }
 }

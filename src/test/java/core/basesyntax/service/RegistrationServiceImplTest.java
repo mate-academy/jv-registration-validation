@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.InvalidInputException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,13 +79,6 @@ public class RegistrationServiceImplTest {
         assertThrows(InvalidInputException.class, () ->
                         registrationService.register(firstUser),
                 "Method should throw InvalidInputException for null password");
-    }
-
-    @Test
-    public void registerNullId_NotOk() {
-        firstUser.setId(null);
-        assertThrows(InvalidInputException.class, () -> registrationService.register(firstUser),
-                "Method should throw InvalidInputException for null Id");
     }
 
     @Test
