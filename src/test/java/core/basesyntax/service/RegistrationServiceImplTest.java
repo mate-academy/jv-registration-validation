@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 100;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final String EXPECTED_EXCEPTION =
             InvalidDataException.class.getSimpleName();
@@ -87,7 +86,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_over18Age_Ok() {
+    void register_adult_Ok() {
         User user = new User();
         user.setLogin("User");
         user.setPassword("123456");
@@ -110,7 +109,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_minValueIntegerAge_notOk() {
+    void register_negativeAge_notOk() {
         User user = new User();
         user.setLogin("User");
         user.setPassword("123456");
@@ -122,19 +121,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_maxValueIntegerAge_notOk() {
-        User user = new User();
-        user.setLogin("User");
-        user.setPassword("123456");
-        user.setAge(Integer.MAX_VALUE);
-        Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user),
-                String.format("Should throw %s when age"
-                        + " is less than %d years", EXPECTED_EXCEPTION, MAX_AGE));
-    }
-
-    @Test
-    void register_under18Age_notOk() {
+    void register_notAdult_notOk() {
         User user = new User();
         user.setLogin("User");
         user.setPassword("123456");
@@ -158,7 +145,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessThan6CharsPassword_notOk() {
+    void register_lessThanMinRequiredCharsLengthOfPassword_notOk() {
         User user = new User();
         user.setLogin("User");
         user.setPassword("12345");
