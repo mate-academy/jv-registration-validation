@@ -17,17 +17,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegisterServiceImplException("Login can't be null !");
         }
-        if (user.getAge() < MIN_AGE && user.getAge() > 0) {
-            throw new RegisterServiceImplException("Not valid age !");
-        }
-        if (user.getAge() == 0) {
-            throw new RegisterServiceImplException("Age can't be zero !");
-        }
-        if (user.getAge() < 0) {
-            throw new RegisterServiceImplException("Age can't be nagative !");
+        if (user.getAge() < MIN_AGE) {
+            throw new RegisterServiceImplException("Age can't be less than " + MIN_AGE + " !");
         }
         if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
-            throw new RegisterServiceImplException("Password must be at least 6 charaters !");
+            throw new RegisterServiceImplException("Password must be at least "
+                    + VALID_PASSWORD_LENGTH + " charaters !");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegisterServiceImplException("User already exist !");

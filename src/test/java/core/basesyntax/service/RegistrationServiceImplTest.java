@@ -14,13 +14,11 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static StorageDao storageDao;
-    private static Storage storage;
     private RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeAll
     static void beforeAll() {
         storageDao = new StorageDaoImpl();
-        storage = new Storage();
     }
 
     @BeforeEach
@@ -112,7 +110,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addingExistingUser_notOk() {
-        User testUser = storage.people.get(1);
+        User testUser = Storage.people.get(1);
         assertThrows(RegisterServiceImplException.class, () -> {
             registrationService.register(testUser);
         });
@@ -132,6 +130,6 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        storage.people.clear();
+        Storage.people.clear();
     }
 }
