@@ -54,30 +54,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUsersWithInvalidCredentials_notOk() {
+    void register_nullUser_notOk() {
+        assertThrows(ValidationException.class, () -> registrationService.register(nullUser));
+    }
+
+    @Test
+    void register_UsersWithInvalidCredentials_notOk() {
         assertThrows(ValidationException.class, () -> registrationService.register(userTwo));
         assertThrows(ValidationException.class, () -> registrationService.register(userThree));
-        assertThrows(ValidationException.class, () -> registrationService.register(nullUser));
-
     }
 
     @Test
-    void registerWithValidAndInvalidCredentialsUsers() {
-        assertEquals(userOne, registrationService.register(userOne));
-        assertThrows(ValidationException.class, () -> registrationService.register(userOne));
-        assertThrows(ValidationException.class, () -> registrationService.register(nullUser));
-        assertThrows(ValidationException.class, () -> registrationService.register(userTwo));
-        assertEquals(userFour, registrationService.register(userFour));
-    }
-
-    @Test
-    void registerWithSameUser_notOk() {
+    void register_withFewSameUser_notOk() {
         assertEquals(userOne, registrationService.register(userOne));
         assertThrows(ValidationException.class, () -> registrationService.register(userOne));
     }
 
     @Test
-    void register_Ok() {
+    void register_userWithValidCredentials_Ok() {
         assertEquals(userOne, registrationService.register(userOne));
         assertEquals(userFour, registrationService.register(userFour));
     }

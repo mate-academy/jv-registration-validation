@@ -13,8 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (validation(user)) {
-            storageDao.add(user);
-            return user;
+            return storageDao.add(user);
         }
         throw new ValidationException("This user can`t be registered");
     }
