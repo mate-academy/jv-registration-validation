@@ -25,10 +25,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can't be null!");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Not valid age");
+            throw new RegistrationException("Not valid age. Age should be more than " + MIN_AGE);
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password is too short!");
+            throw new RegistrationException("Password is too short! "
+                    + "Password length should be minimum " + MIN_PASSWORD_LENGTH);
         }
         if (people.get(user.getLogin()) != null) {
             throw new RegistrationException("User already exists");
