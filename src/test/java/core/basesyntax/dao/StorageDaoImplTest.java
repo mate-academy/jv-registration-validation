@@ -14,36 +14,36 @@ import org.junit.jupiter.api.AfterEach;
 
 class StorageDaoImplTest {
 
-    private final int DEFAULT_AGE = 18;
-    private final String DEFAULT_LOGIN = "login";
-    private final String DEFAULT_PASS = "password";
-    private final int ARRAY_SIZE = 5;
+    private final int defaultAge = 18;
+    private final String defaultLogin = "login";
+    private final String defaultPass = "password";
+    private final int arraySize = 5;
     private final StorageDao storageDao = new StorageDaoImpl();
     private final List<User> defaultUsers = new ArrayList<>();
     private User defaultUser;
 
     @BeforeEach
     void beforeAll() {
-        for (int i = 0; i < ARRAY_SIZE; i++) {
+        for (int i = 0; i < arraySize; i++) {
             User user = new User();
-            user.setLogin(DEFAULT_LOGIN + i);
-            user.setAge(DEFAULT_AGE);
-            user.setPassword(DEFAULT_PASS);
+            user.setLogin(defaultLogin + i);
+            user.setAge(defaultAge);
+            user.setPassword(defaultPass);
             defaultUsers.add(user);
         }
         defaultUser = new User();
-        defaultUser.setLogin(DEFAULT_LOGIN);
-        defaultUser.setAge(DEFAULT_AGE);
-        defaultUser.setPassword(DEFAULT_PASS);
+        defaultUser.setLogin(defaultLogin);
+        defaultUser.setAge(defaultAge);
+        defaultUser.setPassword(defaultPass);
     }
 
     @Test
     void storage_getUsersByLogin_ok() {
-        for (int i = 0; i < ARRAY_SIZE; i++) {
+        for (int i = 0; i < arraySize; i++) {
             people.add(defaultUsers.get(i));
         }
-        for (int i = 0; i < ARRAY_SIZE; i++) {
-            User actual = storageDao.get(DEFAULT_LOGIN + i);
+        for (int i = 0; i < arraySize; i++) {
+            User actual = storageDao.get(defaultLogin + i);
             assertEquals(defaultUsers.get(i), actual);
         }
     }
@@ -94,7 +94,7 @@ class StorageDaoImplTest {
         for (User user : defaultUsers) {
             storageDao.add(user);
         }
-        for (int i = 0; i < ARRAY_SIZE; i++) {
+        for (int i = 0; i < arraySize; i++) {
             assertEquals(defaultUsers.get(i), storageDao.get(defaultUsers.get(i).getLogin()));
         }
     }
