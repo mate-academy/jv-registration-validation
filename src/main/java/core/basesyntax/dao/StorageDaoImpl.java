@@ -8,11 +8,6 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
-        if (user.getAge() == null
-                || user.getPassword() == null
-                || user.getLogin() == null) {
-            throw new NullPointerException();
-        }
         user.setId(++index);
         Storage.people.add(user);
         return user;
@@ -20,9 +15,6 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User get(String login) {
-        if (login == null) {
-            throw new NullPointerException();
-        }
         for (User user : Storage.people) {
             if (user.getLogin().equals(login)) {
                 return user;

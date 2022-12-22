@@ -11,34 +11,34 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final int defaultAge = 18;
-    private final String defaultLogin = "login";
-    private final String defaultPass = "password";
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static final int DEFAULT_AGE = 18;
+    private static final String DEFAULT_LOGIN = "login";
+    private static final String DEFAULT_PASS = "password";
+    private static final RegistrationService registrationService = new RegistrationServiceImpl();
     private User defaultUser;
 
     @BeforeEach
     void beforeEach() {
         defaultUser = new User();
-        defaultUser.setAge(defaultAge);
-        defaultUser.setLogin(defaultLogin);
-        defaultUser.setPassword(defaultPass);
+        defaultUser.setAge(DEFAULT_AGE);
+        defaultUser.setLogin(DEFAULT_LOGIN);
+        defaultUser.setPassword(DEFAULT_PASS);
     }
 
     @Test
     void register_oneHundredUsers_ok() {
         for (int i = 0; i < 100; i++) {
             User user = new User();
-            user.setAge(defaultAge);
-            user.setPassword(defaultPass);
-            user.setLogin(defaultLogin + i);
+            user.setAge(DEFAULT_AGE);
+            user.setPassword(DEFAULT_PASS);
+            user.setLogin(DEFAULT_LOGIN + i);
             registrationService.register(user);
         }
         for (int i = 0; i < 100; i++) {
             User expectedUser = new User();
-            expectedUser.setAge(defaultAge);
-            expectedUser.setPassword(defaultPass);
-            expectedUser.setLogin(defaultLogin + i);
+            expectedUser.setAge(DEFAULT_AGE);
+            expectedUser.setPassword(DEFAULT_PASS);
+            expectedUser.setLogin(DEFAULT_LOGIN + i);
             assertEquals(expectedUser, people.get(i));
         }
     }
@@ -53,15 +53,14 @@ class RegistrationServiceImplTest {
     void register_registerWithTheSameLogins_notOk() {
         User actual = registrationService.register(defaultUser);
         assertEquals(defaultUser, actual);
-        User copiedUser = defaultUser;
         assertThrows(InvalidUserDataException.class, () ->
-                registrationService.register(copiedUser));
+                registrationService.register(defaultUser));
     }
 
     @Test
     void register_userWithNullFields_notOk() {
         User nullUser = new User();
-        assertThrows(NullPointerException.class, () ->
+        assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(nullUser));
     }
 
@@ -81,21 +80,21 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         defaultUser.setLogin(null);
-        assertThrows(NullPointerException.class, () ->
+        assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(defaultUser));
     }
 
     @Test
     void register_nullAge_notOk() {
         defaultUser.setAge(null);
-        assertThrows(NullPointerException.class, () ->
+        assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(defaultUser));
     }
 
     @Test
     void register_nullPassword_notOk() {
         defaultUser.setPassword(null);
-        assertThrows(NullPointerException.class, () ->
+        assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(defaultUser));
     }
 
