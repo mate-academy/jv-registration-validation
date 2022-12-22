@@ -10,21 +10,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws CustomException {
+    public User register(User user) {
         if (user.getLogin() == null) {
-            throw new CustomException("empty login");
+            throw new RegisterException("empty login");
         }
         if (user.getPassword() == null) {
-            throw new CustomException("empty password");
+            throw new RegisterException("empty password");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new CustomException("the age is under 18");
+            throw new RegisterException("the age is under " + MIN_AGE);
         }
         if (user.getPassword().length() < MIN_PASS_LENGTH) {
-            throw new CustomException("password length must be more than 6");
+            throw new RegisterException("password length must be equals or more than " + MIN_PASS_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new CustomException("that user already exist in storage");
+            throw new RegisterException("the " + user.getLogin() + " already exist in storage");
         }
         return storageDao.add(user);
     }
