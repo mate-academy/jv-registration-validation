@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         // login checking
         if (user.getLogin() == null) {
             throw new NullPointerException("can't register user with"
-                    + "null login");
+                    +   "null login");
         }
         for (User existingUser : Storage.people) {
             if (existingUser.getLogin().equals(user.getLogin())) {

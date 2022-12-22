@@ -1,8 +1,9 @@
 package core.basesyntax.dao;
 
 import static core.basesyntax.db.Storage.people;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +13,11 @@ import org.junit.jupiter.api.AfterEach;
 
 
 class StorageDaoImplTest {
-    private final static int DEFAULT_AGE = 18;
-    private final static String DEFAULT_LOGIN = "login";
-    private final static String DEFAULT_PASS = "password";
-    private final static int ARRAY_SIZE = 5;
+
+    private final int DEFAULT_AGE = 18;
+    private final String DEFAULT_LOGIN = "login";
+    private final String DEFAULT_PASS = "password";
+    private final int ARRAY_SIZE = 5;
     private final StorageDao storageDao = new StorageDaoImpl();
     private final List<User> defaultUsers = new ArrayList<>();
     private User defaultUser;

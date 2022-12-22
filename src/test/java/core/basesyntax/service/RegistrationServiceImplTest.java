@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static core.basesyntax.db.Storage.people;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.exceptions.InvalidUserDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -10,9 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final static int DEFAULT_AGE = 18;
-    private final static String DEFAULT_LOGIN = "login";
-    private final static String DEFAULT_PASS = "password";
+    private final int DEFAULT_AGE = 18;
+    private final String DEFAULT_LOGIN = "login";
+    private final String DEFAULT_PASS = "password";
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private User defaultUser;
 
