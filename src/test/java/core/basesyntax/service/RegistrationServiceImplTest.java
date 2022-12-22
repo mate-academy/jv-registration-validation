@@ -1,22 +1,20 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import static core.basesyntax.db.Storage.people;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.exceptions.InvalidUserDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static core.basesyntax.db.Storage.people;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private final static int DEFAULT_AGE = 18;
     private final static String DEFAULT_LOGIN = "login";
     private final static String DEFAULT_PASS = "password";
-    RegistrationService registrationService = new RegistrationServiceImpl();
-    User defaultUser;
-    User nullUser;
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private User defaultUser;
 
     @BeforeEach
     void beforeEach() {
@@ -61,6 +59,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithNullFields_notOk() {
+        User nullUser = new User();
         assertThrows(NullPointerException.class, () ->
                 registrationService.register(nullUser));
     }
@@ -77,6 +76,7 @@ class RegistrationServiceImplTest {
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(defaultUser));
     }
+
     @Test
     void register_nullLogin_notOk() {
         defaultUser.setLogin(null);

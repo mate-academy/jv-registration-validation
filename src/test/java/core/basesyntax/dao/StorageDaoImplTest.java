@@ -1,13 +1,15 @@
 package core.basesyntax.dao;
 
+import static core.basesyntax.db.Storage.people;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
 
-import static core.basesyntax.db.Storage.people;
-import static org.junit.jupiter.api.Assertions.*;
 
 class StorageDaoImplTest {
     private final static int DEFAULT_AGE = 18;
@@ -16,7 +18,7 @@ class StorageDaoImplTest {
     private final static int ARRAY_SIZE = 5;
     private final StorageDao storageDao = new StorageDaoImpl();
     private final List<User> defaultUsers = new ArrayList<>();
-    User defaultUser;
+    private User defaultUser;
 
     @BeforeEach
     void beforeAll() {

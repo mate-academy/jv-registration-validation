@@ -8,9 +8,9 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
-        if (user.getAge() == null ||
-            user.getPassword() == null ||
-            user.getLogin() == null) {
+        if (user.getAge() == null
+            || user.getPassword() == null
+            || user.getLogin() == null) {
             throw new NullPointerException();
         }
         user.setId(++index);
