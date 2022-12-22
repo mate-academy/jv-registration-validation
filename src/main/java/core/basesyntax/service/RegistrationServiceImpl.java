@@ -7,7 +7,7 @@ import core.basesyntax.exceptions.InvalidUserDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final int MIN_PASS_SIZE = 6;
+    private final int minPassSize = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -22,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("can't register user with"
                     + "null password");
         }
-        if (user.getPassword().length() < MIN_PASS_SIZE) {
+        if (user.getPassword().length() < minPassSize) {
             throw new InvalidUserDataException();
         }
         // age checking

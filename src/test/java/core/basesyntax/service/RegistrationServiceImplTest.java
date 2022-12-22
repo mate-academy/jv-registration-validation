@@ -11,34 +11,34 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final int DEFAULT_AGE = 18;
-    private final String DEFAULT_LOGIN = "login";
-    private final String DEFAULT_PASS = "password";
+    private final int defaultAge = 18;
+    private final String defaultLogin = "login";
+    private final String defaultPass = "password";
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private User defaultUser;
 
     @BeforeEach
     void beforeEach() {
         defaultUser = new User();
-        defaultUser.setAge(DEFAULT_AGE);
-        defaultUser.setLogin(DEFAULT_LOGIN);
-        defaultUser.setPassword(DEFAULT_PASS);
+        defaultUser.setAge(defaultAge);
+        defaultUser.setLogin(defaultLogin);
+        defaultUser.setPassword(defaultPass);
     }
 
     @Test
     void register_oneHundredUsers_ok() {
         for (int i = 0; i < 100; i++) {
             User user = new User();
-            user.setAge(DEFAULT_AGE);
-            user.setPassword(DEFAULT_PASS);
-            user.setLogin(DEFAULT_LOGIN + i);
+            user.setAge(defaultAge);
+            user.setPassword(defaultPass);
+            user.setLogin(defaultLogin + i);
             registrationService.register(user);
         }
         for (int i = 0; i < 100; i++) {
             User expectedUser = new User();
-            expectedUser.setAge(DEFAULT_AGE);
-            expectedUser.setPassword(DEFAULT_PASS);
-            expectedUser.setLogin(DEFAULT_LOGIN + i);
+            expectedUser.setAge(defaultAge);
+            expectedUser.setPassword(defaultPass);
+            expectedUser.setLogin(defaultLogin + i);
             assertEquals(expectedUser, people.get(i));
         }
     }
