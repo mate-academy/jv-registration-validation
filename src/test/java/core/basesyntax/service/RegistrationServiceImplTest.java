@@ -23,7 +23,7 @@ class RegistrationServiceImplTest {
         user.setLogin(login);
         user.setPassword(password);
     }
-    
+
     @AfterEach
     void tearDown() {
         Storage.people.clear();
