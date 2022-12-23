@@ -22,13 +22,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationValidationException("Age can't be null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationValidationException("Password must be at least 6 characters");
+            throw new RegistrationValidationException("Password must be at least "
+                    + MIN_PASSWORD_LENGTH + " characters");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationValidationException("Not valid age");
+            throw new RegistrationValidationException("Age must be at least "
+                    + MIN_AGE);
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationValidationException("Such login already exists");
+            throw new RegistrationValidationException("Login \""
+                    + user.getLogin() + "\" already exists");
         }
         return storageDao.add(user);
     }
