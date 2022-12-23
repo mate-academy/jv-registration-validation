@@ -19,21 +19,21 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-        User user1 = new User();
-        user1.setLogin("FirstUser");
-        user1.setAge(34);
-        user1.setPassword("45jisf3");
-        User user2 = new User();
-        user2.setLogin("SecondUser");
-        user2.setAge(18);
-        user2.setPassword("newark");
-        User user3 = new User();
-        user3.setLogin("ThirdUser");
-        user3.setAge(28);
-        user3.setPassword("vo*edekmybr");
-        storageDao.add(user1);
-        storageDao.add(user2);
-        storageDao.add(user3);
+        User userOne = new User();
+        userOne.setLogin("FirstUser");
+        userOne.setAge(34);
+        userOne.setPassword("45jisf3");
+        User userTwo = new User();
+        userTwo.setLogin("SecondUser");
+        userTwo.setAge(18);
+        userTwo.setPassword("newark");
+        User userThree = new User();
+        userThree.setLogin("ThirdUser");
+        userThree.setAge(28);
+        userThree.setPassword("vo*edekmybr");
+        storageDao.add(userOne);
+        storageDao.add(userTwo);
+        storageDao.add(userThree);
     }
 
     @Test
@@ -114,11 +114,11 @@ class RegistrationServiceImplTest {
         user.setLogin("SeventhUser");
         user.setAge(36);
         user.setPassword("123456");
-        User actual;
+        User actual = null;
         try {
             actual = registrationService.register(user);
         } catch (InvalidDataException e) {
-            throw new RuntimeException("User must be registered");
+            fail("User must be registered");
         }
         User expected = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
@@ -163,11 +163,11 @@ class RegistrationServiceImplTest {
         user.setLogin("EleventhUser");
         user.setAge(18);
         user.setPassword("5554321");
-        User actual;
+        User actual = null;
         try {
             actual = registrationService.register(user);
         } catch (InvalidDataException e) {
-            throw new RuntimeException("User must be registered");
+            fail("User must be registered");
         }
         User expected = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
