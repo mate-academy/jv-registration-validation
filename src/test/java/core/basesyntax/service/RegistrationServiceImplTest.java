@@ -53,14 +53,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LessPassword_NotOk() {
+    void register_ShortPassword_NotOk() {
         testUser.setPassword("qwert");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
 
     @Test
-    void register_LessAge_NotOk() {
+    void register_InvalidAge_NotOk() {
         testUser.setAge(17);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingUser_NotOk() {
-        User register = registrationService.register(testUser);
+        Storage.people.add(testUser);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
@@ -87,7 +87,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addingValidUser_Ok() {
+    void register_ValidUser_Ok() {
         User actual = registrationService.register(testUser);
         assertEquals(DEFAULT_PASSWORD, actual.getPassword());
         assertEquals(DEFAULT_AGE, actual.getAge());
