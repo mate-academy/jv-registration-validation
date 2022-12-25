@@ -43,11 +43,7 @@ class RegistrationServiceImplTest {
         user.setAge(26);
         user.setPassword("654gh891");
         User actual;
-        try {
-            actual = registrationService.register(user);
-        } catch (InvalidDataException e) {
-            throw new RuntimeException("User must be registered");
-        }
+        actual = registrationService.register(user);
         User expected = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
     }
@@ -66,12 +62,9 @@ class RegistrationServiceImplTest {
         user.setLogin("ThirdUser");
         user.setAge(19);
         user.setPassword("thirdpass");
-        try {
+        assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        } catch (InvalidDataException e) {
-            return;
-        }
-        fail("InvalidDataException should be thrown if user with such login is already exist");
+        });
     }
 
     @Test
@@ -100,12 +93,9 @@ class RegistrationServiceImplTest {
         user.setLogin("SixthUser");
         user.setAge(65);
         user.setPassword("pssw");
-        try {
+        assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        } catch (InvalidDataException e) {
-            return;
-        }
-        fail("InvalidDataException should be thrown if login is less than 6 characters");
+        });
     }
 
     @Test

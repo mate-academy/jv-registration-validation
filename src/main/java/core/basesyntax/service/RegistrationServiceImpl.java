@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidDataException {
+    public User register(User user) {
         if (user == null) {
             throw new InvalidDataException("Can't register null user. Please, enter your data");
         }
