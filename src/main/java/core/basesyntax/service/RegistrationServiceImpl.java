@@ -6,7 +6,7 @@ import core.basesyntax.exception.UserRegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_AGE = 18;
+    private static final Integer MIN_AGE = 18;
     private static final int MIN_AMOUNT_PASSWORD_CHARACTERS = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -37,9 +37,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void verifyAge(Integer age) {
         if (age == null) {
             throw new UserRegistrationException("Null age is invalid!");
-        }
-        if (age < 0) {
-            throw new UserRegistrationException("The age can't be negative!");
         }
         if (age < MIN_AGE) {
             throw new UserRegistrationException("The user must be at least "
