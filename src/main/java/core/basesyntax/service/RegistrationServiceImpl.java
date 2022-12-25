@@ -7,15 +7,12 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final Integer MIN_AGE = 18;
-    private static final int MIN_AMOUNT_PASSWORD_CHARACTERS = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         verifyUser(user);
-        verifyLogin(user.getLogin());
-        verifyAge(user.getAge());
-        verifyPassword(user.getPassword());
         return storageDao.add(user);
     }
 
@@ -23,6 +20,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new UserRegistrationException("The user can't be null!");
         }
+        verifyLogin(user.getLogin());
+        verifyAge(user.getAge());
+        verifyPassword(user.getPassword());
     }
 
     private void verifyLogin(String login) {
@@ -48,9 +48,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new UserRegistrationException("Null password is invalid!");
         }
-        if (password.length() < MIN_AMOUNT_PASSWORD_CHARACTERS) {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new UserRegistrationException("The password must contains at least "
-                    + MIN_AMOUNT_PASSWORD_CHARACTERS + " characters!");
+                    + MIN_PASSWORD_LENGTH + " characters!");
         }
     }
 }
