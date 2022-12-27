@@ -33,7 +33,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_UserAbove18Age_True() throws UserRegistrationException {
+    void register_UserAbove18Age_Ok() throws UserRegistrationException {
         user.setAge(29);
         user.setPassword("1234567890");
         user.setLogin("2434349");
@@ -67,9 +67,13 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_User18Age_notOk() {
+    void register_User18Age_Ok() {
         user.setAge(18);
-        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
+        user.setPassword("1234590");
+        user.setLogin("2434349wqw");
+        User expected = user;
+        User actual = registrationService.register(user);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -93,31 +97,12 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_ReturnUser_True() throws UserRegistrationException {
+    void register_ReturnUser_Ok() throws UserRegistrationException {
         user.setAge(88);
         user.setLogin("88");
         user.setPassword("1234567890");
         User expected = user;
         User actual = registrationService.register(user);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void register_ReturnUserId_Ok() throws UserRegistrationException {
-        user.setAge(83);
-        user.setLogin("83");
-        user.setPassword("1234567890");
-        Long actual = registrationService.register(user).getId();
-        assertNotNull(actual);
-    }
-
-    @Test
-    void register_ReturnLogin_Ok() throws UserRegistrationException {
-        user.setAge(835);
-        user.setLogin("835");
-        user.setPassword("1234567890");
-        String expected = user.getLogin();
-        String actual = registrationService.register(user).getLogin();
         assertEquals(expected, actual);
     }
 }
