@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -14,16 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final int FIRST_VALID_AGE = 19;
-    private static final int SECOND_VALID_AGE = 18;
-    private static final int INVALID_AGE = 17;
-    private static final long ID = 123456789L;
-    private static final String FIRST_LOGIN = "firstValidLogin";
-    private static final String SECOND_LOGIN = "secondValidLogin";
-    private static final String THIRD_LOGIN = "thirdValidLogin";
-    private static final String FIRST_VALID_PASSWORD = "firstValidPassword";
-    private static final String SECOND_VALID_PASSWORD = "va_lid";
-    private static final String INVALID_PASSWORD = "short";
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storageDao;
     private User firstUser;
@@ -39,30 +28,35 @@ public class RegistrationServiceImplTest {
     public void addUsers() {
         Storage.people.clear();
         firstUser = storageDao.add(new User(null,
-                FIRST_LOGIN, FIRST_VALID_PASSWORD, FIRST_VALID_AGE));
+                "firstValidLogin", "firstValidPassword", 63));
         secondUser = storageDao.add(new User(null,
-                SECOND_LOGIN, SECOND_VALID_PASSWORD, SECOND_VALID_AGE));
+                "secondValidLogin", "va_lid", 18));
     }
 
     @Test
-    public void register_addAgeGreaterThan18_ok() {
-        User expected = new User(ID, THIRD_LOGIN, FIRST_VALID_PASSWORD, FIRST_VALID_AGE);
+    public void register_addAgeGreaterThanMinAge_ok() {
+        int validAge = 19;
+        User expected = new User(123L, "thirdValidLogin",
+                "firstValidPassword", validAge);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual,
-                "User with age " + FIRST_VALID_AGE + " should be registered");
+                "User with age " + validAge + " should be registered");
     }
 
     @Test
-    public void register_addAge18_ok() {
-        User expected = new User(ID, THIRD_LOGIN, FIRST_VALID_PASSWORD, SECOND_VALID_AGE);
+    public void register_addAdultUser_ok() {
+        int validAge = 18;
+        User expected = new User(123L, "thirdValidLogin",
+                "firstValidPassword", validAge);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual,
-                "User with age " + SECOND_VALID_AGE + " should be registered");
+                "User with age " + validAge + " should be registered");
     }
 
     @Test
     public void register_addInvalidUsersAge_NotOk() {
-        User user = new User(ID, THIRD_LOGIN, FIRST_VALID_PASSWORD, INVALID_AGE);
+        User user = new User(123L, "thirdValidLogin",
+                "firstValidPassword", 17);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user),
                 "Method should throw InvalidInputException for invalid age");
 
@@ -70,7 +64,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_addNullAge_NotOk() {
-        User user = new User(ID, THIRD_LOGIN, FIRST_VALID_PASSWORD, null);
+        User user = new User(123L, "thirdValidLogin",
+                "firstValidPassword", null);
         assertThrows(InvalidInputException.class, () ->
                         registrationService.register(user),
                 "Method should throw InvalidInputException for null age");
@@ -85,7 +80,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_addNullLogin_NotOk() {
-        User user = new User(ID, null, FIRST_VALID_PASSWORD, FIRST_VALID_AGE);
+        User user = new User(123L, null, "firstValidPassword", 19);
         assertThrows(InvalidInputException.class, () ->
                         registrationService.register(user),
                 "Method should throw InvalidInputException for null login");
@@ -93,53 +88,42 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_loginExists_NotOk() {
-        User user = new User(ID, FIRST_LOGIN, FIRST_VALID_PASSWORD, FIRST_VALID_AGE);
+        User user = new User(123L, "firstValidLogin",
+                "firstValidPassword", 28);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user),
                 "Method should throw InvalidInputException if user with this login exists");
     }
 
     @Test
-    public void register_passwordLengthIsGreaterThan6_Ok() {
-        User expected = new User(ID, THIRD_LOGIN, FIRST_VALID_PASSWORD, FIRST_VALID_AGE);
+    public void register_passwordLengthIsGreaterThanMinLength_Ok() {
+        String validPassword = "firstValidPassword";
+        User expected = new User(123L, "thirdValidLogin", validPassword, 41);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual,
-                "User with password " + FIRST_VALID_PASSWORD + " should be registered");
+                "User with password " + validPassword + " should be registered");
     }
 
     @Test
     public void register_passwordLengthIs6_Ok() {
-        User expected = new User(ID, THIRD_LOGIN, SECOND_VALID_PASSWORD, FIRST_VALID_AGE);
+        String validPassword = "va_lid";
+        User expected = new User(123L, "thirdValidLogin", validPassword, 19);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual,
-                "User with password " + SECOND_VALID_PASSWORD + " should be registered");
+                "User with password " + validPassword + " should be registered");
     }
 
     @Test
     public void register_addNullPassword_NotOk() {
-        User user = new User(ID, THIRD_LOGIN, null, FIRST_VALID_AGE);
+        User user = new User(123L, "thirdValidLogin", null, 19);
         assertThrows(InvalidInputException.class, () ->
                         registrationService.register(user),
                 "Method should throw InvalidInputException for null password");
     }
 
     @Test
-    public void register_passwordLengthIsLessThan6_NotOk() {
-        User user = new User(ID, THIRD_LOGIN, INVALID_PASSWORD, FIRST_VALID_AGE);
+    public void register_passwordLengthIsLessThanMinLength_Ok() {
+        User user = new User(123L, "thirdValidLogin", "short", 25);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user),
                 "Method should throw InvalidInputException for invalid password");
-    }
-
-    @Test
-    public void getUser_Ok() {
-        User firstExpected = new User(ID, THIRD_LOGIN, FIRST_VALID_PASSWORD, FIRST_VALID_AGE);
-        registrationService.register(firstExpected);
-        User firstActual = storageDao.get(THIRD_LOGIN);
-        assertEquals(firstExpected, firstActual, "Method getUser() should return user by login");
-    }
-
-    @Test
-    public void getUserNonExistLogin_Ok() {
-        User actual = storageDao.get(FIRST_VALID_PASSWORD);
-        assertNull(actual, "Method getUser() should return null for invalid login");
     }
 }

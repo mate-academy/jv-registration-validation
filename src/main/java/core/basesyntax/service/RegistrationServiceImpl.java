@@ -12,22 +12,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new InvalidInputException("User can not be null");
-        }
+        checkUser(user);
         checkUserLogin(user.getLogin());
         checkUserAge(user.getAge());
         checkUserPassword(user.getPassword());
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
-    public User getUser(String login) {
-        User user = storageDao.get(login);
+    private void checkUser(User user) {
         if (user == null) {
-            return null;
+            throw new InvalidInputException("User can not be null");
         }
-        return user;
     }
 
     private void checkUserPassword(String password) {
