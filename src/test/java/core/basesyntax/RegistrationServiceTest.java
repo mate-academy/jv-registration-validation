@@ -88,7 +88,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_UserAlreadyPresent_notOk() throws UserRegistrationException {
+    void register_UserAlreadyPresent_notOk() {
         user.setAge(23);
         user.setLogin("23");
         storageDao.add(user);
@@ -96,7 +96,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_ReturnUser_Ok() throws UserRegistrationException {
+    void register_ReturnUser_Ok() {
         user.setAge(88);
         user.setLogin("88");
         user.setPassword("1234567890");
