@@ -32,7 +32,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_UserAbove18Age_Ok() throws UserRegistrationException {
+    void register_UserAbove18Age_Ok() {
         user.setAge(29);
         user.setPassword("1234567890");
         user.setLogin("2434349");
