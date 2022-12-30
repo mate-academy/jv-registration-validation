@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        thrown = assertThrows(RuntimeException.class, () -> {
+        thrown = assertThrows(RegistrationExceptions.class, () -> {
             registrationService.register(user);
         });
         assertEquals("Login can't be null", thrown.getMessage());
@@ -63,7 +63,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minAge_itsOk() {
-        thrown = assertThrows(RuntimeException.class, () -> {
+        thrown = assertThrows(RegistrationExceptions.class, () -> {
             registrationService.register(user2);
         });
         assertEquals("Login cannot be less than 18", thrown.getMessage());
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_negativeAge_itsOk() {
         user.setAge(-1);
-        thrown = assertThrows(RuntimeException.class, () -> {
+        thrown = assertThrows(RegistrationExceptions.class, () -> {
             registrationService.register(user);
         });
         assertEquals("Login cannot be less than 18", thrown.getMessage());
@@ -81,7 +81,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        thrown = assertThrows(RuntimeException.class, () -> {
+        thrown = assertThrows(RegistrationExceptions.class, () -> {
             registrationService.register(user);
         });
         assertEquals("Login can't be null", thrown.getMessage());
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
     void register_repeatedLogin_notOk() {
         user2.setAge(18);
         storageDao.add(user2);
-        thrown = assertThrows(RuntimeException.class, () -> {
+        thrown = assertThrows(RegistrationExceptions.class, () -> {
             registrationService.register(user2);
         });
         assertEquals("there is user with such login in the Storage", thrown.getMessage());
@@ -100,7 +100,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         user4.setPassword(null);
-        thrown = assertThrows(RuntimeException.class, () -> {
+        thrown = assertThrows(RegistrationExceptions.class, () -> {
             registrationService.register(user4);
         });
         assertEquals("Password can't be null", thrown.getMessage());
@@ -109,7 +109,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_minPassword_notOk() {
         user4.setPassword("1425");
-        thrown = assertThrows(RuntimeException.class, () -> {
+        thrown = assertThrows(RegistrationExceptions.class, () -> {
             registrationService.register(user4);
         });
         assertEquals("Password must be at least six characters long", thrown.getMessage());
