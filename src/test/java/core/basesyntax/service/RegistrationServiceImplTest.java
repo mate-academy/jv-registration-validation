@@ -14,8 +14,6 @@ class RegistrationServiceImplTest {
     private RegistrationService registrationService = new RegistrationServiceImpl();
     private StorageDao storageDao = new StorageDaoImpl();
     private User jac;
-    private User serhii;
-    private User kat;
     private User daniel;
 
     @BeforeEach
@@ -24,14 +22,6 @@ class RegistrationServiceImplTest {
         jac.setLogin("Jac");
         jac.setAge(19);
         jac.setPassword("1245787");
-        serhii = new User();
-        serhii.setLogin("serhii");
-        serhii.setAge(17);
-        serhii.setPassword("1245787");
-        kat = new User();
-        kat.setLogin("Kat");
-        kat.setAge(18);
-        kat.setPassword("1245787");
         daniel = new User();
         daniel.setLogin("Daniel");
         daniel.setAge(22);
@@ -49,6 +39,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_18Age_itsOk() {
+        User kat = new User();
+        kat.setLogin("Kat");
+        kat.setAge(18);
+        kat.setPassword("1245787");
         boolean actual = registrationService.register(kat).equals(kat);
         assertTrue(actual);
     }
@@ -61,8 +55,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minAge_itsOk() {
+        jac.setAge(17);
         RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(serhii);
+            registrationService.register(jac);
         });
         assertEquals("Login cannot be less than 18", thrown.getMessage());
     }
@@ -87,7 +82,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_repeatedLogin_notOk() {
+        User serhii = new User();
+        serhii.setLogin("serhii");
         serhii.setAge(18);
+        serhii.setPassword("1245787");;
         storageDao.add(serhii);
         RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
             registrationService.register(serhii);
