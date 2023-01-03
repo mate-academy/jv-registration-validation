@@ -3,8 +3,6 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -29,12 +27,10 @@ public class HelloWorldTest {
     private static final int MAX_AGE = 118;
     private static final int NULL_AGE = 0;
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -49,12 +45,12 @@ public class HelloWorldTest {
     @Test
     void register_correct_ok() {
         user.setAge(MAX_AGE);
-        assertEquals(user, storageDao.add(user));
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test
     void register_maxAge_ok() {
-        assertEquals(user, storageDao.add(user));
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test
