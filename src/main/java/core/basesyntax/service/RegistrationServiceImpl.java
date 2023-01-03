@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new ValidationException("User has not to be null");
+            throw new ValidationException("Enter user");
         }
         checkLogin(user);
         checkAge(user);
@@ -23,7 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void checkLogin(User user) {
         if (user.getLogin() == null) {
-            throw new ValidationException("Login has not to be null");
+            throw new ValidationException("Enter login");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new ValidationException("User is already in base");
@@ -32,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void checkAge(User user) {
         if (user.getAge() == null) {
-            throw new ValidationException("Age have not to be null");
+            throw new ValidationException("Enter age");
         }
         if (user.getAge() < MIN_AGE) {
             throw new ValidationException("Age has to be 18 or more");
@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void checkPassword(User user) {
         if (user.getPassword() == null) {
-            throw new ValidationException("Password has not to be null");
+            throw new ValidationException("Enter password");
         }
         if (user.getPassword().length() < MIN_PASS_LENGTH) {
             throw new ValidationException("Password length has to be 6 or more symbols");
