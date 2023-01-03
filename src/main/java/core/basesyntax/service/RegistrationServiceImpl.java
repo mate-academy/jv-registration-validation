@@ -14,35 +14,35 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new UserNotFoundException("User is null and  can't register");
         }
-        checkLogin(user);
-        checkPassword(user);
-        checkAge(user);
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
         return storageDao.add(user);
     }
 
-    private void checkLogin(User user) {
-        if (user.getLogin() == null || user.getLogin().length() == 0) {
+    private void checkLogin(String login) {
+        if (login == null || login.length() == 0) {
             throw new UserNotFoundException("This login is incorrect");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (storageDao.get(login) != null) {
             throw new UserNotFoundException("This user is already registered");
         }
     }
 
-    private void checkPassword(User user) {
-        if (user.getPassword() == null || user.getPassword().length() == 0) {
+    private void checkPassword(String password) {
+        if (password == null || password.length() == 0) {
             throw new UserNotFoundException("This password is incorrect");
         }
-        if (user.getPassword().length() < MIN_LENGTH) {
+        if (password.length() < MIN_LENGTH) {
             throw new UserNotFoundException("User password is less than expected");
         }
     }
 
-    private void checkAge(User user) {
-        if (user.getAge() == null) {
-            throw new UserNotFoundException("User age can't be null");
+    private void checkAge(int age) {
+        if (age <= 0) {
+            throw new UserNotFoundException("User age can't be zero or negative");
         }
-        if (user.getAge() < MIN_AGE) {
+        if (age < MIN_AGE) {
             throw new UserNotFoundException("User age is less than allowed");
         }
     }

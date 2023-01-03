@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
     private static final int DEFAULT_AGE = 18;
-    private static final String DEFAULT_PASSWORD = "user_password";
+    private static final String DEFAULT_PASSWORD = "666666";
     private static final String DEFAULT_LOGIN = "user_login";
     private static RegistrationService registrationService;
     private User user;
@@ -35,7 +35,7 @@ public class HelloWorldTest {
 
     @Test
     void register_addAgeGreaterThanMinAge_ok() {
-        user.setAge(99);
+        user.setAge(19);
         assertEquals(user, registrationService.register(user), "User add in Storage");
     }
 
@@ -67,13 +67,13 @@ public class HelloWorldTest {
 
     @Test
     void register_passwordLengthIsGreaterThanMinLength_Ok() {
-        user.setPassword("greatPassword");
+        user.setPassword("7777777");
         assertEquals(user, registrationService.register(user), "User add in Storage");
     }
 
     @Test
     void register_passwordLengthIsLessThanMinLength_Ok() {
-        user.setPassword("less");
+        user.setPassword("55555");
         assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "password less than expected");
     }
@@ -94,7 +94,7 @@ public class HelloWorldTest {
 
     @Test
     void register_addNullAge_NotOk() {
-        user.setAge(null);
+        user.setAge(0);
         assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "Age can't be null");
     }
