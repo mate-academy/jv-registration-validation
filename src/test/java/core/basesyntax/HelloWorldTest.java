@@ -44,12 +44,12 @@ public class HelloWorldTest {
 
     @Test
     void register_correct_ok() {
-        user.setAge(MAX_AGE);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
     void register_maxAge_ok() {
+        user.setAge(MAX_AGE);
         assertEquals(user, registrationService.register(user));
     }
 
