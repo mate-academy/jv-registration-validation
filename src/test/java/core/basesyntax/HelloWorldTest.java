@@ -17,15 +17,6 @@ public class HelloWorldTest {
     private static final int DEFAULT_AGE = 18;
     private static final String DEFAULT_PASSWORD = "user_password";
     private static final String DEFAULT_LOGIN = "user_login";
-    private static final String NULL_STRING = null;
-    private static final String EMPTY_STRING = "";
-    private static final char EMPTY_PLACE = ' ';
-    private static final String SHORT_PASSWORD = "short";
-    private static final int SMALL_AGE = 17;
-    private static final int NEGATIVE_AGE = -68;
-    private static final int BIG_AGE = 119;
-    private static final int MAX_AGE = 118;
-    private static final int NULL_AGE = 0;
     private static RegistrationService registrationService;
     private User user;
 
@@ -43,87 +34,77 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_correct_ok() {
-        assertEquals(user, registrationService.register(user));
+    void register_addAgeGreaterThanMinAge_ok() {
+        user.setAge(99);
+        assertEquals(user, registrationService.register(user), "User add in Storage");
     }
 
     @Test
-    void register_maxAge_ok() {
-        user.setAge(MAX_AGE);
-        assertEquals(user, registrationService.register(user));
+    void register_addAdultUser_ok() {
+        assertEquals(user, registrationService.register(user), "User add in Storage");
     }
 
     @Test
-    void register_nullLogin_notOk() {
-        user.setLogin(NULL_STRING);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_addNullUser_NotOk() {
+        user = null;
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "User can't be null");
     }
 
     @Test
-    void register_nullPassword_notOk() {
-        user.setPassword(NULL_STRING);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_addNullLogin_notOk() {
+        user.setLogin(null);
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "Login can't be null");
     }
 
     @Test
-    void register_emptyPassword_notOk() {
-        user.setPassword(EMPTY_STRING);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_addNullPassword_notOk() {
+        user.setPassword(null);
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "Password can't be null");
     }
 
     @Test
-    void register_emptyPlacePassword_notOk() {
-        user.setPassword(DEFAULT_PASSWORD + EMPTY_PLACE);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_passwordLengthIsGreaterThanMinLength_Ok() {
+        user.setPassword("greatPassword");
+        assertEquals(user, registrationService.register(user), "User add in Storage");
     }
 
     @Test
-    void register_emptyPlaceLogin_notOk() {
-        user.setPassword(DEFAULT_LOGIN + EMPTY_PLACE);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_passwordLengthIsLessThanMinLength_Ok() {
+        user.setPassword("less");
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "password less than expected");
     }
 
     @Test
-    void register_emptyLogin_notOk() {
-        user.setLogin(EMPTY_STRING);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_addUserWithAgeLessThanMinAge_NotOk() {
+        user.setAge(17);
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "Age less than expected");
     }
 
     @Test
-    void register_shortPassword_notOk() {
-        user.setPassword(SHORT_PASSWORD);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_addUserNegativeAge_notOk() {
+        user.setAge(-57);
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "Age can't be negative");
     }
 
     @Test
-    void register_smallAge_notOk() {
-        user.setAge(SMALL_AGE);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_negativeAge_notOk() {
-        user.setAge(NEGATIVE_AGE);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_noAge_notOk() {
-        user.setAge(NULL_AGE);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_bigAge_notOk() {
-        user.setAge(BIG_AGE);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+    void register_addNullAge_NotOk() {
+        user.setAge(null);
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "Age can't be null");
     }
 
     @Test
     void register_userRegistered_notOk() {
         User userRegistered = user;
         registrationService.register(userRegistered);
-        assertThrows(UserNotFoundException.class, () -> registrationService.register(user));
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "User registered early");
 
     }
 
