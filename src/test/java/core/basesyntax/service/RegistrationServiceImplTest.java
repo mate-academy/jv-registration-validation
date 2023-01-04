@@ -14,9 +14,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
-    private static final String VALID_PASSWORD = "123456";
-    private static final String INVALID_PASSWORD = "12345";
-    private static final String GREAT_VALID_PASSWORD = "1234567";
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storageDao;
 
@@ -31,13 +28,8 @@ class RegistrationServiceImplTest {
         User user1 = new User();
         user1.setLogin("Bob");
         user1.setAge(MIN_AGE);
-        user1.setPassword(VALID_PASSWORD);
-        User user2 = new User();
-        user2.setLogin("Alice");
-        user2.setAge(MIN_AGE);
-        user2.setPassword(VALID_PASSWORD);
+        user1.setPassword("123456");
         storageDao.add(user1);
-        storageDao.add(user2);
     }
 
     @AfterEach
@@ -57,7 +49,7 @@ class RegistrationServiceImplTest {
     void register_addNullLogin_NotOk() {
         User newUser = new User();
         newUser.setAge(MIN_AGE);
-        newUser.setPassword(VALID_PASSWORD);
+        newUser.setPassword("123456");
         newUser.setLogin(null);
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(newUser),
@@ -68,7 +60,7 @@ class RegistrationServiceImplTest {
     void register_addNullAge_NotOk() {
         User newUser = new User();
         newUser.setAge(null);
-        newUser.setPassword(VALID_PASSWORD);
+        newUser.setPassword("123456");
         newUser.setLogin("John");
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(newUser),
@@ -89,8 +81,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_addInvalidUsersAge_NotOk() {
         User newUser = new User();
-        newUser.setAge(MIN_AGE - 1);
-        newUser.setPassword(VALID_PASSWORD);
+        newUser.setAge(17);
+        newUser.setPassword("123456");
         newUser.setLogin("John");
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(newUser),
@@ -100,19 +92,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_addAgeGreaterThanMinAge_ok() {
         User newUser = new User();
-        newUser.setAge(MIN_AGE + 1);
-        newUser.setPassword(VALID_PASSWORD);
+        newUser.setAge(20);
+        newUser.setPassword("123456");
         newUser.setLogin("John");
         registrationService.register(newUser);
         User actual = storageDao.get(newUser.getLogin());
-        Assertions.assertEquals(newUser, actual);
+        Assertions.assertEquals(newUser, actual, "Congratulations! You are regisered!");
     }
 
     @Test
     void register_passwordLengthIsLessThanMinLength_Ok() {
         User newUser = new User();
         newUser.setAge(MIN_AGE);
-        newUser.setPassword(INVALID_PASSWORD);
+        newUser.setPassword("12345");
         newUser.setLogin("John");
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(newUser),
@@ -123,18 +115,18 @@ class RegistrationServiceImplTest {
     void register_passwordLengthIsGreaterThanMinLength_Ok() {
         User newUser = new User();
         newUser.setAge(MIN_AGE);
-        newUser.setPassword(GREAT_VALID_PASSWORD);
+        newUser.setPassword("1234567");
         newUser.setLogin("John");
         registrationService.register(newUser);
         User actual = storageDao.get(newUser.getLogin());
-        Assertions.assertEquals(newUser, actual);
+        Assertions.assertEquals(newUser, actual, "Congratulations! You are regisered!");
     }
 
     @Test
     void register_loginExists_NotOk() {
         User newUser = new User();
         newUser.setAge(MIN_AGE);
-        newUser.setPassword(VALID_PASSWORD);
+        newUser.setPassword("123456");
         newUser.setLogin("Bob");
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(newUser),
@@ -145,10 +137,10 @@ class RegistrationServiceImplTest {
     void register_loginNotExists_NotOk() {
         User newUser = new User();
         newUser.setAge(MIN_AGE);
-        newUser.setPassword(VALID_PASSWORD);
+        newUser.setPassword("123456");
         newUser.setLogin("John");
         registrationService.register(newUser);
         User actual = storageDao.get(newUser.getLogin());
-        Assertions.assertEquals(newUser, actual);
+        Assertions.assertEquals(newUser, actual, "Congratulations! You are regisered!");
     }
 }
