@@ -101,8 +101,7 @@ public class HelloWorldTest {
 
     @Test
     void register_userRegistered_notOk() {
-        User userRegistered = user;
-        registrationService.register(userRegistered);
+        registrationService.register(user);
         assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "User registered early");
 
