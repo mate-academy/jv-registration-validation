@@ -7,12 +7,16 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import core.basesyntax.service.UserNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
+    private static final int DEFAULT_AGE = 18;
+    private static final String DEFAULT_PASSWORD = "123456";
+    private static final String DEFAULT_LOGIN = "user_login@gmail.com";
     private static User user;
     private static RegistrationService registrationService;
 
@@ -24,9 +28,9 @@ public class HelloWorldTest {
     @BeforeEach
     void getDefaultUser() {
         user = new User();
-        user.setAge(18);
-        user.setPassword("123456");
-        user.setLogin("test@gmail.com");
+        user.setAge(DEFAULT_AGE);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setLogin(DEFAULT_LOGIN);
     }
 
     @AfterEach
@@ -35,26 +39,22 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_login_ok() {
+    void register_addAdultUser_ok() {
         User actual = registrationService.register(user);
-        assertEquals(user, actual);
+        assertEquals(user, actual,"User is added to Storage");
     }
 
     @Test
-    void register_login_noOk() {
+    void register_userRegistered_notOk() {
         registrationService.register(user);
-        User anotherUser = new User();
-        anotherUser.setAge(23);
-        anotherUser.setLogin("test@gmail.com");
-        anotherUser.setPassword("778955833449");
-        assertThrows(RuntimeException.class,() -> registrationService.register(anotherUser),
-                "User login already exists");
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "User already exists");
     }
 
     @Test
     void register_nullLogin_noOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "Login can't be null");
     }
 
@@ -66,30 +66,37 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_nonValidAge_noOk() {
+    void register_lessAge_noOk() {
         user.setAge(17);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "Not valid age");
     }
 
     @Test
-    void register_UnhapenedAge_noOk() {
+    void register_unhapenedAge_noOk() {
         user.setAge(102);
-        assertThrows(RuntimeException.class,
+        assertThrows(UserNotFoundException.class,
                 () -> registrationService.register(user), "Not valid age");
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        user.setAge(-57);
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
+                "Age can't be negative");
     }
 
     @Test
     void register_nullAge_noOK() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "Age can't be null");
     }
 
     @Test
     void register_shortPassword_noOk() {
         user.setPassword("vika");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "Not valid password");
     }
 
@@ -103,7 +110,7 @@ public class HelloWorldTest {
     @Test
     void register_nullPassword_noOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user),
+        assertThrows(UserNotFoundException.class, () -> registrationService.register(user),
                 "Password can't be null");
     }
 }
