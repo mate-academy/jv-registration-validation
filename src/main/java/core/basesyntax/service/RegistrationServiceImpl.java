@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
-        if (user.getLogin() == null ||storageDao.get(user.getLogin()) != null) {
+        if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("There is user with such login yet");
         }
         if (user.getAge() == null || user.getAge() < MIN_USER_AGE) {
