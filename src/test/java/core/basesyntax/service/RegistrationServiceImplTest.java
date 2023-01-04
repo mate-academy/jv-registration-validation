@@ -74,7 +74,8 @@ class RegistrationServiceImplTest {
         registrationService.register(newUser);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(newUser),
-                String.format("%s is expected when user login already exist in storage", EXCEPTION));
+                String.format("%s is expected when user login already exist in storage",
+                        EXCEPTION));
     }
 
     @Test
