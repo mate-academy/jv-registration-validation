@@ -24,7 +24,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_valid_input_ok() {
+    void register_validInput_ok() {
         assertEquals(user, registrationService.register(user));
     }
 
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_different_users_ok() {
+    void register_differentUsers_ok() {
         user.setLogin("firstUser");
         registrationService.register(user);
         assertThrows(AuthenticationException.class, () -> {
@@ -71,7 +71,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_less_than_six_char_notOk() {
+    void register_passwordLessThanSixChar_notOk() {
         user.setLogin("thirdUser");
         user.setPassword("Ozzy");
         assertThrows(AuthenticationException.class, () -> {
@@ -88,10 +88,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_length_is_6_ok() {
+    void register_passwordLengthIs6_ok() {
         user.setLogin("fifthUser");
         user.setPassword("qwerty");
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void userIsNull_notOk() {
+        user = null;
+        assertThrows(AuthenticationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }

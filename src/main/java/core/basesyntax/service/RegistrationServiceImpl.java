@@ -12,7 +12,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
+        if (user == null || user.getLogin() == null
+                || user.getPassword() == null || user.getAge() == null) {
             throw new AuthenticationException("User is not authorized! Input data can't be null.");
         }
         if (storageDao.get(user.getLogin()) != null) {
