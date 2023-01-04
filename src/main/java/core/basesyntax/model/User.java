@@ -3,6 +3,15 @@ package core.basesyntax.model;
 import java.util.Objects;
 
 public class User {
+    public User() {
+    }
+
+    public User( String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     private Long id;
     private String login;
     private String password;
