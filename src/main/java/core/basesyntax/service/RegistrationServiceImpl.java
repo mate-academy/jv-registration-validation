@@ -12,14 +12,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkNullUser(user);
+        checkNull(user);
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
         return storageDao.add(user);
     }
 
-    private void checkNullUser(User user) {
+    private void checkNull(User user) {
         if (user == null) {
             throw new InvalidDataException("Can`t register null user");
         }

@@ -25,7 +25,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidUser_Ok() {
+    void register_UserWithValidCredentialsAddedToStorage_Ok() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setLogin(VALID_LOGIN);
@@ -33,11 +33,11 @@ class RegistrationServiceImplTest {
         registrationService.register(newUser);
         User actual = storageDao.get(VALID_LOGIN);
         Assertions.assertEquals(newUser, actual,
-                "Valid user should be added");
+                "User with valid credentials should be added");
     }
 
     @Test
-    void registerUserWithEmptyLogin_NotOk() {
+    void register_UserWithEmptyLogin_NotOk() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setPassword(VALID_PASSWORD);
@@ -48,14 +48,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullUser_NotOk() {
+    void register_NullUser_NotOk() {
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(null),
                 String.format("%s is expected when user is null", EXCEPTION));
     }
 
     @Test
-    void registerUserWithNullLogin_NotOk() {
+    void register_UserWithNullLogin_NotOk() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setPassword(VALID_PASSWORD);
@@ -66,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerLoginAlreadyExist_NotOk() {
+    void register_LoginAlreadyExist_NotOk() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setLogin(VALID_LOGIN);
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNullAge_NotOk() {
+    void register_UserWithNullAge_NotOk() {
         User newUser = new User();
         newUser.setLogin(VALID_LOGIN);
         newUser.setPassword(VALID_PASSWORD);
@@ -90,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithLowerAge_NotOk() {
+    void register_UserAgeLowerThenValid_NotOk() {
         User newUser = new User();
         newUser.setLogin(VALID_LOGIN);
         newUser.setPassword(VALID_PASSWORD);
@@ -101,7 +101,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithGreaterAge_Ok() {
+    void register_UserAgeGreaterThenValid_Ok() {
         User newUser = new User();
         newUser.setLogin(VALID_LOGIN);
         newUser.setPassword(VALID_PASSWORD);
@@ -113,7 +113,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerEmptyPassword_NotOk() {
+    void register_UserWithEmptyPassword_NotOk() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setLogin(VALID_LOGIN);
@@ -124,7 +124,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullPassword_NotOk() {
+    void register_UserWithNullPassword_NotOk() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setLogin(VALID_LOGIN);
@@ -135,7 +135,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerTooShortPassword_NotOk() {
+    void register_UserPasswordShorterThenExpected_NotOk() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setLogin(VALID_LOGIN);
@@ -148,7 +148,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerLongPassword_Ok() {
+    void register_UserPasswordLongerThenExpected_Ok() {
         User newUser = new User();
         newUser.setAge(VALID_AGE);
         newUser.setLogin(VALID_LOGIN);
