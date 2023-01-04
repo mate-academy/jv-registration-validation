@@ -41,10 +41,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidDataException("Can`t register user with null password");
         }
-        if (user.getPassword().length() < VALID_LENGTH_PASSWORD) {
+        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
             throw new InvalidDataException(
                     String.format("Can`t register user with password length less than %d",
-                            VALID_LENGTH_PASSWORD));
+                            VALID_PASSWORD_LENGTH));
         }
     }
 
