@@ -8,18 +8,6 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
-        if (user == null) {
-            throw new StorageDaoException("User can`t be null");
-        }
-        if (user.getPassword() == null) {
-            throw new StorageDaoException("Password can`t be null");
-        }
-        if (user.getLogin() == null) {
-            throw new StorageDaoException("Login can`t be null");
-        }
-        if (user.getAge() == null) {
-            throw new StorageDaoException("Age can`t be null");
-        }
         user.setId(++index);
         Storage.people.add(user);
         return user;

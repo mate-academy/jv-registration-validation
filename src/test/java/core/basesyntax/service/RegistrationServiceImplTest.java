@@ -42,7 +42,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_threeUsers_Ok() {
         User user1 = new User();
-
         user1.setLogin("first");
         user1.setPassword("password");
         user1.setAge(18);
@@ -77,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginStartSymbol() {
+    void register_loginStartSymbol_notOk() {
         user.setLogin("-TestLogin");
         Assertions.assertThrows(RegistrationUserException.class,
                 () -> registrationService.register(user));
