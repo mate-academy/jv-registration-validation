@@ -1,7 +1,7 @@
 package core.basesyntax.exception;
 
 public class InvalidDataException extends RuntimeException {
-    public InvalidDataException(String massage) {
-        super(massage);
+    public InvalidDataException(String message) {
+        super(message);
     }
 }

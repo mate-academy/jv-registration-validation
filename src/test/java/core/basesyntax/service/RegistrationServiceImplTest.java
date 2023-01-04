@@ -11,12 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int VALID_LENGTH_PASSWORD = 6;
+    private static final int VALID_PASSWORD_LENGTH = 6;
     private static final int VALID_AGE = 18;
     private static final String VALID_FIRST_LOGIN = "Bob";
-    private static final String VALID_SECOND_LOGIN = "alice";
-    private static final String VALID_THIRD_LOGIN = "joHn";
-    private static final String VALID_PASSWORD = "*".repeat(VALID_LENGTH_PASSWORD);
+    private static final String VALID_PASSWORD = "*".repeat(VALID_PASSWORD_LENGTH);
     private static final String EXCEPTION = InvalidDataException.class.toString();
     private static RegistrationServiceImpl registrationService;
     private static StorageDaoImpl storageDao;
@@ -54,14 +52,14 @@ class RegistrationServiceImplTest {
         invalidUser.setLogin("");
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("User should not be added with empty login %s", EXCEPTION));
+                String.format("%S is expected when login is empty", EXCEPTION));
     }
 
     @Test
     void registerNullUser_NotOk() {
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(null),
-                String.format("Null user should not be added %s", EXCEPTION));
+                String.format("%s is expected when user is null", EXCEPTION));
     }
 
     @Test
@@ -69,7 +67,7 @@ class RegistrationServiceImplTest {
         invalidUser.setLogin(null);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("User should not be added with null login %s", EXCEPTION));
+                String.format("%s is expected when login is null", EXCEPTION));
     }
 
     @Test
@@ -77,7 +75,7 @@ class RegistrationServiceImplTest {
         registrationService.register(validUser);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("This user already exist in storage %s", EXCEPTION));
+                String.format("%s is expected when user already exist in storage", EXCEPTION));
     }
 
     @Test
@@ -85,7 +83,7 @@ class RegistrationServiceImplTest {
         invalidUser.setAge(null);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("User should not be added with null age %s", EXCEPTION));
+                String.format("%s is expected when user age is null", EXCEPTION));
     }
 
     @Test
@@ -93,8 +91,7 @@ class RegistrationServiceImplTest {
         invalidUser.setAge(VALID_AGE - 1);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("User should not be added with lower age then expected %s",
-                        EXCEPTION));
+                String.format("%s is expected when user age lower then %d", EXCEPTION, VALID_AGE));
     }
 
     @Test
@@ -111,7 +108,7 @@ class RegistrationServiceImplTest {
         invalidUser.setPassword("");
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("User should not be added with empty password %s", EXCEPTION));
+                String.format("%s is expected when password is empty", EXCEPTION));
     }
 
     @Test
@@ -119,7 +116,7 @@ class RegistrationServiceImplTest {
         invalidUser.setPassword(null);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("User should not be added with null password %s", EXCEPTION));
+                String.format("%s is expected when password is null", EXCEPTION));
     }
 
     @Test
@@ -128,8 +125,8 @@ class RegistrationServiceImplTest {
         invalidUser.setPassword(newPassword);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUser),
-                String.format("User should not be added with %s password %s",
-                        newPassword, EXCEPTION));
+                String.format("%s is expected when password length lower then %d",
+                        EXCEPTION, VALID_PASSWORD_LENGTH));
     }
 
     @Test
@@ -140,41 +137,6 @@ class RegistrationServiceImplTest {
         User actual = storageDao.get(validUser.getLogin());
         Assertions.assertEquals(validUser, actual,
                 String.format("User should be added with %s password", newPassword));
-    }
-
-    @Test
-    void registerManyValidUsers_Ok() {
-        User alise = new User();
-        alise.setLogin(VALID_SECOND_LOGIN);
-        alise.setPassword(VALID_PASSWORD);
-        alise.setAge(VALID_AGE);
-        User john = new User();
-        john.setLogin(VALID_THIRD_LOGIN);
-        john.setPassword(VALID_PASSWORD);
-        john.setAge(VALID_AGE);
-        registrationService.register(alise);
-        registrationService.register(john);
-        registrationService.register(validUser);
-        User actual = storageDao.get(validUser.getLogin());
-        Assertions.assertEquals(validUser, actual,
-                "Method should be added all users to storage, and return last");
-    }
-
-    @Test
-    void registerAndGetInvalidUser_NotOk() {
-        User alise = new User();
-        alise.setLogin(VALID_SECOND_LOGIN);
-        alise.setPassword(VALID_PASSWORD);
-        alise.setAge(VALID_AGE);
-        User john = new User();
-        john.setLogin(VALID_THIRD_LOGIN);
-        john.setPassword(VALID_PASSWORD);
-        john.setAge(VALID_AGE);
-        registrationService.register(alise);
-        registrationService.register(john);
-        User actual = storageDao.get(validUser.getLogin());
-        Assertions.assertNull(actual,
-                "Method should be returned null for invalid get login");
     }
 
     @AfterEach

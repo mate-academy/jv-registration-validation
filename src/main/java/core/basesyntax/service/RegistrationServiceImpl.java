@@ -12,21 +12,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkNullUser(user);
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
         return storageDao.add(user);
     }
 
-    private void checkLogin(User user) {
+    private void checkNullUser(User user) {
         if (user == null) {
-            throw new InvalidDataException("Can`t add null user to storage");
+            throw new InvalidDataException("Can`t register null user");
         }
+    }
+
+    private void checkLogin(User user) {
         if (user.getLogin() == null) {
-            throw new InvalidDataException("Can`t add user with null login");
+            throw new InvalidDataException("Can`t register user with null login");
         }
         if (user.getLogin().length() == 0) {
-            throw new InvalidDataException("Can`t add user with empty login");
+            throw new InvalidDataException("Can`t register user with empty login");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("This login already exist in storage");
@@ -35,22 +39,22 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkPassword(User user) {
         if (user.getPassword() == null) {
-            throw new InvalidDataException("Can`t add user with null password");
+            throw new InvalidDataException("Can`t register user with null password");
         }
         if (user.getPassword().length() < VALID_LENGTH_PASSWORD) {
             throw new InvalidDataException(
-                    String.format("Can`t add user with password length less than %d",
+                    String.format("Can`t register user with password length less than %d",
                             VALID_LENGTH_PASSWORD));
         }
     }
 
     private void checkAge(User user) {
         if (user.getAge() == null) {
-            throw new InvalidDataException("Can`t add user with null age");
+            throw new InvalidDataException("Can`t register user with null age");
         }
         if (user.getAge() < VALID_AGE) {
             throw new InvalidDataException(
-                    String.format("Can`t add user with age less than %d",
+                    String.format("Can`t register user with age less than %d",
                             VALID_AGE));
         }
     }
