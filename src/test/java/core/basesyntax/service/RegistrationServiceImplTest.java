@@ -36,7 +36,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsNull_exception() {
+    void register_userIsNull_notOk() {
         user = null;
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_existingUserLogin_exception() {
+    void register_existingUserLogin_notOk() {
         User newUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         registrationService.register(user);
         Assertions.assertThrows(RegistrationException.class,
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLogin_exception() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidUserAge_exception() {
+    void register_invalidUserAge_notOk() {
         user.setAge(15);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullAge_exception() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidUserPassword_exception() {
+    void register_invalidUserPassword_notOk() {
         user.setPassword("qwert");
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
@@ -93,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPassword_exception() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
