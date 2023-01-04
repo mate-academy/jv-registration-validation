@@ -96,7 +96,7 @@ class RegistrationServiceImplTest {
         copyUser.setPassword(defaultUser.getPassword());
         copyUser.setAge(defaultUser.getAge());
         registrationService.register(defaultUser);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(copyUser));
+        assertThrows(InvalidUserException.class, () -> registrationService.register(copyUser), "This User is already registered");
     }
 
     @Test
