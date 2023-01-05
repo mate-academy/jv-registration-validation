@@ -1,5 +1,7 @@
 package core.basesyntax.model;
 
+import core.basesyntax.exeption.InvalidEmailException;
+
 import java.util.Objects;
 
 public class User {
@@ -20,7 +22,21 @@ public class User {
         return login;
     }
 
-    public void setLogin(String login) {
+    public void setLogin(String login) throws InvalidEmailException {
+        if (login == null) {
+            this.login = login;
+            return;
+        }
+        int length = login.length();
+        if (!login.contains("@")) {
+            throw new InvalidEmailException("E-mail without '@' is uncorrected!");
+        }
+        if (!login.substring(login.indexOf('@') + 1, length).equals("gmail.com")) {
+            throw new InvalidEmailException("Invalid e-mail mail!");
+        }
+        if (!Character.isLetter(login.charAt(0))) {
+            throw new InvalidEmailException("Your e-mail should start from the letter! Now it's : " + login.charAt(0));
+        }
         this.login = login;
     }
 
