@@ -11,9 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new ValidationException("User can't be null");
-        }
+        checkUser(user);
         checkLogin(user.getLogin());
         checkAge(user.getAge());
         checkPassword(user.getPassword());
@@ -40,6 +38,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         } else if (password.length() < MINIMAL_VALID_PASSWORD_LENGTH) {
             throw new ValidationException("Invalid data. "
                     + "Your password should be at least 6 characters");
+        }
+    }
+
+    private void checkUser(User user) {
+        if (user == null) {
+            throw new ValidationException("User can't be null");
         }
     }
 }

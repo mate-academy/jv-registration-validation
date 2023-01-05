@@ -39,7 +39,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidPasswordLength_notOk() {
+    void register_userPasswordShorterThenExpected_notOk() {
         user.setPassword("hello");
         assertThrows(ValidationException.class, () ->
                 registrationService.register(user),
@@ -55,7 +55,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginIsNull_notOk() {
+    void register_userWithNullLogin_notOk() {
         user.setLogin(null);
         assertThrows(ValidationException.class, () ->
                 registrationService.register(user),
@@ -63,7 +63,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidLoginLength_notOk() {
+    void register_userWithEmptyLogin_notOk() {
         user.setLogin("");
         assertThrows(ValidationException.class, () ->
                 registrationService.register(user),
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_uniUserLogin_notOk() {
+    void register_loginAlreadyExist_notOk() {
         registrationService.register(user);
         assertThrows(ValidationException.class, () ->
                 registrationService.register(user),
@@ -109,8 +109,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullAge_notOk() {
-        user.setAge(0);
+    void register_userWithNullAge_notOk() {
+        user.setAge(null);
         assertThrows(ValidationException.class, () ->
                 registrationService.register(user),
                 "Age can't be 0");
