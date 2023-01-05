@@ -19,11 +19,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new InvalidUserDataException("Login should not be null.");
         }
-        if (user.getLogin().length() > 0 && user.getLogin().isBlank()) {
-            throw new InvalidUserDataException("Login should not be blank.");
-        }
         if (user.getLogin().isEmpty()) {
             throw new InvalidUserDataException("Login should not be empty.");
+        }
+        if (user.getLogin().isBlank()) {
+            throw new InvalidUserDataException("Login should not be blank.");
         }
         if (user.getLogin().length() < LOGIN_MIN_LENGTH) {
             throw new InvalidUserDataException("User login should be at least " + LOGIN_MIN_LENGTH
@@ -40,11 +40,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidUserDataException("Password should not be null.");
         }
-        if (user.getPassword().length() > 0 && user.getPassword().isBlank()) {
-            throw new InvalidUserDataException("Password should not be blank.");
-        }
         if (user.getPassword().isEmpty()) {
             throw new InvalidUserDataException("Password should not be empty.");
+        }
+        if (user.getPassword().isBlank()) {
+            throw new InvalidUserDataException("Password should not be blank.");
         }
         if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
             throw new InvalidUserDataException("Password should be at least "
