@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String LOGIN_EXISTED_IN_STORAGE = "unknownCactus";
     private static final String DEFAULT_LOGIN = "user1";
-    private static final String DEFAULT_PASSWORD = "user1";
-    private static final int DEFAULT_AGE = 22;
+    private static final String DEFAULT_PASSWORD = "user111";
+    private static final int DEFAULT_AGE = 18;
     private static final String WRONG_PASSWORD = "12345";
     private static final int WRONG_AGE = 15;
     private static final String EXCEPTION = InvalidInputDataException.class.toString();
@@ -33,7 +33,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        User expectedUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User expectedUser = new User(LOGIN_EXISTED_IN_STORAGE, DEFAULT_PASSWORD, DEFAULT_AGE);
         storageDao.add(expectedUser);
     }
 
