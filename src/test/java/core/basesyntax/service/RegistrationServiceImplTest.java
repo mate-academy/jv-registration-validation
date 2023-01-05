@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int USER_VALID_AGE = 18;
+    private static final int MIN_AGE = 18;
     private static final String DEFAULT_PASSWORD = "valid_password";
     private static final String DEFAULT_LOGIN = "valid_login";
     private static final String ALREADY_EXISTS_LOGIN = "ValidLogin1";
@@ -41,15 +41,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD,USER_VALID_AGE);
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
         registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
-        Assertions.assertEquals(user, actual);
+        Assertions.assertEquals(user, actual, "You should add user to storage");
     }
 
     @Test
-    void register_ageCheck_notOk() {
-        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, USER_VALID_AGE - 1);
+    void register_checkUserAgeLowerThenMin_notOk() {
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE - 1);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
 
@@ -57,35 +57,35 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLoginCheck_notOk() {
-        User user = new User(null, DEFAULT_PASSWORD, USER_VALID_AGE);
+        User user = new User(null, DEFAULT_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
     void register_checkForExistsLogin_notOk() {
-        User user = new User(ALREADY_EXISTS_LOGIN, DEFAULT_PASSWORD, USER_VALID_AGE);
+        User user = new User(ALREADY_EXISTS_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
     void register_checkForInvalidPassword_notOk() {
-        User user = new User(DEFAULT_LOGIN, INVALID_PASSWORD, USER_VALID_AGE);
+        User user = new User(DEFAULT_LOGIN, INVALID_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
     void register_checkForNullPassword_notOk() {
-        User user = new User(DEFAULT_LOGIN, null, USER_VALID_AGE);
+        User user = new User(DEFAULT_LOGIN, null, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
     void register_checkEmptyLogin_notOk() {
-        User user = new User("", DEFAULT_PASSWORD,USER_VALID_AGE);
+        User user = new User("", DEFAULT_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
     }
