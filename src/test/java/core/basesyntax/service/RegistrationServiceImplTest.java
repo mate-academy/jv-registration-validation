@@ -121,8 +121,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_withExactlyAge() {
         defaultUser.setAge(18);
-        User register = registrationService.register(defaultUser);
-        assertEquals(register, defaultUser, "User should be add to Storage");
+        User user = registrationService.register(defaultUser);
+        assertEquals(user, defaultUser, "User should be add to Storage");
     }
 
     @Test
