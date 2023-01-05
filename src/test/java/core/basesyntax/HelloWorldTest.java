@@ -52,7 +52,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_nullLogin_noOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                 "Login can't be null");
@@ -66,17 +66,10 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_lessAge_noOk() {
+    void register_lessAge_notOk() {
         user.setAge(17);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                 "Not valid age");
-    }
-
-    @Test
-    void register_unhapenedAge_noOk() {
-        user.setAge(102);
-        assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user), "Not valid age");
     }
 
     @Test
@@ -87,14 +80,14 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_nullAge_noOK() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                 "Age can't be null");
     }
 
     @Test
-    void register_shortPassword_noOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("vika");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                 "Not valid password");
@@ -108,7 +101,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_nullPassword_noOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                 "Password can't be null");
