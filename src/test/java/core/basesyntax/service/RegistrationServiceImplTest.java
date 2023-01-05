@@ -22,7 +22,6 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void initializeService() {
         registrationService = new RegistrationServiceImpl();
-        defaultUser = new User(DEFAULT_LOGIN, VALID_PASSWORD, MIN_AGE);
     }
 
     @BeforeEach
@@ -36,28 +35,30 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerCorrectUser_Ok() {
+    void register_CorrectUser_Ok() {
         User actual = registrationService.register(defaultUser);
         boolean cont = Storage.people.contains(actual);
         assertTrue(cont);
     }
 
     @Test
-    void register_NullUser_NotOk() {
+    void register_addNullUser_NotOk() {
         User user = null;
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user),
+                "User can't be null");
     }
 
     @Test
-    void register_nullLogin_Ok() {
+    void register_addNullLogin_NotOk() {
         defaultUser.setLogin(null);
         assertThrows(InvalidUserException.class, () -> registrationService.register(defaultUser),
-                "User can't be null, please fixed this. Login = "
+                "Login can't be null, please fixed this. Login: "
                         + defaultUser.getLogin());
     }
 
     @Test
-    void register_NullPassword_NotOk() {
+    void register_addNullPassword_NotOk() {
         defaultUser.setPassword(null);
         assertThrows(InvalidUserException.class, () -> registrationService.register(defaultUser),
                 "Password can't be null, please fixed this. password = "
@@ -65,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_IncorrectPassword_fiveCharacters_NotOk() {
+    void register_passwordLengthIsLessThanMinLength_NotOk() {
         defaultUser.setPassword("12345");
         assertThrows(InvalidUserException.class, () ->
                         registrationService.register(defaultUser),
@@ -74,61 +75,67 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_CorrectMinPassword_Characters_Ok() {
+    void register_passwordLengthMinLength_Ok() {
         defaultUser.setPassword("123456");
         registrationService.register(defaultUser);
-        boolean checkUser = Storage.people.contains(defaultUser);
-        assertTrue(checkUser);
+        boolean actual = Storage.people.contains(defaultUser);
+        assertTrue(actual, "Password length: "
+                + defaultUser.getPassword().length()
+                + ". User should be add to Storage");
     }
 
     @Test
-    void register_CorrectPassword_Characters_Ok() {
-        defaultUser.setPassword("123456789");
+    void register_passwordLengthIsGreaterThanMinLength_Ok() {
+        defaultUser.setPassword("1234567");
         registrationService.register(defaultUser);
         boolean checkUser = Storage.people.contains(defaultUser);
-        assertTrue(checkUser);
+        assertTrue(checkUser, "User should be add to Storage");
     }
 
     @Test
-    void registrationCopyUser_notOk() {
+    void register_loginExists_NotOk() {
         User copyUser = new User();
         copyUser.setLogin(defaultUser.getLogin());
         copyUser.setPassword(defaultUser.getPassword());
         copyUser.setAge(defaultUser.getAge());
         registrationService.register(defaultUser);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(copyUser),
-                "This User is already registered. Login = " + defaultUser.getLogin());
+        assertThrows(InvalidUserException.class,
+                () -> registrationService.register(copyUser),
+                "This User is already registered. Login = "
+                        + defaultUser.getLogin());
     }
 
     @Test
-    void register_nullAge_notOk() {
+    void register_addNullAge_NotOk() {
         defaultUser.setAge(null);
         assertThrows(InvalidUserException.class,
                 () -> registrationService.register(defaultUser),
                 "User age can't be null, but user age = "
-                + defaultUser.getAge());
+                        + defaultUser.getAge());
     }
 
     @Test
-    void registerWithIncorrectAge_NotOk() {
+    void register_addInvalidUsersAge_NotOk() {
         defaultUser.setAge(17);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(defaultUser),
+        assertThrows(InvalidUserException.class,
+                () -> registrationService.register(defaultUser),
                 "User age should be at least 18 years old, but user age = "
                         + defaultUser.getAge());
     }
 
     @Test
-    void registerWithExactlyAge() {
+    void register_WithExactlyAge() {
         defaultUser.setAge(18);
         User register = registrationService.register(defaultUser);
-        assertEquals(register, defaultUser);
+        assertEquals(register, defaultUser, "User should be add to Storage");
     }
 
     @Test
-    void registerWithCorrectAge_Ok() {
-        defaultUser.setAge(50);
+    void register_addAgeGreaterThanMinAge_ok() {
+        defaultUser.setAge(19);
         User register = registrationService.register(defaultUser);
-        assertEquals(register, defaultUser);
+        assertEquals(register, defaultUser,
+                "User should be add to Storage");
     }
 
 }
