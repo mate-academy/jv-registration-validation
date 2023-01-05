@@ -12,9 +12,33 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RuntimeException("user is null");
+        getUser(user);
+        getLogin(user);
+        getPassword(user);
+        getAge(user);
+        return storageDao.add(user);
+    }
+
+    private static void getAge(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new RuntimeException("user must be at least 18 years old");
         }
+        if (user.getAge() > MAX_AGE) {
+            throw new RuntimeException("Incorrect age");
+        }
+    }
+
+    private static void getPassword(User user) {
+        if (user.getPassword() == null
+                || user.getPassword().isEmpty()) {
+            throw new RuntimeException("password cannot be empty");
+        }
+        if (user.getPassword().length() < MINIUM_PASSWORD_LENGTH) {
+            throw new RuntimeException("password must contain at least 8 characters");
+        }
+    }
+
+    private void getLogin(User user) {
         if (user.getLogin() == null
                 || user.getLogin().isEmpty()
                 || !Character.isLetter(user.getLogin().charAt(0))
@@ -24,19 +48,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("login already exists");
         }
-        if (user.getPassword() == null
-                || user.getPassword().isEmpty()) {
-            throw new RuntimeException("password cannot be empty");
+    }
+
+    private static void getUser(User user) {
+        if (user == null) {
+            throw new RuntimeException("user is null");
         }
-        if (user.getPassword().length() < MINIUM_PASSWORD_LENGTH) {
-            throw new RuntimeException("password must contain at least 8 characters");
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("user must be at least 18 years old");
-        }
-        if (user.getAge() > MAX_AGE) {
-            throw new RuntimeException("Incorrect age");
-        }
-        return storageDao.add(user);
     }
 }
