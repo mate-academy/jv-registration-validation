@@ -16,15 +16,38 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
-        if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
+        loginValidation(user.getLogin());
+        passwordValidation(user.getPassword());
+        ageValidation(user.getAge());
+        return storageDao.add(user);
+    }
+
+    private void loginValidation(String login) {
+        if (login == null) {
+            throw new RegistrationException("Login can't be null");
+        }
+        if (storageDao.get(login) != null) {
             throw new RegistrationException("There is user with such login yet");
         }
-        if (user.getAge() == null || user.getAge() < MIN_USER_AGE) {
-            throw new RegistrationException("User should be at least 18 years old");
+    }
+
+    private void passwordValidation(String password) {
+        if (password == null) {
+            throw new RegistrationException("Password can't be null");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password should be at least 6 characters");
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Password should be at least "
+                    + MIN_PASSWORD_LENGTH + " characters");
         }
-        return storageDao.add(user);
+    } 
+      
+    private void ageValidation(Integer age) {
+        if (age == null) {
+            throw new RegistrationException("Password can't be null");
+        }
+        if (age < MIN_USER_AGE) {
+            throw new RegistrationException("User should be at least "
+                    + MIN_PASSWORD_LENGTH + " years old");
+        }
     }
 }

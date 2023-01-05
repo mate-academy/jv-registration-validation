@@ -14,7 +14,12 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_EXCEPTION = RegistrationException.class.toString();
     private static final String DEFAULT_LOGIN = "validUser";
     private static final String DEFAULT_PASSWORD = "Qwertyu";
+    private static final String MIN_LENGTH_PASSWORD = "Qwerty";
+    private static final String INVALID_PASSWORD = "Qwert";
     private static final int DEFAULT_AGE = 19;
+    private static final int MIN_AGE = 18;
+    private static final int INVALID_AGE = 15;
+
     private static RegistrationService registrationService;
     private static StorageDaoImpl storageDao;
     private User user;
@@ -40,7 +45,7 @@ class RegistrationServiceImplTest {
         user = null;
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                String.format("%s should be thrown user is null", DEFAULT_EXCEPTION));
+                String.format("%s should be thrown if user is null", DEFAULT_EXCEPTION));
     }
 
     @Test
@@ -69,10 +74,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidUserAge_notOk() {
-        user.setAge(15);
+        user.setAge(INVALID_AGE);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                String.format("%s should be thrown if age is less 18", DEFAULT_EXCEPTION));
+                String.format("%s should be thrown if age is less " + MIN_AGE, DEFAULT_EXCEPTION));
     }
 
     @Test
@@ -85,11 +90,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidUserPassword_notOk() {
-        user.setPassword("qwert");
+        user.setPassword(INVALID_PASSWORD);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                String.format("%s should be thrown if password length is less 6",
-                        DEFAULT_EXCEPTION));
+                String.format("%s should be thrown if password length is less "
+                                + MIN_LENGTH_PASSWORD.length(), DEFAULT_EXCEPTION));
     }
 
     @Test
@@ -102,11 +107,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_limitAgeAndPassword_ok() {
-        user.setPassword("qwerty");
-        user.setAge(18);
+        user.setPassword(MIN_LENGTH_PASSWORD);
+        user.setAge(MIN_AGE);
         registrationService.register(user);
         Assertions.assertEquals(user, storageDao.get(DEFAULT_LOGIN),
                 "User should be added to storage");
     }
-
 }
