@@ -24,28 +24,28 @@ class UserTest {
     }
 
     @Test
-    void emailWithoutDogSymbol_NotOk() {
+    void emailWithoutDogSymbol_notOk() {
         assertThrows(InvalidEmailException.class, () ->
                 user.setLogin("testgmail.com"), "Not valid e-mail value!"
         );
     }
 
     @Test
-    void emailWithUncorrectedMail_NotOk() {
+    void emailWithUncorrectedMail_notOk() {
         assertThrows(InvalidEmailException.class, () ->
                 user.setLogin("test@gmaill.com"), "Not valid mail address!"
         );
     }
 
     @Test
-    void emailWithNotSymbolOnFirstIndex_NotOk() {
+    void emailWithNotSymbolOnFirstIndex_notOk() {
         assertThrows(InvalidEmailException.class, () ->
                 user.setLogin("23test@gmail.com"), "Not valid e-mail name!"
         );
     }
 
     @Test
-    void emailChanged_Ok() {
+    void emailChanged_ok() {
         user.setLogin("newEmail@gmail.com");
         assertEquals(user.getLogin(), "newEmail@gmail.com");
     }

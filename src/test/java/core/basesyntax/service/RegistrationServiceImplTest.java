@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkEmptyPassword_NotOk() {
+    void checkEmptyPassword_notOk() {
         user.setPassword(null);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "Password value can't be NULL"
@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkEmptyEmail_NotOk() {
+    void checkEmptyEmail_notOk() {
         user.setLogin(null);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "E-mail value can't be NULL"
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkEmptyAge_NotOk() {
+    void checkEmptyAge_notOk() {
         user.setAge(null);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "Age value can't be NULL"
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkExistedEmail_NotOk() {
+    void checkExistedEmail_notOk() {
         registrationService.register(user);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "User is already exists!"
@@ -69,7 +69,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsBelowZero_NotOk() {
+    void ageIsBelowZero_notOk() {
         user.setAge(-1);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "Age value is below 0!"
@@ -77,7 +77,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsZero_NotOk() {
+    void ageIsZero_notOk() {
         user.setAge(0);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "Age value is 0!"
@@ -85,7 +85,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsUnderTheMinValue_NotOk() {
+    void ageIsUnderTheMinValue_notOk() {
         user.setAge(MIN_AGE - 1);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "Age value is smaller "
@@ -94,7 +94,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsZero_NotOk() {
+    void passwordIsZero_notOk() {
         user.setPassword("");
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "Password can't be empty!"
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsLessThanSixSymbols_NotOk() {
+    void passwordIsLessThanSixSymbols_notOk() {
         user.setPassword("4534");
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "Password can't be less than 6 symbols!"
@@ -110,7 +110,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsAdded_Ok() {
+    void userIsAdded_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
