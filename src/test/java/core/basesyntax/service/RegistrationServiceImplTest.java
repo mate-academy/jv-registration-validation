@@ -22,31 +22,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeLessThenNeed_NotOk() {
+    void register_ageIsIncorrect_NotOk() {
         user.setAge(12);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginNull_NotOk() {
+    void register_userLoginIsNull_NotOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordLessThenNeed_NotOk() {
+    void register_userPasswordLessThenSixCharacters_NotOk() {
         user.setPassword("3728");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordNull_NotOk() {
+    void register_userPasswordIsNull_NotOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userExistInSuchStorage_NotOk() {
+    void register_userExistInSuchStorage_NotOk() {
         storageDao.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
