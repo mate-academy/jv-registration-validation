@@ -6,7 +6,7 @@ import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_USER_AGE = 18;
+    private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -16,22 +16,22 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
-        loginValidation(user.getLogin());
-        passwordValidation(user.getPassword());
-        ageValidation(user.getAge());
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
         return storageDao.add(user);
     }
 
-    private void loginValidation(String login) {
+    private void checkLogin(String login) {
         if (login == null) {
             throw new RegistrationException("Login can't be null");
         }
         if (storageDao.get(login) != null) {
-            throw new RegistrationException("There is user with such login yet");
+            throw new RegistrationException("User with such login is already registered");
         }
     }
 
-    private void passwordValidation(String password) {
+    private void checkPassword(String password) {
         if (password == null) {
             throw new RegistrationException("Password can't be null");
         }
@@ -41,13 +41,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     } 
       
-    private void ageValidation(Integer age) {
+    private void checkAge(Integer age) {
         if (age == null) {
             throw new RegistrationException("Age can't be null");
         }
-        if (age < MIN_USER_AGE) {
+        if (age < MIN_AGE) {
             throw new RegistrationException("User should be at least "
-                    + MIN_USER_AGE + " years old");
+                    + MIN_AGE + " years old");
         }
     }
 }

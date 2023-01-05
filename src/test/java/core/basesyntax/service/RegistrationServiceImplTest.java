@@ -13,13 +13,8 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String DEFAULT_EXCEPTION = RegistrationException.class.toString();
     private static final String DEFAULT_LOGIN = "validUser";
-    private static final String DEFAULT_PASSWORD = "Qwertyu";
-    private static final String MIN_LENGTH_PASSWORD = "Qwerty";
-    private static final String INVALID_PASSWORD = "Qwert";
-    private static final int DEFAULT_AGE = 19;
+    private static final String DEFAULT_PASSWORD = "Qwerty";
     private static final int MIN_AGE = 18;
-    private static final int INVALID_AGE = 15;
-
     private static RegistrationService registrationService;
     private static StorageDaoImpl storageDao;
     private User user;
@@ -32,7 +27,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
     }
 
     @AfterEach
@@ -42,9 +37,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsNull_notOk() {
-        user = null;
         Assertions.assertThrows(RegistrationException.class,
-                () -> registrationService.register(user),
+                () -> registrationService.register(null),
                 String.format("%s should be thrown if user is null", DEFAULT_EXCEPTION));
     }
 
@@ -56,8 +50,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_existingUserLogin_notOk() {
-        User newUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+    void register_existingLogin_notOk() {
+        User newUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
         registrationService.register(user);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(newUser),
@@ -73,8 +67,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidUserAge_notOk() {
-        user.setAge(INVALID_AGE);
+    void register_invalidAge_notOk() {
+        user.setAge(15);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 String.format("%s should be thrown if age is less " + MIN_AGE, DEFAULT_EXCEPTION));
@@ -89,12 +83,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidUserPassword_notOk() {
-        user.setPassword(INVALID_PASSWORD);
+    void register_invalidPassword_notOk() {
+        user.setPassword("qwert");
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 String.format("%s should be thrown if password length is less "
-                                + MIN_LENGTH_PASSWORD.length(), DEFAULT_EXCEPTION));
+                                + DEFAULT_PASSWORD.length(), DEFAULT_EXCEPTION));
     }
 
     @Test
@@ -106,9 +100,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_limitAgeAndPassword_ok() {
-        user.setPassword(MIN_LENGTH_PASSWORD);
-        user.setAge(MIN_AGE);
+    void register_notLimitAge_ok() {
+        user.setAge(MIN_AGE + 1);
+        registrationService.register(user);
+        Assertions.assertEquals(user, storageDao.get(DEFAULT_LOGIN),
+                "User should be added to storage");
+    }
+
+    @Test
+    void register_notLimitPassword_ok() {
+        user.setPassword(DEFAULT_PASSWORD + "qw");
         registrationService.register(user);
         Assertions.assertEquals(user, storageDao.get(DEFAULT_LOGIN),
                 "User should be added to storage");
