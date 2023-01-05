@@ -3,7 +3,10 @@ package core.basesyntax.service;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeption.InvalidUserException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,7 +87,8 @@ class RegistrationServiceImplTest {
     void ageIsUnderTheMinValue_NotOk() {
         user.setAge(MIN_AGE - 1);
         assertThrows(InvalidUserException.class, () ->
-                registrationService.register(user), "Age value is smaller than excepted! Access denied"
+                registrationService.register(user), "Age value is smaller "
+                + "than excepted! Access denied"
         );
     }
 
