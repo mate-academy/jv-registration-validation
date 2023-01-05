@@ -12,6 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+
+    private static final String DEFAULT_LOGIN = "dimasmuk10@gmail.com";
+    private static final int DEFAULT_AGE = 23;
+    private static final String DEFAULT_PASSWORD = "1234qwerty";
     private static StorageDao storageDao;
     private static RegistrationService registrationService;
     private User user;
@@ -20,104 +24,81 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
-
     }
 
     @BeforeEach
     void beforeEach() {
         user = new User();
+        user.setLogin(DEFAULT_LOGIN);
+        user.setAge(DEFAULT_AGE);
+        user.setPassword(DEFAULT_PASSWORD);
     }
 
     @Test
     void register_userLoginOnNull_notOk() {
-        user.setAge(23);
-        user.setPassword("qwer1234");
+        user.setLogin(null);
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user));
-        assertEquals("Login can't be empty!", exception.getMessage());
+                () -> registrationService.register(user), "Login can't be empty!");
     }
 
     @Test
     void register_userLoginIsEmpty_notOk() {
         user.setLogin("");
-        user.setAge(23);
-        user.setPassword("qwer1234");
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user));
-        assertEquals("Login can't be empty!", exception.getMessage());
+                () -> registrationService.register(user), "Login can't be empty!");
     }
 
     @Test
     void register_userLoginHasTheSameLogin_notOk() {
-        user.setLogin("dima");
-        user.setAge(23);
-        user.setPassword("qwer1234");
         storageDao.add(user);
         User user1 = new User();
-        user1.setLogin("dima");
+        user1.setLogin(DEFAULT_LOGIN);
         user1.setAge(32);
         user1.setPassword("qws4123123");
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user1));
-        assertEquals("User with this login "
-                + user1.getLogin() + " is already registered!", exception.getMessage());
+                () -> registrationService.register(user1), "User with this login "
+                        + user1.getLogin() + " is already registered!");
     }
 
     @Test
     void register_userPasswordIsNull_notOk() {
-        user.setLogin("dima");
-        user.setAge(25);
+        user.setPassword(null);
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user));
-        assertEquals("Password can't be empty!", exception.getMessage());
+                () -> registrationService.register(user), "Password can't be empty!");
     }
 
     @Test
     void register_userPasswordIsEmpty_notOk() {
-        user.setLogin("dimasa");
         user.setPassword("");
-        user.setAge(25);
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user));
-        assertEquals("Password can't be empty!", exception.getMessage());
+                () -> registrationService.register(user), "Password can't be empty!");
     }
 
     @Test
     void register_userPasswordLengthLessMin_notOk() {
-        user.setLogin("dima");
         user.setPassword("12");
-        user.setAge(25);
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user));
-        assertEquals("Password length can't be"
-                + "less then 6!", exception.getMessage());
+                () -> registrationService.register(user), "Password length can't be"
+                        + "less then 6!");
     }
 
     @Test
     void register_userAgeOnNull_notOk() {
-        user.setLogin("dima");
-        user.setPassword("qwer1234");
+        user.setAge(null);
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user));
-        assertEquals("Your age can't be null", exception.getMessage());
+                () -> registrationService.register(user), "Your age can't be null");
     }
 
     @Test
     void register_userAgeOlderThan18_notOk() {
-        user.setLogin("dima");
         user.setAge(11);
-        user.setPassword("qwer1234");
         Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user));
-        assertEquals("Your age " + user.getAge() + " less"
-                + " then allowed: 18", exception.getMessage());
+                () -> registrationService.register(user), "Your age " + user.getAge() + " less"
+                        + " then allowed: 18");
     }
 
     @Test
     void register_validUser_Ok() {
-        user.setLogin("dimamk");
-        user.setAge(64);
-        user.setPassword("qwerty213");
         assertEquals(user, registrationService.register(user),
                 "User must be registered");
     }
