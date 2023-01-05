@@ -113,7 +113,7 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         assertThrows(ValidationException.class, () ->
                 registrationService.register(user),
-                "Age can't be 0");
+                "User age can't be null");
     }
 
     @AfterEach

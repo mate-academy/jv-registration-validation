@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         checkUser(user);
         checkLogin(user.getLogin());
-        checkAge(user.getAge());
+        checkAge(user);
         checkPassword(user.getPassword());
         return storageDao.add(user);
     }
@@ -26,8 +26,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkAge(int age) {
-        if (age < MINIMAL_VALID_AGE) {
+    private void checkAge(User user) {
+        if (user.getAge() == null || user.getAge() < MINIMAL_VALID_AGE) {
             throw new ValidationException("Invalid data. You must be 18 years old to register");
         }
     }
