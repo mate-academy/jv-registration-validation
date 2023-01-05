@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.InvalidInputDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -12,18 +13,33 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new RuntimeException("Login can't be null");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with this login is already registered");
-        }
-        if (user.getPassword().length() < MIN_CHARACTERS_NUMBER) {
-            throw new RuntimeException("Password's length is less then 6 characters");
-        }
-        if (user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
-            throw new RuntimeException("Not valid age");
-        }
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
         return storageDao.add(user);
+    }
+
+    private void checkLogin(String login) {
+        if (login == null) {
+            throw new InvalidInputDataException("Login can't be null");
+        }
+        if (storageDao.get(login) != null) {
+            throw new InvalidInputDataException("User with this login is already registered");
+        }
+    }
+
+    private void checkPassword(String password) {
+        if (password == null) {
+            throw new InvalidInputDataException("Password can't be null");
+        }
+        if (password.length() < MIN_CHARACTERS_NUMBER) {
+            throw new InvalidInputDataException("Password's length is less then 6 characters");
+        }
+    }
+
+    private void checkAge(int age) {
+        if (age < MIN_AGE || age > MAX_AGE) {
+            throw new InvalidInputDataException("Not valid age");
+        }
     }
 }
