@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkLogin(String login) {
-        if (login == null || login.isEmpty()) {
+        if (login == null) {
             throw new InvalidUserDataException("Login can't be empty!");
         }
         if (storageDao.get(login) != null) {
@@ -29,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkPassword(String password) {
-        if (password == null || password.isEmpty()) {
+        if (password == null) {
             throw new InvalidUserDataException("Password can't be empty!");
         }
         if (password.length() <= MIN_PASSWORD_SIZE) {

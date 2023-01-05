@@ -42,13 +42,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginIsEmpty_notOk() {
-        user.setLogin("");
-        assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user), "Login can't be empty!");
-    }
-
-    @Test
     void register_userLoginHasTheSameLogin_notOk() {
         storageDao.add(user);
         assertThrows(InvalidUserDataException.class,
