@@ -15,24 +15,40 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidUserException("User can't be null");
         }
-        if (user.getLogin() == null) {
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
+        checkAvailability(user);
+        return storageDao.add(user);
+    }
+
+    private void checkLogin(String login) {
+        if (login == null) {
             throw new InvalidUserException("User login can't be null");
         }
-        if (user.getPassword() == null) {
+    }
+
+    private void checkPassword(String password) {
+        if (password == null) {
             throw new InvalidUserException("User password can't be null");
         }
-        if (user.getAge() == null) {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new InvalidUserException("User password must be more than 6 characters");
+        }
+    }
+
+    private void checkAge(Integer age) {
+        if (age == null) {
             throw new InvalidUserException("Age can't be null");
         }
+        if (age < MIN_AGE) {
+            throw new InvalidUserException("Age should be more or equal 18");
+        }
+    }
+
+    private void checkAvailability(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidUserException("This user is registered");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidUserException("Age should be more or equal 18");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidUserException("User password must be more than 6 characters");
-        }
-        return storageDao.add(user);
     }
 }
