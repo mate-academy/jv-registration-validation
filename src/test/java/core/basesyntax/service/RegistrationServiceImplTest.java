@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     void register_CorrectUser_Ok() {
         User actual = registrationService.register(defaultUser);
         boolean cont = Storage.people.contains(actual);
-        assertTrue(cont);
+        assertTrue(cont, "User should be add to Storage");
     }
 
     @Test
