@@ -6,36 +6,39 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int USER_VALID_AGE = 18;
+    private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        checkAge(user.getAge());
+        checkAge(user);
         checkLogin(user.getLogin());
         checkPassword(user.getPassword());
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
-    private void checkAge(int age) {
-        if (age < USER_VALID_AGE) {
-            throw new InvalidDataException("Invalid age for register " + age);
+    private void checkAge(User user) {
+        if (user.getAge() == null) {
+            throw new InvalidDataException("Age can`t be null");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new InvalidDataException("Can`t register user with age lower then " + MIN_AGE);
         }
     }
 
     private void checkLogin(String login) {
-        String existsLogin = null;
         if (login == null) {
             throw new InvalidDataException("Login can`t be null");
         }
         User user = storageDao.get(login);
         if (user != null) {
-            existsLogin = user.getLogin();
+            if (login.equals(user.getLogin())) {
+                throw new InvalidDataException("This login already exists");
+            }
         }
-        if (login.equals(existsLogin)) {
-            throw new InvalidDataException("This login already exists");
+        if (login.length() == 0) {
+            throw new InvalidDataException("Login can`t be empty");
         }
     }
 
