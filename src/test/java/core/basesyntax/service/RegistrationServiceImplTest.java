@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void chackLogin_existed_notOk() {
+    void checkLogin_existed_notOk() {
         registrationService.register(user);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(user), "User is already exists!"
