@@ -7,15 +7,18 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
+    private static final int MINIMUM_VALID_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationValidationException("Your data can't be empty");
+        }
         loginValidation(user.getLogin());
         passwordValidation(user.getPassword());
         ageValidation(user.getAge());
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void loginValidation(String login) {
@@ -33,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (password.length() < MINIMUM_PASSWORD_LENGTH) {
             throw new RegistrationValidationException(
-                    "Password must be at least 6 characters length");
+                    "Password must be at least " + MINIMUM_PASSWORD_LENGTH + " characters length");
         }
     }
 
@@ -44,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age < 0) {
             throw new RegistrationValidationException("Age value " + age + " is invalid");
         }
-        if (age < 18) {
+        if (age < MINIMUM_VALID_AGE) {
             throw new RegistrationValidationException("You must be of legal age");
         }
     }
