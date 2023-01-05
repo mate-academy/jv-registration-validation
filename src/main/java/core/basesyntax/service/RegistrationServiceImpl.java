@@ -43,11 +43,11 @@ public class RegistrationServiceImpl implements RegistrationService {
       
     private void ageValidation(Integer age) {
         if (age == null) {
-            throw new RegistrationException("Password can't be null");
+            throw new RegistrationException("Age can't be null");
         }
         if (age < MIN_USER_AGE) {
             throw new RegistrationException("User should be at least "
-                    + MIN_PASSWORD_LENGTH + " years old");
+                    + MIN_USER_AGE + " years old");
         }
     }
 }
