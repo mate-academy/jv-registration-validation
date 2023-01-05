@@ -17,6 +17,7 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "valid_login";
     private static final String ALREADY_EXISTS_LOGIN = "ValidLogin1";
     private static final String INVALID_PASSWORD = "12345";
+    private static final String EXCEPTION = InvalidDataException.class.toString();
     private static StorageDao storageDao = new StorageDaoImpl();
     private static RegistrationService registrationService;
 
@@ -40,18 +41,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_ok() {
+    void register_userWithValidCredentialsAddedToStorage_ok() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
         registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
-        Assertions.assertEquals(user, actual, "You should add user to storage");
+        Assertions.assertEquals(user, actual, "You should add user with valid credentials to storage");
     }
 
     @Test
     void register_checkUserAgeLowerThenMin_notOk() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE - 1);
         Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                String.format("%S is expected when age less then min", EXCEPTION));
 
     }
 
@@ -59,41 +61,47 @@ class RegistrationServiceImplTest {
     void register_nullLoginCheck_notOk() {
         User user = new User(null, DEFAULT_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                String.format("%S is expected when login is null", EXCEPTION));
     }
 
     @Test
     void register_checkForExistsLogin_notOk() {
         User user = new User(ALREADY_EXISTS_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                String.format("%S is expected when login is exists", EXCEPTION));
     }
 
     @Test
     void register_checkForInvalidPassword_notOk() {
         User user = new User(DEFAULT_LOGIN, INVALID_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                String.format("%S is expected when password is invalid", EXCEPTION));
     }
 
     @Test
     void register_checkForNullPassword_notOk() {
         User user = new User(DEFAULT_LOGIN, null, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                String.format("%S is expected when password is null", EXCEPTION));
     }
 
     @Test
     void register_checkEmptyLogin_notOk() {
         User user = new User("", DEFAULT_PASSWORD, MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                String.format("%S is expected when login is empty", EXCEPTION));
     }
 
     @Test
     void register_checkForNullAge_notOk() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, null);
         Assertions.assertThrows(InvalidDataException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                String.format("%S is expected when age is null", EXCEPTION));
     }
 }
