@@ -6,20 +6,20 @@ import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int VALID_PASSWORD_LENGTH = 6;
-    private static final int VALID_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        checkNull(user);
+        checkUser(user);
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
         return storageDao.add(user);
     }
 
-    private void checkNull(User user) {
+    private void checkUser(User user) {
         if (user == null) {
             throw new InvalidDataException("Can`t register null user");
         }
@@ -29,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Can`t register user with null login");
         }
-        if (user.getLogin().length() == 0) {
+        if (user.getLogin().isEmpty()) {
             throw new InvalidDataException("Can`t register user with empty login");
         }
         if (storageDao.get(user.getLogin()) != null) {
@@ -41,10 +41,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidDataException("Can`t register user with null password");
         }
-        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidDataException(
                     String.format("Can`t register user with password length less than %d",
-                            VALID_PASSWORD_LENGTH));
+                            MIN_PASSWORD_LENGTH));
         }
     }
 
@@ -52,10 +52,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new InvalidDataException("Can`t register user with null age");
         }
-        if (user.getAge() < VALID_AGE) {
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException(
                     String.format("Can`t register user with age less than %d",
-                            VALID_AGE));
+                            MIN_AGE));
         }
     }
 }
