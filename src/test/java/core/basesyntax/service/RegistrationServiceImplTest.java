@@ -8,7 +8,6 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -19,15 +18,11 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-    }
-
-    @BeforeEach
-    void setUp() {
-        User user1 = new User();
-        user1.setLogin("Bob");
-        user1.setAge(18);
-        user1.setPassword("123456");
-        storageDao.add(user1);
+        User user = new User();
+        user.setLogin("Bob");
+        user.setAge(18);
+        user.setPassword("123456");
+        storageDao.add(user);
     }
 
     @AfterEach
@@ -36,15 +31,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addNullUser_NotOk() {
-        User newUser = null;
+    void register_addNullUser_notOk() {
         Assertions.assertThrows(ValidationException.class,
-                () -> registrationService.register(newUser),
+                () -> registrationService.register(null),
                 "User has not to be null");
     }
 
     @Test
-    void register_addNullLogin_NotOk() {
+    void register_addNullLogin_notOk() {
         User newUser = new User();
         newUser.setAge(18);
         newUser.setPassword("123456");
@@ -55,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addNullAge_NotOk() {
+    void register_addNullAge_notOk() {
         User newUser = new User();
         newUser.setAge(null);
         newUser.setPassword("123456");
@@ -66,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addNullPassword_NotOk() {
+    void register_addNullPassword_notOk() {
         User newUser = new User();
         newUser.setAge(18);
         newUser.setPassword(null);
@@ -77,7 +71,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addInvalidUsersAge_NotOk() {
+    void register_addInvalidUsersAge_notOk() {
         User newUser = new User();
         newUser.setAge(17);
         newUser.setPassword("123456");
@@ -94,12 +88,12 @@ class RegistrationServiceImplTest {
         newUser.setPassword("123456");
         newUser.setLogin("John");
         registrationService.register(newUser);
-        User actual = storageDao.get(newUser.getLogin());
-        Assertions.assertEquals(newUser, actual, "All user`s fields are correct");
+        User expected = storageDao.get(newUser.getLogin());
+        Assertions.assertEquals(expected, newUser, "All user`s fields are correct");
     }
 
     @Test
-    void register_passwordLengthIsLessThanMinLength_Ok() {
+    void register_passwordLengthIsLessThanMinLength_ok() {
         User newUser = new User();
         newUser.setAge(18);
         newUser.setPassword("12345");
@@ -110,7 +104,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLengthIsGreaterThanMinLength_Ok() {
+    void register_passwordLengthIsGreaterThanMinLength_ok() {
         User newUser = new User();
         newUser.setAge(18);
         newUser.setPassword("1234567");
@@ -121,18 +115,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginExists_NotOk() {
+    void register_loginExists_notOk() {
         User newUser = new User();
         newUser.setAge(18);
         newUser.setPassword("123456");
         newUser.setLogin("Bob");
+        registrationService.register(newUser);
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(newUser),
                 "User is already exists");
     }
 
     @Test
-    void register_loginNotExists_NotOk() {
+    void register_validUser_ok() {
         User newUser = new User();
         newUser.setAge(18);
         newUser.setPassword("123456");
