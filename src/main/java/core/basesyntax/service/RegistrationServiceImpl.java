@@ -40,9 +40,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAge(int age) {
-        if (age <= 0) {
-            throw new ValidationException("Age can not be zero or negative");
-        }
         if (age < MIN_AGE) {
             throw new ValidationException("User age: " + age
                     + " is less than allowed: " + MIN_AGE);
