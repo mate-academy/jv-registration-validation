@@ -6,7 +6,7 @@ import core.basesyntax.exeption.InvalidUserException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_AGE_LINE = 18;
+    private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -23,12 +23,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidUserException("Your password is NULL");
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH && user.getPassword().length() > 0) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidUserException("Your password length is above "
-                    + "6 elements! Write a new one");
-        }
-        if (user.getPassword().length() == 0) {
-            throw new InvalidUserException("Your password length is empty! Enter new password");
+                    + MIN_PASSWORD_LENGTH + " elements! Write a new one");
         }
     }
 
@@ -36,12 +33,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new InvalidUserException("The age is null!");
         }
-        if (user.getAge() <= 0) {
-            throw new InvalidUserException("The age is 0 or above! Uncorrected value");
-        }
-        if (user.getAge() < MIN_AGE_LINE && user.getAge() > 0) {
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidUserException("The age: " + user.getAge()
-                    + " is above minimum value!");
+                    + " is below minimum value!");
         }
     }
 
