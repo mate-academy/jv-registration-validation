@@ -1,7 +1,6 @@
 package core.basesyntax.model;
 
 import core.basesyntax.exeption.InvalidEmailException;
-
 import java.util.Objects;
 
 public class User {
@@ -35,7 +34,8 @@ public class User {
             throw new InvalidEmailException("Invalid e-mail mail!");
         }
         if (!Character.isLetter(login.charAt(0))) {
-            throw new InvalidEmailException("Your e-mail should start from the letter! Now it's : " + login.charAt(0));
+            throw new InvalidEmailException("Your e-mail should start from the letter! Now it's : "
+                    + login.charAt(0));
         }
         this.login = login;
     }

@@ -26,14 +26,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserException("The age is 0 or above! Uncorrected value");
         }
         if (user.getAge() < MIN_AGE_LINE && user.getAge() > 0) {
-            throw new InvalidUserException("The age: " + user.getAge() + " is above minimum value!");
+            throw new InvalidUserException("The age: " + user.getAge()
+                    + " is above minimum value!");
 
         }
         if (user.getPassword() == null) {
             throw new InvalidUserException("Your password is NULL");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH && user.getPassword().length() > 0) {
-            throw new InvalidUserException("Your password length is above 6 elements! Write a new one");
+            throw new InvalidUserException("Your password length is above "
+                    + "6 elements! Write a new one");
         }
         if (user.getPassword().length() == 0) {
             throw new InvalidUserException("Your password length is empty! Enter new password");

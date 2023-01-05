@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exeption.InvalidEmailException;
 import core.basesyntax.exeption.InvalidUserException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.*;
