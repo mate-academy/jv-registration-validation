@@ -37,47 +37,43 @@ class RegistrationServiceImplTest {
     @Test
     void register_userLoginOnNull_notOk() {
         user.setLogin(null);
-        Exception exception = assertThrows(InvalidUserDataException.class,
+        assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user), "Login can't be empty!");
     }
 
     @Test
     void register_userLoginIsEmpty_notOk() {
         user.setLogin("");
-        Exception exception = assertThrows(InvalidUserDataException.class,
+        assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user), "Login can't be empty!");
     }
 
     @Test
     void register_userLoginHasTheSameLogin_notOk() {
         storageDao.add(user);
-        User user1 = new User();
-        user1.setLogin(DEFAULT_LOGIN);
-        user1.setAge(32);
-        user1.setPassword("qws4123123");
-        Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user1), "User with this login "
-                        + user1.getLogin() + " is already registered!");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(user), "User with this login "
+                        + user.getLogin() + " is already registered!");
     }
 
     @Test
     void register_userPasswordIsNull_notOk() {
         user.setPassword(null);
-        Exception exception = assertThrows(InvalidUserDataException.class,
+        assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user), "Password can't be empty!");
     }
 
     @Test
     void register_userPasswordIsEmpty_notOk() {
         user.setPassword("");
-        Exception exception = assertThrows(InvalidUserDataException.class,
+        assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user), "Password can't be empty!");
     }
 
     @Test
     void register_userPasswordLengthLessMin_notOk() {
         user.setPassword("12");
-        Exception exception = assertThrows(InvalidUserDataException.class,
+        assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user), "Password length can't be"
                         + "less then 6!");
     }
@@ -85,14 +81,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAgeOnNull_notOk() {
         user.setAge(null);
-        Exception exception = assertThrows(InvalidUserDataException.class,
+        assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user), "Your age can't be null");
     }
 
     @Test
     void register_userAgeOlderThan18_notOk() {
         user.setAge(11);
-        Exception exception = assertThrows(InvalidUserDataException.class,
+        assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user), "Your age " + user.getAge() + " less"
                         + " then allowed: 18");
     }
