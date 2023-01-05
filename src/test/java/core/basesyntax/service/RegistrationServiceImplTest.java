@@ -167,16 +167,6 @@ class RegistrationServiceImplTest {
         user.setAge(17);
         Exception exception = assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(user));
-        assertEquals("User age should not be less than 18.", exception.getMessage());
-    }
-
-    @Test
-    void register_userAgeIsGreaterThanMaxAge_notOk() {
-        user.setLogin("sweaeter");
-        user.setPassword("qwerty1999");
-        user.setAge(101);
-        Exception exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationServiceImpl.register(user));
-        assertEquals("User age should not be greater than 100.", exception.getMessage());
+        assertEquals("User age should not be less than min age.", exception.getMessage());
     }
 }

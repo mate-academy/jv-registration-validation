@@ -11,60 +11,66 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int PASSWORD_MIN_LENGTH = 6;
     private static final int PASSWORD_MAX_LENGTH = 25;
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 100;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
+        return storageDao.add(user);
+    }
+
+    private void checkLogin(String login) {
+        if (login == null) {
             throw new InvalidUserDataException("Login should not be null.");
         }
-        if (user.getLogin().isEmpty()) {
+        if (login.isEmpty()) {
             throw new InvalidUserDataException("Login should not be empty.");
         }
-        if (user.getLogin().isBlank()) {
+        if (login.isBlank()) {
             throw new InvalidUserDataException("Login should not be blank.");
         }
-        if (user.getLogin().length() < LOGIN_MIN_LENGTH) {
+        if (login.length() < LOGIN_MIN_LENGTH) {
             throw new InvalidUserDataException("User login should be at least " + LOGIN_MIN_LENGTH
                     + " characters.");
         }
-        if (user.getLogin().length() > LOGIN_MAX_LENGTH) {
+        if (login.length() > LOGIN_MAX_LENGTH) {
             throw new InvalidUserDataException("User login should not be more than "
                     + LOGIN_MAX_LENGTH + " characters.");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserDataException("User with login " + user.getLogin()
+        if (storageDao.get(login) != null) {
+            throw new InvalidUserDataException("User with login " + login
                     + " is already registered.");
         }
-        if (user.getPassword() == null) {
+    }
+
+    private void checkPassword(String password) {
+        if (password == null) {
             throw new InvalidUserDataException("Password should not be null.");
         }
-        if (user.getPassword().isEmpty()) {
+        if (password.isEmpty()) {
             throw new InvalidUserDataException("Password should not be empty.");
         }
-        if (user.getPassword().isBlank()) {
+        if (password.isBlank()) {
             throw new InvalidUserDataException("Password should not be blank.");
         }
-        if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
+        if (password.length() < PASSWORD_MIN_LENGTH) {
             throw new InvalidUserDataException("Password should be at least "
                     + PASSWORD_MIN_LENGTH + " characters.");
         }
-        if (user.getPassword().length() > PASSWORD_MAX_LENGTH) {
+        if (password.length() > PASSWORD_MAX_LENGTH) {
             throw new InvalidUserDataException("Password should not be more than "
                     + PASSWORD_MAX_LENGTH + " characters.");
         }
-        if (user.getAge() == null) {
+    }
+
+    private void checkAge(Integer age) {
+        if (age == null) {
             throw new InvalidUserDataException("User age should not be null.");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidUserDataException("User age should not be less than "
-                    + MIN_AGE + ".");
+        if (age < MIN_AGE) {
+            throw new InvalidUserDataException("User age should not be less than min age.");
         }
-        if (user.getAge() > MAX_AGE) {
-            throw new InvalidUserDataException("User age should not be greater than "
-                    + MAX_AGE + ".");
-        }
-        return storageDao.add(user);
     }
 }
