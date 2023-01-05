@@ -1,9 +1,8 @@
 package core.basesyntax.service;
 
-import core.basesyntax.customException.InvalidDataException;
+import core.basesyntax.customexception.InvalidDataException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {

@@ -1,13 +1,15 @@
 package core.basesyntax.service;
 
-import core.basesyntax.customException.InvalidDataException;
+import core.basesyntax.customexception.InvalidDataException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int USER_VALID_AGE = 18;
@@ -39,7 +41,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User user = new User(VALID_LOGIN, VALID_PASSWORD ,USER_VALID_AGE);
+        User user = new User(VALID_LOGIN, VALID_PASSWORD,USER_VALID_AGE);
         registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
         Assertions.assertEquals(user, actual);
