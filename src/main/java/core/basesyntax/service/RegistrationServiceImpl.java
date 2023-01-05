@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null || user.getAge() == null || user.getPassword() == null) {
-            throw new InvalidDataException("Login, age or password cannot be null!");
+            throw new InvalidDataException("Login, age and password cannot be null!");
         }
 
         if (storageDao.get(user.getLogin()) != null) {
@@ -20,12 +20,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getAge() < MIN_AGE) {
-            throw new InvalidDataException("Age cannot be less than" + MIN_AGE);
+            throw new InvalidDataException("User age: " + user.getAge()
+                    + " is less than allowed: " + MIN_AGE);
         }
 
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidDataException("Password length should have at least"
-                    + MIN_PASSWORD_LENGTH + "symbols.");
+            throw new InvalidDataException("User password: " + user.getPassword()
+                    + " is less than expected: " + MIN_PASSWORD_LENGTH);
         }
         return storageDao.add(user);
     }

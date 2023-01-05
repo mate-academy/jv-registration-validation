@@ -5,4 +5,3 @@ public class InvalidDataException extends RuntimeException {
         super(message);
     }
 }
-

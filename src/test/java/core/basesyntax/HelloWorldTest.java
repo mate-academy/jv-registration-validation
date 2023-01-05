@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
-    private static final int DEFAULT_AGE = 18;
+    private static final int MIN_AGE = 18;
     private static final String DEFAULT_PASSWORD = "123456";
     private static final String DEFAULT_LOGIN = "user_login@gmail.com";
     private static User user;
@@ -26,9 +26,9 @@ public class HelloWorldTest {
     }
 
     @BeforeEach
-    void getDefaultUser() {
+    void initDefaultUser() {
         user = new User();
-        user.setAge(DEFAULT_AGE);
+        user.setAge(MIN_AGE);
         user.setPassword(DEFAULT_PASSWORD);
         user.setLogin(DEFAULT_LOGIN);
     }
@@ -59,15 +59,8 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_Age_Ok() {
-        user.setAge(32);
-        final User actual = registrationService.register(user);
-        assertEquals(user,actual);
-    }
-
-    @Test
     void register_lessAge_notOk() {
-        user.setAge(17);
+        user.setAge(MIN_AGE - 1);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                 "Not valid age");
     }
@@ -94,10 +87,10 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_password_Ok() {
+    void register_password_ok() {
         user.setPassword("viktoriya");
         User actual = registrationService.register(user);
-        assertEquals(user,actual);
+        assertEquals(user,actual,"User add in Storage");
     }
 
     @Test
