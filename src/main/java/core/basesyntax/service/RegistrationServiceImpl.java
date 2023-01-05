@@ -4,7 +4,6 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.InvalidInputDataException;
 import core.basesyntax.model.User;
-import org.jetbrains.annotations.NotNull;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_USER_AGE = 18;
@@ -40,7 +39,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputDataException("Password can't be null");
         }
         if (user.getPassword().length() <= MIN_PASSWORD_LENGTH) {
-            throw new InvalidInputDataException("Password length must be more or equals " + MIN_PASSWORD_LENGTH);
+            throw new InvalidInputDataException("Password length must be more or equals "
+                    + MIN_PASSWORD_LENGTH);
         }
     }
 

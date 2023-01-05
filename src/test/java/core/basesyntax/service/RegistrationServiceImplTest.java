@@ -20,6 +20,7 @@ class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "userPassword";
     private static final String VALID_LOGIN = "validLogin";
     private static final String SECOND_VALID_LOGIN = "qwerty";
+    private static final String DEFAULT_LOGIN = "default login";
 
     @Test
     void register_userIsNull_NotOk() {
@@ -46,7 +47,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAgeLessThanMin_NotOk() {
-        User newUser = new User("thisIsLogin", VALID_PASSWORD, VALID_AGE - 5);
+        User newUser = new User(DEFAULT_LOGIN, VALID_PASSWORD, VALID_AGE - 5);
         Assertions.assertThrows(RuntimeException.class,
                 () -> registrationService.register(newUser), "Not valid age"
         );
@@ -54,27 +55,27 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAgeEnough_Ok() {
-        User user = new User("newLogin", VALID_PASSWORD, VALID_AGE + 5);
+        User user = new User(DEFAULT_LOGIN, VALID_PASSWORD, VALID_AGE + 5);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
     public void register_ageFloorEdge_NotOk() {
-        User newUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE - 1);
+        User newUser = new User(DEFAULT_LOGIN, VALID_PASSWORD, VALID_AGE - 1);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(newUser));
     }
 
     @Test
     public void register_userAgeIsNull_NotOk() {
-        User user = new User("myLogin", VALID_PASSWORD, null);
+        User user = new User(DEFAULT_LOGIN, VALID_PASSWORD, null);
         Assertions.assertThrows(RuntimeException.class, () ->
                 registrationService.register(user), "Age cant be null");
     }
 
     @Test
     void register_passwordIsNull_NotOk() {
-        User newUser = new User("someLogin", null, VALID_AGE);
+        User newUser = new User(DEFAULT_LOGIN, null, VALID_AGE);
         Assertions.assertThrows(RuntimeException.class,
                 () -> registrationService.register(newUser)
         );
@@ -82,7 +83,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_checkPasswordLength_NotOk() {
-        User newUser = new User("another", "abc", VALID_AGE);
+        User newUser = new User(DEFAULT_LOGIN, "abc", VALID_AGE);
         Assertions.assertThrows(RuntimeException.class,
                 () -> registrationService.register(newUser)
         );
@@ -90,7 +91,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLengthOk_Ok() {
-        User newUser = new User("anotherLogin","enoughLengthPassword",VALID_AGE);
+        User newUser = new User(DEFAULT_LOGIN, "enoughLengthPassword", VALID_AGE);
         assertEquals(newUser, registrationService.register(newUser));
     }
 
