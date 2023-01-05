@@ -15,13 +15,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationValidationException("Your data can't be empty");
         }
-        loginValidation(user.getLogin());
-        passwordValidation(user.getPassword());
-        ageValidation(user.getAge());
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
         return storageDao.add(user);
     }
 
-    private void loginValidation(String login) {
+    private void checkLogin(String login) {
         if (login == null) {
             throw new RegistrationValidationException("Login field is empty");
         }
@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void passwordValidation(String password) {
+    private void checkPassword(String password) {
         if (password == null) {
             throw new RegistrationValidationException("Password field is empty");
         }
@@ -40,12 +40,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void ageValidation(Integer age) {
+    private void checkAge(Integer age) {
         if (age == null) {
             throw new RegistrationValidationException("Age field is empty");
-        }
-        if (age < 0) {
-            throw new RegistrationValidationException("Age value " + age + " is invalid");
         }
         if (age < MINIMUM_VALID_AGE) {
             throw new RegistrationValidationException("You must be of legal age");

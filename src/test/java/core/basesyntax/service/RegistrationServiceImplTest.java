@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.RegistrationValidationException;
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +14,9 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String EXCEPTION_MESSAGE =
             RegistrationValidationException.class.toString();
-    private static final String FIRST_LOGIN = "abc";
-    private static final String SECOND_LOGIN = "def";
-    private static final String PASSWORD = "abcdef";
-    private static final String INVALID_PASSWORD = "xyz";
-    private static final Integer NEGATIVE_AGE = -3;
-    private static final Integer INVALID_AGE = 9;
-    private static final Integer AGE = 18;
+    private static final String DEFAULT_LOGIN = "abc";
+    private static final String DEFAULT_PASSWORD = "abcdef";
+    private static final Integer MIN_AGE = 18;
     private static RegistrationService registrationService;
     private User user;
 
@@ -32,9 +28,14 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin(FIRST_LOGIN);
-        user.setPassword(PASSWORD);
-        user.setAge(AGE);
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setAge(MIN_AGE);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -54,12 +55,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingLogin_notOk() {
-        StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(user);
+        registrationService.register(user);
         assertThrows(RegistrationValidationException.class,
                 () -> registrationService.register(user),
                 String.format("%s should be thrown for already existing login: "
-                        + FIRST_LOGIN, EXCEPTION_MESSAGE));
+                        + DEFAULT_LOGIN, EXCEPTION_MESSAGE));
     }
 
     @Test
@@ -72,11 +72,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidPassword_notOk() {
-        user.setPassword(INVALID_PASSWORD);
+        user.setPassword("xyz");
         assertThrows(RegistrationValidationException.class,
                 () -> registrationService.register(user),
                 String.format("%s should be thrown for invalid password: "
-                        + INVALID_PASSWORD, EXCEPTION_MESSAGE));
+                        + user.getPassword(), EXCEPTION_MESSAGE));
     }
 
     @Test
@@ -88,26 +88,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_negativeAge_notOk() {
-        user.setAge(NEGATIVE_AGE);
-        assertThrows(RegistrationValidationException.class,
-                () -> registrationService.register(user),
-                String.format("%s should be thrown for a negative age: "
-                        + NEGATIVE_AGE, EXCEPTION_MESSAGE));
-    }
-
-    @Test
     void register_invalidAge_notOk() {
-        user.setAge(INVALID_AGE);
+        user.setAge(9);
         assertThrows(RegistrationValidationException.class,
                 () -> registrationService.register(user),
                 String.format("%s should be thrown for a invalid age: "
-                        + INVALID_AGE, EXCEPTION_MESSAGE));
+                        + user.getAge(), EXCEPTION_MESSAGE));
     }
 
     @Test
     void register_validUser_Ok() {
-        user.setLogin(SECOND_LOGIN);
         assertEquals(user, registrationService.register(user),
                 "User must be registered");
     }
