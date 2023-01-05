@@ -110,7 +110,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_isAdded_ok() {
+    void register_validUser_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
