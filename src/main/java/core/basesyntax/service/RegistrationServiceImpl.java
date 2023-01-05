@@ -2,10 +2,9 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
-public class RegistrationServiceImpl extends Storage implements RegistrationService {
+public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMAL_VALID_AGE = 18;
     private static final int MINIMAL_VALID_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
