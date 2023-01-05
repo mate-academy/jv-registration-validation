@@ -31,64 +31,89 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidAge_notOk() {
+    void register_userAgeLowerThenValid_notOk() {
         user.setAge(15);
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "You should be older than 18 to register");
     }
 
     @Test
     void register_invalidPasswordLength_notOk() {
         user.setPassword("hello");
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "Your password must contain more than 5 symbols");
     }
 
     @Test
     void register_passwordIsEmpty_notOk() {
         user.setPassword("");
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "Your password can't be empty");
     }
 
     @Test
     void register_userLoginIsNull_notOk() {
         user.setLogin(null);
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "login can't be null");
     }
 
     @Test
     void register_invalidLoginLength_notOk() {
         user.setLogin("");
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "Your login can't be empty");
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         user.setPassword(null);
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "password can't be null");
     }
 
     @Test
     void register_uniUserLogin_notOk() {
         registrationService.register(user);
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "Such user already registered");
     }
 
     @Test
     void register_validUser_ok() {
-        assertEquals(user, registrationService.register(user));
+        assertEquals(user, registrationService.register(user),
+                "User registered");
     }
 
     @Test
     void register_negativeAge_notOk() {
         user.setAge(-19);
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user));
+                registrationService.register(user),
+                "Your age should be positive");
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        user = null;
+        assertThrows(ValidationException.class, () ->
+                registrationService.register(user),
+                "User is null");
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        user.setAge(0);
+        assertThrows(ValidationException.class, () ->
+                registrationService.register(user),
+                "Age can't be 0");
     }
 
     @AfterEach
