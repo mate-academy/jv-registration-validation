@@ -45,7 +45,8 @@ class RegistrationServiceImplTest {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
         registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
-        Assertions.assertEquals(user, actual, "You should add user with valid credentials to storage");
+        Assertions.assertEquals(user, actual,
+                "You should add user with valid credentials to storage");
     }
 
     @Test
