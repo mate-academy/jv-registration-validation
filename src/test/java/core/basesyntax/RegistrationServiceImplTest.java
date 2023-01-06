@@ -65,7 +65,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addUserAlreadyExist_NotOk() {
-        regService.register(user);
+        User user = new User();
+        user.setLogin("Ivan_Ivanov");
         assertThrows(RuntimeException.class, () -> regService.register(user),
                 " This user can't created, it already exist");
     }
@@ -74,14 +75,14 @@ class RegistrationServiceImplTest {
     void register_addYoungAge_NotOk() {
         user.setAge(12);
         assertThrows(RuntimeException.class, () -> regService.register(user),
-                "This user is to young, minimum age 18");
+                "User age should be greater than 18");
     }
 
     @Test
     void register_addIncorrectAge_NotOk() {
         user.setAge(Integer.MIN_VALUE);
         assertThrows(RuntimeException.class, () -> regService.register(user),
-                "This age is incorrect, must be from 18 to 120");
+                "User age should be greater than 18");
     }
 
     @Test
@@ -89,7 +90,8 @@ class RegistrationServiceImplTest {
         user.setPassword("12345");
         user.setAge(17);
         assertThrows(RuntimeException.class, () -> regService.register(user),
-                "This user: " + user + " can't be created");
+                "This password: " + user.getPassword() + " to short, must be 6 symbols."
+                + " User age should be greater than 18");
     }
-
 }
+

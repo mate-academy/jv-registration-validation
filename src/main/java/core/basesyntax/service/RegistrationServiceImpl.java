@@ -5,21 +5,21 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MINIUM_PASSWORD_LENGTH = 6;
+    private static final int MINIMUM_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 120;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        getUser(user);
-        getLogin(user);
-        getPassword(user);
-        getAge(user);
+        checkUser(user);
+        checkLogin(user);
+        checkPassword(user);
+        checkAge(user);
         return storageDao.add(user);
     }
 
-    private static void getAge(User user) {
+    private static void checkAge(User user) {
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("user must be at least 18 years old");
         }
@@ -28,17 +28,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void getPassword(User user) {
+    private static void checkPassword(User user) {
         if (user.getPassword() == null
                 || user.getPassword().isEmpty()) {
             throw new RuntimeException("password cannot be empty");
         }
-        if (user.getPassword().length() < MINIUM_PASSWORD_LENGTH) {
-            throw new RuntimeException("password must contain at least 8 characters");
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new RuntimeException("password must contain at least 6 characters");
         }
     }
 
-    private void getLogin(User user) {
+    private void checkLogin(User user) {
         if (user.getLogin() == null
                 || user.getLogin().isEmpty()
                 || !Character.isLetter(user.getLogin().charAt(0))
@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void getUser(User user) {
+    private static void checkUser(User user) {
         if (user == null) {
             throw new RuntimeException("user is null");
         }
