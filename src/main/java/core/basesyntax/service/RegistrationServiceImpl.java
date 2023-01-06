@@ -7,7 +7,6 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 120;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -33,12 +32,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputDataException("Password can't be null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidInputDataException("Password's length is less then 6 characters");
+            throw new InvalidInputDataException(
+                    "Password's length is less then MIN_PASSWORD_LENGTH characters");
         }
     }
 
-    private void checkAge(int age) {
-        if (age < MIN_AGE || age > MAX_AGE) {
+    private void checkAge(Integer age) {
+        if (age == null) {
+            throw new InvalidInputDataException("Age value can't be null");
+        }
+        if (age < MIN_AGE) {
             throw new InvalidInputDataException("Not valid age");
         }
     }
