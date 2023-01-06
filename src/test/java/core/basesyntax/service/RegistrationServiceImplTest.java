@@ -102,7 +102,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        user = null;
         assertThrows(ValidationException.class, () ->
                 registrationService.register(null),
                 "User is null");

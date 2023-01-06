@@ -19,9 +19,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkLogin(String login) {
-        if (login == null || login.length() == 0) {
+        if (login == null || login.isEmpty()) {
             throw new ValidationException("Invalid data. User login can't be null or empty");
-        } else if (storageDao.get(login) != null) {
+        }
+        if (storageDao.get(login) != null) {
             throw new ValidationException("Invalid data. User with this login already exists");
         }
     }
