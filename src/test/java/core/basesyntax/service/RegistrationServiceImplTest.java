@@ -11,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService;
     private static final String DEFAULT_LOGIN = "valid_login";
     private static final String DEFAULT_PASSWORD = "valid_password";
     private static final int DEFAULT_AGE = 25;
+    private static RegistrationService registrationService;
     private User user;
 
     @BeforeAll
@@ -104,7 +104,7 @@ class RegistrationServiceImplTest {
     void register_nullUser_notOk() {
         user = null;
         assertThrows(ValidationException.class, () ->
-                registrationService.register(user),
+                registrationService.register(null),
                 "User is null");
     }
 

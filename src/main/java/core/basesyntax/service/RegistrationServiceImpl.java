@@ -13,31 +13,34 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         checkUser(user);
         checkLogin(user.getLogin());
-        checkAge(user);
+        checkAge(user.getAge());
         checkPassword(user.getPassword());
         return storageDao.add(user);
     }
 
     private void checkLogin(String login) {
-        if (storageDao.get(login) != null) {
+        if (login == null || login.length() == 0) {
+            throw new ValidationException("Invalid data. User login can't be null or empty");
+        } else if (storageDao.get(login) != null) {
             throw new ValidationException("Invalid data. User with this login already exists");
-        } else if (login == null || login.length() == 0) {
-            throw new ValidationException("Invalid data. User login can't be null");
         }
     }
 
-    private void checkAge(User user) {
-        if (user.getAge() == null || user.getAge() < MINIMAL_VALID_AGE) {
-            throw new ValidationException("Invalid data. You must be 18 years old to register");
+    private void checkAge(Integer age) {
+        if (age == null || age < MINIMAL_VALID_AGE) {
+            throw new ValidationException("Invalid data. You must be "
+                    + MINIMAL_VALID_AGE + " years old to register");
         }
     }
 
     private void checkPassword(String password) {
         if (password == null) {
             throw new ValidationException("Invalid data. Your password can't be null");
-        } else if (password.length() < MINIMAL_VALID_PASSWORD_LENGTH) {
+        }
+        if (password.length() < MINIMAL_VALID_PASSWORD_LENGTH) {
             throw new ValidationException("Invalid data. "
-                    + "Your password should be at least 6 characters");
+                    + "Your password should be at least "
+                    + MINIMAL_VALID_PASSWORD_LENGTH + " characters");
         }
     }
 
