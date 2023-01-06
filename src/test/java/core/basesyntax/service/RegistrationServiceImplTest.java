@@ -116,8 +116,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validLogin_Ok() {
-        actual = new User("DEFAULT_LOGIN", "DEFAULT_PASSWORD", DEFAULT_AGE);
-        Assertions.assertEquals(actual, registrationService.register(actual),
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual,
                 "User added");
     }
 
