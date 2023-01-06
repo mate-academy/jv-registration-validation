@@ -3,26 +3,23 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidUserDataException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static final String DEFAULT_LOGIN = "dimasmuk10@gmail.com";
     private static final int DEFAULT_AGE = 23;
     private static final String DEFAULT_PASSWORD = "1234qwerty";
-    private static StorageDao storageDao;
     private static RegistrationService registrationService;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -34,6 +31,11 @@ class RegistrationServiceImplTest {
         user.setPassword(DEFAULT_PASSWORD);
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
     void register_userLoginOnNull_notOk() {
         user.setLogin(null);
@@ -43,10 +45,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userLoginHasTheSameLogin_notOk() {
-        storageDao.add(user);
-        assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user), "User with this login "
-                        + user.getLogin() + " is already registered!");
+        registrationService.register(user);
+        assertThrows(InvalidUserDataException.class, () -> registrationService.register(user),
+                "Method should throw InvalidInputException if user with this login exists");
     }
 
     @Test
@@ -92,4 +93,3 @@ class RegistrationServiceImplTest {
                 "User must be registered");
     }
 }
-
