@@ -8,13 +8,13 @@ import core.basesyntax.model.User;
 public class ValidationServiceImpl implements ValidationService {
     private static final int ADULT_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
-    private static final String EMPTY_LOGIN_MESSAGE = "Login is empty";
-    private static final String EMPTY_PASSWORD_MESSAGE = "Password is empty";
-    private static final String EMPTY_AGE_MESSAGE = "Age is empty";
+    private static final String NULL_LOGIN_MESSAGE = "Login is null";
+    private static final String NULL_PASSWORD_MESSAGE = "Password is null";
+    private static final String NULL_AGE_MESSAGE = "Age is null";
     private static final String MIN_LENGTH_PASSWORD_MESSAGE
             = "Password needs 6 characters at least";
-    private static final String MIN_LIMIT_AGE_MESSAGE = "You are so little";
-    private static final String EMPTY_USER_MESSAGE = "User is empty";
+    private static final String MIN_LIMIT_AGE_MESSAGE = "User age is less than min age";
+    private static final String NULL_USER_MESSAGE = "User is null";
     private final StorageDao storageDao = new StorageDaoImpl();
 
     private void notNullInput(Object input, String message) {
@@ -37,13 +37,13 @@ public class ValidationServiceImpl implements ValidationService {
 
     @Override
     public void validateUser(User user) {
-        notNullInput(user, EMPTY_USER_MESSAGE);
+        notNullInput(user, NULL_USER_MESSAGE);
         String password = user.getPassword();
         String login = user.getLogin();
         Integer age = user.getAge();
-        notNullInput(login, EMPTY_LOGIN_MESSAGE);
-        notNullInput(password, EMPTY_PASSWORD_MESSAGE);
-        notNullInput(age, EMPTY_AGE_MESSAGE);
+        notNullInput(login, NULL_LOGIN_MESSAGE);
+        notNullInput(password, NULL_PASSWORD_MESSAGE);
+        notNullInput(age, NULL_AGE_MESSAGE);
         existsLogin(login);
         inputMinLimit(MIN_PASSWORD_LENGTH, password.length(), MIN_LENGTH_PASSWORD_MESSAGE);
         inputMinLimit(ADULT_AGE, age, MIN_LIMIT_AGE_MESSAGE);
