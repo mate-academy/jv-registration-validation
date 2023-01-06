@@ -48,7 +48,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserException("Password field can't be empty.");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidUserException("The password length must be minimum " + MIN_PASSWORD_LENGTH
+            throw new InvalidUserException("The password length must be minimum "
+                    + MIN_PASSWORD_LENGTH
                     + " characters, and your password length is : " + password.length());
         }
     }
