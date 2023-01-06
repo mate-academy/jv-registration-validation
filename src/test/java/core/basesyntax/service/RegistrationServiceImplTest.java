@@ -8,31 +8,20 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
     private static final String DEFAULT_PASSWORD = "valid_password";
     private static final String DEFAULT_LOGIN = "valid_login";
-    private static final String ALREADY_EXISTS_LOGIN = "ValidLogin1";
-    private static final String INVALID_PASSWORD = "12345";
     private static final String EXCEPTION = InvalidDataException.class.toString();
-    private static StorageDao storageDao = new StorageDaoImpl();
+    private static StorageDao storageDao;
     private static RegistrationService registrationService;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-    }
-
-    @BeforeEach
-    void setUp() {
-        User user1 = new User(ALREADY_EXISTS_LOGIN, "ValidPassword1", 25);
-        User user2 = new User("ValidLogin2", "ValidPassword2", 27);
-        storageDao.add(user1);
-        storageDao.add(user2);
     }
 
     @AfterEach
@@ -43,8 +32,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithValidCredentialsAddedToStorage_ok() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
-        registrationService.register(user);
-        User actual = storageDao.get(user.getLogin());
+        User actual = registrationService.register(user);
         Assertions.assertEquals(user, actual,
                 "You should add user with valid credentials to storage");
     }
@@ -68,7 +56,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_checkForExistsLogin_notOk() {
-        User user = new User(ALREADY_EXISTS_LOGIN, DEFAULT_PASSWORD, MIN_AGE);
+        User user = new User("ValidLogin1", DEFAULT_PASSWORD, MIN_AGE);
+        registrationService.register(user);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user),
                 String.format("%S is expected when login is exists", EXCEPTION));
@@ -76,7 +65,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_checkForInvalidPassword_notOk() {
-        User user = new User(DEFAULT_LOGIN, INVALID_PASSWORD, MIN_AGE);
+        User user = new User(DEFAULT_LOGIN, "12345", MIN_AGE);
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user),
                 String.format("%S is expected when password is invalid", EXCEPTION));

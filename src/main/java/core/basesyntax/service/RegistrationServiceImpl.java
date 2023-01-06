@@ -31,11 +31,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new InvalidDataException("Login can`t be null");
         }
+        if (login.isEmpty()) {
+            throw new InvalidDataException("Login can`t be empty");
+        }
         if (storageDao.get(login) != null) {
             throw new InvalidDataException("This login already exists");
-        }
-        if (login.length() == 0) {
-            throw new InvalidDataException("Login can`t be empty");
         }
     }
 
@@ -44,7 +44,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Password can`t be null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidDataException("Password length can`t be less than 6");
+            throw new InvalidDataException("Password length can`t be less than "
+                    + MIN_PASSWORD_LENGTH);
         }
     }
 }
