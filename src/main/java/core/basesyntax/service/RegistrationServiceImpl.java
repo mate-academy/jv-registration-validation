@@ -20,17 +20,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(User user) {
         if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("user must be at least 18 years old");
+            throw new RuntimeException("User must be at least 18 years old");
         }
     }
 
     private void checkPassword(User user) {
         if (user.getPassword() == null
                 || user.getPassword().isEmpty()) {
-            throw new RuntimeException("password cannot be empty");
+            throw new RuntimeException("Password cannot be empty");
         }
         if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new RuntimeException("password must contain at least 6 characters");
+            throw new RuntimeException("Password must contain at least 6 characters");
         }
     }
 
@@ -39,16 +39,16 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin().isEmpty()
                 || !Character.isLetter(user.getLogin().charAt(0))
                 || user.getLogin().contains("\\W")) {
-            throw new RuntimeException("incorrect login");
+            throw new RuntimeException("Incorrect login");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("login already exists");
+            throw new RuntimeException("Login already exists");
         }
     }
 
     private void checkUser(User user) {
         if (user == null) {
-            throw new RuntimeException("user is null");
+            throw new RuntimeException("User is null");
         }
     }
 }
