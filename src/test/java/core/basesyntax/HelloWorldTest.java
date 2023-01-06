@@ -46,7 +46,6 @@ public class HelloWorldTest {
 
     @Test
     void register_addNullUser_notOk() {
-        user = null;
         assertThrows(ValidationException.class, () -> registrationService.register(null),
                 "User can't be null");
     }
