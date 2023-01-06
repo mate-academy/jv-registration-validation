@@ -40,7 +40,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_login_isNull_notOk() {
+    void register_loginNull_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
@@ -94,7 +94,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_userIdIsNull_notOk() {
+    void register_userIdNull_notOk() {
         registrationService.register(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
