@@ -17,7 +17,6 @@ class RegistrationServiceImplTest {
     private static final int DEFAULT_AGE = 18;
     private static final String EXCEPTION = InvalidInputDataException.class.toString();
     private static RegistrationServiceImpl registrationService;
-    private static User actual;
 
     @BeforeAll
     static void beforeAll() {
@@ -31,84 +30,84 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginNull_NotOk() {
-        actual = new User(null, DEFAULT_PASSWORD, DEFAULT_AGE);
+    void register_loginNull_notOk() {
+        User actual = new User(null, DEFAULT_PASSWORD, DEFAULT_AGE);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_passwordInvalid_NotOk() {
-        actual = new User("useruser1", "123", DEFAULT_AGE);
+    void register_passwordInvalid_notOk() {
+        User actual = new User("useruser1", "123", DEFAULT_AGE);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_ageInvalid_NotOk() {
-        actual = new User("useruser1", DEFAULT_PASSWORD, 16);
+    void register_ageInvalid_notOk() {
+        User actual = new User("useruser1", DEFAULT_PASSWORD, 16);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_loginRegistered_NotOk() {
-        actual = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+    void register_loginRegistered_notOk() {
+        User actual = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_loginNullAndPasswordInvalid_NotOk() {
-        actual = new User(null, "123", DEFAULT_AGE);
+    void register_loginNullAndPasswordInvalid_notOk() {
+        User actual = new User(null, "123", DEFAULT_AGE);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_loginNullAndAgeInvalid_NotOk() {
-        actual = new User(null, DEFAULT_PASSWORD, 15);
+    void register_loginNullAndAgeInvalid_notOk() {
+        User actual = new User(null, DEFAULT_PASSWORD, 15);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_loginRegisteredAndPasswordInvalid_NotOk() {
-        actual = new User(DEFAULT_LOGIN, "123", DEFAULT_AGE);
+    void register_loginRegisteredAndPasswordInvalid_notOk() {
+        User actual = new User(DEFAULT_LOGIN, "123", DEFAULT_AGE);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_loginRegisteredAndAgeInvalid_NotOk() {
-        actual = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, 16);
+    void register_loginRegisteredAndAgeInvalid_notOk() {
+        User actual = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, 16);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_passwordAndAgeInvalid_NotOk() {
-        actual = new User("useruser1", "123", 16);
+    void register_passwordAndAgeInvalid_notOk() {
+        User actual = new User("useruser1", "123", 16);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_loginNullPasswordAndAgeInvalid_NotOk() {
-        actual = new User(null, "123", 16);
+    void register_loginNullPasswordAndAgeInvalid_notOk() {
+        User actual = new User(null, "123", 16);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_loginRegisteredPasswordAndAgeInvalid_NotOk() {
-        actual = new User(DEFAULT_LOGIN, "123", 16);
+    void register_loginRegisteredPasswordAndAgeInvalid_notOk() {
+        User actual = new User(DEFAULT_LOGIN, "123", 16);
         assertThrows(InvalidInputDataException.class, () ->
                 registrationService.register(actual), EXCEPTION);
     }
 
     @Test
-    void register_validUser_Ok() {
+    void register_validUser_ok() {
         User user = new User("useruser1", DEFAULT_PASSWORD, DEFAULT_AGE);
         User actual = registrationService.register(user);
         Assertions.assertEquals(user, actual,

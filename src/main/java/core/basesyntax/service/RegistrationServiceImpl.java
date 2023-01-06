@@ -33,7 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidInputDataException(
-                    "Password's length is less then MIN_PASSWORD_LENGTH characters");
+                    "Password's length is less then " + MIN_PASSWORD_LENGTH + " characters");
         }
     }
 
@@ -42,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputDataException("Age value can't be null");
         }
         if (age < MIN_AGE) {
-            throw new InvalidInputDataException("Not valid age");
+            throw new InvalidInputDataException("Age should be not less than " + MIN_AGE);
         }
     }
 }
