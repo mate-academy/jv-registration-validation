@@ -8,7 +8,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MIN_QUANTITY_OF_CHARACTER = 6;
+    private static final int MIN_LENGTH_OF_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -17,21 +17,19 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User is null");
         }
 
-        for (User person : Storage.people) {
-            if (person.getLogin().equals(user.getLogin())) {
-                throw new RegistrationException("User with such login "
-                        + user.getLogin() + " contains in this storage");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with such login "
+                    + user.getLogin() + " contains in this storage");
         }
 
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Age " + user.getAge()
-                    + " is less then need");
+                    + " is less then " + MIN_AGE);
         }
 
-        if (user.getPassword().length() < MIN_QUANTITY_OF_CHARACTER) {
+        if (user.getPassword().length() < MIN_LENGTH_OF_PASSWORD) {
             throw new RegistrationException("The password must contains min "
-                    + MIN_QUANTITY_OF_CHARACTER + " characters");
+                    + MIN_LENGTH_OF_PASSWORD + " characters");
         }
         return storageDao.add(user);
     }
