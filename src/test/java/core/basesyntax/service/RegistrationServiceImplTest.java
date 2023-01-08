@@ -16,6 +16,10 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static User user;
     private static StorageDao storageDao;
+    private static final int VALID_AGE = 18;
+    private static final String VALID_PASSWORD = "MyPassword";
+    private static final String VALID_LOGIN = "6575MyLogin";
+    private static final String VALID_LOGIN_NEW = "94MyLogin95";
 
     @BeforeAll
     static void beforeAll() {
@@ -26,6 +30,10 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        user.setAge(VALID_AGE);
+        user.setPassword(VALID_PASSWORD);
+        user.setLogin(VALID_LOGIN);
+        storageDao.add(user);
     }
 
     @AfterEach
@@ -34,11 +42,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIfValid_Ok() {
+    void register_validUser_Ok() {
         User newUser = new User();
-        newUser.setAge(21);
-        newUser.setPassword("MyPassword");
-        newUser.setLogin("6575MyLogin");
+        newUser.setAge(VALID_AGE);
+        newUser.setPassword(VALID_PASSWORD);
+        newUser.setLogin(VALID_LOGIN_NEW);
         registrationService.register(newUser);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
 
