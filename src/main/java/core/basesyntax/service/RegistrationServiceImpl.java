@@ -7,7 +7,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
-    private static final StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
