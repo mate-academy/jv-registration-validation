@@ -13,9 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final int DEFAULT_AGE = 18;
-    private static final String DEFAULT_PASSWORD = "845146";
-    private static final String DEFAULT_LOGIN = "user_login";
+    private static final int VALID_AGE = 18;
+    private static final String VALID_PASSWORD = "123456";
+    private static final String VALID_LOGIN = "user_login";
     private static RegistrationService registrationService;
     private static StorageDaoImpl storageDao;
     private User user;
@@ -29,9 +29,9 @@ public class RegistrationServiceImplTest {
     @BeforeEach
     void setUser() {
         user = new User();
-        user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(DEFAULT_PASSWORD);
-        user.setAge(DEFAULT_AGE);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
     }
 
     @AfterEach
@@ -40,71 +40,79 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageLessThan18_notOK() {
-        user.setAge(DEFAULT_AGE - 1);
-        assertThrows(RegistrationException.class,() -> registrationService.register(user));
+    void register_ageLessThanValid_notOK() {
+        user.setAge(VALID_AGE - 1);
+        assertThrows(RegistrationException.class,() -> registrationService.register(user),
+                "You should throw RegistrationException if user age is below valid age");
     }
 
     @Test
-    void register_addNullUser_notOk() {
+    void register_ageMoreThanValid_notOK() {
+        user.setAge(VALID_AGE + 1);
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
+        assertEquals(user, actual, "18 and more is a valid age for user");
+    }
+
+    @Test
+    void register_userIsNull_notOk() {
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(null),
-                "User can't be null");
+                "You should throw RegistrationException if user is null");
     }
 
     @Test
-    void register_addNullLogin_notOk() {
+    void register_userLoginIsNull_notOk() {
         user.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "User`s login can't be null");
+                "You should throw RegistrationException if user login is null");
     }
 
     @Test
-    void register_addNullAge_notOk() {
+    void register_userAgeIsNull_notOk() {
         user.setAge(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "User`s age can't be null");
+                "You should throw RegistrationException if user age is null");
     }
 
     @Test
-    void register_addNullPassword_notOk() {
+    void register_userPasswordIsNull_notOk() {
         user.setPassword(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "User`s password can't be null");
+                "You should throw RegistrationException if user password is null");
     }
 
     @Test
-    void validUser_Ok() {
+    void register_validUserIsAddedToStorage_Ok() {
         registrationService.register(user);
         User expected = storageDao.get(user.getLogin());
-        Assertions.assertEquals(expected, user, "Age field's passed");
+        Assertions.assertEquals(expected, user, "Valid user is added to storage");
     }
 
     @Test
-    void register_passwordLengthIsLessThanMinLength_notOk() {
-        user.setPassword("321");
+    void register_userPasswordLengthIsLessThanMinLength_notOk() {
+        user.setPassword("12345");
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "User`s password should be 6 or more symbols");
+                "You should throw RegistrationException when user password is less than 6");
     }
 
     @Test
-    void register_passwordLengthIsLongerThanMinLength_ok() {
-        user.setPassword(DEFAULT_PASSWORD + "1");
+    void register_userPasswordLengthIsLongerThanMinLength_ok() {
+        user.setPassword(VALID_PASSWORD + "7");
         registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
-        assertEquals(user, actual, "All user`s fields are correct");
+        assertEquals(user, actual, "User password can be longer than 6 symbols");
     }
 
     @Test
-    void register_loginExists_notOk() {
-        registrationService.register(user);
-        registrationService.register(user);
+    void register_userLoginAlreadyExists_notOk() {
+            registrationService.register(user);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "User is already exists");
+                "You should throw RegistrationException if user login already exists");
     }
 }
