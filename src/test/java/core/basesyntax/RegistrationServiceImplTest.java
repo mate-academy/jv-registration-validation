@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addUserAlreadyExist_NotOk() {
+    void register_addUserAlreadyExist_notOk() {
         User user = new User();
         user.setLogin("Ivan_Ivanov");
         assertThrows(RuntimeException.class, () -> regService.register(user),
