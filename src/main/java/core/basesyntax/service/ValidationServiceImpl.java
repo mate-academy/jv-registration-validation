@@ -17,6 +17,20 @@ public class ValidationServiceImpl implements ValidationService {
     private static final String NULL_USER_MESSAGE = "User is null";
     private final StorageDao storageDao = new StorageDaoImpl();
 
+    @Override
+    public void validateUser(User user) {
+        notNullInput(user, NULL_USER_MESSAGE);
+        String password = user.getPassword();
+        String login = user.getLogin();
+        Integer age = user.getAge();
+        notNullInput(login, NULL_LOGIN_MESSAGE);
+        notNullInput(password, NULL_PASSWORD_MESSAGE);
+        notNullInput(age, NULL_AGE_MESSAGE);
+        existsLogin(login);
+        inputMinLimit(MIN_PASSWORD_LENGTH, password.length(), MIN_LENGTH_PASSWORD_MESSAGE);
+        inputMinLimit(ADULT_AGE, age, MIN_LIMIT_AGE_MESSAGE);
+    }
+
     private void notNullInput(Object input, String message) {
         if (input == null) {
             throw new ValidationException(message);
@@ -33,19 +47,5 @@ public class ValidationServiceImpl implements ValidationService {
         if (storageDao.get(login) != null) {
             throw new ValidationException("Login already exists");
         }
-    }
-
-    @Override
-    public void validateUser(User user) {
-        notNullInput(user, NULL_USER_MESSAGE);
-        String password = user.getPassword();
-        String login = user.getLogin();
-        Integer age = user.getAge();
-        notNullInput(login, NULL_LOGIN_MESSAGE);
-        notNullInput(password, NULL_PASSWORD_MESSAGE);
-        notNullInput(age, NULL_AGE_MESSAGE);
-        existsLogin(login);
-        inputMinLimit(MIN_PASSWORD_LENGTH, password.length(), MIN_LENGTH_PASSWORD_MESSAGE);
-        inputMinLimit(ADULT_AGE, age, MIN_LIMIT_AGE_MESSAGE);
     }
 }

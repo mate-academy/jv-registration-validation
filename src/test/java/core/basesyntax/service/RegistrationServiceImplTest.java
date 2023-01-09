@@ -32,6 +32,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     private void beforeEach() {
         userUnderTest = new User();
+        userUnderTest.setAge(17);
+        userUnderTest.setLogin("Greek");
+        userUnderTest.setPassword("bandit1234");
     }
 
     @Test
@@ -46,10 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_TooYoungUser_NotOk() {
-        userUnderTest.setAge(17);
-        userUnderTest.setLogin("Greek");
-        userUnderTest.setPassword("bandit1234");
+    void register_tooYoungUser_notOk() {
 
         ValidationException validationException = assertThrows(ValidationException.class,
                 () -> registrationService.register(userUnderTest));
@@ -57,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_TooShortPassword_NotOk() {
+    void register_tooShortPassword_notOk() {
         userUnderTest.setAge(19);
         userUnderTest.setLogin("Userok");
         userUnderTest.setPassword("Shrek");
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordIsNull_NotOk() {
+    void register_passwordIsNull_notOk() {
         userUnderTest.setAge(19);
         userUnderTest.setLogin("Userok");
         userUnderTest.setPassword(null);
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginIsNull_NotOk() {
+    void register_loginIsNull_notOk() {
         userUnderTest.setAge(19);
         userUnderTest.setLogin(null);
         userUnderTest.setPassword("PutinMurlo");
@@ -90,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeIsNull_NotOk() {
+    void register_ageIsNull_notOk() {
         userUnderTest.setAge(null);
         userUnderTest.setLogin("Lexus");
         userUnderTest.setPassword("PutinMurlo");
