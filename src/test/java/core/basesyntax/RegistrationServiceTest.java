@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.LoginExistException;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -27,33 +26,33 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void checkLoginEmpty_NotOk() {
+    void register_emptyLogin_notOk() {
         assertThrows(RegistrationException.class, ()
                 -> registrationService.register(new User(null,"iortrion",24)));
     }
 
     @Test
-    void checkEmptyUser_NotOk() {
+    void register_emptyUser_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void checkPasswordIsEmpty_NotOk() {
+    void register_emptyPassword_notOk() {
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(new User("denis", null, 43)));
     }
 
     @Test
-    void checkAgeIsEmpty_NotOk() {
+    void register_emptyAge_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("denis","iortrion",null));
         });
     }
 
     @Test
-    void registrationCompleteForThreeUsers_Ok() {
+    void register_addThreeUsers_Ok() {
         List actual = Storage.people;
         assertEquals(3, actual.size());
         assertTrue(actual.contains(new User("boblogin", "bobpassword", 18)));
@@ -62,21 +61,21 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void passwordLessThanSixSigns_NotOk() {
+    void register_passwordLessSixSigns_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("denislogin6549", "denis", 25));
         });
     }
 
     @Test
-    void loginExist_false() {
-        assertThrows(LoginExistException.class, () -> {
+    void register_loginAlreadyExist_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("denislogin", "denispassword22",25));
         });
     }
 
     @Test
-    void incorrectAge_NotOk() {
+    void register_ageMoreThanMaxValue_NotOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("denis1987", "oirudpwuuo091", 325));
         });
