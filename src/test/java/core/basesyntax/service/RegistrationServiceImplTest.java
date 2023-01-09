@@ -110,7 +110,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_userLoginAlreadyExists_notOk() {
-            registrationService.register(user);
+        registrationService.register(user);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "You should throw RegistrationException if user login already exists");
