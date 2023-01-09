@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
     private static RegistrationService registrationService;
+    private static final int MIN_AGE = 18;
     private User user;
 
     @BeforeAll
@@ -19,12 +20,11 @@ class RegistrationServiceTest {
     }
 
     @BeforeEach
-    void setUp() {
+    void defaultUser() {
         user = new User();
-        user.setLogin("mate_user");
-        user.setAge(18);
+        user.setLogin("stim_one");
+        user.setAge(MIN_AGE);
         user.setPassword("MyCatNameDin");
-        user.setId(713298L);
     }
 
     @AfterEach
@@ -41,61 +41,31 @@ class RegistrationServiceTest {
 
     @Test
     void register_loginNull_notOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
-    }
-
-    @Test
-    void register_login_isEmpty_notOk() {
-        registrationService.register(user);
+        user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_age_minimumAge_notOk() {
-        registrationService.register(user);
+        user.setAge(MIN_AGE - 1);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_ageNull_notOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+        user.setAge(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordLength_notOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_passwordUpperCaseLetters_notOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_passwordLowerCaseLetters_notOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_passwordIsEmpty_notOk() {
-        registrationService.register(user);
+        user.setPassword("1234");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordNull_notOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
-    }
-
-    @Test
-    void register_userIdNull_notOk() {
-        registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+        user.setPassword(null);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }

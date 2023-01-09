@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new InvalidUserException("User field can't be empty.");
+            throw new InvalidUserException("User can't be null");
         }
         checkUserLogin(user.getLogin());
         checkUserPassword(user.getPassword());
@@ -23,10 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUserLogin(String login) {
         if (login == null) {
-            throw new InvalidUserException("Login field is null.");
-        }
-        if (login.isEmpty()) {
-            throw new InvalidUserException("Login field can't be empty.");
+            throw new InvalidUserException("Login field can't be null.");
         }
         if (storageDao.get(login) != null) {
             throw new InvalidUserException("Login: " + login
@@ -36,16 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUserPassword(String password) {
         if (password == null) {
-            throw new InvalidUserException("Password field is null.");
-        }
-        if (password.contains(password.toUpperCase())) {
-            throw new InvalidUserException("The password cannot contain only uppercase letters");
-        }
-        if (password.contains(password.toLowerCase())) {
-            throw new InvalidUserException("The password cannot contain only lowercase letters");
-        }
-        if (password.isEmpty()) {
-            throw new InvalidUserException("Password field can't be empty.");
+            throw new InvalidUserException("Password can't be null.");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidUserException("The password length must be minimum "
@@ -56,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUserAge(Integer age) {
         if (age == null) {
-            throw new InvalidUserException("Age field is null.");
+            throw new InvalidUserException("Age field can't be null.");
         }
         if (age < MIN_USER_AGE) {
             throw new InvalidUserException("To register ,your age must be at least: "
