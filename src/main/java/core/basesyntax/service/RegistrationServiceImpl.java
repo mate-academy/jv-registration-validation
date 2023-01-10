@@ -11,12 +11,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        userValidation(user);
+        validateUser(user);
         storageDao.add(user);
         return user;
     }
 
-    private void userValidation(User user) {
+    private void validateUser(User user) {
         checkUser(user);
         checkAge(user);
         checkLogin(user);
