@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     private void beforeEach() {
         userUnderTest = new User();
-        userUnderTest.setAge(17);
+        userUnderTest.setAge(18);
         userUnderTest.setLogin("Greek");
         userUnderTest.setPassword("bandit1234");
     }
@@ -40,8 +40,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_validUser_isOk() {
         userUnderTest.setAge(18);
-        userUnderTest.setLogin("Userok");
-        userUnderTest.setPassword("bandit1234");
 
         registrationService.register(userUnderTest);
         User actual = storageDao.get(userUnderTest.getLogin());
@@ -50,6 +48,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_tooYoungUser_notOk() {
+        userUnderTest.setAge(17);
 
         ValidationException validationException = assertThrows(ValidationException.class,
                 () -> registrationService.register(userUnderTest));
