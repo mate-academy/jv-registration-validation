@@ -6,9 +6,12 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    private ValidationService validationService = new ValidationServiceImpl();
 
     @Override
     public User register(User user) {
-        return null;
+        validationService.validateUser(user);
+        return storageDao.add(user);
     }
+
 }
