@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.InvalidUserException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,44 +29,44 @@ class RegistrationServiceTest {
     }
 
     @AfterEach
-    void removeStorage() {
+    void clearStorage() {
         Storage.people.clear();
     }
 
     @Test
     void register_userValid_Ok() {
         registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
 
     }
 
     @Test
     void register_loginNull_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_age_minimumAge_notOk() {
+    void register_lowAge_notOk() {
         user.setAge(MIN_AGE - 1);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_ageNull_notOk() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordLength_notOk() {
         user.setPassword("1234");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordNull_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
     }
 }
