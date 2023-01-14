@@ -1,15 +1,17 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    private static final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static final RegistrationServiceImpl registrationService
+            = new RegistrationServiceImpl();
     private static final StorageDao storageDao = new StorageDaoImpl();
     private static final String STRING_EMPTY = new String();
     private static User userTest;
@@ -18,7 +20,6 @@ class RegistrationServiceImplTest {
     void register_nullLogin_notOk() {
         userTest = new User(null, null, "1234567", 20);
         assertThrows(ValidationException.class, () -> registrationService.register(userTest));
-
     }
 
     @Test
@@ -64,17 +65,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullGetLogin_notOk() {
-        userTest = new User(null, "12345", "123456", 20);
-        User userResult = registrationService.register(userTest);
-        assertThrows(ValidationException.class, () -> registrationService.register(userTest));
-    }
-
-    @Test
     void register_checkAge_Ok() {
         userTest = new User(null, "12345", "123456", 20);
         User userResult = registrationService.register(userTest);
         assertEquals(storageDao.get(userResult.getLogin()),userTest);
     }
 
+    @Test
+    void register_nullGetLogin_notOk() {
+        userTest = new User(null, "12345", "123456", 20);
+        User userResult = registrationService.register(userTest);
+        assertEquals(storageDao.get(userResult.getLogin()),userTest);
+        User user2 = new User(null, "12345", "123456", 21);
+        assertThrows(ValidationException.class, () -> registrationService.register(user2));
+    }
 }
