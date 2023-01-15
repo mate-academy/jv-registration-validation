@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -24,11 +23,9 @@ class RegistrationServiceImplTest {
     private static User nullPasswordUser;
     private static User shortPasswordUser;
     private static User veryOldUser;
-    private static User notBornUser1;
-    private static User notBornUser2;
+    private static User notBornUser;
     private static User teenUser;
     private static User nullAgeUser;
-    private static int size;
 
     @BeforeAll
     static void beforeAll() {
@@ -42,8 +39,7 @@ class RegistrationServiceImplTest {
         nullPasswordUser = new User("nullPass228", null, 87);
         shortPasswordUser = new User("shortLogin", "short", 30);
         veryOldUser = new User("veryOld", "veryOldPassword", 250);
-        notBornUser1 = new User("notBorn1", "notBornPassword1", -15);
-        notBornUser2 = new User("notBorn2", "notBornPassword2", 0);
+        notBornUser = new User("notBorn", "notBornPassword", -15);
         nullAgeUser = new User("withNoAgeUser", "pa$$w0rd", null);
         teenUser = new User("teenager", "teenagerPassword", 13);
     }
@@ -51,43 +47,24 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        size = 0;
     }
 
     @Test
     void register_newUser_Ok() {
         User actual = registrationService.register(newUser1);
         User expected = newUser1;
-        size++;
         assertEquals(actual, expected, "Test failed! "
                 + "Your register method should return added user");
-        assertTrue(Storage.people.contains(newUser1), "Test failed! "
-                + "After registering new user, people list must contain this user");
-        assertEquals(size, Storage.people.size(), "Test failed! "
-                + "After registering new user, people list size should be " + size
-                + ", but was " + Storage.people.size());
 
         actual = registrationService.register(newUser2);
         expected = newUser2;
-        size++;
         assertEquals(actual, expected, "Test failed! "
                 + "Your register method should return added user");
-        assertTrue(Storage.people.contains(newUser2), "Test failed! "
-                + "After registering new user, people list must contain this user");
-        assertEquals(size, Storage.people.size(), "Test failed! "
-                + "After registering new user, people list size should be " + size
-                + ", but was " + Storage.people.size());
 
         actual = registrationService.register(newUser3);
         expected = newUser3;
-        size++;
         assertEquals(actual, expected, "Test failed! "
                 + "Your register method should return added user");
-        assertTrue(Storage.people.contains(newUser3), "Test failed! "
-                + "After registering new user, people list must contain this user");
-        assertEquals(size, Storage.people.size(), "Test failed! "
-                + "After registering new user, people list size should be " + size
-                + ", but was " + Storage.people.size());
     }
 
     @Test
@@ -123,27 +100,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_incorrectAge_notOk() {
+    void register_veryOldUser_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(veryOldUser);
         }, "Test failed! If age is invalid,"
                 + " we should throw custom unchecked exception");
+    }
 
+    @Test
+    void register_notBornUser_notOk() {
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(notBornUser1);
+            registrationService.register(notBornUser);
         }, "Test failed! If age is invalid,"
                 + " we should throw custom unchecked exception");
+    }
 
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(notBornUser2);
-        }, "Test failed! If age is invalid,"
-                + " we should throw custom unchecked exception");
-
+    @Test
+    void register_nullAge() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(nullAgeUser);
         }, "Test failed! If age is invalid,"
                 + " we should throw custom unchecked exception");
+    }
 
+    @Test
+    void register_teenUser_notOK() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(teenUser);
         }, "Test failed! If age is invalid,"

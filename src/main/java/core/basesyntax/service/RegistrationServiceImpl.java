@@ -7,9 +7,8 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl
         implements RegistrationService {
-    private static final int OLDEST_HUMAN_ALIVE = 118;
+    private static final int MAX_AGE = 118;
     private static final int MIN_AGE = 18;
-    private static final int ZERO_AGE = 0;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -34,13 +33,10 @@ public class RegistrationServiceImpl
         if (user.getAge() == null) {
             throw new InvalidDataException("Age can't be null");
         }
-        if (user.getAge() < ZERO_AGE) {
-            throw new InvalidDataException("User's age cannot be less than " + ZERO_AGE);
-        }
         if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException("User must be at least " + MIN_AGE + " years old");
         }
-        if (user.getAge() > OLDEST_HUMAN_ALIVE) {
+        if (user.getAge() > MAX_AGE) {
             throw new InvalidDataException("Incorrect age. Please enter your real age");
         }
         return storageDao.add(user);
