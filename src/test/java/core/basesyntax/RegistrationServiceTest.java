@@ -29,30 +29,36 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void getRegistration_Ok() {
+    public void register_validUser_Ok() {
         user.setLogin("UserDao");
         storageDao.add(user);
         Assertions.assertEquals(user, storageDao.get("UserDao"));
     }
 
     @Test
-    public void getRegistration_newLogin_Ok() {
+    public void register_newLogin_Ok() {
         user.setLogin("UserTest");
         registrationService.register(user);
         Assertions.assertEquals("UserTest", storageDao.get("UserTest").getLogin());
     }
 
     @Test
-    public void getRegistration_rightPassword_Ok() {
-        user.setLogin("User");
+    public void register_rightPassword_Ok() {
+        user.setLogin("UserTestPassword");
         user.setPassword("123qwerty");
         registrationService.register(user);
-        Assertions.assertEquals("123qwerty", storageDao.get("User").getPassword());
+        Assertions.assertEquals("123qwerty", storageDao.get("UserTestPassword").getPassword());
     }
 
     @Test
-    public void getRegistration_wrongPasswordLessNormal_notOk() {
+    public void register_wrongPasswordLessNormal_notOk() {
         user.setPassword("12");
+        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_nullPassword_notOk() {
+        user.setPassword(null);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
@@ -71,6 +77,7 @@ public class RegistrationServiceTest {
     @Test
     public void register_wrongLogin_notOk() {
         user.setLogin("User");
+        storageDao.add(user);
         Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 }
