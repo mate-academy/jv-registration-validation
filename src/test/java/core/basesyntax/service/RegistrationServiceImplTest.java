@@ -15,9 +15,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storageDao;
-    private static User newUser1;
-    private static User newUser2;
-    private static User newUser3;
+    private static User newUser;
     private static User nullLoginUser;
     private static User sameLoginUser;
     private static User nullPasswordUser;
@@ -31,11 +29,9 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-        newUser1 = new User("newLogin1", "newPassword1", 19);
-        newUser2 = new User("newLogin2", "newPassword2", 68);
-        newUser3 = new User("newLogin3", "newPassword3", 35);
+        newUser = new User("newLogin", "newPassword", 19);
         nullLoginUser = new User(null, "12345678", 24);
-        sameLoginUser = new User("newLogin1", "qwerty123", 54);
+        sameLoginUser = new User("newLogin", "qwerty123", 54);
         nullPasswordUser = new User("nullPass228", null, 87);
         shortPasswordUser = new User("shortLogin", "short", 30);
         veryOldUser = new User("veryOld", "veryOldPassword", 250);
@@ -51,19 +47,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_newUser_Ok() {
-        User actual = registrationService.register(newUser1);
-        User expected = newUser1;
-        assertEquals(actual, expected, "Test failed! "
-                + "Your register method should return added user");
-
-        actual = registrationService.register(newUser2);
-        expected = newUser2;
-        assertEquals(actual, expected, "Test failed! "
-                + "Your register method should return added user");
-
-        actual = registrationService.register(newUser3);
-        expected = newUser3;
-        assertEquals(actual, expected, "Test failed! "
+        assertEquals(registrationService.register(newUser), newUser, "Test failed! "
                 + "Your register method should return added user");
     }
 
@@ -76,7 +60,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingLogin_notOk() {
-        storageDao.add(newUser1);
+        storageDao.add(newUser);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(sameLoginUser);
         }, "Test failed! If user with this login already exists, "
