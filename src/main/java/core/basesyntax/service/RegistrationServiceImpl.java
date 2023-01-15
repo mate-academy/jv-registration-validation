@@ -21,7 +21,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new AgeValidationException("Age can't be less than " + MIN_AGE);
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH_PASSWORD) {
-            throw new PasswordValidationException("Password can't be less than " + MIN_LENGTH_PASSWORD);
+            throw new PasswordValidationException("Password can't be less than "
+            + MIN_LENGTH_PASSWORD);
         }
         return storageDao.add(user);
     }
