@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -78,5 +80,12 @@ class RegistrationServiceImplTest {
         assertEquals(storageDao.get(userResult.getLogin()),userTest);
         User user2 = new User(null, "12345", "123456", 21);
         assertThrows(ValidationException.class, () -> registrationService.register(user2));
+    }
+
+    @AfterEach
+    void storage_clear() {
+        if (!Storage.people.isEmpty()) {
+            Storage.people.clear();
+        }
     }
 }
