@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -23,6 +24,7 @@ public class RegistrationServiceTest {
     @BeforeEach
     void getDefaultUser() {
         user = new User();
+        user.setLogin("TestUser");
         user.setId(1L);
         user.setPassword("123456");
         user.setAge(19);
@@ -30,9 +32,9 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_validUser_Ok() {
-        user.setLogin("UserDao");
-        storageDao.add(user);
-        Assertions.assertEquals(user, storageDao.get("UserDao"));
+        user.setLogin("UserSome");
+        registrationService.register(user);
+        Assertions.assertEquals(user, storageDao.get("UserSome"));
     }
 
     @Test
@@ -43,41 +45,54 @@ public class RegistrationServiceTest {
     }
 
     @Test
+    public void register_nullLogin_notOk() {
+        user.setLogin(null);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
     public void register_rightPassword_Ok() {
         user.setLogin("UserTestPassword");
         user.setPassword("123qwerty");
         registrationService.register(user);
-        Assertions.assertEquals("123qwerty", storageDao.get("UserTestPassword").getPassword());
+        Assertions.assertEquals("123qwerty",
+                storageDao.get("UserTestPassword").getPassword());
     }
 
     @Test
-    public void register_wrongPasswordLessNormal_notOk() {
+    public void register_shortPassword_notOk() {
         user.setPassword("12");
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
     public void register_nullPassword_notOk() {
         user.setPassword(null);
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void register_wrongAgeLessNormal_notOk() {
+    public void register_smallAge_notOk() {
         user.setAge(10);
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void register_wrongAgeNegative_notOk() {
+    public void register_negativeAge_notOk() {
         user.setAge(-12);
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void register_wrongLogin_notOk() {
+    public void register_duplicateLogin_notOk() {
         user.setLogin("User");
         storageDao.add(user);
-        Assertions.assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 }
