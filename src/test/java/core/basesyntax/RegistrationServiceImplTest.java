@@ -15,7 +15,7 @@ public class RegistrationServiceImplTest {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Test
-    void register_alreadyExist_NotOk() {
+    void register_alreadyExist_notOk() {
         User userFirst = new User();
         userFirst.setId(7575L);
         userFirst.setLogin("qwe");
@@ -32,7 +32,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validData_Ok() {
+    void register_validData_ok() {
         User user = new User();
         user.setId(123L);
         user.setLogin("sdhgs5s");
@@ -42,7 +42,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageNull_NotOk() {
+    void register_ageNull_notOk() {
         User user = new User();
         user.setId(456L);
         user.setPassword("1234534346");
@@ -52,7 +52,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordNull_NotOk() {
+    void register_passwordNull_notOk() {
         User user = new User();
         user.setId(123L);
         user.setLogin("sdhgss");
@@ -62,7 +62,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginNull_NotOk() {
+    void register_loginNull_notOk() {
         User user = new User();
         user.setId(123L);
         user.setPassword("ghghgh");
@@ -72,7 +72,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_youngAge_NotOk() {
+    void register_youngAge_notOk() {
         User user = new User();
         user.setId(789L);
         user.setLogin("fhg");
@@ -82,7 +82,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortPassword_NotOk() {
+    void register_shortPassword_notOk() {
         User user = new User();
         user.setId(15L);
         user.setLogin("sdgfsdg");
