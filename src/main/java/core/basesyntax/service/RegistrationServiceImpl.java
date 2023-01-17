@@ -44,7 +44,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + "Password field should not be empty");
         }
         if (password.length() < MIN_LENGTH_PASSWORD) {
-            throw new InputMismatchException("Your password must be at least 6 characters long");
+            throw new InputMismatchException("Your password must be at least "
+                    + MIN_LENGTH_PASSWORD + " characters long");
         }
     }
 
@@ -52,7 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new InvalidParameterException("The Age field can't be null");
         }
-        if (age < 18) {
+        if (age < VALID_AGE_FROM) {
             throw new InvalidParameterException("users over the age of "
                     + VALID_AGE_FROM + " can only registered");
         }
