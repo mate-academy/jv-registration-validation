@@ -15,12 +15,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private User validUser1;
     private User validUser2;
-    private User invalidUserNegativeAge;
-    private User invalidUserLowAge;
-    private User invalidUserShortPassword;
-    private User invalidUserNullAge;
-    private User invalidUserNullLogin;
-    private User invalidUserNullPassword;
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
 
@@ -28,12 +22,6 @@ class RegistrationServiceImplTest {
     void setUp() {
         validUser1 = new User();
         validUser2 = new User();
-        invalidUserNegativeAge = new User();
-        invalidUserLowAge = new User();
-        invalidUserShortPassword = new User();
-        invalidUserNullAge = new User();
-        invalidUserNullLogin = new User();
-        invalidUserNullPassword = new User();
 
         validUser1.setLogin("validUser1");
         validUser1.setPassword("validPassword1");
@@ -42,30 +30,6 @@ class RegistrationServiceImplTest {
         validUser2.setLogin("validUser2");
         validUser2.setPassword("validPassword2");
         validUser2.setAge(28);
-
-        invalidUserNegativeAge.setLogin("invalidUserNegativeAge");
-        invalidUserNegativeAge.setPassword("invalidUserNegativeAge");
-        invalidUserNegativeAge.setAge(-2);
-
-        invalidUserLowAge.setLogin("invalidUserLowAge");
-        invalidUserLowAge.setPassword("validPasswordLowAge");
-        invalidUserLowAge.setAge(15);
-
-        invalidUserShortPassword.setLogin("invalidUserShortPassword");
-        invalidUserShortPassword.setPassword("inv");
-        invalidUserShortPassword.setAge(18);
-
-        invalidUserNullAge.setLogin("InvalidUserNullLogin");
-        invalidUserNullAge.setPassword("InvalidUser");
-        invalidUserNullAge.setAge(null);
-
-        invalidUserNullLogin.setLogin(null);
-        invalidUserNullLogin.setPassword("InvalidUser");
-        invalidUserNullLogin.setAge(30);
-
-        invalidUserNullPassword.setLogin("InvalidUserNullPassword");
-        invalidUserNullPassword.setPassword(null);
-        invalidUserNullPassword.setAge(15);
     }
 
     @AfterEach
@@ -113,36 +77,60 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addInvalidUserNullAge_NotOk() {
+        User invalidUserNullAge = new User();
+        invalidUserNullAge.setLogin("InvalidUserNullLogin");
+        invalidUserNullAge.setPassword("InvalidUser");
+        invalidUserNullAge.setAge(null);
         assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUserNullAge));
     }
 
     @Test
     void register_addInvalidUserNullLogin_NotOk() {
+        User invalidUserNullLogin = new User();
+        invalidUserNullLogin.setLogin(null);
+        invalidUserNullLogin.setPassword("InvalidUser");
+        invalidUserNullLogin.setAge(30);
         assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUserNullLogin));
     }
 
     @Test
     void register_addInvalidUserNullPassword_NotOk() {
+        User invalidUserNullPassword = new User();
+        invalidUserNullPassword.setLogin("InvalidUserNullPassword");
+        invalidUserNullPassword.setPassword(null);
+        invalidUserNullPassword.setAge(15);
         assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUserNullPassword));
     }
 
     @Test
     void register_addInvalidUserNegativeAge_NotOk() {
+        User invalidUserNegativeAge = new User();
+        invalidUserNegativeAge.setLogin("invalidUserNegativeAge");
+        invalidUserNegativeAge.setPassword("invalidUserNegativeAge");
+        invalidUserNegativeAge.setAge(-2);
         assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUserNegativeAge));
     }
 
     @Test
     void register_addInvalidUserLowAge_NotOk() {
+        User invalidUserLowAge = new User();
+        invalidUserLowAge.setLogin("invalidUserLowAge");
+        invalidUserLowAge.setPassword("validPasswordLowAge");
+        invalidUserLowAge.setAge(15);
         assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUserLowAge));
     }
 
     @Test
     void register_addInvalidUserShortPassword_NotOk() {
+        User invalidUserShortPassword = new User();
+        invalidUserShortPassword.setLogin("invalidUserShortPassword");
+        invalidUserShortPassword.setPassword("inv");
+        invalidUserShortPassword.setAge(18);
         assertThrows(InvalidDataException.class,
                 () -> registrationService.register(invalidUserShortPassword));
     }
