@@ -7,14 +7,17 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.UserValidationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService regService;
+    private static RegistrationService regService;
+    private static final String GENERAL_LOGIN = "login";
+    private static final String GENERAL_PASSWORD = "123456";
+    private static final Integer GENERAL_AGE = 25;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll() {
         regService = new RegistrationServiceImpl();
     }
 
@@ -24,82 +27,82 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserIsNull_NotOk() {
+    void register_userIsNull_notOk() {
         assertThrows(UserValidationException.class, () -> regService.register(null));
     }
 
     @Test
-    void register_loginIsNull_NotOk() {
-        User userWithLoginIsNull = createUser(null, "123456", 25);
+    void register_loginIsNull_notOk() {
+        User userWithLoginIsNull = createUser(null, GENERAL_PASSWORD, GENERAL_AGE);
         assertThrows(
                 UserValidationException.class, () -> regService.register(userWithLoginIsNull)
         );
     }
 
     @Test
-    void register_loginIsEmpty_NotOk() {
-        User userWithEmptyLogin = createUser("", "123456", 25);
+    void register_loginIsEmpty_notOk() {
+        User userWithEmptyLogin = createUser("", GENERAL_PASSWORD, GENERAL_AGE);
         assertThrows(
                 UserValidationException.class, () -> regService.register(userWithEmptyLogin)
         );
     }
 
     @Test
-    void register_PasswordIsNull_NotOk() {
-        User userWithPasswordIsNull = createUser("login", null, 25);
+    void register_passwordIsNull_notOk() {
+        User userWithPasswordIsNull = createUser(GENERAL_LOGIN, null, GENERAL_AGE);
         assertThrows(
                 UserValidationException.class, () -> regService.register(userWithPasswordIsNull)
         );
     }
 
     @Test
-    void register_PasswordIsShort_NotOk() {
-        User userWithShortPassword = createUser("login", "12345", 25);
+    void register_passwordIsShort_notOk() {
+        User userWithShortPassword = createUser(GENERAL_LOGIN, "12345", GENERAL_AGE);
         assertThrows(
                 UserValidationException.class, () -> regService.register(userWithShortPassword)
         );
     }
 
     @Test
-    void register_AgeIsNull_NotOk() {
-        User userWithAgeIsNull = createUser("login", "123456", null);
+    void register_ageIsNull_notOk() {
+        User userWithAgeIsNull = createUser(GENERAL_LOGIN, GENERAL_PASSWORD, null);
         assertThrows(UserValidationException.class, () -> regService.register(userWithAgeIsNull));
     }
 
     @Test
-    void register_AgeIsSmall_NotOk() {
-        User userWithSmallAge = createUser("login", "123456", 17);
+    void register_ageIsSmall_notOk() {
+        User userWithSmallAge = createUser(GENERAL_LOGIN, GENERAL_PASSWORD, 17);
         assertThrows(UserValidationException.class, () -> regService.register(userWithSmallAge));
     }
 
     @Test
-    void register_AgeIsHuge_NotOk() {
-        User userWithInvalidHugeAge = createUser("login", "123456", 151);
+    void register_ageIsHuge_notOk() {
+        User userWithInvalidHugeAge = createUser(GENERAL_LOGIN, GENERAL_PASSWORD, 151);
         assertThrows(
                 UserValidationException.class, () -> regService.register(userWithInvalidHugeAge)
         );
     }
 
     @Test
-    void register_AgeIsNegative_NotOk() {
-        User userWithNegativeAge = createUser("login", "123456", -5);
+    void register_ageIsNegative_notOk() {
+        User userWithNegativeAge = createUser(GENERAL_LOGIN, GENERAL_PASSWORD, -5);
         assertThrows(UserValidationException.class, () -> regService.register(userWithNegativeAge));
     }
 
     @Test
-    void register_userWithSameLogin_NotOk() {
-        User userWithValidSmallAge = createUser("login", "123456", 18);
-        User userWithSameLogin = createUser("login", "654321", 50);
+    void register_userWithSameLogin_notOk() {
+        User userWithValidSmallAge = createUser(GENERAL_LOGIN, GENERAL_PASSWORD, 18);
+        User userWithSameLogin = createUser(GENERAL_LOGIN, "654321", 50);
         regService.register(userWithValidSmallAge);
         assertEquals(1, Storage.people.size());
         assertThrows(UserValidationException.class, () -> regService.register(userWithSameLogin));
     }
 
     @Test
-    void register_validUserList_Ok() {
-        User firstUser = createUser("login1", "123456", 18);
-        User secondUser = createUser("login2", "1234567", 70);
-        User thirdUser = createUser("login3", "12345678", 150);
+    void register_validUserList_ok() {
+        User firstUser = createUser(GENERAL_LOGIN + '1', GENERAL_PASSWORD, 18);
+        User secondUser = createUser(GENERAL_LOGIN + '2', "1234567", GENERAL_AGE);
+        User thirdUser = createUser(GENERAL_LOGIN + '3', "12345678", 150);
         regService.register(firstUser);
         regService.register(secondUser);
         regService.register(thirdUser);
