@@ -5,18 +5,16 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ValidationTest {
     private static RegistrationServiceImpl registrationService;
@@ -53,7 +51,7 @@ public class ValidationTest {
     }
 
     @Test
-    void CheckCountOfPrivateFieldsInRegistrationService() {
+    void checkPrivateFieldsInRegistrationImpl_Ok() {
         List<Field> privateFields = new ArrayList<>();
         List<Field> allFields = Arrays.asList(RegistrationServiceImpl.class.getDeclaredFields());
         for (Field field : allFields) {
@@ -61,8 +59,10 @@ public class ValidationTest {
                 privateFields.add(field);
             }
         }
-        assertEquals(allFields.size(), privateFields.size(), "You should have private fields only!\n");
-        assertTrue(privateFields.size() >= allFields.size(), "You should have at least " + allFields.size() + " fields");
+        Assertions.assertEquals(allFields.size(), privateFields.size(),
+                "You should have private fields only!" + '\n');
+        Assertions.assertTrue(privateFields.size() >= allFields.size(),
+                "You should have at least " + allFields.size() + " fields" + '\n');
     }
 
     @Test
@@ -73,17 +73,18 @@ public class ValidationTest {
             actual.add(storageDaoImpl.get(user.getLogin()));
         }
 
-        assertEquals(expectedStorageSize, Storage.people.size(),
-                "Test failed! The size of the storage isn't correct. Expected " + expectedStorageSize + " but was " + Storage.people.size());
+        Assertions.assertEquals(expectedStorageSize, Storage.people.size(),
+                "Test failed! The size of the storage isn't correct. Expected "
+                        + expectedStorageSize + " but was " + Storage.people.size() + '\n');
 
-        assertTrue(actual.contains(new User("bob", "bobPassword27", 27)),
-                "Test failed! The storage must contain a user with login: bob");
-        assertTrue(actual.contains(new User("alice96", "qwerty", 21)),
-                "Test failed! The storage must contain a user with login: alice96");
-        assertTrue(actual.contains(new User("josh_goldberg", "sh43u#Idsh", 18)),
-                "Test failed! The storage must contain a user with login: josh_goldberg");
-        assertTrue(actual.contains(new User("marku$", "markus5", 60)),
-                "Test failed! The storage must contain a user with login: marku$");
+        Assertions.assertTrue(actual.contains(new User("bob", "bobPassword27", 27)),
+                "Test failed! The storage must contain a user with login: bob" + '\n');
+        Assertions.assertTrue(actual.contains(new User("alice96", "qwerty", 21)),
+                "Test failed! The storage must contain a user with login: alice96" + '\n');
+        Assertions.assertTrue(actual.contains(new User("josh_goldberg", "sh43u#Idsh", 18)),
+                "Test failed! The storage must contain a user with login: josh_goldberg" + '\n');
+        Assertions.assertTrue(actual.contains(new User("marku$", "markus5", 60)),
+                "Test failed! The storage must contain a user with login: marku$" + '\n');
     }
 
     @Test
@@ -91,73 +92,80 @@ public class ValidationTest {
         for (User user : validUserData) {
             registrationService.register(user);
         }
-        assertEquals(expectedStorageSize, Storage.people.size(),
-                "The size of the storage isn't correct. Expected " + expectedStorageSize + " but was " + Storage.people.size());
+        Assertions.assertEquals(expectedStorageSize, Storage.people.size(),
+                "The size of the storage isn't correct. Expected "
+                        + expectedStorageSize + " but was " + Storage.people.size());
 
         User actualBobUser = storageDaoImpl.get(bob.getLogin());
         User actualAliceUser = storageDaoImpl.get(alice.getLogin());
         User actualJohnUser = storageDaoImpl.get(john.getLogin());
         User actualMarkUser = storageDaoImpl.get(mark.getLogin());
 
-        assertEquals(bob, actualBobUser,
+        Assertions.assertEquals(bob, actualBobUser,
                 "Test failed! Storage expects to contain " + bob.getLogin() + ", "
-                        + " but was " + actualBobUser);
-        assertEquals(alice, actualAliceUser,
+                        + " but was " + actualBobUser + '\n');
+        Assertions.assertEquals(alice, actualAliceUser,
                 "Test failed! Storage expects to contain " + alice.getLogin() + ", "
-                        + " but was " + actualAliceUser);
-        assertEquals(john, actualJohnUser,
+                        + " but was " + actualAliceUser + '\n');
+        Assertions.assertEquals(john, actualJohnUser,
                 "Test failed! Storage expects to contain " + john.getLogin() + ", "
-                        + " but was " + actualJohnUser);
-        assertEquals(mark, actualMarkUser,
+                        + " but was " + actualJohnUser + '\n');
+        Assertions.assertEquals(mark, actualMarkUser,
                 "Test failed! Storage expects to contain " + mark.getLogin() + ", "
-                        + " but was " + actualMarkUser);
+                        + " but was " + actualMarkUser + '\n');
     }
 
     @Test
     void registerNullUser_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(null),
-                "Test failed! The method should throw an exception if the user == null" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () ->
+                        registrationService.register(null),
+                "Test failed! The method should throw an exception if the user == null" + '\n');
     }
 
     @Test
     void registerSomeUser_NotOk() throws RegistrationException {
         registrationService.register(bob);
         registrationService.register(alice);
-        assertEquals(2, Storage.people.size(),
-                "Test failed! The size isn't correct. Expected " + 2 + " but was " + Storage.people.size());
+        Assertions.assertEquals(2, Storage.people.size(),
+                "Test failed! The size isn't correct. Expected "
+                        + 2 + " but was " + Storage.people.size() + '\n');
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(bob),
-                "Test failed! The method should throw an exception if the login are exist!" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () ->
+                        registrationService.register(bob),
+                "Test failed! The method should throw an exception if the login are exist!" + '\n');
     }
 
     @Test
     void registerInvalidAge_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(new User("steve", "steveLongLongPasswordOfCourse", 15)),
-                "Test failed! The method should throw an exception if the user's age does not meet the requirements!" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () ->
+                        registrationService.register(new User("steve", "steveLongPassword", 15)),
+                "Test failed! The method should throw an exception if the user's age < 18!" + '\n');
     }
 
     @Test
     void registerInvalidPasswordLength_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(new User("steve", "short", 25)),
-                "Test failed! The method should throw an exception if the password length does not meet the requirements!" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () ->
+                        registrationService.register(new User("steve", "short", 25)),
+                "Test failed! The method should throw an exception if the password length < 6>" + '\n');
     }
 
     @Test
     void registerNullPassword_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(new User("steve", null, 25)),
-                "Test failed! The method should throw an exception if password == null!" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () ->
+                        registrationService.register(new User("steve", null, 25)),
+                "Test failed! The method should throw an exception if password == null!" + '\n');
     }
 
     @Test
     public void registerNullLogin_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(new User(null, "pasdasd325", 52)),
-                "Test failed! The method should throw an exception if login == null!" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(new User(null, "pasdasd325", 52)),
+                "Test failed! The method should throw an exception if login == null!" + '\n');
     }
 
     @Test
     public void registerNullAge_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(new User("steve", "pasdas4d325", null)),
-                "Test failed! The method should throw an exception if age == null!" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(new User("steve", "pasdas4d325", null)),
+                "Test failed! The method should throw an exception if age == null!" + '\n');
     }
 
     @Test
@@ -165,20 +173,20 @@ public class ValidationTest {
         for (User user : validUserData) {
             registrationService.register(user);
         }
-        assertNull(storageDaoImpl.get(null),
-                "Test failed! The method must return null!"); // Хотя Немчинский через раз повторяет, что методы не должны возвращать null.  
+        Assertions.assertNull(storageDaoImpl.get(null),
+                "Test failed! The method must return null!" + '\n');
     }
 
     @Test
     void getByNonExistUser() {
-        assertNull(storageDaoImpl.get(alice.getLogin()),
-                "Test failed! The method should have returned null with a non-existent login! " + alice.getLogin());
+        Assertions.assertNull(storageDaoImpl.get(alice.getLogin()),
+                "Test failed! The method should have returned null with a non-existent login! " + alice.getLogin() + '\n');
     }
 
     @Test
     void registerNegativeAge_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(new User("steve", "pasdas4d325", -16)),
-                "Test failed! The method should throw an exception if age is a negative number!" + "\n");
+        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(new User("steve", "pasdas4d325", -16)),
+                "Test failed! The method should throw an exception if age is a negative number!" + '\n');
     }
 
     @Test
@@ -187,24 +195,26 @@ public class ValidationTest {
         long bobIndex = bob.getId();
         registrationService.register(alice);
         long aliceIndex = alice.getId();
-        assertNotEquals(bobIndex, aliceIndex,
-                "Test failed! The index must increment when user registrations!" + "\n");
+        Assertions.assertNotEquals(bobIndex, aliceIndex,
+                "Test failed! The index must increment when user registrations!" + '\n');
     }
 
     @Test
     void usersIsEquals_Ok() {
-        assertEquals(bob, secondBob,
-                "User objects do not equal. The equals() method doesn't work correctly!");
+        Assertions.assertEquals(bob, secondBob,
+                "Test failed! User objects do not equal. The equals() method doesn't work correctly!" + '\n');
     }
 
     @Test
     void userNotEqualsWithNull_Ok() {
-        assertNotEquals(bob, null);
+        Assertions.assertNotEquals(bob, null,
+                "Test failed! User and null can't be equals!" + '\n');
     }
 
     @Test
     void usersHashCodeIsEquals_Ok() {
-        assertEquals(bob.hashCode(), secondBob.hashCode(), "Users' hashCode does not equal. The hashCode() method doesn't work correctly!");
+        Assertions.assertEquals(bob.hashCode(), secondBob.hashCode(),
+                "Test failed! Users' hashCode does not equal. The hashCode() method doesn't work correctly!" + '\n');
     }
 
     @Test
@@ -213,24 +223,23 @@ public class ValidationTest {
         tony.setId(10L);
 
         long oldId = tony.getId();
-        String oldLogin = tony.getLogin();
-        String oldPassword = tony.getPassword();
-        int oldAge = tony.getAge();
-
         tony.setId(22L);
-        assertNotEquals(oldId, tony.getId(),
+        Assertions.assertNotEquals(oldId, tony.getId(),
                 "Fields don't have to be equal. setId() method works incorrectly!" + '\n');
 
+        String oldLogin = tony.getLogin();
         tony.setLogin("STARK");
-        assertNotEquals(oldLogin, tony.getLogin(),
+        Assertions.assertNotEquals(oldLogin, tony.getLogin(),
                 "Fields don't have to be equal. setLogin() method works incorrectly!" + '\n');
 
+        String oldPassword = tony.getPassword();
         tony.setPassword("qwertyasdfgzxcvb");
-        assertNotEquals(oldPassword, tony.getPassword(),
+        Assertions.assertNotEquals(oldPassword, tony.getPassword(),
                 "Fields don't have to be equal. setPassword() method works incorrectly!" + '\n');
 
+        int oldAge = tony.getAge();
         tony.setAge(51);
-        assertNotEquals(oldAge, tony.getAge(),
+        Assertions.assertNotEquals(oldAge, tony.getAge(),
                 "Fields don't have to be equal. setAge() method works incorrectly!" + '\n');
     }
 }
