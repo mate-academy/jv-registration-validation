@@ -11,9 +11,23 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null
-                || user.getLogin() == null || user.getPassword() == null || user.getAge() == null
-                || user.getLogin().length() == 0) {
+        if (user == null) {
+            throw new RegistrationException("All of the user`s fields must be filled",
+                    new Throwable());
+        }
+        if (user.getLogin() == null) {
+            throw new RegistrationException("All of the user`s fields must be filled",
+                    new Throwable());
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("All of the user`s fields must be filled",
+                    new Throwable());
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("All of the user`s fields must be filled",
+                    new Throwable());
+        }
+        if (user.getLogin().length() == 0) {
             throw new RegistrationException("All of the user`s fields must be filled",
                     new Throwable());
         }
