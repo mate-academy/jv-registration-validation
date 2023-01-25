@@ -35,12 +35,12 @@ public class RegistrationServiceImplTest {
     private User validUserJohn;
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         validUserBob = new User();
         validUserBob.setLogin(VALID_LOGIN_FIRST);
         validUserBob.setPassword(VALID_PASSWORD_FIRST);
@@ -63,12 +63,12 @@ public class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         Storage.people.clear();
     }
 
     @Test
-    void registerValidUsers_Ok() {
+    public void register_ValidUsers_Ok() {
         for (User user : validUsersList) {
             registrationService.register(user);
         }
@@ -88,14 +88,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullUser_NotOk() {
+    public void register_NullUser_NotOk() {
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(null),
                 String.format("%S should be thrown for: User == null" + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    void registerSameUser_NotOk() throws RegistrationException {
+    public void register_SameUser_NotOk() throws RegistrationException {
         registrationService.register(validUserBob);
         registrationService.register(validUserAlice);
         int expectedStorageSize = 2;
@@ -110,7 +110,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullLogin_NotOk() {
+    public void register_NullLogin_NotOk() {
         validUserBob.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
@@ -118,7 +118,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerEmptyLogin_NotOk() {
+    public void register_EmptyLogin_NotOk() {
         validUserBob.setLogin("");
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
@@ -126,7 +126,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerInvalidPasswordLength_NotOk() {
+    public void register_InvalidPasswordLength_NotOk() {
         validUserBob.setPassword("12345");
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
@@ -135,7 +135,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullPassword_NotOk() {
+    public void register_NullPassword_NotOk() {
         validUserBob.setPassword(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
@@ -144,7 +144,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullAge_NotOk() {
+    public void register_NullAge_NotOk() {
         validUserBob.setAge(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
@@ -152,7 +152,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerInvalidAge_NotOk() {
+    public void register_InvalidAge_NotOk() {
         validUserBob.setAge(17);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
