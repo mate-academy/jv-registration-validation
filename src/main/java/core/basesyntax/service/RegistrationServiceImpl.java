@@ -33,7 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can't be empty!");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("Login " + user.getLogin() + " are exist!");
+            throw new RegistrationException("Login " + user.getLogin() + " is exist!");
         }
     }
 
