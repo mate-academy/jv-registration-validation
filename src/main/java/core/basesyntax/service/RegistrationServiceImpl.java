@@ -11,43 +11,36 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+
         if (user == null) {
-            throw new RegistrationException("All of the user`s fields must be filled",
-                    new Throwable());
+            throw new RegistrationException("All of the user`s fields must be filled");
         }
         if (user.getLogin() == null) {
-            throw new RegistrationException("All of the user`s fields must be filled",
-                    new Throwable());
+            throw new RegistrationException("Login field must be filled");
         }
         if (user.getPassword() == null) {
-            throw new RegistrationException("All of the user`s fields must be filled",
-                    new Throwable());
+            throw new RegistrationException("Password field must be filled");
         }
         if (user.getAge() == null) {
-            throw new RegistrationException("All of the user`s fields must be filled",
-                    new Throwable());
+            throw new RegistrationException("Age field must be filled");
         }
         if (user.getLogin().length() == 0) {
-            throw new RegistrationException("All of the user`s fields must be filled",
-                    new Throwable());
+            throw new RegistrationException("Login field must be filled");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("The user with such login: \""
                     + user.getLogin()
-                    + "\" already exists",
-                    new Throwable());
+                    + "\" already exists");
         }
         if (user.getAge() < MINIMUM_USERS_AGE) {
             throw new RegistrationException("The user with: "
                     + user.getAge()
-                    + " years old - not allowed",
-                    new Throwable());
+                    + " years old - not allowed");
         }
         if (user.getPassword().length() < MINIMUM_PASS_CHARS) {
             throw new RegistrationException("The password must be not less than: "
                     + MINIMUM_PASS_CHARS
-                    + " chars",
-                    new Throwable());
+                    + " chars");
         }
         storageDao.add(user);
         return user;
