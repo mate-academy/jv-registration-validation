@@ -15,10 +15,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("Value should not be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("User age must be at least 18");
+            throw new RuntimeException("User's minimum age must be at least 18");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password must contain at least 6 characters");
+            throw new RuntimeException("Password's minimum length " +
+                    "should be at least 6 characters");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("User with such login already exist");

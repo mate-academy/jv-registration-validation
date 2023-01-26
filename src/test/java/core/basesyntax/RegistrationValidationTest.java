@@ -13,6 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationValidationTest {
+    private static final Integer DEFAULT_AGE = 18;
+    private static final String DEFAULT_LOGIN = "test@gmail.com";
+    private static final String DEFAULT_PASSWORD = "123456";
     private static User user;
     private static RegistrationService registrationService;
 
@@ -24,9 +27,9 @@ public class RegistrationValidationTest {
     @BeforeEach
     void getDefaultUser() {
         user = new User();
-        user.setAge(18);
-        user.setLogin("test@gmail.com");
-        user.setPassword("123456");
+        user.setAge(DEFAULT_AGE);
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(DEFAULT_PASSWORD);
     }
 
     @AfterEach
@@ -42,7 +45,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_age_notOk() {
+    void register_lessThanMinAge_notOk() {
         user.setAge(16);
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
@@ -63,7 +66,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_password_notOk() {
+    void register_lessThanMinPassword_notOk() {
         user.setPassword("1111");
         assertThrows(RuntimeException.class, () ->
                 registrationService.register(user));
@@ -82,14 +85,14 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_login_notOk() {
+    void register_loginExists_notOk() {
         registrationService.register(user);
-        User user1 = new User();
-        user1.setAge(25);
-        user1.setLogin("test@gmail.com");
-        user1.setPassword("987654321");
+        User duplicatedLoginUser = new User();
+        duplicatedLoginUser.setAge(25);
+        duplicatedLoginUser.setLogin(DEFAULT_LOGIN);
+        duplicatedLoginUser.setPassword("987654321");
         assertThrows(RuntimeException.class, () ->
-                registrationService.register(user1));
+                registrationService.register(duplicatedLoginUser));
     }
 
     @Test
