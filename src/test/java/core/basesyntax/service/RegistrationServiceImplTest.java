@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_youngerMinYO_notOk() {
+    void register_youngerMin_notOk() {
         int minLimitedAge = RegistrationServiceImpl.MINIMUM_USERS_AGE;
         user.setAge(minLimitedAge - 1);
         assertThrows(RegistrationException.class, () ->
@@ -57,7 +57,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passShorterMin_notOk() {
-        int minPasswordChars = RegistrationServiceImpl.MINIMUM_PASS_CHARS;
+        int minPasswordChars = RegistrationServiceImpl.MINIMUM_PASSWORD_LENGTH;
         String badPassword = user.getPassword().substring(0, minPasswordChars - 1);
         user.setPassword(badPassword);
         assertThrows(RegistrationException.class, () ->

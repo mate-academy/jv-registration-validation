@@ -6,7 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     public static final int MINIMUM_USERS_AGE = 18;
-    public static final int MINIMUM_PASS_CHARS = 6;
+    public static final int MINIMUM_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegistrationException("Age field must be filled");
         }
-        if (user.getLogin().length() == 0) {
+        if (user.getLogin().isEmpty()) {
             throw new RegistrationException("Login field must be filled");
         }
         if (storageDao.get(user.getLogin()) != null) {
@@ -37,9 +37,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + user.getAge()
                     + " years old - not allowed");
         }
-        if (user.getPassword().length() < MINIMUM_PASS_CHARS) {
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
             throw new RegistrationException("The password must be not less than: "
-                    + MINIMUM_PASS_CHARS
+                    + MINIMUM_PASSWORD_LENGTH
                     + " chars");
         }
         storageDao.add(user);
