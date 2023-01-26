@@ -1,6 +1,8 @@
 package core.basesyntax;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -9,13 +11,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 public class RegistrationValidationTest {
     private static User user;
     private static RegistrationService registrationService;
+
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
+
     @BeforeEach
     void getDefaultUser() {
         user = new User();
@@ -23,6 +28,7 @@ public class RegistrationValidationTest {
         user.setLogin("test@gmail.com");
         user.setPassword("123456");
     }
+
     @AfterEach
     void clearStorage() {
         Storage.people.clear();
