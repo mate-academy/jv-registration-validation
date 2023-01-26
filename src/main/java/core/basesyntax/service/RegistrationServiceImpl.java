@@ -12,6 +12,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkUsersData(user);
+        return storageDao.add(user);
+    }
+
+    private void checkUsersData(User user) {
         if (user == null) {
             throw new RegistrationException("Input data is null.");
         }
@@ -27,8 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MIN_PASSWORD_LENGTH + " characters.");
         }
         if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login is already exists. ");
+            throw new RegistrationException("User with this login is already exists.");
         }
-        return storageDao.add(user);
     }
 }

@@ -7,7 +7,6 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -25,15 +24,6 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-    }
-
-    @BeforeEach
-    void setUp() {
-        User arnold = new User();
-        arnold.setAge(CORRECT_USERS_AGE);
-        arnold.setLogin("Arny");
-        arnold.setPassword("1*hD#Sak");
-        storageDao.add(arnold);
     }
 
     @Test
@@ -91,6 +81,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_sameLogin_notOk() {
+        User arnold = new User();
+        arnold.setAge(CORRECT_USERS_AGE);
+        arnold.setLogin("Arny");
+        arnold.setPassword("1*hD#Sak");
+        storageDao.add(arnold);
         User mary = new User();
         mary.setAge(CORRECT_USERS_AGE);
         mary.setLogin("Arny");
