@@ -11,18 +11,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws ValidationException {
-        if (user == null) { //null check
+    public User register(User user) {
+        if (user == null) {
             throw new ValidationException("Can't add User. User is null.");
         }
-        if (user.getLogin() == null || user.getLogin().length() == 0) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new ValidationException("Can't add User. User login is null or empty.");
         }
         if (user.getPassword() == null) {
             throw new ValidationException("Can't add User. User password is null.");
-        }
-        if (user.getAge() == 0 || user.getAge() > 110) {
-            throw new ValidationException("Can't add User. Wrong User age.");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new ValidationException("Can't add User. User already exist.");
