@@ -3,7 +3,9 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +32,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserAlreadyExist_ok() {
-        assertEquals(user, registrationService.register(user));
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -39,44 +42,50 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginNull_notOk() {
+    void register_userLoginNull_notOk() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPassword_notOk() {
+    void register_userPassword_notOk() {
         user.setPassword("1234");
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordNull_notOk() {
+    void register_userPasswordNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeNull_notOk() {
+    void register_userAgeNull_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userYoungAge_notOk() {
+    void register_userYoungAge_notOk() {
         user.setAge(14);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userNegativeAge_notOk() {
+    void register_userNegativeAge_notOk() {
         user.setAge(-2);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeOver18_ok() {
+    void register_userAgeOver18_ok() {
         user.setAge(40);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
