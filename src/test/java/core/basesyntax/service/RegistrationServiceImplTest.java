@@ -1,12 +1,16 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String PASSWORD_OK = "123456";
@@ -15,9 +19,9 @@ class RegistrationServiceImplTest {
     private static final int AGE_OK = 18;
     private static final int AGE_NOT_OK = 11;
     private static final int NEGATIVE_AGE = - 1;
-    private User user;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -91,6 +95,4 @@ class RegistrationServiceImplTest {
     void tearDown() {
         Storage.people.clear();
     }
-
-
 }

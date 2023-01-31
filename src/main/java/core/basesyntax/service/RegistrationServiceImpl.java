@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUser(User user) {
-        if(user == null) {
+        if (user == null) {
             throw new RuntimeException("User can not be null");
         } else if (user.getLogin() == null) {
             throw new RuntimeException("Login can not be null");
@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validateAge (User user) {
+    private void validateAge(User user) {
         if (user.getAge() < 0) {
             throw new RuntimeException("User's age can not be negative");
         } else if (user.getAge() == 0) {
@@ -40,14 +40,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validatePassword (User user) {
+    private void validatePassword(User user) {
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new RuntimeException("Password should be six and more characters");
         }
     }
 
-    private void validateUniqueUser (User user) {
-        if(storageDao.get(user.getLogin()) != null) {
+    private void validateUniqueUser(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RuntimeException("This user login is already exist");
         }
     }
