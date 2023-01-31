@@ -1,5 +1,9 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
@@ -7,7 +11,6 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,94 +76,94 @@ public class RegistrationServiceImplTest {
             registrationService.register(user);
         }
 
-        Assertions.assertEquals(validUsersList.size(), Storage.people.size(),
+        assertEquals(validUsersList.size(), Storage.people.size(),
                 "Test failed! The size of the storage isn't correct. Expected "
                         + validUsersList.size() + " but was " + Storage.people.size() + '\n');
-        Assertions.assertTrue(Storage.people.contains(validUserBob),
+        assertTrue(Storage.people.contains(validUserBob),
                 "Test failed! The storage must contain a user with login: "
                         + validUserBob.getLogin() + '\n');
-        Assertions.assertTrue(Storage.people.contains(validUserAlice),
+        assertTrue(Storage.people.contains(validUserAlice),
                 "Test failed! The storage must contain a user with login: "
                         + validUserAlice.getLogin() + '\n');
-        Assertions.assertTrue(Storage.people.contains(validUserJohn),
+        assertTrue(Storage.people.contains(validUserJohn),
                 "Test failed! The storage must contain a user with login: "
                         + validUserJohn.getLogin() + '\n');
     }
 
     @Test
-    public void register_NullUser_NotOk() {
-        Assertions.assertThrows(RegistrationException.class,
+    public void register_NullUser_NotAllowed() {
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(null),
                 String.format("%S should be thrown for: User == null" + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    public void register_SameUser_NotOk() throws RegistrationException {
+    public void register_SameUser_NotAllowed() throws RegistrationException {
         registrationService.register(validUserBob);
         registrationService.register(validUserAlice);
         int expectedStorageSize = 2;
-        Assertions.assertEquals(expectedStorageSize, Storage.people.size(),
+        assertEquals(expectedStorageSize, Storage.people.size(),
                 "Test failed! The size isn't correct. Expected "
                         + expectedStorageSize + " but was " + Storage.people.size() + '\n');
 
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: already existing login: "
                         + validUserBob.getLogin() + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    public void register_NullLogin_NotOk() {
+    public void register_NullLogin_NotAllowed() {
         validUserBob.setLogin(null);
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: login == null" + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    public void register_EmptyLogin_NotOk() {
+    public void register_EmptyLogin_NotAllowed() {
         validUserBob.setLogin("");
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: login is empty" + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    public void register_InvalidPasswordLength_NotOk() {
+    public void register_InvalidPasswordLength_NotAllowed() {
         validUserBob.setPassword("12345");
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: not enough length for password: "
                         + validUserBob.getPassword() + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    public void register_NullPassword_NotOk() {
+    public void register_NullPassword_NotAllowed() {
         validUserBob.setPassword(null);
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: password == null"
                         + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    public void register_NullAge_NotOk() {
+    public void register_NullAge_NotAllowed() {
         validUserBob.setAge(null);
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: age == null" + '\n', EXCEPTION_MESSAGE));
     }
 
     @Test
-    public void register_InvalidAge_NotOk() {
+    public void register_InvalidAge_NotAllowed() {
         validUserBob.setAge(17);
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: user's age < 18!"
                         + '\n', EXCEPTION_MESSAGE));
 
         validUserBob.setAge(-19);
-        Assertions.assertThrows(RegistrationException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(validUserBob),
                 String.format("%S should be thrown for: user's age < 18!"
                         + '\n', EXCEPTION_MESSAGE));
