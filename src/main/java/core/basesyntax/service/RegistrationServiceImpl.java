@@ -11,18 +11,27 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("All fields must be specified.");
+        }
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new RegistrationException("The login must be specified.");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("The password must be specified.");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("The age must be specified.");
+        }
         if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("The user's age must be at least " + MIN_AGE + ".");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("The user's password must be at least " + MIN_PASSWORD_LENGTH
-                    + " characters.");
-        }
-        if (user.getLogin() == null) {
-            throw new RuntimeException("The login must be specified.");
+            throw new RegistrationException("The user's age must be at least " + MIN_AGE + ".");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("This login is already registered.");
+            throw new RegistrationException("This login is already registered.");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("The user's password must be at least "
+                    + MIN_PASSWORD_LENGTH + " characters.");
         }
         return storageDao.add(user);
     }

@@ -9,126 +9,114 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final long DEFAULT_ID = 1111;
-    private static final String DEFAULT_LOGIN = "login";
-    private static final String DEFAULT_PASSWORD = "12345678";
-    private static final Integer DEFAULT_AGE = 19;
-    private static final String WRONG_PASSWORD = "1234";
-    private static final String SHORTEST_PASSWORD = "123456";
+    private static final String TOO_SHORT_PASSWORD = "1234";
+    private static final String SHORTEST_VALID_PASSWORD = "123456";
     private static final Integer AGE_LESS_THAN_MIN = 17;
     private static final Integer NEGATIVE_AGE = -20;
     private static final Integer MIN_AGE = 18;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private User user;
+    private User defaultUser = new User(1111L, "login", "12345678", 19);
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
-    @BeforeEach
-    void getDefaultUser() {
-        user = new User();
-        user.setId(DEFAULT_ID);
-        user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(DEFAULT_PASSWORD);
-        user.setAge(DEFAULT_AGE);
-    }
-
     @AfterEach
-    void clearStorage() {
+    public void clearStorage() {
         Storage.people.clear();
     }
 
     @Test
-    void register_ageLessThanMin_notOk() {
-        user.setAge(AGE_LESS_THAN_MIN);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    public void register_ageLessThanMin_notOk() {
+        defaultUser.setAge(AGE_LESS_THAN_MIN);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void register_nullAge_notOk() {
-        user.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    public void register_nullAge_notOk() {
+        defaultUser.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void register_ageIsMin_Ok() {
-        user.setAge(MIN_AGE);
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+    public void register_ageIsMin_Ok() {
+        defaultUser.setAge(MIN_AGE);
+        User registeredUser = registrationService.register(defaultUser);
+        assertEquals(defaultUser, registeredUser);
     }
 
     @Test
-    void register_negativeAge_notOk() {
-        user.setAge(NEGATIVE_AGE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    public void register_negativeAge_notOk() {
+        defaultUser.setAge(NEGATIVE_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void register_age_ok() {
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+    public void register_age_ok() {
+        User registeredUser = registrationService.register(defaultUser);
+        assertEquals(defaultUser, registeredUser);
     }
 
     @Test
-    void register_passwordShorterThanMin_notOk() {
-        user.setPassword(WRONG_PASSWORD);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    public void register_passwordShorterThanMin_notOk() {
+        defaultUser.setPassword(TOO_SHORT_PASSWORD);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void register_nullPassword_notOk() {
-        user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    public void register_nullPassword_notOk() {
+        defaultUser.setPassword(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void register_shortestPassword_ok() {
-        user.setPassword(SHORTEST_PASSWORD);
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+    public void register_shortestPassword_ok() {
+        defaultUser.setPassword(SHORTEST_VALID_PASSWORD);
+        User registeredUser = registrationService.register(defaultUser);
+        assertEquals(defaultUser, registeredUser);
     }
 
     @Test
-    void register_password_ok() {
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+    public void register_password_ok() {
+        User registeredUser = registrationService.register(defaultUser);
+        assertEquals(defaultUser, registeredUser);
     }
 
     @Test
-    void register_nullLogin_notOk() {
-        user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+    public void register_nullLogin_notOk() {
+        defaultUser.setLogin(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void register_duplicateLogin_notOk() {
-        storageDao.add(user);
-        User duplicateUser = new User();
-        duplicateUser.setId(DEFAULT_ID);
-        duplicateUser.setLogin(DEFAULT_LOGIN);
-        duplicateUser.setPassword(DEFAULT_PASSWORD);
-        duplicateUser.setAge(DEFAULT_AGE);
-        assertThrows(RuntimeException.class, () -> registrationService.register(duplicateUser));
+    public void register_emptyLogin_notOk() {
+        defaultUser.setLogin("");
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
-    void register_login_ok() {
-        //A user is added to storage to check that no duplicate login is added.
-        User userInStorage = new User();
-        userInStorage.setId(DEFAULT_ID + 1);
-        userInStorage.setLogin(DEFAULT_LOGIN + "1");
-        userInStorage.setPassword(DEFAULT_PASSWORD + "1");
-        userInStorage.setAge(DEFAULT_AGE + 1);
-        storageDao.add(userInStorage);
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+    public void register_duplicateLogin_notOk() {
+        storageDao.add(defaultUser);
+        User duplicateUser = defaultUser;
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(duplicateUser));
+    }
+
+    @Test
+    public void register_login_ok() {
+        User registeredUser = registrationService.register(defaultUser);
+        assertEquals(defaultUser, registeredUser);
+    }
+
+    @Test
+    public void register_nullUser_notOk() {
+        defaultUser = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 }
