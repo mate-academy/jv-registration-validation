@@ -3,18 +3,32 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import core.basesyntax.service.MyRegistrationException;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws MyRegistrationException{
+    public User register(User user) throws MyRegistrationException {
         if (user.getLogin() == null) {
             throw new MyRegistrationException("Login can`t be null");
-            //return null;
         }
-
+        if (user.getPassword() == null) {
+            throw new MyRegistrationException("Password can`t be null");
+        }
+        if (user.getAge() == 0) {
+            throw new MyRegistrationException("Age can`t be zero");
+        }
+        if (user.getAge() < 0) {
+            throw new MyRegistrationException("Age can`t be less than zero");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new MyRegistrationException("Age can`t be less than eighteen");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new MyRegistrationException("Password length can`t be less than six symbol");
+        }
         return storageDao.add(user);
     }
 }
