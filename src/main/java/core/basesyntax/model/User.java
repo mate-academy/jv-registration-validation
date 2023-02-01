@@ -58,4 +58,16 @@ public class User {
     public int hashCode() {
         return Objects.hash(login, password, age);
     }
+
+    /////////////////////// DELETE TO STRING ///////////////////
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }
