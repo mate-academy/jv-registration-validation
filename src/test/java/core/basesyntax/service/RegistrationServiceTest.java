@@ -3,14 +3,11 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.exceptions.PasswordException;
-import core.basesyntax.service.exceptions.UserExistException;
-import core.basesyntax.service.exceptions.UserNullException;
-import core.basesyntax.service.exceptions.UserYoungException;
+import core.basesyntax.service.exceptions.UserRegistrationException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -38,9 +35,9 @@ class RegistrationServiceTest {
                 "register method must return same user as was supplied");
         assertNotNull(normalUser.getId(), "User must have id after registration");
         // check db state
-        List<User> expectedDbState = new ArrayList<>();
-        expectedDbState.add(normalUser);
-        assertEquals(Storage.people, expectedDbState, "User must be saved in db");
+        List<User> actualDbState = new ArrayList<>();
+        actualDbState.add(normalUser);
+        assertEquals(Storage.people, actualDbState, "User must be saved in db");
     }
 
     @Test
@@ -77,7 +74,7 @@ class RegistrationServiceTest {
                 MIN_USER_AGE * 2);
         registrationService.register(normalUser1);
 
-        assertThrows(UserExistException.class,
+        assertThrows(UserRegistrationException.class,
                 () -> registrationService.register(normalUser2));
         List<User> expectedDbState = new ArrayList<>();
         expectedDbState.add(normalUser1);
@@ -87,7 +84,8 @@ class RegistrationServiceTest {
     @Test
     void register_userTooYoung_notOk() {
         User youngUser = createUser(DEFAULT_LOGIN, VALID_PASSWORD, MIN_USER_AGE - 1);
-        assertThrows(UserYoungException.class, () -> registrationService.register(youngUser));
+        assertThrows(UserRegistrationException.class, ()
+                -> registrationService.register(youngUser));
         assertEquals(Storage.people, new ArrayList<>(), "User mustn't be saved");
     }
 
@@ -101,22 +99,13 @@ class RegistrationServiceTest {
     @Test
     void register_nullFields_notOk() {
         User user = createUser(null, null, null);
-        assertThrows(UserNullException.class, () -> registrationService.register(user));
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
         assertEquals(Storage.people, new ArrayList<>(), "User mustn't be saved");
     }
 
     @Test
     void register_null_notOk() {
-        try {
-            registrationService.register(null);
-        } catch (NullPointerException e) {
-            fail("We should handle situation when user is null");
-        } catch (RuntimeException e) {
-            assertEquals(e.getClass(), RuntimeException.class);
-            assertEquals(Storage.people, new ArrayList<>(), "User mustn't be saved");
-            return;
-        }
-        fail();
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(null));
     }
 
     private User createUser(String login, String password, Integer age) {

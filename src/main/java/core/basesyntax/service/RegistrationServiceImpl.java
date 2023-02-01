@@ -4,9 +4,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.exceptions.PasswordException;
-import core.basesyntax.service.exceptions.UserExistException;
-import core.basesyntax.service.exceptions.UserNullException;
-import core.basesyntax.service.exceptions.UserYoungException;
+import core.basesyntax.service.exceptions.UserRegistrationException;
 
 public class RegistrationServiceImpl implements RegistrationService {
 
@@ -18,22 +16,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         userValidate(user);
         if (storageDao.get(user.getLogin()) != null) {
-            throw new UserExistException("This user with login already exists");
+            throw new UserRegistrationException("This user with login already exists");
         }
         return storageDao.add(user);
     }
 
     private void userValidate(User user) {
         if (user == null) {
-            throw new RuntimeException("null is not a valid value");
+            throw new UserRegistrationException("User cannot be null");
         }
-        if (user.getLogin() == null
-                || user.getLogin() == null
-                || user.getAge() == null) {
-            throw new UserNullException("values must be filled");
+        if (user.getLogin() == null) {
+            throw new UserRegistrationException("Login must be filled");
+        }
+        if (user.getAge() == null) {
+            throw new UserRegistrationException("Age must be filled");
         }
         if (user.getAge() < MIN_USER_AGE) {
-            throw new UserYoungException("the user is too young. His age should be "
+            throw new UserRegistrationException("the user is too young. His age should be "
                     + MIN_USER_AGE);
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
