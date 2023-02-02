@@ -21,78 +21,78 @@ class RegistrationServiceImplTest {
     private static final int NEGATIVE_AGE = - 1;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private User user;
+    private static User user;
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+        user = new User();
     }
 
     @BeforeEach
-    void setUp() {
-        user = new User();
+    public void setUp() {
         user.setLogin(LOGIN);
         user.setAge(AGE_OK);
         user.setPassword(PASSWORD_OK);
     }
 
     @Test
-    void register_tooSmallPassword_NotOk() {
+    public void register_tooSmallPassword_NotOk() {
         user.setPassword(PASSWORD_NOT_OK);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
 
     }
 
     @Test
-    void register_ageTooSmall_NotOK() {
+    public void register_ageTooSmall_notOK() {
         user.setAge(AGE_NOT_OK);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_loginIsNull_NotOK() {
+    public void register_loginIsNull_notOK() {
         user.setLogin(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_passwordIsNull_NotOk() {
+    public void register_passwordIsNull_notOk() {
         user.setPassword(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ageIsNull_NotOk() {
+    public void register_ageIsNull_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_negativeAge_NotOk() {
+    public void register_negativeAge_notOk() {
         user.setAge(NEGATIVE_AGE);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_rightUser_Ok() {
+    public void register_rightUser_Ok() {
         User actual = registrationService.register(user);
         assertSame(actual, user);
     }
 
     @Test
-    void register_NullUser_NotOk() {
+    public void register_nullUser_notOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_addSameUser_NotOk() {
+    public void register_addSameUser_notOk() {
         storageDao.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         Storage.people.clear();
     }
 }
