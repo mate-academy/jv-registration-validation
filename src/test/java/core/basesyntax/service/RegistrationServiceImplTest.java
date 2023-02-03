@@ -23,57 +23,44 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         user.setLogin("test@gmail.com");
-        user.setPassword("1234556");
+        user.setPassword("123456");
         user.setAge(18);
     }
 
     @Test
     void register_nullPassword_notOk() {
-        user.setLogin("testUser");
         user.setPassword(null);
-        user.setAge(20);
         assertThrows(RegistrationExeption.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        user.setPassword("123456");
-        user.setAge(20);
         assertThrows(RegistrationExeption.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_notValidAge_notOk() {
-        user.setLogin("testUser");
-        user.setPassword("123456");
         user.setAge(17);
         assertThrows(RegistrationExeption.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_zeroAge_notOk() {
-        user.setLogin("testUser");
-        user.setPassword("123456");
         user.setAge(0);
         assertThrows(RegistrationExeption.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nagativeAge_notOk() {
-        user.setLogin("testUser");
-        user.setPassword("123456");
         user.setAge(-17);
         assertThrows(RegistrationExeption.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        user.setLogin("testUser");
-        user.setPassword("123");
-        user.setAge(18);
+        user.setPassword("12345");
         assertThrows(RegistrationExeption.class, () -> registrationService.register(user));
     }
 

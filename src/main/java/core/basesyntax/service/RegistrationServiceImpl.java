@@ -7,7 +7,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     public static final int MIN_AGE = 18;
-    public static final int MIN_SYMBOLS_AMOUNT = 6;
+    public static final int MIN_PASSWORD_LENGHT = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -21,9 +21,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationExeption("Age can't be less than " + MIN_AGE + " !");
         }
-        if (user.getPassword().length() < MIN_SYMBOLS_AMOUNT) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGHT) {
             throw new RegistrationExeption("Password must be at least "
-                    + MIN_SYMBOLS_AMOUNT + " charters !");
+                    + MIN_PASSWORD_LENGHT + " charters !");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationExeption("User already exist !");
