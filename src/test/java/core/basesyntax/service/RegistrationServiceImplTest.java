@@ -21,27 +21,31 @@ class RegistrationServiceImplTest {
     private static final int NEGATIVE_AGE = - 1;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private static User user;
+    private User user;
 
     @BeforeAll
     public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-        user = new User();
     }
 
     @BeforeEach
     public void setUp() {
+        user = new User();
         user.setLogin(LOGIN);
         user.setAge(AGE_OK);
         user.setPassword(PASSWORD_OK);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
     public void register_tooSmallPassword_NotOk() {
         user.setPassword(PASSWORD_NOT_OK);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-
     }
 
     @Test
@@ -89,10 +93,5 @@ class RegistrationServiceImplTest {
     public void register_addSameUser_notOk() {
         storageDao.add(user);
         assertThrows(RuntimeException.class, () -> registrationService.register(user));
-    }
-
-    @AfterEach
-    public void tearDown() {
-        Storage.people.clear();
     }
 }
