@@ -29,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationExeption("User already exist !");
         }
 
-            return storageDao.add(user);
+        return storageDao.add(user);
     }
 
 }
