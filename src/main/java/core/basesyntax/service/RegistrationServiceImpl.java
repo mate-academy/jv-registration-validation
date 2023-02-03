@@ -6,7 +6,7 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_PASSWORD_SIZE = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private StorageDao storageDao = new StorageDaoImpl();
 
@@ -23,9 +23,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new RegistrationException("Password cant be null");
         }
-        if (password.length() < MIN_PASSWORD_SIZE) {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password has to be at least "
-                    + MIN_PASSWORD_SIZE + " characters");
+                    + MIN_PASSWORD_LENGTH + " characters");
         }
     }
 

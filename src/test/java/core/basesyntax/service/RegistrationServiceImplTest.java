@@ -37,49 +37,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginNull_NotOK() {
+    void register_LoginNull_NotOK() {
         testUser.setLogin(null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
 
     @Test
-    void userPasswordNull_NotOK() {
+    void register_PasswordNull_NotOK() {
         testUser.setPassword(null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
 
     @Test
-    void userAgeNull_NotOK() {
+    void register_AgeNull_NotOK() {
         testUser.setAge(null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
 
     @Test
-    void userLoginNotUnique_NotOk() {
+    void register_LoginNotUnique_NotOk() {
         registrationService.register(testUser);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
 
     @Test
-    void userPasswordLessThanRequiredMinimumLength_NotOk() {
+    void register_PasswordLessThanRequiredMinimumLength_NotOk() {
         testUser.setPassword("12345");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
 
     @Test
-    void userAgeLessThanRequiredMinimum_NotOk() {
+    void register_AgeLessThanRequiredMinimum_NotOk() {
         testUser.setAge(17);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
 
     @Test
-    void userWithValidParameters_OK() {
+    void register_WithValidParameters_OK() {
         registrationService.register(testUser);
         assertEquals(testUser, storageDao.get(testUser.getLogin()));
     }
