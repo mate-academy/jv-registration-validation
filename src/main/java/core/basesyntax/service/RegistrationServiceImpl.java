@@ -15,9 +15,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         userValidate(user);
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new UserRegistrationException("This user with login already exists");
-        }
         return storageDao.add(user);
     }
 
@@ -38,6 +35,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new PasswordException("Password length is incorrect."
                     + " The length of the password is correct " + MIN_PASSWORD_LENGTH);
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserRegistrationException("This user with login already exists");
         }
     }
 }
