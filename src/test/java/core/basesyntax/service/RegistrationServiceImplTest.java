@@ -18,6 +18,7 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static final String WRONG_LOGIN_ZERO_SYMBOLS = "";
+    private static final String WRONG_PASSWORD_ZERO_SYMBOLS = "";
     private static final String MINIMUM_CORRECT_LOGIN_ONE_SYMBOL = "a";
     private static final String ANOTHER_CORRECT_LOGIN = "aa";
     private static final String FIVE_SYMBOLS_WRONG_PASSWORD = "five5";
@@ -40,70 +41,74 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void getUserByLogin_ok() {
+    void get_byExistingLogin_ok() {
         registrationService.register(user);
         User actual = storageDao.get(MINIMUM_CORRECT_LOGIN_ONE_SYMBOL);
         assertEquals(RegistrationServiceImplTest.user, actual, "Users must be equal");
     }
 
     @Test
-    void getUserByFailLogin_notOk() {
+    void get_byNonExistingLogin_notOk() {
         registrationService.register(user);
         User actual = storageDao.get(ANOTHER_CORRECT_LOGIN);
         assertNotEquals(RegistrationServiceImplTest.user, actual, "Users mustn't be equal");
     }
 
     @Test
-    void registrationUserWithNull_notOk() {
+    void register_null_notOk() {
         assertThrows(UserValidationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void registrationUserWithCorrectData_Ok() {
+    void register_validData_Ok() {
         User expected = registrationService.register(user);
         assertEquals(expected, user, "Expected " + expected + ", but we have " + user);
     }
 
     @Test
-    void userLoginWithNullValidation_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginWithZeroSymbolsValidation_notOk() {
+    void register_zeroSymbolLogin_notOk() {
         user.setLogin(WRONG_LOGIN_ZERO_SYMBOLS);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userSameLogin_notOk() {
+    void register_byExistingLogin_notOk() {
         registrationService.register(user);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordWithNullValidation_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void wrongUserPasswordValidation_notOk() {
-        user.setPassword(WRONG_LOGIN_ZERO_SYMBOLS);
+    void register_withoutSymbolsPassword_notOk() {
+        user.setPassword(WRONG_PASSWORD_ZERO_SYMBOLS);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_shortPassword_notOk() {
         user.setPassword(FIVE_SYMBOLS_WRONG_PASSWORD);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeWithNullValidation_notOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void wrongUserAgeValidation_notOk() {
+    void register_AgeLess18_notOk() {
         user.setAge(WRONG_YEARS_OLD);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
