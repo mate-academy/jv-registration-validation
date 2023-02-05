@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
@@ -25,10 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password length can`t be less than six symbol");
         }
-        for (User currentUser : Storage.people) {
-            if (currentUser.getLogin().equals(user.getLogin())) {
-                throw new RegistrationException("User with this login already exists");
-            }
+        if (storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
+            throw new RegistrationException("User with this login already exists");
         }
         return storageDao.add(user);
     }

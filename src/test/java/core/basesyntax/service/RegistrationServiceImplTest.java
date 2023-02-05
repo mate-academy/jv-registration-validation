@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User user;
@@ -28,6 +27,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        user.setLogin("Jezza");
+        user.setPassword("123456");
+        user.setAge(62);
     }
 
     @Test
@@ -47,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullAge_notOk() {
+    void register_zeroAge_notOk() {
         user.setAge(0);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -80,26 +82,21 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_successfulRegistration_Ok() {
-        user.setLogin("Jezza");
-        user.setPassword("123456");
-        user.setAge(62);
-        boolean actual = registrationService.register(user)
-                        .equals(storageDao.get(user.getLogin()));
+        user.setAge(18);
+        User tempUser = storageDao.add(user);
+        boolean actual = storageDao.get(user.getLogin()).equals(tempUser);
         assertTrue(actual);
     }
 
     @Test
     void register_suchLoginAlreadyExists_notOk() {
-        user.setLogin("Jezza");
-        user.setPassword("123456");
-        user.setAge(62);
-        storageDao.add(user);
-        User jezza = new User();
-        jezza.setLogin("Jezza");
-        jezza.setPassword("1234567890");
-        jezza.setAge(62);
+        User jeremy = new User();
+        jeremy.setLogin("Jezza");
+        jeremy.setPassword("1234567890");
+        jeremy.setAge(62);
+        storageDao.add(jeremy);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(jezza);
+            registrationService.register(user);
         });
     }
 
