@@ -32,7 +32,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User can't be older " + MAX_AGE + " years old");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password must contains at least " + MIN_PASSWORD_LENGTH + " characters");
+            throw new RuntimeException("Password must contains at least "
+                    + MIN_PASSWORD_LENGTH + " characters");
         }
         if (user.getPassword().length() > MAX_PASSWORD_LENGTH) {
             throw new RuntimeException("Password cannot be longer than "

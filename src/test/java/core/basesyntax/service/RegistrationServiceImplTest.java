@@ -7,19 +7,23 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "111111";
     private static final String VALID_LOGIN = "test_user@gmail.com";
     private static final int VALID_AGE = 20;
-    private static RegistrationService registrationService;
+    private static RegistrationServiceImpl registrationService;
     private static User user;
-
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
         user = new User();
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
