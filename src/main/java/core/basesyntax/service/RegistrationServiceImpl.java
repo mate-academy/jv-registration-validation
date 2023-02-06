@@ -13,6 +13,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user.getLogin() == null) {
+            throw new RuntimeException("Enter user's login");
+        }
         if (!(user.getLogin() != null && storageDao.get(user.getLogin()) == null)) {
             throw new RuntimeException("Storage already contains this user");
         }
@@ -22,9 +25,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RuntimeException("Enter user's password");
         }
-        if (user.getLogin() == null) {
-            throw new RuntimeException("Enter user's login");
-        }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("User must be at least " + MIN_AGE + " years old");
         }
@@ -32,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User can't be older " + MAX_AGE + " years old");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password must contains at least 6 characters");
+            throw new RuntimeException("Password must contains at least " + MIN_PASSWORD_LENGTH + " characters");
         }
         if (user.getPassword().length() > MAX_PASSWORD_LENGTH) {
             throw new RuntimeException("Password cannot be longer than "
