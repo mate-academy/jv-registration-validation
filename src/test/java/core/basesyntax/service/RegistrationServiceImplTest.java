@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.InvalidRegistrationException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,7 +26,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         User user = new User(null, "123456", 25);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         User user = new User("Alice", null, 25);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -42,7 +42,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         User user = new User("Alice", "123456", null);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_emptyLogin_notOk() {
         User user = new User("", "123456", 54);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_emptyPassword_notOk() {
         User user = new User("Kate", "", 54);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -66,7 +66,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageNegative_notOk() {
         User user = new User("Alice", "123456", -5);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageZero_notOk() {
         User user = new User("Alice", "123456", 0);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -82,7 +82,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageUnder18_notOk() {
         User user = new User("Alice", "123456", 10);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
@@ -126,7 +126,7 @@ class RegistrationServiceImplTest {
         User user1 = new User("Andrew", "123456", 27);
         User user2 = new User("Andrew", "123456", 27);
         storageDao.add(user1);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user2));
         assertTrue(Storage.people.contains(user2), "Method register shouldn't add has already "
                 + "been user");
     }
@@ -134,7 +134,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordLessThenSixCharacters_notOk() {
         User user = new User("Alice", "12345", 24);
-        assertThrows(InvalidRegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.people.contains(user), "Method register shouldn't add user with "
                 + "not valid parameters");
     }
