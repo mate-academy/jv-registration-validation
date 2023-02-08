@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
     void userNotValidLogin_NotOk() {
         people.add(validUserBob);
         userWithNotValidLogin = new User("Bob", "1111111", 23);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidLogin);
         });
     }
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     @Test
     void userNotValidPassword_NotOk() {
         userWithNotValidPassword = new User("Alice","12345",22);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidPassword);
         });
     }
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     @Test
     void userNotValidAge_NotOk() {
         userWithNotValidAge = new User("John", "123456",17);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidAge);
         });
     }
@@ -78,7 +78,7 @@ class RegistrationServiceImplTest {
     @Test
     void userNegativeAge_NotOk() {
         userWithNotValidAge = new User("John", "123456",-22);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidAge);
         });
     }
@@ -86,7 +86,7 @@ class RegistrationServiceImplTest {
     @Test
     void userNullLogin_NotOk() {
         userWithNotValidLogin = new User(null, "1111111", 23);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidLogin);
         });
     }
@@ -94,7 +94,7 @@ class RegistrationServiceImplTest {
     @Test
     void userNullPassword_NotOk() {
         userWithNotValidPassword = new User("Alice",null,22);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidPassword);
         });
     }
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
     @Test
     void userNullAge_NotOk() {
         userWithNotValidAge = new User("John", "123456",null);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidAge);
         });
     }
@@ -110,7 +110,7 @@ class RegistrationServiceImplTest {
     @Test
     void userEmptyLineLogin_NotOk() {
         userWithNotValidLogin = new User("", "1111111", 23);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidLogin);
         });
     }
@@ -118,7 +118,7 @@ class RegistrationServiceImplTest {
     @Test
     void userEmptyLinePassword_NotOk() {
         userWithNotValidPassword = new User("Alice","",22);
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithNotValidPassword);
         });
     }
