@@ -10,116 +10,111 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User validUserBob;
-    private static User validUserKyle;
-    private static User validUserGreg;
-    private static User userWithNotValidLogin;
-    private static User userWithNotValidAge;
-    private static User userWithNotValidPassword;
+    private static User validUser;
+    private static User notValidUser;
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        validUserBob = new User("Bob", "123456",18);
-        validUserKyle = new User("Kyle", "1234567",99);
-        validUserGreg = new User("Greg", "qwerty",33);
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         people.clear();
-        people.add(validUserGreg);
+        validUser = null;
+        notValidUser = null;
     }
 
     @Test
-    void validUser_Ok() {
-        registrationService.register(validUserBob);
-        assertTrue(people.contains(validUserBob));
-        assertEquals(2,people.size());
-        assertEquals(people.get(1),validUserBob);
+    public void registrationService_validUser_Ok() {
+        validUser = new User("Bob","123456", 18);
+        registrationService.register(validUser);
+        assertTrue(people.contains(validUser));
+        assertEquals(1,people.size());
+        assertEquals(people.get(0),validUser);
     }
 
     @Test
-    void validUserWithOldAge_Ok() {
-        people.add(validUserBob);
-        registrationService.register(validUserKyle);
-        assertTrue(people.contains(validUserKyle));
-        assertEquals(3,people.size());
-        assertEquals(people.get(2),validUserKyle);
+    public void registrationService_validUserWithOldAge_Ok() {
+        validUser = new User("Bob","123456", 99);
+        registrationService.register(validUser);
+        assertTrue(people.contains(validUser));
+        assertEquals(1,people.size());
+        assertEquals(people.get(0),validUser);
     }
 
     @Test
-    void userNotValidLogin_NotOk() {
-        people.add(validUserBob);
-        userWithNotValidLogin = new User("Bob", "1111111", 23);
+    public void registrationService_userNotValidLogin_NotOk() {
+        people.add(new User("Bob","123456", 18));
+        notValidUser = new User("Bob", "1111111", 23);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidLogin);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userNotValidPassword_NotOk() {
-        userWithNotValidPassword = new User("Alice","12345",22);
+    public void registrationService_userNotValidPassword_NotOk() {
+        notValidUser = new User("Alice","12345",22);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidPassword);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userNotValidAge_NotOk() {
-        userWithNotValidAge = new User("John", "123456",17);
+    public void registrationService_userNotValidAge_NotOk() {
+        notValidUser = new User("John", "123456",17);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidAge);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userNegativeAge_NotOk() {
-        userWithNotValidAge = new User("John", "123456",-22);
+    public void registrationService_userNegativeAge_NotOk() {
+        notValidUser = new User("John", "123456",-22);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidAge);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userNullLogin_NotOk() {
-        userWithNotValidLogin = new User(null, "1111111", 23);
+    public void registrationService_userNullLogin_NotOk() {
+        notValidUser = new User(null, "1111111", 23);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidLogin);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userNullPassword_NotOk() {
-        userWithNotValidPassword = new User("Alice",null,22);
+    public void registrationService_userNullPassword_NotOk() {
+        notValidUser = new User("Alice",null,22);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidPassword);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userNullAge_NotOk() {
-        userWithNotValidAge = new User("John", "123456",null);
+    public void registrationService_userNullAge_NotOk() {
+        notValidUser = new User("John", "123456",null);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidAge);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userEmptyLineLogin_NotOk() {
-        userWithNotValidLogin = new User("", "1111111", 23);
+    public void registrationService_userEmptyLineLogin_NotOk() {
+        notValidUser = new User("", "1111111", 23);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidLogin);
+            registrationService.register(notValidUser);
         });
     }
 
     @Test
-    void userEmptyLinePassword_NotOk() {
-        userWithNotValidPassword = new User("Alice","",22);
+    public void registrationService_userEmptyLinePassword_NotOk() {
+        notValidUser = new User("Alice","",22);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNotValidPassword);
+            registrationService.register(notValidUser);
         });
     }
 }

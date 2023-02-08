@@ -20,11 +20,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegistrationException("Invalid data. Age can't be null");
         }
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isEmpty()) {
             throw new RegistrationException("Invalid data. "
                     + "Login can't be initialised with empty line");
         }
-        if (user.getPassword().equals("")) {
+        if (user.getPassword().isEmpty()) {
             throw new RegistrationException("Invalid data. "
                     + "Password can't be initialised with empty line");
         }
