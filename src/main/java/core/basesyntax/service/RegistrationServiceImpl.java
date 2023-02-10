@@ -5,7 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MINIMAl_AGE = 18;
+    private static final int MINIMAL_AGE = 18;
     private static final int MINIMAL_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -26,9 +26,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegistrationException("Age can't be null");
         }
-        if (user.getAge() < MINIMAl_AGE) {
+        if (user.getAge() < MINIMAL_AGE) {
             throw new RegistrationException("User must be at least "
-                    + MINIMAl_AGE
+                    + MINIMAL_AGE
                     + " years old");
         }
         if (user.getPassword() == null) {
