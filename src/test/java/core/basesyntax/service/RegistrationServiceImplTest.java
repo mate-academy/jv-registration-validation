@@ -75,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessThanSix_notOk() {
+    void register_passwordShorterThanRequiredMin_notOk() {
         User user = new User(LOGIN, "12345", MIN_AGE);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThanEighteen_notOk() {
+    void register_ageLessThanRequiredMin_notOk() {
         User user = new User(LOGIN, PASSWORD, 17);
         RuntimeException thrown = assertThrows(RuntimeException.class,
                 () -> registrationService.register(user),

@@ -11,15 +11,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || checkLogin(user.getLogin())) {
+        if (user == null || user.getLogin() == null || user.getLogin().trim().isEmpty()) {
             throw new RuntimeException("Invalid data");
         }
-        if (checkPassword(user.getPassword())) {
+        if (user.getPassword() == null
+                || user.getPassword().trim().length() < MIN_LENGTH_PASSWORD) {
             throw new RuntimeException(
                     String.format("User password should be at least %s characters",
                             MIN_LENGTH_PASSWORD));
         }
-        if (checkAge(user.getAge())) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RuntimeException(
                     String.format("User age should be at least %s years old",
                             MIN_AGE));
@@ -29,17 +30,5 @@ public class RegistrationServiceImpl implements RegistrationService {
                     user.getLogin()));
         }
         return storageDao.add(user);
-    }
-
-    private boolean checkLogin(String login) {
-        return login == null || login.trim().isEmpty();
-    }
-
-    private boolean checkPassword(String pass) {
-        return pass == null || pass.trim().length() < MIN_LENGTH_PASSWORD;
-    }
-
-    private boolean checkAge(Integer age) {
-        return age == null || age < MIN_AGE;
     }
 }
