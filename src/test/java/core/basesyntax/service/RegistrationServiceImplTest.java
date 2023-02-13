@@ -77,6 +77,7 @@ class RegistrationServiceImplTest {
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserAgeTooYoung);
         });
-        assertEquals("user is to young: " + invalidUserAgeTooYoung.getAge(), exception.getMessage());
+        assertEquals("user is to young: "
+                + invalidUserAgeTooYoung.getAge(), exception.getMessage());
     }
 }
