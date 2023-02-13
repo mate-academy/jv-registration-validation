@@ -24,7 +24,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ageLessThan18_notOk() {
+    public void register_ageLessThan_notOk() {
         User user = new User();
         user.setAge(17);
         user.setLogin("user");
@@ -33,7 +33,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_passwordLengthLessThan6_notOk() {
+    public void register_passwordLengthLessThan_notOk() {
         User user = new User();
         user.setAge(19);
         user.setLogin("user");
