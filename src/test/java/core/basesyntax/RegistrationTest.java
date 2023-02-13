@@ -13,11 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationTest {
-    private static final int Minimum_Age = 18;
-    private final String Login_Default = "name@gmail.com";
-    private final String Password_Example = "123abc";
     private static RegistrationService registrationService;
     private static User user;
+    private static final int MINIMUM_AGE = 18;
+    private final String loginDefault = "name@gmail.com";
+    private final String passwordExample = "123abc";
 
     @BeforeAll
     static void beforeAll() {
@@ -27,9 +27,9 @@ public class RegistrationTest {
     @BeforeEach
     void setUserExample() {
         user = new User();
-        user.setAge(Minimum_Age);
-        user.setLogin(Login_Default);
-        user.setPassword(Password_Example);
+        user.setAge(MINIMUM_AGE);
+        user.setLogin(loginDefault);
+        user.setPassword(passwordExample);
     }
 
     @AfterEach
@@ -67,7 +67,7 @@ public class RegistrationTest {
 
     @Test
     void register_Login_Ok() {
-        user.setLogin(Login_Default);
+        user.setLogin(loginDefault);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
@@ -88,7 +88,7 @@ public class RegistrationTest {
 
     @Test
     void register_Password_Ok() {
-        user.setPassword(Password_Example);
+        user.setPassword(passwordExample);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
