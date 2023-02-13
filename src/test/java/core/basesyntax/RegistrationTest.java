@@ -100,4 +100,3 @@ public class RegistrationTest {
                 registrationService.register(user));
     }
 }
-
