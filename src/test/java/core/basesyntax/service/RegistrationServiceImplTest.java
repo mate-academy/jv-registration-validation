@@ -1,5 +1,7 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
@@ -78,6 +80,9 @@ public class RegistrationServiceImplTest {
         user.setAge(19);
         user.setLogin("user");
         user.setPassword("123456");
-        Assertions.assertEquals(1, (long) service.register(user).getId());
+        StorageDao dao = new StorageDaoImpl();
+        User registeredUser = dao.add(user);
+        Assertions.assertEquals(1, (long) registeredUser.getId());
+        Assertions.assertEquals(Storage.people.get(0), registeredUser);
     }
 }
