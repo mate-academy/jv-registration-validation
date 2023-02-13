@@ -3,10 +3,10 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.customexception.ValidationExceptionIncorrectValue;
-import core.basesyntax.customexception.ValidationExceptionNullValue;
+import core.basesyntax.custom.exception.UserValidationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,14 +23,18 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setDefaultData() {
         testUser = new User();
+        testUser.setLogin("CorrectLogin");
+        testUser.setAge(18);
+        testUser.setPassword("CorrectPassword");
+    }
+
+    @AfterEach
+    void tearDown() {
         Storage.people.clear();
     }
 
     @Test
     void containsUserCorrectData_OK() {
-        testUser.setLogin("CorrectLogin");
-        testUser.setAge(18);
-        testUser.setPassword("CorrectPassword");
         User expected = testUser;
         User actual = registrationService.register(testUser);
         assertEquals(expected, actual);
@@ -38,11 +42,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void containsUserLoginInStorage_NotOk() {
-        testUser.setLogin("CorrectLogin");
-        testUser.setAge(18);
-        testUser.setPassword("CorrectPassword");
         registrationService.register(testUser);
-        assertThrows(ValidationExceptionIncorrectValue.class, () -> {
+        assertThrows(core.basesyntax.custom.exception.UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
@@ -50,7 +51,7 @@ class RegistrationServiceImplTest {
     @Test
     void isEmptyUserLogin_NotOk() {
         testUser.setLogin("");
-        assertThrows(ValidationExceptionIncorrectValue.class, () -> {
+        assertThrows(core.basesyntax.custom.exception.UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
@@ -58,26 +59,22 @@ class RegistrationServiceImplTest {
     @Test
     void containsWhitespaceUserLogin_NotOk() {
         testUser.setLogin("T e s t U s e r");
-        assertThrows(ValidationExceptionIncorrectValue.class, () -> {
+        assertThrows(core.basesyntax.custom.exception.UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
 
     @Test
     void containsAgeUnderMinValue_NotOk() {
-        testUser.setLogin("CorrectLogin");
         testUser.setAge(-25);
-        testUser.setPassword("CorrectPassword");
-        assertThrows(ValidationExceptionIncorrectValue.class, () -> {
+        assertThrows(core.basesyntax.custom.exception.UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
 
     @Test
     void containsAgeMinValue_OK() {
-        testUser.setLogin("CorrectLogin");
         testUser.setAge(18);
-        testUser.setPassword("CorrectPassword");
         User expected = testUser;
         User actual = registrationService.register(testUser);
         assertEquals(expected, actual);
@@ -85,20 +82,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void containsPasswordUnderMinLength_NotOk() {
-        testUser.setLogin("CorrectLogin");
-        testUser.setAge(18);
         testUser.setPassword("abc");
-        assertThrows(ValidationExceptionIncorrectValue.class, () -> {
+        assertThrows(core.basesyntax.custom.exception.UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
 
     @Test
     void containsWhiteSpaceInPassword_NotOk() {
-        testUser.setLogin("CorrectLogin");
-        testUser.setAge(18);
         testUser.setPassword("a b c");
-        assertThrows(ValidationExceptionIncorrectValue.class, () -> {
+        assertThrows(core.basesyntax.custom.exception.UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
@@ -106,7 +99,7 @@ class RegistrationServiceImplTest {
     @Test
     void isNullUser_NotOk() {
         testUser = null;
-        assertThrows(ValidationExceptionNullValue.class, () -> {
+        assertThrows(UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
@@ -114,29 +107,23 @@ class RegistrationServiceImplTest {
     @Test
     void isNullUserLogin_NotOk() {
         testUser.setLogin(null);
-        testUser.setAge(18);
-        testUser.setPassword("CorrectPassword");
-        assertThrows(ValidationExceptionNullValue.class, () -> {
+        assertThrows(UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
 
     @Test
     void isNullUserAge_NotOk() {
-        testUser.setLogin("CorrectLogin");
         testUser.setAge(null);
-        testUser.setPassword("CorrectPassword");
-        assertThrows(ValidationExceptionNullValue.class, () -> {
+        assertThrows(UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
 
     @Test
     void isNullPassword_NotOk() {
-        testUser.setLogin("CorrectLogin");
-        testUser.setAge(18);
         testUser.setPassword(null);
-        assertThrows(ValidationExceptionNullValue.class, () -> {
+        assertThrows(UserValidationException.class, () -> {
             registrationService.register(testUser);
         });
     }
