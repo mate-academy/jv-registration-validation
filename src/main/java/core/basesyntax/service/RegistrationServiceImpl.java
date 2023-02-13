@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserRegisterException("This login is already registered");
         }
-        if (user.getPassword() == null || user.getPassword().length() == 0) {
+        if (user.getPassword() == null) {
             throw new UserRegisterException("Password can't be empty");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {

@@ -50,14 +50,16 @@ class RegistrationServiceTest {
 
     @Test
     void register_sameLogin_notOk() {
+        User sameLoginUser = new User();
+        sameLoginUser.setLogin("bob2020");
         storageDao.add(user);
         assertThrows(UserRegisterException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(sameLoginUser);
         });
     }
 
     @Test
-    void register_nullPass_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(UserRegisterException.class, () -> {
             registrationService.register(user);
@@ -65,7 +67,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_emptyPass_notOk() {
+    void register_emptyPassword_notOk() {
         user.setPassword("");
         assertThrows(UserRegisterException.class, () -> {
             registrationService.register(user);
@@ -73,7 +75,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_shortPass_notOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("123");
         assertThrows(UserRegisterException.class, () -> {
             registrationService.register(user);
