@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final User validUser = new User("Mitresko", "P@ssw0rd", 30);
     private static final User invalidUserLoginExist = new User("Mitresko", "P@ssw0rd", 30);
-    private static final User invalidUserAgeLess18 = new User("Mitresko1", "P@ssw0rd", 17);
+    private static final User invalidUserAgeTooYoung = new User("Mitresko1", "P@ssw0rd", 17);
     private static final User invalidUserShortPass = new User("Taras", "P@ssw", 30);
     private static final User invalidUserNullLogin = new User(null, "P@ssw", 30);
     private static final User invalidUserNullPass = new User("Mykola", null, 30);
@@ -73,10 +73,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_ageLess18_exceptionThrown() {
+    void add_ageTooYoung_exceptionThrown() {
         Exception exception = assertThrows(RegistrationException.class, () -> {
-            service.register(invalidUserAgeLess18);
+            service.register(invalidUserAgeTooYoung);
         });
-        assertEquals("user is to young: " + invalidUserAgeLess18.getAge(), exception.getMessage());
+        assertEquals("user is to young: " + invalidUserAgeTooYoung.getAge(), exception.getMessage());
     }
 }
