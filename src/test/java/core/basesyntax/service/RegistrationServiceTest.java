@@ -107,7 +107,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_18Age_ok() {
+    void register_minAge_ok() {
         user.setAge(18);
         registrationService.register(user);
         boolean actual = Storage.people.contains(user);

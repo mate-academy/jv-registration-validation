@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getLogin().length() == 0) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new UserRegisterException("Login can't be empty");
         }
         if (storageDao.get(user.getLogin()) != null) {
