@@ -10,17 +10,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
-    private static RegistrationService service;
+    private static RegistrationService service = new RegistrationServiceImpl();
 
     @BeforeEach
     void clearData() {
         Storage.people.clear();
-        service = new RegistrationServiceImpl();
     }
 
     @Test
-    public void register_validUser_Ok() {
+    public void register_validUser_ok() {
         User validUser = new User("Mitresko", "P@ssw0rd", 30);
         service.register(validUser);
         assertEquals(validUser, Storage.people.get(0));
@@ -29,7 +27,7 @@ class RegistrationServiceImplTest {
     @Test
     public void register_loginExists_exceptionThrown() {
         User validUser = new User("Mitresko", "P@ssw0rd", 30);
-        User invalidUserLoginExist = new User("Mitresko", "P@ssw0rd", 30);
+        User invalidUserLoginExist = new User("Mitresko", "anotherP@ssw0rd", 28);
         service.register(validUser);
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserLoginExist);
@@ -81,5 +79,12 @@ class RegistrationServiceImplTest {
         });
         assertEquals("user is to young: "
                 + invalidUserAgeTooYoung.getAge(), exception.getMessage());
+    }
+
+    @Test
+    public void register_ageMinimalOk_ok() {
+        User validUser = new User("Mitresko", "P@ssw0rd", 18);
+        service.register(validUser);
+        assertEquals(validUser, Storage.people.get(0));
     }
 }
