@@ -11,7 +11,7 @@ public class StorageDaoImplTest {
     private static final User validUser = new User("Mitresko", "P@ssw0rd", 30);
 
     @BeforeEach
-    void clearData() {
+    public void clearData() {
         Storage.people.clear();
     }
 

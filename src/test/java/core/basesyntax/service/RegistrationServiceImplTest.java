@@ -10,13 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User validUser = new User("Mitresko", "P@ssw0rd", 30);
-    private static final User invalidUserLoginExist = new User("Mitresko", "P@ssw0rd", 30);
-    private static final User invalidUserAgeTooYoung = new User("Mitresko1", "P@ssw0rd", 17);
-    private static final User invalidUserShortPass = new User("Taras", "P@ssw", 30);
-    private static final User invalidUserNullLogin = new User(null, "P@ssw", 30);
-    private static final User invalidUserNullPass = new User("Mykola", null, 30);
-    private static final User invalidUserNullAge = new User("Sashko", "P@ssword", null);
+
     private static RegistrationService service;
 
     @BeforeEach
@@ -26,13 +20,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addAndGet_validUser_Ok() {
+    public void register_validUser_Ok() {
+        User validUser = new User("Mitresko", "P@ssw0rd", 30);
         service.register(validUser);
         assertEquals(validUser, Storage.people.get(0));
     }
 
     @Test
-    void add_loginExists_exceptionThrown() {
+    public void register_loginExists_exceptionThrown() {
+        User validUser = new User("Mitresko", "P@ssw0rd", 30);
+        User invalidUserLoginExist = new User("Mitresko", "P@ssw0rd", 30);
         service.register(validUser);
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserLoginExist);
@@ -41,7 +38,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_loginNull_exceptionThrown() {
+    public void register_loginNull_exceptionThrown() {
+        User invalidUserNullLogin = new User(null, "P@ssw", 30);
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserNullLogin);
         });
@@ -49,7 +47,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_passwordNull_exceptionThrown() {
+    public void register_passwordNull_exceptionThrown() {
+        User invalidUserNullPass = new User("Mykola", null, 30);
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserNullPass);
         });
@@ -57,7 +56,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_ageNull_exceptionThrown() {
+    public void register_ageNull_exceptionThrown() {
+        User invalidUserNullAge = new User("Sashko", "P@ssword", null);
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserNullAge);
         });
@@ -65,7 +65,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_passwordShort_exceptionThrown() {
+    public void register_passwordShort_exceptionThrown() {
+        User invalidUserShortPass = new User("Taras", "P@ssw", 30);
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserShortPass);
         });
@@ -73,7 +74,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_ageTooYoung_exceptionThrown() {
+    public void register_ageTooYoung_exceptionThrown() {
+        User invalidUserAgeTooYoung = new User("Mitresko1", "P@ssw0rd", 17);
         Exception exception = assertThrows(RegistrationException.class, () -> {
             service.register(invalidUserAgeTooYoung);
         });

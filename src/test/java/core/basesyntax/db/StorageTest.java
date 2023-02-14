@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class StorageTest {
 
     @BeforeEach
-    void clearData() {
+    public void clearData() {
         Storage.people.clear();
     }
 
