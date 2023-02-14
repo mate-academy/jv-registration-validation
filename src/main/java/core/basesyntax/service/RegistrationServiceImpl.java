@@ -52,6 +52,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             return "Password can't be null";
         } else if (user.getAge() == null) {
             return "Age can't be null";
-        } else return "OK";
+        }
+        return "OK";
     }
 }
