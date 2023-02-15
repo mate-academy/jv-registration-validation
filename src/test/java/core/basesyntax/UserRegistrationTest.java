@@ -1,11 +1,11 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import core.basesyntax.dao.UsersDataIsNotValidException;
+import core.basesyntax.dao.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +40,7 @@ public class UserRegistrationTest {
         registrationService.register(user1);
         try {
             registrationService.register(user2);
-        } catch (UsersDataIsNotValidException e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("UsersDataIsNotValidException shout throw if login is already registered");
@@ -57,8 +57,7 @@ public class UserRegistrationTest {
         user2.setAge(ageValid);
         user2.setPassword(passwordValid);
         registrationService.register(user1);
-        boolean actual = registrationService.register(user2);
-        assertTrue(actual);
+        assertEquals(registrationService.register(user2), user2);
     }
 
     @Test
@@ -67,7 +66,7 @@ public class UserRegistrationTest {
         user1.setLogin("new login");
         user1.setAge(ageNotValid);
         user1.setPassword(passwordValid);
-        assertThrows(UsersDataIsNotValidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user1);
         });
     }
@@ -78,8 +77,7 @@ public class UserRegistrationTest {
         user1.setLogin("minimal age");
         user1.setAge(ageValid);
         user1.setPassword(passwordValid);
-        boolean actual = registrationService.register(user1);
-        assertTrue(actual);
+        assertEquals(registrationService.register(user1), user1);
     }
 
     @Test
@@ -88,8 +86,9 @@ public class UserRegistrationTest {
         user1.setLogin("minimal password");
         user1.setAge(ageValid);
         user1.setPassword(pasWorldNotValid);
-        boolean actual = registrationService.register(user1);
-        assertFalse(actual);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user1);
+        });
     }
 
     @Test
@@ -98,8 +97,7 @@ public class UserRegistrationTest {
         user1.setLogin("large password");
         user1.setAge(ageValid);
         user1.setPassword(passwordValid);
-        boolean actual = registrationService.register(user1);
-        assertTrue(actual);
+        assertEquals(registrationService.register(user1), user1);
     }
 
     @Test
@@ -108,8 +106,7 @@ public class UserRegistrationTest {
         user1.setLogin(null);
         user1.setAge(ageValid);
         user1.setPassword(passwordValid);
-        boolean actual = registrationService.register(user1);
-        assertFalse(actual);
+        assertNull(registrationService.register(user1));
     }
 
     @Test
@@ -118,8 +115,7 @@ public class UserRegistrationTest {
         user1.setLogin("null age");
         user1.setAge(null);
         user1.setPassword(passwordValid);
-        boolean actual = registrationService.register(user1);
-        assertFalse(actual);
+        assertNull(registrationService.register(user1));
     }
 
     @Test
@@ -128,7 +124,6 @@ public class UserRegistrationTest {
         user1.setLogin("null password");
         user1.setAge(ageValid);
         user1.setPassword(null);
-        boolean actual = registrationService.register(user1);
-        assertFalse(actual);
+        assertNull(registrationService.register(user1));
     }
 }
