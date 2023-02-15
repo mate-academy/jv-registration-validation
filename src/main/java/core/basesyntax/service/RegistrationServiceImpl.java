@@ -6,6 +6,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MINIMAL_AGE = 18;
+    private static final int MINIMAL_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -14,11 +16,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkPassword(user);
         checkLogin(user);
         storageDao.add(user);
+        validLogin(user.getLogin());
         return user;
     }
 
     private void checkPassword(User user) {
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
             throw new RegistrationException("Incorrect password!");
         }
         if (user.getPassword() == null) {
@@ -27,9 +30,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkLogin(User user) {
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Incorrect user login!");
-        }
         for (User person : Storage.people) {
             if (user.getLogin().equals(person.getLogin())) {
                 throw new RegistrationException("This login is not available!");
@@ -37,8 +37,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
+    private void validLogin (String login) {
+        if (login == null) {
+            throw new RegistrationException("Incorrect user login!");
+        }
+    }
+
     private void checkAge(User user) {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MINIMAL_AGE) {
             throw new RegistrationException("Incorrect user age!");
         }
     }

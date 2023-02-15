@@ -5,10 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+
+    @BeforeEach
+    void beforeEach() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @Test
     void register_nullAge_notOk() {
@@ -17,7 +22,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLogin_notOk() {
+    void register_checkLogin_notOk() {
         User user = new User(1L,null,"1234567",20);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
@@ -48,5 +53,10 @@ class RegistrationServiceImplTest {
         User user = new User(1L,"Nike","1234567",22);
         registrationService.register(user);
         assertEquals(size + 1,Storage.people.size());
+    }
+
+    @AfterEach
+    public void afterEach() {
+        Storage.people.clear();
     }
 }
