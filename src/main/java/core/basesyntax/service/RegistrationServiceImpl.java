@@ -15,8 +15,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkAge(user);
         checkPassword(user);
         checkLogin(user);
-        storageDao.add(user);
         validLogin(user.getLogin());
+        storageDao.add(user);
         return user;
     }
 
@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validLogin (String login) {
+    private void validLogin(String login) {
         if (login == null) {
             throw new RegistrationException("Incorrect user login!");
         }
