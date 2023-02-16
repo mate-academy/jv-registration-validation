@@ -13,19 +13,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null) {
-            return null;
+            throw new RegistrationException("This login is null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This login is already registered");
         }
         if (user.getAge() == null) {
-            return null;
+            throw new RegistrationException("The user's age is null");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("The user's age is less than 18");
         }
         if (user.getPassword() == null) {
-            return null;
+            throw new RegistrationException("The user's password is null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("The user's password is at least 6 characters");

@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -28,13 +27,13 @@ public class UserRegistrationTest {
         user.setLogin(login);
         user.setAge(ageValid);
         user.setPassword(passwordValid);
-        User userloginIsAlreadyRegistered = new User();
-        userloginIsAlreadyRegistered.setLogin(login);
-        userloginIsAlreadyRegistered.setAge(ageValid);
-        userloginIsAlreadyRegistered.setPassword(passwordValid);
+        User userLoginIsAlreadyRegistered = new User();
+        userLoginIsAlreadyRegistered.setLogin(login);
+        userLoginIsAlreadyRegistered.setAge(ageValid);
+        userLoginIsAlreadyRegistered.setPassword(passwordValid);
         registrationService.register(user);
         try {
-            registrationService.register(userloginIsAlreadyRegistered);
+            registrationService.register(userLoginIsAlreadyRegistered);
         } catch (RegistrationException e) {
             return;
         }
@@ -113,7 +112,9 @@ public class UserRegistrationTest {
         user.setLogin(null);
         user.setAge(ageValid);
         user.setPassword(passwordValid);
-        assertNull(registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
@@ -123,7 +124,9 @@ public class UserRegistrationTest {
         user.setLogin("null age");
         user.setAge(null);
         user.setPassword(passwordValid);
-        assertNull(registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
@@ -133,6 +136,8 @@ public class UserRegistrationTest {
         user.setLogin("null password");
         user.setAge(ageValid);
         user.setPassword(null);
-        assertNull(registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
