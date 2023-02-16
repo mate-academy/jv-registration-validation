@@ -38,6 +38,51 @@ public class RegistrationTest {
     }
 
     @Test
+    void register_nullUser_notOk() {
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(null));
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        user.setLogin(null);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(null));
+    }
+
+    @Test
+    void register_alreadyExist_notOk() {
+        registrationService.register(user);
+        User newUser = new User();
+        newUser.setLogin("name@gmail.com");
+        newUser.setPassword("dudu6776");
+        newUser.setAge(18);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void register_emptyLogin_notOk() {
+        user.setLogin("");
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
+    void register_Login_Ok() {
+        user.setLogin(loginDefault);
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
+    }
+
+    @Test
+    void register_Login_notOk() {
+        Storage.people.add(user);
+        assertThrows(RuntimeException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
     void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class, () ->
@@ -56,27 +101,6 @@ public class RegistrationTest {
         user.setAge(18);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
-    }
-
-    @Test
-    void register_nullLogin_notOk() {
-        user.setLogin(null);
-        assertThrows(RuntimeException.class, () ->
-                registrationService.register(user));
-    }
-
-    @Test
-    void register_Login_Ok() {
-        user.setLogin(loginDefault);
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
-    }
-
-    @Test
-    void register_Login_notOk() {
-        Storage.people.add(user);
-        assertThrows(RuntimeException.class, () ->
-                    registrationService.register(user));
     }
 
     @Test
