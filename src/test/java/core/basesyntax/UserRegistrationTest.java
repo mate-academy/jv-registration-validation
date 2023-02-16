@@ -13,33 +13,28 @@ import org.junit.jupiter.api.Test;
 
 public class UserRegistrationTest {
     private static RegistrationServiceImpl registrationService;
-    private static int ageValid;
-    private static int ageNotValid;
-    private static String passwordValid;
-    private static String pasWorldNotValid;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        ageValid = 19;
-        ageNotValid = 16;
-        passwordValid = "asdfgh";
-        pasWorldNotValid = "asd";
     }
 
     @Test
-    void loginIsAlreadyRegistered_notOk() {
-        User user1 = new User();
-        user1.setLogin("login");
-        user1.setAge(ageValid);
-        user1.setPassword(passwordValid);
-        User user2 = new User();
-        user2.setLogin("login");
-        user2.setAge(ageValid);
-        user2.setPassword(passwordValid);
-        registrationService.register(user1);
+    void register_loginIsAlreadyRegistered_notOk() {
+        String login = "login";
+        int ageValid = 19;
+        String passwordValid = "asdfgh";
+        User user = new User();
+        user.setLogin(login);
+        user.setAge(ageValid);
+        user.setPassword(passwordValid);
+        User userloginIsAlreadyRegistered = new User();
+        userloginIsAlreadyRegistered.setLogin(login);
+        userloginIsAlreadyRegistered.setAge(ageValid);
+        userloginIsAlreadyRegistered.setPassword(passwordValid);
+        registrationService.register(user);
         try {
-            registrationService.register(user2);
+            registrationService.register(userloginIsAlreadyRegistered);
         } catch (RegistrationException e) {
             return;
         }
@@ -47,83 +42,97 @@ public class UserRegistrationTest {
     }
 
     @Test
-    void loginIsNewerRegistered_ok() {
-        User user1 = new User();
-        user1.setLogin("user");
-        user1.setAge(ageValid);
-        user1.setPassword(passwordValid);
-        User user2 = new User();
-        user2.setLogin("new user");
-        user2.setAge(ageValid);
-        user2.setPassword(passwordValid);
-        registrationService.register(user1);
-        assertEquals(registrationService.register(user2), user2);
+    void register_loginIsNewerRegistered_ok() {
+        int ageValid = 19;
+        String passwordValid = "asdfgh";
+        User userOldLogin = new User();
+        userOldLogin.setLogin("user");
+        userOldLogin.setAge(ageValid);
+        userOldLogin.setPassword(passwordValid);
+        User userNewLogin = new User();
+        userNewLogin.setLogin("new user");
+        userNewLogin.setAge(ageValid);
+        userNewLogin.setPassword(passwordValid);
+        registrationService.register(userOldLogin);
+        assertEquals(registrationService.register(userNewLogin), userNewLogin);
     }
 
     @Test
-    void ageIsLessMinimalAge_notOk() {
-        User user1 = new User();
-        user1.setLogin("new login");
-        user1.setAge(ageNotValid);
-        user1.setPassword(passwordValid);
+    void register_ageIsLessMinimalAge_notOk() {
+        int ageNotValid = 16;
+        String passwordValid = "asdfgh";
+        User user = new User();
+        user.setLogin("new login");
+        user.setAge(ageNotValid);
+        user.setPassword(passwordValid);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void userIsOlderMinimalAge_ok() {
-        User user1 = new User();
-        user1.setLogin("minimal age");
-        user1.setAge(ageValid);
-        user1.setPassword(passwordValid);
-        assertEquals(registrationService.register(user1), user1);
+    void register_ageMoreMinimalAge_ok() {
+        int ageValid = 19;
+        String passwordValid = "asdfgh";
+        User user = new User();
+        user.setLogin("minimal age");
+        user.setAge(ageValid);
+        user.setPassword(passwordValid);
+        assertEquals(registrationService.register(user), user);
     }
 
     @Test
-    void passwordIsLessMinimumCharacterSize_notOk() {
-        User user1 = new User();
-        user1.setLogin("minimal password");
-        user1.setAge(ageValid);
-        user1.setPassword(pasWorldNotValid);
+    void register_passwordIsLessMinimumCharacterSize_notOk() {
+        int ageValid = 19;
+        String pasWorldNotValid = "asd";
+        User user = new User();
+        user.setLogin("minimal password");
+        user.setAge(ageValid);
+        user.setPassword(pasWorldNotValid);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void passwordIsLargeMinimumCharacterSize_Ok() {
-        User user1 = new User();
-        user1.setLogin("large password");
-        user1.setAge(ageValid);
-        user1.setPassword(passwordValid);
-        assertEquals(registrationService.register(user1), user1);
+    void register_passwordIsLargeMinimumCharacterSize_Ok() {
+        int ageValid = 19;
+        String passwordValid = "asdfgh";
+        User user = new User();
+        user.setLogin("large password");
+        user.setAge(ageValid);
+        user.setPassword(passwordValid);
+        assertEquals(registrationService.register(user), user);
     }
 
     @Test
     void register_nullLogin_notOk() {
-        User user1 = new User();
-        user1.setLogin(null);
-        user1.setAge(ageValid);
-        user1.setPassword(passwordValid);
-        assertNull(registrationService.register(user1));
+        int ageValid = 19;
+        String passwordValid = "asdfgh";
+        User user = new User();
+        user.setLogin(null);
+        user.setAge(ageValid);
+        user.setPassword(passwordValid);
+        assertNull(registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
-        User user1 = new User();
-        user1.setLogin("null age");
-        user1.setAge(null);
-        user1.setPassword(passwordValid);
-        assertNull(registrationService.register(user1));
+        String passwordValid = "asdfgh";
+        User user = new User();
+        user.setLogin("null age");
+        user.setAge(null);
+        user.setPassword(passwordValid);
+        assertNull(registrationService.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
-        User user1 = new User();
-        user1.setLogin("null password");
-        user1.setAge(ageValid);
-        user1.setPassword(null);
-        assertNull(registrationService.register(user1));
+        int ageValid = 19;
+        User user = new User();
+        user.setLogin("null password");
+        user.setAge(ageValid);
+        user.setPassword(null);
+        assertNull(registrationService.register(user));
     }
 }
