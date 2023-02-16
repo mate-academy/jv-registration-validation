@@ -5,15 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService = new RegistrationServiceImpl();
 
-    @BeforeEach
-    void beforeEach() {
+    @Before
+    void before() {
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -24,13 +24,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkLogin_notOk() {
+    void register_nullLogin_notOk() {
         User user = new User(1L,null,"1234567",20);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_incorrectLogin_notOk() {
+    void register_userAlreadyExists_notOk() {
         User user = new User(1L,"Ivan ivanov","1234567",21);
         Storage.people.add(user);
         User userReg = new User(1L,"Ivan ivanov","1234567",21);
@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_IncorrectPassword_notOk() {
+    void register_shortPassword_notOk() {
         User user = new User(1L,"Jane","12345",22);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }

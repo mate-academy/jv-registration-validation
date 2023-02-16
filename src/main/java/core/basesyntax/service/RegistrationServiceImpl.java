@@ -12,39 +12,35 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkAge(user);
-        checkPassword(user);
-        checkLogin(user);
-        validLogin(user.getLogin());
+        checkAge(user.getAge());
+        checkPassword(user.getPassword());
+        checkLogin(user.getLogin());
         storageDao.add(user);
         return user;
     }
 
-    private void checkPassword(User user) {
-        if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
+    private void checkPassword(String password) {
+        if (password == null) {
             throw new RegistrationException("Incorrect password!");
         }
-        if (user.getPassword() == null) {
+        if (password.length() < MINIMAL_PASSWORD_LENGTH) {
             throw new RegistrationException("Incorrect password!");
         }
     }
 
-    private void checkLogin(User user) {
+    private void checkLogin(String login) {
+        if (login == null) {
+            throw new RegistrationException("Incorrect user login!");
+        }
         for (User person : Storage.people) {
-            if (user.getLogin().equals(person.getLogin())) {
+            if (login.equals(person.getLogin())) {
                 throw new RegistrationException("This login is not available!");
             }
         }
     }
 
-    private void validLogin(String login) {
-        if (login == null) {
-            throw new RegistrationException("Incorrect user login!");
-        }
-    }
-
-    private void checkAge(User user) {
-        if (user.getAge() < MINIMAL_AGE) {
+    private void checkAge(Integer age) {
+        if (age < MINIMAL_AGE) {
             throw new RegistrationException("Incorrect user age!");
         }
     }
