@@ -5,15 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService = new RegistrationServiceImpl();
 
-    @BeforeEach
-    void beforeEach() {
+    @Before
+    void before() {
         registrationService = new RegistrationServiceImpl();
     }
 
