@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exeption.ValidationExeption;
+import core.basesyntax.exeption.ValidationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
             assertEquals(user, storageDao.get("Frank"));
-        } catch (ValidationExeption e) {
+        } catch (ValidationException e) {
             fail("User with current login exist in Storage!");
 
         }
@@ -53,39 +53,39 @@ class RegistrationServiceImplTest {
     @Test
     void register_isLoginInStorage_NotOk() {
         user = new User("Jane","82ghnd43",31);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_loginIsNull_NotOk() {
         user = new User(null,"82ghnd43", 31);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_loginIsEmptyLine_NotOk() {
         user = new User("","82ghnd43", 31);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_userAgeIsEighteen_Ok() {
+    void register_userAgeIsMinRequired_Ok() {
         user = new User("Forty","87lhnd43", 18);
         try {
             registrationService.register(user);
             assertEquals(user, storageDao.get("Forty"));
-        } catch (ValidationExeption e) {
+        } catch (ValidationException e) {
             fail("User age isn't correct!");
         }
     }
 
     @Test
-    void register_userAgeIsGreaterThanEighteen_Ok() {
+    void register_userAgeIsGreaterMinRequired_Ok() {
         user = new User("Yasemin","82ghfd43", 91);
         try {
             registrationService.register(user);
             assertEquals(user, storageDao.get("Yasemin"));
-        } catch (ValidationExeption e) {
+        } catch (ValidationException e) {
             fail("User age isn't correct!");
         }
     }
@@ -93,13 +93,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAgeIsNull_NotOk() {
         user = new User("Marta","fortycash", null);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_userAgeLessThanEighteen_NotOk() {
+    void register_userAgeLessThanMinRequired_NotOk() {
         user = new User("Marta","fortycash1", 17);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -108,7 +108,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
             assertEquals(user, storageDao.get("Kobe"));
-        } catch (ValidationExeption e) {
+        } catch (ValidationException e) {
             fail("User password isn't correct!");
 
         }
@@ -120,7 +120,7 @@ class RegistrationServiceImplTest {
         try {
             registrationService.register(user);
             assertEquals(user, storageDao.get("George"));
-        } catch (ValidationExeption e) {
+        } catch (ValidationException e) {
             fail("User password isn't correct!");
         }
     }
@@ -128,18 +128,18 @@ class RegistrationServiceImplTest {
     @Test
     void register_userPasswordIsNull_NotOk() {
         user = new User("Monika", null, 30);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userPasswordIsEmptyLine_NotOk() {
         user = new User("Stephen", "", 34);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userPasswordIsLessThanMinCharacters_NotOK() {
         user = new User("Drew", "18ui", 31);
-        assertThrows(ValidationExeption.class, () -> registrationService.register(user));
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 }
