@@ -2,12 +2,14 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeption.ValidationExeption;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,11 +33,21 @@ class RegistrationServiceImplTest {
         Storage.people.add(new User("Thomas","djfj3621", 20));
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
-    void register_userWithUniqueLogic_Ok() throws ValidationExeption {
+    void register_userWithUniqueLogic_Ok() {
         user = new User("Frank","82ghnrw3",35);
-        registrationService.register(new User("Frank","82ghnrw3",35));
-        assertEquals(user, storageDao.get("Frank"));
+        try {
+            registrationService.register(user);
+            assertEquals(user, storageDao.get("Frank"));
+        } catch (ValidationExeption e) {
+            fail("User with current login exist in Storage!");
+
+        }
     }
 
     @Test
@@ -57,17 +69,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsEighteen_Ok() throws ValidationExeption {
+    void register_userAgeIsEighteen_Ok() {
         user = new User("Forty","87lhnd43", 18);
-        registrationService.register(user);
-        assertEquals(user, storageDao.get("Forty"));
+        try {
+            registrationService.register(user);
+            assertEquals(user, storageDao.get("Forty"));
+        } catch (ValidationExeption e) {
+            fail("User age isn't correct!");
+        }
     }
 
     @Test
-    void register_userAgeIsGreaterThanEighteen_Ok() throws ValidationExeption {
-        user = new User("Yesmin","82ghfd43", 91);
-        registrationService.register(user);
-        assertEquals(user, storageDao.get("Yesmin"));
+    void register_userAgeIsGreaterThanEighteen_Ok() {
+        user = new User("Yasemin","82ghfd43", 91);
+        try {
+            registrationService.register(user);
+            assertEquals(user, storageDao.get("Yasemin"));
+        } catch (ValidationExeption e) {
+            fail("User age isn't correct!");
+        }
     }
 
     @Test
@@ -83,17 +103,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsSixCharacters_Ok() throws ValidationExeption {
-        user = new User("Kobe","ghfd43", 20);
-        registrationService.register(user);
-        assertEquals(user, storageDao.get("Kobe"));
+    void register_userPasswordIsMinCharacters_Ok() {
+        user = new User("Kobe", "ghfd43", 20);
+        try {
+            registrationService.register(user);
+            assertEquals(user, storageDao.get("Kobe"));
+        } catch (ValidationExeption e) {
+            fail("User password isn't correct!");
+
+        }
     }
 
     @Test
-    void register_userPasswordIsGreaterThanSixCharacters_Ok() throws ValidationExeption {
+    void register_userPasswordIsGreaterThanMinCharacters_Ok() {
         user = new User("George","ghfd4382daa", 19);
-        registrationService.register(user);
-        assertEquals(user, storageDao.get("George"));
+        try {
+            registrationService.register(user);
+            assertEquals(user, storageDao.get("George"));
+        } catch (ValidationExeption e) {
+            fail("User password isn't correct!");
+        }
     }
 
     @Test
@@ -109,7 +138,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsLessThanSixCharacters_NotOK() {
+    void register_userPasswordIsLessThanMinCharacters_NotOK() {
         user = new User("Drew", "18ui", 31);
         assertThrows(ValidationExeption.class, () -> registrationService.register(user));
     }
