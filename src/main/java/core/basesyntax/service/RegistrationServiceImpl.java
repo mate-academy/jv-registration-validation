@@ -26,6 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password.length() < MINIMAL_PASSWORD_LENGTH) {
             throw new RegistrationException("Incorrect password!");
         }
+
     }
 
     private void checkLogin(String login) {

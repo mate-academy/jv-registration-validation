@@ -59,6 +59,7 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     public void afterEach() {
+
         Storage.people.clear();
     }
 }
