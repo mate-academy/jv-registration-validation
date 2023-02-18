@@ -12,28 +12,28 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null || user.getLogin().equals("")) {
-            throw new RuntimeException("User login field "
+            throw new RegistrationException("User login field "
                     + "cannot be empty");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User login "
+            throw new RegistrationException("User login "
                     + "already exists");
         }
         if (user.getPassword() == null) {
-            throw new RuntimeException("User password field "
+            throw new RegistrationException("User password field "
                     + "cannot be empty");
         }
         if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
-            throw new RuntimeException("User password less then "
+            throw new RegistrationException("User password less then "
                     + VALID_PASSWORD_LENGTH
                     + " symbols");
         }
         if (user.getAge() == null) {
-            throw new RuntimeException("User age field "
+            throw new RegistrationException("User age field "
                     + "cannot be empty");
         }
         if (user.getAge() < VALID_USER_AGE) {
-            throw new RuntimeException("Users age must be more "
+            throw new RegistrationException("Users age must be more "
                     + VALID_USER_AGE
                     + " years");
         }
