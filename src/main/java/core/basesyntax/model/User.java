@@ -40,15 +40,6 @@ public class User {
         this.age = age;
     }
 
-    public User createUser(long id, String login, String password, int age) {
-        User user = new User();
-        user.setId(id);
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
-        return user;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

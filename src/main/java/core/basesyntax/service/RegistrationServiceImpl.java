@@ -11,21 +11,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getLogin().equals("")
-                || storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Users login field cannot be empty "
-                    + "(or login already exist)");
+        if (user.getLogin() == null || user.getLogin().equals("")) {
+            throw new RuntimeException("User login field "
+                    + "cannot be empty");
         }
-        if (user.getPassword() == null
-                || user.getPassword().length() < VALID_PASSWORD_LENGTH) {
-            throw new RuntimeException("Users password field cannot be empty "
-                    + "(or password less then "
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("User login "
+                    + "already exists");
+        }
+        if (user.getPassword() == null) {
+            throw new RuntimeException("User password field "
+                    + "cannot be empty");
+        }
+        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
+            throw new RuntimeException("User password less then "
                     + VALID_PASSWORD_LENGTH
-                    + "symbols)");
+                    + " symbols");
         }
-        if (user.getAge() == null || user.getAge() < VALID_USER_AGE) {
-            throw new RuntimeException("Users age must be more 18 years "
-                    + "(or age field cannot be empty)");
+        if (user.getAge() == null) {
+            throw new RuntimeException("User age field "
+                    + "cannot be empty");
+        }
+        if (user.getAge() < VALID_USER_AGE) {
+            throw new RuntimeException("Users age must be more "
+                    + VALID_USER_AGE
+                    + " years");
         }
         return storageDao.add(user);
     }
