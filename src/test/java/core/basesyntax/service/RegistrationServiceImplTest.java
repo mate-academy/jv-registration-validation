@@ -53,36 +53,36 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOK() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(user),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when NULL AGE field in User registration");
     }
 
     @Test
     void register_underValidAge_notOK() {
         user.setAge(15);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when UNDER VALID AGE field in User registration");
     }
 
     @Test
     void register_negativeAge_notOK() {
         user.setAge(-23);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when NEGATIVE AGE field in User registration");
     }
 
     @Test
     void register_existentUser_notOK() {
         registrationService.register(user);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when try REGISTER SAME User");
     }
 
@@ -91,63 +91,63 @@ class RegistrationServiceImplTest {
         User user1 = createUser(750_001L, DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_ADULT_AGE);
         registrationService.register(user1);
         User user2 = createUser(750_002L, DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_ADULT_AGE);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user2),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when try register User with SAME LOGIN");
     }
 
     @Test
     void register_emptyLogin_notOK() {
         user.setLogin("");
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when try register User with EMPTY LOGIN");
     }
 
     @Test
     void register_nullField_notOK() {
         user = new User();
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw when "
+                "There must RegistrationException throw when "
                         + "NULL ALL fields User registration");
     }
 
     @Test
     void register_nullLogin_notOK() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw when "
+                "There must RegistrationException throw when "
                         + "NULL LOGIN field in User registration");
     }
 
     @Test
     void register_nullPassword_notOK() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw when "
+                "There must RegistrationException throw when "
                         + "NULL PASSWORD field in User registration");
     }
 
     @Test
     void register_emptyPassword_notOK() {
         user.setPassword("");
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when EMPTY PASSWORD field in User registration");
     }
 
     @Test
     void register_shortPassword_notOK() {
         user.setPassword("abc123");
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(user),
-                "There must RuntimeException throw "
+                "There must RegistrationException throw "
                         + "when PASSWORD LESS THEN NINE symbols");
     }
 
