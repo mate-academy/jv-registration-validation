@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -18,11 +20,13 @@ class RegistrationServiceImplTest {
     private static final int DEFAULT_ADULT_AGE = 35;
     private static final int DEFAULT_ELDERLY_AGE = 70;
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private static User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
         user = new User();
     }
 
@@ -42,7 +46,7 @@ class RegistrationServiceImplTest {
         users[2] = createUser(750_003L, "User3", DEFAULT_PASSWORD, DEFAULT_VALID_AGE);
 
         for (User user :users) {
-            registrationService.register(user);
+            storageDao.add(user);
         }
     }
 
@@ -152,13 +156,13 @@ class RegistrationServiceImplTest {
         for (int i = 0; i < 10; i++) {
             user = createUser(750_001L * i, DEFAULT_LOGIN + i,
                     DEFAULT_PASSWORD, DEFAULT_VALID_AGE + i);
-            registrationService.register(user);
+            storageDao.add(user);
         }
 
-        long perviousUserId = Storage.people.get(0).getId();
+        long previousUserId = Storage.people.get(0).getId();
         for (int i = 1; i < 10; i++) {
-            assertEquals(perviousUserId + 1, Storage.people.get(i).getId());
-            perviousUserId = Storage.people.get(i).getId();
+            assertEquals(previousUserId + 1, Storage.people.get(i).getId());
+            previousUserId = Storage.people.get(i).getId();
         }
     }
 
