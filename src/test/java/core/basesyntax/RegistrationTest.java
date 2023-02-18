@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegisterNotValidException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -39,14 +40,14 @@ public class RegistrationTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(null));
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(null));
     }
 
@@ -57,14 +58,14 @@ public class RegistrationTest {
         newUser.setLogin("name@gmail.com");
         newUser.setPassword("dudu6776");
         newUser.setAge(18);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(newUser));
     }
 
     @Test
     void register_emptyLogin_notOk() {
         user.setLogin("");
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(user));
     }
 
@@ -78,21 +79,21 @@ public class RegistrationTest {
     @Test
     void register_Login_notOk() {
         Storage.people.add(user);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_Age_notOk() {
         user.setAge(17);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(user));
     }
 
@@ -106,7 +107,7 @@ public class RegistrationTest {
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(user));
     }
 
@@ -120,7 +121,7 @@ public class RegistrationTest {
     @Test
     void register_lengthPassword_notOk() {
         user.setPassword("12ab");
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegisterNotValidException.class, () ->
                 registrationService.register(user));
     }
 }

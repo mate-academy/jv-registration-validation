@@ -12,29 +12,29 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RuntimeException("User can't be null!");
+            throw new RegisterNotValidException("User can't be null!");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User already exist!");
+            throw new RegisterNotValidException("User already exist!");
         }
         if (user.getAge() == null) {
-            throw new RuntimeException("Age can't be null!");
+            throw new RegisterNotValidException("Age can't be null!");
         }
         if (user.getLogin() == null) {
-            throw new RuntimeException("Login can't be null!");
+            throw new RegisterNotValidException("Login can't be null!");
         }
         if (user.getPassword() == null) {
-            throw new RuntimeException("Password can't be null!");
+            throw new RegisterNotValidException("Password can't be null!");
         }
         if (user.getLogin().isBlank()) {
-            throw new RuntimeException("Login can't be empty!");
+            throw new RegisterNotValidException("Login can't be empty!");
         }
         if (user.getAge() < MINIMUM_AGE) {
-            throw new RuntimeException("For registration, user has to be at least minimum "
+            throw new RegisterNotValidException("For registration, user has to be at least minimum "
                     + MINIMUM_AGE + " years old");
         }
         if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new RuntimeException("Password has to be minimum at least minimum "
+            throw new RegisterNotValidException("Password has to be minimum at least minimum "
                     + MINIMUM_PASSWORD_LENGTH + " characters");
         }
         return storageDao.add(user);
