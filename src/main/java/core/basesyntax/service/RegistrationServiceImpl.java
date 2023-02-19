@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidRegistrationDataException("Invalid login");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidRegistrationDataException("User already registerd");
+            throw new InvalidRegistrationDataException("User already registered");
         }
         if (user.getAge() == null || user.getAge() < 18) {
             throw new InvalidRegistrationDataException("Invalid age");
