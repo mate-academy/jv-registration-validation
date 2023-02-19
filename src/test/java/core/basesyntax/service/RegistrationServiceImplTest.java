@@ -88,8 +88,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existentLogin_notOK() {
-        User user1 = createUser(750_001L, DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_ADULT_AGE);
-        registrationService.register(user1);
+        storageDao.add(user);
         User user2 = createUser(750_002L, DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_ADULT_AGE);
         assertThrows(RegistrationException.class, () ->
                         registrationService.register(user2),
