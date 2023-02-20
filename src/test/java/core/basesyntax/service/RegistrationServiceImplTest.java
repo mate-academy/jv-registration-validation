@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -8,8 +12,6 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final long FIRST_TEST_ID = 12431;
@@ -29,10 +31,9 @@ class RegistrationServiceImplTest {
     private static final String PASSWORD_8_SYMBOL_NOTOK = "y5monya";
 
     private static StorageDao storageDao;
-
-    public static User testUser;
-    public static User secondTestUser;
-    public static RegistrationServiceImpl registrationService;
+    private static User testUser;
+    private static User secondTestUser;
+    private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
     static void beforeAll() {
@@ -90,7 +91,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_login_СontainsSpace_NotOk() {
+    void register_loginContainsSpace_NotOk() {
         testUser.setLogin(LOGIN_CONTAINS_SPACE);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);

@@ -15,7 +15,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegisterValidationException("User must be Not null");
         }
-        if (user.getAge() == null || user.getAge() < AGE_LOW_LIMIT || user.getAge() > AGE_UP_LIMIT) {
+        if (user.getAge() == null
+                || user.getAge() < AGE_LOW_LIMIT
+                || user.getAge() > AGE_UP_LIMIT) {
             throw new RegisterValidationException("You enter wrong age");
         }
         if (user.getLogin() == null || user.getLogin().contains(" ")) {
