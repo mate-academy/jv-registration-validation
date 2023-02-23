@@ -9,6 +9,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeption.RegisterValidationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,10 @@ class RegistrationServiceImplTest {
         secondTestUser.setAge(AGE_MORE_18_YEARS);
         secondTestUser.setLogin(LOGIN_SECOND_OK);
         secondTestUser.setPassword(PASSWORD_8_SYMBOL_SECOND_OK);
+    }
 
+    @AfterEach
+    void tearDown() {
         Storage.people.clear();
     }
 
@@ -63,7 +67,8 @@ class RegistrationServiceImplTest {
         testUser = null;
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "User must be NOT null");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown for the null user, but it wasn't");
     }
 
     @Test
@@ -71,7 +76,8 @@ class RegistrationServiceImplTest {
         testUser.setAge(AGE_LES_18_YEARS);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Age must be more then 18");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown for the user age less then 18, but it wasn't");
     }
 
     @Test
@@ -79,7 +85,8 @@ class RegistrationServiceImplTest {
         testUser.setAge(null);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Age must be more NOT null");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown for the null user age, but it wasn't");
     }
 
     @Test
@@ -87,7 +94,8 @@ class RegistrationServiceImplTest {
         testUser.setAge(AGE_MORE_80_YEARS);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Age must be less then 80");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown for the user age more then 18, but it wasn't");
     }
 
     @Test
@@ -95,7 +103,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin(LOGIN_CONTAINS_SPACE);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Login must NOT contains space");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown for the user login contain space, but it wasn't");
     }
 
     @Test
@@ -103,7 +112,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin(null);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Login must NOT be null");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown for the null user login, but it wasn't");
     }
 
     @Test
@@ -111,7 +121,8 @@ class RegistrationServiceImplTest {
         testUser.setPassword(null);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Password must NOT be null");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown for the null user password, but it wasn't");
     }
 
     @Test
@@ -119,27 +130,29 @@ class RegistrationServiceImplTest {
         testUser.setPassword(PASSWORD_8_SYMBOL_NOTOK);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Password must be mo then 8 characters");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown if password contain less then 8 characters, but it wasn't");
     }
 
     @Test
-    void register_login_OlreadyExist_NotOk() {
-        registrationService.register(testUser);
+    void register_login_AlreadyExist_NotOk() {
+        storageDao.add(testUser);
         testUser.setPassword(PASSWORD_8_SYMBOL_SECOND_OK);
         secondTestUser.setLogin(LOGIN_OK);
         assertThrows(RegisterValidationException.class, () -> {
             registrationService.register(secondTestUser);
-        }, "This login already exist");
+        }, "Expected " + RegisterValidationException.class.getName()
+                + " to be thrown if username already exists in storage, but it wasn't");
     }
 
     @Test
     void register_login_NotExist_Ok() {
-        registrationService.register(testUser);
+        storageDao.add(testUser);
         testUser.setPassword(PASSWORD_8_SYMBOL_SECOND_OK);
         secondTestUser.setLogin(LOGIN_SECOND_OK);
         assertDoesNotThrow(() -> {
             registrationService.register(secondTestUser);
-        }, "This login already exist");
+        }, "Expected: none Exception here, but it was");
     }
 
     @Test

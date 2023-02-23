@@ -36,10 +36,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegisterValidationException("Your login must not contain a space");
         }
         if (user.getPassword() == null || user.getPassword().length() < 8) {
-            throw new RegisterValidationException("You password must be more then 8 character");
+            throw new RegisterValidationException("You password must be at least"
+                    + " 8 characters long");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegisterValidationException("Login already exist!");
+            throw new RegisterValidationException("User with such login already exists!");
         }
     }
 }
