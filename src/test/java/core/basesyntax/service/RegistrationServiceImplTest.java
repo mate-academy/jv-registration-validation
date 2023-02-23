@@ -46,7 +46,6 @@ class RegistrationServiceImplTest {
             assertEquals(user, storageDao.get("Frank"));
         } catch (ValidationException e) {
             fail("User with current login exist in Storage!");
-
         }
     }
 
@@ -110,7 +109,6 @@ class RegistrationServiceImplTest {
             assertEquals(user, storageDao.get("Kobe"));
         } catch (ValidationException e) {
             fail("User password isn't correct!");
-
         }
     }
 
