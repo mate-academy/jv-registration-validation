@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + "is already registered");
         }
         if (user.getAge() == null || user.getAge() < AGE_18 || user.getAge() > AGE_140) {
-            throw new InvalidRegistrationDataException("Age must be over 18");
+            throw new InvalidRegistrationDataException("Age must be between 18 and 140");
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LEN) {
             throw new InvalidRegistrationDataException("Password is too short");
