@@ -6,6 +6,9 @@ import core.basesyntax.exceptions.InvalidRegistrationDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int AGE_18 = 18;
+    private static final int MIN_PASSWORD_LEN = 6;
+    private static final int AGE_140 = 140;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -17,13 +20,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidRegistrationDataException("Invalid login");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidRegistrationDataException("User already registered");
+            throw new InvalidRegistrationDataException("User with this login is already registered");
         }
-        if (user.getAge() == null || user.getAge() < 18) {
-            throw new InvalidRegistrationDataException("Invalid age");
+        if (user.getAge() == null || user.getAge() < AGE_18 || user.getAge() > AGE_140) {
+            throw new InvalidRegistrationDataException("Age must be over 18");
         }
-        if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new InvalidRegistrationDataException("Invalid password");
+        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LEN) {
+            throw new InvalidRegistrationDataException("Password is too short");
         }
         storageDao.add(user);
         return user;
