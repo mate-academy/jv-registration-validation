@@ -128,5 +128,4 @@ class RegistrationServiceImplTest {
         assertThrows(CustomException.class, () ->
                 registrationService.register(user));
     }
-
 }
