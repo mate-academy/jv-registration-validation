@@ -1,6 +1,8 @@
 package core.basesyntax.service;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.CustomException;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
