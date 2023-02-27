@@ -3,26 +3,40 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidRegistrationDataException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String INITIAL_LOGIN = "initial_login";
+    private static final String INITIAL_PASSWORD = "initial_password";
+    private static final String NON_UNIQUE_LOGIN = "second_login";
+    private static final int AGE_18 = 18;
+    private static final int INITIAL_AGE = 24;
+    private static RegistrationService registrationService;
     private User defaultUser;
-    private StorageDao storageDao;
-    private RegistrationService registrationService;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl();
         defaultUser = new User();
         defaultUser.setAge(90);
-        defaultUser.setLogin("initial_login");
-        defaultUser.setPassword("initial_password");
+        defaultUser.setLogin(INITIAL_LOGIN);
+        defaultUser.setPassword(INITIAL_PASSWORD);
+        defaultUser.setAge(INITIAL_AGE);
+    }
+
+    @AfterEach
+    void after() {
+        Storage.people.clear();
     }
 
     @Test
@@ -34,25 +48,24 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsNull_notOk() {
+        defaultUser.setLogin(null);
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin(null);
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException expected for user.login = null");
     }
 
     @Test
     void register_ageIsNull_notOk() {
+        defaultUser.setAge(null);
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin("first_login");
-            defaultUser.setAge(null);
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException expected for user.age = null");
     }
 
     @Test
     void register_passwordIsNull_notOk() {
+        defaultUser.setPassword(null);
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setPassword(null);
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException expected for user.password = null");
     }
@@ -60,18 +73,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginAlreadyInStorage_notOk() {
         User storageUser = new User();
-        storageUser.setLogin("second_login");
-        storageDao.add(storageUser);
+        storageUser.setLogin(NON_UNIQUE_LOGIN);
+        Storage.people.add(storageUser);
+        defaultUser.setLogin(NON_UNIQUE_LOGIN);
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin("second_login");
             registrationService.register(defaultUser);
-        }, "InvalidRegistrationDataException, method allows user duplicates");
+        }, InvalidRegistrationDataException.class.getName()
+                + ", method does not allow user login duplicates");
     }
 
     @Test
     void register_loginIsEmpty_notOk() {
+        defaultUser.setLogin("");
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin("");
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException,"
                 + "when login field empty an exception should be thrown");
@@ -80,17 +94,16 @@ class RegistrationServiceImplTest {
     @Test
     void register_default_ok() {
         registrationService.register(defaultUser);
-        assertEquals(storageDao.get(defaultUser.getLogin()).getLogin(), defaultUser.getLogin());
-        assertEquals(storageDao.get(defaultUser.getLogin()).getPassword(),
-                defaultUser.getPassword());
-        assertEquals(storageDao.get(defaultUser.getLogin()).getAge(), defaultUser.getAge());
+        assertEquals(INITIAL_LOGIN, defaultUser.getLogin());
+        assertEquals(1, defaultUser.getId());
+        assertEquals(INITIAL_PASSWORD, defaultUser.getPassword());
+        assertEquals(INITIAL_AGE, defaultUser.getAge());
     }
 
     @Test
     void register_passwordLengthLessThan6_notOk() {
+        defaultUser.setPassword("");
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin("third_login");
-            defaultUser.setPassword("");
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException,"
                 + "if password length less than 6 an exception should be thrown");
@@ -98,38 +111,33 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeLessThan18_notOk() {
+        defaultUser.setAge(16);
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin("fourth_login");
-            defaultUser.setAge(16);
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException, if age < 18 method you should thrown an exception");
     }
 
     @Test
     void register_AgeEquals18_ok() {
-        defaultUser.setAge(18);
-        defaultUser.setLogin("login_fifth");
+        defaultUser.setAge(AGE_18);
         registrationService.register(defaultUser);
-        assertEquals(storageDao.get(defaultUser.getLogin()).getAge(),
+        assertEquals(AGE_18,
                 defaultUser.getAge(), "Age not match");
     }
 
     @Test
     void register_AgeIsNegative_notOk() {
+        defaultUser.setAge(-23939);
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin("sixth_login");
-            defaultUser.setAge(-23939);
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException, if age < 0 method should thrown an exception");
     }
 
     @Test
     void register_AgeEquals999_notOk() {
+        defaultUser.setAge(999);
         assertThrows(InvalidRegistrationDataException.class, () -> {
-            defaultUser.setLogin("login_seventh");
-            defaultUser.setAge(999);
             registrationService.register(defaultUser);
         }, "InvalidRegistrationDataException, if age > 140 method should thrown an exception");
     }
-
 }
