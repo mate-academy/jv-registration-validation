@@ -110,7 +110,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeLessThan18_notOk() {
+    void register_ageLessThan18_notOk() {
         defaultUser.setAge(16);
         assertThrows(InvalidRegistrationDataException.class, () -> {
             registrationService.register(defaultUser);
@@ -118,7 +118,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeEquals18_ok() {
+    void register_ageEquals18_ok() {
         defaultUser.setAge(AGE_18);
         registrationService.register(defaultUser);
         assertEquals(AGE_18,
@@ -126,7 +126,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeIsNegative_notOk() {
+    void register_ageIsNegative_notOk() {
         defaultUser.setAge(-23939);
         assertThrows(InvalidRegistrationDataException.class, () -> {
             registrationService.register(defaultUser);
@@ -134,7 +134,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeEquals999_notOk() {
+    void register_ageGreaterThan140_notOk() {
         defaultUser.setAge(999);
         assertThrows(InvalidRegistrationDataException.class, () -> {
             registrationService.register(defaultUser);
