@@ -14,10 +14,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws CustomException {
         if (user == null) {
-            throw new CustomException("User is null");
+            throw new CustomException("Expected " + CustomException.class.getName()
+                    + " to be thrown for the null user, but it wasn't");
         }
         if (user.getAge() < VALID_AGE || user.getAge() > MAX_VALID_AGE || user.getAge() == null) {
-            throw new CustomException("Age should be above 18 or equal and less than 115!");
+            throw new CustomException("Age should be above" + VALID_AGE
+                    + " or equal and less than" + MAX_VALID_AGE);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new CustomException("User with the same Login already exist!");
@@ -26,7 +28,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (!Character.isLetter(chars) || !Character.isDigit(chars)
                     || user.getPassword().length() < VALID_COUNT_OF_CHARACTER
                     || user.getPassword() == null) {
-                throw new CustomException("Your Password should include 6 "
+                throw new CustomException("Your Password should include "
+                        + VALID_COUNT_OF_CHARACTER
                         + "and more characters! Your Password cannot contains any special symbols");
             }
         }

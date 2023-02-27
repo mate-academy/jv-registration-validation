@@ -42,7 +42,8 @@ class RegistrationServiceImplTest {
     void register_null_user_notOk() {
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(null);
-        }, "User cannot be null!");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the null user, but it wasn't");
     }
 
     @Test
@@ -51,7 +52,9 @@ class RegistrationServiceImplTest {
         assertEquals(storageDao.get(userIsValid.getLogin()), userIsValid);
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "User with the same Login is already exist!");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with the same name. "
+                + "User with the same Login is already exist!");
     }
 
     @Test
@@ -59,7 +62,10 @@ class RegistrationServiceImplTest {
         userIsValid.setAge(119);
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "Age should be above 18 or equal and less than 115");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with age more than 115. "
+                + "Age cannot be a negative number or contains special symbols"
+                + " and should be above 18 or equal and less than 115");
     }
 
     @Test
@@ -67,7 +73,10 @@ class RegistrationServiceImplTest {
         userIsValid.setAge(14);
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "Age should be above 18 or equal and less than 115");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with age less than 18. "
+                + "Age cannot be a negative number or contains special symbols"
+                + " and should be above 18 or equal and less than 115");
     }
 
     @Test
@@ -75,7 +84,10 @@ class RegistrationServiceImplTest {
         userIsValid.setAge(-19);
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "Age cannot be a negative number and should be above 18 or equal and less than 115");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with negative number at his age. "
+                + "Age cannot be a negative number or contains special symbols"
+                + " and should be above 18 or equal and less than 115");
     }
 
     @Test
@@ -83,7 +95,9 @@ class RegistrationServiceImplTest {
         userIsValid.setLogin("Good vin");
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "Your Login cannot exist whitespace!");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with whitespace at his login. "
+                + "Your Login cannot exist whitespace!");
     }
 
     @Test
@@ -91,7 +105,9 @@ class RegistrationServiceImplTest {
         userIsValid.setLogin("");
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "Your Login should exist at least 1 character!");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with empty login. "
+                + "Your Login should exist at least 1 character!");
     }
 
     @Test
@@ -99,7 +115,9 @@ class RegistrationServiceImplTest {
         userIsValid.setPassword("pas");
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "Your Password should include 6 and more characters!");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with password length less than 6 characters. "
+                + "Your Password should include 6 and more characters!");
     }
 
     @Test
@@ -107,7 +125,9 @@ class RegistrationServiceImplTest {
         userIsValid.setPassword("^$#@#($%6*");
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "Your Password shouldn't contains special characters!");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with password which contains special symbols. "
+                + "Your Password shouldn't contains special characters!");
     }
 
     @Test
@@ -118,6 +138,8 @@ class RegistrationServiceImplTest {
         newUser.setAge(18);
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
-        }, "You must enter Your Password!");
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with empty password. "
+                + "You must enter Your Password!");
     }
 }
