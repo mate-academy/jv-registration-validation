@@ -24,51 +24,87 @@ public class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         User user = new User(123456L, "First", null, 20);
-        assertThrows(WrongDataException.class, () -> registrationService.register(user));
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Password cannot be null!");
     }
 
     @Test
     void register_shortPassword_notOk() {
         User user = new User(123456L, "First", "qwert", 20);
-        assertThrows(WrongDataException.class, () -> registrationService.register(user));
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "The password must contain no less than 6 characters!");
+    }
+
+    @Test
+    void register_tooLongPassword_notOk() {
+        User user = new User(123456L, "First", "qwertyqwerty1", 20);
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "The password must contain no more than 12 characters!");
     }
 
     @Test
     void register_nullAge_notOk() {
         User user = new User(123456L, "First", "qwerty", null);
-        assertThrows(WrongDataException.class, () -> registrationService.register(user));
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Age cannot be null!");
     }
 
     @Test
     void register_youngAge_notOk() {
         User user = new User(123456L, "First", "qwerty", 16);
-        assertThrows(WrongDataException.class, () -> registrationService.register(user));
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Age must be at least 18 years!");
+    }
+
+    @Test
+    void register_oldAge_notOk() {
+        User user = new User(123456L, "Last", "qwerty", 101);
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Age must must be no more 100 years!");
     }
 
     @Test
     void register_userExists_notOk() {
         User user = new User(123456L, "First", "qwerty", 21);
         storageDao.add(user);
-        assertThrows(WrongDataException.class, () -> registrationService.register(user));
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "A user with this login already exists!");
     }
 
     @Test
     void register_emptyLogin_notOk() {
         User user = new User(123456L, "", "qwerty", 21);
-        assertThrows(WrongDataException.class, () -> registrationService.register(user));
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Login cannot be empty!");
     }
 
     @Test
     void register_nullLogin_notOk() {
         User user = new User(123456L, null, "qwerty", 21);
-        assertThrows(WrongDataException.class, () -> registrationService.register(user));
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Login cannot be null!");
+    }
+
+    @Test
+    void register_toLongLogin_notOk() {
+        User user = new User(123456L, "Polischuck", "qwerty", 21);
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Login must contain no more 6 characters!");
+    }
+
+    @Test
+    void register_loginWithSpace_notOk() {
+        User user = new User(123456L, " Polis", "qwerty", 21);
+        assertThrows(WrongDataException.class, () -> registrationService.register(user),
+                "Login must not contain spaces!");
     }
 
     @Test
     void register_successRegister_ok() {
         User user = new User(123456L, "Ford", "qwerty", 21);
         User actual = registrationService.register(user);
-        assertEquals(user, actual);
+        assertEquals(user, actual,
+                "Registration must be successful!");
     }
 
     @Test
@@ -76,7 +112,8 @@ public class RegistrationServiceImplTest {
         User user = new User(123456L, "Second", "qwerty", 21);
         registrationService.register(user);
         User actual = storageDao.get("Second");
-        assertEquals(user, actual);
+        assertEquals(user, actual,
+                "The method must return " + user);
     }
 
     @Test
@@ -88,7 +125,8 @@ public class RegistrationServiceImplTest {
         registrationService.register(user1);
         registrationService.register(user2);
         int actual = Storage.people.size();
-        assertEquals(actual, 3);
+        assertEquals(actual, 3,
+                "Incorrect number of users!");
     }
 
     @Test
@@ -96,7 +134,8 @@ public class RegistrationServiceImplTest {
         User user = new User(223456L, "Green", "qwerty", 24);
         User user1 = new User(223456L, "Green", "qwerty", 24);
         boolean actual = user.equals(user1);
-        assertTrue(actual);
+        assertTrue(actual,
+                "Users must be equal!");
     }
 
     @Test
@@ -104,12 +143,14 @@ public class RegistrationServiceImplTest {
         User user = new User(223456L, "Green", "qwerty", 24);
         User user1 = new User(223456L, "Yellow", "qwerty", 24);
         boolean actual = user.equals(user1);
-        assertFalse(actual);
+        assertFalse(actual,
+                "Users must be not equal!");
     }
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(WrongDataException.class, () -> registrationService.register(null));
+        assertThrows(WrongDataException.class, () -> registrationService.register(null),
+                "User cannot be null!");
     }
 
     @Test
@@ -117,34 +158,38 @@ public class RegistrationServiceImplTest {
         Long expected = 444444L;
         User user = new User(expected, "Purple", "qwerty12", 24);
         Long actual = user.getId();
-        assertEquals(actual, expected);
+        assertEquals(actual, expected,
+                "Method must return id " + expected);
 
     }
 
     @Test
-    void setLogin_set_ok() {
+    void setLogin_ok() {
         String expected = "White";
         User user = new User(123456L, "Black", "qwerty12", 24);
         user.setLogin(expected);
         String actual = user.getLogin();
-        assertEquals(actual, expected);
+        assertEquals(actual, expected,
+                "Method must return login " + expected);
     }
 
     @Test
-    void setPassword_set_ok() {
+    void setPassword_ok() {
         String expected = "asdfgh";
         User user = new User(123456L, "Black", "qwerty12", 24);
         user.setPassword(expected);
         String actual = user.getPassword();
-        assertEquals(actual, expected);
+        assertEquals(actual, expected,
+                "Method must return password " + expected);
     }
 
     @Test
-    void setAge_set_ok() {
+    void setAge_ok() {
         int expectedAge = 30;
         User user = new User(123456L, "Black", "qwerty12", 24);
         user.setAge(expectedAge);
         int actual = user.getAge();
-        assertEquals(actual, expectedAge);
+        assertEquals(actual, expectedAge,
+                "Method must return age " + expectedAge);
     }
 }
