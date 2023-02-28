@@ -17,8 +17,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 public class HelloWorldTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
