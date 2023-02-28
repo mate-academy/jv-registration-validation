@@ -92,7 +92,8 @@ class RegistrationServiceImplTest {
         User userNull = (User) NULL_VALUE;
         Assertions.assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userNull);
-        }, "User mustn`t be null");
+        },"Expected " + UserIsNotValidException.class.getName()
+                + " to be thrown for the null user, but it wasn't");
     }
 
     @Test
@@ -100,7 +101,8 @@ class RegistrationServiceImplTest {
         User userWithLogin = new User(USER_ID1, (String) NULL_VALUE, PASSWORD, AGE2);
         assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userWithLogin);
-        }, "User login mustn`t be null");
+        }, "Expected " + UserIsNotValidException.class.getName()
+                + "to be thrown for the null user login, but it wasn't");
     }
 
     @Test
@@ -108,7 +110,8 @@ class RegistrationServiceImplTest {
         User userWithPassword = new User(USER_ID1, LOGIN, (String) NULL_VALUE, AGE1);
         assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userWithPassword);
-        }, "User password mustn`t be null");
+        }, "Expected " + UserIsNotValidException.class.getName()
+                + "to be thrown for the null user password, but it wasn't");
     }
 
     @Test
@@ -117,7 +120,7 @@ class RegistrationServiceImplTest {
                 (String) NULL_VALUE, UNREAL_AGE);
         assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userWithLoginAndPasswordAndAge);
-        }, "User have invalid value");
+        }, "to be thrown for the null user login and password and unreal age, but it wasn't ");
     }
 
     @Test
@@ -126,7 +129,8 @@ class RegistrationServiceImplTest {
                 (String) NULL_VALUE, AGE2);
         assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userWithLoginAndPassword);
-        }, "User login or password mustn`t be null");
+        }, "Expected " + UserIsNotValidException.class.getName()
+                + "to be thrown for the null user login and password, but it wasn't");
     }
 
     @Test
@@ -134,7 +138,8 @@ class RegistrationServiceImplTest {
         User userWithShortPassword = new User(USER_ID1, LOGIN, SHORT_PASSWORD, AGE2);
         assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userWithShortPassword);
-        }, "User password must be longer than 6 elements");
+        }, "Expected " + UserIsNotValidException.class.getName()
+                + "to be thrown for the short user password, but it wasn't");
     }
 
     @Test
@@ -142,7 +147,8 @@ class RegistrationServiceImplTest {
         User userWithBadAge = new User(USER_ID1, LOGIN, PASSWORD, SMALL_AGE);
         assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userWithBadAge);
-        }, "User age must be bigger than 18");
+        }, "Expected " + UserIsNotValidException.class.getName()
+                + "to be thrown for the small user age, but it wasn't");
     }
 
     @Test
@@ -152,6 +158,7 @@ class RegistrationServiceImplTest {
         user2 = user1;
         assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(user2);
-        }, "User is already present");
+        }, "Expected " + UserIsNotValidException.class.getName()
+                + "to be thrown for the same user login, but it wasn't");
     }
 }
