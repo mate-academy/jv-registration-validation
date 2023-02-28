@@ -15,79 +15,81 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private static RegistrationServiceImpl registrationService;
-    private static User[] users;
+    private static User user;
 
     @BeforeAll
     static void beforeAll() {
-        final int usersNumbs = 7;
         registrationService = new RegistrationServiceImpl();
-        users = new User[usersNumbs];
         storageDao = new StorageDaoImpl();
-        users[0] = new User("pokemon", "Rock99pop", 23);
-        users[1] = new User("donald", "Tot77", 18);
-        users[2] = new User("supra", "Lol556yo", 16);
-        users[3] = new User("superCat", null, 23);
-        users[4] = new User(null, "Toyota45cut", 23);
-        users[5] = new User("logoBulls", "Toronto78punk", -53);
-        users[6] = new User("", "", 23);
+        user = new User("", "", 0);
     }
 
     @Test
     void addTest_OK() throws RegistrationException {
-        final int numbers = 1;
-        registrationService.register(users[0]);
+        final int number = 1;
+        user.setLogin("pokemon");
+        user.setPassword("Rock99pop");
+        user.setAge(23);
+
+        registrationService.register(user);
         boolean expected = true;
-        boolean actual = Storage.people.size() == numbers;
+        boolean actual = Storage.people.size() == number;
         assertEquals(expected, actual, "There must be one since one user has been added!");
     }
 
     @Test
-    void overwritingNotPossible_notOK() throws RegistrationException {
-        registrationService.register(users[0]);
-        assertThrows(RegistrationException.class, () -> registrationService.register(users[0]));
+    void overwriting_existingUsers_notOK() throws RegistrationException {
+        user.setLogin("pokemon");
+        user.setPassword("Rock99pop");
+        user.setAge(23);
+        registrationService.register(user);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void shortPassword_notOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(users[1]));
+        user.setPassword("rock");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void minor_notOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(users[2]));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void nullPassword_notOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(users[3]));
+        user.setPassword(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void nullLogin_notOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(users[4]));
+        user.setLogin(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void ageMustBe18andNotMinus() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(users[5]));
+    void ageMinus18_notOK() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void emptyLines() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(users[6]));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void getUser_OK() throws RegistrationException {
-        User user001 = new User("rockPop", "Toy78cook", 44);
-        User user002 = new User("stopCop", "Car098track", 56);
-        User user003 = new User("lotDog", "flay99board", 48);
-        registrationService.register(user001);
-        registrationService.register(user002);
-        registrationService.register(user003);
+        User bob = new User("rockPop", "Toy78cook", 44);
+        User johan = new User("stopCop", "Car098track", 56);
+        User alice = new User("lotDog", "flay99board", 48);
+        registrationService.register(bob);
+        registrationService.register(johan);
+        registrationService.register(alice);
         StorageDaoImpl dao = new StorageDaoImpl();
         dao.get("stopCop");
-        assertEquals(user002, dao.get("stopCop"), "Wrong user search!");
+        assertEquals(johan, dao.get("stopCop"), "Wrong user search!");
     }
 
     @AfterEach
