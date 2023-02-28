@@ -12,9 +12,12 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 public class HelloWorldTest {
     private static RegistrationService registrationService;
@@ -30,6 +33,11 @@ public class HelloWorldTest {
         user = new User();
         differentUser = new User();
         sameUser = new User();
+    }
+
+    @AfterEach
+    void tearDown() {
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -127,14 +135,14 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_UserAgeMoreThan18_Ok() {
+    void register_UserCorrectAge_Ok() {
         user.setAge(33);
 
         storageDao.add(user);
     }
 
     @Test
-    void register_UserAgeUnder18_NotOk() {
+    void register_UserAgeLessThanNeed_NotOk() {
         user.setAge(17);
 
         assertThrows(RegistrationException.class, () -> {
@@ -143,7 +151,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_UserAge18_Ok() {
+    void register_UserAgeEqualsMinRequirement_Ok() {
         user.setAge(18);
 
         storageDao.add(user);

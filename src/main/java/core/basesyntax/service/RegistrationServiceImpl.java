@@ -37,8 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password should contain more than 6 symbols");
         }
-        User sameUser = storageDao.get(user.getLogin());
-        if (sameUser != null) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("Login already exists");
         }
         return storageDao.add(user);
