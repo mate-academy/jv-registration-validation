@@ -17,12 +17,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new WrongDataException("User cannot be null!");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (user != null && storageDao.get(user.getLogin()) != null) {
             throw new WrongDataException("A user with login " + user.getLogin()
                     + " already exists!");
+        }
+        if (user == null) {
+            throw new WrongDataException("User cannot be null!");
         }
         if (user.getLogin() == null
                 || user.getLogin().length() < MIN_LENGTH_OF_LOGIN
