@@ -8,7 +8,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidUserDataException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,17 +18,13 @@ class RegistrationServiceImplTest {
     private User defaultUser;
 
     @BeforeEach
-    void createDefaultUser() {
+    void setUp() {
+        Storage.people.clear();
         defaultUser = new User();
         defaultUser.setId(100L);
         defaultUser.setAge(20);
         defaultUser.setLogin("newUser");
         defaultUser.setPassword("123456");
-    }
-
-    @AfterEach
-    void clearStorage() {
-        Storage.people.clear();
     }
 
     @Test
