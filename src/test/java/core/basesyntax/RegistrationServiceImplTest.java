@@ -25,42 +25,48 @@ public class RegistrationServiceImplTest {
     void register_nullPassword_notOk() {
         User user = new User(123456L, "First", null, 20);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Password cannot be null!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " Your password cannot be null!");
     }
 
     @Test
     void register_shortPassword_notOk() {
         User user = new User(123456L, "First", "qwert", 20);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "The password must contain no less than 6 characters!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + "Your password cannot be less than " + 6 + " characters!");
     }
 
     @Test
     void register_tooLongPassword_notOk() {
         User user = new User(123456L, "First", "qwertyqwerty1", 20);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "The password must contain no more than 12 characters!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + "Your password cannot be longer than " + 12 + " characters!");
     }
 
     @Test
     void register_nullAge_notOk() {
         User user = new User(123456L, "First", "qwerty", null);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Age cannot be null!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " Your age cannot be null!");
     }
 
     @Test
     void register_youngAge_notOk() {
         User user = new User(123456L, "First", "qwerty", 16);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Age must be at least 18 years!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + "Your age cannot be less than " + 18 + " years!");
     }
 
     @Test
     void register_oldAge_notOk() {
         User user = new User(123456L, "Last", "qwerty", 101);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Age must must be no more 100 years!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + "Your age cannot be more than " + 100 + " years!");
     }
 
     @Test
@@ -68,43 +74,47 @@ public class RegistrationServiceImplTest {
         User user = new User(123456L, "First", "qwerty", 21);
         storageDao.add(user);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "A user with this login already exists!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " You cannot register user with the same login!");
     }
 
     @Test
     void register_emptyLogin_notOk() {
         User user = new User(123456L, "", "qwerty", 21);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Login cannot be empty!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " Login cannot be empty!");
     }
 
     @Test
     void register_nullLogin_notOk() {
         User user = new User(123456L, null, "qwerty", 21);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Login cannot be null!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " Login cannot be null!");
     }
 
     @Test
     void register_toLongLogin_notOk() {
         User user = new User(123456L, "Polischuck", "qwerty", 21);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Login must contain no more 6 characters!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " Login must contain no more " + 6 + " characters");
     }
 
     @Test
     void register_loginWithSpace_notOk() {
         User user = new User(123456L, " Polis", "qwerty", 21);
         assertThrows(WrongDataException.class, () -> registrationService.register(user),
-                "Login must not contain spaces!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " Login cannot contain spaces!");
     }
 
     @Test
     void register_successRegister_ok() {
         User user = new User(123456L, "Ford", "qwerty", 21);
         User actual = registrationService.register(user);
-        assertEquals(user, actual,
-                "Registration must be successful!");
+        assertEquals(user, actual, "Registration must be successful!");
     }
 
     @Test
@@ -112,8 +122,7 @@ public class RegistrationServiceImplTest {
         User user = new User(123456L, "Second", "qwerty", 21);
         registrationService.register(user);
         User actual = storageDao.get("Second");
-        assertEquals(user, actual,
-                "The method must return " + user);
+        assertEquals(user, actual, "The method must return " + user);
     }
 
     @Test
@@ -126,7 +135,7 @@ public class RegistrationServiceImplTest {
         registrationService.register(user2);
         int actual = Storage.people.size();
         assertEquals(actual, 3,
-                "Incorrect number of users!");
+                "Incorrect number of users! Expected " + 3 + ", but was " + actual);
     }
 
     @Test
@@ -135,22 +144,23 @@ public class RegistrationServiceImplTest {
         User user1 = new User(223456L, "Green", "qwerty", 24);
         boolean actual = user.equals(user1);
         assertTrue(actual,
-                "Users must be equal!");
+                "Users must be equal! Expected " + true + ", but was " + actual);
     }
 
     @Test
     void equals_usersNotEqual_NotOk() {
         User user = new User(223456L, "Green", "qwerty", 24);
-        User user1 = new User(223456L, "Yellow", "qwerty", 24);
+        User user1 = new User(193456L, "Yellow", "qwerty", 24);
         boolean actual = user.equals(user1);
         assertFalse(actual,
-                "Users must be not equal!");
+                "Users must be not equal! Expected " + false + ", but was " + actual);
     }
 
     @Test
     void register_nullUser_notOk() {
         assertThrows(WrongDataException.class, () -> registrationService.register(null),
-                "User cannot be null!");
+                "Test failed! Expected " + WrongDataException.class.getName()
+                        + " User cannot be null!");
     }
 
     @Test
@@ -159,7 +169,7 @@ public class RegistrationServiceImplTest {
         User user = new User(expected, "Purple", "qwerty12", 24);
         Long actual = user.getId();
         assertEquals(actual, expected,
-                "Method must return id " + expected);
+                "Method must return id " + expected + ", but was " + actual);
 
     }
 
@@ -170,7 +180,7 @@ public class RegistrationServiceImplTest {
         user.setLogin(expected);
         String actual = user.getLogin();
         assertEquals(actual, expected,
-                "Method must return login " + expected);
+                "Login must be " + expected + ", but was " + actual);
     }
 
     @Test
@@ -180,16 +190,16 @@ public class RegistrationServiceImplTest {
         user.setPassword(expected);
         String actual = user.getPassword();
         assertEquals(actual, expected,
-                "Method must return password " + expected);
+                "Password must be " + expected + ", but was " + actual);
     }
 
     @Test
     void setAge_ok() {
-        int expectedAge = 30;
+        int expected = 30;
         User user = new User(123456L, "Black", "qwerty12", 24);
-        user.setAge(expectedAge);
+        user.setAge(expected);
         int actual = user.getAge();
-        assertEquals(actual, expectedAge,
-                "Method must return age " + expectedAge);
+        assertEquals(actual, expected,
+                "Age must be " + expected + ", but was " + actual);
     }
 }

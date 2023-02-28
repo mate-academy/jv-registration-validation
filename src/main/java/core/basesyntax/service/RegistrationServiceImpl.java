@@ -7,20 +7,13 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final String SPACE = " ";
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 100;
+    private static final int MIN_LENGTH_OF_PASSWORD = 6;
+    private static final int MAX_LENGTH_OF_PASSWORD = 12;
+    private static final int MAX_LENGTH_OF_LOGIN = 6;
+    private static final int MIN_LENGTH_OF_LOGIN = 1;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final int minAge;
-    private final int maxAge;
-    private final int minLengthOfPassword;
-    private final int maxLengthOfPassword;
-    private final int maxLengthOfLogin;
-
-    public RegistrationServiceImpl() {
-        this.minAge = 18;
-        this.maxAge = 100;
-        this.minLengthOfPassword = 6;
-        this.maxLengthOfPassword = 12;
-        this.maxLengthOfLogin = 6;
-    }
 
     @Override
     public User register(User user) {
@@ -28,23 +21,27 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new WrongDataException("User cannot be null!");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new WrongDataException("A user with this login already exists!");
+            throw new WrongDataException("A user with login " + user.getLogin()
+                    + " already exists!");
         }
         if (user.getLogin() == null
-                || user.getLogin().length() == 0
-                || user.getLogin().length() > maxLengthOfLogin
+                || user.getLogin().length() < MIN_LENGTH_OF_LOGIN
+                || user.getLogin().length() > MAX_LENGTH_OF_LOGIN
                 || user.getLogin().contains(SPACE)) {
-            throw new WrongDataException("The login must contain from 1 to 6 characters!");
+            throw new WrongDataException("The login must contain from "
+                    + MIN_LENGTH_OF_LOGIN + " to " + MAX_LENGTH_OF_LOGIN + " characters!");
         }
         if (user.getAge() == null
-                || user.getAge() < minAge
-                || user.getAge() > maxAge) {
-            throw new WrongDataException("Your age must be from 18 to 100 years old!");
+                || user.getAge() < MIN_AGE
+                || user.getAge() > MAX_AGE) {
+            throw new WrongDataException("Your age must be from "
+                    + MIN_AGE + " to " + MAX_AGE + " years old!");
         }
         if (user.getPassword() == null
-                || user.getPassword().length() < minLengthOfPassword
-                || user.getPassword().length() > maxLengthOfPassword) {
-            throw new WrongDataException("The password must contain from 6 to 12 characters!");
+                || user.getPassword().length() < MIN_LENGTH_OF_PASSWORD
+                || user.getPassword().length() > MAX_LENGTH_OF_PASSWORD) {
+            throw new WrongDataException("The password must contain from "
+                    + MIN_LENGTH_OF_PASSWORD + " to " + MAX_LENGTH_OF_PASSWORD + " characters!");
         }
         storageDao.add(user);
         return user;
