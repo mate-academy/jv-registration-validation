@@ -20,10 +20,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Error: login null!");
         }
         if (user.getAge() < REQUIRED_AGE) {
-            throw new RegistrationException("Age should be " + REQUIRED_AGE + " and cannot be less than zero!");
+            throw new RegistrationException("Age should be "
+                    + REQUIRED_AGE + " and cannot be less than zero!");
         }
         if (user.getPassword().length() < REQUIRED_SYMBOLS) {
-            throw new RegistrationException("Password must be at least " + REQUIRED_SYMBOLS + " symbols");
+            throw new RegistrationException("Password must be at least "
+                    + REQUIRED_SYMBOLS + " symbols");
         }
         if (user.getLogin().isEmpty() || user.getPassword().isEmpty()) {
             throw new RegistrationException("Maybe you forgot to fill in your login or password!");
