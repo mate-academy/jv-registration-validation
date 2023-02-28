@@ -1,41 +1,38 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.CustomException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class RegistrationServiceImplTest {
+    private static final String DEFAULT_LOGIN = "Goodvin";
+    private static final String LOGIN_FOR_TEST_SAME_LOGIN = "Same_login";
+    private static final String DEFAULT_PASSWORD = "Password123";
+    private static final int DEFAULT_AGE = 27;
+    private static final int ADDED_FIRST_ID = 1;
     private static RegistrationService registrationValidator;
     private static StorageDao storageDao;
     private static User userIsValid;
-    private static User invalidUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationValidator = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         userIsValid = new User();
-        invalidUser = new User();
     }
 
     @BeforeEach
     void setUp() {
-        userIsValid.setId(77L);
-        userIsValid.setLogin("Goodvin");
-        userIsValid.setPassword("Password123");
-        userIsValid.setAge(27);
-
-        invalidUser.setId(-123L);
-        invalidUser.setLogin(null);
-        invalidUser.setPassword("1");
-        invalidUser.setAge(13);
+        userIsValid.setLogin(DEFAULT_LOGIN);
+        userIsValid.setPassword(DEFAULT_PASSWORD);
+        userIsValid.setAge(DEFAULT_AGE);
     }
 
     @Test
@@ -43,13 +40,15 @@ class RegistrationServiceImplTest {
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(null);
         }, "Expected " + CustomException.class.getName()
-                + " to be thrown for the null user, but it wasn't");
+                + " to be thrown for the null user. Null user is allowed");
     }
 
     @Test
     void register_user_with_such_login_is_already_added_notOk() {
-        storageDao.add(userIsValid);
-        assertEquals(storageDao.get(userIsValid.getLogin()), userIsValid);
+        User newUser = new User();
+        newUser.setLogin(LOGIN_FOR_TEST_SAME_LOGIN);
+        Storage.people.add(newUser);
+        userIsValid.setLogin(LOGIN_FOR_TEST_SAME_LOGIN);
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
         }, "Expected " + CustomException.class.getName()
@@ -133,13 +132,34 @@ class RegistrationServiceImplTest {
     @Test
     void register_user_with_null_password_notOk() {
         User newUser = new User();
-        newUser.setId(7712L);
-        newUser.setLogin("Goodvin");
-        newUser.setAge(18);
+        newUser.setLogin(DEFAULT_LOGIN);
+        newUser.setPassword(null);
+        newUser.setAge(DEFAULT_AGE);
         assertThrows(CustomException.class, () -> {
-            registrationValidator.register(userIsValid);
+            registrationValidator.register(newUser);
         }, "Expected " + CustomException.class.getName()
                 + " to be thrown for the user with empty password. "
                 + "You must enter Your Password!");
+    }
+
+    @Test
+    void register_user_with_null_login_notOk() {
+        User newUser = new User();
+        newUser.setPassword(DEFAULT_PASSWORD);
+        newUser.setAge(DEFAULT_AGE);
+        assertThrows(CustomException.class, () -> {
+            registrationValidator.register(newUser);
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the user with empty login. "
+                + "You must enter Your Login!");
+    }
+
+    @Test
+    void register_user_Ok() {
+        registrationValidator.register(userIsValid);
+        assertEquals(userIsValid.getLogin(), DEFAULT_LOGIN);
+        assertEquals(userIsValid.getPassword(), DEFAULT_PASSWORD);
+        assertEquals(userIsValid.getAge(), DEFAULT_AGE);
+        assertEquals(userIsValid.getId(), ADDED_FIRST_ID);
     }
 }
