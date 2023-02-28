@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.InvalidUserDataException;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,25 +30,25 @@ class RegistrationServiceImplTest {
     @Test
     void register_AgeUnderMin_NotOk() {
         defaultUser.setAge(MIN_AGE - 1);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_NegativeAge_NotOk() {
         defaultUser.setAge(-1);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_ZeroAge_NotOk() {
         defaultUser.setAge(0);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_NullAge_NotOk() {
         defaultUser.setAge(null);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
@@ -68,36 +68,36 @@ class RegistrationServiceImplTest {
     @Test
     void register_NullId_NotOk() {
         defaultUser.setId(null);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_NullLogin_NotOk() {
         defaultUser.setLogin(null);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_ZeroLengthLogin_NotOk() {
         defaultUser.setLogin("");
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_NullPassword_NotOk() {
         defaultUser.setPassword(null);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_ShortPassword_NotOk() {
         defaultUser.setPassword("12345");
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 
     @Test
     void register_UserAlreadyAdded_NotOk() {
         storageDao.add(defaultUser);
-        assertThrows(InvalidUserDataException.class, () -> regService.register(defaultUser));
+        assertThrows(RegistrationException.class, () -> regService.register(defaultUser));
     }
 }
