@@ -1,15 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.CustomException;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private User userOne;
@@ -17,7 +14,7 @@ class RegistrationServiceImplTest {
     private User userThree;
     private User userFour;
     private User userFourClone;
-    RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
     void setUp() {
