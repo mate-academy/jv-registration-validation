@@ -1,44 +1,32 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
-    private static final Object NULL_VALUE = null;
-    private static final String UNREAL_LOGIN1 = "nuefdd";
-    private static final String UNREAL_LOGIN2 = "dfghjkl";
+    private static final long USER_ID = 145789L;
     private static final String LOGIN = "Login";
     private static final String PASSWORD = "password";
+    private static final String PASSWORD_FOR_SAME_USER = "passwordsame";
     private static final String SHORT_PASSWORD = "pass";
-    private static final String LOGIN1 = "login1";
-    private static final String LOGIN2 = "login2";
-    private static final String LOGIN3 = "login3";
-    private static final String PASSWORD1 = "password1";
-    private static final String PASSWORD2 = "password2";
-    private static final String PASSWORD3 = "password3";
-    private static final int AGE1 = 22;
-    private static final int AGE2 = 40;
-    private static final int AGE3 = 18;
+    private static final int AGE = 22;
+    private static final int AGE_FOR_SAME_USER = 40;
     private static final int SMALL_AGE = 12;
     private static final int UNREAL_AGE = -10;
-    private static final long USER_ID1 = 1L;
-    private static final long USER_ID2 = 2L;
-    private static final long USER_ID3 = 3L;
     private static RegistrationService registrationService;
     private static StorageDao storage;
-    private User user1;
-    private User user2;
-    private User user3;
+    private User testUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -48,48 +36,24 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user1 = new User(USER_ID1,LOGIN1, PASSWORD1, AGE1);
-        user2 = new User(USER_ID2,LOGIN2, PASSWORD2, AGE2);
-        user3 = new User(USER_ID3,LOGIN3, PASSWORD3, AGE3);
+        testUser = new User(USER_ID,LOGIN, PASSWORD, AGE);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void registerAndGetOrdinaryUsers() {
-        registrationService.register(user1);
-        User actual = storage.get(LOGIN1);
-        assertEquals(user1,actual);
-
-        registrationService.register(user2);
-        actual = storage.get(LOGIN2);
-        assertEquals(user2,actual);
-
-        registrationService.register(user3);
-        actual = storage.get(LOGIN3);
-        assertEquals(user3,actual);
+    void registerAndGet_ordinaryUsers_isOk() {
+        registrationService.register(testUser);
+        User actual = storage.get(LOGIN);
+        assertEquals(testUser,actual);
     }
 
     @Test
-    void getUserByUnrealLogin() {
-        assertEquals(NULL_VALUE, storage.get(UNREAL_LOGIN1));
-
-        assertEquals(NULL_VALUE, storage.get(UNREAL_LOGIN2));
-    }
-
-    @Test
-    void registerAndGetUnrealUsers() {
-        User actual = storage.get(LOGIN1);
-        assertNotEquals(user2,actual);
-
-        actual = storage.get(LOGIN2);
-        assertNotEquals(user3,actual);
-
-        actual = storage.get(LOGIN3);
-        assertNotEquals(user1,actual);
-    }
-
-    @Test
-    void registerNullUser() {
-        User userNull = (User) NULL_VALUE;
+    void register_nullUser_isNotOk() {
+        User userNull = null;
         Assertions.assertThrows(UserIsNotValidException.class, () -> {
             registrationService.register(userNull);
         },"Expected " + UserIsNotValidException.class.getName()
@@ -97,67 +61,92 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNullLogin() {
-        User userWithLogin = new User(USER_ID1, (String) NULL_VALUE, PASSWORD, AGE2);
+    void register_userWithNullLogin_isNotOk() {
+        testUser.setLogin(null);
+        testUser.setPassword(PASSWORD);
+        testUser.setAge(AGE);
         assertThrows(UserIsNotValidException.class, () -> {
-            registrationService.register(userWithLogin);
+            registrationService.register(testUser);
         }, "Expected " + UserIsNotValidException.class.getName()
                 + "to be thrown for the null user login, but it wasn't");
     }
 
     @Test
-    void registerUserWithNullPassword() {
-        User userWithPassword = new User(USER_ID1, LOGIN, (String) NULL_VALUE, AGE1);
+    void register_userWithNullPassword_isNotOk() {
+        testUser.setLogin(LOGIN);
+        testUser.setPassword(null);
+        testUser.setAge(AGE);
         assertThrows(UserIsNotValidException.class, () -> {
-            registrationService.register(userWithPassword);
+            registrationService.register(testUser);
         }, "Expected " + UserIsNotValidException.class.getName()
                 + "to be thrown for the null user password, but it wasn't");
     }
 
     @Test
-    void registerUserWithAllUnrealValues() {
-        User userWithLoginAndPasswordAndAge = new User(USER_ID1, (String) NULL_VALUE,
-                (String) NULL_VALUE, UNREAL_AGE);
+    void register_userWithAllUnrealValues_isNotOk() {
+        testUser.setLogin(null);
+        testUser.setPassword(null);
+        testUser.setAge(UNREAL_AGE);
         assertThrows(UserIsNotValidException.class, () -> {
-            registrationService.register(userWithLoginAndPasswordAndAge);
+            registrationService.register(testUser);
         }, "to be thrown for the null user login and password and unreal age, but it wasn't ");
     }
 
     @Test
-    void registerUserWithNullPasswordAndLogin() {
-        User userWithLoginAndPassword = new User(USER_ID1, (String) NULL_VALUE,
-                (String) NULL_VALUE, AGE2);
+    void register_userWithNullPasswordAndLogin_isNotOk() {
+        testUser.setLogin(null);
+        testUser.setPassword(null);
+        testUser.setAge(AGE);
         assertThrows(UserIsNotValidException.class, () -> {
-            registrationService.register(userWithLoginAndPassword);
+            registrationService.register(testUser);
         }, "Expected " + UserIsNotValidException.class.getName()
                 + "to be thrown for the null user login and password, but it wasn't");
     }
 
     @Test
-    void registerUserWithShotPassword() {
-        User userWithShortPassword = new User(USER_ID1, LOGIN, SHORT_PASSWORD, AGE2);
+    void register_userWithShotPassword_isNotOk() {
+        testUser.setLogin(LOGIN);
+        testUser.setPassword(SHORT_PASSWORD);
+        testUser.setAge(AGE);
         assertThrows(UserIsNotValidException.class, () -> {
-            registrationService.register(userWithShortPassword);
+            registrationService.register(testUser);
         }, "Expected " + UserIsNotValidException.class.getName()
                 + "to be thrown for the short user password, but it wasn't");
     }
 
     @Test
-    void registerUserWithBadAge() {
-        User userWithBadAge = new User(USER_ID1, LOGIN, PASSWORD, SMALL_AGE);
+    void register_userWithInvalidAge_isNotOk() {
+        testUser.setLogin(LOGIN);
+        testUser.setPassword(PASSWORD);
+        testUser.setAge(SMALL_AGE);
         assertThrows(UserIsNotValidException.class, () -> {
-            registrationService.register(userWithBadAge);
+            registrationService.register(testUser);
         }, "Expected " + UserIsNotValidException.class.getName()
                 + "to be thrown for the small user age, but it wasn't");
     }
 
     @Test
-    void registerTheSameUsers() {
-        assertEquals(user1, storage.get(LOGIN1));
+    void register_theSameUsers_isNotOk() {
+        registrationService.register(testUser);
+        assertEquals(testUser, storage.get(LOGIN));
 
-        user2 = user1;
+        User sameTestUser = testUser;
         assertThrows(UserIsNotValidException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(sameTestUser);
+        }, "Expected " + UserIsNotValidException.class.getName()
+                + "to be thrown for the same user, but it wasn't");
+    }
+
+    @Test
+    void register_userWithAlreadyExistingLogin_throwsException() {
+        registrationService.register(testUser);
+        assertEquals(testUser, storage.get(LOGIN));
+
+        User sameTestUser = testUser;
+        sameTestUser.setPassword(PASSWORD_FOR_SAME_USER);
+        sameTestUser.setAge(AGE_FOR_SAME_USER);
+        assertThrows(UserIsNotValidException.class, () -> {
+            registrationService.register(sameTestUser);
         }, "Expected " + UserIsNotValidException.class.getName()
                 + "to be thrown for the same user login, but it wasn't");
     }
