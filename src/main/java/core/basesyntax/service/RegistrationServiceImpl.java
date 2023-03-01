@@ -16,15 +16,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         nullCheck(user);
-        loginExistenceCheck(user);
         loginNullOrEmptyCheck(user);
+        loginExistenceCheck(user);
+        passwordNullOrEmptyCheck(user);
+        ageNullCheck(user);
         loginLengthCheck(user);
         loginPatternCheck(user);
-        passwordNullOrEmptyCheck(user);
         passwordLengthCheck(user);
         passwordPatternCheck(user);
         ageValidation(user);
-        ageNullCheck(user);
         storageDao.add(user);
         return user;
     }
