@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.model.CurrentLoginIsExists;
-import core.basesyntax.model.InvalidInputData;
+import core.basesyntax.model.CurrentLoginIsExistsException;
+import core.basesyntax.model.InvalidInputDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ class RegistrationServiceImplTest {
     private static final String MISMATCH_LOGIN = "--------------";
     private static final String MISMATCH_PASSWORD = "%$#%@**(*&*(";
 
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final Storage storage = new Storage();
     private final User defaultUser = new User();
     private final User defaultCopyUser = new User();
@@ -87,45 +87,49 @@ class RegistrationServiceImplTest {
     @Test
     void checkCurrentLoginExistException_Ok() {
         registrationService.register(defaultUser);
-        assertThrows(CurrentLoginIsExists.class, () ->
+        assertThrows(CurrentLoginIsExistsException.class, () ->
                         registrationService.register(defaultCopyUser),
                 "CurrentLoginIsExist must thrown if current login is located in storage.");
     }
 
     @Test
     void checkInvalidInputDataIfUserNull_Ok() {
-        assertThrows(InvalidInputData.class, () ->
+        assertThrows(InvalidInputDataException.class, () ->
                         registrationService.register(nullUser),
                 "InvalidInputData must thrown if user is null or empty.");
     }
 
     @Test
     void checkInvalidInputDataExceptionIfLoginNullOrEmpty_Ok() {
-        assertThrows(InvalidInputData.class, () -> registrationService.register(nullLoginUser),
+        assertThrows(InvalidInputDataException.class, () ->
+                        registrationService.register(nullLoginUser),
                 "InvalidInputData must thrown if Login is null or empty.");
     }
 
     @Test
     void checkInvalidInputDataIfPasswordNullOrEmpty_Ok() {
-        assertThrows(InvalidInputData.class, () -> registrationService.register(nullPasswordUser),
+        assertThrows(InvalidInputDataException.class, () ->
+                        registrationService.register(nullPasswordUser),
                 "InvalidInputData must thrown if Password is null or empty.");
     }
 
     @Test
     void checkShortPasswordException_Ok() {
-        assertThrows(InvalidInputData.class, () -> registrationService.register(shortPasswordUser),
+        assertThrows(InvalidInputDataException.class, () ->
+                        registrationService.register(shortPasswordUser),
                 "InvalidInputData must thrown if Password is less than 10 elements.");
     }
 
     @Test
     void checkShortLoginException_Ok() {
-        assertThrows(InvalidInputData.class, () -> registrationService.register(shortLoginUser),
+        assertThrows(InvalidInputDataException.class, () ->
+                        registrationService.register(shortLoginUser),
                 "InvalidInputData must thrown if Login is less than 14 elements.");
     }
 
     @Test
     void checkMismatchPatternException_Ok() {
-        assertThrows(InvalidInputData.class, () ->
+        assertThrows(InvalidInputDataException.class, () ->
                         registrationService.register(misMathcPatternUser),
                 "InvalidInputData must thrown Login or Password mismatch pattern [a-z-A-Z-0-9].");
     }
