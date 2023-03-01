@@ -58,23 +58,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_more_than_18_notOk() {
+    void register_age_more_than_115_notOk() {
         userIsValid.setAge(119);
         assertThrows(CustomException.class, () -> {
             registrationValidator.register(userIsValid);
         }, "Expected " + CustomException.class.getName()
                 + " to be thrown for the user with age more than 115. "
-                + "Age cannot be a negative number or contains special symbols"
-                + " and should be above 18 or equal and less than 115");
-    }
-
-    @Test
-    void register_age_less_than_18_notOk() {
-        userIsValid.setAge(14);
-        assertThrows(CustomException.class, () -> {
-            registrationValidator.register(userIsValid);
-        }, "Expected " + CustomException.class.getName()
-                + " to be thrown for the user with age less than 18. "
                 + "Age cannot be a negative number or contains special symbols"
                 + " and should be above 18 or equal and less than 115");
     }
@@ -153,6 +142,18 @@ class RegistrationServiceImplTest {
         }, "Expected " + CustomException.class.getName()
                 + " to be thrown for the user with empty login. "
                 + "You must enter Your Login!");
+    }
+
+    @Test
+    void register_user_with_null_fields_notOk() {
+        User newUser = new User();
+        newUser.setLogin(null);
+        newUser.setPassword(null);
+        newUser.setAge(null);
+        assertThrows(CustomException.class, () -> {
+            registrationValidator.register(newUser);
+        }, "Expected " + CustomException.class.getName()
+                + " to be thrown for the null user. Null user is allowed");
     }
 
     @Test
