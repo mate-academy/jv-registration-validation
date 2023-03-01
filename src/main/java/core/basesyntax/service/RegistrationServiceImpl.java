@@ -15,38 +15,30 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        nullCheck(user);
-        loginCheck(user);
-        passwordCheck(user);
-        checkAge(user);
+        userValidate(user);
         storageDao.add(user);
         return user;
     }
 
-    private void checkAge(User user) {
-        if (user.getAge() == null) {
-            throw new InvalidInputDataException("Field age can't be empty or null");
+    private void userValidate(User user) {
+        if (user == null) {
+            throw new InvalidInputDataException("Inserted user data not exists");
         }
-        if (user.getAge() < AGE_LIMIT) {
-            throw new InvalidInputDataException("You can't register until 18 years old. Sorry(");
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new InvalidInputDataException("Field Login can't be empty or null. Try again");
         }
-    }
-
-    private void passwordCheck(User user) {
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new InvalidInputDataException("Field password can't be empty or null");
+        }
+        if (user.getAge() == null) {
+            throw new InvalidInputDataException("Field age can't be empty or null");
         }
         if (user.getPassword().length() <= PASSWORD_MIN_LENGTH) {
             throw new InvalidInputDataException("Your password must contain more than 10 elements");
         }
         if (!(user.getPassword().matches(PATTERN_FOR_PASSWORD_LOGIN))) {
-            throw new InvalidInputDataException("Your password must much pattern [a-z-A-Z-0-9]");
-        }
-    }
-
-    private void loginCheck(User user) {
-        if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new InvalidInputDataException("Field Login can't be empty or null. Try again");
+            throw new InvalidInputDataException("Your password must contain only"
+                    + " uppercase and lowercase letters and numbers");
         }
         if (user.getLogin() != null && storageDao.get(user.getLogin()) != null) {
             throw new CurrentLoginIsExistsException("The current login is occupied"
@@ -56,13 +48,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputDataException("Your login must contain more than 14 elements");
         }
         if (!(user.getLogin().matches(PATTERN_FOR_PASSWORD_LOGIN))) {
-            throw new InvalidInputDataException("Your login must much pattern [a-z-A-Z-0-9]");
+            throw new InvalidInputDataException("Your login must contain only"
+                    + " uppercase and lowercase letters and numbers");
         }
-    }
 
-    private static void nullCheck(User user) {
-        if (user == null) {
-            throw new InvalidInputDataException("Inserted user data not exists");
+        if (user.getAge() < AGE_LIMIT) {
+            throw new InvalidInputDataException("You can't register until 18 years old. Sorry(");
         }
     }
 }

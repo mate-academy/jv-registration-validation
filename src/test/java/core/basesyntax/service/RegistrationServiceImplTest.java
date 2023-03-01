@@ -3,12 +3,12 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.CurrentLoginIsExistsException;
 import core.basesyntax.model.InvalidInputDataException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +22,7 @@ class RegistrationServiceImplTest {
     private static final String MISMATCH_PASSWORD = "%$#%@**(*&*(";
 
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final Storage storage = new Storage();
+    private final StorageDao storageDao = new StorageDaoImpl();
     private final User defaultUser = new User();
     private final User defaultCopyUser = new User();
     private final User nullUser = new User();
@@ -35,6 +35,8 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Storage storage = new Storage();
+        storage.people.clear();
         defaultUser.setAge(18);
         defaultUser.setLogin(DEFAULT_LOGIN);
         defaultUser.setPassword(DEFAULT_PASSWORD);
@@ -71,17 +73,10 @@ class RegistrationServiceImplTest {
         misMathcPatternUser.setAge(DEFAULT_AGE);
     }
 
-    @AfterEach
-    void afterEach() {
-        storage.people.clear();
-        StorageDaoImpl.setIndex(0L);
-    }
-
     @Test
     void checkIfUserIsRegistered_Ok() {
         registrationService.register(defaultUser);
-        Long actual = defaultUser.getId();
-        assertEquals(1, actual);
+        assertEquals(defaultUser, storageDao.get(defaultUser.getLogin()));
     }
 
     @Test
