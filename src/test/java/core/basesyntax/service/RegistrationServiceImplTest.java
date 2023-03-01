@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.CustomException;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ class RegistrationServiceImplTest {
         userThree = new User(2323233L, "world14", "userworld95884", 19);
         userFour = new User(12333L, "world1266", "userw23023", 21);
         userFourClone = new User(12333L, "world1266", "userw23023", 21);
+        Storage.people.clear();
     }
 
     @Test
@@ -33,6 +35,7 @@ class RegistrationServiceImplTest {
         assertEquals(userOne, userTestOne);
         assertEquals(userTwo, userTestTwo);
         assertEquals(userThree, userTestThree);
+        assertEquals(3, Storage.people.size());
     }
 
     @Test
