@@ -1,112 +1,148 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.CurrentLoginIsExists;
 import core.basesyntax.model.InvalidInputData;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    StorageDaoImpl storageDao = new StorageDaoImpl();
-    User user = new User();
-    User sameUser = new User();
-    User nullUser = new User();
-    User nullPasswordUser = new User();
-    User nullLoginUser = new User();
-    User nullAgeUser = new User();
-    User shortPasswordUser = new User();
-    User shortLoginUser = new User();
-    User misMathcPatternUser = new User();
-    Pattern pattern = Pattern.compile("[a-zA-Z]");
-    Matcher matcher;
+    private static final String DEFAULT_LOGIN = "programator12341";
+    private static final String DEFAULT_PASSWORD = "passatic123";
+    private static final int DEFAULT_AGE = 19;
+    private static final int AGE_LIMIT = 18;
+    private static final int LOGIN_MIN_LENGTH = 14;
+    private static final int PASSWORD_MIN_LENGTH = 10;
+    private static final String PATTERN_FOR_PASSWORD_LOGIN = "[A-Za-z0-9]*";
+    private static final String SHORT_PASSWORD = "short";
+    private static final String SHORT_LOGIN = "short";
+    private static final String MISMATCH_LOGIN = "--------------";
+    private static final String MISMATCH_PASSWORD = "%$#%@**(*&*(";
+
+    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private final StorageDaoImpl storageDao = new StorageDaoImpl();
+    private final Storage storage = new Storage();
+    private final User defaultUser = new User();
+    private final User defaultCopyUser = new User();
+    private final User nullUser = new User();
+    private final User nullPasswordUser = new User();
+    private final User nullLoginUser = new User();
+    private final User nullAgeUser = new User();
+    private final User shortPasswordUser = new User();
+    private final User shortLoginUser = new User();
+    private final User misMathcPatternUser = new User();
 
     @BeforeEach
     void setUp() {
-        user.setAge(18);
-        user.setLogin("programator12341");
-        user.setPassword("passatic123");
-        registrationService.register(user);
-        sameUser.setAge(18);
-        sameUser.setLogin("programator12341");
-        sameUser.setPassword("passatic123");
+        defaultUser.setAge(18);
+        defaultUser.setLogin(DEFAULT_LOGIN);
+        defaultUser.setPassword(DEFAULT_PASSWORD);
+
+        defaultCopyUser.setAge(DEFAULT_AGE);
+        defaultCopyUser.setLogin(DEFAULT_LOGIN);
+        defaultCopyUser.setPassword(DEFAULT_PASSWORD);
+
         nullUser.setAge(null);
         nullUser.setLogin(null);
         nullUser.setPassword(null);
-        nullLoginUser.setPassword("hellomyfriend123");
+
+        nullLoginUser.setPassword(DEFAULT_PASSWORD);
         nullLoginUser.setLogin(null);
-        nullLoginUser.setAge(20);
-        nullPasswordUser.setAge(20);
-        nullPasswordUser.setLogin("HelloworldMyfait");
+        nullLoginUser.setAge(DEFAULT_AGE);
+
+        nullPasswordUser.setAge(DEFAULT_AGE);
+        nullPasswordUser.setLogin(DEFAULT_LOGIN);
         nullPasswordUser.setPassword(null);
-        nullAgeUser.setLogin("User22222222222");
-        nullAgeUser.setLogin("HelloToWorldOr00");
-        shortLoginUser.setLogin("short");
-        shortLoginUser.setPassword("normalPassword");
-        shortPasswordUser.setAge(23);
-        shortLoginUser.setLogin("short");
-        shortLoginUser.setPassword("normalPassword");
-        shortLoginUser.setAge(23);
-        misMathcPatternUser.setPassword("--------------");
-        misMathcPatternUser.setLogin("-------------------");
-        misMathcPatternUser.setAge(25);
 
+        nullAgeUser.setLogin(DEFAULT_LOGIN);
+        nullAgeUser.setPassword(DEFAULT_PASSWORD);
 
+        shortLoginUser.setLogin(SHORT_LOGIN);
+        shortLoginUser.setPassword(DEFAULT_PASSWORD);
+        shortLoginUser.setAge(DEFAULT_AGE);
+
+        shortPasswordUser.setLogin(DEFAULT_LOGIN);
+        shortPasswordUser.setPassword(SHORT_PASSWORD);
+        shortPasswordUser.setAge(DEFAULT_AGE);
+
+        misMathcPatternUser.setPassword(MISMATCH_PASSWORD);
+        misMathcPatternUser.setLogin(MISMATCH_LOGIN);
+        misMathcPatternUser.setAge(DEFAULT_AGE);
+    }
+
+    @AfterEach
+    void afterEach() {
+        storage.people.clear();
     }
 
     @Test
     void current_Login_Is_Not_Exists_In_Storage_Is_Ok() {
-        boolean actual = storageDao.get(user.getLogin()) == null;
+        boolean actual = storageDao.get(defaultUser.getLogin()) == null;
         assertTrue(actual);
     }
 
     @Test
     void checkLoginFieldIsNotEmptyOrNullIs_Ok() {
-        boolean actual = user.getLogin() == null || user.getLogin().isEmpty();
+        boolean actual = defaultUser.getLogin() == null || defaultUser.getLogin().isEmpty();
         assertFalse(actual);
     }
 
     @Test
     void checkInputLoginLengthIs_Ok() {
-        boolean actual = user.getLogin().length() >= 14;
+        boolean actual = defaultUser.getLogin().length() >= LOGIN_MIN_LENGTH;
         assertTrue(actual);
     }
 
     @Test
     void checkLoginMatchPatternIs_Ok() {
-        matcher = pattern.matcher(user.getLogin());
-        boolean actual = matcher.matches();
+        boolean actual = defaultUser.getLogin().matches(PATTERN_FOR_PASSWORD_LOGIN);
         assertTrue(actual);
     }
 
     @Test
     void currentPasswordIsNotEmptyOrNullIs_Ok() {
-        boolean actual = user.getPassword() != null || !(user.getPassword().isEmpty());
+        boolean actual = defaultUser.getPassword() != null
+                || !(defaultUser.getPassword().isEmpty());
         assertTrue(actual);
     }
 
     @Test
     void checkInputPasswordLengthIs_Ok() {
-        boolean actual = user.getPassword().length() >= 10;
+        boolean actual = defaultUser.getPassword().length() >= PASSWORD_MIN_LENGTH;
         assertTrue(actual);
     }
 
     @Test
     void checkPasswordMatchPatternIs_Ok() {
-        boolean actual = user.getPassword().matches("[a-zA-Z]");
+        boolean actual = defaultUser.getPassword().matches(PATTERN_FOR_PASSWORD_LOGIN);
         assertTrue(actual);
     }
 
     @Test
-    void currentLoginIsExistsExceptionIfNot_Ok() {
+    void checkAgeValidation() {
+        boolean actual = defaultUser.getAge() >= AGE_LIMIT;
+        assertTrue(actual);
+    }
+
+    @Test
+    void checkIfUserRegistered() {
+        storageDao.add(defaultUser);
+        boolean actual = storageDao.get(defaultUser.getLogin()).equals(defaultUser);
+        assertTrue(actual);
+    }
+
+    @Test
+    void checkCurrentLoginExistException() {
+        registrationService.register(defaultUser);
         try {
-            registrationService.register(sameUser);
+            registrationService.register(defaultCopyUser);
         } catch (CurrentLoginIsExists exception) {
             return;
         }
@@ -114,7 +150,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidInputLoginExceptionIfNullOrEmpty() {
+    void checkInvalidInputDataExceptionIfLoginNullOrEmpty() {
         try {
             registrationService.register(nullLoginUser);
         } catch (InvalidInputData exception) {
@@ -124,7 +160,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidInputPasswordIfNullOrEmpty() {
+    void checkInvalidInputDataIfPasswordNullOrEmpty() {
         try {
             registrationService.register(nullPasswordUser);
         } catch (InvalidInputData exception) {
