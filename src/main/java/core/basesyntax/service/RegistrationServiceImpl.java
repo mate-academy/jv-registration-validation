@@ -1,9 +1,9 @@
-package core.basesyntax;
+package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.UserIsNotValidException;
 import core.basesyntax.model.User;
-import core.basesyntax.service.RegistrationService;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int USER_AGE = 18;
@@ -12,41 +12,34 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws UserIsNotValidException {
-        userIsNull(user);
-        userLoginOrPasswordIsNull(user);
-        userIsAlreadyRegister(user);
-        userPasswordIsIncorrect(user);
-        userAgeIsIncorrect(user);
+        validateUser(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         storageDao.add(user);
         return user;
     }
 
-    private void userIsNull(User user) {
+    private void validateUser(User user) {
         if (user == null) {
             throw new UserIsNotValidException("user is null");
         }
     }
 
-    private void userLoginOrPasswordIsNull(User user) {
-        if (user.getLogin() == null || user.getPassword() == null) {
-            throw new UserIsNotValidException("users login or password is null");
-        }
-    }
-
-    private void userPasswordIsIncorrect(User user) {
-        if (user.getPassword().length() < PASSWORD_LENGTH) {
+    private void validatePassword(User user) {
+        if (user.getPassword() == null || user.getPassword().length() < PASSWORD_LENGTH) {
             throw new UserIsNotValidException(
                     "incorrect password. Password should have more than 6 elements");
         }
     }
 
-    private void userIsAlreadyRegister(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
+    private void validateLogin(User user) {
+        if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
             throw new UserIsNotValidException("user is already registered");
         }
     }
 
-    private void userAgeIsIncorrect(User user) {
+    private void validateAge(User user) {
         if (user.getAge() < USER_AGE) {
             throw new UserIsNotValidException(
                     "incorrect age. User should have more than 18 year old");
