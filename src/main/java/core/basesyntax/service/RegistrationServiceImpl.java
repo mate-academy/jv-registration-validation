@@ -42,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("You are too small)");
         }
         if (user.getAge() > MAX_AGE) {
-            throw new RegistrationException("You are too old, " + "the heart may not withstand the content))");
+            throw new RegistrationException("You are too old");
         }
         return user;
     }
