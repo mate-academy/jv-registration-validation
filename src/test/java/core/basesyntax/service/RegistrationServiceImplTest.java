@@ -3,7 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import core.basesyntax.CustomException;
+import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUser_Ok() throws CustomException {
+    void addUser_Ok() {
         User userTestOne = registrationService.register(userOne);
         User userTestTwo = registrationService.register(userTwo);
         User userTestThree = registrationService.register(userThree);
@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
         try {
             User userTestFour = registrationService.register(userFour);
             User userTestFouClone = registrationService.register(userFourClone);
-        } catch (CustomException e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("You can not add users with same login");
@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
         User userWithNullPassword = new User(12333L, "world126333", null, 21);
         try {
             registrationService.register(userWithNullPassword);
-        } catch (CustomException e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("We can not add user with null password");
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
         User userWithNullLogin = new User(12333L, null, "jdhfhd83", 21);
         try {
             registrationService.register(userWithNullLogin);
-        } catch (CustomException e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("We can not add user with null login");
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
         User user = new User(12333L, "newLogin1029", "jdhfhd83", 17);
         try {
             registrationService.register(user);
-        } catch (CustomException e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("You can not add use with age under 18");
@@ -87,7 +87,7 @@ class RegistrationServiceImplTest {
         User user = new User(12333L, "newLogin10329", "2828", 17);
         try {
             registrationService.register(user);
-        } catch (CustomException e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("You can not add user with password length less then 8");
