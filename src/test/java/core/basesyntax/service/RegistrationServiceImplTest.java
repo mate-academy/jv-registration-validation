@@ -16,61 +16,16 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "programator12341";
     private static final String DEFAULT_PASSWORD = "passatic123";
     private static final int DEFAULT_AGE = 19;
-    private static final String SHORT_PASSWORD = "short";
-    private static final String SHORT_LOGIN = "short";
-    private static final String MISMATCH_LOGIN = "--------------";
-    private static final String MISMATCH_PASSWORD = "%$#%@**(*&*(";
-
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final StorageDao storageDao = new StorageDaoImpl();
     private final User defaultUser = new User();
-    private final User defaultCopyUser = new User();
-    private final User nullUser = new User();
-    private final User nullPasswordUser = new User();
-    private final User nullLoginUser = new User();
-    private final User nullAgeUser = new User();
-    private final User shortPasswordUser = new User();
-    private final User shortLoginUser = new User();
-    private final User misMathcPatternUser = new User();
 
     @BeforeEach
     void setUp() {
-        Storage storage = new Storage();
-        storage.people.clear();
+        Storage.people.clear();
         defaultUser.setAge(18);
         defaultUser.setLogin(DEFAULT_LOGIN);
         defaultUser.setPassword(DEFAULT_PASSWORD);
-
-        defaultCopyUser.setAge(DEFAULT_AGE);
-        defaultCopyUser.setLogin(DEFAULT_LOGIN);
-        defaultCopyUser.setPassword(DEFAULT_PASSWORD);
-
-        nullUser.setAge(null);
-        nullUser.setLogin(null);
-        nullUser.setPassword(null);
-
-        nullLoginUser.setPassword(DEFAULT_PASSWORD);
-        nullLoginUser.setLogin(null);
-        nullLoginUser.setAge(DEFAULT_AGE);
-
-        nullPasswordUser.setAge(DEFAULT_AGE);
-        nullPasswordUser.setLogin(DEFAULT_LOGIN);
-        nullPasswordUser.setPassword(null);
-
-        nullAgeUser.setLogin(DEFAULT_LOGIN);
-        nullAgeUser.setPassword(DEFAULT_PASSWORD);
-
-        shortLoginUser.setLogin(SHORT_LOGIN);
-        shortLoginUser.setPassword(DEFAULT_PASSWORD);
-        shortLoginUser.setAge(DEFAULT_AGE);
-
-        shortPasswordUser.setLogin(DEFAULT_LOGIN);
-        shortPasswordUser.setPassword(SHORT_PASSWORD);
-        shortPasswordUser.setAge(DEFAULT_AGE);
-
-        misMathcPatternUser.setPassword(MISMATCH_PASSWORD);
-        misMathcPatternUser.setLogin(MISMATCH_LOGIN);
-        misMathcPatternUser.setAge(DEFAULT_AGE);
     }
 
     @Test
@@ -80,52 +35,58 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkCurrentLoginExistException_Ok() {
+    void register_existLogin_notOk() {
         registrationService.register(defaultUser);
         assertThrows(CurrentLoginIsExistsException.class, () ->
-                        registrationService.register(defaultCopyUser),
+                        registrationService.register(defaultUser),
                 "CurrentLoginIsExist must thrown if current login is located in storage.");
     }
 
     @Test
-    void checkInvalidInputDataIfUserNull_Ok() {
+    void register_nullUser_notOk() {
         assertThrows(InvalidInputDataException.class, () ->
-                        registrationService.register(nullUser),
+                        registrationService.register(null),
                 "InvalidInputData must thrown if user is null or empty.");
     }
 
     @Test
-    void checkInvalidInputDataExceptionIfLoginNullOrEmpty_Ok() {
+    void register_nullLogin_notOk() {
+        defaultUser.setLogin(null);
         assertThrows(InvalidInputDataException.class, () ->
-                        registrationService.register(nullLoginUser),
+                        registrationService.register(defaultUser),
                 "InvalidInputData must thrown if Login is null or empty.");
     }
 
     @Test
-    void checkInvalidInputDataIfPasswordNullOrEmpty_Ok() {
+    void register_nullPassword_notOk() {
+        defaultUser.setPassword(null);
         assertThrows(InvalidInputDataException.class, () ->
-                        registrationService.register(nullPasswordUser),
+                        registrationService.register(defaultUser),
                 "InvalidInputData must thrown if Password is null or empty.");
     }
 
     @Test
-    void checkShortPasswordException_Ok() {
+    void register_shotPassword_notOk() {
+        defaultUser.setPassword("short");
         assertThrows(InvalidInputDataException.class, () ->
-                        registrationService.register(shortPasswordUser),
+                        registrationService.register(defaultUser),
                 "InvalidInputData must thrown if Password is less than 10 elements.");
     }
 
     @Test
-    void checkShortLoginException_Ok() {
+    void register_shorLogin_notOk() {
+        defaultUser.setLogin("short");
         assertThrows(InvalidInputDataException.class, () ->
-                        registrationService.register(shortLoginUser),
+                        registrationService.register(defaultUser),
                 "InvalidInputData must thrown if Login is less than 14 elements.");
     }
 
     @Test
-    void checkMismatchPatternException_Ok() {
+    void register_missPatternLoginPassword_notOk() {
+        defaultUser.setLogin("____&^&^*%^&*()");
+        defaultUser.setPassword("&^*()*&^^*()*&(^");
         assertThrows(InvalidInputDataException.class, () ->
-                        registrationService.register(misMathcPatternUser),
+                        registrationService.register(defaultUser),
                 "InvalidInputData must thrown Login or Password mismatch pattern [a-z-A-Z-0-9].");
     }
 }
