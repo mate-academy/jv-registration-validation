@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("Login exist");
         }
-        if (user.getAge() < MIN_AGE) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationException("Age can not be less then 18");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
