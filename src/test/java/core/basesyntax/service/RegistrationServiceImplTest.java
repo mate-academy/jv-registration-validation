@@ -15,7 +15,7 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "default_login";
     private static final String DEFAULT_PASSWORD = "default_password";
     private static final String NON_UNIQUE_LOGIN = "nonunique_login";
-    private static final int INITIAL_AGE = 24;
+    private static final int DEFAULT_AGE = 24;
     private static final int MIN_AGE = 18;
     private static RegistrationService registrationService;
     private User defaultUser;
@@ -28,7 +28,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void before() {
         defaultUser = new User();
-        defaultUser.setAge(INITIAL_AGE);
+        defaultUser.setAge(DEFAULT_AGE);
         defaultUser.setLogin(DEFAULT_LOGIN);
         defaultUser.setPassword(DEFAULT_PASSWORD);
     }
