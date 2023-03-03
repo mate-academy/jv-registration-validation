@@ -113,7 +113,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_user_ok() {
         registrationService.register(defaultUser);
-        defaultUser.setId(1L);
         assertEquals(1,defaultUser.getId());
         assertEquals(DEFAULT_LOGIN,defaultUser.getLogin());
         assertEquals(DEFAULT_PASSWORD,defaultUser.getPassword());
