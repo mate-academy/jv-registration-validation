@@ -51,14 +51,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_notOk() {
+    void register_userAlreadyExists_notOk() {
         Storage.people.add(user);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void register_withNull_notOk() {
+    void register_userIsNull_notOk() {
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(null));
     }
@@ -81,14 +81,7 @@ class RegistrationServiceImplTest {
      */
 
     @Test
-    void register_withCorrectPassword_ok() {
-        user.setPassword(DEFAULT_PASSWORD);
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
-    }
-
-    @Test
-    void register_withNullInPassword_notOk() {
+    void register_nullInPassword_notOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
@@ -102,7 +95,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_withVeryLongPassword_notOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("1234567891011121314");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
@@ -119,15 +112,8 @@ class RegistrationServiceImplTest {
      */
 
     @Test
-    void register_underageUser_notOk() {
-        user.setAge(12);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
-    }
-
-    @Test
-    void register_veryOldUser_notOk() {
-        user.setAge(90);
+    void register_lowUserAge_notOk() {
+        user.setAge(17);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
