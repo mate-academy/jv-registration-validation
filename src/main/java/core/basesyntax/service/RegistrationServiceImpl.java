@@ -44,6 +44,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() > MAX_AGE) {
             throw new RegistrationException("You are too old");
         }
-        return user;
+        return storageDao.add(user);
     }
 }
