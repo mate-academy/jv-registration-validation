@@ -71,7 +71,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkForAbsenceInTheFirstLetterOfCharacter_notOk() {
+    void register_firstLoginCharacterIsNotLetter_notOk() {
         user.setLogin("#oleksii");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
@@ -95,15 +95,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_longPassword_notOk() {
         user.setPassword("1234567891011121314");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void register_withVerySmallPassword_notOk() {
-        user.setPassword("12");
+    void register_smallPassword_notOk() {
+        user.setPassword("12345");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
