@@ -10,7 +10,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkNotNull(user);
+        checkForNulls(user);
         checkLogin(user.getLogin().toLowerCase());
         checkPassword(user.getPassword());
         checkAge(user.getAge());
@@ -18,15 +18,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    private boolean checkNotNull(User user) {
+    private void checkForNulls(User user) {
         if (user == null || user.getLogin() == null || user.getPassword() == null
                 || user.getAge() == null) {
             throw new InvalidUserInputException("User params can't be null");
         }
-        return true;
     }
 
-    private boolean checkLogin(String login) {
+    private void checkLogin(String login) {
         if (login.length() < 4 || login.length() > 16
                 || !login.matches("\\w++")) {
             throw new InvalidUserInputException("Invalid login");
@@ -34,20 +33,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(login) != null) {
             throw new InvalidUserInputException("User already exists");
         }
-        return true;
     }
 
-    private boolean checkPassword(String password) {
+    private void checkPassword(String password) {
         if (password.length() < 6 || password.length() > 16) {
             throw new InvalidUserInputException("Invalid password");
         }
-        return true;
     }
 
-    private boolean checkAge(Integer age) {
+    private void checkAge(Integer age) {
         if (age < 18 || age > 140) {
             throw new InvalidUserInputException("Invalid age");
         }
-        return true;
     }
 }
