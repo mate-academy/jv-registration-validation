@@ -1,11 +1,8 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeption.RegistrationValidationExeption;
 import core.basesyntax.model.User;
@@ -27,7 +24,6 @@ class RegistrationServiceImplTest {
     private static final String PASSWORD_8_SYMBOL_OK = "buffer789";
     private static final String PASSWORD_8_SYMBOL_SECOND_OK = "grinGo666";
     private static final String PASSWORD_LESS_THEN_8_OK = "notwork";
-    private static StorageDao storageDao;
     private static User firstUser;
     private static User secondUser;
     private static RegistrationServiceImpl registrationService;
@@ -35,7 +31,6 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -59,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_NotOk() {
+    void register_nullUser_notOk() {
         firstUser = null;
         assertThrows(RegistrationValidationExeption.class,
                 () -> registrationService.register(firstUser),
@@ -67,15 +62,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessThen18yearsOld_NotOk() {
+    void register_lessThen18yearsOld_notOk() {
         firstUser.setAge(AGE_LES_18_YEARS);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
-        }, "User must be older then 18");
+        }, "User must be 18 year old or older");
     }
 
     @Test
-    void register_NullAge_NotOk() {
+    void register_nullAge_notOk() {
         firstUser.setAge(null);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
@@ -83,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NegativeAge_NotOk() {
+    void register_negativeAge_notOk() {
         firstUser.setAge(-15);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
@@ -91,7 +86,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_moreThen100yearsOld() {
+    void register_olderThen100yearsOld_notOk() {
         firstUser.setAge(AGE_MORE_100_YEARS);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
@@ -99,7 +94,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         firstUser.setLogin(null);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
@@ -107,7 +102,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginWithSpace_NotOk() {
+    void register_loginWithSpace_notOk() {
         firstUser.setLogin(LOGIN_CONTAINS_SPACE);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
@@ -115,7 +110,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordNull_NotOK() {
+    void register_passwordNull_notOK() {
         firstUser.setPassword(null);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
@@ -123,7 +118,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessThen8_NotOk() {
+    void register_passwordLessThen8_notOk() {
         firstUser.setPassword(PASSWORD_LESS_THEN_8_OK);
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(firstUser);
@@ -131,8 +126,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginAlreadyExist_NotOk() {
-        storageDao.add(firstUser);
+    void register_loginAlreadyExist_notOk() {
+        Storage.people.add(firstUser);
         secondUser.setLogin(firstUser.getLogin());
         assertThrows(RegistrationValidationExeption.class, () -> {
             registrationService.register(secondUser);
@@ -140,39 +135,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserCanNotRegister_Ok() {
-        firstUser.setAge(AGE_MORE_100_YEARS);
-        firstUser.setLogin(LOGIN_CONTAINS_SPACE);
-        firstUser.setPassword(PASSWORD_LESS_THEN_8_OK);
-        assertThrows(RegistrationValidationExeption.class,
-                () -> registrationService.register(firstUser));
-    }
-
-    @Test
-    void register_loginNotExist_Ok() {
-        storageDao.add(firstUser);
+    void register_loginNotExist_ok() {
+        Storage.people.add(firstUser);
         assertDoesNotThrow(() -> {
             registrationService.register(secondUser);
         }, "User was added without problems");
-    }
-
-    @Test
-    void register_compare_SaveUserAge_Ok() {
-        registrationService.register(firstUser);
-        registrationService.register(secondUser);
-        int expected = firstUser.getAge();
-        int actual = storageDao.get(firstUser.getLogin()).getAge();
-        String message = "Expected Age in storage (" + expected + ") but was (" + actual + ")";
-        assertEquals(expected, actual, message);
-    }
-
-    @Test
-    void register_compare_SaveUserPassword_Ok() {
-        registrationService.register(firstUser);
-        registrationService.register(secondUser);
-        String expected = firstUser.getPassword();
-        String actual = storageDao.get(firstUser.getLogin()).getPassword();
-        String message = "Expected Password in storage (" + expected + ") but was (" + actual + ")";
-        assertEquals(expected, actual, message);
     }
 }

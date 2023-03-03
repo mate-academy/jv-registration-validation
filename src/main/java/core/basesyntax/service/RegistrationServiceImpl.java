@@ -18,15 +18,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RegistrationValidationExeption("User can't be null");
-        }
         validateUser(user);
         storageDao.add(user);
         return user;
     }
 
     private void validateUser(User user) {
+        if (user == null) {
+            throw new RegistrationValidationExeption("User can't be null");
+        }
         if (user.getAge() == null || user.getAge() < AGE_LOW_LIMIT
                 || user.getAge() > AGE_UP_LIMIT) {
             throw new RegistrationValidationExeption("User's age (" + user.getAge()
