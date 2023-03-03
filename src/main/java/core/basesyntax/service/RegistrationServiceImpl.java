@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_LOGIN_LENGTH = 3;
     private static final int MAX_LOGIN_LENGTH = 20;
-    private static final int MAX_PASSWORD_LENGTH = 30;
+    private static final int MAX_PASSWORD_LENGTH = 25;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -32,6 +32,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidInputException("Password less than "
                     + MIN_PASSWORD_LENGTH + " symbols");
+        }
+        if (user.getLogin().matches(System.lineSeparator())
+                || user.getPassword().matches(System.lineSeparator())) {
+            throw new InvalidInputException("Credentials can't contains new line separator");
         }
         if (!user.getLogin().matches("[a-zA-Z0-9]+")) {
             throw new InvalidInputException("Login can't contains special characters: @#$%");

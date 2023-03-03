@@ -1,6 +1,8 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -14,10 +16,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static final String FIRST_LOGIN_OK = "Nick";
-    private static final String FIRST_PASSWORD_OK = "adgfaw123";
-    private static final long FIRST_ID_OK = 633444;
-    private static final int STANDART_AGE_OK = 18;
+    private static final String STANDARD_LOGIN_OK = "Nick";
+    private static final String STANDARD_LOGIN_OK_PASSWORD_OK = "adgfaw123";
+    private static final long STANDARD_ID_OK = 633444;
+    private static final int STANDARD_AGE_OK = 18;
     private static final String SHORT_LOGIN = "Hi";
     private static final String SHORT_PASSWORD = "5";
     private static final int AGE_LESS = 15;
@@ -26,6 +28,7 @@ public class RegistrationServiceTest {
     private static final String EMPTY = "";
     private static final String SPECIAL_CHARACTERS = "@#$%";
     private static final String LARGE_LOGIN = "HelloMyNameIsJohnPhilips";
+    private static final String LARGE_PASSWORD = "fesgeFEFr32453ft4t3t43534543";
     private static RegistrationService registrationService;
     private static User standartUser;
 
@@ -37,11 +40,10 @@ public class RegistrationServiceTest {
     @BeforeEach
     void setUp() {
         standartUser = new User();
-        standartUser.setLogin(FIRST_LOGIN_OK);
-        standartUser.setPassword(FIRST_PASSWORD_OK);
-        standartUser.setId(FIRST_ID_OK);
-        standartUser.setAge(STANDART_AGE_OK);
-
+        standartUser.setLogin(STANDARD_LOGIN_OK);
+        standartUser.setPassword(STANDARD_LOGIN_OK_PASSWORD_OK);
+        standartUser.setId(STANDARD_ID_OK);
+        standartUser.setAge(STANDARD_AGE_OK);
     }
 
     @AfterEach
@@ -52,10 +54,10 @@ public class RegistrationServiceTest {
     @Test
     void register_dublicateUser_notOk() {
         User secondUser = new User();
-        secondUser.setLogin(FIRST_LOGIN_OK);
-        secondUser.setPassword(FIRST_PASSWORD_OK);
-        secondUser.setId(FIRST_ID_OK);
-        secondUser.setAge(STANDART_AGE_OK);
+        secondUser.setLogin(STANDARD_LOGIN_OK);
+        secondUser.setPassword(STANDARD_LOGIN_OK_PASSWORD_OK);
+        secondUser.setId(STANDARD_ID_OK);
+        secondUser.setAge(STANDARD_AGE_OK);
         Storage.people.add(standartUser);
         assertThrows(InvalidInputException.class,
                 () -> registrationService.register(secondUser),
@@ -135,6 +137,27 @@ public class RegistrationServiceTest {
     }
 
     @Test
+    void equals_nullObject_notOk() {
+        assertNotEquals(null, standartUser, "User can't equal null");
+    }
+
+    @Test
+    void equals_sameUser_ok() {
+        assertEquals(standartUser, standartUser, "User should equal same User");
+    }
+
+    @Test
+    void user_equalHashcode_ok() {
+        User user2 = new User();
+        user2.setLogin(STANDARD_LOGIN_OK);
+        user2.setPassword(STANDARD_LOGIN_OK_PASSWORD_OK);
+        user2.setAge(STANDARD_AGE_OK);
+        user2.setId(STANDARD_ID_OK);
+        assertEquals(standartUser.hashCode(), user2.hashCode());
+        assertEquals(standartUser, user2);
+    }
+
+    @Test
     void register_user_largeLogin_notOk() {
         standartUser.setLogin(LARGE_LOGIN);
         assertThrows(InvalidInputException.class,
@@ -160,10 +183,26 @@ public class RegistrationServiceTest {
 
     @Test
     void register_user_largePassword_notOk() {
-        standartUser.setLogin(SHORT_PASSWORD);
+        standartUser.setPassword(LARGE_PASSWORD);
         assertThrows(InvalidInputException.class,
                 () -> registrationService.register(standartUser),
                 "Password can't be so large");
+    }
+
+    @Test
+    void register_user_sameCredentials_notOk() {
+        standartUser.setPassword(standartUser.getLogin());
+        assertThrows(InvalidInputException.class,
+                () -> registrationService.register(standartUser),
+                "Credentials can't be same");
+    }
+
+    @Test
+    void register_user_lineSeparatorLogin_notOk() {
+        standartUser.setLogin(System.lineSeparator());
+        assertThrows(InvalidInputException.class,
+                () -> registrationService.register(standartUser),
+                "Password can't contains space");
     }
 
     @Test
