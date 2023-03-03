@@ -39,14 +39,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNull_notOk() {
-        assertThrows(NullPointerException.class, () -> {
+    void register_NullUser_notOk() {
+        assertThrows(InvalidDataException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void registerAlreadyExistedUser_notOk() {
+    void register_alreadyExistedUser_notOk() {
         User existingUser = new User();
         existingUser.setLogin(NON_UNIQUE_LOGIN);
         Storage.people.add(existingUser);
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsNull_notOk() {
         defaultUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
         }, "password doesn`t have to be null");
     }

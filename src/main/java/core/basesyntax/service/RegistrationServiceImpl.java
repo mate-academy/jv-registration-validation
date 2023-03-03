@@ -23,7 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void checkIfNull(User user) {
         if (user == null) {
-            throw new NullPointerException("Can not add null to user storage");
+            throw new InvalidDataException("Can not add null to user storage");
         }
     }
 
@@ -34,11 +34,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkPasswordLength(User user) {
-        if (user.getPassword().length() < MIN_LENGTH) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH) {
             throw new InvalidDataException("Password length has to be greater than 6");
-        }
-        if (user.getPassword() == null) {
-            throw new NullPointerException();
         }
     }
 
