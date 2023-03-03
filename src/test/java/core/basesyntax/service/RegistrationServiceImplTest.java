@@ -28,6 +28,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_UserNull_NotOk() {
+        assertThrows(RegistrationException.class, () -> regService.register(null),
+                "Registered null user");
+    }
+
+    @Test
     void register_AgeUnderMin_NotOk() {
         defaultUser.setAge(MIN_AGE - 1);
         assertThrows(RegistrationException.class, () -> regService.register(defaultUser),
