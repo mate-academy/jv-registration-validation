@@ -46,7 +46,7 @@ class RegistrationServiceImplTest {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
         User expected = storageDao.get(DEFAULT_LOGIN);
-        assertEquals(expected, user);
+        assertEquals(expected, actual);
 
     }
 
