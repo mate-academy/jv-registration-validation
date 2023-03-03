@@ -14,56 +14,59 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
+    private static final User USER_DEFAULT_1 = new User(1L,"login1", "123456", 50);
+    private static final User USER_DEFAULT_2 = new User(2L, "login2", "789012", 25);
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-        storageDao.add(new User(1L,"login1", "123456", 50));
-        storageDao.add(new User(2L, "login2", "789012", 25));
+        StorageDao storageDao = new StorageDaoImpl();
+        storageDao.add(USER_DEFAULT_1);
+        storageDao.add(USER_DEFAULT_2);
     }
 
     @Test
     void register_NotOk_userIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(null));
     }
 
     @Test
     void register_NotOk_loginFieldIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(null, "", 0)));
     }
 
     @Test
     void register_NotOk_passwordFieldIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("", null, 0)));
     }
 
     @Test
     void register_NotOk_ageFieldIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("", "", null)));
     }
 
     @Test
-    void register_NotOk_ageFieldLess18() {
-        assertThrows(IllegalArgumentException.class,
-                () -> registrationService.register(new User("login", "123456", 6)));
+    void register_NotOk_ageFieldLessMinAge() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(
+                        new User("login", "123456", RegistrationServiceImpl.MIN_AGE - 1)));
     }
 
     @Test
-    void register_NotOk_passwordFieldLengthLess6() {
-        assertThrows(IllegalArgumentException.class,
-                () -> registrationService.register(new User("", "1234", 25)));
+    void register_NotOk_passwordFieldLengthLessMinPasswordLength() {
+        String password = "1".repeat(RegistrationServiceImpl.MIN_LENGTH_PASSWORD - 1);
+        User user = new User("", password, 25);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_NullOk_userInStorage() {
-        User user = new User("login1", "123456", 25);
-        assertNull(registrationService.register(user));
+        assertNull(registrationService.register(USER_DEFAULT_1));
     }
 
     @Test
