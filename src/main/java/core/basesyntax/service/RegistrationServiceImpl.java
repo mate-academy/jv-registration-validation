@@ -21,9 +21,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new RegistrationException("Invalid login");
         }
-        if (user.getId() == null) {
-            throw new RegistrationException("Invalid user Id");
-        }
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationException("Invalid user age");
         }
