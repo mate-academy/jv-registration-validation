@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
     private static final String STANDARD_LOGIN_OK = "Nick";
-    private static final String STANDARD_LOGIN_OK_PASSWORD_OK = "adgfaw123";
+    private static final String PASSWORD_OK = "adgfaw123";
     private static final long STANDARD_ID_OK = 633444;
     private static final int STANDARD_AGE_OK = 18;
     private static final String SHORT_LOGIN = "Hi";
@@ -39,11 +39,10 @@ public class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
-        standartUser = new User();
-        standartUser.setLogin(STANDARD_LOGIN_OK);
-        standartUser.setPassword(STANDARD_LOGIN_OK_PASSWORD_OK);
-        standartUser.setId(STANDARD_ID_OK);
-        standartUser.setAge(STANDARD_AGE_OK);
+        standartUser = userConstructor(STANDARD_LOGIN_OK,
+                PASSWORD_OK,
+                STANDARD_AGE_OK,
+                STANDARD_ID_OK);
     }
 
     @AfterEach
@@ -52,12 +51,11 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_dublicateUser_notOk() {
-        User secondUser = new User();
-        secondUser.setLogin(STANDARD_LOGIN_OK);
-        secondUser.setPassword(STANDARD_LOGIN_OK_PASSWORD_OK);
-        secondUser.setId(STANDARD_ID_OK);
-        secondUser.setAge(STANDARD_AGE_OK);
+    void register_duplicateUser_notOk() {
+        User secondUser = userConstructor(STANDARD_LOGIN_OK,
+                PASSWORD_OK,
+                STANDARD_AGE_OK,
+                STANDARD_ID_OK);
         Storage.people.add(standartUser);
         assertThrows(InvalidInputException.class,
                 () -> registrationService.register(secondUser),
@@ -148,13 +146,12 @@ public class RegistrationServiceTest {
 
     @Test
     void user_equalHashcode_ok() {
-        User user2 = new User();
-        user2.setLogin(STANDARD_LOGIN_OK);
-        user2.setPassword(STANDARD_LOGIN_OK_PASSWORD_OK);
-        user2.setAge(STANDARD_AGE_OK);
-        user2.setId(STANDARD_ID_OK);
-        assertEquals(standartUser.hashCode(), user2.hashCode());
-        assertEquals(standartUser, user2);
+        User secondUser = userConstructor(STANDARD_LOGIN_OK,
+                PASSWORD_OK,
+                STANDARD_AGE_OK,
+                STANDARD_ID_OK);
+        assertEquals(standartUser.hashCode(), secondUser.hashCode());
+        assertEquals(standartUser, secondUser);
     }
 
     @Test
@@ -209,5 +206,14 @@ public class RegistrationServiceTest {
     void register_user_ok() {
         assertDoesNotThrow(() -> registrationService.register(standartUser),
                 "User can't be added");
+    }
+
+    private User userConstructor(String login, String password, int age, long setId) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        user.setId(setId);
+        return user;
     }
 }
