@@ -6,6 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MIN_PASSWORD_LENGTH = 6;
 
     @Override
     public User register(User user) {
@@ -25,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputExcepton(
                     "Minors are only allowed under parents' supervision");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidInputExcepton(
                     "Password is too short");
         }
