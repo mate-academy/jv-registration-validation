@@ -37,6 +37,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RuntimeException("Age can't be null");
         }
+        if (user.getId() != null) {
+            throw new RuntimeException("Id should be null, but id is ["+user.getId()+"]");
+        }
         return storageDao.add(user);
     }
 }

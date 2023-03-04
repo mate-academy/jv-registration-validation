@@ -97,6 +97,7 @@ class RegistrationServiceImplTest {
     @Test
     void registration_nullId_notOk() {
         for (User user : users) {
+            user.setId(null);
             registrationService.register(user);
         }
         for (User person : people) {
@@ -111,6 +112,7 @@ class RegistrationServiceImplTest {
     @Test
     void registration_idLessThanZero_notOk() {
         for (User user : users) {
+            user.setId(null);
             registrationService.register(user);
         }
         for (User person : people) {
@@ -129,6 +131,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void registration_idIsNotNull_notOk() {
+        User user = new User("potrap", "qwerty123", 20);
+        user.setId(50L);
+        try {
+            registrationService.register(user);
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("Should be Runtime exception for user with id = [50]");
+    }
+
+    @Test
     void registration_addTwoSameUsers_notOk() {
         registrationService.register(new User("potrap", "qwerty123", 20));
         try {
@@ -142,6 +156,7 @@ class RegistrationServiceImplTest {
     @Test
     void registration_addSeveralUsers_ok() {
         for (User user : users) {
+            user.setId(null);
             registrationService.register(user);
         }
         for (User user : users) {
@@ -152,6 +167,7 @@ class RegistrationServiceImplTest {
     @Test
     void storageDao_getNullLogin_notOk() {
         for (User user : users) {
+            user.setId(null);
             registrationService.register(user);
         }
         assertNull(storageDao.get(null));
@@ -160,6 +176,7 @@ class RegistrationServiceImplTest {
     @Test
     void storageDao_getNonexistentLogin_notOk() {
         for (User user : users) {
+            user.setId(null);
             registrationService.register(user);
         }
         assertNull(storageDao.get("NonexistentLogin"));
