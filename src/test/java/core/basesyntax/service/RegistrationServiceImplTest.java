@@ -1,23 +1,24 @@
 package core.basesyntax.service;
 
+import static core.basesyntax.db.Storage.people;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Assertions;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static core.basesyntax.db.Storage.people;
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
+    private static List<User> users = new ArrayList<>();
     private final StorageDao storageDao = new StorageDaoImpl();
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private static List<User> users = new ArrayList<>();
 
     @BeforeAll
     static void beforeAll() {
@@ -40,7 +41,7 @@ class RegistrationServiceImplTest {
         } catch (RuntimeException e) {
             return;
         }
-        Assertions.fail("Should be Runtime exception for age = [null]");
+        fail("Should be Runtime exception for age = [null]");
     }
 
     @Test
@@ -50,7 +51,7 @@ class RegistrationServiceImplTest {
         } catch (RuntimeException e) {
             return;
         }
-        Assertions.fail("Should be Runtime exception for age = [12]");
+        fail("Should be Runtime exception for age = [12]");
     }
 
     @Test
@@ -60,7 +61,7 @@ class RegistrationServiceImplTest {
         } catch (RuntimeException e) {
             return;
         }
-        Assertions.fail("Should be Runtime exception for age = [150]");
+        fail("Should be Runtime exception for age = [150]");
     }
 
     @Test
@@ -70,7 +71,7 @@ class RegistrationServiceImplTest {
         } catch (RuntimeException e) {
             return;
         }
-        Assertions.fail("Should be Runtime exception for password = [null]");
+        fail("Should be Runtime exception for password = [null]");
     }
 
     @Test
@@ -80,7 +81,7 @@ class RegistrationServiceImplTest {
         } catch (RuntimeException e) {
             return;
         }
-        Assertions.fail("Should be Runtime exception for password = [bob1]");
+        fail("Should be Runtime exception for password = [bob1]");
     }
 
     @Test
@@ -90,7 +91,7 @@ class RegistrationServiceImplTest {
         } catch (RuntimeException e) {
             return;
         }
-        Assertions.fail("Should be Runtime exception for login = [null]");
+        fail("Should be Runtime exception for login = [null]");
     }
 
     @Test
@@ -124,7 +125,7 @@ class RegistrationServiceImplTest {
         } catch (RuntimeException e) {
             return;
         }
-        Assertions.fail("Should be Runtime exception for user = [null]");
+        fail("Should be Runtime exception for user = [null]");
     }
 
     @Test
