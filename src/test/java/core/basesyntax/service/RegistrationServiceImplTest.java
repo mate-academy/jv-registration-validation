@@ -5,86 +5,107 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User bob = new User(55555L, "bobr", "123456", 16);
-    private static final User john = new User(4444L, "john1998", "123", 26);
-    private static final User steve = new User(333L, null, "123456", 65);
-    private static final User alice = new User(22L, "alice", "qwerty56", null);
-    private static final User artur = new User(22L, "artur", "123456789", -18);
-    private static final User kris = new User(22L, "kris", null, 18);
-    private static final User kirill = new User(1L, "Kirill", "987654321", 90);
-    private static final User stas = new User(154354L, "Stas", "798564213", 40);
-    private static final User dima = new User(164354L, "Dima", "9413543fg545", 25);
-    private static final User sveta = new User(154352L, "Sveta", "asdfgh456", 31);
+    private final User correctUser = new User();
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
 
+    @BeforeEach
+    void correctUser() {
+        correctUser.setLogin("Travis");
+        correctUser.setAge(55);
+        correctUser.setId(1L);
+        correctUser.setPassword("123456789");
+    }
+
     @Test
     void register_userNull_notOk() {
-        assertThrows(CustomException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void registerLogin_notOk() {
-        assertThrows(CustomException.class, () -> registrationService.register(steve));
+    void register_userId_notOk() {
+        correctUser.setId(-1L);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
+        correctUser.setId(0L);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
     }
 
     @Test
-    void registerAge_notOk() {
-        assertThrows(CustomException.class, () -> registrationService.register(bob));
-        assertThrows(CustomException.class, () -> registrationService.register(alice));
-        assertThrows(CustomException.class, () -> registrationService.register(artur));
+    void register_login_notOk() {
+        correctUser.setLogin(null);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(correctUser));
+        correctUser.setLogin("");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(correctUser));
     }
 
     @Test
-    void registerPassword_notOk() {
-        assertThrows(CustomException.class, () -> registrationService.register(john));
-        assertThrows(CustomException.class, () -> registrationService.register(kris));
+    void register_age_notOk() {
+        correctUser.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
+        correctUser.setAge(17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
+        correctUser.setAge(220);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
+        correctUser.setAge(-6);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
+    }
+
+    @Test
+    void register_password_notOk() {
+        correctUser.setPassword("123");
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
+        correctUser.setPassword(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
     }
 
     @Test
     void storage_add_notOk() {
-        storageDao.add(kirill);
-        storageDao.add(kirill);
-
-        assertThrows(CustomException.class, () -> registrationService.register(kirill));
+        storageDao.add(correctUser);
+        storageDao.add(correctUser);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
     }
 
     @Test
-    void storage_addAndGet_Ok() {
-        storageDao.add(kirill);
-        storageDao.add(stas);
-        storageDao.add(sveta);
-        storageDao.add(dima);
+    void storage_add_Ok() {
+        storageDao.add(correctUser);
 
-        final User firstActualValue = storageDao.get(kirill.getLogin());
-        final User secondActualValue = storageDao.get(stas.getLogin());
-        final User thirdActualValue = storageDao.get(sveta.getLogin());
-        final User fourthActualValue = storageDao.get(dima.getLogin());
-
-        assertEquals(kirill, firstActualValue);
-        assertEquals(stas, secondActualValue);
-        assertEquals(sveta, thirdActualValue);
-        assertEquals(dima, fourthActualValue);
+        correctUser.setLogin("Stas");
+        correctUser.setAge(18);
+        correctUser.setId(1L);
+        correctUser.setPassword("987654321");
+        storageDao.add(correctUser);
+        assertThrows(RegistrationException.class, () -> registrationService.register(correctUser));
     }
 
     @Test
     void register_Ok() {
-        registrationService.register(kirill);
-        registrationService.register(stas);
-        registrationService.register(sveta);
-        registrationService.register(dima);
+        registrationService.register(correctUser);
+        final User firstActualValue = storageDao.get(correctUser.getLogin());
 
-        final User firstActualValue = storageDao.get(kirill.getLogin());
-        final User secondActualValue = storageDao.get(stas.getLogin());
-        final User thirdActualValue = storageDao.get(sveta.getLogin());
-        final User fourthActualValue = storageDao.get(dima.getLogin());
+        User user2 = new User();
+        user2.setLogin("Stas");
+        user2.setAge(18);
+        user2.setId(2L);
+        user2.setPassword("987654321");
+        registrationService.register(user2);
+        final User secondActualValue = storageDao.get(user2.getLogin());
 
-        assertEquals(kirill, firstActualValue);
-        assertEquals(stas, secondActualValue);
-        assertEquals(sveta, thirdActualValue);
-        assertEquals(dima, fourthActualValue);
+        User user3 = new User();
+        user3.setLogin("Sveta");
+        user3.setAge(22);
+        user3.setId(3L);
+        user3.setPassword("987654321");
+        registrationService.register(user3);
+        final User thirdActualValue = storageDao.get(user3.getLogin());
+
+        assertEquals(storageDao.get("Travis"), firstActualValue);
+        assertEquals(storageDao.get("Stas"), secondActualValue);
+        assertEquals(storageDao.get("Sveta"), thirdActualValue);
     }
 }
