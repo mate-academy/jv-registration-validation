@@ -35,6 +35,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void registration_emptyLogin_notOk() {
+        try {
+            registrationService.register(new User("", "qwerty123", 20));
+            registrationService.register(new User("     ", "qwerty456", 30));
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("Should be Runtime exception for login = []");
+    }
+
+    @Test
+    void registration_emptyPassword_notOk() {
+        try {
+            registrationService.register(new User("potrap", "", 20));
+            registrationService.register(new User("maksym", "     ", 30));
+        } catch (RuntimeException e) {
+            return;
+        }
+        fail("Should be Runtime exception for password = []");
+    }
+
+    @Test
     void registration_nullAge_notOk() {
         try {
             registrationService.register(new User("potrap", "qwerty123", null));

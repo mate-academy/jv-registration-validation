@@ -31,8 +31,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RuntimeException("Login can't be null");
         }
+        if (user.getLogin().trim().equals("")) {
+            throw new RuntimeException("Login can't be []]");
+        }
         if (user.getPassword() == null) {
             throw new RuntimeException("Password can't be null");
+        }
+        if (user.getPassword().trim().equals("")) {
+            throw new RuntimeException("Password can't be []]");
         }
         if (user.getAge() == null) {
             throw new RuntimeException("Age can't be null");
