@@ -1,206 +1,130 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.db.Storage.people;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static List<User> users = new ArrayList<>();
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static User user;
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-
-    @BeforeAll
-    static void beforeAll() {
-        users.add(new User("potrap", "qwerty123", 20));
-        users.add(new User("maksym", "jen478fs", 19));
-        users.add(new User("obama", "123456789", 65));
-        users.add(new User("baiden", "12365t89", 75));
-        users.add(new User("hellomoto", "hellooo123", 49));
-    }
 
     @BeforeEach
     void beforeEach() {
-        people.clear();
+        user = new User();
+        user.setLogin("potrap");
+        user.setPassword("qwerty123");
+        user.setAge(20);
+    }
+
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
     }
 
     @Test
-    void registration_emptyLogin_notOk() {
-        try {
-            registrationService.register(new User("", "qwerty123", 20));
-            registrationService.register(new User("     ", "qwerty456", 30));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for login = []");
-    }
-
-    @Test
-    void registration_emptyPassword_notOk() {
-        try {
-            registrationService.register(new User("potrap", "", 20));
-            registrationService.register(new User("maksym", "     ", 30));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for password = []");
-    }
-
-    @Test
-    void registration_nullAge_notOk() {
-        try {
-            registrationService.register(new User("potrap", "qwerty123", null));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for age = [null]");
-    }
-
-    @Test
-    void registration_ageLessThanEighteen_notOk() {
-        try {
-            registrationService.register(new User("potrap", "qwerty123", 12));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for age = [12]");
-    }
-
-    @Test
-    void registration_tooBigAge_notOk() {
-        try {
-            registrationService.register(new User("potrap", "qwerty123", 150));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for age = [150]");
-    }
-
-    @Test
-    void registration_nullPassword_notOk() {
-        try {
-            registrationService.register(new User("potrap", null, 20));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for password = [null]");
-    }
-
-    @Test
-    void registration_passwordShorterThanSixChars_notOk() {
-        try {
-            registrationService.register(new User("potrap", "bob1", 20));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for password = [bob1]");
-    }
-
-    @Test
-    void registration_nullLogin_notOk() {
-        try {
-            registrationService.register(new User(null, "qwerty123", 20));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for login = [null]");
-    }
-
-    @Test
-    void registration_nullId_notOk() {
-        for (User user : users) {
-            user.setId(null);
+    void register_emptyLogin_notOk() {
+        user.setLogin(" ");
+        assertThrows(InvalidInputDataException.class, () -> {
             registrationService.register(user);
-        }
-        for (User person : people) {
-            try {
-                person.getId();
-            } catch (NullPointerException e) {
-                fail("Id can`t be [null], but id is [null]", e);
-            }
-        }
+        }, "InvalidRegistrationDataException expected for login [ ]");
     }
 
     @Test
-    void registration_idLessThanZero_notOk() {
-        for (User user : users) {
-            user.setId(null);
+    void register_emptyPassword_notOk() {
+        user.setPassword(" ");
+        assertThrows(InvalidInputDataException.class, () -> {
             registrationService.register(user);
-        }
-        for (User person : people) {
-            assertTrue(person.getId() > 0);
-        }
+        }, "InvalidRegistrationDataException expected for password [ ]");
     }
 
     @Test
-    void registration_userIsNull_notOk() {
-        try {
-            registrationService.register(null);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for user = [null]");
+    void register_nullAge_notOk() {
+        user.setAge(null);
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for age null");
     }
 
     @Test
-    void registration_idIsNotNull_notOk() {
-        User user = new User("potrap", "qwerty123", 20);
+    void register_ageLessThanEighteen_notOk() {
+        user.setAge(14);
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for age [14]");
+    }
+
+    @Test
+    void register_tooBigAge_notOk() {
+        user.setAge(150);
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for age [150]");
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        user.setPassword(null);
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for password null");
+    }
+
+    @Test
+    void register_passwordShorterThanSixChars_notOk() {
+        user.setPassword("bob1");
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for password [bob1]");
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        user.setLogin(null);
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for login null");
+    }
+
+    @Test
+    void register_userIsNull_notOk() {
+        user = null;
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for user null");
+    }
+
+    @Test
+    void register_idIsNotNull_notOk() {
         user.setId(50L);
-        try {
+        assertThrows(InvalidInputDataException.class, () -> {
             registrationService.register(user);
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime exception for user with id = [50]");
+        }, "InvalidRegistrationDataException expected for id which is not null");
     }
 
     @Test
-    void registration_addTwoSameUsers_notOk() {
-        registrationService.register(new User("potrap", "qwerty123", 20));
-        try {
-            registrationService.register(new User("potrap", "qwerty123", 20));
-        } catch (RuntimeException e) {
-            return;
-        }
-        fail("Should be Runtime for two same users");
+    void register_addTwoSameUsers_notOk() {
+        registrationService.register(user);
+        assertThrows(InvalidInputDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidRegistrationDataException expected for two same users");
     }
 
     @Test
-    void registration_addSeveralUsers_ok() {
-        for (User user : users) {
-            user.setId(null);
-            registrationService.register(user);
-        }
-        for (User user : users) {
-            assertEquals(storageDao.get(user.getLogin()), user);
-        }
-    }
-
-    @Test
-    void storageDao_getNullLogin_notOk() {
-        for (User user : users) {
-            user.setId(null);
-            registrationService.register(user);
-        }
-        assertNull(storageDao.get(null));
-    }
-
-    @Test
-    void storageDao_getNonexistentLogin_notOk() {
-        for (User user : users) {
-            user.setId(null);
-            registrationService.register(user);
-        }
-        assertNull(storageDao.get("NonexistentLogin"));
+    void register_addTwoUsers_ok() {
+        registrationService.register(user);
+        User newUser = new User();
+        newUser.setLogin("maksym");
+        newUser.setPassword("ytrewq321");
+        newUser.setAge(21);
+        registrationService.register(newUser);
+        assertEquals(Storage.people.get(0), user, "User on index 0 should be "
+                + user.toString() + ",but was " + Storage.people.get(0));
+        assertEquals(Storage.people.get(1), newUser, "user on index 1 should be "
+                + newUser.toString() + ",but was " + Storage.people.get(1));
     }
 }

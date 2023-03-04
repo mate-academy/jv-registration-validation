@@ -14,37 +14,39 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null");
+            throw new InvalidInputDataException("User is null");
         }
         if (Storage.people.contains(user)) {
-            throw new UserAlreadyPresentException();
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new UserShortAgeException();
-        }
-        if (user.getAge() > MAX_AGE) {
-            throw new UserTooOldException();
-        }
-        if (user.getPassword().length() < MIN_CHARS_COUNT) {
-            throw new UserPasswordTooShortException();
+            throw new InvalidInputDataException("Such user is already present in the storage");
         }
         if (user.getLogin() == null) {
-            throw new RuntimeException("Login can't be null");
+            throw new InvalidInputDataException("Login can't be null");
         }
         if (user.getLogin().trim().equals("")) {
-            throw new RuntimeException("Login can't be []]");
+            throw new InvalidInputDataException("Login can't be []]");
         }
         if (user.getPassword() == null) {
-            throw new RuntimeException("Password can't be null");
+            throw new InvalidInputDataException("Password can't be null");
         }
         if (user.getPassword().trim().equals("")) {
-            throw new RuntimeException("Password can't be []]");
+            throw new InvalidInputDataException("Password can't be []");
+        }
+        if (user.getPassword().length() < MIN_CHARS_COUNT) {
+            throw new InvalidInputDataException("User's password has less characters than 6");
         }
         if (user.getAge() == null) {
-            throw new RuntimeException("Age can't be null");
+            throw new InvalidInputDataException("Age can't be null");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new InvalidInputDataException("User's age is less than 18");
+        }
+        if (user.getAge() > MAX_AGE) {
+            throw new InvalidInputDataException("User is too old. "
+                    + "Nobody in the world can't have such age");
         }
         if (user.getId() != null) {
-            throw new RuntimeException("Id should be null, but id is [" + user.getId() + "]");
+            throw new InvalidInputDataException("Id should be null, but id is ["
+                    + user.getId() + "]");
         }
         return storageDao.add(user);
     }
