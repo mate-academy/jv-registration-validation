@@ -8,6 +8,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     private final StorageDao storageDao = new StorageDaoImpl();
+
     @Override
     public User register(User user) {
         if (user == null) {
