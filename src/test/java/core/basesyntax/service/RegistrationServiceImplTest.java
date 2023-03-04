@@ -53,83 +53,83 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void null_user_throwsException_ok() {
+    void register_nullUser_notOk() {
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(null));
+                () -> registrationService.register(null), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void null_login_throwsException_ok() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void null_password_throwsException_ok() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void null_age_throwsException_ok() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void small_age_throwsException_ok() {
+    void register_smallAge_notOk() {
         user.setAge(17);
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void high_age_throwsException_ok() {
+    void register_highAge_notOk() {
         user.setAge(160);
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void minus_age_throwsException_ok() {
+    void register_minusAge_notOk() {
         user.setAge(-50);
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void short_login_throwsException_ok() {
+    void register_shortLogin_notOk() {
         user.setLogin("o");
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void long_login_throwsException_ok() {
+    void register_longLogin_notOk() {
         user.setLogin("Ilko12345678901234567890");
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void short_password_throwsException_ok() {
+    void register_shortPassword_notOk() {
         user.setPassword("12345");
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void long_password_throwsException_ok() {
+    void register_longPassword_notOk() {
         user.setPassword("1234567890QWERTY_qwerty");
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
     }
 
     @Test
-    void register_users_ok() {
+    void register_usersInSequence_ok() {
         assertEquals(1, (long) registrationService.register(user).getId(),
                 USER_RETURN_EXCEPTION_MESSAGE);
 
@@ -149,7 +149,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void user_alreadyExists_throwsException_ok() {
+    void register_existingUser_notOk() {
         StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
         assertThrows(InvalidUserInputException.class,
@@ -163,7 +163,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void login_illegalCharacters_throwsException_ok() {
+    void register_illegalCharactersLogin_notOk() {
         user.setLogin("Ilko123#12");
         assertThrows(InvalidUserInputException.class,
                 () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);

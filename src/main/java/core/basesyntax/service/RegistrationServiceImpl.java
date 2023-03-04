@@ -6,6 +6,12 @@ import core.basesyntax.exceptions.InvalidUserInputException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int LOGIN_MIN_LENGTH = 4;
+    private static final int INPUT_MAX_LENGTH = 16;
+    private static final int PASSWORD_MIN_LENGTH = 6;
+    private static final int AGE_MIN = 18;
+    private static final int AGE_MAX = 140;
+
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -26,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkLogin(String login) {
-        if (login.length() < 4 || login.length() > 16
+        if (login.length() < LOGIN_MIN_LENGTH || login.length() > INPUT_MAX_LENGTH
                 || !login.matches("\\w++")) {
             throw new InvalidUserInputException("Invalid login");
         }
@@ -36,13 +42,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkPassword(String password) {
-        if (password.length() < 6 || password.length() > 16) {
+        if (password.length() < PASSWORD_MIN_LENGTH
+                || password.length() > INPUT_MAX_LENGTH) {
             throw new InvalidUserInputException("Invalid password");
         }
     }
 
     private void checkAge(Integer age) {
-        if (age < 18 || age > 140) {
+        if (age < AGE_MIN || age > AGE_MAX) {
             throw new InvalidUserInputException("Invalid age");
         }
     }
