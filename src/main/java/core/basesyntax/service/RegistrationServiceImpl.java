@@ -26,11 +26,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new InvalidInputDataException("Age can't be null");
         }
-        for (User userInStorage : Storage.people) {
-            if (user.getLogin().equals(userInStorage.getLogin())) {
-                throw new InvalidInputDataException("Login " + userInStorage.getLogin()
-                        + " is already exists");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidInputDataException("Login " + user.getLogin()
+                    + " is already exists");
         }
         if (user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
             throw new InvalidInputDataException("The age should be at least 18 and less than 99");
@@ -38,6 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidInputDataException("The password should be at least 6 symbols");
         }
-        return storageDao.add(user);
+        storageDao.add(user);
+        return user;
     }
 }
