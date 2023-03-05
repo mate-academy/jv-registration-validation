@@ -124,6 +124,6 @@ class RegistrationServiceImplTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
         assertDoesNotThrow(() -> service.register(user),
-                "User is added to storage");
+                "User is added to storage.");
     }
 }
