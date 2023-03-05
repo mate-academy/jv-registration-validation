@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -31,6 +32,13 @@ class RegistrationServiceImplTest {
         testUser.setLogin(VALID_LOGIN);
         testUser.setId(ID);
         testUser.setAge(VALID_AGE);
+    }
+
+    @Test
+    void userDataCorrect() {
+        registerService.register(testUser);
+        User actual = storageDao.get(testUser.getLogin());
+        assertEquals(testUser, actual);
     }
 
     @Test
