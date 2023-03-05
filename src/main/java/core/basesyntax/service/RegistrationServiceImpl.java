@@ -9,6 +9,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkForNulls(user);
+        checkLogin(user);
+        checkAge(user);
+        checkPassword(user);
+        checkIfUserExist(user);
+        storageDao.add(user);
+        return user;
+    }
+
+    private void checkForNulls(User user) {
         if (user == null) {
             throw new IncorrectUserDataException("User is null");
         }
@@ -18,25 +28,35 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new IncorrectUserDataException("User age is null");
         }
-        if (user.getAge() < 0 || user.getAge() > 100) {
+    }
+
+    private void checkLogin(User user) {
+        if (user.getLogin().equals("")) {
+            throw new IncorrectUserDataException("Login is empty");
+        }
+    }
+
+    private void checkAge(User user) {
+        if (user.getAge() > 100) {
             throw new IncorrectUserDataException("User age is not valid");
         }
         if (user.getAge() < 18) {
             throw new IncorrectUserDataException("User age is less than eighteen");
         }
+    }
+
+    private void checkPassword(User user) {
         if (user.getPassword() == null) {
             throw new IncorrectUserDataException("User password is not valid");
         }
         if (user.getPassword().length() < 6) {
             throw new IncorrectUserDataException("User password is less than 6 symbols");
         }
+    }
+
+    private void checkIfUserExist(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new IncorrectUserDataException("User already exist");
         }
-        if (user.getLogin().equals("")) {
-            throw new IncorrectUserDataException("Login is empty");
-        }
-        storageDao.add(user);
-        return user;
     }
 }
