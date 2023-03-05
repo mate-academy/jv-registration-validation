@@ -12,6 +12,7 @@ class RegistrationServiceImplTest {
     static User userTwo = new User();
     static User userThree = new User();
     static User userFour = new User();
+    static User userFive = new User();
     RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
 
     @BeforeAll
@@ -31,19 +32,20 @@ class RegistrationServiceImplTest {
         userFour.setLogin("ILoveCherry");
         userFour.setPassword("ireallylovecherry");
         userFour.setAge(21);
+
+        userFive.setLogin(null);
+        userFive.setPassword(null);
+        userFive.setAge(null);
     }
 
     @Test
     void userAge_Ok() {
-        assertThrows(RegistrationFailedException.class, () -> {
-            registrationService.register(userOne);
-        }, "Your age must be over 18!");
-        assertThrows(RegistrationFailedException.class, () -> {
+        /*assertThrows(RegistrationFailedException.class, () -> {
            registrationService.register(userTwo);
         }, "Your password must be more than 6 characters!");
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(userThree);
-        }, "Your login already exist!");
+        }, "Your login already exist!");*/
         try {
             assertEquals(userFour, registrationService.register(userFour));
         } catch (RegistrationFailedException e) {
@@ -52,40 +54,48 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userTwo() {
+    void userAge_NotOk() {
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(userOne);
+        }, "Your age must be over 18!");
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(userFive);
+        }, "Your age must be over 18!");
     }
 
     @Test
     void userLogin_Ok() {
-        assertThrows(RegistrationFailedException.class, () -> {
-            registrationService.register(userThree);
-        }, "Your login already exist!");
+
         try {
             assertEquals(userFour, registrationService.register(userFour));
-        } catch (RegistrationFailedException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            assertEquals(userOne, registrationService.register(userOne));
         } catch (RegistrationFailedException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    void userPassword_Ok() {
+    void userLogin_NotOk() {
         assertThrows(RegistrationFailedException.class, () -> {
-            registrationService.register(userTwo);
-        }, "Your password must be more than 6 characters!");
+            registrationService.register(userThree);
+        }, "Your login already exist!");
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(userFive);
+        }, "Your login already exist!");
+    }
+
+    @Test
+    void userPassword_Ok() {
         try {
             assertEquals(userFour, registrationService.register(userFour));
         } catch (RegistrationFailedException e) {
             throw new RuntimeException(e);
         }
-        try {
-            assertEquals(userThree, registrationService.register(userThree));
-        } catch (RegistrationFailedException e) {
-            throw new RuntimeException(e);
-        }
+    }
+
+    @Test
+    void userPassword_NotOk() {
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(userTwo);
+        }, "Your password must be more than 6 characters!");
     }
 }
