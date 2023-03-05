@@ -117,4 +117,3 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
     }
 }
-
