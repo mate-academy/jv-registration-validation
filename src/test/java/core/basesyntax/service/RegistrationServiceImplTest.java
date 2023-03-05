@@ -59,7 +59,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void userLogin_Ok() {
-
         try {
             assertEquals(userFour, registrationService.register(userFour));
         } catch (RegistrationFailedException e) {

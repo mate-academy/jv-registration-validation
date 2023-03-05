@@ -11,7 +11,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationFailedException {
-
         if (user.getAge() == null
                 || user.getAge() < MIN_AGE) {
             throw new RegistrationFailedException("Your age must be over 18!");
