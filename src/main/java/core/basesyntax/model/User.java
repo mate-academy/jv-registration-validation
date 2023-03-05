@@ -8,6 +8,12 @@ public class User {
     private String password;
     private Integer age;
 
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,14 +47,14 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        User user = (User) o;
+        User user = (User) object;
         return Objects.equals(login, user.login)
                 && Objects.equals(password, user.password)
                 && Objects.equals(age, user.age);
@@ -57,5 +63,14 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(login, password, age);
+    }
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id
+                + ", login='" + login + '\''
+                + ", password='" + password + '\''
+                + ", age=" + age + '}';
     }
 }
