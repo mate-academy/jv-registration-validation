@@ -1,18 +1,19 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    static User userOne = new User();
-    static User userTwo = new User();
-    static User userThree = new User();
-    static User userFour = new User();
-    static User userFive = new User();
-    RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static User userOne = new User();
+    private static User userTwo = new User();
+    private static User userThree = new User();
+    private static User userFour = new User();
+    private static User userFive = new User();
+    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
 
     @BeforeAll
     static void beforeAll() {
