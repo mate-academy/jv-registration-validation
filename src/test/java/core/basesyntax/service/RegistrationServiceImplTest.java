@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,12 +39,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void userAge_Ok() {
-        /*assertThrows(RegistrationFailedException.class, () -> {
-           registrationService.register(userTwo);
-        }, "Your password must be more than 6 characters!");
-        assertThrows(RegistrationFailedException.class, () -> {
-            registrationService.register(userThree);
-        }, "Your login already exist!");*/
         try {
             assertEquals(userFour, registrationService.register(userFour));
         } catch (RegistrationFailedException e) {
@@ -80,7 +73,7 @@ class RegistrationServiceImplTest {
         }, "Your login already exist!");
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(userFive);
-        }, "Your login already exist!");
+        }, "You wrote an empty login!");
     }
 
     @Test
@@ -96,6 +89,6 @@ class RegistrationServiceImplTest {
     void userPassword_NotOk() {
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(userTwo);
-        }, "Your password must be more than 6 characters!");
+        }, "Your password must be at least 6 characters!");
     }
 }
