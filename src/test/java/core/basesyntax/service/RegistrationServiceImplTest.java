@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
+import core.basesyntax.exceptions.InvalidRegistrationDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,8 +13,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int DEFAULT_AGE = 25;
+    private static final int AGE_GREATER_THAN_MAX = 127;
+    private static final int AGE_LESS_THAN_MIN = 17;
+    private static final int NEGATIVE_AGE = -999;
     private static final String DEFAULT_PASSWORD = "default_password";
     private static final String DEFAULT_LOGIN = "default_login";
+    private static final String EMPTY_LOGIN = "";
     private static final String INVALID_PASSWORD = "1234";
     private static RegistrationService registrationService;
     private User user;
@@ -46,7 +51,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsEmpty_notOk() {
-        user.setLogin("");
+        user.setLogin(EMPTY_LOGIN);
         assertThrows(InvalidRegistrationDataException.class, () -> {
             registrationService.register(user);
         }, "InvalidRegistrationDataException expected for empty login");
@@ -78,7 +83,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThan18_notOk() {
-        user.setAge(17);
+        user.setAge(AGE_LESS_THAN_MIN);
         assertThrows(InvalidRegistrationDataException.class, () -> {
             registrationService.register(user);
         }, "InvalidRegistrationDataException expected for age is less than 18");
@@ -86,7 +91,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageMoreThan120_notOk() {
-        user.setAge(126);
+        user.setAge(AGE_GREATER_THAN_MAX);
         assertThrows(InvalidRegistrationDataException.class, () -> {
             registrationService.register(user);
         }, "InvalidRegistrationDataException expected for age is more than 120");
@@ -94,7 +99,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageIsNegative_notOk() {
-        user.setAge(-999);
+        user.setAge(NEGATIVE_AGE);
         assertThrows(InvalidRegistrationDataException.class, () -> {
             registrationService.register(user);
         }, "InvalidRegistrationDataException expected for age is negative.");
