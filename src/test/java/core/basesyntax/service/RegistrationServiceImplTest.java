@@ -3,8 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
@@ -17,17 +15,15 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "Nikitos";
     private static final int DEFAULT_AGE = 26;
     private static final String DEFAULT_PASSWORD = "qwertyu1213";
-    private static final int MAX = 100;
-    private static final int MIN = 18;
+    private static final int MAX_AGE = 100;
+    private static final int MIN_AGE = 18;
     private static final String EMPTY = "";
     private static RegistrationServiceImpl registrationService;
-    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -79,7 +75,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeLessThan18_NotOk() {
-        user.setAge(MIN - 7);
+        user.setAge(MIN_AGE - 7);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
@@ -87,7 +83,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeMoreThanMax_NotOk() {
-        user.setAge(MAX + 100);
+        user.setAge(MAX_AGE + 100);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
