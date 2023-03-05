@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LoginIsEmpty_NotOk() {
-        user.setLogin("");
+        user.setLogin(EMPTY);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
