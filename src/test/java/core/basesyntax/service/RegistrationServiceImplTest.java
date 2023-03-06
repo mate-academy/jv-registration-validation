@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-    void clearStorage(){
+    void clearStorage() {
         Storage.people.clear();
     }
 
@@ -44,11 +44,13 @@ class RegistrationServiceImplTest {
         registrationServiceImpl.register(validUser1);
         Assertions.assertEquals(validUser1, storageDao.get(validUser1.getLogin()));
     }
+
     @Test
     void registerLoginBlank_NotOk() {
         Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
                 new User(BLANK_LOGIN, validUser3.getPassword(), AGE_NEGATIVE)));
     }
+
     @Test
     void registerLoginWithSpaces_NotOk() {
         Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
