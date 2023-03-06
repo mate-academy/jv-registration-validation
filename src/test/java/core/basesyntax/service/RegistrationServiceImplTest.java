@@ -26,13 +26,13 @@ public class RegistrationServiceImplTest {
     private static User user;
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
@@ -40,7 +40,7 @@ public class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void clearStorage() {
+    public void clearStorage() {
         Storage.people.clear();
     }
 

@@ -11,17 +11,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         checkForNulls(user);
+        checkIfUserExist(user);
         checkLogin(user);
         checkAge(user);
         checkPassword(user);
-        checkIfUserExist(user);
         storageDao.add(user);
         return user;
     }
 
     private void checkForNulls(User user) {
         if (user == null) {
-            throw new InvalidRegistrationDataException("User argument is null");
+            throw new InvalidRegistrationDataException("User object is null");
         }
         if (user.getLogin() == null) {
             throw new InvalidRegistrationDataException("User login is null");
@@ -33,16 +33,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkLogin(User user) {
         if (user.getLogin().equals("")) {
-            throw new InvalidRegistrationDataException("Login is empty");
+            throw new InvalidRegistrationDataException("Login is empty "
+                    + "or contains only whitespace");
         }
     }
 
     private void checkAge(User user) {
         if (user.getAge() > 116) {
-            throw new InvalidRegistrationDataException("Age must be between 18 and 116");
+            throw new InvalidRegistrationDataException("User age must be less than"
+                    + " or equal to 116");
         }
         if (user.getAge() < 18) {
-            throw new InvalidRegistrationDataException("User age is less than 18");
+            throw new InvalidRegistrationDataException("User age must be at least 18");
         }
     }
 
