@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationFailedException("User password can't be null");
         }
         if (user.getLogin().length() == 0) {
-            throw new RegistrationFailedException("User login must be longer than 6 characters");
+            throw new RegistrationFailedException("User login must be longer than 0 characters");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationFailedException("User must be 18 y.o. or older");
