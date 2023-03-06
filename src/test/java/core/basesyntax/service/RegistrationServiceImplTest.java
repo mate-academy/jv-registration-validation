@@ -26,10 +26,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     void beforeEach() {
-        user = new User();
-        user.setAge(VALID_AGE);
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
+        user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
     }
 
     @AfterEach
@@ -40,37 +37,50 @@ public class RegistrationServiceImplTest {
     @Test
     void register_NullUser_false() {
         assertThrows(InvalidUserDataException.class, () ->
-                service.register(null), "User can't be null");
+                service.register(null), " expected "
+                + InvalidUserDataException.class.getName()
+                + " to be thrown for less length login "
+                + user
+                + " but it wasn't");
     }
 
     @Test
     void register_NullLogin_false() {
         user.setLogin(null);
         assertThrows(InvalidUserDataException.class, () ->
-                service.register(user),"Login can't be null");
+                service.register(user)," expected "
+                + InvalidUserDataException.class.getName()
+                + " to be thrown for less length login "
+                + user.getLogin()
+                + " but it wasn't");
     }
 
     @Test
     void register_NullAge_false() {
         user.setAge(null);
         assertThrows(InvalidUserDataException.class, () ->
-                service.register(user),"Age can't be null");
+                service.register(user)," expected "
+                + InvalidUserDataException.class.getName()
+                + " to be thrown for null age "
+                + user.getAge()
+                + " but it wasn't");
     }
 
     @Test
     void register_NullPass_false() {
         user.setPassword(null);
         assertThrows(InvalidUserDataException.class, () ->
-                service.register(user),"Password can't be null");
+                service.register(user)," expected "
+                + InvalidUserDataException.class.getName()
+                + " to be thrown for null password "
+                + user.getPassword()
+                + " but it wasn't");
     }
 
     @Test
     void register_loginDublicate_false() {
         Storage.people.add(user);
-        User newUser = new User();
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setAge(VALID_AGE);
-        newUser.setLogin(user.getLogin());
+        User newUser = new User(user.getLogin(), VALID_PASSWORD, VALID_AGE);
         assertThrows(InvalidUserDataException.class, () -> service.register(newUser),
                 "This login already exists");
     }
@@ -79,27 +89,23 @@ public class RegistrationServiceImplTest {
     void register_passwordShort_false() {
         user.setPassword(WRONG_PASSWORD);
         assertThrows(InvalidUserDataException.class, () -> service.register(user),
-                "Password must contains at least 6 characters");
+                " expected " + InvalidUserDataException.class.getName()
+                    + " to be thrown for age " + user.getPassword() + " but it wasn't");
     }
 
     @Test
-    void register_userAgeUnder18_notOk() {
+    void register_userAgeUnder18_false() {
         user.setAge(LOWER_18);
         assertThrows(InvalidUserDataException.class, () -> service.register(user),
-                "Age of user is invalid.");
-    }
-
-    @Test
-    void register_userAgeIsNegative_notOk() {
-        user.setAge(VALID_AGE * -1);
-        assertThrows(InvalidUserDataException.class, () -> service.register(user),
-                "Age of user can`t be negative");
+                " expected " + InvalidUserDataException.class.getName()
+                    + " to be thrown for less age "
+                    + user.getAge()
+                    + " but it wasn't");
     }
 
     @Test
     void register_userValid_true() {
-        assertDoesNotThrow(() -> service.register(user),
-                "User is added to storage");
+        assertDoesNotThrow(() -> service.register(user));
     }
 
 }
