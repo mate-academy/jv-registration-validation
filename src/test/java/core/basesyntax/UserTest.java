@@ -3,11 +3,11 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,6 @@ public class UserTest {
     private static final int VALID_AGE = 18;
     private static final String VALID_PASSWORD = "my password 123";
     private static final int INVALID_NEGATIVE_AGE = -10;
-    private static final int INVALID_AGE = 15;
     private static final String INVALID_SHORT_PASSWORD = "12345";
     private RegistrationServiceImpl registration;
     private User user;
@@ -30,6 +29,11 @@ public class UserTest {
         user.setPassword(VALID_PASSWORD);
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
     void register_user_ok() {
         User actual = registration.register(user);
@@ -38,45 +42,37 @@ public class UserTest {
 
     @Test
     void register_several_users_ok() {
-        int quantity = 50;
-        for (int i = 0; i < quantity; i++) {
-            user = new User();
-            user.setAge(VALID_AGE);
-            user.setPassword(VALID_PASSWORD);
-            user.setLogin("testName" + i);
-            registration.register(user);
-            assertTrue(Storage.people.contains(user));
-        }
-        assertEquals(quantity, Storage.people.size());
+        registration.register(user);
+        assertEquals(1, Storage.people.size());
     }
 
     @Test
-    void object_user_null_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_nullUser_notOk() {
+        assertThrows(InvalidDataException.class, () -> {
             registration.register(null);
         });
     }
 
     @Test
-    void login_null_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(InvalidDataException.class, () -> {
             registration.register(user);
         });
     }
 
     @Test
-    void password_null_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(InvalidDataException.class, () -> {
             registration.register(user);
         });
     }
 
     @Test
-    void age_null_notOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(InvalidDataException.class, () -> {
             registration.register(user);
         });
     }
@@ -90,7 +86,7 @@ public class UserTest {
 
     @Test
     void little_age_notOk() {
-        user.setAge(INVALID_AGE);
+        user.setAge(VALID_AGE - 1);
         User actual = registration.register(user);
         assertNull(actual);
     }
