@@ -72,6 +72,8 @@ class RegistrationServiceImplTest {
     void register_loginIsOccupied_notOk() {
         Storage.people.add(user);
         User testUser = new User();
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(VALID_AGE);
         testUser.setLogin(user.getLogin());
         assertThrows(ValidationException.class, () -> service.register(testUser),
                 "This login already exists");
