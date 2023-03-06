@@ -2,9 +2,11 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -30,6 +32,11 @@ class RegistrationServiceImplTest {
         validUser2 = new User("login2", "12345678", 26);
         validUser3 = new User("login3", "123456789", 27);
         validUser4 = new User("login4", "1234567890", 28);
+    }
+
+    @BeforeEach
+    void clearStorage(){
+        Storage.people.clear();
     }
 
     @Test
