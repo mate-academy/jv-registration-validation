@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final Long ID = 12345L;
     private static final String LOGIN = "troll";
     private static final String EMPTY = "";
     private static final String PASSWORD = "qwerty12345";
@@ -27,7 +26,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(ID, LOGIN, PASSWORD, AGE);
+        user = new User(LOGIN, PASSWORD, AGE);
     }
 
     @AfterEach
@@ -93,7 +92,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_successful_ok() {
-        User anotherUser = new User(123L, "gay", "111111", 45);
+        User anotherUser = new User( "gay", "111111", 45);
         Storage.people.add(anotherUser);
         Storage.people.add(user);
         assertEquals(user, Storage.people.get(Storage.people.size() - 1),
