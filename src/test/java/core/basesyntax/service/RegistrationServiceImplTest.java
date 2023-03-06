@@ -6,12 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static User user;
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static RegistrationServiceImpl registrationService;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void beforeEach() {
@@ -92,9 +98,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsNull_notOk() {
-        user = null;
         assertThrows(InvalidInputDataException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(null);
         }, "InvalidRegistrationDataException expected for user null");
     }
 
