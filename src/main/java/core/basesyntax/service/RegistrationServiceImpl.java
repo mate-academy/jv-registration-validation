@@ -55,10 +55,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputException("Password can't be null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidInputException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long");
+            throw new InvalidInputException("Password must be at least "
+                    + MIN_PASSWORD_LENGTH
+                    + " characters long");
         }
         if (password.length() > MAX_PASSWORD_LENGTH) {
-            throw new InvalidInputException("Password must be less than " + MAX_PASSWORD_LENGTH + " characters long");
+            throw new InvalidInputException("Password must be less than "
+                    + MAX_PASSWORD_LENGTH
+                    + " characters long");
         }
         if (password.equals(login)) {
             throw new InvalidInputException("Password must be different from login");
