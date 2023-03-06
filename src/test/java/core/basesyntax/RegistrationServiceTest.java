@@ -16,13 +16,11 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceTest {
     private static final String STANDARD_LOGIN_OK = "Nick";
     private static final String PASSWORD_OK = "adgfaw123";
-    private static final long STANDARD_ID_OK = 633444;
     private static final int STANDARD_AGE_OK = 18;
     private static final String SHORT_LOGIN = "Hi";
     private static final String SHORT_PASSWORD = "5";
     private static final int AGE_LESS = 15;
     private static final int AGE_BIGGEST = 165;
-    private static final long NEGATIVE_ID = -4324;
     private static final String EMPTY = "";
     private static final String SPECIAL_CHARACTERS = "@#$%";
     private static final String LARGE_LOGIN = "HelloMyNameIsJohnPhilips";
@@ -39,8 +37,7 @@ public class RegistrationServiceTest {
     void setUp() {
         standartUser = createUser(STANDARD_LOGIN_OK,
                 PASSWORD_OK,
-                STANDARD_AGE_OK,
-                STANDARD_ID_OK);
+                STANDARD_AGE_OK);
     }
 
     @AfterEach
@@ -52,8 +49,7 @@ public class RegistrationServiceTest {
     void register_duplicateUser_notOk() {
         User secondUser = createUser(STANDARD_LOGIN_OK,
                 PASSWORD_OK,
-                STANDARD_AGE_OK,
-                STANDARD_ID_OK);
+                STANDARD_AGE_OK);
         Storage.people.add(standartUser);
         assertThrows(InvalidInputException.class,
                 () -> registrationService.register(secondUser),
@@ -105,14 +101,6 @@ public class RegistrationServiceTest {
         assertThrows(InvalidInputException.class,
                 () -> registrationService.register(standartUser),
                 "The age can't be so great");
-    }
-
-    @Test
-    void register_user_negativeId_notOk() {
-        standartUser.setId(NEGATIVE_ID);
-        assertThrows(InvalidInputException.class,
-                () -> registrationService.register(standartUser),
-                "The id can't be negative");
     }
 
     @Test
@@ -185,12 +173,11 @@ public class RegistrationServiceTest {
                 "User can't be added");
     }
 
-    private User createUser(String login, String password, int age, long setId) {
+    private User createUser(String login, String password, int age) {
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
         user.setAge(age);
-        user.setId(setId);
         return user;
     }
 }
