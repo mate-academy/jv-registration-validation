@@ -5,7 +5,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int ZERO = 0;
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 120;
     private static final int MIN_PASSWORD_LENGTH = 6;
@@ -16,14 +15,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkUser(user);
         checkAgeNull(user);
         checkAgeLess18(user);
-        checkAgeBigger100(user);
-        checkAgeZero(user);
+        checkAgeBigger120(user);
         checkLoginNull(user);
         checkLoginIncorrect(user);
         checkPasswordNull(user);
-        checkPasswordLess8(user);
-        checkIdNull(user);
-        checkIdNegative(user);
+        checkPasswordLess6(user);
         checkStorageContainsUserAlready(user);
         storageDao.add(user);
         return user;
@@ -41,12 +37,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkAgeZero(User user) {
-        if (user.getAge() < ZERO) {
-            throw new IncorrectDataExeption("Age can not be less than 0");
-        }
-    }
-
     private void checkAgeNull(User user) {
         if (user.getAge() == null) {
             throw new IncorrectDataExeption("Age can not be null");
@@ -59,7 +49,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkAgeBigger100(User user) {
+    private void checkAgeBigger120(User user) {
         if (user.getAge() > MAX_AGE) {
             throw new IncorrectDataExeption("Age can not be bigger then 120");
         }
@@ -71,7 +61,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkPasswordLess8(User user) {
+    private void checkPasswordLess6(User user) {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new IncorrectDataExeption("Password can not be less then 6");
         }
@@ -86,18 +76,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void checkLoginIncorrect(User user) {
         if (!user.getLogin().contains("@gmail.com")) {
             throw new IncorrectDataExeption("Login must contains @gmail.com");
-        }
-    }
-
-    private void checkIdNull(User user) {
-        if (user.getId() == null) {
-            throw new IncorrectDataExeption("Id can not be null");
-        }
-    }
-
-    private void checkIdNegative(User user) {
-        if (user.getId() < ZERO) {
-            throw new IncorrectDataExeption("Id can not be less then 0");
         }
     }
 }

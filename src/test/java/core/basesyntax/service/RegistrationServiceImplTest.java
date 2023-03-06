@@ -15,11 +15,9 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "Valid_login@gmail.com";
     private static final String INVALID_LOGIN = "invalid_login";
     private static final Integer VALID_AGE = 20;
-    private static final Integer INVALID_AGE = 12;
+    private static final Integer INVALID_AGE = 17;
     private static final Integer NEGATIVE_AGE = -10;
     private static final Integer BIG_AGE = 150;
-    private static final Long ID = 1234L;
-    private static final Long NEGATIVE_ID = -5L;
     private final RegistrationService registerService = new RegistrationServiceImpl();
     private User testUser = new User();
 
@@ -27,7 +25,6 @@ class RegistrationServiceImplTest {
     void setUp() {
         testUser.setPassword(VALID_PASSWORD);
         testUser.setLogin(VALID_LOGIN);
-        testUser.setId(ID);
         testUser.setAge(VALID_AGE);
     }
 
@@ -67,11 +64,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeAreBiggerThen100_notOk() {
+    void userAgeAreBiggerThen120_notOk() {
         testUser.setAge(BIG_AGE);
         assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
-        }, "User age must be less then 100");
+        }, "User age must be less then 120");
     }
 
     @Test
@@ -115,24 +112,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIdAreNull_notOk() {
-        testUser.setId(null);
-        assertThrows(IncorrectDataExeption.class, () -> {
-            registerService.register(testUser);
-        }, "Id can`t be null");
-    }
-
-    @Test
-    void userIdAreNegative_notOk() {
-        testUser.setId(NEGATIVE_ID);
-        assertThrows(IncorrectDataExeption.class, () -> {
-            registerService.register(testUser);
-        }, "Id can`t be less then 0");
-    }
-
-    @Test
     void storageAlreadyContainsUser_notOk() {
-        registerService.register(testUser);
+        Storage.people.add(testUser);
         assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "User already exists in storage");
