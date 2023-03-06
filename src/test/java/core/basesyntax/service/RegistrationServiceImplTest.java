@@ -164,5 +164,4 @@ class RegistrationServiceImplTest {
         Storage.people.add(user);
         assertEquals(Storage.people.get(0).getId(), user.getId());
     }
-
 }
