@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_successful_ok() {
-        User anotherUser = new User( "gay", "111111", 45);
+        User anotherUser = new User("gay", "111111", 45);
         Storage.people.add(anotherUser);
         Storage.people.add(user);
         assertEquals(user, Storage.people.get(Storage.people.size() - 1),
