@@ -27,58 +27,58 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         Storage.people.clear();
         storageDao.add(defaultUser);
         defaultUser.setId(0L);
     }
 
     @Test
-    void registerValidUser_Ok() {
+    public void registerValidUser_Ok() {
         User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD,
                 RegistrationServiceImpl.MIN_AGE);
         assertEquals(registrationService.register(user), storageDao.get(user.getLogin()));
     }
 
     @Test
-    void registerNullUser_NotOk() {
+    public void registerNullUser_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void registerUserWithNullLogin_NotOk() {
+    public void registerUserWithNullLogin_NotOk() {
         User user = new User(null, DEFAULT_PASSWORD, RegistrationServiceImpl.MIN_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithNullPassword_NotOk() {
+    public void registerUserWithNullPassword_NotOk() {
         User user = new User(DEFAULT_NEW_USER_LOGIN, null, RegistrationServiceImpl.MIN_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithNullAge() {
+    public void registerUserWithNullAge() {
         User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD, null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithExistingLogin_NotOk() {
+    public void registerUserWithExistingLogin_NotOk() {
         User user = new User(defaultUser.getLogin(), DEFAULT_PASSWORD,
                 RegistrationServiceImpl.MIN_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithInvalidPassword_NotOk() {
+    public void registerUserWithInvalidPassword_NotOk() {
         User user = new User(DEFAULT_NEW_USER_LOGIN, INVALID_PASSWORD,
                 RegistrationServiceImpl.MIN_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerTooYoungUser_NotOk() {
+    public void registerTooYoungUser_NotOk() {
         User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD,
                 RegistrationServiceImpl.MIN_AGE - 1);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
