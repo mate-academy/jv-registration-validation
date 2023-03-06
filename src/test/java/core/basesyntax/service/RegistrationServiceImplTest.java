@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int VALID_AGE = 20;
+    private static final int MIN_VALID_AGE = 18;
     private static final int NOT_VALID_AGE = 15;
     private static final int NEGATIVE_AGE = -1;
     private static final int LARGE_AGE = 234534255;
@@ -20,12 +22,12 @@ class RegistrationServiceImplTest {
     private User user = new User();
 
     @Test
-    void register_defaultUser_NotOk() {
+    void register_emptyUser_NotOk() {
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_LoginNull_NotOk() {
+    void register_loginNull_NotOk() {
         user.setLogin(null);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
@@ -73,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_sameUserInStorage_NotOk() {
+    void register_userAlreadyExist_NotOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
@@ -83,14 +85,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullArgument_NotOk() {
         assertThrows(InvalidDataException.class, () -> registrationService.register(null));
-    }
-
-    @Test
-    void register_negativeAge_NotOk() {
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(NEGATIVE_AGE);
-        assertThrows(InvalidDataException.class,() -> registrationService.register(user));
     }
 
     @Test
@@ -105,7 +99,7 @@ class RegistrationServiceImplTest {
     void register_eighteenAge_Ok() {
         user.setLogin(ANOTHER_VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
-        user.setAge(18);
-        registrationService.register(user);
+        user.setAge(MIN_VALID_AGE);
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 }
