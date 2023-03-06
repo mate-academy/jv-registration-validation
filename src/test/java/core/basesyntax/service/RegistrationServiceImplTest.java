@@ -1,10 +1,8 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -19,12 +17,11 @@ class RegistrationServiceImplTest {
     private static final Integer VALID_AGE = 20;
     private static final Integer INVALID_AGE = 12;
     private static final Integer NEGATIVE_AGE = -10;
-    private static final Integer BIG_AGE = 110;
+    private static final Integer BIG_AGE = 150;
     private static final Long ID = 1234L;
     private static final Long NEGATIVE_ID = -5L;
     private final RegistrationService registerService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
-    private final User testUser = new User();
+    private User testUser = new User();
 
     @BeforeEach
     void setUp() {
@@ -34,110 +31,110 @@ class RegistrationServiceImplTest {
         testUser.setAge(VALID_AGE);
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
-    void userDataCorrect() {
+    void userDataCorrect_ok() {
         registerService.register(testUser);
-        User actual = storageDao.get(testUser.getLogin());
-        assertEquals(testUser, actual);
+        boolean actual = Storage.people.contains(testUser);
+        assertTrue(actual);
     }
 
     @Test
-    void userAreNull_NotOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void userAreNull_notOk() {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(null);
-        });
+        }, "User can not be null");
     }
 
     @Test
-    void userAgeAreLessThat18_NotOk() {
+    void userAgeAreLessThat18_notOk() {
         testUser.setAge(INVALID_AGE);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "User age must be 18 or bigger");
     }
 
     @Test
-    void userAgeAreNegative_NotOk() {
+    void userAgeAreNegative_notOk() {
         testUser.setAge(NEGATIVE_AGE);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "User age must be bigger then 0");
     }
 
     @Test
-    void userAgeAreBiggerThen100_NotOk() {
+    void userAgeAreBiggerThen100_notOk() {
         testUser.setAge(BIG_AGE);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "User age must be less then 100");
     }
 
     @Test
-    void userAgeAreNull_NotOk() {
+    void userAgeAreNull_notOk() {
         testUser.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "User age must be not null");
     }
 
     @Test
-    void userPasswordAreNull_NotOk() {
+    void userPasswordAreNull_notOk() {
         testUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "User password must be not null");
     }
 
     @Test
-    void userPasswordAreInvalid_NotOk() {
+    void userPasswordAreInvalid_notOk() {
         testUser.setPassword(INVALID_PASSWORD);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
-        }, "User password must be 8 symbol or bigger");
+        }, "User password must be 6 symbol or bigger");
     }
 
     @Test
-    void userLoginAreNull_NotOk() {
+    void userLoginAreNull_notOk() {
         testUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "Login can`t be null");
     }
 
     @Test
-    void userLoginInvalid_NotOk() {
+    void userLoginInvalid_notOk() {
         testUser.setLogin(INVALID_LOGIN);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "Login must contain @gmail.com");
     }
 
     @Test
-    void userIdAreNull_NotOk() {
+    void userIdAreNull_notOk() {
         testUser.setId(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "Id can`t be null");
     }
 
     @Test
-    void userIdAreNegative_NotOk() {
+    void userIdAreNegative_notOk() {
         testUser.setId(NEGATIVE_ID);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "Id can`t be less then 0");
     }
 
     @Test
-    void storageAlreadyContainsUser_NotOk() {
-        storageDao.add(testUser);
-        assertThrows(RuntimeException.class, () -> {
+    void storageAlreadyContainsUser_notOk() {
+        registerService.register(testUser);
+        assertThrows(IncorrectDataExeption.class, () -> {
             registerService.register(testUser);
         }, "User already exists in storage");
-    }
-
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
     }
 }

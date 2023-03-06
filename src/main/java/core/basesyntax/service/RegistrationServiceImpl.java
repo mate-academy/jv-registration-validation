@@ -5,6 +5,10 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int ZERO = 0;
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 120;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -38,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAgeZero(User user) {
-        if (user.getAge() < 0) {
+        if (user.getAge() < ZERO) {
             throw new IncorrectDataExeption("Age can not be less than 0");
         }
     }
@@ -50,14 +54,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAgeLess18(User user) {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             throw new IncorrectDataExeption("Age can not be less than 18");
         }
     }
 
     private void checkAgeBigger100(User user) {
-        if (user.getAge() > 100) {
-            throw new IncorrectDataExeption("Age can not be bigger then 100");
+        if (user.getAge() > MAX_AGE) {
+            throw new IncorrectDataExeption("Age can not be bigger then 120");
         }
     }
 
@@ -68,8 +72,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkPasswordLess8(User user) {
-        if (user.getPassword().length() < 8) {
-            throw new IncorrectDataExeption("Password can not be less then 8");
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new IncorrectDataExeption("Password can not be less then 6");
         }
     }
 
@@ -92,7 +96,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkIdNegative(User user) {
-        if (user.getId() < 0) {
+        if (user.getId() < ZERO) {
             throw new IncorrectDataExeption("Id can not be less then 0");
         }
     }
