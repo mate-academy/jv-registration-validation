@@ -13,6 +13,8 @@ class RegistrationServiceImplTest {
     private static final int AGE_NEGATIVE = -10;
     private static final int AGE_NOT_OK = 13;
     private static final String SHORT_PASSWORD = "123";
+    private static final String BLANK_LOGIN = "";
+    private static final String LOGIN_WITH_SPACES = "123123  ";
     private static StorageDao storageDao;
     private static User validUser1;
     private static User validUser2;
@@ -34,6 +36,16 @@ class RegistrationServiceImplTest {
     void registerValidUser_Ok() {
         registrationServiceImpl.register(validUser1);
         Assertions.assertEquals(validUser1, storageDao.get(validUser1.getLogin()));
+    }
+    @Test
+    void registerLoginBlank_NotOk() {
+        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
+                new User(BLANK_LOGIN, validUser3.getPassword(), AGE_NEGATIVE)));
+    }
+    @Test
+    void registerLoginWithSpaces_NotOk() {
+        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
+                new User(LOGIN_WITH_SPACES, validUser3.getPassword(), AGE_NEGATIVE)));
     }
 
     @Test

@@ -35,6 +35,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new RegistrationException("Login cannot be null.");
         }
+        if (login.isEmpty()) {
+            throw new RegistrationException("Login cannot be empty.");
+        }
+        if (login.trim().length() != login.length()) {
+            throw new RegistrationException("Login cannot contain blank symbols "
+                    + "at the start or at the end of string.");
+        }
     }
 
     private void validatePassword(String password) throws RegistrationException {
