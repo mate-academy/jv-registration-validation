@@ -3,14 +3,21 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
     private User user;
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
 
     @BeforeEach
     void setUp() {
@@ -22,22 +29,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_invalidUser_NotOk() {
+        user = null;
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
+        }, "InvalidDataException expected, "
+                + "if user null.");
+    }
+
+    @Test
     void register_invalidAge_NotOk() {
         user.setAge(130);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        },"InvalidDataException,"
-                + "if age more than 120 an exception should be thrown");
+        },"InvalidDataException expected, "
+                + "if age more than 120.");
         user.setAge(17);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        },"InvalidDataException,"
-                + "if age less than 18 an exception should be thrown");
+        },"InvalidDataException expected, "
+                + "if age less than 18.");
         user.setAge(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        },"InvalidDataException,"
-                + "if age null an exception should be thrown");
+        },"InvalidDataException  expected, "
+                + "if age null.");
     }
 
     @Test
@@ -45,13 +61,13 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        },"InvalidDataException,"
-                + "if password null an exception should be thrown");
+        },"InvalidDataException expected, "
+                + "if password null.");
         user.setPassword("12345");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        },"InvalidDataException,"
-                + "if password length less than 6 an exception should be thrown");
+        },"InvalidDataException expected, "
+                + "if password length less than 6.");
     }
 
     @Test
@@ -59,19 +75,18 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        },"InvalidDataException,"
-                + "if login null an exception should be thrown");
+        },"InvalidDataException expected, "
+                + "if login null");
         user.setLogin("q");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
-        },"InvalidDataException,"
-                + "if login length less than 2 an exception should be thrown");
+        },"InvalidDataException expected, "
+                + "if login length less than 2");
     }
 
     @Test
     void register_validPassword_Ok() {
         user.setPassword("1234ab");
-        user.setLogin("bob");
         Long actualId = user.getId();
         registrationService.register(user);
         assertNotEquals(actualId, user.getId());

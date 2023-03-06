@@ -11,11 +11,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int MAX_PASSWORD_AND_LOGIN_LENGTH = 100;
     public static final int MIN_LOGIN_LENGTH = 2;
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao;
+
+    public RegistrationServiceImpl() {
+        storageDao = new StorageDaoImpl();
+    }
 
     @Override
 
     public User register(User user) throws InvalidDataException {
+        if (user == null) {
+            throw new InvalidDataException("User can't be null");
+        }
         checkUserInSystem(user);
         checkLogin(user.getLogin());
         checkAge(user.getAge());
