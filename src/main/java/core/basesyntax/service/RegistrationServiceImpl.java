@@ -8,6 +8,8 @@ import core.basesyntax.model.User;
 import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    public static final int MIN_AGE = 18;
+    public static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -24,13 +26,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (Objects.equals(user.getAge(), null)) {
             throw new RegistrationException("You can't use null value as age!");
         }
-        if (user.getAge() < User.MIN_AGE) {
+        if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("You must be at least "
-                    + User.MIN_AGE + " years old!");
+                    + MIN_AGE + " years old!");
         }
-        if (user.getPassword().length() < User.MIN_PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Your password must contain at least "
-                    + User.MIN_PASSWORD_LENGTH + " characters!");
+                    + MIN_PASSWORD_LENGTH + " characters!");
         }
         for (User existingUser : Storage.people) {
             if (user.getLogin().equals(existingUser.getLogin())) {

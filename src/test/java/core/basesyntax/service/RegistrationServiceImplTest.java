@@ -12,66 +12,75 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationService REGISTRATION_SERVICE = new RegistrationServiceImpl();
-    private static final StorageDao STORAGE_DAO = new StorageDaoImpl();
     private static final String DEFAULT_NEW_USER_LOGIN = "newUser";
     private static final String DEFAULT_PASSWORD = "123456";
     private static final String INVALID_PASSWORD = "12345";
-    private static final User DEFAULT_USER = new User("defaultUser", DEFAULT_PASSWORD,
-            User.MIN_AGE);
+    private final RegistrationService registrationService;
+    private final StorageDao storageDao;
+    private final User defaultUser;
+
+    public RegistrationServiceImplTest() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        defaultUser = new User("defaultUser", DEFAULT_PASSWORD,
+                RegistrationServiceImpl.MIN_AGE);
+    }
 
     @BeforeEach
     void beforeEach() {
         Storage.people.clear();
-        STORAGE_DAO.add(DEFAULT_USER);
-        DEFAULT_USER.setId(0L);
+        storageDao.add(defaultUser);
+        defaultUser.setId(0L);
     }
 
     @Test
-    void validUserRegistration_Ok() {
-        User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD, User.MIN_AGE);
-        assertEquals(REGISTRATION_SERVICE.register(user), STORAGE_DAO.get(user.getLogin()));
+    void registerValidUser_Ok() {
+        User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD,
+                RegistrationServiceImpl.MIN_AGE);
+        assertEquals(registrationService.register(user), storageDao.get(user.getLogin()));
     }
 
     @Test
-    void userIsNull_NotOk() {
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(null));
+    void registerNullUser_NotOk() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void userLoginIsNull_NotOk() {
-        User user = new User(null, DEFAULT_PASSWORD, User.MIN_AGE);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+    void registerUserWithNullLogin_NotOk() {
+        User user = new User(null, DEFAULT_PASSWORD, RegistrationServiceImpl.MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordIsNull_NotOk() {
-        User user = new User(DEFAULT_NEW_USER_LOGIN, null, User.MIN_AGE);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+    void registerUserWithNullPassword_NotOk() {
+        User user = new User(DEFAULT_NEW_USER_LOGIN, null, RegistrationServiceImpl.MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeIsNull() {
+    void registerUserWithNullAge() {
         User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD, null);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginAlreadyExists_NotOk() {
-        User user = new User(DEFAULT_USER.getLogin(), DEFAULT_PASSWORD, User.MIN_AGE);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+    void registerUserWithExistingLogin_NotOk() {
+        User user = new User(defaultUser.getLogin(), DEFAULT_PASSWORD,
+                RegistrationServiceImpl.MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordLengthLessThanRequirement_NotOk() {
-        User user = new User(DEFAULT_NEW_USER_LOGIN, INVALID_PASSWORD, User.MIN_AGE);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+    void registerUserWithInvalidPassword_NotOk() {
+        User user = new User(DEFAULT_NEW_USER_LOGIN, INVALID_PASSWORD,
+                RegistrationServiceImpl.MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeLessThanRequirement_NotOk() {
-        User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD, User.MIN_AGE - 1);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+    void registerTooYoungUser_NotOk() {
+        User user = new User(DEFAULT_NEW_USER_LOGIN, DEFAULT_PASSWORD,
+                RegistrationServiceImpl.MIN_AGE - 1);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
-
 }
