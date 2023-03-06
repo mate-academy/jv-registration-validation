@@ -25,12 +25,12 @@ class RegistrationServiceImplTest {
     private User testUser;
 
     @BeforeAll
-    static void registrationServiceCreation() {
+    public static void registrationServiceCreation() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         testUser = new User();
         testUser.setLogin(DEFAULT_LOGIN);
         testUser.setPassword(DEFAULT_PASSWORD);
@@ -38,12 +38,12 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void afterEach() {
+    public void afterEach() {
         Storage.people.clear();
     }
 
     @Test
-    void register_loginExist_notOk() {
+    public void register_loginExist_notOk() {
         User tempUser = new User();
         tempUser.setLogin(DEFAULT_LOGIN);
         tempUser.setPassword(DEFAULT_PASSWORD);
@@ -56,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLogin_notOk() {
+    public void register_nullLogin_notOk() {
         testUser.setLogin(null);
         assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(testUser);
@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessSymbols_notOk() {
+    public void register_passwordLessSymbols_notOk() {
         testUser.setPassword(LESS_THAN_6_PASSWORD);
         assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(testUser);
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPassword_notOk() {
+    public void register_nullPassword_notOk() {
         testUser.setPassword(null);
         assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(testUser);
@@ -80,14 +80,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageEquals18_Ok() {
+    public void register_ageEquals18_Ok() {
         testUser.setAge(AGE_IS_18);
         registrationService.register(testUser);
         assertEquals(AGE_IS_18, testUser.getAge(), "Age accepted");
     }
 
     @Test
-    void register_ageLessThan18_notOk() {
+    public void register_ageLessThan18_notOk() {
         testUser.setAge(AGE_LESS_THAN_18);
         assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(testUser);
@@ -95,7 +95,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullAge_notOk() {
+    public void register_nullAge_notOk() {
         testUser.setAge(null);
         assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(testUser);
@@ -103,7 +103,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_correctData_ok() {
+    public void register_correctData_ok() {
         registrationService.register(testUser);
         assertEquals(DEFAULT_LOGIN, testUser.getLogin());
         assertEquals(DEFAULT_PASSWORD, testUser.getPassword());
