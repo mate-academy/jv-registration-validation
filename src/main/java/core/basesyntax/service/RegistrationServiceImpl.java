@@ -29,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Age is less than " + "MIN_ALLOWED_AGE");
         }
         if (user.getAge() > MAX_ALLOWED_AGE) {
-            throw new InvalidDataException("Age is bigeer than " + "MAX_ALLOWED_AGE");
+            throw new InvalidDataException("Age is bigger than " + "MAX_ALLOWED_AGE");
         }
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password can`t be null");

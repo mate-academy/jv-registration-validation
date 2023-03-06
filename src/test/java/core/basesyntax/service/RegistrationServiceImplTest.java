@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.InvalidDataException;
@@ -34,11 +35,6 @@ class RegistrationServiceImplTest {
         user.setAge(EXAMPLE_OF_AGE);
         user.setLogin(EXAMPLE_OF_LOGIN);
         user.setPassword(EXAMPLE_OF_PASSWORD);
-    }
-
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
     }
 
     @Test
@@ -99,12 +95,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-
     void register_PassIsLessThanAllowed_NotOk() {
         user.setPassword(EXAMPLE_OF_INVALID_PASS);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
 
+    @Test
+    void register_ValidUser_Ok() {
+        registrationService.register(user);
+        assertEquals(EXAMPLE_OF_LOGIN, user.getLogin());
+        assertEquals(EXAMPLE_OF_AGE, user.getAge());
+        assertEquals(EXAMPLE_OF_PASSWORD, user.getPassword());
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
