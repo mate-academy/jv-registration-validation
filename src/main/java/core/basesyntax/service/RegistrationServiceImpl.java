@@ -35,7 +35,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void passwordLengthCheck(User user) {
         if (user.getPassword() == null || user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
-            throw new RegistrationServiceException("Password " + user.getPassword() + " is not correct. "
+            throw new RegistrationServiceException("Password " + user.getPassword()
+                    + " is not correct. "
                     + "Password must be at least 6 symbols.");
         }
     }
