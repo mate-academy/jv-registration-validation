@@ -3,33 +3,42 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     public static final int MIN_AGE = 18;
-    private static final StorageDao storageDao = new StorageDaoImpl();
-    private static final RegistrationService regService = new RegistrationServiceImpl();
     private static final String CORRECT_LOGIN = "newUser";
     private static final String CORRECT_PASSWORD = "123456";
     private static final String TOO_SHORT_PASSWORD = "12345";
+    private static RegistrationService regService;
     private User correctUser;
+
+    @BeforeAll
+    static void init() {
+        regService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         correctUser = createCorrectUser();
+    }
+
+    @AfterEach
+    void cleanUp() {
+        Storage.people.clear();
     }
 
     private User createCorrectUser() {
         User user = new User();
-        user.setAge(MIN_AGE + 5);
+        user.setAge(MIN_AGE);
         user.setLogin(CORRECT_LOGIN);
         user.setPassword(CORRECT_PASSWORD);
         return user;
@@ -74,7 +83,7 @@ class RegistrationServiceImplTest {
         correctUser.setAge(MIN_AGE);
         assertEquals(correctUser, regService.register(correctUser),
                 "User with minimum age wasn't registered");
-        assertEquals(correctUser, storageDao.get(correctUser.getLogin()),
+        assertTrue(Storage.people.contains(correctUser),
                 "User with minimum age wasn't added to database");
     }
 
@@ -83,7 +92,7 @@ class RegistrationServiceImplTest {
         correctUser.setAge(MIN_AGE + 1);
         assertEquals(correctUser, regService.register(correctUser),
                 "User with age above minimum wasn't registered");
-        assertEquals(correctUser, storageDao.get(correctUser.getLogin()),
+        assertTrue(Storage.people.contains(correctUser),
                 "User with age above minimum wasn't added to database");
     }
 
@@ -118,10 +127,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserAlreadyAdded_NotOk() {
-        storageDao.add(correctUser);
+        Storage.people.add(correctUser);
         assertThrows(RegistrationException.class, () -> regService.register(correctUser),
                 "Registered a user that is already added "
                         + "to database without throwing an exception");
+    }
+
+    @Test
+    void register_SavedInStorageWithNullID_NotOk() {
+        regService.register(correctUser);
+        int indexDB = Storage.people.indexOf(correctUser);
+        assertNotNull(Storage.people.get(indexDB).getId());
     }
 
     @Test
@@ -131,7 +147,7 @@ class RegistrationServiceImplTest {
             correctUser = createCorrectUser();
             correctUser.setLogin("newUser" + i);
             assertEquals(correctUser, regService.register(correctUser));
-            assertNotNull(storageDao.get(correctUser.getLogin()));
+            assertTrue(Storage.people.contains(correctUser));
         }
         assertEquals(testUsersAmount, Storage.people.size());
     }
