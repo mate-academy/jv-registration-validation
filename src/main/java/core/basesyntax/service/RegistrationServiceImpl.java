@@ -30,10 +30,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + " is already exists");
         }
         if (user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
-            throw new InvalidInputDataException("The age should be at least 18 and less than 99");
+            throw new InvalidInputDataException("The age should be at least " + MIN_AGE
+                    + "and less than " + MAX_AGE);
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidInputDataException("The password should be at least 6 symbols");
+            throw new InvalidInputDataException("The password should be at least "
+                    + MIN_PASSWORD_LENGTH + " symbols");
         }
         storageDao.add(user);
         return user;

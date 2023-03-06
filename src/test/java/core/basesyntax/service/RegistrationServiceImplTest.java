@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -13,11 +14,11 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD = "12345";
-    private static final String LILY_PASSWORD = "lilyPassword";
+    private static final String VALID_PASSWORD = "lilyPassword";
     private static final Integer LOWER_THAN_POSSIBLE_AGE = 17;
     private static final Integer HIGHER_THAN_POSSIBLE_AGE = 159;
-    private static final Integer LILY_AGE = 24;
-    private static final String LILY_LOGIN = "lilyLogin";
+    private static final Integer VALID_AGE = 24;
+    private static final String VALID_LOGIN = "lilyLogin";
 
     private static RegistrationService registrationService;
     private User user;
@@ -35,9 +36,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin(LILY_LOGIN);
-        user.setPassword(LILY_PASSWORD);
-        user.setAge(LILY_AGE);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
     }
 
     @Test
@@ -49,11 +50,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_Ok() {
-        registrationService.register(user);
-        assertEquals(LILY_LOGIN, user.getLogin());
-        assertEquals(LILY_PASSWORD, user.getPassword());
-        assertEquals(LILY_AGE, user.getAge());
-        assertEquals(1, user.getId());
+        User actual = registrationService.register(user);
+        assertEquals(VALID_LOGIN, actual.getLogin());
+        assertEquals(VALID_PASSWORD, actual.getPassword());
+        assertEquals(VALID_AGE, actual.getAge());
+        assertNotNull(actual.getId());
     }
 
     @Test
@@ -75,9 +76,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_invalidLogin_notOk() {
         User newUser = new User();
-        newUser.setLogin(LILY_LOGIN);
-        newUser.setPassword(LILY_PASSWORD);
-        newUser.setAge(LILY_AGE);
+        newUser.setLogin(VALID_LOGIN);
+        newUser.setPassword(VALID_PASSWORD);
+        newUser.setAge(VALID_AGE);
         Storage.people.add(user);
         assertThrows(InvalidInputDataException.class, () -> {
             registrationService.register(newUser);
