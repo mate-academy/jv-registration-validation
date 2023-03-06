@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    public static final int ADULT_AGE = 18;
+    public static final String VALID_PASSWORD = "123456";
+    public static final String VALID_LOGIN = "CorrectLogin";
     private RegistrationService registrationService;
     private User user;
 
@@ -19,12 +22,13 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 
+
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(18);
-        user.setPassword("123456");
-        user.setLogin("CorrectName");
+        user.setAge(ADULT_AGE);
+        user.setPassword(VALID_PASSWORD);
+        user.setLogin(VALID_LOGIN);
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -94,7 +98,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validAge_Ok() {
-        user.setAge(18);
+        user.setAge(ADULT_AGE);
         Long actualId = user.getId();
         registrationService.register(user);
         assertNotEquals(actualId, user.getId());
@@ -107,7 +111,7 @@ class RegistrationServiceImplTest {
         User userSameLogin = new User();
         userSameLogin.setLogin("Bob");
         userSameLogin.setAge(19);
-        userSameLogin.setPassword("123456");
+        userSameLogin.setPassword(VALID_PASSWORD);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(userSameLogin);
         });
