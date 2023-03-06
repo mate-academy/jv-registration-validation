@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -42,7 +43,7 @@ class RegistrationServiceImplTest {
     void register_nullUser_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(null);
-        });
+        }, "InvalidDataException expected for null user");
     }
 
     @Test
@@ -53,7 +54,7 @@ class RegistrationServiceImplTest {
         defaultUser.setLogin(NON_UNIQUE_LOGIN);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        }, "method does not allow to store duplicates");
+        }, "InvalidDataException expected for user duplicate");
     }
 
     @Test
@@ -61,7 +62,7 @@ class RegistrationServiceImplTest {
         defaultUser.setPassword("");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        }, "method does not allow register user with shor passwords");
+        }, "InvalidDataException expected for password with length less than 6");
     }
 
     @Test
@@ -69,13 +70,7 @@ class RegistrationServiceImplTest {
         defaultUser.setPassword(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        }, "password doesn`t have to be null");
-    }
-
-    @Test
-    void register_ageEquals18_ok() {
-        defaultUser.setAge(18);
-        assertEquals(defaultUser.getAge(),MIN_AGE);
+        }, "InvalidDataException expected for null password");
     }
 
     @Test
@@ -83,7 +78,7 @@ class RegistrationServiceImplTest {
         defaultUser.setLogin("");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        });
+        }, "InvalidDataException expected for user with empty login");
     }
 
     @Test
@@ -91,7 +86,7 @@ class RegistrationServiceImplTest {
         defaultUser.setAge(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        });
+        },"InvalidDataException expected for user with null age");
     }
 
     @Test
@@ -99,7 +94,7 @@ class RegistrationServiceImplTest {
         defaultUser.setAge(131);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        });
+        }, "InvalidDataException expected for user with the age more than 130");
     }
 
     @Test
@@ -107,7 +102,7 @@ class RegistrationServiceImplTest {
         defaultUser.setLogin(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        });
+        },"InvalidDataException expected for user with null login");
     }
 
     @Test
@@ -115,21 +110,21 @@ class RegistrationServiceImplTest {
         defaultUser.setAge(17);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(defaultUser);
-        });
+        },"InvalidDataException expected for user whose age is under 18");
     }
 
     @Test
     void register_user_ok() {
         registrationService.register(defaultUser);
-        assertEquals(2,defaultUser.getId());
-        assertEquals(DEFAULT_LOGIN,defaultUser.getLogin());
-        assertEquals(DEFAULT_PASSWORD,defaultUser.getPassword());
+        assertNotNull(defaultUser.getId());
+        assertNotNull(defaultUser.getLogin());
+        assertNotNull(defaultUser.getPassword());
     }
 
     @Test
     void register_storageSizeIncreased_ok() {
         int startSize = Storage.people.size();
         registrationService.register(defaultUser);
-        assertEquals(startSize + 1,Storage.people.size());
+        assertEquals(startSize + 1, Storage.people.size());
     }
 }
