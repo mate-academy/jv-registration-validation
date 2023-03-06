@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_receivedUserIsNotNull_Ok() {
+    void register_receivedUserIsNotNull_ok() {
         User actualUser = registrationService.register(user);
         boolean actual = Storage.people.contains(user);
         assertNotNull(actualUser.getId(), "Id don't has to be null");
