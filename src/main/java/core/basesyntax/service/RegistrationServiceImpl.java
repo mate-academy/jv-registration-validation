@@ -12,6 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
         }
@@ -29,10 +32,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User's password" + user.getPassword()
                     + "should to contain 6 symbols or more");
         }
-        if (storageDao.get(user.getLogin()) != null && storageDao.get(user.getLogin())
-                .getLogin().equals(user.getLogin())) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with such login" + user.getLogin()
-                    + "already exist");
+                    + "already exists");
         }
         return storageDao.add(user);
     }
