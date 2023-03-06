@@ -15,11 +15,11 @@ class RegistrationServiceImplTest {
     private static final long TEST_USER_ID = 999L;
     private static final String TEST_LOGIN = "Login";
     private static final String PASSWORD_VALID = "Password";
-    private static final String PASSWORD_NOT_VALID = "Pas%";
     private static final int MIN_AGE = 18;
-    private static final int LESS_AGE = 16;
+    private static final String PASSWORD_NOT_VALID = "Pas%";
+    private static final int LESS_AGE = 17;
     private static final int GREATER_AGE = 135;
-    private static final int ZERO = 0;
+    private static final int NEGATIVE_NUMBER = -12;
     private static RegistrationService registrationService;
     private User testUser;
 
@@ -30,7 +30,11 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        testUser = new User(TEST_USER_ID, TEST_LOGIN, PASSWORD_VALID, MIN_AGE);
+        testUser = new User();
+        testUser.setId(TEST_USER_ID);
+        testUser.setAge(MIN_AGE);
+        testUser.setPassword(PASSWORD_VALID);
+        testUser.setLogin(TEST_LOGIN);
     }
 
     @AfterEach
@@ -81,7 +85,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_withSameLogin_isNotOk() {
-        User actualUser = registrationService.register(testUser);
+        User actualUser = new User();
+        actualUser.setLogin(TEST_LOGIN);
+        Storage.people.add(actualUser);
         assertEquals(actualUser.getLogin(), testUser.getLogin());
         assertThrows(RegistrationUserException.class,
                 () -> registrationService.register(testUser), "Login is present, chose another");
@@ -110,7 +116,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_withNegativeAge_isNotOk() {
-        testUser.setAge(ZERO);
+        testUser.setAge(NEGATIVE_NUMBER);
         assertThrows(RegistrationUserException.class,
                 () -> registrationService.register(testUser), "Age can't be negative");
     }

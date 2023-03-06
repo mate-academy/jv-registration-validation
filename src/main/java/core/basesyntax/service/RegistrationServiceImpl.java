@@ -9,7 +9,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 125;
-    private static final int ZERO = 0;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -53,9 +52,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationUserException("You are too young!");
         }
-        if (user.getAge() > MAX_AGE || user.getAge() < ZERO) {
-            throw new RegistrationUserException("Incorrect age!");
+        if (user.getAge() > MAX_AGE) {
+            throw new RegistrationUserException("Age can't be greater than 125!");
         }
-
     }
 }
