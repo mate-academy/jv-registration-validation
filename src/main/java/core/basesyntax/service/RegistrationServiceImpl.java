@@ -23,25 +23,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkPassword(User user) {
         if (user.getPassword() == null || user.getPassword().length() < PASSWORD_MIN_LENGTH) {
-            throw new UserInvalidException("Password is invalid, try to write another password");
+            throw new UserInvalidException("Password is: " + user.getPassword()
+                    + "Should be not null and more than 6 letters");
         }
     }
 
     private void checkAge(User user) {
         if (user.getAge() < USER_MIN_AGE || user.getAge() > USER_MAX_AGE) {
-            throw new UserInvalidException("User must be older than 17 years");
+            throw new UserInvalidException("Age is: " + user.getAge()
+                    + "Should be more than 17 and less than 150");
         }
     }
 
     private void checkUserIsNotNull(User user) {
         if (user == null) {
-            throw new UserInvalidException("User is null");
+            throw new UserInvalidException("User is null you should to create the user");
         }
     }
 
     private void checkLogin(User user) {
-        if (user.getLogin() == null || storageDao.get(user.getLogin()) != null) {
-            throw new UserInvalidException("User with this login is already exist");
+        if (user.getLogin() == null) {
+            throw new UserInvalidException("Login is: " + user.getLogin()
+                    + " login shouldn`t be null");
+        } else if (storageDao.get(user.getLogin()) != null) {
+            throw new UserInvalidException("Login is: " + user.getLogin()
+                    + " user with this login is already exist try to use another login");
         }
     }
 }

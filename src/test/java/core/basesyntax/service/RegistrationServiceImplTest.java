@@ -1,12 +1,12 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.UserInvalidException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userNull_isNotOk() {
         User userNull = null;
-        Assertions.assertThrows(UserInvalidException.class, () -> {
+        assertThrows(UserInvalidException.class, () -> {
             registrationService.register(userNull);
         }, "Expected " + UserInvalidException.class.getName() + ", but it wasn`t");
     }
@@ -56,7 +56,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithNullPassword_isNotOk() {
         user.setPassword(null);
-        Assertions.assertThrows(UserInvalidException.class, () -> {
+        assertThrows(UserInvalidException.class, () -> {
             registrationService.register(user);
         }, "Expected " + UserInvalidException.class.getName() + ", but it wasn`t");
     }
@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithNullLogin_isNotOk() {
         user.setLogin(null);
-        Assertions.assertThrows(UserInvalidException.class, () -> {
+        assertThrows(UserInvalidException.class, () -> {
             registrationService.register(user);
         }, "Expected " + UserInvalidException.class.getName() + ", but it wasn`t");
     }
@@ -72,42 +72,23 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithInvalidPassword_isNotOk() {
         user.setPassword(INVALID_PASSWORD);
-        Assertions.assertThrows(UserInvalidException.class, () -> {
+        assertThrows(UserInvalidException.class, () -> {
             registrationService.register(user);
         }, "Expected " + UserInvalidException.class.getName() + ", but it wasn`t");
     }
 
     @Test
-    void register_userWithSameLogin_isNotOk() {
-        registrationService.register(user);
-        Assertions.assertThrows(UserInvalidException.class, () -> {
+    void register_loginAlreadyExist_NotOk() {
+        Storage.people.add(user);
+        assertThrows(UserInvalidException.class, () -> {
             registrationService.register(user);
         }, "Expected " + UserInvalidException.class + ", but it wasn`t ");
     }
 
     @Test
-    void register_userWithNullLoginAndPassword_isNotOk() {
-        user.setPassword(null);
-        user.setLogin(null);
-        Assertions.assertThrows(UserInvalidException.class, () -> {
-            registrationService.register(user);
-        }, "Expected " + UserInvalidException.class + ", but it wasn`t");
-    }
-
-    @Test
     void register_userInvalidAge_isNotOk() {
         user.setAge(INVALID_AGE);
-        Assertions.assertThrows(UserInvalidException.class, () -> {
-            registrationService.register(user);
-        }, "Expected " + UserInvalidException.class + ", but it wasn`t");
-    }
-
-    @Test
-    void register_invalidUser_isNotOk() {
-        user.setAge(INVALID_AGE);
-        user.setLogin(null);
-        user.setPassword(INVALID_PASSWORD);
-        Assertions.assertThrows(UserInvalidException.class, () -> {
+        assertThrows(UserInvalidException.class, () -> {
             registrationService.register(user);
         }, "Expected " + UserInvalidException.class + ", but it wasn`t");
     }
