@@ -16,6 +16,7 @@ class RegistrationServiceImplTest {
     private static final String EMPTY = "";
     private static final String PASSWORD = "qwerty12345";
     private static final Integer AGE = 18;
+    private static final Integer INCORRECT_AGE = 17;
     private static RegistrationServiceImpl registrationService;
     private User user;
 
@@ -75,7 +76,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lessAge_notOk() {
-        user.setAge(0);
+        user.setAge(INCORRECT_AGE);
         assertThrows(ValidationException.class, () -> registrationService.register(user),
                 "Expected " + ValidationException.class.getSimpleName()
                         + " to be thrown for user age less than " + AGE
@@ -92,9 +93,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_successful_ok() {
-        User anotherUser = new User("gay", "111111", 45);
-        Storage.people.add(anotherUser);
-        Storage.people.add(user);
+        User anotherUser = new User("guy", "111111", 45);
+        registrationService.register(anotherUser);
+        registrationService.register(user);
         assertEquals(user, Storage.people.get(Storage.people.size() - 1),
                 "User with login '" + user.getLogin() + "' was not registered!!");
     }
