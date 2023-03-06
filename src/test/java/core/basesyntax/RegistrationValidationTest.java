@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class HelloWorldTest {
+public class RegistrationValidationTest {
     private static final String VALID_LOGIN = "myLogin";
     private static final String VALID_PASSWORD = "myValidPassword";
     private static final String NOT_VALID_PASSWORD = "pass";
