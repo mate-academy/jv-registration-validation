@@ -1,8 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -13,6 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationValidationTest {
     private static final String VALID_LOGIN = "myLogin";
@@ -79,15 +78,16 @@ public class RegistrationValidationTest {
     @Test
     void register_validUserAdded_ok() {
         registrationService.register(testUser);
-        assertEquals(testUser, storageDao.get(testUser.getLogin()));
+        assertEquals(testUser, storageDao.get(testUser.getLogin()), "Expected user exist at the storage!");
+        assertNotEquals(null, testUser.getId(), "Expected user has id after adding to storage!");
     }
 
     @Test
     void register_loginAlreadyExist_notOk() {
-        registrationService.register(testUser);
+        Storage.people.add(testUser);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Expected RegistrationValidationException if login already exist!");
+        }, "Expected RegistrationValidationException if login already exists!");
     }
 
     @Test
@@ -103,6 +103,6 @@ public class RegistrationValidationTest {
         testUser.setAge(NOT_VALID_AGE);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Expected RegistrationValidationException if age less then 6 characters!");
+        }, "Expected RegistrationValidationException if age less then 18!");
     }
 }
