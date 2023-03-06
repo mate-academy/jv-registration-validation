@@ -2,29 +2,25 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidDataForRegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User user;
-    private static StorageDao storageDao;
-    private static User anotherUser;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-        anotherUser = new User();
-        anotherUser.setLogin("bobik");
-        anotherUser.setAge(30);
-        anotherUser.setPassword("idk1488");
+    }
+
+    @BeforeEach
+    void setUp() {
         user = new User();
         user.setPassword("popbob1337");
         user.setAge(20);
@@ -111,5 +107,18 @@ class RegistrationServiceImplTest {
             registrationService.register(user);
         }, InvalidDataForRegistrationException.class.getName()
                 + ", method does not allow login duplicates");
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        User nullUser = null;
+        assertThrows(InvalidDataForRegistrationException.class, () -> {
+            registrationService.register(nullUser);
+        });
+    }
+
+    @Test
+    void register_defaultUserWithValidFields_ok() {
+        registrationService.register(user);
     }
 }
