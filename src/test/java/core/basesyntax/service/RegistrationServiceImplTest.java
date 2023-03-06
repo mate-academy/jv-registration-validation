@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThanEighteen_notOk() {
-        user.setAge(14);
+        user.setAge(17);
         assertThrows(InvalidInputDataException.class, () -> {
             registrationService.register(user);
         }, "InvalidRegistrationDataException expected for age [14]");
@@ -104,16 +104,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_idIsNotNull_notOk() {
-        user.setId(50L);
-        assertThrows(InvalidInputDataException.class, () -> {
-            registrationService.register(user);
-        }, "InvalidRegistrationDataException expected for id which is not null");
-    }
-
-    @Test
     void register_addTwoSameUsers_notOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(InvalidInputDataException.class, () -> {
             registrationService.register(user);
         }, "InvalidRegistrationDataException expected for two same users");

@@ -20,20 +20,20 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidInputDataException("User is null");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidInputDataException("Such user is already present in the storage");
-        }
         if (user.getLogin() == null) {
             throw new InvalidInputDataException("Login can't be null");
         }
         if (user.getLogin().trim().equals("")) {
-            throw new InvalidInputDataException("Login can't be []]");
+            throw new InvalidInputDataException("Login can't be []");
         }
         if (user.getPassword() == null) {
             throw new InvalidInputDataException("Password can't be null");
         }
         if (user.getPassword().trim().equals("")) {
             throw new InvalidInputDataException("Password can't be []");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidInputDataException("Such user is already present in the storage");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidInputDataException("User's password has less characters than 6");
@@ -47,10 +47,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() > MAX_AGE) {
             throw new InvalidInputDataException("User is too old. "
                     + "Nobody in the world can't have such age");
-        }
-        if (user.getId() != null) {
-            throw new InvalidInputDataException("Id should be null, but id is ["
-                    + user.getId() + "]");
         }
     }
 }
