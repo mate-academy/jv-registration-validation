@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserNull_NotOk() {
+    void register_nullUser_NotOk() {
         assertThrows(RegistrationException.class, () -> regService.register(null),
                 "Registered null user");
     }

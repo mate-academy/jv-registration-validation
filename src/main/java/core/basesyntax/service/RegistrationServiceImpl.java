@@ -16,13 +16,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User has null value");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already added.");
+            throw new RegistrationException("User with login "
+                    + user.getLogin() + " already added.");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new RegistrationException("Invalid login");
+            throw new RegistrationException("Login must be at least 1 character");
         }
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Invalid user age");
+            throw new RegistrationException("Invalid user age " + user.getAge());
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Invalid password");
