@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "jessy";
-    private static final String VALID_PASSWORD = "012345";
-    private static final String INVALID_PASSWORD = "01234";
+    private static final String VALID_PASSWORD = "123456";
+    private static final String INVALID_PASSWORD = "12345";
     private static final int VALID_AGE = 18;
     private static final int INVALID_AGE = 17;
     private final RegistrationService registrationService =
