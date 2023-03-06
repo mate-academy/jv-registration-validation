@@ -13,19 +13,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         checkUserExist(user);
-        checkId(user);
-        checkLogin(user);
         checkPassword(user);
         checkAge(user);
+        checkId(user);
+        checkLogin(user);
+
         return storageDao.add(user);
     }
 
     private void checkUserExist(User user) {
         if (user == null) {
             throw new RegistrationException("User not found");
-        }
-        if (user.equals(storageDao.get(user.getLogin()))) {
-            throw new RegistrationException("This user already exist");
         }
     }
 
@@ -41,15 +39,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
+    private void checkId(User user) {
+        if (user.getId() != null) {
+            throw new RegistrationException("User should not have id assigned yet");
+        }
+    }
+
     private void checkLogin(User user) {
         if (user.getLogin() == null || user.getLogin().equals("")) {
             throw new RegistrationException("Can't find login");
         }
-    }
-
-    private void checkId(User user) {
-        if (user.getId() <= 0) {
-            throw new RegistrationException("This ID already exist");
+        if (storageDao.get(user.getLogin()) != null
+                && user.getLogin().equals(storageDao.get(user.getLogin()).getLogin())) {
+            throw new RegistrationException("This user already exist");
         }
     }
 }
