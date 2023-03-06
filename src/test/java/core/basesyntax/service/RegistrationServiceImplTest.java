@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.RegistrationException;
@@ -77,9 +78,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User expected = user;
-        User actual = registrationService.register(user);
-        assertEquals(expected, actual);
+        user.setLogin("nadia@gmail");
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
+        assertEquals(user, actual);
+        assertNotNull(user.getId());
     }
 
     @Test
