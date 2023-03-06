@@ -26,13 +26,13 @@ public class RegistrationValidationTest {
     private User testUser;
 
     @BeforeAll
-    static void beforeAll() {
+    private void beforeAll() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
-    void beforeEach() {
+    private void beforeEach() {
         testUser = new User();
         testUser.setLogin(VALID_LOGIN);
         testUser.setPassword(VALID_PASSWORD);
@@ -40,12 +40,12 @@ public class RegistrationValidationTest {
     }
 
     @AfterEach
-    void afterEach() {
+    private void afterEach() {
         Storage.people.clear();
     }
 
     @Test
-    void register_nullUser_notOk() {
+    private void register_nullUser_notOk() {
         User testUser = null;
 
         assertThrows(RegistrationValidationException.class, () -> {
@@ -54,7 +54,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_nullLogin_notOk() {
+    private void register_nullLogin_notOk() {
         testUser.setLogin(null);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
@@ -62,7 +62,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_nullPassword_notOk() {
+    private void register_nullPassword_notOk() {
         testUser.setPassword(null);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
@@ -70,7 +70,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_nullAge_notOk() {
+    private void register_nullAge_notOk() {
         testUser.setAge(null);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
@@ -78,7 +78,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_validUserAdded_ok() {
+    private void register_validUserAdded_ok() {
         registrationService.register(testUser);
         assertEquals(testUser, storageDao.get(testUser.getLogin()),
                 "Expected user exist at the storage!");
@@ -87,15 +87,15 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_loginAlreadyExist_notOk() {
+    private void register_loginAlreadyExist_notOk() {
         Storage.people.add(testUser);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
-        }, "Expected RegistrationValidationException if login already exists!");
+        }, "Expected RegistrationValidationException if login already exist!");
     }
 
     @Test
-    void register_invalidPassword_notOk() {
+    private void register_invalidPassword_notOk() {
         testUser.setPassword(NOT_VALID_PASSWORD);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
@@ -103,7 +103,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void register_invalidAge_notOk() {
+    private void register_invalidAge_notOk() {
         testUser.setAge(NOT_VALID_AGE);
         assertThrows(RegistrationValidationException.class, () -> {
             registrationService.register(testUser);
