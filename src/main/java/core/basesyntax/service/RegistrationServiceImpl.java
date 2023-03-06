@@ -12,23 +12,47 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || user.getLogin() == null
-                || user.getPassword() == null || user.getAge() == null) {
+        checkUser(user);
+        checkLogin(user);
+        checkPassword(user);
+        checkAge(user);
+        return storageDao.add(user);
+    }
+
+    private void checkUser(User user) {
+        if (user == null) {
             throw new RegistrationException("Invalid data. User can't be null");
         }
-        if (user.getLogin().isEmpty()) {
-            throw new RegistrationException("Login can't be empty");
+    }
+
+    private void checkLogin(User user) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new RegistrationException("Invalid data. Login can't be empty or null");
         }
-        if (user.getAge() < MINIMUM_AGE) {
-            throw new RegistrationException("Age can't be less than " + MINIMUM_AGE + "!");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with this login already exists");
+        }
+    }
+
+    private void checkPassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Invalid data. Password can't be null");
         }
         if (user.getPassword().length() < MINIMUM_PASSWORD) {
             throw new RegistrationException("The password must contain at least "
                     + MINIMUM_PASSWORD + " characters");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already exists");
+    }
+
+    private void checkAge(User user) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("Invalid data. Age can't be null");
         }
-        return storageDao.add(user);
+        if (user.getAge() < 0) {
+            throw new RegistrationException("Age can't be negative");
+        }
+        if (user.getAge() < MINIMUM_AGE) {
+            throw new RegistrationException("Age can't be less than " + MINIMUM_AGE + "!");
+        }
     }
 }
