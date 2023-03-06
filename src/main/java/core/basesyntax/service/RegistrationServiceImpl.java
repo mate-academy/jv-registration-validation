@@ -6,6 +6,9 @@ import core.basesyntax.exceptions.InvalidRegistrationDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MAX_AGE = 116;
+    private static final int MIN_AGE = 18;
+    private static final int MIN_PASS_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -32,18 +35,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkLogin(User user) {
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isEmpty()) {
             throw new InvalidRegistrationDataException("Login is empty "
                     + "or contains only whitespace");
         }
     }
 
     private void checkAge(User user) {
-        if (user.getAge() > 116) {
+        if (user.getAge() > MAX_AGE) {
             throw new InvalidRegistrationDataException("User age must be less than"
                     + " or equal to 116");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidRegistrationDataException("User age must be at least 18");
         }
     }
@@ -52,7 +55,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidRegistrationDataException("User password is not valid");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASS_LENGTH) {
             throw new InvalidRegistrationDataException("User password is less than 6 symbols");
         }
     }
