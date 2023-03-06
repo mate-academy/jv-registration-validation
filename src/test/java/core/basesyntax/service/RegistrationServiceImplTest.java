@@ -16,7 +16,8 @@ class RegistrationServiceImplTest {
     private static final String INITIAL_LOGIN = "Shevshenko";
     private static final String INITIAL_PASSWORD = "Password2023";
     private static final String INCORRECT_PASSWORD = "12345";
-    private static final int INCORRECT_AGE = 15;
+    private static final int INCORRECT_LOW_AGE = 15;
+    private static final int INCORRECT_HIGH_AGE = 131;
     private static final int NEGATIVE_AGE = -5;
     private static RegistrationService registrationService;
     private User defaultUser = new User();
@@ -53,6 +54,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userIsNull_notOk() {
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(null);
+        });
+    }
+
+    @Test
     void register_NullPassword_NotOk() {
         defaultUser.setPassword(null);
         assertThrows(RegistrationFailedException.class, () -> {
@@ -78,7 +86,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLess18_NotOk() {
-        defaultUser.setAge(INCORRECT_AGE);
+        defaultUser.setAge(INCORRECT_LOW_AGE);
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(defaultUser);
+        });
+    }
+
+    @Test
+    void register_ageMore100_NotOk() {
+        defaultUser.setAge(INCORRECT_HIGH_AGE);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
         });
