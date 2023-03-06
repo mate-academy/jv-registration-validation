@@ -22,6 +22,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getId() == null) {
             throw new RegistrationException("ID can't be null");
         }
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age can't be null");
+        }
         if (user.getId() < MIN_ID_VALUE) {
             throw new RegistrationException("ID can't be less than 1");
         }

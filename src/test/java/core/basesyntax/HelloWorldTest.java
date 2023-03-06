@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -57,14 +58,14 @@ public class HelloWorldTest {
     @Test
     void register_nullLogin_notOK() {
         uniqUser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
 
     @Test
     void register_nullInput_notOK() {
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
@@ -72,7 +73,7 @@ public class HelloWorldTest {
     @Test
     void register_userAgeLessThanNeed_notOK() {
         uniqUser.setAge(12);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
@@ -80,7 +81,7 @@ public class HelloWorldTest {
     @Test
     void register_nullPassword_notOK() {
         uniqUser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
@@ -88,7 +89,7 @@ public class HelloWorldTest {
     @Test
     void register_nullAge_notOK() {
         uniqUser.setAge(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
@@ -96,7 +97,7 @@ public class HelloWorldTest {
     @Test
     void register_nullID_notOK() {
         uniqUser.setId(null);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
@@ -104,7 +105,7 @@ public class HelloWorldTest {
     @Test
     void register_lessThanNullID_notOK() {
         uniqUser.setId(-10L);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
@@ -115,7 +116,7 @@ public class HelloWorldTest {
         assertTrue(sameLogin);
         storageDao.add(uniqUser);
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(sameUser);
         });
         assertEquals(uniqUser, storageDao.get(uniqUser.getLogin()));
@@ -124,7 +125,7 @@ public class HelloWorldTest {
     @Test
     void register_incorrectPasswordLength_notOk() {
         uniqUser.setPassword("pass1");
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
@@ -144,7 +145,7 @@ public class HelloWorldTest {
     @Test
     void register_userAgeLessThanNull_notOK() {
         uniqUser.setAge(-30);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
     }
