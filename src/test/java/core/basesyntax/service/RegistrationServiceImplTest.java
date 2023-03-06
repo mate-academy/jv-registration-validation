@@ -1,5 +1,7 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -19,6 +21,7 @@ class RegistrationServiceImplTest {
     private static final Integer MIN_AGE = 18;
     private static final Integer MAX_AGE = 120;
     private static final String DEFAULT_PASS = "newPass1";
+    private static final byte AFTER_REGISTRATION_SIZE = 1;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User user;
@@ -46,6 +49,8 @@ class RegistrationServiceImplTest {
     void register_ok() {
         User registeredUser = registrationService.register(user);
         assertSame(storageDao.get(DEFAULT_LOGIN), registeredUser);
+        assertEquals(AFTER_REGISTRATION_SIZE, Storage.people.size());
+        assertNotEquals(null, registeredUser.getId());
     }
 
     @Test
