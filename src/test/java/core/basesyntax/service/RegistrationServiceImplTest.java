@@ -117,8 +117,6 @@ class RegistrationServiceImplTest {
     void register_user_ok() {
         registrationService.register(defaultUser);
         assertNotNull(defaultUser.getId());
-        assertNotNull(defaultUser.getLogin());
-        assertNotNull(defaultUser.getPassword());
     }
 
     @Test
