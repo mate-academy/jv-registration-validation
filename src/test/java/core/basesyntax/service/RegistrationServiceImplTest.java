@@ -1,9 +1,9 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,12 +93,34 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userHasId_ok() {
+        User input = new User(VALID_LOGIN,
+                VALID_PASSWORD,
+                VALID_AGE);
+        User expected = registrationService.register(input);
+        assertNotEquals(expected.getId(),
+                null);
+    }
+
+    @Test
     void register_ok() {
         User input = new User(VALID_LOGIN,
                 VALID_PASSWORD,
                 VALID_AGE);
         registrationService.register(input);
-        assertEquals(new StorageDaoImpl().get(VALID_LOGIN),
+        User expected = Storage.people.get(Storage.people.size() - 1);
+        assertEquals(expected,
                 input);
+    }
+
+    @Test
+    void register_storageIncrease_ok() {
+        User input = new User(VALID_LOGIN,
+                VALID_PASSWORD,
+                VALID_AGE);
+        int oldSize = Storage.people.size();
+        registrationService.register(input);
+        assertEquals(oldSize + 1,
+                Storage.people.size());
     }
 }

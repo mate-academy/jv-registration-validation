@@ -25,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() == null) {
             throw new InvalidInputExcepton(
-                    "Sorry, seems like an internal error has occurred: login is null");
+                    "Sorry, seems like an internal error has occurred: age value is null");
         }
         if (user.getAge() < 18) {
             throw new InvalidInputExcepton(
