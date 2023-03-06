@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -61,9 +62,9 @@ public class RegistrationTests {
     }
 
     @Test
-    @DisplayName("Registration an user with null login")
+    @DisplayName("Registration of user with null login")
     public void register_user_with_null_login_NotOk() {
-        validUser.setLogin(null);
+        invalidUser.setLogin(null);
         assertThrows(RegistrationIllegalArgumentException.class, () -> {
             registrationService.register(invalidUser); }, "Expected "
                 + RegistrationIllegalArgumentException.class.getName()
@@ -74,7 +75,6 @@ public class RegistrationTests {
     @Test
     @DisplayName("Registration an user with empty login")
     public void register_user_with_empty_login_NotOk() {
-        validUser.setLogin(null);
         assertThrows(RegistrationIllegalArgumentException.class, () -> {
             registrationService.register(invalidUser); }, "Expected "
                 + RegistrationIllegalArgumentException.class.getName()
@@ -122,6 +122,16 @@ public class RegistrationTests {
                 + RegistrationIllegalArgumentException.class.getName()
                 + " to be thrown for user with nonacceptable length of password, but it wasn't");
         System.out.println("Test register_user_with_nonacceptable_password_NotOk passed");
+    }
+
+    @Test
+    @DisplayName("Registration an new user with valid parameters")
+    public void register_valid_user_Ok() {
+        Storage.people.clear();
+        storageDao.add(validUser);
+        assertEquals(validUser, storageDao.get(validUser.getLogin()),
+                "Testing user present in Storage");
+        System.out.println("Test register_valid_user_Ok passed");
     }
 
     @Test

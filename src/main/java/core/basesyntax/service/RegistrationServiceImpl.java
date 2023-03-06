@@ -16,15 +16,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationIllegalArgumentException("User object is null");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new RegistrationIllegalArgumentException("Login password is an empty");
+            throw new RegistrationIllegalArgumentException("Login password is empty");
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationIllegalArgumentException(
-                    "Inputted password is shorter than is permitted. Need at least 6 symbols");
+                    "Inputted password is shorter than is permitted. Need at least "
+                            + MIN_PASSWORD_LENGTH + " symbols");
         }
         if (user.getAge() == null || user.getAge() < ACCEPTABLE_AGE) {
             throw new RegistrationIllegalArgumentException(
-                    "Registration permitted only for User with age 18 and more ");
+                    "Registration permitted only for User with age "
+                            + ACCEPTABLE_AGE + " and more ");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationIllegalArgumentException(
