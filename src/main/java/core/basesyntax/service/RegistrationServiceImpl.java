@@ -42,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (password.length() > MAX_PASSWORD_LENGTH) {
             throw new RegistrationValidationException(
-                    "Password can't be more " + MIN_PASSWORD_LENGTH + " characters");
+                    "Password can't be more " + MAX_PASSWORD_LENGTH + " characters");
         }
     }
 

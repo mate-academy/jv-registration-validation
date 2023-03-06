@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.RegistrationValidationException;
@@ -111,7 +112,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidMaxAge_notOK() {
+    void register_invalidMaxAge_notOk() {
         user.setAge(91);
         assertThrows(RegistrationValidationException.class,
                 () -> registrationService.register(user),
@@ -120,8 +121,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_validAge_Ok() {
+        user.setAge(25);
+        assertEquals(user, registrationService.register(user));
+        assertNotNull(user.getId());
+    }
+
+    @Test
+    void register_validPassword_Ok() {
+        user.setPassword("abcdefghi");
+        assertEquals(user, registrationService.register(user));
+        assertNotNull(user.getId());
+    }
+
+    @Test
     void register_validUser_Ok() {
         assertEquals(user, registrationService.register(user),
                 "User must be registered");
+        assertNotNull(user.getId());
     }
 }
