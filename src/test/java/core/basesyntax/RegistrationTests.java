@@ -32,7 +32,7 @@ public class RegistrationTests {
     private static User invalidUser = new User();
 
     @BeforeAll
-    static void setUp() {
+    private static final static void setUp() {
         System.out.println(ANSI_YELLOW
                 + "----------------------  Tests started  ----------------------" + ANSI_RESET);
         storageDao = new StorageDaoImpl();
@@ -45,7 +45,7 @@ public class RegistrationTests {
     }
 
     @BeforeEach
-    void initialUsers() {
+    private void initialUsers() {
         invalidUser.setAge(NON_ACCEPTABLE_AGE);
         invalidUser.setLogin(EMPTY_LOGIN);
         invalidUser.setPassword(INCORRECT_PASSWORD);
@@ -147,7 +147,7 @@ public class RegistrationTests {
     }
 
     @AfterAll
-    static void doneTests() {
+    public static void doneTests() {
         System.out.println(ANSI_CYAN
                 + "----------------------  Tests are finished  ----------------------"
                 + ANSI_RESET);
