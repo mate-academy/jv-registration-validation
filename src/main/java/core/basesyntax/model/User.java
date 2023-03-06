@@ -41,14 +41,14 @@ public class User {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        User user = (User) o;
+        User user = (User) object;
         return Objects.equals(login, user.login)
                 && Objects.equals(password, user.password)
                 && Objects.equals(age, user.age);
