@@ -63,6 +63,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age > MAX_AGE) {
             throw new RegistrationFailedException("Your age must lower than " + MAX_AGE);
         }
-
     }
 }
