@@ -27,10 +27,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationFailedException("You wrote an empty login!");
         }
         if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationFailedException("Your login must be at least " + MIN_LOGIN_LENGTH + " characters!");
+            throw new RegistrationFailedException("Your login must be at least "
+                    + MIN_LOGIN_LENGTH + " characters!");
         }
         if (login.length() > MAX_LOGIN_LENGTH) {
-            throw new RegistrationFailedException("Your login must be lower than " + MAX_LOGIN_LENGTH + " characters!");
+            throw new RegistrationFailedException("Your login must be lower than "
+                    + MAX_LOGIN_LENGTH + " characters!");
         }
         if (storageDao.get(login) != null) {
             throw new RegistrationFailedException("Your login already exist!");
@@ -42,10 +44,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationFailedException("You wrote an empty password!");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationFailedException("Your password must be at least " + MIN_PASSWORD_LENGTH + " characters!");
+            throw new RegistrationFailedException("Your password must be at least "
+                    + MIN_PASSWORD_LENGTH + " characters!");
         }
         if (password.length() > MAX_PASSWORD_LENGTH) {
-            throw new RegistrationFailedException("Your password must be lower than " + MAX_PASSWORD_LENGTH + " characters!");
+            throw new RegistrationFailedException("Your password must be lower than "
+                    + MAX_PASSWORD_LENGTH + " characters!");
         }
     }
 
