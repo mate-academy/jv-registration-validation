@@ -6,6 +6,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int minimumAge = 18;
+    private static final int minimumPasswordLength = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -22,10 +24,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() == 0) {
             throw new NotValidUserException("User's login must be longer than 0");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < minimumAge) {
             throw new NotValidUserException("User must be 18 years old or older");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < minimumPasswordLength) {
             throw new NotValidUserException("Password's length must be longer than 6");
         }
         for (User user1: Storage.people) {
