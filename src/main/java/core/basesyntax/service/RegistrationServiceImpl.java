@@ -29,7 +29,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new RegistrationException("Password length less than " + MIN_LENGTH_PASSWORD);
         }
-        // if retrying user registration (login already exists) - return null
-        return storageDao.get(user.getLogin()) == null ? storageDao.add(user) : null;
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("Retrying user registration (login ["
+                    + user.getLogin() + "] already exists)");
+        }
+        return storageDao.add(user);
     }
 }
