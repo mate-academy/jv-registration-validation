@@ -23,6 +23,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputExcepton(
                     "Sorry, seems like an internal error has occurred: password is null");
         }
+        if (user.getAge() == null) {
+            throw new InvalidInputExcepton(
+                    "Sorry, seems like an internal error has occurred: login is null");
+        }
         if (user.getAge() < 18) {
             throw new InvalidInputExcepton(
                     "Minors are only allowed under parents' supervision");

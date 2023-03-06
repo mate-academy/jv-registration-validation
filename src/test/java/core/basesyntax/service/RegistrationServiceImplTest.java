@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "jessy";
-    private static final String VALID_PASSWORD = "0123467";
-    private static final String INVALID_PASSWORD = "012346";
+    private static final String VALID_PASSWORD = "012345";
+    private static final String INVALID_PASSWORD = "01234";
     private static final int VALID_AGE = 18;
     private static final int INVALID_AGE = 17;
+    private final RegistrationService registrationService =
+            new RegistrationServiceImpl();
 
     @BeforeEach
     void emptyStorage() {
@@ -22,9 +24,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullInput_notOk() {
-        RegistrationService registrationService =
-                new RegistrationServiceImpl();
+    void register_nullInput_notOk() {
         User input = null;
         assertThrows(InvalidInputExcepton.class, () -> {
             registrationService.register(input);
@@ -32,10 +32,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullLogin_notOk() {
-        RegistrationService registrationService =
-                new RegistrationServiceImpl();
-        User input = userConstructor(null,
+    void register_nullLogin_notOk() {
+        User input = new User(null,
                 VALID_PASSWORD,
                 VALID_AGE);
         assertThrows(InvalidInputExcepton.class, () -> {
@@ -44,10 +42,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_notOk() {
-        RegistrationService registrationService =
-                new RegistrationServiceImpl();
-        User input = userConstructor(VALID_LOGIN,
+    void register_nullPassword_notOk() {
+        User input = new User(VALID_LOGIN,
                 null,
                 VALID_AGE);
         assertThrows(InvalidInputExcepton.class, () -> {
@@ -56,10 +52,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAlreadyExists_notOk() {
-        RegistrationService registrationService =
-                new RegistrationServiceImpl();
-        User input = userConstructor(VALID_LOGIN,
+    void register_nullAge_notOk() {
+        User input = new User(VALID_LOGIN,
+                VALID_PASSWORD,
+                null);
+        assertThrows(InvalidInputExcepton.class, () -> {
+            registrationService.register(input);
+        });
+    }
+
+    @Test
+    void register_userAlreadyExists_notOk() {
+        User input = new User(VALID_LOGIN,
                 VALID_PASSWORD,
                 VALID_AGE);
         registrationService.register(input);
@@ -69,10 +73,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userTooYoung_notOk() {
-        RegistrationService registrationService =
-                new RegistrationServiceImpl();
-        User input = userConstructor(VALID_LOGIN,
+    void register_userTooYoung_notOk() {
+        User input = new User(VALID_LOGIN,
                 VALID_PASSWORD,
                 INVALID_AGE);
         assertThrows(InvalidInputExcepton.class, () -> {
@@ -81,12 +83,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidPassword_notOk() {
-        RegistrationService registrationService =
-                new RegistrationServiceImpl();
-        User input = userConstructor(VALID_LOGIN,
+    void register_invalidPassword_notOk() {
+        User input = new User(VALID_LOGIN,
                 INVALID_PASSWORD,
-                INVALID_AGE);
+                VALID_AGE);
         assertThrows(InvalidInputExcepton.class, () -> {
             registrationService.register(input);
         });
@@ -94,23 +94,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ok() {
-        RegistrationService registrationService =
-                new RegistrationServiceImpl();
-        User input = userConstructor(VALID_LOGIN,
+        User input = new User(VALID_LOGIN,
                 VALID_PASSWORD,
                 VALID_AGE);
         registrationService.register(input);
         assertEquals(new StorageDaoImpl().get(VALID_LOGIN),
                 input);
-    }
-
-    private User userConstructor(String login,
-                                 String password,
-                                 int age) {
-        User user = new User();
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
-        return user;
     }
 }
