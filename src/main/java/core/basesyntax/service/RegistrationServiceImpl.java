@@ -6,7 +6,6 @@ import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MAX_AGE = 100;
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH_OF_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -29,16 +28,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Age can't be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new InvalidDataException("User can't be younger than 18");
-        }
-        if (user.getAge() > MAX_AGE) {
-            throw new InvalidDataException("User can't be older than 100");
+            throw new InvalidDataException("User can't be younger than " + MIN_AGE);
         }
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password can't be null");
         }
         if (user.getPassword().length() < MIN_LENGTH_OF_PASSWORD) {
-            throw new InvalidDataException("You can't have password shorter than 6");
+            throw new InvalidDataException("You can't have password shorter than "
+                    + MIN_LENGTH_OF_PASSWORD);
         }
         if (user.getPassword().isEmpty()) {
             throw new InvalidDataException("Password can't be empty");

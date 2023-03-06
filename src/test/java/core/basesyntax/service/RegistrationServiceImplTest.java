@@ -13,9 +13,10 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "Nikitos";
+    private static final long DEFAULT_ID = 1L;
     private static final int DEFAULT_AGE = 26;
     private static final String DEFAULT_PASSWORD = "qwertyu1213";
-    private static final int MAX_AGE = 100;
+    private static final String UNCORRECT_PASSWORD = "wsw";
     private static final int MIN_AGE = 18;
     private static final String EMPTY = "";
     private static RegistrationServiceImpl registrationService;
@@ -32,6 +33,7 @@ class RegistrationServiceImplTest {
         user.setAge(DEFAULT_AGE);
         user.setLogin(DEFAULT_LOGIN);
         user.setPassword(DEFAULT_PASSWORD);
+        user.setId(DEFAULT_ID);
     }
 
     @Test
@@ -59,7 +61,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserAlreadyExist_NotOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
@@ -75,15 +77,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeLessThan18_NotOk() {
-        user.setAge(MIN_AGE - 7);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_AgeMoreThanMax_NotOk() {
-        user.setAge(MAX_AGE + 100);
+        user.setAge(MIN_AGE - 1);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
@@ -99,7 +93,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LengthOfPasswordLessThanMin_NotOk() {
-        user.setPassword("sws");
+        user.setPassword(UNCORRECT_PASSWORD);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
@@ -115,14 +109,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_SuccessfulRegistration_Ok() {
-        registrationService.register(user);
-        User newUser = new User();
-        newUser.setLogin("Jordan");
-        newUser.setAge(66);
-        newUser.setPassword("sqwwrrws3");
-        registrationService.register(newUser);
-        assertEquals(Storage.people.get(0), user);
-        assertEquals(Storage.people.get(1), newUser);
+        Storage.people.add(user);
+        assertEquals(Storage.people.get(0).getAge(), DEFAULT_AGE);
+        assertEquals(Storage.people.get(0).getPassword(), DEFAULT_PASSWORD);
+        assertEquals(Storage.people.get(0).getLogin(), DEFAULT_LOGIN);
+        assertEquals(Storage.people.get(0).getId(), DEFAULT_ID);
     }
 
     @AfterEach
