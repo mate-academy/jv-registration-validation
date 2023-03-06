@@ -3,6 +3,7 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationIllegalArgumentException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -13,6 +14,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationTests {
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_RESET = "\u001B[0m";
     private static final long ID1 = 1L;
     private static final long ID2 = 2L;
     private static final int NON_ACCEPTABLE_AGE = 9;
@@ -22,13 +26,15 @@ public class RegistrationTests {
     private static final String INCORRECT_PASSWORD = "34df";
     private static final String CORRECT_PASSWORD = "GloryOfUkraine";
     private static RegistrationServiceImpl registrationService;
+    private static StorageDaoImpl storageDao;
     private static User validUser = new User();
     private static User invalidUser = new User();
 
     @BeforeAll
     static void setUp() {
-        System.out.println("----------------------  Tests begin  ----------------------");
-        StorageDaoImpl storageDao = new StorageDaoImpl();
+        System.out.println(ANSI_YELLOW
+                + "----------------------  Tests started  ----------------------" + ANSI_RESET);
+        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
         validUser.setId(ID1);
         validUser.setAge(ACCEPTABLE_AGE);
@@ -121,7 +127,8 @@ public class RegistrationTests {
     @Test
     @DisplayName("Repeatedly registration an user that was registered before")
     public void register_existing_user_again_NotOk() {
-        registrationService.register(validUser);
+        Storage.people.clear();
+        storageDao.add(validUser);
         assertThrows(RegistrationIllegalArgumentException.class, () -> {
             registrationService.register(validUser); }, "Expected "
                 + RegistrationIllegalArgumentException.class.getName()
@@ -131,6 +138,8 @@ public class RegistrationTests {
 
     @AfterAll
     static void doneTests() {
-        System.out.println("----------------------  Tests are finished  ----------------------");
+        System.out.println(ANSI_CYAN
+                + "----------------------  Tests are finished  ----------------------"
+                + ANSI_RESET);
     }
 }
