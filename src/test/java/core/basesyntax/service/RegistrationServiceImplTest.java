@@ -12,8 +12,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final Integer DEFAULT_AGE = 20;
+    private static final Integer MINIMAL_AGE = 18;
+    private static final Integer INVALID_AGE = 17;
+    private static final Integer NEGATIVE_AGE = -1;
+    private static final Integer BIG_AGE = 101;
     private static final String DEFAULT_LOGIN = "login";
     private static final String DEFAULT_PASSWORD = "12345678";
+    private static final String SHORT_PASSWORD = "12345";
     private static RegistrationServiceImpl registrationService;
     private static User user;
 
@@ -64,7 +69,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOk() {
-        user.setAge(-1);
+        user.setAge(NEGATIVE_AGE);
         assertThrows(IncorrectUserDataException.class,
                 () -> registrationService.register(user),
                 "Registering user with negative age"
@@ -73,7 +78,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_greaterOneHundred_notOk() {
-        user.setAge(101);
+        user.setAge(BIG_AGE);
         assertThrows(IncorrectUserDataException.class,
                 () -> registrationService.register(user),
                 "Registering user with negative age"
@@ -82,7 +87,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessEighteen_notOk() {
-        user.setAge(17);
+        user.setAge(INVALID_AGE);
         assertThrows(IncorrectUserDataException.class,
                 () -> registrationService.register(user),
                 "Registering user with age less than 18"
@@ -91,7 +96,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageGreaterEighteen_ok() {
-        user.setAge(18);
+        user.setAge(MINIMAL_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user),
                 "Registering user with age 18 should add user to Storage.");
@@ -127,7 +132,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLessSix_notOk() {
-        user.setPassword("12345");
+        user.setPassword(SHORT_PASSWORD);
         assertThrows(IncorrectUserDataException.class,
                 () -> registrationService.register(user),
                 "Registering user with password length less than six"
