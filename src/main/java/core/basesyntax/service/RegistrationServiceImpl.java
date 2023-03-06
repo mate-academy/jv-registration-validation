@@ -6,7 +6,6 @@ import core.basesyntax.exception.UserRegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final String EMPTY_LOGIN = "";
     private static final int MINIMAL_AGE = 18;
     private static final int MINIMAL_PASSWORD_LENGTH = 6;
     private static final int MAXIMUM_USER_AGE = 125;
@@ -32,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new UserRegistrationException("User's login is null");
         }
-        if (user.getLogin().equals(EMPTY_LOGIN)) {
+        if (user.getLogin().isEmpty()) {
             throw new UserRegistrationException("User's login is empty");
         }
         if (user.getPassword() == null) {

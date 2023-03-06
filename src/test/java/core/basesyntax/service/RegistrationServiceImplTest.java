@@ -23,7 +23,6 @@ public class RegistrationServiceImplTest {
     private static final int LARGE_AGE = 135;
     private static final String EMPTY_LOGIN = "";
     private static RegistrationService registrationService;
-
     private User user;
 
     @BeforeAll
@@ -41,9 +40,9 @@ public class RegistrationServiceImplTest {
         user = createUser(USER_LOGIN, USER_PASSWORD, USER_AGE);
         user.setId(USER_ID);
 
-        User result = registrationService.register(user);
+        User actualUser = registrationService.register(user);
 
-        Assertions.assertEquals(user, result);
+        Assertions.assertEquals(user, actualUser);
     }
 
     @Test
