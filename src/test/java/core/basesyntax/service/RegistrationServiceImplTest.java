@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -17,15 +16,8 @@ class RegistrationServiceImplTest {
     private static final String NOT_VALID_NAME = "";
     private static final String VALID_PASSWORD = "654321";
     private static final String NOT_VALID_PASSWORD = "111";
-
     private RegistrationService registrationService = new RegistrationServiceImpl();
     private User user = new User();
-
-    @BeforeEach
-    void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        user = new User();
-    }
 
     @Test
     void register_defaultUser_NotOk() {
