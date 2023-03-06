@@ -39,7 +39,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_notOk() {
+    void register_nullUser_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(null);
         });
@@ -87,6 +87,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_ageNull_notOk() {
+        defaultUser.setAge(null);
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(defaultUser);
+        });
+    }
+
+    @Test
     void register_ageMoreThan130_notOk() {
         defaultUser.setAge(131);
         assertThrows(InvalidDataException.class, () -> {
@@ -113,8 +121,15 @@ class RegistrationServiceImplTest {
     @Test
     void register_user_ok() {
         registrationService.register(defaultUser);
-        assertEquals(1,defaultUser.getId());
+        assertEquals(2,defaultUser.getId());
         assertEquals(DEFAULT_LOGIN,defaultUser.getLogin());
         assertEquals(DEFAULT_PASSWORD,defaultUser.getPassword());
+    }
+
+    @Test
+    void register_storageSizeIncreased_ok() {
+        int startSize = Storage.people.size();
+        registrationService.register(defaultUser);
+        assertEquals(startSize + 1,Storage.people.size());
     }
 }

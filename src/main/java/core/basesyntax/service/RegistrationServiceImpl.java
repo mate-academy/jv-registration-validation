@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkUserAge(User user) {
-        if ((user.getAge() < MIN_AGE) || (user.getAge() > MAX_AGE)) {
+        if ((user.getAge() == null) || (user.getAge() < MIN_AGE) || (user.getAge() > MAX_AGE)) {
             throw new InvalidDataException("Invalid age of user");
         }
     }
@@ -40,11 +40,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkLoginExistance(User user) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new InvalidDataException("Invalid login");
+        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("User exists");
-        }
-        if (user.getLogin() == null || user.getLogin().equals("")) {
-            throw new InvalidDataException("Invalid login");
         }
     }
 
