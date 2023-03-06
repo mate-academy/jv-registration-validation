@@ -20,7 +20,7 @@ public class RegistrationServiceImplTest {
     private static final int NEW_USER_AGE = 32;
     private static final int INVALID_AGE = 17;
     private static final String INVALID_PASSWORD = "000";
-    private static final int LARGE_AGE = 135;
+    private static final int INVALID_OLDER_AGE = 135;
     private static final String EMPTY_LOGIN = "";
     private static RegistrationService registrationService;
     private User user;
@@ -38,10 +38,7 @@ public class RegistrationServiceImplTest {
     @Test
     void registration_user_Ok() {
         user = createUser(USER_LOGIN, USER_PASSWORD, USER_AGE);
-        user.setId(USER_ID);
-
         User actualUser = registrationService.register(user);
-
         Assertions.assertEquals(user, actualUser);
     }
 
@@ -56,7 +53,6 @@ public class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user = createUser(null, USER_PASSWORD, USER_AGE);
-
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(user),
                 "UserRegistrationException expected for user.login = null");
@@ -66,7 +62,6 @@ public class RegistrationServiceImplTest {
     @Test
     void register_emptyLogin_notOk() {
         user = createUser(EMPTY_LOGIN, USER_PASSWORD, USER_AGE);
-
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(user),
                 "UserRegistrationException expected for empty user.login");
@@ -76,7 +71,6 @@ public class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         user = createUser(USER_LOGIN, null, USER_AGE);
-
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(user),
                 "UserRegistrationException expected for user.password = null");
@@ -86,7 +80,6 @@ public class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         user = createUser(USER_LOGIN, USER_PASSWORD, null);
-
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(user),
                 "UserRegistrationException expected for user.age = null");
@@ -95,8 +88,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_largeAge_notOk() {
-        user = createUser(USER_LOGIN, USER_PASSWORD, LARGE_AGE);
-
+        user = createUser(USER_LOGIN, USER_PASSWORD, INVALID_OLDER_AGE);
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(user),
                 "UserRegistrationException expected for large user.age");
@@ -106,9 +98,8 @@ public class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyExist_notOk() {
         user = createUser(USER_LOGIN, USER_PASSWORD, USER_AGE);
-        registrationService.register(user);
+        Storage.people.add(user);
         User newUser = createUser(USER_LOGIN, NEW_USER_PASSWORD, NEW_USER_AGE);
-
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(newUser),
                 "UserRegistrationException expected for already stored user");
@@ -118,7 +109,6 @@ public class RegistrationServiceImplTest {
     @Test
     void register_invalidAge_notOK() {
         user = createUser(USER_LOGIN, USER_PASSWORD, INVALID_AGE);
-
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(user),
                 "UserRegistrationException expected for invalid user's age");
@@ -128,7 +118,6 @@ public class RegistrationServiceImplTest {
     @Test
     void register_invalidPassword_notOk() {
         user = createUser(USER_LOGIN, INVALID_PASSWORD, USER_AGE);
-
         var exception = assertThrows(UserRegistrationException.class, () ->
                         registrationService.register(user),
                 "UserRegistrationException expected for invalid user's password");
