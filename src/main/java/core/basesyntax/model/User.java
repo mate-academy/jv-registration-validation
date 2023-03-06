@@ -3,10 +3,19 @@ package core.basesyntax.model;
 import java.util.Objects;
 
 public class User {
+    public static final int MIN_AGE = 18;
+    public static final int MIN_PASSWORD_LENGTH = 6;
+
     private Long id;
     private String login;
     private String password;
     private Integer age;
+
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
 
     public Long getId() {
         return id;
