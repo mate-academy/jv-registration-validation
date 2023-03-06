@@ -1,11 +1,11 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.model.User;
 import core.basesyntax.dao.StorageDao;
-import org.junit.jupiter.api.Test;
+import core.basesyntax.model.User;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int MIN_AGE_LIMIT = 18;
