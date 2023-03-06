@@ -11,13 +11,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int PASSWORD_MIN_LENGTH = 6;
     private static final int AGE_MIN = 18;
     private static final int AGE_MAX = 140;
+    private static final String LOGIN_MATCH_REGEX = "\\w++";
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         checkForNulls(user);
-        checkLogin(user.getLogin().toLowerCase());
+        checkLogin(user.getLogin());
         checkPassword(user.getPassword());
         checkAge(user.getAge());
         storageDao.add(user);
@@ -33,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkLogin(String login) {
         if (login.length() < LOGIN_MIN_LENGTH || login.length() > INPUT_MAX_LENGTH
-                || !login.matches("\\w++")) {
+                || !login.matches(LOGIN_MATCH_REGEX)) {
             throw new InvalidUserInputException("Invalid login");
         }
         if (storageDao.get(login) != null) {

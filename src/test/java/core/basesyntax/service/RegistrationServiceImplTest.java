@@ -146,6 +146,8 @@ class RegistrationServiceImplTest {
         user.setAge(55);
         assertEquals(3, (long) registrationService.register(user).getId(),
                 USER_RETURN_EXCEPTION_MESSAGE);
+        assertEquals(3, Storage.people.size(),
+                "storage size grows incorrectly");
     }
 
     @Test
