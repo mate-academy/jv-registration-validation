@@ -51,10 +51,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationValidationException("Age field is empty");
         }
         if (age < MIN_AGE) {
-            throw new RegistrationValidationException("Your age is less than allowable");
+            throw new RegistrationValidationException(
+                    "Your age is less than allowable" + age);
         }
         if (age > MAX_AGE) {
-            throw new RegistrationValidationException("Your age is over than maximum allowable");
+            throw new RegistrationValidationException(
+                    "Your age is over than maximum allowable" + age);
         }
     }
 }
