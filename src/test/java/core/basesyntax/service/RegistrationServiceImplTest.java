@@ -21,7 +21,7 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD = "o7 07";
     private static final String EMPTY_LINE = "";
     private static RegistrationService service;
-    private static User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -31,9 +31,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(INVALID_AGE);
-        user.setLogin(EMPTY_LINE);
-        user.setPassword(INVALID_PASSWORD);
+        user.setAge(VALID_AGE);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
     }
 
     @AfterEach
@@ -43,8 +43,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        user = null;
-        assertThrows(ValidationException.class, () -> service.register(user),
+        assertThrows(ValidationException.class, () -> service.register(null),
                 "User can't be null.");
     }
 
@@ -71,7 +70,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsOccupied_notOk() {
-        user.setLogin(VALID_LOGIN);
         Storage.people.add(user);
         User testUser = new User();
         testUser.setLogin(user.getLogin());
@@ -88,12 +86,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_emptyLogin_notOk() {
+        user.setLogin(EMPTY_LINE);
         assertThrows(ValidationException.class, () -> service.register(user),
                 "Login can't be empty.");
     }
 
     @Test
     void register_userAgeUnder18_notOk() {
+        user.setAge(INVALID_AGE);
         assertThrows(ValidationException.class, () -> service.register(user),
                 "Age of user is invalid.");
     }
@@ -114,15 +114,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLengthLess6_notOk() {
+        user.setPassword(INVALID_PASSWORD);
         assertThrows(ValidationException.class, () -> service.register(user),
                 "Password must contains at least 6 characters.");
     }
 
     @Test
     void register_userWithValidData_Ok() {
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
         assertDoesNotThrow(() -> service.register(user),
                 "User is added to storage.");
     }
