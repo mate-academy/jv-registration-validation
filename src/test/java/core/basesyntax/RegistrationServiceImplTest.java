@@ -103,7 +103,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_correctData_Ok() {
+    void register_correctData_ok() {
         registrationService.register(testUser);
         assertEquals(DEFAULT_LOGIN, testUser.getLogin());
         assertEquals(DEFAULT_PASSWORD, testUser.getPassword());

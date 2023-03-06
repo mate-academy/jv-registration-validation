@@ -20,25 +20,27 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    void nullCheck(User user) {
+    private void nullCheck(User user) {
         if (user == null) {
             throw new RegistrationServiceException("Register field is null!");
         }
     }
 
-    void minAgeCheck(User user) {
+    private void minAgeCheck(User user) {
         if (user.getAge() == null || user.getAge() < MINIMAL_AGE) {
-            throw new RegistrationServiceException("Age must be more than 18!");
+            throw new RegistrationServiceException("Age " + user.getAge() + " is not correct. "
+                    + "Age must be 18 or more.");
         }
     }
 
-    void passwordLengthCheck(User user) {
+    private void passwordLengthCheck(User user) {
         if (user.getPassword() == null || user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
-            throw new RegistrationServiceException("Password length must be more than 6 symbols!");
+            throw new RegistrationServiceException("Password " + user.getPassword() + " is not correct. "
+                    + "Password must be at least 6 symbols.");
         }
     }
 
-    void loginCheck(User user) {
+    private void loginCheck(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationServiceException("Login field is empty!");
         }
