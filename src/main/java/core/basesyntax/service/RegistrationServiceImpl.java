@@ -6,7 +6,7 @@ import core.basesyntax.exception.IncorrectUserDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int PASSWORD_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 140;
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -28,8 +28,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new IncorrectUserDataException("User password can't be null");
         }
-        if (user.getPassword().length() < PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new IncorrectUserDataException("User password must be has at least 6 symbols");
+        }
+        if (user.getAge() == null) {
+            throw new IncorrectUserDataException("User age can't be null");
         }
         if (user.getAge() < MIN_AGE) {
             throw new IncorrectUserDataException("User age must be at least 18");
