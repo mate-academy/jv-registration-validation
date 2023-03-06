@@ -40,10 +40,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     void loginCheck(User user) {
         if (user.getLogin() == null) {
-           throw new RegistrationServiceException("Login field is empty!");
+            throw new RegistrationServiceException("Login field is empty!");
         }
         if (storageDao.get(user.getLogin()) != null) {
-           throw new RegistrationServiceException("User with login " + user.getLogin()
+            throw new RegistrationServiceException("User with login " + user.getLogin()
                     + " already exist");
         }
     }
