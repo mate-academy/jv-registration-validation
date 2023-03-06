@@ -48,8 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null || user.getLogin().equals("")) {
             throw new RegistrationException("Can't find login");
         }
-        if (storageDao.get(user.getLogin()) != null
-                && user.getLogin().equals(storageDao.get(user.getLogin()).getLogin())) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This user already exist");
         }
     }

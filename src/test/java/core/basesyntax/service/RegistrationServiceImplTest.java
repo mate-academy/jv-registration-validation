@@ -3,7 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ class RegistrationServiceImplTest {
     private static final int SET_UP_AGE = 55;
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private User user;
-    private StorageDaoImpl storageDao;
 
     @BeforeEach
     void setUp() {
@@ -23,16 +22,15 @@ class RegistrationServiceImplTest {
         user.setAge(SET_UP_AGE);
         user.setPassword(SET_UP_PASSWORD);
         user.setId(null);
-        storageDao = new StorageDaoImpl();
     }
 
     @Test
-    void register_userNull_notOk() {
+    void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_userId_notOk() {
+    void register_negativeUserId_notOk() {
         user.setId(-1L);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
@@ -89,7 +87,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addSameUser_notOk() {
-        storageDao.add(user);
+        Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -97,7 +95,7 @@ class RegistrationServiceImplTest {
     void register_addSameLogin_notOk() {
         user.setPassword("1236547532159");
         user.setAge(26);
-        storageDao.add(user);
+        Storage.people.add(user);
         user.setId(null);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
@@ -106,7 +104,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_Ok() {
         registrationService.register(user);
-        final User firstActualValue = storageDao.get(user.getLogin());
-        assertEquals(storageDao.get("Travis"), firstActualValue);
+        final User firstActualValue = Storage.people.get(Storage.people.indexOf(user));
+        assertEquals("Travis", firstActualValue.getLogin());
     }
 }
