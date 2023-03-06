@@ -15,18 +15,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new InvalidRegistrationDataException("Null user value");
-        }
+        checkUser(user);
         if (storageDao.get(user.getLogin()) == null) {
-            isValidData(user);
             return storageDao.add(user);
         }
         throw new InvalidRegistrationDataException(
                 "Can't register a user with existing login " + user.getLogin());
     }
 
-    private void isValidData(User user) {
+    private void checkUser(User user) {
+        if (user == null) {
+            throw new InvalidRegistrationDataException("Null user value");
+        }
         String login = user.getLogin();
         String password = user.getPassword();
         Integer age = user.getAge();
@@ -38,7 +38,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidRegistrationDataException("Login can't be empty");
         }
         if (login.length() > LOGIN_UPPER_BOUND) {
-            throw new InvalidRegistrationDataException("Login can't be more than 10 symbols");
+            throw new InvalidRegistrationDataException(
+                    "Login can't be more than " + LOGIN_UPPER_BOUND + " symbols");
         }
         if (login.contains(" ")) {
             throw new InvalidRegistrationDataException("Login can't have spaces");
@@ -51,7 +52,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password.length() < PASSWORD_LOWER_BOUND
                 || password.length() > PASSWORD_UPPER_BOUND) {
             throw new InvalidRegistrationDataException(
-                    "Password should be more than 5 and less than 17 symbols");
+                    "Password should be in range of "
+                    + PASSWORD_LOWER_BOUND + " - " + PASSWORD_UPPER_BOUND + " symbols");
         }
     }
 }
