@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
 
-    public User register(User user) throws InvalidDataException {
+    public User register(User user){
         if (user == null) {
             throw new InvalidDataException("User can't be null");
         }
