@@ -8,7 +8,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
-
 class RegistrationServiceImplTest {
     private static final int MIN_AGE_LIMIT = 18;
     private static final int LESS_AGE_LIMIT = 15;
