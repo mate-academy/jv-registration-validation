@@ -40,6 +40,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_loginLengthZero_NotOk() {
+        defaultUser.setLogin("");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(defaultUser);
+        });
+    }
+
+    @Test
     void register_correctUser_Ok() {
         registrationService.register(defaultUser);
         assertEquals(defaultUser, Storage.people.get(0));

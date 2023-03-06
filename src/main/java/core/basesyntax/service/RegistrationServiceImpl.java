@@ -19,6 +19,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new NotValidUserException("User's password can't be null");
         }
+        if (user.getLogin().length() == 0) {
+            throw new NotValidUserException("User's login must be longer than 0");
+        }
         if (user.getAge() < 18) {
             throw new NotValidUserException("User must be 18 years old or older");
         }
