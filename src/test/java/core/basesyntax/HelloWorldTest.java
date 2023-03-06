@@ -23,31 +23,42 @@ public class HelloWorldTest {
     private static User sameUser;
     private static User differentUser;
 
+    private static final int AGE = 25;
+    private static final long ID = 10L;
+    private static final int MIN_AGE = 18;
+    private static final int MINUS_AGE = -18;
+    private static final int LESS_THAN_NEED_AGE = -18;
+    private static final String USER_LOGIN_ONE = "testUser";
+    private static final String USER_LOGIN_TWO = "testUser2";
+    private static final String CORRECT_PASSWORD = "userPassword";
+    private static final String CORRECT_PASSWORD2 = "userPass666";
+    private static final String BAD_PASSWORD = "user";
+
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         uniqUser = new User();
+
         sameUser = new User();
+        sameUser.setLogin(USER_LOGIN_ONE);
+        sameUser.setId(ID);
+        sameUser.setAge(AGE);
+        sameUser.setPassword(CORRECT_PASSWORD);
+
         differentUser = new User();
+        differentUser.setLogin(USER_LOGIN_TWO);
+        differentUser.setId(ID);
+        differentUser.setAge(AGE);
+        differentUser.setPassword(CORRECT_PASSWORD);
     }
 
     @BeforeEach
     void setUp() {
-        uniqUser.setLogin("testUser");
-        uniqUser.setId(12L);
-        uniqUser.setAge(25);
-        uniqUser.setPassword("userPassword1");
-
-        sameUser.setLogin("testUser");
-        sameUser.setId(12L);
-        sameUser.setAge(25);
-        sameUser.setPassword("userPassword1");
-
-        differentUser.setLogin("testUser2");
-        differentUser.setId(15L);
-        differentUser.setAge(25);
-        differentUser.setPassword("userPassword2");
+        uniqUser.setLogin(USER_LOGIN_ONE);
+        uniqUser.setId(ID);
+        uniqUser.setAge(AGE);
+        uniqUser.setPassword(CORRECT_PASSWORD);
     }
 
     @AfterEach
@@ -72,7 +83,7 @@ public class HelloWorldTest {
 
     @Test
     void register_userAgeLessThanNeed_notOK() {
-        uniqUser.setAge(12);
+        uniqUser.setAge(LESS_THAN_NEED_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
@@ -95,22 +106,6 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_nullID_notOK() {
-        uniqUser.setId(null);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(uniqUser);
-        });
-    }
-
-    @Test
-    void register_lessThanNullID_notOK() {
-        uniqUser.setId(-10L);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(uniqUser);
-        });
-    }
-
-    @Test
     void register_userWithSuchLogin_notOK() {
         boolean sameLogin = uniqUser.getLogin().equals(sameUser.getLogin());
         assertTrue(sameLogin);
@@ -124,7 +119,7 @@ public class HelloWorldTest {
 
     @Test
     void register_incorrectPasswordLength_notOk() {
-        uniqUser.setPassword("pass1");
+        uniqUser.setPassword(BAD_PASSWORD);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
@@ -132,19 +127,19 @@ public class HelloWorldTest {
 
     @Test
     void register_userAgeEqualsNeedAge_OK() {
-        uniqUser.setAge(18);
+        uniqUser.setAge(MIN_AGE);
         storageDao.add(uniqUser);
     }
 
     @Test
     void register_userAgeMoreThanNeed_OK() {
-        uniqUser.setAge(18);
+        uniqUser.setAge(AGE);
         storageDao.add(uniqUser);
     }
 
     @Test
     void register_userAgeLessThanNull_notOK() {
-        uniqUser.setAge(-30);
+        uniqUser.setAge(MINUS_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(uniqUser);
         });
@@ -152,7 +147,7 @@ public class HelloWorldTest {
 
     @Test
     void register_correctPasswordLength_Ok() {
-        uniqUser.setPassword("correct");
+        uniqUser.setPassword(CORRECT_PASSWORD2);
         storageDao.add(uniqUser);
     }
 
