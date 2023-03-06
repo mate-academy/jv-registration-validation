@@ -22,7 +22,6 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 
-
     @BeforeEach
     void setUp() {
         user = new User();
