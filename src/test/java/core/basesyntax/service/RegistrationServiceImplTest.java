@@ -26,11 +26,9 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String INPUT_EXCEPTION_MESSAGE
-            = "must throw InvalidUserInputException if input is invalid";
-    private static final String USER_RETURN_EXCEPTION_MESSAGE =
-            "Registration should return valid registered user";
-    private static final String DUPLICATED_LOGIN_MESSAGE =
-            "Duplicated login should throw InvalidUserInputException";
+            = "Must throw InvalidUserInputException if: ";
+    private static final String VALID_USER_TEST_MESSAGE =
+            "Registration should return valid registered user for: ";
     private static final String CORRECT_LOGIN = "Ilko";
     private static final String CORRECT_PASSWORD = "12345678";
     private static final Integer CORRECT_AGE = 18;
@@ -55,97 +53,115 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_notOk() {
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(null), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(null),
+                INPUT_EXCEPTION_MESSAGE + "user is null");
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "login is null");
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "password is null");
     }
 
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "age is null");
     }
 
     @Test
     void register_smallAge_notOk() {
         user.setAge(17);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "age is too small, like "
+                        + user.getAge());
     }
 
     @Test
     void register_highAge_notOk() {
         user.setAge(160);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "age is too big, like "
+                        + user.getAge());
     }
 
     @Test
     void register_minusAge_notOk() {
         user.setAge(-50);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "age is negative, like "
+                        + user.getAge());
     }
 
     @Test
     void register_shortLogin_notOk() {
         user.setLogin("o");
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "login is too small, like "
+                        + user.getLogin());
     }
 
     @Test
     void register_longLogin_notOk() {
         user.setLogin("Ilko12345678901234567890");
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "login is too big, like "
+                        + user.getLogin());
     }
 
     @Test
     void register_shortPassword_notOk() {
         user.setPassword("12345");
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "password is too small, like "
+                        + user.getPassword());
     }
 
     @Test
     void register_longPassword_notOk() {
         user.setPassword("1234567890QWERTY_qwerty");
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "password is too big, like "
+                        + user.getPassword());
     }
 
     @Test
     void register_usersInSequence_ok() {
         assertEquals(1, (long) registrationService.register(user).getId(),
-                USER_RETURN_EXCEPTION_MESSAGE);
+                VALID_USER_TEST_MESSAGE + user.toString());
 
         user = new User();
         user.setLogin("GOOD");
         user.setPassword(CORRECT_PASSWORD);
         user.setAge(CORRECT_AGE);
         assertEquals(2, (long) registrationService.register(user).getId(),
-                USER_RETURN_EXCEPTION_MESSAGE);
+                VALID_USER_TEST_MESSAGE + user.toString());
 
         user = new User();
         user.setLogin("User_3");
         user.setPassword("Some_Password");
         user.setAge(55);
         assertEquals(3, (long) registrationService.register(user).getId(),
-                USER_RETURN_EXCEPTION_MESSAGE);
+                VALID_USER_TEST_MESSAGE + user.toString());
         assertEquals(3, Storage.people.size(),
                 "storage size grows incorrectly");
     }
@@ -155,19 +171,23 @@ class RegistrationServiceImplTest {
         StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), DUPLICATED_LOGIN_MESSAGE);
+                () -> registrationService.register(user),
+                "Must throw an exception for a user that exists");
         user = new User();
         user.setLogin(CORRECT_LOGIN.toUpperCase());
         user.setPassword(CORRECT_PASSWORD);
         user.setAge(CORRECT_AGE);
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), DUPLICATED_LOGIN_MESSAGE);
+                () -> registrationService.register(user),
+                "Must throw an exception for a user that exists, case insensitive");
     }
 
     @Test
     void register_illegalCharactersLogin_notOk() {
         user.setLogin("Ilko123#12");
         assertThrows(InvalidUserInputException.class,
-                () -> registrationService.register(user), INPUT_EXCEPTION_MESSAGE);
+                () -> registrationService.register(user),
+                INPUT_EXCEPTION_MESSAGE + "login has invalid symbols like"
+                        + user.getLogin());
     }
 }
