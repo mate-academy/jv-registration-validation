@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -94,18 +95,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validAgeLoginPassword_Ok() {
+        int actual = Storage.people.size();
         registrationService.register(user);
+        assertNotEquals(actual,Storage.people.size());
         assertNotNull(user.getId());
     }
 
     @Test
     void register_tryAddAnotherUserWithSameLogin_NotOk() {
-        user.setLogin("Bob");
-        registrationService.register(user);
+        Storage.people.add(user);
         User userSameLogin = new User();
-        userSameLogin.setLogin("Bob");
+        userSameLogin.setLogin(user.getLogin());
         userSameLogin.setAge(19);
-        userSameLogin.setPassword(VALID_PASSWORD);
+        userSameLogin.setPassword("123123");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(userSameLogin);
         },"InvalidDataException expected, "
