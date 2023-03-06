@@ -6,6 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_LENGTH = 6;
+    public static final int MINIMAL_USER_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -55,7 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age <= 0) {
             throw new RegistrationException("Age should be a positive number.");
         }
-        if (age < 18) {
+        if (age < MINIMAL_USER_AGE) {
             throw new RegistrationException("Registration is forbidden for users below 18 y.o.");
         }
     }
