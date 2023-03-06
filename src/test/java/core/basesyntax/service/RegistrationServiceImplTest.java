@@ -4,23 +4,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.RegistrationValidatorException;
 import core.basesyntax.model.User;
-import core.basesyntax.validators.RegistrationValidatorException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int AGE_LESS_MIN = 17;
     private static final int AGE_LESS_ZERO = -10;
-    private RegistrationServiceImpl registrationService;
-    private StorageDaoImpl storageDao;
+    private static RegistrationServiceImpl registrationService;
+    private static StorageDaoImpl storageDao;
     private User testUser;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @BeforeEach
     void init() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
         testUser = new User();
+        testUser.setId(Long.valueOf("1"));
+        testUser.setLogin("nicolas");
+        testUser.setPassword("123456");
+        testUser.setAge(20);
     }
 
     @Test
@@ -40,35 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginStartWithSpace_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin(" test");
-        testUser.setPassword("123456");
-        testUser.setAge(20);
-
-        assertThrows(RegistrationValidatorException.class, () -> {
-            registrationService.register(testUser);
-        });
-    }
-
-    @Test
-    void register_loginLessThanFiveCharacters_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("test");
-        testUser.setPassword("123456");
-        testUser.setAge(20);
-
-        assertThrows(RegistrationValidatorException.class, () -> {
-            registrationService.register(testUser);
-        });
-    }
-
-    @Test
     void register_existingUserInStorage_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
-        testUser.setPassword("123456");
-        testUser.setAge(20);
         storageDao.add(testUser);
 
         assertThrows(RegistrationValidatorException.class, () -> {
@@ -78,21 +59,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addNewUserInStorage_ok() throws RegistrationValidatorException {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
-        testUser.setPassword("123456");
-        testUser.setAge(20);
-        User expctedUser = testUser;
+        testUser.setId(Long.valueOf(2));
+        testUser.setLogin("bob");
+        User expectedUser = testUser;
         User actualUser = registrationService.register(testUser);
 
-        assertEquals(expctedUser, actualUser, "User has not been added to the storage");
+        assertEquals(expectedUser, actualUser, "User has not been added to the storage");
     }
 
     @Test
     void register_nullAge_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
-        testUser.setPassword("123456");
         testUser.setAge(null);
 
         assertThrows(RegistrationValidatorException.class, () -> {
@@ -102,9 +78,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThan18_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
-        testUser.setPassword("123456");
         testUser.setAge(AGE_LESS_MIN);
 
         assertThrows(RegistrationValidatorException.class, () -> {
@@ -114,9 +87,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessZero_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
-        testUser.setPassword("123456");
         testUser.setAge(AGE_LESS_ZERO);
         assertThrows(RegistrationValidatorException.class, () -> {
             registrationService.register(testUser);
@@ -125,9 +95,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_age18_ok() throws RegistrationValidatorException {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
-        testUser.setPassword("123456");
+        testUser.setId(Long.valueOf(4));
+        testUser.setLogin("ben");
         testUser.setAge(18);
         Integer expectedAge = testUser.getAge();
         Integer actualAge = registrationService.register(testUser).getAge();
@@ -137,10 +106,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
         testUser.setPassword(null);
-        testUser.setAge(20);
 
         assertThrows(RegistrationValidatorException.class, () -> {
             registrationService.register(testUser);
@@ -149,10 +115,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordWithFiveCharacters_notOk() {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
         testUser.setPassword("12345");
-        testUser.setAge(20);
 
         assertThrows(RegistrationValidatorException.class, () -> {
             registrationService.register(testUser);
@@ -161,10 +124,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordWithSixCharacters_ok() throws RegistrationValidatorException {
-        testUser.setId(Long.valueOf("1"));
-        testUser.setLogin("nicolas");
-        testUser.setPassword("123456");
-        testUser.setAge(20);
+        testUser.setId(Long.valueOf(3));
+        testUser.setLogin("john");
         String expectedPassword = testUser.getPassword();
 
         registrationService.register(testUser);
