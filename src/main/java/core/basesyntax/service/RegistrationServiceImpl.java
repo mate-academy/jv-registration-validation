@@ -17,51 +17,72 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        return storageDao.add(user);
+    }
+
+    public void validateUser(User user) {
         if (user == null) {
             throw new InvalidInputException("User can't be null");
         }
-        if (user.getLogin() == null) {
+
+        String login = user.getLogin();
+        String password = user.getPassword();
+
+        if (login == null) {
             throw new InvalidInputException("Login can't be null");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+
+        if (storageDao.get(login) != null) {
             throw new InvalidInputException("A user with this login exists");
         }
-        if (user.getPassword() == null) {
+
+        if (password == null) {
             throw new InvalidInputException("Password can't be null");
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidInputException("Password less than "
                     + MIN_PASSWORD_LENGTH + " symbols");
         }
-        if (user.getLogin().matches(System.lineSeparator())
-                || user.getPassword().matches(System.lineSeparator())) {
+
+        if (login.matches(System.lineSeparator()) || password.matches(System.lineSeparator())) {
             throw new InvalidInputException("Credentials can't contains new line separator");
         }
-        if (!user.getLogin().matches("[a-zA-Z0-9]+")) {
+
+        if (!login.matches("[a-zA-Z0-9]+")) {
             throw new InvalidInputException("Login can't contains special characters: @#$%");
         }
-        if (user.getLogin().length() > MAX_LOGIN_LENGTH) {
+
+        if (login.length() > MAX_LOGIN_LENGTH) {
             throw new InvalidInputException("Login size should be less than " + MAX_LOGIN_LENGTH);
         }
-        if (user.getPassword().length() > MAX_PASSWORD_LENGTH) {
+
+        if (password.length() > MAX_PASSWORD_LENGTH) {
             throw new InvalidInputException("Password size should be less than "
                     + MAX_PASSWORD_LENGTH);
         }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+
+        if (login.length() < MIN_LOGIN_LENGTH) {
             throw new InvalidInputException("Login should be larger than " + MIN_LOGIN_LENGTH);
         }
+
+        int age = user.getAge();
+
         if (user.getAge() < MIN_AGE) {
             throw new InvalidInputException("Age less than " + MIN_AGE);
         }
-        if (user.getAge() >= AGE_GUINNESS_RECORD) {
+
+        if (age >= AGE_GUINNESS_RECORD) {
             throw new InvalidInputException("Age more than " + AGE_GUINNESS_RECORD);
         }
+
         if (user.getId() < MIN_ID) {
             throw new InvalidInputException("User id can't be less than " + MIN_ID);
         }
-        if (user.getPassword().equals(user.getLogin())) {
+
+        if (password.equals(login)) {
             throw new InvalidInputException("The password should be different from the login");
         }
-        return storageDao.add(user);
     }
 }

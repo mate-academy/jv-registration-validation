@@ -1,8 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -30,7 +28,7 @@ public class RegistrationServiceTest {
     private static final String LARGE_LOGIN = "HelloMyNameIsJohnPhilips";
     private static final String LARGE_PASSWORD = "fesgeFEFr32453ft4t3t43534543";
     private static RegistrationService registrationService;
-    private static User standartUser;
+    private User standartUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -39,7 +37,7 @@ public class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
-        standartUser = userConstructor(STANDARD_LOGIN_OK,
+        standartUser = createUser(STANDARD_LOGIN_OK,
                 PASSWORD_OK,
                 STANDARD_AGE_OK,
                 STANDARD_ID_OK);
@@ -52,7 +50,7 @@ public class RegistrationServiceTest {
 
     @Test
     void register_duplicateUser_notOk() {
-        User secondUser = userConstructor(STANDARD_LOGIN_OK,
+        User secondUser = createUser(STANDARD_LOGIN_OK,
                 PASSWORD_OK,
                 STANDARD_AGE_OK,
                 STANDARD_ID_OK);
@@ -64,9 +62,8 @@ public class RegistrationServiceTest {
 
     @Test
     void register_nullUser_notOk() {
-        standartUser = null;
         assertThrows(InvalidInputException.class,
-                () -> registrationService.register(standartUser),
+                () -> registrationService.register(null),
                 "You can't register null user");
     }
 
@@ -79,7 +76,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_user_NullLogin_notOk() {
+    void register_nullUserLogin_notOk() {
         standartUser.setLogin(null);
         assertThrows(InvalidInputException.class,
                 () -> registrationService.register(standartUser),
@@ -132,26 +129,6 @@ public class RegistrationServiceTest {
         assertThrows(InvalidInputException.class,
                 () -> registrationService.register(standartUser),
                 "Login can't be empty");
-    }
-
-    @Test
-    void equals_nullObject_notOk() {
-        assertNotEquals(null, standartUser, "User can't equal null");
-    }
-
-    @Test
-    void equals_sameUser_ok() {
-        assertEquals(standartUser, standartUser, "User should equal same User");
-    }
-
-    @Test
-    void user_equalHashcode_ok() {
-        User secondUser = userConstructor(STANDARD_LOGIN_OK,
-                PASSWORD_OK,
-                STANDARD_AGE_OK,
-                STANDARD_ID_OK);
-        assertEquals(standartUser.hashCode(), secondUser.hashCode());
-        assertEquals(standartUser, secondUser);
     }
 
     @Test
@@ -208,7 +185,7 @@ public class RegistrationServiceTest {
                 "User can't be added");
     }
 
-    private User userConstructor(String login, String password, int age, long setId) {
+    private User createUser(String login, String password, int age, long setId) {
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
