@@ -11,14 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int initialAge = 24;
-    private static final String initialLogin = "IvanIvan";
-    private static final String defaultLogin2 = "Misha Hrynko";
-    private static final String defaultLogin3 = "Bohdan Chupika";
-    private static final String initialPassword = "qwerty1234";
-    private static final String incorrectPassword = "12345";
-    private static final int incorrectAge = 15;
-    private static final int negativeAge = -5;
+    private static final int INITIAL_AGE = 24;
+    private static final String INITIAL_LOGIN = "IvanIvan";
+    private static final String INITIAL_PASSWORD = "qwerty1234";
+    private static final String INCORRECT_PASSWORD = "12345";
+    private static final int INCORRECT_AGE = 15;
+    private static final int NEGATIVE_AGE = -5;
     private static RegistrationService registrationService;
     private User defaultUser = new User();
 
@@ -29,9 +27,9 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        defaultUser.setAge(initialAge);
-        defaultUser.setLogin(initialLogin);
-        defaultUser.setPassword(initialPassword);
+        defaultUser.setAge(INITIAL_AGE);
+        defaultUser.setLogin(INITIAL_LOGIN);
+        defaultUser.setPassword(INITIAL_PASSWORD);
     }
 
     @AfterEach
@@ -40,9 +38,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLengthZero_NotOk() {
+    void register_zeroLoginLength_NotOk() {
         defaultUser.setLogin("");
-        assertThrows(NotValidUserException.class, () -> {
+        assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(defaultUser);
         });
     }
@@ -56,7 +54,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_NullPassword_NotOk() {
         defaultUser.setPassword(null);
-        assertThrows(NotValidUserException.class, () -> {
+        assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(defaultUser);
         });
     }
@@ -64,7 +62,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_NotOk() {
         defaultUser.setLogin(null);
-        assertThrows(NotValidUserException.class, () -> {
+        assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(defaultUser);
         });
     }
@@ -72,23 +70,31 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         defaultUser.setAge(null);
-        assertThrows(NotValidUserException.class, () -> {
+        assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(defaultUser);
         });
     }
 
     @Test
     void register_ageLess18_NotOk() {
-        defaultUser.setAge(incorrectAge);
-        assertThrows(NotValidUserException.class, () -> {
+        defaultUser.setAge(INCORRECT_AGE);
+        assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(defaultUser);
         });
     }
 
     @Test
     void register_incorrectPassword_notOk() {
-        defaultUser.setPassword(incorrectPassword);
-        assertThrows(NotValidUserException.class, () -> {
+        defaultUser.setPassword(INCORRECT_PASSWORD);
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(defaultUser);
+        });
+    }
+
+    @Test
+    void register_negativeAge_NotOk() {
+        defaultUser.setAge(NEGATIVE_AGE);
+        assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(defaultUser);
         });
     }
@@ -96,17 +102,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyExists_notOk() {
         registrationService.register(defaultUser);
-        User user2 = new User();
-        user2.setLogin(defaultLogin2);
-        user2.setAge(initialAge);
-        user2.setPassword(initialPassword);
-        registrationService.register(user2);
-        User user3 = new User();
-        user3.setLogin(defaultLogin3);
-        user3.setAge(initialAge);
-        user3.setPassword(initialPassword);
-        registrationService.register(user3);
-        assertThrows(NotValidUserException.class, () -> {
+        assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(defaultUser);
         });
     }
