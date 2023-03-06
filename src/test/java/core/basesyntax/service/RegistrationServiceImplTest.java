@@ -1,11 +1,16 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidRegistrationDataException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +18,7 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private static final int VALID_AGE = 28;
     private static final String VALID_LOGIN = "userlogincorrect";
     private static final String INVALID_LOGIN = "invalide_login";
@@ -22,15 +28,20 @@ public class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 
     @Test
@@ -87,11 +98,13 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_default_ok() {
-        registrationService.register(user);
-        assertEquals(VALID_LOGIN, user.getLogin());
-        assertEquals(1, user.getId());
-        assertEquals(VALID_PASSWORD, user.getPassword());
-        assertEquals(VALID_AGE, user.getAge());
+        User registerUser = registrationService.register(user);
+        assertNotNull(registerUser);
+        assertEquals(VALID_LOGIN, registerUser.getLogin());
+        assertEquals(1, registerUser.getId());
+        assertEquals(VALID_PASSWORD, registerUser.getPassword());
+        assertEquals(VALID_AGE, registerUser.getAge());
+        assertTrue(Storage.people.contains(registerUser));
     }
 
     @Test
