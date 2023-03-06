@@ -23,8 +23,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidDataException("User can't be null");
         }
-        checkUserInSystem(user);
         checkLogin(user.getLogin());
+        checkUserInSystem(user);
         checkAge(user.getAge());
         checkPassword(user.getPassword());
         return storageDao.add(user);

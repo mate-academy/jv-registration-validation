@@ -1,12 +1,13 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,12 +15,17 @@ class RegistrationServiceImplTest {
     public static final int ADULT_AGE = 18;
     public static final String VALID_PASSWORD = "123456";
     public static final String VALID_LOGIN = "CorrectLogin";
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
     private User user;
 
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
@@ -28,7 +34,6 @@ class RegistrationServiceImplTest {
         user.setAge(ADULT_AGE);
         user.setPassword(VALID_PASSWORD);
         user.setLogin(VALID_LOGIN);
-        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
@@ -88,19 +93,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validPassword_Ok() {
-        user.setPassword("1234ab");
-        Long actualId = user.getId();
+    void register_validAgeLoginPassword_Ok() {
         registrationService.register(user);
-        assertNotEquals(actualId, user.getId());
-    }
-
-    @Test
-    void register_validAge_Ok() {
-        user.setAge(ADULT_AGE);
-        Long actualId = user.getId();
-        registrationService.register(user);
-        assertNotEquals(actualId, user.getId());
+        assertNotNull(user.getId());
     }
 
     @Test
@@ -113,6 +108,7 @@ class RegistrationServiceImplTest {
         userSameLogin.setPassword(VALID_PASSWORD);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(userSameLogin);
-        });
+        },"InvalidDataException expected, "
+                + "if we try add user with same name.");
     }
 }
