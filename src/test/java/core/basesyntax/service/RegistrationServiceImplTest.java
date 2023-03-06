@@ -70,12 +70,12 @@ class RegistrationServiceImplTest {
     @Test
     void register_existedUser_notOk() {
         storageDao.add(user);
-        User user2 = new User();
-        user2.setLogin(DEFAULT_LOGIN);
-        user2.setAge(24);
-        user2.setPassword("newPass2");
+        User nameExistsUser = new User();
+        nameExistsUser.setLogin(DEFAULT_LOGIN);
+        nameExistsUser.setAge(24);
+        nameExistsUser.setPassword("newPass2");
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(nameExistsUser);
         });
     }
 
