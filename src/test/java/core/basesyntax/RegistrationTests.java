@@ -32,7 +32,7 @@ public class RegistrationTests {
     private static User invalidUser = new User();
 
     @BeforeAll
-    private static final static void setUp() {
+    public static void setUp() {
         System.out.println(ANSI_YELLOW
                 + "----------------------  Tests started  ----------------------" + ANSI_RESET);
         storageDao = new StorageDaoImpl();
