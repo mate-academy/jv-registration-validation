@@ -3,6 +3,7 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
@@ -15,6 +16,7 @@ public class RegistrationServiceTest {
     private static User bob;
     private static User alice;
     private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @BeforeAll
     static void beforeAll() {
@@ -35,6 +37,16 @@ public class RegistrationServiceTest {
 
     @Test
     void registration_userWithValidData_Ok() {
+        assertEquals(bob, registrationService.register(bob));
+    }
+
+    @Test
+    void addUser_userWithValidData_Ok() {
+        assertEquals(alice, storageDao.add(alice));
+    }
+
+    @Test
+    void registration_twoUsersWithValidData_Ok() {
         registrationService.register(bob);
         registrationService.register(alice);
         int actual = Storage.people.size();
@@ -62,6 +74,24 @@ public class RegistrationServiceTest {
     }
 
     @Test
+    void registration_userAge18_ok() {
+        User max = new User();
+        max.setLogin("max");
+        max.setPassword("789123");
+        max.setAge(18);
+        assertEquals(max, registrationService.register(max));
+    }
+
+    @Test
+    void registration_userNegativeAge_notOk() {
+        User max = new User();
+        max.setLogin("max");
+        max.setPassword("789123");
+        max.setAge(-16);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(max));
+    }
+
+    @Test
     void registration_userPasswordUnder6Characters_notOk() {
         User max = new User();
         max.setLogin("max");
@@ -71,9 +101,36 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void registration_userWithNullValue_notOk() {
+    void registration_userPassword6Characters_Ok() {
+        User max = new User();
+        max.setLogin("max");
+        max.setPassword("123456");
+        max.setAge(31);
+        assertEquals(max, registrationService.register(max));
+    }
+
+    @Test
+    void registration_userWithNullLogin_notOk() {
         User max = new User();
         max.setLogin(null);
+        max.setPassword("1234");
+        max.setAge(20);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(max));
+    }
+
+    @Test
+    void registration_userWithNullPassword_notOk() {
+        User max = new User();
+        max.setLogin("max");
+        max.setPassword(null);
+        max.setAge(20);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(max));
+    }
+
+    @Test
+    void registration_userWithNullAge_notOk() {
+        User max = new User();
+        max.setLogin("max");
         max.setPassword("1234");
         max.setAge(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(max));
