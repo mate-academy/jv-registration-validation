@@ -4,7 +4,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
