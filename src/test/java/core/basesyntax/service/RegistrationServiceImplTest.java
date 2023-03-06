@@ -2,8 +2,10 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.UserInvalidException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +33,11 @@ class RegistrationServiceImplTest {
         user.setAge(AGE);
         user.setLogin(LOGIN);
         user.setPassword(PASSWORD);
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 
     @Test
@@ -72,6 +79,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithSameLogin_isNotOk() {
+        registrationService.register(user);
         Assertions.assertThrows(UserInvalidException.class, () -> {
             registrationService.register(user);
         }, "Expected " + UserInvalidException.class + ", but it wasn`t ");

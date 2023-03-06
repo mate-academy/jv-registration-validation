@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws UserInvalidException {
+    public User register(User user) {
         checkUserIsNotNull(user);
         checkPassword(user);
         checkAge(user);
