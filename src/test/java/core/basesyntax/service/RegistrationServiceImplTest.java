@@ -45,7 +45,10 @@ class RegistrationServiceImplTest {
         user.setLogin(EMPTY_ENTRY);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(user);
-        });
+        }, " expected " + RegistrationFailedException.class.getName()
+                + " to be thrown for empty entry login "
+                + user.getLogin()
+                + " but it wasn't");
     }
 
     @Test
@@ -56,7 +59,7 @@ class RegistrationServiceImplTest {
             registrationService.register(anotherUser);
         }, " expected " + RegistrationFailedException.class.getName()
                 + " to be thrown for exist login "
-                + user.getLogin()
+                + anotherUser.getLogin()
                 + " but it wasn't");
     }
 
