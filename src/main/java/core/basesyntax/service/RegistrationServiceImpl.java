@@ -7,34 +7,37 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMAL_AGE = 18;
+    private static final int MINIMAL_LOGIN_SIZE = 1;
     private static final int MINIMAL_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new InvalidDataException("user should be not null");
+            throw new InvalidDataException("user should not be null");
         }
         if (user.getLogin() == null) {
-            throw new InvalidDataException("user has null login");
+            throw new InvalidDataException("user's login should not be null");
         }
         if (user.getPassword() == null) {
-            throw new InvalidDataException("user has null password");
+            throw new InvalidDataException("user's password should not be null");
         }
         if (user.getAge() == null) {
-            throw new InvalidDataException("user has null age");
+            throw new InvalidDataException("user's age should not be null");
         }
-        if (user.getLogin().length() < 1) {
-            throw new InvalidDataException("user have to have login");
+        if (user.getLogin().length() < MINIMAL_LOGIN_SIZE) {
+            throw new InvalidDataException("user login have to be longer than "
+                    + MINIMAL_LOGIN_SIZE);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("there already is user with same login in storage");
         }
         if (user.getAge() < MINIMAL_AGE) {
-            throw new InvalidDataException("user age is under 18");
+            throw new InvalidDataException("user age is under " + MINIMAL_AGE);
         }
         if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
-            throw new InvalidDataException("user password should be at least 6 characters");
+            throw new InvalidDataException("user password should be at least "
+                    + MINIMAL_PASSWORD_LENGTH + " characters");
         }
         storageDao.add(user);
         return user;
