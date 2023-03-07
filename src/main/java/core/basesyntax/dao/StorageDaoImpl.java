@@ -1,5 +1,6 @@
 package core.basesyntax.dao;
 
+import core.basesyntax.db.InvalidDataUser;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
@@ -8,6 +9,7 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
+
         user.setId(++index);
         Storage.people.add(user);
         return user;
