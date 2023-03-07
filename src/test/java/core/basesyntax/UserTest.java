@@ -1,13 +1,14 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,12 +18,16 @@ public class UserTest {
     private static final String VALID_PASSWORD = "my password 123";
     private static final int INVALID_NEGATIVE_AGE = -10;
     private static final String INVALID_SHORT_PASSWORD = "12345";
-    private RegistrationServiceImpl registration;
+    private static RegistrationService registration;
     private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registration = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registration = new RegistrationServiceImpl();
         user = new User();
         user.setLogin(VALID_NAME);
         user.setAge(VALID_AGE);
@@ -37,7 +42,7 @@ public class UserTest {
     @Test
     void register_user_ok() {
         User actual = registration.register(user);
-        assertEquals(user, actual);
+        assertEquals(Storage.people.get(0), actual);
     }
 
     @Test
@@ -80,22 +85,33 @@ public class UserTest {
     @Test
     void invalid_age_notOk() {
         user.setAge(INVALID_NEGATIVE_AGE);
-        User actual = registration.register(user);
-        assertNull(actual);
+        assertThrows(InvalidDataException.class, () -> {
+            registration.register(user);
+        });
     }
 
     @Test
     void little_age_notOk() {
         user.setAge(VALID_AGE - 1);
-        User actual = registration.register(user);
-        assertNull(actual);
+        assertThrows(InvalidDataException.class, () -> {
+            registration.register(user);
+        });
     }
 
     @Test
     void short_password_notOk() {
         user.setPassword(INVALID_SHORT_PASSWORD);
-        User actual = registration.register(user);
-        assertNull(actual);
+        assertThrows(InvalidDataException.class, () -> {
+            registration.register(user);
+        });
+    }
+
+    @Test
+    void add_user_with_existing_login_notOk() {
+        registration.register(user);
+        assertThrows(InvalidDataException.class, () -> {
+            registration.register(user);
+        });
     }
 }
 

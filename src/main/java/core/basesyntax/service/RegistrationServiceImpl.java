@@ -7,6 +7,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int VALID_AGE = 18;
     private static final int VALID_LENGTH_PASS = 6;
+    private StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -22,21 +23,32 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidDataException("User password can't be null");
         }
-        StorageDaoImpl storageDao = new StorageDaoImpl();
-        if (storageDao.get(user.getLogin()) == null) {
-            if (isValidAge(user) && isValidPassword(user)) {
-                storageDao.add(user);
-                return user;
-            }
+        if (userIsInStorage(user) && isValidAge(user) && isValidPassword(user)) {
+            storageDao.add(user);
+            return user;
         }
         return null;
     }
 
+    private boolean userIsInStorage(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidDataException("User with this login is already registered");
+        }
+        return true;
+    }
+
     private boolean isValidAge(User user) {
-        return user.getAge() >= VALID_AGE;
+        if (user.getAge() < VALID_AGE) {
+            throw new InvalidDataException("Age must be at least " + VALID_AGE);
+        }
+        return true;
     }
 
     private boolean isValidPassword(User user) {
-        return user.getPassword().length() >= VALID_LENGTH_PASS;
+        if (user.getPassword().length() < VALID_LENGTH_PASS) {
+            throw new InvalidDataException("Your password must contain at least "
+                    + VALID_LENGTH_PASS + " characters");
+        }
+        return true;
     }
 }
