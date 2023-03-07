@@ -25,90 +25,100 @@ class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationServiceImpl;
 
     @BeforeAll
-    static void setUp() {
+    public static void set_up() {
         storageDao = new StorageDaoImpl();
         registrationServiceImpl = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    public void initialize() {
+        Storage.people.clear();
         validUser1 = new User("login1", "1234567", AGE_BARELY_OK);
         validUser2 = new User("login2", "12345678", 26);
         validUser3 = new User("login3", "123456789", 27);
         validUser4 = new User("login4", "1234567890", 28);
     }
 
-    @BeforeEach
-    void clearStorage() {
-        Storage.people.clear();
-    }
-
     @Test
-    void registerValidUser_Ok() {
+    public void register_valid_user_ok() {
         registrationServiceImpl.register(validUser1);
         Assertions.assertEquals(validUser1, storageDao.get(validUser1.getLogin()));
     }
 
     @Test
-    void registerLoginBlank_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(BLANK_LOGIN, validUser3.getPassword(), AGE_NEGATIVE)));
+    public void register_login_blank_not_ok() {
+        validUser1.setLogin(BLANK_LOGIN);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    void registerLoginWithSpaces_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(LOGIN_WITH_SPACES, validUser3.getPassword(), AGE_NEGATIVE)));
+    public void register_login_with_spaces_not_ok() {
+        validUser1.setLogin(LOGIN_WITH_SPACES);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    void registerAge_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(validUser3.getLogin(), validUser3.getPassword(), AGE_NEGATIVE)));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(validUser3.getLogin(), validUser3.getPassword(), AGE_NOT_OK)));
+    public void register_age_not_ok() {
+        validUser1.setAge(AGE_NEGATIVE);
+        validUser2.setAge(AGE_NOT_OK);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser1));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser2));
     }
 
     @Test
-    void registerAge_Ok() {
-        Assertions.assertEquals(registrationServiceImpl.register(
-                        new User(validUser2.getLogin(), validUser2.getPassword(), AGE_BARELY_OK)),
+    public void register_age_ok() {
+        validUser1.setAge(AGE_OK);
+        validUser2.setAge(AGE_BARELY_OK);
+        Assertions.assertEquals(
+                registrationServiceImpl.register(validUser1),
+                storageDao.get(validUser1.getLogin()));
+        Assertions.assertEquals(
+                registrationServiceImpl.register(validUser2),
                 storageDao.get(validUser2.getLogin()));
-        Assertions.assertEquals(registrationServiceImpl.register(
-                        new User(validUser3.getLogin(), validUser3.getPassword(), AGE_OK)),
-                storageDao.get(validUser3.getLogin()));
     }
 
     @Test
-    void registerPasswordTooShort_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(validUser1.getLogin(), SHORT_PASSWORD, validUser1.getAge())));
+    public void register_password_too_short_not_ok() {
+        validUser1.setPassword(SHORT_PASSWORD);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    void registerNullUser_NotOk() {
+    public void register_null_user_not_ok() {
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(null));
     }
 
     @Test
-    void registerNullLogin_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(null, validUser1.getPassword(), validUser1.getAge())));
-    }
-
-    @Test
-    void registerNullPassword_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(validUser1.getLogin(), null, validUser1.getAge())));
-    }
-
-    @Test
-    void registerNullAge_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(
-                new User(validUser1.getLogin(), validUser1.getPassword(), null)));
-    }
-
-    @Test
-    void registerExistingUser_NotOk() {
-        registrationServiceImpl.register(validUser4);
+    public void register_null_login_not_ok() {
+        validUser1.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
-                () -> registrationServiceImpl.register(validUser4));
+                () -> registrationServiceImpl.register(validUser1));
+    }
+
+    @Test
+    public void register_null_password_not_ok() {
+        validUser1.setPassword(null);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser1));
+    }
+
+    @Test
+    public void register_null_age_not_ok() {
+        validUser1.setAge(null);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser1));
+    }
+
+    @Test
+    public void register_existing_user_not_ok() {
+        registrationServiceImpl.register(validUser1);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(validUser1));
     }
 }
