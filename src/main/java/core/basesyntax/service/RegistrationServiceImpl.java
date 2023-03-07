@@ -30,10 +30,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationValidatorException("Your age is null or less than "
                     + MIN_AGE + " years old");
         }
-        if (storageDao.get(user.getLogin()) != null
-                && storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationValidatorException(
-                    "You can't add user because user exists in the storage!"
+                    "Login already exists in the storage: " + user.getLogin()
             );
         }
         return storageDao.add(user);

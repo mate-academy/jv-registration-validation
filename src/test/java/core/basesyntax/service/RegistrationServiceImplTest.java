@@ -26,7 +26,6 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void init() {
         testUser = new User();
-        testUser.setId(Long.valueOf("1"));
         testUser.setLogin("nicolas");
         testUser.setPassword("123456");
         testUser.setAge(20);
@@ -58,8 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addNewUserInStorage_ok() throws RegistrationValidatorException {
-        testUser.setId(Long.valueOf(2));
+    void register_addNewUserInStorage_ok() {
         testUser.setLogin("bob");
         User expectedUser = testUser;
         User actualUser = registrationService.register(testUser);
@@ -94,8 +92,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age18_ok() throws RegistrationValidatorException {
-        testUser.setId(Long.valueOf(4));
+    void register_age18_ok() {
         testUser.setLogin("ben");
         testUser.setAge(18);
         Integer expectedAge = testUser.getAge();
@@ -123,8 +120,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordWithSixCharacters_ok() throws RegistrationValidatorException {
-        testUser.setId(Long.valueOf(3));
+    void register_passwordWithSixCharacters_ok() {
         testUser.setLogin("john");
         String expectedPassword = testUser.getPassword();
 
