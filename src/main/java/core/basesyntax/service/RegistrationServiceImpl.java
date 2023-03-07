@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationIllegalArgumentException("User object is null");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new RegistrationIllegalArgumentException("Login password is empty");
+            throw new RegistrationIllegalArgumentException("Login is null or empty");
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationIllegalArgumentException(
