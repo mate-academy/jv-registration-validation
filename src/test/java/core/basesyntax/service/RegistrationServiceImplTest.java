@@ -82,7 +82,10 @@ public class RegistrationServiceImplTest {
         Storage.people.add(user);
         User newUser = new User(user.getLogin(), VALID_PASSWORD, VALID_AGE);
         assertThrows(InvalidUserDataException.class, () -> service.register(newUser),
-                "This login already exists");
+                "Expected" + InvalidUserDataException.class.getName()
+                + "to be thrown when registering a user with a duplicate login"
+                + newUser.getLogin()
+                + "but it was not thrown");
     }
 
     @Test
