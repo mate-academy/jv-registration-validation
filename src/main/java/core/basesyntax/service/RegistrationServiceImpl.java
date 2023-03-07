@@ -26,17 +26,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Age can`t be null");
         }
         if (user.getAge() < MIN_ALLOWED_AGE) {
-            throw new InvalidDataException("Age is less than " + "MIN_ALLOWED_AGE");
+            throw new InvalidDataException("Age is less than " + MIN_ALLOWED_AGE);
         }
         if (user.getAge() > MAX_ALLOWED_AGE) {
-            throw new InvalidDataException("Age is bigger than " + "MAX_ALLOWED_AGE");
+            throw new InvalidDataException("Age is bigger than " + MAX_ALLOWED_AGE);
         }
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password can`t be null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidDataException("Your password is shorter than "
-                    + "MIN_PASSWORD_LENGTH");
+                    + MIN_PASSWORD_LENGTH);
         }
         if (user.getPassword().isEmpty()) {
             throw new InvalidDataException("Password can`t be empty");
