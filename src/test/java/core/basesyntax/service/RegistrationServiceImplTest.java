@@ -18,21 +18,21 @@ class RegistrationServiceImplTest {
     private static final String EMPTY_LOGIN = "";
     private static final String LOGIN_WITH_WHITESPACES = "Lo gi n ";
     private static final String SHORT_PASS = "abc";
+    private static final String FIRST_USER_PASS = "1234567";
+    private static final String SECOND_USER_PASS = "12345678";
+    private static final String FIRST_USER_LOGIN = "login1";
+    private static final String SECOND_USER_LOGIN = "login2";
     private static StorageDao storageDao;
     private static RegistrationServiceImpl registrationServiceImpl;
     private static User userTest1;
     private static User userTest2;
-    private static User userTest3;
-    private static User userTest4;
 
     @BeforeAll
     static void setUp() {
         storageDao = new StorageDaoImpl();
         registrationServiceImpl = new RegistrationServiceImpl();
-        userTest1 = new User("login1", "1234567", MIN_AGE);
-        userTest2 = new User("login2", "12345678", NORMAL_AGE);
-        userTest3 = new User("Login3", "123456789", 35);
-        userTest4 = new User("login4", "1234567890", 40);
+        userTest1 = new User(FIRST_USER_LOGIN, FIRST_USER_PASS, MIN_AGE);
+        userTest2 = new User(SECOND_USER_LOGIN, SECOND_USER_PASS, NORMAL_AGE);
     }
 
     @BeforeEach
@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerUser_ok() {
         registrationServiceImpl.register(userTest1);
-        Assertions.assertEquals(userTest1, storageDao.get(userTest1.getLogin()));
+        Assertions.assertEquals(userTest1, storageDao.get(FIRST_USER_LOGIN));
     }
 
     @Test
@@ -63,66 +63,66 @@ class RegistrationServiceImplTest {
     void registerEmptyLogin_notOk() {
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(EMPTY_LOGIN, userTest3.getPassword(), NEGATIVE_AGE)));
+                        new User(EMPTY_LOGIN, SECOND_USER_PASS, NEGATIVE_AGE)));
     }
 
     @Test
     void registerWhitespaceLogin_notOk() {
-        registrationServiceImpl.register(userTest4);
+        registrationServiceImpl.register(userTest1);
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(LOGIN_WITH_WHITESPACES, userTest4.getPassword(), NEGATIVE_AGE)));
+                        new User(LOGIN_WITH_WHITESPACES, FIRST_USER_PASS, NEGATIVE_AGE)));
     }
 
     @Test
     void registerNullLogin_notOk() {
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(null, userTest1.getPassword(), userTest1.getAge())));
+                        new User(null, FIRST_USER_PASS, MIN_AGE)));
     }
 
     @Test
     void registerLittleAge_notOk() {
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(userTest2.getLogin(), userTest2.getPassword(), LITTLE_AGE)));
+                        new User(SECOND_USER_LOGIN, SECOND_USER_PASS, LITTLE_AGE)));
     }
 
     @Test
     void registerNegativeAge_notOk() {
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(userTest3.getLogin(), userTest3.getPassword(), NEGATIVE_AGE)));
+                        new User(FIRST_USER_LOGIN, FIRST_USER_LOGIN, NEGATIVE_AGE)));
     }
 
     @Test
     void registerAge_ok() {
         Assertions.assertEquals(registrationServiceImpl.register(
-                        new User(userTest4.getLogin(), userTest4.getPassword(), MIN_AGE)),
-                storageDao.get(userTest4.getLogin()));
+                        new User(SECOND_USER_LOGIN, SECOND_USER_PASS, MIN_AGE)),
+                storageDao.get(SECOND_USER_LOGIN));
         Assertions.assertEquals(registrationServiceImpl.register(
-                        new User(userTest1.getLogin(), userTest1.getPassword(), NORMAL_AGE)),
-                storageDao.get(userTest1.getLogin()));
+                        new User(FIRST_USER_LOGIN, FIRST_USER_PASS, NORMAL_AGE)),
+                storageDao.get(FIRST_USER_LOGIN));
     }
 
     @Test
     void registerNullAge_notOk() {
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(userTest4.getLogin(), userTest4.getPassword(), null)));
+                        new User(SECOND_USER_LOGIN, SECOND_USER_PASS, null)));
     }
 
     @Test
     void registerShortPassword_notOk() {
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(userTest2.getLogin(), SHORT_PASS, userTest2.getAge())));
+                        new User(SECOND_USER_LOGIN, SHORT_PASS, NORMAL_AGE)));
     }
 
     @Test
     void registerNullPassword_notOk() {
         Assertions.assertThrows(RegistrationIsFailedException.class,
                 () -> registrationServiceImpl.register(
-                        new User(userTest4.getLogin(), null, userTest4.getAge())));
+                        new User(FIRST_USER_LOGIN, null, NORMAL_AGE)));
     }
 }
