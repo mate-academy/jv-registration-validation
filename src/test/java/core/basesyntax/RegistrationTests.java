@@ -70,7 +70,7 @@ public class RegistrationTests {
 
     @Test
     @DisplayName("Registration an user with empty login")
-    public void register_user_with_empty_login_NotOk() {
+    public void register_emptyLogin_NotOk() {
         testUser.setLogin(EMPTY_LOGIN);
         assertThrows(RegistrationIllegalArgumentException.class, () -> {
             registrationService.register(testUser); }, "Expected "
