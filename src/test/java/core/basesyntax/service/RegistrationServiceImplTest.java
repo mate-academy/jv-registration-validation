@@ -1,11 +1,12 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,11 @@ class RegistrationServiceImplTest {
         user.setLogin(LOGIN);
         user.setPassword(PASSWORD);
         user.setAge(AGE);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -69,7 +75,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_SameUserLogin_NotOK() {
-        assertEquals(user, registrationService.register(user));
+        registrationService.register(user);
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(user));
     }
 
     @Test
