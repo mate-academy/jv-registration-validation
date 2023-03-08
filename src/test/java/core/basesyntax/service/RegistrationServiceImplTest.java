@@ -46,7 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_login_blank_not_ok() {
+    public void registerLoginBlank_notOk() {
         validUser1.setLogin(BLANK_LOGIN);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(validUser1));
