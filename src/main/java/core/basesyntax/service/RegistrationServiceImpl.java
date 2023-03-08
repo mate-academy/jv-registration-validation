@@ -69,7 +69,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age should be a positive number.");
         }
         if (age < MINIMAL_USER_AGE) {
-            throw new RegistrationException("Registration is forbidden for users below 18 y.o.");
+            throw new RegistrationException("Registration is forbidden for users below " + MINIMAL_USER_AGE  + " y.o.");
         }
     }
 }
