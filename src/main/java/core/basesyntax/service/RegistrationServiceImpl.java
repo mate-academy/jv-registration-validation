@@ -5,13 +5,12 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MINIMAL_PASSWORD_LENGTH;
-    private static final int MINIMAL_USER_AGE;
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MINIMAL_PASSWORD_LENGTH = 6;
+    private static final int MINIMAL_USER_AGE = 18;
+    private final StorageDao storageDao;
 
-    static {
-        MINIMAL_PASSWORD_LENGTH = 6;
-        MINIMAL_USER_AGE = 18;
+    public RegistrationServiceImpl() {
+        storageDao = new StorageDaoImpl();
     }
 
     @Override
@@ -69,7 +68,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age should be a positive number.");
         }
         if (age < MINIMAL_USER_AGE) {
-            throw new RegistrationException("Registration is forbidden for users below " + MINIMAL_USER_AGE  + " y.o.");
+            throw new RegistrationException("Registration is forbidden for users below "
+                    + MINIMAL_USER_AGE + " y.o.");
         }
     }
 }

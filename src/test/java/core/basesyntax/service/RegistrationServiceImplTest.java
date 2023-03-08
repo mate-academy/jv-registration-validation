@@ -20,12 +20,10 @@ class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private static User validUser1;
     private static User validUser2;
-    private static User validUser3;
-    private static User validUser4;
     private static RegistrationServiceImpl registrationServiceImpl;
 
     @BeforeAll
-    public static void set_up() {
+    public static void setUp() {
         storageDao = new StorageDaoImpl();
         registrationServiceImpl = new RegistrationServiceImpl();
     }
@@ -35,12 +33,10 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
         validUser1 = new User("login1", "1234567", AGE_BARELY_OK);
         validUser2 = new User("login2", "12345678", 26);
-        validUser3 = new User("login3", "123456789", 27);
-        validUser4 = new User("login4", "1234567890", 28);
     }
 
     @Test
-    public void register_valid_user_ok() {
+    public void registerValidUser_ok() {
         registrationServiceImpl.register(validUser1);
         Assertions.assertEquals(validUser1, storageDao.get(validUser1.getLogin()));
     }
@@ -53,14 +49,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_login_with_spaces_not_ok() {
+    public void registerLoginWithSpaces_notOk() {
         validUser1.setLogin(LOGIN_WITH_SPACES);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    public void register_age_not_ok() {
+    public void registerAge_notOk() {
         validUser1.setAge(AGE_NEGATIVE);
         validUser2.setAge(AGE_NOT_OK);
         Assertions.assertThrows(RegistrationException.class,
@@ -70,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_age_ok() {
+    public void registerAge_ok() {
         validUser1.setAge(AGE_OK);
         validUser2.setAge(AGE_BARELY_OK);
         Assertions.assertEquals(
@@ -82,41 +78,41 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_password_too_short_not_ok() {
+    public void registerPasswordTooShort_notOk() {
         validUser1.setPassword(SHORT_PASSWORD);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    public void register_null_user_not_ok() {
+    public void registerNullUser_notOk() {
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(null));
     }
 
     @Test
-    public void register_null_login_not_ok() {
+    public void registerNullLogin_notOk() {
         validUser1.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    public void register_null_password_not_ok() {
+    public void registerNullPassword_notOk() {
         validUser1.setPassword(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    public void register_null_age_not_ok() {
+    public void registerNullAge_notOk() {
         validUser1.setAge(null);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(validUser1));
     }
 
     @Test
-    public void register_existing_user_not_ok() {
+    public void registerExistingUser_notOk() {
         registrationServiceImpl.register(validUser1);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(validUser1));
