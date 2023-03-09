@@ -1,16 +1,17 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static List<User> usersForCheck;
@@ -31,36 +32,30 @@ public class RegistrationServiceImplTest {
     @BeforeEach
     void fillingListWith_5_ValidUsers() {
         User user1 = new User();
-        User user2 = new User();
-        User user3 = new User();
-        User user4 = new User();
-        User user5 = new User();
-
         user1.setLogin("login_to_go145");
         user1.setAge(53);
         user1.setId(4324L);
         user1.setPassword("fdfsJsn1");
-
+        User user2 = new User();
         user2.setLogin("myLogin");
         user2.setAge(23);
         user2.setId(9302L);
         user2.setPassword("80301dd");
-
+        User user3 = new User();
         user3.setLogin("BestttLOg");
         user3.setAge(18);
         user3.setId(342667L);
         user3.setPassword("%#@^*#@");
-
+        User user4 = new User();
         user4.setLogin("coll)((!#$");
         user4.setAge(99);
         user4.setId(12L);
         user4.setPassword("FMDOFWFMFWWFWDFDGSGDWEFGRGW");
-
+        User user5 = new User();
         user5.setLogin("ruioewrwIWJRNW902938-4--28=1");
         user5.setAge(29);
         user5.setId(432143L);
         user5.setPassword("JFIEWW");
-
         usersForCheck.add(user1);
         usersForCheck.add(user2);
         usersForCheck.add(user3);

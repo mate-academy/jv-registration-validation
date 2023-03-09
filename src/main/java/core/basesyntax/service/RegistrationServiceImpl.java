@@ -7,13 +7,14 @@ import core.basesyntax.exeptions.InvalidInputException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     static final int[] VALID_AGE_NUMBERS_BETWEEN = {0, 100};
     static final int MIN_AGE = 18;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user.getAge() <= VALID_AGE_NUMBERS_BETWEEN[0] || user.getAge() > VALID_AGE_NUMBERS_BETWEEN[1]) {
+        if (user.getAge() <= VALID_AGE_NUMBERS_BETWEEN[0]
+                || user.getAge() > VALID_AGE_NUMBERS_BETWEEN[1]) {
             throw new InvalidInputException("Invalid age input");
         }
         if (user.getAge() < MIN_AGE) {
