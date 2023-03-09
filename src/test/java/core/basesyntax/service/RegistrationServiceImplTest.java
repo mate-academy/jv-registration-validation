@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.AuthorizationError;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,10 +52,6 @@ class RegistrationServiceImplTest {
         userNullLogin.setLogin(null);
         userNullLogin.setPassword(VALID_PASSWORD);
         userNullLogin.setAge(VALID_AGE);
-        userNullLogin = new User();
-        userNullLogin.setLogin(null);
-        userNullLogin.setPassword(VALID_PASSWORD);
-        userNullLogin.setAge(VALID_AGE);
         userEmptyLogin = new User();
         userEmptyLogin.setLogin(EMPTY_LOGIN);
         userEmptyLogin.setPassword(VALID_PASSWORD);
@@ -75,39 +71,39 @@ class RegistrationServiceImplTest {
     void registerNullUserNotOK() {
         try {
             registrationService.register(userIsNull);
-        } catch (AuthorizationError e) {
+        } catch (RegistrationException e) {
             return;
         }
-        fail("Object User  is empty ");
+        fail("Object User must not be empty (null) ");
     }
 
     @Test
     void registerNullLoginNotOK() {
         try {
             registrationService.register(userNullLogin);
-        } catch (AuthorizationError e) {
+        } catch (RegistrationException e) {
             return;
         }
-        fail("Login must be not null ");
+        fail("Login object must not be empty (null) ");
     }
 
     @Test
     void registerNullPasswordNotOK() {
-        assertThrows(AuthorizationError.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userNullPassword);
         });
     }
 
     @Test
-    void registerNullAgedNotOK() {
-        assertThrows(AuthorizationError.class, () -> {
+    void registerNullAgeNotOK() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userNullAge);
         });
     }
 
     @Test
     void registerInvalidAgeNotOK() {
-        assertThrows(AuthorizationError.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userInvalidAge);
         });
     }
@@ -117,8 +113,8 @@ class RegistrationServiceImplTest {
         User expected = null;
         try {
             expected = registrationService.register(validUser);
-        } catch (AuthorizationError e) {
-            fail("User is Valid and must be added");
+        } catch (RegistrationException e) {
+            fail("User is valid and must be added");
         }
         assertEquals(validUser,expected,"User is valid");
     }
@@ -127,12 +123,12 @@ class RegistrationServiceImplTest {
     void registerCloneUserNotOk() {
         try {
             registrationService.register(validUser);
-        } catch (AuthorizationError e) {
+        } catch (RegistrationException e) {
             fail("users are valid and must be added");
         }
         try {
             registrationService.register(validUser);
-        } catch (AuthorizationError e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("Two record whit same login -> exception ");
@@ -142,7 +138,7 @@ class RegistrationServiceImplTest {
     void registerEmptyLoginNotOk() {
         try {
             registrationService.register(userEmptyLogin);
-        } catch (AuthorizationError e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("Login must have a value");
@@ -152,7 +148,7 @@ class RegistrationServiceImplTest {
     void registerShortPasswordNotOk() {
         try {
             registrationService.register(userShortPassword);
-        } catch (AuthorizationError e) {
+        } catch (RegistrationException e) {
             return;
         }
         fail("User password is at least 6 characters, mast have");
