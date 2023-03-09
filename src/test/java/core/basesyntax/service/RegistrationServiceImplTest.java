@@ -1,12 +1,15 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.AuthorizationError;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "login";
@@ -154,5 +157,4 @@ class RegistrationServiceImplTest {
         }
         fail("User password is at least 6 characters, mast have");
     }
-
 }
