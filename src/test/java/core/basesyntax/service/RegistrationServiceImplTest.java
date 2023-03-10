@@ -25,7 +25,7 @@ class RegistrationServiceImplTest {
     void setUp() {
        user = new User();
        user.setPassword(DEFAULT_PASSWORD);
-        user.setAge(MORE_AGE_LIMIT);
+       user.setAge(MORE_AGE_LIMIT);
     }
 
     @Test
