@@ -33,6 +33,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
+        testUser.setLogin(VALID_LOGIN);
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(VALID_AGE);
     }
 
     @Test
@@ -48,8 +51,6 @@ class RegistrationServiceImplTest {
     @Test
     void registerNullLoginNotOK() {
         testUser.setLogin(null);
-        testUser.setPassword(VALID_PASSWORD);
-        testUser.setAge(VALID_AGE);
         try {
             registrationService.register(testUser);
         } catch (RegistrationException e) {
@@ -60,33 +61,24 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNullPasswordNotOK() {
-        testUser.setLogin(VALID_LOGIN);
         testUser.setPassword(null);
-        testUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void registerNullAgeNotOK() {
-        testUser.setLogin(VALID_LOGIN);
-        testUser.setPassword(VALID_PASSWORD);
         testUser.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void registerInvalidAgeNotOK() {
-        testUser.setLogin(VALID_LOGIN);
-        testUser.setPassword(VALID_PASSWORD);
         testUser.setAge(INVALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void registerValidUserOk() {
-        testUser.setLogin(VALID_LOGIN);
-        testUser.setPassword(VALID_PASSWORD);
-        testUser.setAge(VALID_AGE);
         User expected = null;
         try {
             expected = registrationService.register(testUser);
@@ -98,9 +90,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerCloneUserNotOk() {
-        testUser.setLogin(VALID_LOGIN);
-        testUser.setPassword(VALID_PASSWORD);
-        testUser.setAge(VALID_AGE);
         try {
             registrationService.register(testUser);
         } catch (RegistrationException e) {
@@ -117,8 +106,6 @@ class RegistrationServiceImplTest {
     @Test
     void registerEmptyLoginNotOk() {
         testUser.setLogin(EMPTY_LOGIN);
-        testUser.setPassword(VALID_PASSWORD);
-        testUser.setAge(VALID_AGE);
         try {
             registrationService.register(testUser);
         } catch (RegistrationException e) {
@@ -129,9 +116,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerShortPasswordNotOk() {
-        testUser.setLogin(VALID_LOGIN);
         testUser.setPassword(SHORT_PASSWORD);
-        testUser.setAge(VALID_AGE);
         try {
             registrationService.register(testUser);
         } catch (RegistrationException e) {
