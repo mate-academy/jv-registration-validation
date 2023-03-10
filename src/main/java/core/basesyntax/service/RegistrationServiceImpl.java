@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws RegistrationException {
         if (user == null) {
-            throw new RegistrationException("Unknown error, Object is absent!");
+            throw new RegistrationException("Object user must be not null");
         }
         String password = user.getPassword();
         if (password == null) {

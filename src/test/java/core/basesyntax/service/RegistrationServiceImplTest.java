@@ -20,46 +20,14 @@ class RegistrationServiceImplTest {
     private static final String EMPTY_LOGIN = "";
 
     private static final User userIsNull = null;
-    private static User validUser;
-    private static User userInvalidAge;
-    private static User userNullLogin;
-    private static User userNullPassword;
-    private static User userNullAge;
-    private static User userEmptyLogin;
-    private static User userShortPassword;
+    private static User testUser;
+
     private static RegistrationService registrationService;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        validUser = new User();
-        validUser.setLogin(VALID_LOGIN);
-        validUser.setPassword(VALID_PASSWORD);
-        validUser.setAge(VALID_AGE);
-        userInvalidAge = new User();
-        userInvalidAge.setLogin(VALID_LOGIN);
-        userInvalidAge.setPassword(VALID_PASSWORD);
-        userInvalidAge.setAge(INVALID_AGE);
-        userNullAge = new User();
-        userNullAge.setLogin(VALID_LOGIN);
-        userNullAge.setPassword(VALID_PASSWORD);
-        userNullAge.setAge(null);
-        userNullPassword = new User();
-        userNullPassword.setLogin(VALID_LOGIN);
-        userNullPassword.setPassword(null);
-        userNullPassword.setAge(VALID_AGE);
-        userNullLogin = new User();
-        userNullLogin.setLogin(null);
-        userNullLogin.setPassword(VALID_PASSWORD);
-        userNullLogin.setAge(VALID_AGE);
-        userEmptyLogin = new User();
-        userEmptyLogin.setLogin(EMPTY_LOGIN);
-        userEmptyLogin.setPassword(VALID_PASSWORD);
-        userEmptyLogin.setAge(VALID_AGE);
-        userShortPassword = new User();
-        userShortPassword.setLogin(VALID_LOGIN);
-        userShortPassword.setPassword(SHORT_PASSWORD);
-        userShortPassword.setAge(VALID_AGE);
+        testUser = new User();
     }
 
     @BeforeEach
@@ -79,8 +47,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNullLoginNotOK() {
+        testUser.setLogin(null);
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(VALID_AGE);
         try {
-            registrationService.register(userNullLogin);
+            registrationService.register(testUser);
         } catch (RegistrationException e) {
             return;
         }
@@ -89,45 +60,54 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNullPasswordNotOK() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userNullPassword);
-        });
+        testUser.setLogin(VALID_LOGIN);
+        testUser.setPassword(null);
+        testUser.setAge(VALID_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void registerNullAgeNotOK() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userNullAge);
-        });
+        testUser.setLogin(VALID_LOGIN);
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void registerInvalidAgeNotOK() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userInvalidAge);
-        });
+        testUser.setLogin(VALID_LOGIN);
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(INVALID_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void registerValidUserOk() {
+        testUser.setLogin(VALID_LOGIN);
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(VALID_AGE);
         User expected = null;
         try {
-            expected = registrationService.register(validUser);
+            expected = registrationService.register(testUser);
         } catch (RegistrationException e) {
             fail("User is valid and must be added");
         }
-        assertEquals(validUser,expected,"User is valid");
+        assertEquals(testUser,expected,"User is valid");
     }
 
     @Test
     void registerCloneUserNotOk() {
+        testUser.setLogin(VALID_LOGIN);
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(VALID_AGE);
         try {
-            registrationService.register(validUser);
+            registrationService.register(testUser);
         } catch (RegistrationException e) {
             fail("users are valid and must be added");
         }
         try {
-            registrationService.register(validUser);
+            registrationService.register(testUser);
         } catch (RegistrationException e) {
             return;
         }
@@ -136,8 +116,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerEmptyLoginNotOk() {
+        testUser.setLogin(EMPTY_LOGIN);
+        testUser.setPassword(VALID_PASSWORD);
+        testUser.setAge(VALID_AGE);
         try {
-            registrationService.register(userEmptyLogin);
+            registrationService.register(testUser);
         } catch (RegistrationException e) {
             return;
         }
@@ -146,8 +129,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerShortPasswordNotOk() {
+        testUser.setLogin(VALID_LOGIN);
+        testUser.setPassword(SHORT_PASSWORD);
+        testUser.setAge(VALID_AGE);
         try {
-            registrationService.register(userShortPassword);
+            registrationService.register(testUser);
         } catch (RegistrationException e) {
             return;
         }
