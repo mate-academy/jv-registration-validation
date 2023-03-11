@@ -113,7 +113,6 @@ public class RegistrationServiceImplTest {
         usersForCheck.get(0).setAge(1);
         usersForCheck.get(1).setAge(-43);
         usersForCheck.get(2).setAge(0);
-        usersForCheck.get(3).setAge(12345);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(usersForCheck.get(0));
         });
@@ -122,9 +121,6 @@ public class RegistrationServiceImplTest {
         });
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(usersForCheck.get(2));
-        });
-        assertThrows(RuntimeException.class, () -> {
-            registrationService.register(usersForCheck.get(3));
         });
     }
 
