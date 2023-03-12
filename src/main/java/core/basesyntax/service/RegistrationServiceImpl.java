@@ -12,21 +12,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationServiceException {
-        if ((user.getLogin() == null) || (user.getLogin().equals(""))) {
+        if (user.getLogin() == null) {
             throw new RegistrationServiceException("Error, login is " + user.getLogin());
         }
-        if ((user.getPassword() == null) || (user.getPassword().equals(""))) {
+        if (user.getLogin().equals("")) {
+            throw new RegistrationServiceException("Error, login is " + user.getLogin());
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationServiceException("Error, password is " + user.getPassword());
+        }
+        if (user.getPassword().equals("")) {
             throw new RegistrationServiceException("Error, password is " + user.getPassword());
         }
         if (user.getAge() == null) {
-            throw new RegistrationServiceException("Error, age is " + user.getPassword());
+            throw new RegistrationServiceException("Error, age is " + user.getAge());
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationServiceException("User with this login is already exists");
         }
-        if ((user.getAge() < AGE_MIN) || (user.getAge() >= AGE_MAX)) {
+        if (user.getAge() < AGE_MIN) {
             throw new RegistrationServiceException("User's age "
-                    + user.getAge() + " is less than 18 or more than 122 years");
+                    + user.getAge() + " is less than 18 years");
+        }
+        if (user.getAge() > AGE_MAX) {
+            throw new RegistrationServiceException("User's age "
+                    + user.getAge() + " is more than 122 years");
         }
         if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
             throw new RegistrationServiceException("User's password is less than 6 characters");
