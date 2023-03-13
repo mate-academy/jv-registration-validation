@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 
+
 public class RegistrationServiceImplTest {
     private static final int DEFAULT_AGE = 28;
     private static final String DEFAULT_LOGIN = "Ivan Ivanov";

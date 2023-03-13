@@ -35,6 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
+
     private void loginValidation(User user) {
         if (user.getLogin() == null || storageDao.get(user.getLogin()) != null
                 || user.getLogin().length() < MIN_LOGIN_LENGTH) {
