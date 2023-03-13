@@ -6,15 +6,15 @@ import core.basesyntax.db.InvalidUserException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final static int MIN_USER_AGE = 18;
-    private final static int MIN_LOGIN_LENGTH = 6;
-    private final static int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_USER_AGE = 18;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
     private void userValidation(User user) {
         if (user == null) {
-            throw  new InvalidUserException(" Wrong user - null");
+            throw new InvalidUserException(" Wrong user - null");
         }
         loginValidation(user);
         passwordValidation(user);
@@ -34,7 +34,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserException("Wrong age - " + user.getAge());
         }
     }
-
 
     private void loginValidation(User user) {
         if (user.getLogin() == null || storageDao.get(user.getLogin()) != null
