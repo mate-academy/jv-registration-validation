@@ -1,6 +1,5 @@
 package core.basesyntax.dao;
 
-import core.basesyntax.db.InvalidDataUser;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
