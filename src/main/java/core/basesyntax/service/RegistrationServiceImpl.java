@@ -9,8 +9,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_USER_AGE = 18;
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
-
     private final StorageDao storageDao = new StorageDaoImpl();
+
+    @Override
+    public User register(User user) {
+        userValidation(user);
+        return storageDao.add(user);
+    }
 
     private void userValidation(User user) {
         if (user == null) {
@@ -40,11 +45,5 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new InvalidUserException("Wrong login - " + user.getLogin());
         }
-    }
-
-    @Override
-    public User register(User user) {
-        userValidation(user);
-        return storageDao.add(user);
     }
 }

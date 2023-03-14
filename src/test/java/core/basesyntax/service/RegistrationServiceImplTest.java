@@ -38,105 +38,94 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_christAgeUser_ok() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
-        User actual = registrationService.register(defaultValidUser);
+        User actual = service.register(defaultValidUser);
         assertEquals(defaultValidUser, actual);
     }
 
     @Test
     void register_nullAgeUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setAge(null); //для замены
+        actual.setAge(null); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " age user! = null");
     }
 
     @Test
     void register_lowAgeUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setAge(2); //для замены
+        actual.setAge(2); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " a little age user!");
     }
 
     @Test
     void register_negativeAgeUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setAge(-12); //для замены
+        actual.setAge(-12); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " negative age user!");
     }
 
     @Test
     void register_alreadyExistLoginUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setLogin("Ivan Ivanov"); //для замены
+        actual.setLogin("Ivan Ivanov"); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
-            registrationService.register(actual);
+            service.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " twice login user!");
     }
 
     @Test
     void register_nullLoginUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setLogin(null); //для замены
+        actual.setLogin(null); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " null login user!");
     }
 
     @Test
     void register_shortLoginUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setLogin("i"); //для замены
+        actual.setLogin("i"); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " short login user!");
     }
 
     @Test
     void register_nullPassUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setPassword(null); //для замены
+        actual.setPassword(null); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " null Password user!");
     }
 
     @Test
     void register_shortPassUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = defaultValidUser;
-        actual.setPassword("ab"); //для замены
+        actual.setPassword("ab"); //for check
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " short Password user!");
     }
 
     @Test
     void register_defaultValidUser_ok() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
-        User actual = registrationService.register(defaultValidUser);
+        User actual = service.register(defaultValidUser);
         assertEquals(defaultValidUser, actual);
     }
 
     @Test
     void register_nullUser_notOk() {
-        RegistrationService registrationService = new RegistrationServiceImpl();
         User actual = null;
         assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(actual);
+            service.register(actual);
         }, "Expected " + InvalidUserException.class + " for null user!");
     }
 }
