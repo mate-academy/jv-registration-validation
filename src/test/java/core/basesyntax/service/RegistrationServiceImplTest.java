@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+public class RegistrationServiceImplTest {
     private static final String EXCEPTION_MASSAGE = InvalidUserDataException.class.toString();
     private static final String VALID_LOGIN = "Acxbbmnb";
     private static final String VALID_PASSWORD = "123456";
@@ -30,48 +30,48 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         defaultValidUser = new User(VALID_ID, VALID_LOGIN,
                 VALID_PASSWORD,VALID_USER_AGE);
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void register_nullLogin_NotOk() {
         User userTest = new User(VALID_ID, null, VALID_PASSWORD, VALID_USER_AGE);
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
-    void shortPassword_NotOk() {
+    void register_shortPassword_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, "123", VALID_USER_AGE);
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
-    void nullAge_NotOk() {
+    void register_nullAge_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, null);
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
-    void underAge_NotOk() {
+    void register_underAge_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, 17);
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void register_nullPassword_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, null, VALID_USER_AGE);
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
-    void minusAge_NotOk() {
+    void register_minusAge_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, -20);
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(userTest));
