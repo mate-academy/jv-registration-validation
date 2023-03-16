@@ -1,20 +1,19 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.InvalidUserDataException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final String EXCEPTION_MASSAGE = InvalidUserDataException.class.toString();
+    private static final String EXCEPTION_MASSAGE = RegistrationService.class.toString();
     private static final String VALID_LOGIN = "Acxbbmnb";
     private static final String VALID_PASSWORD = "123456";
     private static int VALID_USER_AGE = 18;
@@ -29,69 +28,63 @@ public class RegistrationServiceImplTest {
         storage = new StorageDaoImpl();
     }
 
-    @BeforeEach
-    public void setUp() {
-        defaultValidUser = new User(VALID_ID, VALID_LOGIN,
-                VALID_PASSWORD,VALID_USER_AGE);
-    }
-
     @Test
     void register_nullLogin_NotOk() {
         User userTest = new User(VALID_ID, null, VALID_PASSWORD, VALID_USER_AGE);
-        assertThrows(InvalidUserDataException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
     void register_shortPassword_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, "123", VALID_USER_AGE);
-        assertThrows(InvalidUserDataException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
     void register_nullAge_NotOk() {
-        User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, null);
-        assertThrows(InvalidUserDataException.class, () ->
+        User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, 0);
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
     void register_underAge_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, 17);
-        assertThrows(InvalidUserDataException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
     void register_nullPassword_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, null, VALID_USER_AGE);
-        assertThrows(InvalidUserDataException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
     void register_minusAge_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, -20);
-        assertThrows(InvalidUserDataException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(userTest));
     }
 
     @Test
-    void register_defaultValidUser_ok() throws InvalidUserDataException {
-        User actual = registrationService.register(defaultValidUser);
-        assertEquals(defaultValidUser, actual);
+    void register_exist_NotOk() {
+        User user = new User(VALID_ID, VALID_LOGIN, "895759",45);
+        storage.add(user);
+        User user2 = new User(VALID_ID,VALID_LOGIN, "356789", 18);
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user2);
+        });
     }
 
     @Test
-    void register_alreadyExistLoginUser_notOk() throws InvalidUserDataException {
-        User actual = registrationService.register(defaultValidUser);
-        assertEquals(defaultValidUser, actual);
-        User clone = new User(VALID_ID, actual.getLogin(), VALID_PASSWORD, VALID_USER_AGE);
-        assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(clone);
-        }, "Expected " + InvalidUserDataException.class.getName()
-                + "for already exist login!");
+    void register_Ok() {
+        User user = new User(VALID_ID,VALID_LOGIN,VALID_PASSWORD,VALID_USER_AGE);
+        User register = registrationService.register(user);
+        assertSame(storage.get(VALID_LOGIN), register);
     }
 
     @AfterEach
