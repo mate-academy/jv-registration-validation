@@ -81,13 +81,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userTooOld_notOk() {
-        testUser.setAge(LOW_AGE);
+        testUser.setAge(HIGH_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_userTooYoung_notOk() {
-        testUser.setAge(HIGH_AGE);
+        testUser.setAge(LOW_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
     }
 
@@ -98,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWasRegistered_Ok() {
+    void register_validUser_Ok() {
         assertEquals(registrationService.register(testUser), testUser);
     }
 
