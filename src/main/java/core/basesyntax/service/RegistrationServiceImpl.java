@@ -10,11 +10,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getAge() < 18) {
-            throw new InvalidDataException("Your age is under 18!");
+        if (user == null) {
+            throw new InvalidDataException("User can not be null!");
         }
         if (user.getAge() == null) {
             throw new InvalidDataException("Your age can not be null!");
+        }
+        if (user.getAge() < 18) {
+            throw new InvalidDataException("Your age is under 18!");
+        }
+        if (user.getPassword() == null) {
+            throw new InvalidDataException("Your password can not be null!");
         }
         if (user.getPassword().length() < 6) {
             throw new InvalidDataException("Your password is less than 6 characters!");
