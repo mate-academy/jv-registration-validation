@@ -9,7 +9,6 @@ public class User {
     private Integer age;
 
     public User() {
-
     }
 
     public User(Long id, String login, String password, Integer age) {
