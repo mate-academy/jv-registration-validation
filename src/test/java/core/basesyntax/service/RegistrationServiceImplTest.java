@@ -44,7 +44,7 @@ public class RegistrationServiceImplTest {
     @Test
     void register_nullAge_NotOk() {
         User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, null);
-        assertThrows(NullPointerException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(userTest));
     }
 

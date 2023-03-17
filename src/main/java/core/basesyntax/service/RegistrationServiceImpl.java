@@ -23,12 +23,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Not valid password!");
         }
 
-        if (user.getAge() < MIN_USER_AGE && user.getAge() != null) {
-            throw new RegistrationException(" Not valid age");
+        if (user.getAge() != null && user.getAge() < MIN_USER_AGE) {
+            throw new RegistrationException(" Not valid age!");
         }
 
         if (user.getAge() == null) {
-            throw new NullPointerException("Age can`t be null ");
+            throw new RegistrationException("Age can`t be null!");
         }
 
         if (storageDao.get(user.getLogin()) != null) {
