@@ -18,7 +18,6 @@ public class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "123456";
     private static int VALID_USER_AGE = 18;
     private static Long VALID_ID = Long.valueOf(12334);
-    private static User defaultValidUser;
     private static RegistrationService registrationService;
     private static StorageDao storage;
 
@@ -44,8 +43,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_NotOk() {
-        User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, 0);
-        assertThrows(RegistrationException.class, () ->
+        User userTest = new User(VALID_ID, VALID_LOGIN, VALID_PASSWORD, null);
+        assertThrows(NullPointerException.class, () ->
                 registrationService.register(userTest));
     }
 
