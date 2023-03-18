@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserAlreadyExist_ok() {
+    void register_newUser_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
