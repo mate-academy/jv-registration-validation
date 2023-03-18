@@ -78,3 +78,4 @@ class RegistrationServiceImplTest {
         return user;
     }
 }
+
