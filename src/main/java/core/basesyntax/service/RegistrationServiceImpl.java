@@ -25,24 +25,20 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidDataException("The user should not be equal null");
         }
-
         User newUser = storageDao.get(user.getLogin());
         if (newUser != null) {
-            throw new InvalidDataException("The user already is in storage");
+            throw new InvalidDataException("The user already is in storage: " + user.getLogin());
         }
     }
 
     private void passwordValidation(User user) throws InvalidDataException {
         if (user.getPassword() == null) {
-            throw new InvalidDataException("Your password is equal null"
-                    + user.getPassword());
+            throw new InvalidDataException("Your password is equal null");
         }
-
         if (user.getPassword().isEmpty()) {
             throw new InvalidDataException("You did not write any symbol: "
                     + user.getPassword());
         }
-
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new InvalidDataException("Your password is short: "
                     + user.getPassword());
@@ -51,15 +47,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void ageValidation(User user) throws InvalidDataException {
         if (user.getAge() == null) {
-            throw new InvalidDataException("Your age is equal null. "
-                    + user.getAge());
+            throw new InvalidDataException("Your age is equal null");
         }
-
         if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException("You are younger then need: "
                     + user.getAge());
         }
-
         if (user.getAge() < ZERO_AGE) {
             throw new InvalidDataException("You wrote a negative number: "
                     + user.getAge());
@@ -68,15 +61,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void loginValidation(User user) throws InvalidDataException {
         if (user.getLogin() == null) {
-            throw new InvalidDataException("Your login is equal null."
-                    + user.getLogin());
+            throw new InvalidDataException("Your login is equal null");
         }
-
         if (user.getLogin().isEmpty()) {
             throw new InvalidDataException("You did not write any symbol: "
                     + user.getLogin());
         }
-
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new InvalidDataException("Your login is very short: "
                     + user.getLogin());

@@ -43,7 +43,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_defaultValidUser_ok() {
-        Assertions.assertDoesNotThrow(() -> RegistrationServiceImpl.register(testUserOk));
+        RegistrationServiceImpl.register(testUserOk);
         Assertions.assertNotNull(storageDao.get(testUserOk.getLogin()));
     }
 
@@ -67,7 +67,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_passwordIsRight_Ok() {
-        Assertions.assertDoesNotThrow(() -> RegistrationServiceImpl.register(testUserOk));
+        RegistrationServiceImpl.register(testUserOk);
         String expectedPassword = "Password";
         User userInStorage = storageDao.get(testUserOk.getLogin());
         Assertions.assertEquals(expectedPassword, userInStorage.getPassword());
@@ -90,7 +90,7 @@ public class RegistrationServiceImplTest {
         testUserChristOk.setLogin("Login");
         testUserChristOk.setPassword("Password");
         int expectedAge = 33;
-        Assertions.assertDoesNotThrow(() -> RegistrationServiceImpl.register(testUserChristOk));
+        RegistrationServiceImpl.register(testUserChristOk);
         User userInStorage = storageDao.get(testUserChristOk.getLogin());
         Assertions.assertEquals(expectedAge, userInStorage.getAge());
     }
@@ -128,7 +128,7 @@ public class RegistrationServiceImplTest {
     @Test
     void register_userHasPermissibleAge_Ok() {
         int expectedAge = 20;
-        Assertions.assertDoesNotThrow(() -> RegistrationServiceImpl.register(testUserOk));
+        RegistrationServiceImpl.register(testUserOk);
         User userInStorage = storageDao.get(testUserOk.getLogin());
         Assertions.assertEquals(expectedAge, userInStorage.getAge());
     }
