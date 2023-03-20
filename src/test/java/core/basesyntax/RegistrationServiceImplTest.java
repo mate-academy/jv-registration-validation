@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Feel free to remove this class and create your own.
  */
-public class RegistrationServiceImplTest {
+class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final String EXPECTED_EXCEPTION =
@@ -35,6 +35,27 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_positiveTest_ok() {
+        User user = new User();
+        user.setAge(19);
+        user.setLogin("User");
+        user.setPassword("123456");
+        storageDao.add(user);
+    }
+
+    @Test
+    void register_newLogin_Ok() {
+        User user = new User();
+        user.setLogin("User");
+        user.setPassword("123456");
+        user.setAge(21);
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
+        Assertions.assertEquals(user, actual,
+                "User should be added if user login doesnt exist");
+    }
+
+    @Test
     void register_nullUser_notOk() {
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(null),
@@ -42,31 +63,10 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_positiveTest_Ok(){
-        User user = new User();
-        user.setAge(18);
-        user.setLogin("User");
-        user.setPassword("123456");
-        storageDao.add(user);
-    }
-
-    @Test
-    void register_newUser_Ok() {
-        User user = new User();
-        user.setLogin("User");
-        user.setPassword("123456789");
-        user.setAge(20);
-        registrationService.register(user);
-        User actual = storageDao.get(user.getLogin());
-        Assertions.assertEquals(user, actual,
-                "User should be add, if user doesn't exist");
-    }
-
-    @Test
-    void register_login_not_Ok() {
+    void register_nullLogin_notOk() {
         User user = new User();
         user.setAge(19);
-        user.setPassword("1234567");
+        user.setPassword("123456");
         user.setLogin(null);
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(user),
@@ -74,38 +74,47 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_not_Ok() {
+    void register_WrongAre_notOk() {
         User user = new User();
-        user.setPassword("1234");
-        user.setAge(19);
-        user.setLogin("Name");
+        user.setLogin("User");
+        user.setPassword("123456");
+        user.setAge(17);
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(user),
-                String.format("Should throw %s when password less than %d characters", EXPECTED_EXCEPTION, MIN_AGE));
-    }
-    @Test
-    void register_passwordNull_not_Ok() {
-        User user = new User();
-        user.setPassword(null);
-        user.setAge(19);
-        user.setLogin("Name");
-        Assertions.assertThrows(ValidationException.class,
-                () -> registrationService.register(user),
-                String.format("Should throw %s when password is null", EXPECTED_EXCEPTION));
+                String.format("Should throw %s when age under %d",
+                        EXPECTED_EXCEPTION, MIN_AGE));
     }
 
     @Test
-    void register_age_not_OK() {
+    void register_nullAge_notOk() {
         User user = new User();
-        user.setLogin("Name");
-        user.setAge(17);
+        user.setLogin("User");
         user.setPassword("123456");
+        user.setAge(null);
         Assertions.assertThrows(ValidationException.class,
                 () -> registrationService.register(user),
-                String.format("Should throw %s when age less than &d", EXPECTED_EXCEPTION, MIN_AGE));
+                String.format("Should throw %s when age is null", EXPECTED_EXCEPTION));
     }
+
     @Test
-    void register_Password_Ok() {
+    void register_existingLogin_notOk() {
+        User firstUser = new User();
+        firstUser.setAge(19);
+        firstUser.setPassword("123456");
+        firstUser.setLogin("User");
+        storageDao.add(firstUser);
+        User secondUser = new User();
+        secondUser.setAge(19);
+        secondUser.setPassword("123456");
+        secondUser.setLogin("User");
+        Assertions.assertThrows(ValidationException
+                        .class, () -> registrationService.register(secondUser),
+                String.format("Should throw %s when login is already exists",
+                        EXPECTED_EXCEPTION));
+    }
+
+    @Test
+    void register_validPassword_Ok() {
         User user = new User();
         user.setLogin("User");
         user.setPassword("12345678910");
@@ -115,5 +124,4 @@ public class RegistrationServiceImplTest {
         Assertions.assertEquals(user, actual,
                 "User should be added if user password is valid");
     }
-
 }

@@ -20,25 +20,26 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private static void verifyAge(User user) {
-        if(user.getAge() < MIN_AGE) {
-            throw new ValidationException("Not valid age, age should be more than " + MIN_AGE);
-        }
-        if(user.getAge() == null) {
+        if (user.getAge() == null) {
             throw new ValidationException("Age shouldn't be null");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new ValidationException("Not valid age, age should be more than " + MIN_AGE);
         }
     }
 
     private static void verifyUser(User user) {
-        if(user == null) {
+        if (user == null) {
             throw new ValidationException("Can't find a  user");
         }
     }
+
     private static void verifyLogin(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new ValidationException("User with the same login already exists");
 
         }
-        if(user.getLogin() == null) {
+        if (user.getLogin() == null) {
             throw new ValidationException("Login can't be empty");
         }
     }
@@ -47,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new ValidationException("Password can't be null");
         }
-        if(user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new ValidationException("Password should be more that 6 characters");
         }
     }
