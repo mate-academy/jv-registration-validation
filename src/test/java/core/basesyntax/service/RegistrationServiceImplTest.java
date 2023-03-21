@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void overwriting_existingUsers_notOK() throws RegistrationException {
+    void registration_check_notOK() throws RegistrationException {
         user.setLogin("pokemon");
         user.setPassword("Rock99pop");
         user.setAge(23);
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageMinus18_notOK() {
+    public void register_UnvalidAge_notOK()  {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
