@@ -30,7 +30,7 @@ public class RegistrationServiceImplTests {
     }
 
     @Test
-    void register_userPasswordEqualsNull_Ok() {
+    void register_userPasswordEqualsNull_notOk() {
         user.setPassword(null);
         Assertions.assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(user);
@@ -38,7 +38,7 @@ public class RegistrationServiceImplTests {
     }
 
     @Test
-    void register_userPasswordMinLength_Ok() {
+    void register_userPasswordMinLengthAndAgeMin_Ok() {
         User actual = storageDao.add(user);
         Assertions.assertEquals(user, actual);
     }
@@ -57,12 +57,6 @@ public class RegistrationServiceImplTests {
         Assertions.assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(user);
         });
-    }
-
-    @Test
-    void register_userAgeMin_Ok() throws RegistrationServiceException {
-        User actual = storageDao.add(user);
-        Assertions.assertEquals(user, actual);
     }
 
     @Test
@@ -120,7 +114,7 @@ public class RegistrationServiceImplTests {
     }
 
     @Test
-    void register_userNull_Ok() {
+    void register_userNull_notOk() {
         user = null;
         Assertions.assertThrows(NullPointerException.class, () -> {
             registrationService.register(user);
@@ -130,6 +124,22 @@ public class RegistrationServiceImplTests {
     @Test
     void register_userExist_Ok() throws Exception {
         storageDao.add(user);
+        Assertions.assertThrows(RegistrationServiceException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_userLoginNull_notOk() throws RegistrationServiceException {
+        user.setLogin(null);
+        Assertions.assertThrows(RegistrationServiceException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_userLoginEmpty_notOk() throws RegistrationServiceException {
+        user.setLogin("");
         Assertions.assertThrows(RegistrationServiceException.class, () -> {
             registrationService.register(user);
         });

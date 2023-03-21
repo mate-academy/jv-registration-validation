@@ -16,13 +16,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceException("Error, login is " + user.getLogin());
         }
         if (user.getLogin().equals("")) {
-            throw new RegistrationServiceException("Error, login is " + user.getLogin());
+            throw new RegistrationServiceException("Error, login can't be empty");
         }
         if (user.getPassword() == null) {
             throw new RegistrationServiceException("Error, password is " + user.getPassword());
         }
         if (user.getPassword().equals("")) {
-            throw new RegistrationServiceException("Error, password is " + user.getPassword());
+            throw new RegistrationServiceException("Error, password cant be empty");
         }
         if (user.getAge() == null) {
             throw new RegistrationServiceException("Error, age is " + user.getAge());
@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() > AGE_MAX) {
             throw new RegistrationServiceException("User's age "
-                    + user.getAge() + " is more than 122 years");
+                    + user.getAge() + " is more than" + AGE_MAX + "years");
         }
         if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
             throw new RegistrationServiceException("User's password is less than 6 characters");
