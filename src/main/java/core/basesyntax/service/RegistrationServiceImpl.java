@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationServiceException("Error, login is " + user.getLogin());
         }
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isEmpty()) {
             throw new RegistrationServiceException("Error, login can't be empty");
         }
         if (user.getPassword() == null) {
