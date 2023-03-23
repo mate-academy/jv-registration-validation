@@ -9,6 +9,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
         }
@@ -24,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < 18) {
             throw new RegistrationException("User should be 18 and older");
         }
-        if (user.getPassword().toCharArray().length < 6) {
+        if (user.getPassword().length() < 6) {
             throw new RegistrationException("Password should be 6 and more symbols");
         }
         return storageDao.add(user);
