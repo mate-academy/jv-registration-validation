@@ -8,12 +8,8 @@ import core.basesyntax.model.User;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RegistrationServiceImplTest {
     private static List<User> userList;
     private static User nullUser;
@@ -50,8 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @Order(1)
-    void register_validData_Ok() {
+    void register1_validData_Ok() {
         userWithValidData = new User();
         userWithValidData.setPassword("12345678");
         userWithValidData.setLogin("user");
@@ -81,8 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @Order(2)
-    void register_sameLogin_NotOk() {
+    void register2_sameLogin_NotOk() {
         userWithValidDateSameLogin = new User();
         userWithValidDateSameLogin.setLogin("user");
         userWithValidDateSameLogin.setPassword("123456958");
