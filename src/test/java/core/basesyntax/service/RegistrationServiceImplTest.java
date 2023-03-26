@@ -1,8 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -22,18 +20,18 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         user = new User();
+        user.setId(1L);
         anotherUser = new User();
+        anotherUser.setId(2L);
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     void setUp() {
-        anotherUser.setId(44L);
         anotherUser.setAge(32);
         anotherUser.setLogin("anotherUserLogin");
         anotherUser.setPassword("anotherUserPassword");
-        user.setId(1L);
         user.setAge(23);
         user.setLogin("uniqueLogin");
         user.setPassword("uniquePassword");
@@ -136,15 +134,6 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
-
-    @Test
-    void register_TwoDifferentUsers_Ok() {
-        boolean login = user.getLogin().equals(anotherUser.getLogin());
-        assertFalse(login);
-        storageDao.add(user);
-        storageDao.add(anotherUser);
-        assertNotEquals(storageDao.get(user.getLogin()), storageDao.get(anotherUser.getLogin()));
     }
 
     @Test

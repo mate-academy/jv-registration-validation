@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User id can not be empty");
         }
         if (user.getId() < MIN_USER_ID) {
-            throw new RegistrationException("User id should be bigger or equal 1");
+            throw new RegistrationException("User id should be bigger or equal " + MIN_USER_ID);
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Field password can not be empty");
@@ -34,10 +34,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("There is user with such login already");
         }
         if (user.getAge() < MIN_USER_AGE) {
-            throw new RegistrationException("User age must be 18 or older");
+            throw new RegistrationException("User age must be " + MIN_USER_AGE + " or older");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password should have 6 or more characters");
+            throw new RegistrationException("Password should have "
+                    + MIN_PASSWORD_LENGTH + "or more characters");
         }
         return storageDao.add(user);
     }
