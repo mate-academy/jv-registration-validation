@@ -1,44 +1,82 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
 
     private RegistrationService registrationService = new RegistrationServiceImpl();
     private StorageDao storageDao = new StorageDaoImpl();
+    private Map<String,User> users;
+
+    @BeforeEach
+    void setUp() {
+        users = new HashMap<>();
+        User testUserOk = new User(); //testUserOk
+        testUserOk.setId(12345L);
+        testUserOk.setAge(18);
+        testUserOk.setLogin("testUserOk");
+        testUserOk.setPassword("123456");
+        users.put("testUserOk",testUserOk);
+        User testUserNamesake = new User(); //testUserNamesake
+        testUserNamesake.setId(12347L);
+        testUserNamesake.setAge(22);
+        testUserNamesake.setLogin("testUserOk");
+        testUserNamesake.setPassword("1234568");
+        users.put("testUserNamesake", testUserNamesake);
+        User testUserJuvenile = new User(); //testUserJuvenile
+        testUserJuvenile.setId(12347L);
+        testUserJuvenile.setAge(16);
+        testUserJuvenile.setLogin("userJuvenile");
+        testUserJuvenile.setPassword("1234568");
+        users.put("testUserJuvenile", testUserJuvenile);
+        User testUserShortPassword = new User(); //testUserShortPassword
+        testUserShortPassword.setId(12348L);
+        testUserShortPassword.setAge(20);
+        testUserShortPassword.setLogin("userShortPassword");
+        testUserShortPassword.setPassword("12345");
+        users.put("testUserShortPassword", testUserShortPassword);
+        User testUserNoId = new User(); //testUserNoId
+        testUserNoId.setAge(20);
+        testUserNoId.setLogin("userNoId");
+        testUserNoId.setPassword("123456");
+        users.put("testUserNoId", testUserNoId);
+        User testUserNoAge = new User(); //testUserNoAge
+        testUserNoAge.setId(12348L);
+        testUserNoAge.setLogin("userNoAge");
+        testUserNoAge.setPassword("123456");
+        users.put("testUserNoAge", testUserNoAge);
+        User testUserNoLogin = new User(); //testUserNoLogin
+        testUserNoLogin.setId(12348L);
+        testUserNoLogin.setAge(20);
+        testUserNoLogin.setPassword("123456");
+        users.put("testUserNoLogin", testUserNoLogin);
+        User testUserNoPassword = new User(); //testUserNoPassword
+        testUserNoPassword.setId(12348L);
+        testUserNoPassword.setLogin("userNoPassword");
+        testUserNoPassword.setAge(20);
+        users.put("testUserNoPassword", testUserNoPassword);
+    }
 
     @Test
     void registerUser_Ok() throws AuthenticationException {
-        User testUser1 = new User(); //testUser1
-        testUser1.setId(12345L);
-        testUser1.setAge(18);
-        testUser1.setLogin("user1");
-        testUser1.setPassword("123456");
-        registrationService.register(testUser1);
-        assertTrue(storageDao.get(testUser1.getLogin()) != null);
+        registrationService.register(users.get("testUserOk"));
+        assertNotNull(storageDao.get(users.get("testUserOk").getLogin()));
     }
 
     @Test
     void userAlreadyExist_NotOk() throws AuthenticationException {
-        User testUser2 = new User(); //testUser2
-        testUser2.setId(12346L);
-        testUser2.setAge(20);
-        testUser2.setLogin("user2");
-        testUser2.setPassword("1234567");
-        registrationService.register(testUser2);
-        User testUser3 = new User(); //testUser3
-        testUser3.setId(12347L);
-        testUser3.setAge(22);
-        testUser3.setLogin("user2");
-        testUser3.setPassword("1234568");
         try {
-            registrationService.register(testUser3);
+            registrationService.register(users.get("testUserOk"));
+            registrationService.register(users.get("testUserNamesake"));
         } catch (AuthenticationException e) {
             return;
         }
@@ -46,14 +84,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userYoungerThan18_NotOk() {
-        User testUser4 = new User(); //testUser4
-        testUser4.setId(12347L);
-        testUser4.setAge(16);
-        testUser4.setLogin("user4");
-        testUser4.setPassword("1234568");
+    void userYoungerThanLimit_NotOk() {
         try {
-            registrationService.register(testUser4);
+            registrationService.register(users.get("testUserJuvenile"));
         } catch (AuthenticationException e) {
             return;
         }
@@ -61,14 +94,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLessThan6Char_NotOk() {
-        User testUser5 = new User(); //testUser5
-        testUser5.setId(12348L);
-        testUser5.setAge(20);
-        testUser5.setLogin("user5");
-        testUser5.setPassword("12345");
+    void passwordLessThanLimit_NotOk() {
         try {
-            registrationService.register(testUser5);
+            registrationService.register(users.get("testUserShortPassword"));
         } catch (AuthenticationException e) {
             return;
         }
@@ -77,42 +105,26 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNull_NotOk() {
-        User testUser6 = new User(); //testUser6 NoID
-        testUser6.setAge(20);
-        testUser6.setLogin("user6");
-        testUser6.setPassword("123456");
         try {
-            registrationService.register(testUser6);
+            registrationService.register(users.get("testUserNoId"));
         } catch (AuthenticationException e) {
             return;
         }
         fail("AuthenticationException should be thrown because ID can't be null");
-        User testUser7 = new User(); //testUser7 NoAge
-        testUser7.setId(12348L);
-        testUser7.setLogin("user7");
-        testUser7.setPassword("123456");
         try {
-            registrationService.register(testUser7);
+            registrationService.register(users.get("testUserNoAge"));
         } catch (AuthenticationException e) {
             return;
         }
         fail("AuthenticationException should be thrown because Age can't be null");
-        User testUser8 = new User(); //testUser8 NoLogin
-        testUser8.setId(12348L);
-        testUser8.setAge(20);
-        testUser8.setPassword("123456");
         try {
-            registrationService.register(testUser8);
+            registrationService.register(users.get("testUserNoLogin"));
         } catch (AuthenticationException e) {
             return;
         }
         fail("AuthenticationException should be thrown because Login can't be null");
-        User testUser9 = new User(); //testUser9 NoPassword
-        testUser9.setId(12348L);
-        testUser9.setLogin("user9");
-        testUser9.setAge(20);
         try {
-            registrationService.register(testUser9);
+            registrationService.register(users.get("testUserNoPassword"));
         } catch (AuthenticationException e) {
             return;
         }
