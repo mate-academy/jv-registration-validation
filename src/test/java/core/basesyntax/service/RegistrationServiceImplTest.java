@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userUnderEighteen_NotOk() {
+    void register_userUnderEighteen_NotOk() {
         user.setAge(LOW_USER_AGE);
         assertThrows(RegistrationException.class, () -> {
             regService.register(user);
@@ -46,7 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsEighteen_Ok() {
+    void register_userIsEighteen_Ok() {
         user.setAge(USER_AGE_EIGHTEEN);
         regService.register(user);
         User actual = storageDao.get(user.getLogin());
@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsAdult_Ok() {
+    void register_userIsAdult_Ok() {
         regService.register(user);
         User actual = storageDao.get(user.getLogin());
         assertEquals(user, actual);
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsNull_NotOk() {
+    void register_passwordIsNull_NotOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> {
             regService.register(user);
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginNull_NotOk() {
+    void register_userLoginNull_NotOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             regService.register(user);
@@ -78,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userWithThisUserNameIsExist_NotOk() {
+    void register_userWithThisUserNameIsExist_NotOk() {
         regService.register(user);
         assertThrows(RegistrationException.class, () -> {
             regService.register(user);
@@ -86,7 +86,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shortPass_NotOk() {
+    void register_shortPass_NotOk() {
         user.setPassword(SHORT_PASSWORD);
         assertThrows(RegistrationException.class, () -> {
             regService.register(user);
@@ -94,7 +94,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() {
+    void register_register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> {
             regService.register(null);
         });
