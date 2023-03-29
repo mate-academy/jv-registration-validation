@@ -12,6 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null.");
+        }
         if (user.getAge() < USER_MIN_AGE) {
             throw new RegistrationException("User age should be "
                     + USER_MIN_AGE + " or more!");

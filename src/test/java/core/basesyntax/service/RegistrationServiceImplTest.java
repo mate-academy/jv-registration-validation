@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userNotAdult_NotOk() {
+    void userUnderEighteen_NotOk() {
         user.setAge(LOW_USER_AGE);
         assertThrows(RegistrationException.class, () -> {
             regService.register(user);
@@ -91,7 +91,13 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             regService.register(user);
         });
+    }
 
+    @Test
+    void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            regService.register(null);
+        });
     }
 
     @AfterEach
