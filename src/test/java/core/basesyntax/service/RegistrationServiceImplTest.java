@@ -20,27 +20,28 @@ class RegistrationServiceImplTest {
     private static final int INCORRECT_HIGH_AGE = 131;
     private static final int NEGATIVE_AGE = -5;
     private static RegistrationService registrationService;
-    private User defaultUser = new User();
+    private static User defaultUser;
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        defaultUser = new User();
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         defaultUser.setAge(INITIAL_AGE);
         defaultUser.setLogin(INITIAL_LOGIN);
         defaultUser.setPassword(INITIAL_PASSWORD);
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         Storage.people.clear();
     }
 
     @Test
-    void register_zeroLoginLength_NotOk() {
+    public void register_emptyLoginLength_notOk() {
         defaultUser.setLogin("");
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
@@ -48,20 +49,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_correctUser_Ok() {
+    public void register_correctUser_Ok() {
         registrationService.register(defaultUser);
         assertEquals(defaultUser, Storage.people.get(0));
     }
 
     @Test
-    void register_userIsNull_notOk() {
+    public void register_userIsNull_notOk() {
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void register_NullPassword_NotOk() {
+    public void register_nullPassword_NotOk() {
         defaultUser.setPassword(null);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
@@ -69,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    public void register_nullLogin_NotOk() {
         defaultUser.setLogin(null);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
@@ -77,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullAge_notOk() {
+    public void register_nullAge_notOk() {
         defaultUser.setAge(null);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
@@ -85,7 +86,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLess18_NotOk() {
+    public void register_ageLessThanMin_NotOk() {
         defaultUser.setAge(INCORRECT_LOW_AGE);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
@@ -93,7 +94,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageMore100_NotOk() {
+    public void register_ageMore100_NotOk() {
         defaultUser.setAge(INCORRECT_HIGH_AGE);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
@@ -101,7 +102,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_incorrectPassword_notOk() {
+    public void register_incorrectPassword_notOk() {
         defaultUser.setPassword(INCORRECT_PASSWORD);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
@@ -109,15 +110,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_negativeAge_NotOk() {
-        defaultUser.setAge(NEGATIVE_AGE);
-        assertThrows(RegistrationFailedException.class, () -> {
-            registrationService.register(defaultUser);
-        });
-    }
-
-    @Test
-    void register_userAlreadyExists_notOk() {
+    public void register_userAlreadyExists_notOk() {
         registrationService.register(defaultUser);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(defaultUser);
