@@ -9,6 +9,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 130;
     private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 0;
+
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -31,7 +33,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationFailedException("User password can't be null");
         }
         if (user.getLogin().length() == 0) {
-            throw new RegistrationFailedException("User login must be longer than 0 characters");
+            throw new RegistrationFailedException("User login must be longer than "
+                    + MIN_LOGIN_LENGTH + " characters");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationFailedException("User must be " + MIN_AGE + " y.o. or older");
@@ -41,10 +44,12 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MAX_AGE + " years old");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationFailedException("Password length must be longer than 6");
+            throw new RegistrationFailedException("Password length must be longer than "
+                    + MIN_PASSWORD_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationFailedException("This login is already in use, please try again");
+            throw new RegistrationFailedException("This login: "
+                    + user.getLogin() + " is already in use, please try again");
         }
     }
 }
