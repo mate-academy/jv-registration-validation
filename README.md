@@ -5,9 +5,9 @@ Your task is to implement a registration service and write unit tests for it.
 Registration service has one method `register(User user)`, that accepts some user (the User.class has already been given to you).
 This method should register a user (by adding it to Storage) only if the user meets the following criteria:
 - there is no user with such login in the Storage yet
-- user login is at least 6 characters
-- user password is at least 6 characters
-- the user is at least 18 years old
+- user's login is at least 6 characters
+- user's password is at least 6 characters
+- user's age is at least 18 years old
 
 In case of invalid data you should throw RuntimeException.
 
