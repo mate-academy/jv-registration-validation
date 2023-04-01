@@ -21,18 +21,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUser_Ok() throws AuthenticationException {
+    void register_user_Ok() throws AuthenticationException {
         User testUserOk = new User(); //testUserOk
         testUserOk.setId(12345L);
         testUserOk.setAge(18);
-        testUserOk.setLogin("testUserOk");
+        testUserOk.setLogin("testUser");
         testUserOk.setPassword("123456");
         registrationService.register(testUserOk);
         assertNotNull(storageDao.get(testUserOk.getLogin()));
     }
 
     @Test
-    void userAlreadyExist_NotOk() throws AuthenticationException {
+    void register_userAlreadyExist_NotOk() throws AuthenticationException {
         User testUserOk = new User(); //testUserOk
         testUserOk.setId(12345L);
         testUserOk.setAge(18);
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeLessThanLimit_NotOk() {
+    void register_userAgeLessThanLimit_NotOk() {
         User testUserJuvenile = new User(); //testUserJuvenile
         testUserJuvenile.setId(12347L);
         testUserJuvenile.setAge(16);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLessThanLimit_NotOk() {
+    void register_passwordLessThanLimit_NotOk() {
         User testUserShortPassword = new User(); //testUserShortPassword
         testUserShortPassword.setId(12348L);
         testUserShortPassword.setAge(20);
@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNoId_NotOk() {
+    void register_NoId_NotOk() {
         User testUserNoId = new User(); //testUserNoId
         testUserNoId.setAge(20);
         testUserNoId.setLogin("userNoId");
@@ -97,7 +97,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNoAge_NotOk() {
+    void register_NoAge_NotOk() {
         User testUserNoAge = new User(); //testUserNoAge
         testUserNoAge.setId(12348L);
         testUserNoAge.setLogin("userNoAge");
@@ -111,7 +111,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNoLogin_NotOk() {
+    void register_NoLogin_NotOk() {
         User testUserNoLogin = new User(); //testUserNoLogin
         testUserNoLogin.setId(12348L);
         testUserNoLogin.setAge(20);
@@ -125,7 +125,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNoPassword_NotOk() {
+    void register_NoPassword_NotOk() {
         User testUserNoPassword = new User(); //testUserNoPassword
         testUserNoPassword.setId(12348L);
         testUserNoPassword.setLogin("userNoPassword");

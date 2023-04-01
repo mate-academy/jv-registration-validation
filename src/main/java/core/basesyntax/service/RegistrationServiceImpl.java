@@ -11,7 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws AuthenticationException {
+    public User register(User user) {
         if (user.getLogin() == null) {
             throw new AuthenticationException("Login can't be null");
         }
