@@ -20,7 +20,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void PasswordNotNull_Ok() {
+    void passwordNotNull_Ok() {
         User userTest = new User();
         userTest.setId(4135141L);
         userTest.setLogin("bondorol");
@@ -62,5 +62,4 @@ class RegistrationServiceImplTest {
 
         assertNotEquals(expected, actual);
     }
-
 }
