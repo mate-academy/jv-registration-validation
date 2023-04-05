@@ -10,6 +10,16 @@ class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
+    void passwordNotNull_Ok() {
+        User userTest = new User();
+        userTest.setId(4135141L);
+        userTest.setLogin("bondorol");
+        userTest.setPassword("1234567");
+        userTest.setAge(43);
+        assertNotNull(userTest.getPassword());
+    }
+
+    @Test
     void userNotNull_Ok() {
         User userTest = new User();
         userTest.setId(31654L);
@@ -18,16 +28,6 @@ class RegistrationServiceImplTest {
         userTest.setAge(43);
         User register = registrationService.register(userTest);
         assertNotNull(register.getLogin());
-    }
-
-    @Test
-    void passwordNotNull_Ok() {
-        User userTest = new User();
-        userTest.setId(4135141L);
-        userTest.setLogin("bondorol");
-        userTest.setPassword("1234567");
-        userTest.setAge(43);
-        assertNotNull(userTest.getPassword());
     }
 
     @Test
