@@ -3,8 +3,9 @@ package core.basesyntax.service;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
