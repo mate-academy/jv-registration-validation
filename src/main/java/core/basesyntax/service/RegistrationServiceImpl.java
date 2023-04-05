@@ -11,14 +11,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getPassword().length() < 6) {
-            throw new RegistrationUserException("Can't registration user" +
-                    ", because password is less than 6 letters");
+            throw new RegistrationUserException(
+                    "Can't registration user, because password is less than 6 letters");
         } else if (user.getAge() < 18) {
-            throw new RegistrationUserException("Can't registration user" +
-                    ", because user isn't 18 years ago");
+            throw new RegistrationUserException(
+                    "Can't registration user, because user isn't 18 years ago");
         } else if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationUserException("Can't registration user" +
-                    ", because this login already uses in storage");
+            throw new RegistrationUserException(
+                    "Can't registration user, because this login already uses in storage");
         }
         return storageDao.add(user);
     }
