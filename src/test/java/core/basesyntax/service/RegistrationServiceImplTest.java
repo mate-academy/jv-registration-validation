@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
+
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
 
