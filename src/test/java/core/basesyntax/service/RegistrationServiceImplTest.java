@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
-import core.basesyntax.model.User;
 import static org.junit.jupiter.api.Assertions.*;
+import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -24,7 +24,6 @@ class RegistrationServiceImplTest {
         userTest.setPassword("1234567");
         assertNotNull(userTest.getPassword());
     }
-
 
     @Test
     void idNotNull_Ok() {
