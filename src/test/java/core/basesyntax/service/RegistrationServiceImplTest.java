@@ -80,12 +80,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginsEquals_notOk() {
-        StorageDao storageDao = new StorageDaoImpl();
         User user = new User();
         user.setId(123131344L);
         user.setLogin("bondorol");
         user.setPassword("121456136");
         user.setAge(19);
+        StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
 
         User userTest = new User();
