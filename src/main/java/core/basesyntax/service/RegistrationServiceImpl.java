@@ -12,6 +12,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException(
+                    "User is null");
+        }
         if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new RegistrationException(
                     "Can't registration user, because password is less than 6 letters");
