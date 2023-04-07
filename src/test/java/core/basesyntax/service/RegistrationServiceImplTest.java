@@ -5,15 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.Test;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-    User userTest = new User();
 
     @Test
     void user_NotNull_Ok() {
+        User userTest = new User();
         userTest.setLogin("bondorol");
         userTest.setPassword("123456");
         userTest.setId(12365L);
@@ -24,6 +24,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void password_Null_notOk() {
+        User userTest = new User();
         userTest.setLogin("bondorol");
         userTest.setPassword(null);
         userTest.setId(12365L);
@@ -43,7 +44,7 @@ class RegistrationServiceImplTest {
     @Test
     void age_Is0_notOk() {
         int actual = 18;
-
+        User userTest = new User();
         userTest.setAge(0);
         Integer expected = userTest.getAge();
         assertNotEquals(expected, actual);
@@ -52,6 +53,7 @@ class RegistrationServiceImplTest {
     @Test
     void age_Is5_notOk() {
         int actual = 18;
+        User userTest = new User();
         userTest.setAge(5);
         Integer expected = userTest.getAge();
         assertNotEquals(expected, actual);
@@ -60,6 +62,7 @@ class RegistrationServiceImplTest {
     @Test
     void age_Is10_notOk() {
         int actual = 18;
+        User userTest = new User();
         userTest.setAge(10);
         Integer expected = userTest.getAge();
         assertNotEquals(expected, actual);
@@ -68,6 +71,7 @@ class RegistrationServiceImplTest {
     @Test
     void age_Is18_ok() {
         int actual = 18;
+        User userTest = new User();
         userTest.setAge(18);
         Integer expected = userTest.getAge();
         assertEquals(expected, actual);
@@ -76,6 +80,7 @@ class RegistrationServiceImplTest {
     @Test
     void age_IsMore_Than18_ok() {
         int actual = 18;
+        User userTest = new User();
         userTest.setAge(19);
         Integer expected = userTest.getAge();
         assertNotEquals(expected, actual);
@@ -83,6 +88,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void login_IsNotNull_Ok() {
+        User userTest = new User();
         userTest.setLogin("ewruyeu");
         assertNotNull(userTest.getLogin());
     }
