@@ -12,7 +12,7 @@ class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
-    void user_NotNull_Ok() {
+    void register_userNotNull_Ok() {
         User userTest = new User();
         userTest.setLogin("bondorol");
         userTest.setPassword("123456");
@@ -23,7 +23,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void password_Null_notOk() {
+    void register_passwordNull_notOk() {
         User userTest = new User();
         userTest.setLogin("bondorol");
         userTest.setPassword(null);
@@ -35,14 +35,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void user_IsNull_notOk() {
+    void register_userIsNull_notOk() {
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void age_Is0_notOk() {
+    void register_ageIs0_notOk() {
         int actual = 18;
         User userTest = new User();
         userTest.setAge(0);
@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_Is5_notOk() {
+    void registe_ageIs5_notOk() {
         int actual = 18;
         User userTest = new User();
         userTest.setAge(5);
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_Is10_notOk() {
+    void register_ageIs10_notOk() {
         int actual = 18;
         User userTest = new User();
         userTest.setAge(10);
@@ -69,7 +69,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_Is18_ok() {
+    void registe_ageIs18_ok() {
         int actual = 18;
         User userTest = new User();
         userTest.setAge(18);
@@ -78,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_IsMore_Than18_ok() {
+    void register_ageIsMoreThan18_ok() {
         int actual = 18;
         User userTest = new User();
         userTest.setAge(19);
@@ -87,14 +87,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void login_IsNotNull_Ok() {
+    void registe_loginIsNotNull_Ok() {
         User userTest = new User();
         userTest.setLogin("ewruyeu");
         assertNotNull(userTest.getLogin());
     }
 
     @Test
-    void login_IsEquals_notOk() {
+    void register_loginIsEquals_notOk() {
         User userFirstTest = new User();
         User userSecondTest = new User();
         userFirstTest.setLogin("bondorol");
@@ -107,7 +107,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLength_less_thanSix_notOk() {
+    void register_passwordLengthLessThanSix_notOk() {
         User firstUserTest = new User();
         User secondUserTest = new User();
         firstUserTest.setPassword("123");
@@ -118,7 +118,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLength_IsFiveCharacters_notOk() {
+    void register_passwordLengthIsFiveCharacters_notOk() {
         User firstUserTest = new User();
         User secondUserTest = new User();
         firstUserTest.setPassword("12345");
@@ -129,7 +129,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLength_IsSixCharacters_ok() {
+    void register_passwordLengthIsSixCharacters_ok() {
         User firstUserTest = new User();
         User secondUserTest = new User();
         firstUserTest.setPassword("123456");
@@ -140,7 +140,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLength_IsEightCharacters_ok() {
+    void register_passwordLengthIsEightCharacters_ok() {
         User firstUserTest = new User();
         User secondUserTest = new User();
         firstUserTest.setPassword("12345678");
