@@ -25,6 +25,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         } else if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException(
                     "Can't registration user, because this login already uses in storage");
+        } else if (user.getId() == 0 && user.getLogin() == null
+                && user.getPassword() == null && user.getAge() == 0) {
+            throw new RegistrationException(
+                    "Can't registration user, because one of the criteria is null");
         }
         return storageDao.add(user);
     }

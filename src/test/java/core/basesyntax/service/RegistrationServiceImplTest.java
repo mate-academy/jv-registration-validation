@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
         userTest.setLogin("bondorol");
         userTest.setPassword(null);
         userTest.setAge(18);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userTest);
         });
     }
