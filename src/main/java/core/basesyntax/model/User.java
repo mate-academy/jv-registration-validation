@@ -7,8 +7,15 @@ public class User {
     private String login;
     private String password;
     private Integer age;
-
-    public Long getId() {
+	
+	public User(Long id, String login, String password, Integer age) {
+		this.id = id;
+		this.login = login;
+		this.password = password;
+		this.age = age;
+	}
+	
+	public Long getId() {
         return id;
     }
 
