@@ -24,7 +24,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerNullUser_NotOk() {
         User user = null;
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(ParameterNotNullUncheckedException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         User user = new User(null, "testuser", 25);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(ParameterNotNullUncheckedException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         User user = new User("testuser", null, 25);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(ParameterNotNullUncheckedException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         User user = new User("testuser", "testuser", null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(ParameterNotNullUncheckedException.class, () -> {
             registrationService.register(user);
         });
     }
