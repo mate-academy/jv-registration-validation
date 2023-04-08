@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException(
                     "User is null");
-        } else if (user.getId() == 0 || user.getLogin() == null || user.getPassword() == null) {
+        } else if (user.getLogin() == null || user.getPassword() == null) {
             throw new RegistrationException(
                     "Can't registration user, because one of the criteria is null");
         }

@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIsLessThan6_notOk() {
+    void register_passworLessMinLength_notOk() {
         User userTest = new User();
         userTest.setId(12365L);
         userTest.setLogin("bondorol");
@@ -55,7 +55,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIs0_notOk() {
+    void register_ageIsNull_notOk() {
         User userTest = new User();
         userTest.setId(12435L);
         userTest.setLogin("123455");
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThan18_notOk() {
+    void register_ageLessMinAge_notOk() {
         User userTest = new User();
         userTest.setId(12314L);
         userTest.setLogin("123456");
