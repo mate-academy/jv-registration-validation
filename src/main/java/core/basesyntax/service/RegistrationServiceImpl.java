@@ -13,28 +13,30 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NotNullParameterUncheckedException("User can't be null");
+            throw new RegistrationException("User can't be null");
         }
         if (user.getLogin() == null) {
-            throw new NotNullParameterUncheckedException("Login can't be null");
+            throw new RegistrationException("Login can't be null");
         }
         if (user.getPassword() == null) {
-            throw new NotNullParameterUncheckedException("Password can't be null");
+            throw new RegistrationException("Password can't be null");
         }
         if (user.getAge() == null) {
-            throw new NotNullParameterUncheckedException("Age can't be null");
+            throw new RegistrationException("Age can't be null");
         }
         if (storageDao.get(user.getLogin()) == null) {
             if (user.getAge() < MIN_AGE) {
-                throw new RuntimeException("Not valid age: " + user.getAge() + ". Allowed age is "
-                        + "older than " + MIN_AGE);
+                throw new RegistrationException("Not valid age: " + user.getAge()
+                        + ". Allowed age is " + "older than " + MIN_AGE);
             }
             if (user.getPassword().toCharArray().length < MIN_LEHGTH) {
-                throw new RuntimeException("Password is incorrect. Plese enter at least 6 symbols");
+                throw new RegistrationException("Password is incorrect. Plese enter at least"
+                        + "6 symbols");
             }
             Storage.people.add(user);
             return user;
         }
-        throw new RuntimeException("Can't add user. There's existing user with a given login.");
+        throw new RegistrationException("Can't add user. There's existing user with a"
+                + "given login.");
     }
 }

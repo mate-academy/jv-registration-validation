@@ -24,7 +24,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerNullUser_NotOk() {
         User user = null;
-        assertThrows(NotNullParameterUncheckedException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         User user = new User(null, "testuser", 25);
-        assertThrows(NotNullParameterUncheckedException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         User user = new User("testuser", null, 25);
-        assertThrows(NotNullParameterUncheckedException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_notOk() {
         User user = new User("testuser", "testuser", null);
-        assertThrows(NotNullParameterUncheckedException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -66,19 +66,19 @@ class RegistrationServiceImplTest {
         User user4 = new User("hellofirst", "user04", 31);
         User user5 = new User("hellosecond", "user05", 32);
         assertAll("user already exists",
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user1);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user2);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user3);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user4);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user5);
                 })
         );
@@ -90,13 +90,13 @@ class RegistrationServiceImplTest {
         User user2 = new User("invalidage2", "invalidage2", 10);
         User user3 = new User("invalidage3", "invalidage3", 17);
         assertAll("user has invalid age",
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user1);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user2);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user3);
                 })
         );
@@ -111,22 +111,22 @@ class RegistrationServiceImplTest {
         User user4 = new User("fourth", "1234", 21);
         User user5 = new User("fifth", "12345", 21);
         assertAll("password length is less than 6 symbols",
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user0);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user1);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user2);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user3);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user4);
                 }),
-                () -> assertThrows(RuntimeException.class, () -> {
+                () -> assertThrows(RegistrationException.class, () -> {
                     registrationService.register(user5);
                 })
         );
