@@ -13,16 +13,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NotNullParameterUncheckedException("User can't be null");
+            throw new NullPointerException("User can't be null");
         }
         if (user.getLogin() == null) {
-            throw new NotNullParameterUncheckedException("Login can't be null");
+            throw new NullPointerException("Login can't be null");
         }
         if (user.getPassword() == null) {
-            throw new NotNullParameterUncheckedException("Password can't be null");
+            throw new NullPointerException("Password can't be null");
         }
         if (user.getAge() == null) {
-            throw new NotNullParameterUncheckedException("Age can't be null");
+            throw new NullPointerException("Age can't be null");
         }
         if (storageDao.get(user.getLogin()) == null) {
             if (user.getAge() < MIN_AGE) {
