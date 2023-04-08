@@ -12,6 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new NullPointerException("User can't be null");
+        }
         if (user.getLogin() == null) {
             throw new NullPointerException("Login can't be null");
         }
@@ -30,8 +33,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 throw new RuntimeException("Password is incorrect. Plese enter at least 6 symbols");
             }
             Storage.people.add(user);
-            //storageDao.add(user);
-            int size = Storage.people.size();
             return user;
         }
         throw new RuntimeException("Can't add user. There's existing user with a given login.");
