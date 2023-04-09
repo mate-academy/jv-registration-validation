@@ -13,25 +13,44 @@ public class RegistrationServiceImpl implements RegistrationService {
     
     @Override
     public User register(User user) {
+        checkDataForNull(user);
+        checkLoginExists(user);
+        checkLogin(user);
+        checkPassword(user);
+        checkAge(user);
+        return storageDao.add(user);
+    }
+    
+    private void checkAge(User user) {
+        if (user.getAge() < MIN_USER_AGE) {
+            throw new ValidationException("User must be over 18 years of age");
+        }
+    }
+    
+    private void checkPassword(User user) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new ValidationException(
+                    "Password is too short, it must be more than 6 characters");
+        }
+    }
+    
+    private void checkLogin(User user) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new ValidationException("Login is too short, it must be more than 6 characters");
+        }
+    }
+    
+    private void checkLoginExists(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new ValidationException("User with this login exists try again");
+        }
+    }
+    
+    private void checkDataForNull(User user) {
         if (user.getLogin() == null
                 || user.getPassword() == null
                 || user.getAge() == null) {
             throw new ValidationException("Any user value cannot be null");
         }
-        
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new ValidationException("User with this login exists try again");
-        }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new ValidationException("Login is too short, it must be more than 6 characters");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new ValidationException(
-                    "Password is too short, it must be more than 6 characters");
-        }
-        if (user.getAge() < MIN_USER_AGE) {
-            throw new ValidationException("User must be over 18 years of age");
-        }
-        return storageDao.add(user);
     }
-}
+ }
