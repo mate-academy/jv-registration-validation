@@ -6,29 +6,32 @@ import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_LOGIN_AND_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_USER_AGE = 18;
-    private static final int MIN_ID_LENGTH = 8;
     private final StorageDao storageDao = new StorageDaoImpl();
     
     @Override
-    public User register(User user) throws ValidationException {
-        if (user.getId() == null
-                || user.getLogin() == null
+    public User register(User user) {
+        if (user.getLogin() == null
                 || user.getPassword() == null
                 || user.getAge() == null) {
             throw new ValidationException("Any user value cannot be null");
         }
         
-        if (user.getId().toString().length() >= MIN_ID_LENGTH
-                && storageDao.get(user.getLogin()) == null
-                && user.getLogin().length() >= MIN_LOGIN_AND_PASSWORD_LENGTH
-                && user.getPassword().length() >= MIN_LOGIN_AND_PASSWORD_LENGTH
-                && user.getAge() >= MIN_USER_AGE) {
-            storageDao.add(user);
-        } else {
-            return user;
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new ValidationException("User with this login exists try again");
         }
-        return null;
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new ValidationException("Login is too short, it must be more than 6 characters");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new ValidationException(
+                    "Password is too short, it must be more than 6 characters");
+        }
+        if (user.getAge() < MIN_USER_AGE) {
+            throw new ValidationException("User must be over 18 years of age");
+        }
+        return storageDao.add(user);
     }
 }

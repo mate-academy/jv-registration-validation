@@ -1,8 +1,7 @@
 package core.basesyntax.service;
 
-import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 
 public interface RegistrationService {
-    User register(User user) throws ValidationException;
+    User register(User user);
 }
