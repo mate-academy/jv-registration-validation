@@ -53,4 +53,4 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("Any user value cannot be null");
         }
     }
- }
+}
