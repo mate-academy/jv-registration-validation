@@ -15,14 +15,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException(
                     "User is null");
-        } else if (user.getLogin() == null || user.getPassword() == null) {
+        }
+        if (user.getLogin() == null || user.getPassword() == null) {
             throw new RegistrationException(
                     "Can't registration user, because one of the criteria is null");
-        }
-        if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
+        } else if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new RegistrationException(
                     "Can't registration user, because password is less than 6 letters");
-        } else if (user.getAge() < MIN_AGE_FOR_REGISTRATION || user.getAge() == null) {
+        } else if (user.getAge() == null || user.getAge() < MIN_AGE_FOR_REGISTRATION) {
             throw new RegistrationException(
                     "Can't registration user, because user isn't 18 years ago");
         } else if (storageDao.get(user.getLogin()) != null) {

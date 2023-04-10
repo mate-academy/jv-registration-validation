@@ -13,14 +13,13 @@ class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
-    void register_userNotNull_Ok() {
+    void register_userNotNull_ok() {
         User userTest = new User();
-        userTest.setId(12365L);
+        userTest.setId(123456L);
         userTest.setLogin("bondorol");
         userTest.setPassword("123456");
         userTest.setAge(18);
-        User register = registrationService.register(userTest);
-        assertNotNull(register);
+        assertNotNull(userTest);
     }
 
     @Test
@@ -31,9 +30,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordNull_notOk() {
+    void register_loginIsNull_notOk() {
         User userTest = new User();
-        userTest.setId(12365L);
+        userTest.setId(123456L);
+        userTest.setLogin(null);
+        userTest.setPassword("123456");
+        userTest.setAge(18);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(userTest);
+        });
+    }
+
+    @Test
+    void register_passwordIsNull_notOk() {
+        User userTest = new User();
+        userTest.setId(123456L);
         userTest.setLogin("bondorol");
         userTest.setPassword(null);
         userTest.setAge(18);
@@ -43,11 +54,35 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passworLessMinLength_notOk() {
+    void register_ageLessThanMinAge_notOk() {
         User userTest = new User();
-        userTest.setId(12365L);
+        userTest.setId(123456L);
         userTest.setLogin("bondorol");
-        userTest.setPassword("123");
+        userTest.setPassword("123456");
+        userTest.setAge(17);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(userTest);
+        });
+    }
+
+    @Test
+    void register_passwordNull_notOk() {
+        User userTest = new User();
+        userTest.setId(123456L);
+        userTest.setLogin("bondorol");
+        userTest.setPassword(null);
+        userTest.setAge(18);
+        assertThrows(RegistrationException.class, ()-> {
+            registrationService.register(userTest);
+        });
+    }
+
+    @Test
+    void register_passwordLengthLessThanMin_notOk() {
+        User userTest = new User();
+        userTest.setId(123456L);
+        userTest.setLogin("bondorol");
+        userTest.setPassword("12345");
         userTest.setAge(18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userTest);
@@ -55,36 +90,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsNull_notOk() {
-        User userTest = new User();
-        userTest.setId(12435L);
-        userTest.setLogin("123455");
-        userTest.setPassword("123456");
-        userTest.setAge(0);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userTest);
-        });
-    }
-
-    @Test
-    void register_ageLessMinAge_notOk() {
-        User userTest = new User();
-        userTest.setId(12314L);
-        userTest.setLogin("123456");
-        userTest.setPassword("123456");
-        userTest.setAge(12);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userTest);
-        });
-    }
-
-    @Test
-    void register_loginsEquals_notOk() {
+    void register_loginsNotMach_notOk() {
         User user = new User();
         user.setId(123131344L);
         user.setLogin("bondorol");
-        user.setPassword("121456136");
-        user.setAge(19);
+        user.setPassword("1214566");
+        user.setAge(18);
         StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
 
