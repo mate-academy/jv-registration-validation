@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
         userWrongLogin = new User(3L, "log", "password3", 20);
         userWrongPassword = new User(4L, "login4", "pass", 21);
         userWrongAge = new User(5L, "login5", "password5", 2);
-        preparedStorage();
+        prepareStorage();
     }
 
     @Test
@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
 
-    private static void preparedStorage() {
+    private static void prepareStorage() {
         StorageDaoImpl storageDao = new StorageDaoImpl();
         for (int i = 0; i < NUM_OF_ARRAY_ELEMENTS; i++) {
             long id = FIRST_ID + i;
