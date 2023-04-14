@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
 import java.util.ArrayList;
@@ -37,9 +37,6 @@ class RegistrationServiceImplTest {
         List<User> registeredUsers = new ArrayList<>();
         for (int i = 0; i < USERS_TO_ADD; i++) {
             User registeredUser = registrationService.register(users.pop());
-            if (registeredUser == null) {
-                break;
-            }
             registeredUsers.add(registeredUser);
         }
         assertEquals(USERS_TO_ADD, registeredUsers.size());
@@ -47,8 +44,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        User actual = registrationService.register(null);
-        assertNull(actual);
+        assertThrows(InvalidUserException.class, () -> {
+            User actual = registrationService.register(null);
+        });
     }
 
     @Test
@@ -66,57 +64,63 @@ class RegistrationServiceImplTest {
     @Test
     void register_existingUser_notOk() {
         User user = users.pop();
-        User actual = registrationService.register(user);
-        assertNotNull(actual);
-        actual = registrationService.register(user);
-        assertNull(actual);
+        registrationService.register(user);
+        assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_shortLogin_notOk() {
         User user = users.pop();
         user.setLogin(SHORT_STRING);
-        User actual = registrationService.register(user);
-        assertNull(actual);
+        assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_nullLogin_notOk() {
         User user = users.pop();
         user.setLogin(null);
-        User actual = registrationService.register(user);
-        assertNull(actual);
+        assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_shortPassword_notOk() {
         User user = users.pop();
         user.setPassword(SHORT_STRING);
-        User actual = registrationService.register(user);
-        assertNull(actual);
+        assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_nullPassword_notOk() {
         User user = users.pop();
         user.setPassword(null);
-        User actual = registrationService.register(user);
-        assertNull(actual);
+        assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_youngUser_notOk() {
         User user = users.pop();
         user.setAge(YOUNG_AGE);
-        User actual = registrationService.register(user);
-        assertNull(actual);
+        assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
     void register_nullAge_notOk() {
         User user = users.pop();
         user.setAge(null);
-        User actual = registrationService.register(user);
-        assertNull(actual);
+        assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
