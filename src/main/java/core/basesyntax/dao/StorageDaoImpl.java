@@ -17,7 +17,6 @@ public class StorageDaoImpl implements StorageDao {
     public User get(String login) {
         for (User user : Storage.people) {
             if (user.getLogin().equals(login)) {
-
                 return user;
             }
         }

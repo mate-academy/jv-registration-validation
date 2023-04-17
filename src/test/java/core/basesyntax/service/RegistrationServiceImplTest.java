@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -17,22 +16,23 @@ class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static User user;
 
-    @Test
-    void emptyLines() throws RegistrationException {
-        boolean expected = false;
-        boolean emptyPass = user.getPassword() == null;
-        boolean emptyAge = user.getAge() == null;
-        boolean emptyLogin = user.getLogin() == null;
-        assertEquals(expected, emptyPass, "Password is empty!");
-        assertEquals(expected, emptyLogin, "Login is empty!");
-        assertEquals(expected, emptyAge, "Age is empty!");
-    }
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         user = new User("", "", 0);
+    }
+
+    @Test
+    void emptyLines_check_NotOk() throws RegistrationException {
+        user.setPassword("");
+        user.setLogin("");
+        boolean expected = true;
+        boolean pass = user.getPassword().equals("");
+        boolean login = user.getLogin().equals("");
+        assertEquals(expected, pass, "password field is empty!");
+        assertEquals(expected, login, "login field is empty!");
     }
 
     @Test
@@ -81,7 +81,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_UnvalidAge_notOK() {
+    public void register_InvalidAge_notOK() {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
