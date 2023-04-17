@@ -17,6 +17,11 @@ class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static User user;
 
+    @Test
+    void emptyLines() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
@@ -70,12 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_UnvalidAge_notOK()  {
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void emptyLines() {
+    public void register_UnvalidAge_notOK() {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
