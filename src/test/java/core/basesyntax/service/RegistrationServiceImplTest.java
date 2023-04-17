@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -15,7 +16,6 @@ class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private static RegistrationServiceImpl registrationService;
     private static User user;
-
 
     @BeforeAll
     static void beforeAll() {
