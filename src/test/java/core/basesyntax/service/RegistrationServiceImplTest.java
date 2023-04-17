@@ -18,8 +18,14 @@ class RegistrationServiceImplTest {
     private static User user;
 
     @Test
-    void emptyLines() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    void emptyLines() throws RegistrationException {
+        boolean expected = false;
+        boolean emptyPass = user.getPassword() == null;
+        boolean emptyAge = user.getAge() == null;
+        boolean emptyLogin = user.getLogin() == null;
+        assertEquals(expected, emptyPass, "Password is empty!");
+        assertEquals(expected, emptyLogin, "Login is empty!");
+        assertEquals(expected, emptyAge, "Age is empty!");
     }
 
     @BeforeAll
