@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         testUser.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -60,13 +60,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAge_notOk() {
         testUser.setAge(10);
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void resister_nullAge_notOk() {
         testUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -78,13 +78,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         testUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void register_userPasswordLength_notOk() {
         testUser.setPassword("00000");
-        assertThrows(RuntimeException.class, () -> registrationService.register(testUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @AfterEach
