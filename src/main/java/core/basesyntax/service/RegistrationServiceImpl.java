@@ -40,5 +40,4 @@ public class RegistrationServiceImpl implements RegistrationService {
     private boolean checkUserForAge(User user) {
         return user.getAge() >= MINIMAL_AGE;
     }
-
 }

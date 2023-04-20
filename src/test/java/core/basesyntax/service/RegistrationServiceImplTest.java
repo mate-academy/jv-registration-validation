@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -8,7 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationServiceImpl REGISTRATION_SERVICE = new RegistrationServiceImpl();
+    private static final RegistrationServiceImpl REGISTRATION_SERVICE
+            = new RegistrationServiceImpl();
     private User defaultCorrectUser;
 
     @BeforeEach
@@ -22,25 +24,29 @@ class RegistrationServiceImplTest {
     @Test
     void register_NullUser_NotOk() {
         User user = null;
-        assertThrows(InvalidUserException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(user));
     }
 
     @Test
     void register_MinorUser_NotOk() {
         defaultCorrectUser.setAge(15);
-        assertThrows(InvalidUserException.class, () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
 
     @Test
     void register_IncorrectPassword_NotOk() {
         defaultCorrectUser.setPassword("123");
-        assertThrows(InvalidUserException.class, () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
 
     @Test
     void register_IncorrectLogin_NotOk() {
         defaultCorrectUser.setLogin("4321");
-        assertThrows(InvalidUserException.class, () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
 
     @Test
@@ -51,7 +57,8 @@ class RegistrationServiceImplTest {
         user.setLogin(defaultCorrectUser.getLogin());
         user.setAge(20);
         user.setPassword("abcdefg");
-        assertThrows(InvalidUserException.class, () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
 
     @Test
