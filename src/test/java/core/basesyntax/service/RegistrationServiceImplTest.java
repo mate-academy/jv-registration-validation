@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationService REGISTRATION_SERVICE = new RegistrationServiceImpl();
+    private static final RegistrationServiceImpl REGISTRATION_SERVICE = new RegistrationServiceImpl();
     private User defaultCorrectUser;
 
     @BeforeEach
@@ -41,5 +42,22 @@ class RegistrationServiceImplTest {
     void register_IncorrectLogin_NotOk() {
         defaultCorrectUser.setLogin("4321");
         assertThrows(InvalidUserException.class, () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+
+    @Test
+    void register_ExistingUser_NotOk() {
+        Storage.people.clear();
+        REGISTRATION_SERVICE.register(defaultCorrectUser);
+        User user = new User();
+        user.setLogin(defaultCorrectUser.getLogin());
+        user.setAge(20);
+        user.setPassword("abcdefg");
+        assertThrows(InvalidUserException.class, () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+
+    @Test
+    void register_CorrectUser_Ok() {
+        REGISTRATION_SERVICE.register(defaultCorrectUser);
+        assertFalse(REGISTRATION_SERVICE.checkUserLoginForIdentity(defaultCorrectUser));
     }
 }

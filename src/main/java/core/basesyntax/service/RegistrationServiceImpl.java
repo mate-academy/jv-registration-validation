@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         throw new InvalidUserException();
     }
 
-    private boolean checkUserLoginForIdentity(User user) {
+    boolean checkUserLoginForIdentity(User user) {
         return storageDao.get(user.getLogin()) == null;
     }
 
@@ -39,4 +39,5 @@ public class RegistrationServiceImpl implements RegistrationService {
     private boolean checkUserForAge(User user) {
         return user.getAge() >= 18;
     }
+
 }
