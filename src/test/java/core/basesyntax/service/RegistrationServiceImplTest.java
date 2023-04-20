@@ -1,12 +1,11 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final RegistrationServiceImpl REGISTRATION_SERVICE
@@ -15,6 +14,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         defaultCorrectUser = new User();
         defaultCorrectUser.setAge(20);
         defaultCorrectUser.setLogin("correct login");
@@ -22,37 +22,110 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_NotOk() {
+    void register_nullUser_NotOk() {
         User user = null;
         assertThrows(InvalidUserException.class,
                 () -> REGISTRATION_SERVICE.register(user));
     }
 
     @Test
-    void register_MinorUser_NotOk() {
+    void register_minorUser_NotOk() {
         defaultCorrectUser.setAge(15);
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+    @Test
+    void register_correctAge_Ok() {
+        defaultCorrectUser.setAge(80);
+        REGISTRATION_SERVICE.register(defaultCorrectUser);
+        assertFalse(REGISTRATION_SERVICE.checkLogin(defaultCorrectUser));
+    }
+    @Test
+    void register_nullAge_NotOk() {
+        defaultCorrectUser.setAge(null);
         assertThrows(InvalidUserException.class,
                 () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
 
     @Test
-    void register_IncorrectPassword_NotOk() {
+    void register_incorrectPassword_NotOk() {
         defaultCorrectUser.setPassword("123");
         assertThrows(InvalidUserException.class,
                 () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
 
     @Test
-    void register_IncorrectLogin_NotOk() {
-        defaultCorrectUser.setLogin("4321");
+    void register_emptyPassword_NotOk() {
+        defaultCorrectUser.setPassword("");
         assertThrows(InvalidUserException.class,
                 () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
 
     @Test
-    void register_ExistingUser_NotOk() {
-        Storage.people.clear();
+    void register_nullPassword_NotOk() {
+        defaultCorrectUser.setPassword(null);
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+
+    @Test
+    void register_fiveLengthPassword_NotOk() {
+        defaultCorrectUser.setPassword("12345");
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+
+    @Test
+    void register_sixLengthPassword_Ok() {
+        defaultCorrectUser.setPassword("123456");
         REGISTRATION_SERVICE.register(defaultCorrectUser);
+        assertFalse(REGISTRATION_SERVICE.checkLogin(defaultCorrectUser));
+    }
+
+    @Test
+    void register_longPassword_Ok() {
+        defaultCorrectUser.setPassword("12345678901234");
+        REGISTRATION_SERVICE.register(defaultCorrectUser);
+        assertFalse(REGISTRATION_SERVICE.checkLogin(defaultCorrectUser));
+    }
+
+    @Test
+    void register_fiveLengthLogin_NotOk() {
+        defaultCorrectUser.setLogin("12345");
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+    @Test
+    void register_sixLengthLogin_Ok() {
+        defaultCorrectUser.setLogin("123456");
+        REGISTRATION_SERVICE.register(defaultCorrectUser);
+        assertFalse(REGISTRATION_SERVICE.checkLogin(defaultCorrectUser));
+    }
+
+    @Test
+    void register_nullLogin_NotOk() {
+        defaultCorrectUser.setLogin(null);
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+
+    @Test
+    void register_shortLogin_NotOk() {
+        defaultCorrectUser.setLogin("12");
+        assertThrows(InvalidUserException.class,
+                () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+    }
+
+    @Test
+    void register_longLogin_Ok() {
+        defaultCorrectUser.setLogin("124567890123");
+        REGISTRATION_SERVICE.register(defaultCorrectUser);
+        assertFalse(REGISTRATION_SERVICE.checkLogin(defaultCorrectUser));
+    }
+
+    @Test
+    void register_existingUser_NotOk() {
+        Storage.people.add(defaultCorrectUser);
         User user = new User();
         user.setLogin(defaultCorrectUser.getLogin());
         user.setAge(20);
@@ -62,8 +135,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_CorrectUser_Ok() {
+    void register_correctUser_Ok() {
         REGISTRATION_SERVICE.register(defaultCorrectUser);
-        assertFalse(REGISTRATION_SERVICE.checkUserLoginForIdentity(defaultCorrectUser));
+        assertFalse(REGISTRATION_SERVICE.checkLogin(defaultCorrectUser));
     }
 }

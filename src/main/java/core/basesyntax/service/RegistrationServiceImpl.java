@@ -25,7 +25,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         throw new InvalidUserException();
     }
 
-    boolean checkUserLoginForIdentity(User user) {
+    public boolean checkLogin(User user) {
+        return checkUserLoginForIdentity(user);
+    }
+
+    private boolean checkUserLoginForIdentity(User user) {
+        if (user.getLogin() == null) {
+            return false;
+        }
         return storageDao.get(user.getLogin()) == null;
     }
 
@@ -34,10 +41,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean checkUserPasswordForLength(User user) {
+        if (user.getPassword() == null) {
+            return false;
+        }
         return user.getPassword().length() >= MINIMAL_LENGTH;
     }
 
     private boolean checkUserForAge(User user) {
+        if (user.getAge() == null) {
+            return false;
+        }
         return user.getAge() >= MINIMAL_AGE;
     }
 }
