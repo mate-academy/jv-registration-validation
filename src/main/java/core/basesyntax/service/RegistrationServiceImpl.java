@@ -2,10 +2,11 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MINIMAL_LENGTH = 6;
+    private static final int MINIMAL_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -29,15 +30,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean checkUserLoginForLength(User user) {
-        return user.getLogin().length() >= 6;
+        return user.getLogin().length() >= MINIMAL_LENGTH;
     }
 
     private boolean checkUserPasswordForLength(User user) {
-        return user.getPassword().length() >= 6;
+        return user.getPassword().length() >= MINIMAL_LENGTH;
     }
 
     private boolean checkUserForAge(User user) {
-        return user.getAge() >= 18;
+        return user.getAge() >= MINIMAL_AGE;
     }
 
 }
