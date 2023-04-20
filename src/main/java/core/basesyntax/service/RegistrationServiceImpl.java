@@ -6,24 +6,26 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final StorageDaoImpl STORAGE = new StorageDaoImpl();
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) throws RuntimeException {
+        if (user == null) {
+            throw new InvalidUserException();
+        }
         boolean correctUser = checkUserForAge(user)
                 && checkUserLoginForIdentity(user)
                 && checkUserLoginForLength(user)
                 && checkUserPasswordForLength(user);
         if (correctUser) {
-            STORAGE.add(user);
+            storageDao.add(user);
             return user;
         }
         throw new InvalidUserException();
     }
 
     private boolean checkUserLoginForIdentity(User user) {
-        return STORAGE.get(user.getLogin()) == null;
+        return storageDao.get(user.getLogin()) == null;
     }
 
     private boolean checkUserLoginForLength(User user) {
