@@ -1,11 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final RegistrationServiceImpl REGISTRATION_SERVICE
@@ -33,13 +34,16 @@ class RegistrationServiceImplTest {
         defaultCorrectUser.setAge(15);
         assertThrows(InvalidUserException.class,
                 () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
+
     }
+
     @Test
     void register_correctAge_Ok() {
         defaultCorrectUser.setAge(80);
         REGISTRATION_SERVICE.register(defaultCorrectUser);
         assertFalse(REGISTRATION_SERVICE.checkLogin(defaultCorrectUser));
     }
+
     @Test
     void register_nullAge_NotOk() {
         defaultCorrectUser.setAge(null);
@@ -95,6 +99,7 @@ class RegistrationServiceImplTest {
         assertThrows(InvalidUserException.class,
                 () -> REGISTRATION_SERVICE.register(defaultCorrectUser));
     }
+
     @Test
     void register_sixLengthLogin_Ok() {
         defaultCorrectUser.setLogin("123456");
