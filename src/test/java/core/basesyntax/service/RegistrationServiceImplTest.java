@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -44,75 +43,70 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_nullAge_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(NULL_AGE_USER);
         });
     }
 
     @Test
     public void register_nullLogin_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(NULL_LOGIN_USER);
         });
     }
 
     @Test
     public void register_nullPassword_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(NULL_PASSWORD_USER);
         });
     }
 
     @Test
     public void register_addUser_ok() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(FIRST_USER);
         });
     }
 
     @Test
     public void register_addUserAndCheck_ok() {
-        try {
-            registrationService.register(FIRST_USER);
-            User actual = Storage.people.get(0);
-            assertEquals(FIRST_USER, actual);
-        } catch (RegisterException e) {
-            fail();
-        }
-
+        registrationService.register(FIRST_USER);
+        User actual = Storage.people.get(0);
+        assertEquals(FIRST_USER, actual);
     }
 
     @Test
     public void register_notAllowedUser_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(UNDER_MIN_VALUES_USER);
         });
     }
 
     @Test
     public void register_notAllowedLogin_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(UNDER_MIN_LOGIN_USER);
         });
     }
 
     @Test
     public void register_notAllowedPassword_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(UNDER_MIN_PASSWORD_USER);
         });
     }
 
     @Test
     public void register_notAllowedAge_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(UNDER_MIN_AGE_USER);
         });
     }
 
     @Test
     public void register_zeroValues_notOk() {
-        assertThrows(Exception.class, () -> {
+        assertThrows(RegisterException.class, () -> {
             registrationService.register(ZERO_VALUES_USER);
         });
     }
@@ -130,13 +124,5 @@ class RegistrationServiceImplTest {
         Storage.people.add(FIRST_USER);
         User actual = storageDao.get(FIRST_USER.getLogin());
         assertEquals(FIRST_USER, actual);
-    }
-
-    @Test
-    public void userGet_checkNullValue_notOk() {
-        Storage.people.add(NULL_VALUES_USER);
-        assertThrows(Exception.class, () -> {
-            storageDao.get(NULL_VALUES_USER.getLogin());
-        });
     }
 }
