@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMAL_LENGTH = 6;
@@ -14,25 +16,24 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidUserException("User can't be null!");
         }
-        StringBuilder exception = new StringBuilder();
+        List<String> exceptionList = new ArrayList<>();
         if (!checkUserForAge(user)) {
-            exception.append("Incorrect age!").append(System.lineSeparator());
+            exceptionList.add("Incorrect age!");
         }
         if (!checkUserLoginForIdentity(user)) {
-            exception.append("There is user with this login already!")
-                    .append(System.lineSeparator());
+            exceptionList.add("There is user with this login already!");
         }
         if (!checkUserLoginForIdentity(user) || !checkUserLoginForLength(user)) {
-            exception.append("Incorrect login!").append(System.lineSeparator());
+            exceptionList.add("Incorrect login!");
         }
         if (!checkUserPasswordForLength(user)) {
-            exception.append("Incorrect password!").append(System.lineSeparator());
+            exceptionList.add("Incorrect password!");
         }
-        if (exception.length() == 0) {
+        if (exceptionList.size() == 0) {
             storageDao.add(user);
             return user;
         }
-        throw new InvalidUserException(exception.toString());
+        throw new InvalidUserException(String.join(System.lineSeparator(), exceptionList));
     }
 
     public boolean checkLogin(User user) {
@@ -40,10 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean checkUserLoginForIdentity(User user) {
-        if (user.getLogin() == null) {
-            return false;
-        }
-        return storageDao.get(user.getLogin()) == null;
+        return user.getLogin() != null && storageDao.get(user.getLogin()) == null;
     }
 
     private boolean checkUserLoginForLength(User user) {
@@ -51,16 +49,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean checkUserPasswordForLength(User user) {
-        if (user.getPassword() == null) {
-            return false;
-        }
-        return user.getPassword().length() >= MINIMAL_LENGTH;
+        return user.getPassword() != null && user.getPassword().length() >= MINIMAL_LENGTH;
     }
 
     private boolean checkUserForAge(User user) {
-        if (user.getAge() == null) {
-            return false;
-        }
-        return user.getAge() >= MINIMAL_AGE;
+        return user.getAge() != null && user.getAge() >= MINIMAL_AGE;
     }
 }
