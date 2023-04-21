@@ -17,9 +17,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("The login must be initialized");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("Such a login already exists");
-        }
         if (user.getLogin().length() < MINIMUM_NUMBER_OF_CHARACTERS) {
             throw new RegistrationException("The number of characters in the login"
                     + " must be more than 6");
@@ -36,6 +33,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() < MINIMUM_AGE_FOR_REGISTRATION) {
             throw new RegistrationException("Age for registration must not be less than 18");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("Such a login already exists");
         }
         storageDao.add(user);
         return user;
