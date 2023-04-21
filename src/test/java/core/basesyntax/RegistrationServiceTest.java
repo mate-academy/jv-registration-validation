@@ -16,10 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static final String VALID_LOGIN = "login";
-    private static final String VALID_PASSWORD = "password";
-    private static final String ANOTHER_VALID_LOGIN = "anotherLogin";
-    private static final String ANOTHER_VALID_PASSWORD = "anotherPassword";
+    private static final String VALID_LOGIN = "validLogin";
+    private static final String VALID_PASSWORD = "validPassword";
     private static final String INVALID_LOGIN_WITH_LENGTH_ZERO = "";
     private static final String INVALID_LOGIN_WITH_LENGTH_THREE = "qwe";
     private static final String INVALID_LOGIN_WITH_LENGTH_FIVE = "asdfg";
@@ -27,13 +25,11 @@ public class RegistrationServiceTest {
     private static final String INVALID_PASSWORD_WITH_LENGTH_THREE = "qwe";
     private static final String INVALID_PASSWORD_WITH_LENGTH_FIVE = "asdfg";
     private static final int VALID_AGE = 18;
-    private static final int ANOTHER_VALID_AGE = 22;
     private static final int INVALID_AGE_SIX = 6;
     private static final int INVALID_AGE_NINE = 9;
     private static final int INVALID_AGE_SIXTEEN = 16;
 
     private static StorageDao storageDao;
-    private static Storage storage;
     private static RegistrationService registrationService;
     private static User user;
 
@@ -45,7 +41,6 @@ public class RegistrationServiceTest {
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        storage = new Storage();
         user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
@@ -54,7 +49,7 @@ public class RegistrationServiceTest {
 
     @AfterEach
     void tearDown() {
-
+        Storage.people.clear();
     }
 
     @Test
@@ -120,9 +115,9 @@ public class RegistrationServiceTest {
     @Test
     void register_validUserData_ok() {
         User expectedUser = new User();
-        expectedUser.setLogin(ANOTHER_VALID_LOGIN);
-        expectedUser.setPassword(ANOTHER_VALID_PASSWORD);
-        expectedUser.setAge(ANOTHER_VALID_AGE);
+        expectedUser.setLogin(VALID_LOGIN);
+        expectedUser.setPassword(VALID_PASSWORD);
+        expectedUser.setAge(VALID_AGE);
         User actualUser = registrationService.register(expectedUser);
         assertEquals(expectedUser, actualUser);
     }
