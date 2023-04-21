@@ -24,8 +24,6 @@ class RegistrationServiceImplTest {
     private static final User UNDER_MIN_AGE_USER = new User("login1", "password", 10);
     private static final User UNDER_MIN_VALUES_USER = new User("login", "123", 16);
     private static final User ZERO_VALUES_USER = new User("", "", 0);
-    private static final User NULL_VALUES_USER = new User(null, null, null);
-    private static final int EXPECTED_SIZE = 2;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private Storage storage;
