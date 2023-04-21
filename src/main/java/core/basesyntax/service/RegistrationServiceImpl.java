@@ -12,17 +12,27 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws RuntimeException {
         if (user == null) {
-            throw new InvalidUserException();
+            throw new InvalidUserException("User can't be null!");
         }
-        boolean correctUser = checkUserForAge(user)
-                && checkUserLoginForIdentity(user)
-                && checkUserLoginForLength(user)
-                && checkUserPasswordForLength(user);
-        if (correctUser) {
+        StringBuilder exception = new StringBuilder();
+        if (!checkUserForAge(user)) {
+            exception.append("Incorrect age!").append(System.lineSeparator());
+        }
+        if (!checkUserLoginForIdentity(user)) {
+            exception.append("There is user with this login already!")
+                    .append(System.lineSeparator());
+        }
+        if (!checkUserLoginForIdentity(user) || !checkUserLoginForLength(user)) {
+            exception.append("Incorrect login!").append(System.lineSeparator());
+        }
+        if (!checkUserPasswordForLength(user)) {
+            exception.append("Incorrect password!").append(System.lineSeparator());
+        }
+        if (exception.length() == 0) {
             storageDao.add(user);
             return user;
         }
-        throw new InvalidUserException();
+        throw new InvalidUserException(exception.toString());
     }
 
     public boolean checkLogin(User user) {
