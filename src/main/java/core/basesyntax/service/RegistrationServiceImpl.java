@@ -14,11 +14,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null) {
-            throw new RegistrationUserException("Login can't be null");
+            throw new NullPointerException("Login can't be null");
         }
         if (user.getLogin().length() < MIN_SIZE_LOGIN) {
-            throw new RegistrationUserException("Login must be at least " + MIN_SIZE_LOGIN + ": "
-                    + MIN_SIZE_LOGIN + " characters");
+            throw new RegistrationUserException("Login must be at least "
+                    + MIN_SIZE_LOGIN + "characters");
         }
         if (user.getPassword() == null) {
             throw new RegistrationUserException("Password can't be null");
@@ -28,8 +28,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + ". Min allowed age is " + MIN_AGE);
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_SIZE_PASSWORD) {
-            throw new RegistrationUserException("Password must be at least :"
-                    + MIN_SIZE_PASSWORD + " characters");
+            throw new RegistrationUserException("Password must be at least : "
+                    + MIN_SIZE_PASSWORD + "characters");
         }
         return storageDao.add(user);
     }

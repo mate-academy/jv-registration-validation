@@ -1,7 +1,7 @@
 package core.basesyntax.exception;
 
 public class RegistrationUserException extends RuntimeException {
-    public RegistrationUserException(String massage) {
-        super(massage);
+    public RegistrationUserException(String message) {
+        super(message);
     }
 }
