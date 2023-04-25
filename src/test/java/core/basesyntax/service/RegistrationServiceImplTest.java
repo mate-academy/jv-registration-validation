@@ -63,7 +63,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_NotOK() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RegistrationUserException.class, () -> {
             registrationService.register(user);
         });
     }

@@ -13,8 +13,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new NullPointerException("Login can't be null");
+        if ((user.getLogin() == null) || (user == null)) {
+            throw new RegistrationUserException("Login can't be null");
         }
         if (user.getLogin().length() < MIN_SIZE_LOGIN) {
             throw new RegistrationUserException("Login must be at least "
