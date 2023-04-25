@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.exception.RegistrationUserException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,16 +16,12 @@ class RegistrationServiceImplTest {
     private static final String SHORT_PASSWORD = "short";
     private static final String DEFAULT_LOGIN_NAME = "Developer";
     private static final String SHORT_LOGIN_NAME = "login";
-    private static RegistrationService registrationService;
+    private RegistrationService registrationService;
     private User user;
-
-    @BeforeAll
-    static void createNewRegistrationServiceImpl() {
-        registrationService = new RegistrationServiceImpl();
-    }
 
     @BeforeEach
     public void setUp() {
+        registrationService = new RegistrationServiceImpl();
         user = new User(DEFAULT_LOGIN_NAME, DEFAULT_PASSWORD, DEFAULT_AGE);
     }
 
