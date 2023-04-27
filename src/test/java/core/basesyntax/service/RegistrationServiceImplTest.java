@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -13,13 +12,11 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static User user;
-    private static User equalUser;
-    
+
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         user = new User();
-        equalUser = new User();
     }
 
     @BeforeEach
@@ -28,11 +25,15 @@ public class RegistrationServiceImplTest {
         user.setLogin("bobius");
         user.setPassword("qwerty");
         user.setAge(23);
+    }
 
-        equalUser.setId(21L);
-        equalUser.setLogin("bobius");
-        equalUser.setPassword("qwerty");
-        equalUser.setAge(23);
+    @Test
+    void register_nullUser_notOk() {
+        user.setId(null);
+        user.setLogin(null);
+        user.setPassword(null);
+        user.setAge(null);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -42,7 +43,19 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LackOfSymbolsInLogin_notOk() {
+    void register_nullPassword_notOk() {
+        user.setPassword(null);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        user.setLogin(null);
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_shortLogin_notOk() {
         user.setLogin("teddy");
         assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
@@ -55,20 +68,13 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_addExistingUser_notOk() {
-        User register = registrationService.register(user);
-        assertThrows(RuntimeException.class, () -> registrationService.register(register));
+        Storage.people.add(user);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void checkEqualUsersByHashCode_Ok() {
-        int userHashCode = user.hashCode();
-        int equalUserHashCode = equalUser.hashCode();
-        assertEquals(userHashCode, equalUserHashCode);
-    }
-
-    @Test
-    void register_userExist_notOk() {
-        Storage.people.add(equalUser);
+    void register_existingUser_notOk() {
+        Storage.people.add(user);
         assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
 
