@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -76,6 +77,12 @@ public class RegistrationServiceImplTest {
     void register_existingUser_notOk() {
         Storage.people.add(user);
         assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void successfulRegistration() {
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser);
     }
 
     @AfterEach
