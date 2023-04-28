@@ -14,6 +14,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationServiceException("User is empty");
         }
+        if (user.getLogin() == null) {
+            throw new RegistrationServiceException("Login field is empty");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationServiceException("Password field is empty");
+        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationServiceException("There is a user with "
                     + "such login in the Storage already");
@@ -29,12 +35,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationServiceException("Your age should be "
                     + MIN_AGE + "+ to pass th registration");
-        }
-        if (user.getLogin() == null) {
-            throw new RegistrationServiceException("Login field is empty");
-        }
-        if (user.getPassword() == null) {
-            throw new RegistrationServiceException("Password field is empty");
         }
         return storageDao.add(user);
     }

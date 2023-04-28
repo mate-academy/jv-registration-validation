@@ -33,7 +33,7 @@ public class RegistrationServiceImplTest {
         user.setLogin(null);
         user.setPassword(null);
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -45,13 +45,13 @@ public class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LackOfSymbolsInPassword_notOk() {
+    void register_shortPassword_notOk() {
         user.setPassword("short");
         assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
