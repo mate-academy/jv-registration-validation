@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
+    private User validUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -29,11 +32,11 @@ public class RegistrationServiceImplTest {
 
     @Test
     void passed() {
-        User user = new User();
-        user.setAge(25);
-        user.setLogin("Anna");
-        user.setPassword("111111");
-        storageDao.add(user);
+        validUser = new User();
+        validUser.setAge(25);
+        validUser.setLogin("Anna");
+        validUser.setPassword("111111");
+        storageDao.add(validUser);
     }
 
     @Test
@@ -88,7 +91,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_isNotOk() {
+    void register_ageBelowThreshold_isNotOk() {
         User user = new User();
         user.setLogin("uhwerty");
         user.setPassword("password");
@@ -110,19 +113,11 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_duplicateUser_isNotOk() {
-        User user1 = new User();
-        user1.setLogin("uhwerty");
-        user1.setPassword("password");
-        user1.setAge(20);
-        storageDao.add(user1);
-        User user2 = new User();
-        user2.setLogin("uhwerty");
-        user2.setPassword("password");
-        user2.setAge(20);
-        storageDao.add(user2);
+    public void register_duplicateUser_isOk() {
+        Storage.people.add(validUser);
         Assertions.assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(user2),
+                () -> registrationService.register(validUser),
                 "Should throw InvalidUserDataException duplicate users were detected");
+        assertEquals(1, Storage.people.size());
     }
 }
