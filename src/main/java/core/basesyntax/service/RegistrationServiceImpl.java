@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegisterException(user.getLogin() + " login must be more than"
             + MIN_AMOUNT_CHARACTERS + " characters");
         }
-        if (user.getLogin().equals(storageDao.get(user.getLogin()))) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegisterException(user.getLogin() + " with the same login already exists");
         }
     }
@@ -47,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegisterException(user.getLogin() + " user age can't be null");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             throw new RegisterException(user.getLogin() + " age should be bigger then "
             + MIN_AGE);
         }

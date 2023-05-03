@@ -27,7 +27,6 @@ public class RegistrationServiceTest {
     public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         usersIsValid = new ArrayList<>();
-        
     }
 
     @BeforeEach
@@ -41,7 +40,7 @@ public class RegistrationServiceTest {
         for (User user : usersIsValid) {
             registrationService.register(user);
         }
-        assertEquals(Storage.people, usersIsValid,"User list is not equal to database");
+        assertEquals(Storage.people, usersIsValid, "User list is not equal to database");
     }
 
     @Test
@@ -63,7 +62,6 @@ public class RegistrationServiceTest {
     @Test
     public void userRegister_LoginIsNull_NotOK() {
         user.setLogin(null);
-        
         assertThrows(RegisterException.class, () -> {
             registrationService.register(user);
         });
@@ -72,7 +70,6 @@ public class RegistrationServiceTest {
     @Test
     public void userRegister_LoginIsEmpty_NotOK() {
         user.setLogin("");
-        
         assertThrows(RegisterException.class, () -> {
             registrationService.register(user);
         });
@@ -113,7 +110,6 @@ public class RegistrationServiceTest {
     @Test
     public void userRegister_minAge_NotOK() {
         user.setAge(MIN_USER_AGE);
-        
         assertThrows(RegisterException.class, () -> {
             registrationService.register(user);
         });
@@ -122,7 +118,6 @@ public class RegistrationServiceTest {
     @Test
     public void userRegister_negativeAge_NotOK() {
         user.setAge(NEGATIVE_USER_AGE);
-        
         assertThrows(RegisterException.class, () -> {
             registrationService.register(user);
         });
@@ -131,7 +126,6 @@ public class RegistrationServiceTest {
     @Test
     public void userRegister_isNullAge_NotOK() {
         user.setAge(null);
-        
         assertThrows(RegisterException.class, () -> {
             registrationService.register(user);
         });
@@ -140,7 +134,6 @@ public class RegistrationServiceTest {
     @Test
     public void userRegister_isNumNullAge_NotOK() {
         user.setAge(0);
-        
         assertThrows(RegisterException.class, () -> {
             registrationService.register(user);
         });
