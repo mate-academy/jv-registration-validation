@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
+import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,7 @@ class RegistrationServiceImplTest {
         currentUser = new User(0L,"login6","password",19);
         assertEquals(currentUser, registrationService.register((currentUser)),
                 "Current USER must be returned");
+        Storage.people.remove(currentUser);
     }
 
     @Test
@@ -57,6 +59,7 @@ class RegistrationServiceImplTest {
         currentUser = new User(0L,"login77","password",19);
         assertEquals(currentUser, registrationService.register((currentUser)),
                 "Current USER must be returned");
+        Storage.people.remove(currentUser);
     }
 
     @Test
@@ -78,6 +81,7 @@ class RegistrationServiceImplTest {
         currentUser = new User(0L,"login3","passwo",19);
         assertEquals(currentUser, registrationService.register((currentUser)),
                 "Current USER must be returned");
+        Storage.people.remove(currentUser);
     }
 
     @Test
@@ -85,6 +89,7 @@ class RegistrationServiceImplTest {
         currentUser = new User(0L,"login4","passwor",19);
         assertEquals(currentUser, registrationService.register((currentUser)),
                 "Current USER must be returned");
+        Storage.people.remove(currentUser);
     }
 
     @Test
@@ -106,6 +111,7 @@ class RegistrationServiceImplTest {
         currentUser = new User(0L,"login7","password",18);
         assertEquals(currentUser, registrationService.register((currentUser)),
                 "Current USER must be returned");
+        Storage.people.remove(currentUser);
     }
 
     @Test
@@ -113,39 +119,23 @@ class RegistrationServiceImplTest {
         currentUser = new User(0L,"login8","password",19);
         assertEquals(currentUser, registrationService.register((currentUser)),
                 "Current USER must be returned");
+        Storage.people.remove(currentUser);
     }
 
     @Test
     void register_sameLogin_notOK() {
-        Storage.people.add(new User(0L,"login9","password1",18));
-        Storage.people.add(new User(0L,"login10","password2",19));
-        Storage.people.add(new User(0L,"login11","password3",20));
+        User user9 = new User(0L,"login9","password1",18);
+        User user10 = new User(0L,"login10","password2",19);
+        User user11 = new User(0L,"login11","password3",20);
+        ArrayList<User> userList = new ArrayList<>();
+        userList.add(user9);
+        userList.add(user10);
+        userList.add(user11);
+        Storage.people.addAll(0, userList);
         assertThrows(ValidationException.class,
                 () -> registrationService.register(new User(0L,"login9","password1",18)));
         assertThrows(ValidationException.class,
                 () -> registrationService.register(new User(0L,"login11","password3",20)));
-    }
-
-    @Test
-    void getuser_withNullLogin_notOK() {
-        assertThrows(ValidationException.class,
-                () -> registrationService.getUser(null));
-    }
-    
-    @Test
-    void get_notExistedLogin_notOK() {
-        assertThrows(ValidationException.class,
-                () -> registrationService.getUser(loginNotExist));
-    }
-
-    @Test
-    void getUser_byLogin_isOK() {
-        Storage.people.add(new User(0L,"login12","password1",21));
-        Storage.people.add(new User(0L,"login13","password2",22));
-        Storage.people.add(new User(0L,"login14","password3",23));
-        currentUser = new User(0L,"login12","password1",21);
-        assertEquals(currentUser, registrationService.getUser("login12"), "User must be returned");
-        currentUser = new User(0L,"login14","password3",23);
-        assertEquals(currentUser, registrationService.getUser("login14"), "User must be returned");
+        Storage.people.removeAll(userList);
     }
 }

@@ -41,17 +41,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.get(user.getLogin());
     }
 
-    @Override
-    public User getUser(String login) {
-        if (login == null) {
-            throw new ValidationException("Login can't be null!");
-        }
-        if (storageDao.get(login) == null) {
-            throw new ValidationException("User with login " + login + " doesn't exist");
-        }
-        return storageDao.get(login);
-    }
-
     private boolean isUserExist(User user) {
         return storageDao.get(user.getLogin()) != null;
     }
