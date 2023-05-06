@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LessLoginLength_NotOk() {
+    void register_TooShortLogin_NotOk() {
         user.setLogin("123");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setLogin("1234");
@@ -57,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LessPasswordLength_NotOk() {
+    void register_TooShortPassword_NotOk() {
         user.setPassword("123");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setPassword("12345");
@@ -70,51 +70,54 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setAge(7);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        user.setAge(0);
+        user.setAge(Integer.MIN_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_AgeGreaterThan18_Ok() {
         user.setAge(18);
-        assertTrue(registrationService.register(user).getAge()
-                >= RegistrationServiceImpl.MIN_USER_AGE);
+        assertEquals(user.getAge(), registrationService.register(user).getAge());
         Storage.people.clear();
         user.setLogin("Abraham");
         user.setPassword("fo30re9st");
-        user.setAge(79);
-        assertTrue(registrationService.register(user).getAge()
-                >= RegistrationServiceImpl.MIN_USER_AGE);
+        user.setAge(87);
+        assertEquals(user.getAge(), registrationService.register(user).getAge());
+        Storage.people.clear();
+        user.setLogin("Abraham");
+        user.setPassword("fo30re9st");
+        user.setAge(Integer.MAX_VALUE);
+        assertEquals(user.getAge(), registrationService.register(user).getAge());
     }
 
     @Test
     void register_LoginHasCorrectLength_Ok() {
         user.setLogin("abcdef");
-        assertTrue(registrationService.register(user).getLogin().length()
-                >= RegistrationServiceImpl.MIN_LOGIN_CHARACTERS);
+        assertEquals(user.getLogin().length(),
+                registrationService.register(user).getLogin().length());
         Storage.people.clear();
         user.setLogin("Bgreekk123565567");
         user.setPassword("fo30re9st");
         user.setAge(28);
-        assertTrue(registrationService.register(user).getLogin().length()
-                >= RegistrationServiceImpl.MIN_LOGIN_CHARACTERS);
+        assertEquals(user.getLogin().length(),
+                registrationService.register(user).getLogin().length());
     }
 
     @Test
     void register_PasswordHasCorrectLength_Ok() {
         user.setPassword("123456");
-        assertTrue(registrationService.register(user).getPassword().length()
-                >= RegistrationServiceImpl.MIN_PASSWORD_CHARACTERS);
+        assertEquals(user.getPassword().length(),
+                registrationService.register(user).getPassword().length());
         Storage.people.clear();
         user.setLogin("Abraham");
-        user.setPassword("1234567891011121314151617181920212222324252627282930");
         user.setAge(28);
-        assertTrue(registrationService.register(user).getPassword().length()
-                >= RegistrationServiceImpl.MIN_PASSWORD_CHARACTERS);
+        user.setPassword("1234567891011121314151617181920212222324252627282930");
+        assertEquals(user.getPassword().length(),
+                registrationService.register(user).getPassword().length());
     }
 
     @Test
-    void register_UserLoginAlreadyExist_Ok() {
+    void register_UserLoginAlreadyExist_NotOk() {
         Storage.people.add(user);
         User sameUser = new User();
         sameUser.setLogin("Abraham");
