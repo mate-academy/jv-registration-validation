@@ -72,45 +72,39 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setAge(Integer.MIN_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setAge(17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_AgeGreaterThan18_Ok() {
+    void register_ValidAge_Ok() {
         user.setAge(18);
         assertEquals(user.getAge(), registrationService.register(user).getAge());
         Storage.people.clear();
-        user.setLogin("Abraham");
-        user.setPassword("fo30re9st");
         user.setAge(87);
         assertEquals(user.getAge(), registrationService.register(user).getAge());
         Storage.people.clear();
-        user.setLogin("Abraham");
-        user.setPassword("fo30re9st");
         user.setAge(Integer.MAX_VALUE);
         assertEquals(user.getAge(), registrationService.register(user).getAge());
     }
 
     @Test
-    void register_LoginHasCorrectLength_Ok() {
+    void register_ValidLogin_Ok() {
         user.setLogin("abcdef");
-        assertEquals(user.getLogin().length(),
-                registrationService.register(user).getLogin().length());
+        assertEquals(user.getLogin(),
+                registrationService.register(user).getLogin());
         Storage.people.clear();
         user.setLogin("Bgreekk123565567");
-        user.setPassword("fo30re9st");
-        user.setAge(28);
-        assertEquals(user.getLogin().length(),
-                registrationService.register(user).getLogin().length());
+        assertEquals(user.getLogin(),
+                registrationService.register(user).getLogin());
     }
 
     @Test
-    void register_PasswordHasCorrectLength_Ok() {
+    void register_ValidPassword_Ok() {
         user.setPassword("123456");
         assertEquals(user.getPassword().length(),
                 registrationService.register(user).getPassword().length());
         Storage.people.clear();
-        user.setLogin("Abraham");
-        user.setAge(28);
         user.setPassword("1234567891011121314151617181920212222324252627282930");
         assertEquals(user.getPassword().length(),
                 registrationService.register(user).getPassword().length());
