@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void nullValue_NotOk() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(ValidationException.class, () -> {
             registrationService.register(null);
         });
     }
@@ -73,7 +73,7 @@ class RegistrationServiceImplTest {
     @Test
     void passwordIsMoreThan6Letters_NotOk() {
         User jane = new User();
-        jane.setAge(15);
+        jane.setAge(45);
         jane.setLogin("1234567890");
         jane.setPassword("1");
         assertThrows(ValidationException.class, () -> {
@@ -111,6 +111,28 @@ class RegistrationServiceImplTest {
         tanya.setPassword("111111111");
         assertThrows(ValidationException.class, () -> {
             registrationService.register(tanya);
+        });
+    }
+
+    @Test
+    void passwordNullCheck_NotOk() {
+        User mike = new User();
+        mike.setAge(80);
+        mike.setLogin("1200000");
+        mike.setPassword(null);
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(mike);
+        });
+    }
+
+    @Test
+    void loginNullCheck_NotOk() {
+        User dan = new User();
+        dan.setAge(50);
+        dan.setLogin(null);
+        dan.setPassword("09090909");
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(dan);
         });
     }
 }
