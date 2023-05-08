@@ -34,7 +34,6 @@ class RegistrationServiceImplTest {
         bob.setAge(22);
         bob.setLogin("1234567");
         bob.setPassword("21212121");
-
         Storage.people.add(bob);
         assertThrows(ValidationException.class, () -> {
             registrationService.register(bob);
@@ -63,10 +62,10 @@ class RegistrationServiceImplTest {
     void loginIsMoreThan6Letters_Ok() {
         User alice = new User();
         alice.setAge(32);
-        alice.setLogin("1234567890");
+        alice.setLogin("46545678999");
         alice.setPassword("32323232");
-        int expected = 10;
-        int actual = alice.getLogin().length();
+        int expected = 11;
+        int actual = registrationService.register(alice).getLogin().length();
         assertEquals(expected, actual);
     }
 
@@ -96,10 +95,10 @@ class RegistrationServiceImplTest {
     void userAge_Ok() {
         User ann = new User();
         ann.setAge(18);
-        ann.setLogin("1234567890");
+        ann.setLogin("123767890");
         ann.setPassword("11111111111");
         int expected = 18;
-        int actual = ann.getAge();
+        int actual = registrationService.register(ann).getAge();
         assertEquals(expected, actual);
     }
 
