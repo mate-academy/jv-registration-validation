@@ -1,8 +1,9 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.*;
-import core.basesyntax.exception.*;
-import core.basesyntax.model.*;
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.ValidationException;
+import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
