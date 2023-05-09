@@ -1,42 +1,42 @@
 package core.basesyntax.service;
 
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
+    User defaultOkUser;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
+        defaultOkUser = new User();
+        defaultOkUser.setAge(40);
+        defaultOkUser.setLogin("1234566666");
+        defaultOkUser.setPassword("43434343");
     }
 
     @Test
     void containsValidUser_Ok() {
-        User kate = new User();
-        kate.setAge(40);
-        kate.setLogin("1234566666");
-        kate.setPassword("43434343");
-        User expected = kate;
-        User actual = registrationService.register(kate);
+        User expected = defaultOkUser;
+        User actual = registrationService.register(defaultOkUser);
         assertEquals(expected, actual);
     }
 
     @Test
     void userIsAlreadyInStorage_NotOk() {
-        User bob = new User();
-        bob.setAge(22);
-        bob.setLogin("1234567");
-        bob.setPassword("21212121");
-        Storage.people.add(bob);
+        Storage.people.add(defaultOkUser);
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(bob);
+            registrationService.register(defaultOkUser);
         });
     }
 
@@ -49,89 +49,65 @@ class RegistrationServiceImplTest {
 
     @Test
     void loginIsMoreThan6Letters_NotOk() {
-        User john = new User();
-        john.setAge(30);
-        john.setLogin("1");
-        john.setPassword("4343");
+        defaultOkUser.setLogin("1");
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(john);
+            registrationService.register(defaultOkUser);
         });
     }
 
     @Test
     void loginIsMoreThan6Letters_Ok() {
-        User alice = new User();
-        alice.setAge(32);
-        alice.setLogin("46545678999");
-        alice.setPassword("32323232");
-        int expected = 11;
-        int actual = registrationService.register(alice).getLogin().length();
+        defaultOkUser.setLogin("1010100909");
+        int expected = 10;
+        int actual = registrationService.register(defaultOkUser).getLogin().length();
         assertEquals(expected, actual);
     }
 
     @Test
     void passwordIsMoreThan6Letters_NotOk() {
-        User jane = new User();
-        jane.setAge(45);
-        jane.setLogin("1234567890");
-        jane.setPassword("1");
+        defaultOkUser.setPassword("1");
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(jane);
+            registrationService.register(defaultOkUser);
         });
     }
 
     @Test
     void passwordIsMoreThan6Letters_Ok() {
-        User tim = new User();
-        tim.setAge(25);
-        tim.setLogin("1234567890");
-        tim.setPassword("11111111");
+        defaultOkUser.setLogin("303030303030");
         int expected = 8;
-        int actual = registrationService.register(tim).getPassword().length();
+        int actual = registrationService.register(defaultOkUser).getPassword().length();
         assertEquals(expected, actual);
     }
 
     @Test
     void userAge_Ok() {
-        User ann = new User();
-        ann.setAge(18);
-        ann.setLogin("123767890");
-        ann.setPassword("11111111111");
-        int expected = 18;
-        int actual = registrationService.register(ann).getAge();
+        defaultOkUser.setLogin("909090909090");
+        int expected = 40;
+        int actual = registrationService.register(defaultOkUser).getAge();
         assertEquals(expected, actual);
     }
 
     @Test
     void userAge_NotOk() {
-        User tanya = new User();
-        tanya.setAge(10);
-        tanya.setLogin("123456789");
-        tanya.setPassword("111111111");
+        defaultOkUser.setAge(10);
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(tanya);
+            registrationService.register(defaultOkUser);
         });
     }
 
     @Test
     void passwordNullCheck_NotOk() {
-        User mike = new User();
-        mike.setAge(80);
-        mike.setLogin("1200000");
-        mike.setPassword(null);
+        defaultOkUser.setPassword(null);
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(mike);
+            registrationService.register(defaultOkUser);
         });
     }
 
     @Test
     void loginNullCheck_NotOk() {
-        User dan = new User();
-        dan.setAge(50);
-        dan.setLogin(null);
-        dan.setPassword("09090909");
+        defaultOkUser.setLogin(null);
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(dan);
+            registrationService.register(defaultOkUser);
         });
     }
 }
