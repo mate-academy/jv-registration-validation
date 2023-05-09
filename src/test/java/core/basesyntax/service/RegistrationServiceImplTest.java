@@ -59,8 +59,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void loginIsMoreThan6Letters_Ok() {
-        defaultOkUser.setLogin("1010100909");
-        int expected = 10;
+        defaultOkUser.setLogin("10101009091");
+        int expected = 11;
         int actual = registrationService.register(defaultOkUser).getLogin().length();
         assertEquals(expected, actual);
     }
