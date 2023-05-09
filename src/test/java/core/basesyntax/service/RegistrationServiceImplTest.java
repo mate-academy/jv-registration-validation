@@ -1,16 +1,18 @@
 package core.basesyntax.service;
 
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    User defaultOkUser;
+    private User defaultOkUser;
 
     @BeforeAll
     static void beforeAll() {
