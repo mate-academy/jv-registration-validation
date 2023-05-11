@@ -26,7 +26,6 @@ class RegistrationServiceImplTest {
         existUser.setLogin(LOGIN_EXIST_USER);
         existUser.setPassword(PASSWORD);
         existUser.setAge(USER_AGE);
-
         defaultUser = new User();
         defaultUser.setLogin(LOGIN_DEFAULT_USER);
         defaultUser.setPassword(PASSWORD);
