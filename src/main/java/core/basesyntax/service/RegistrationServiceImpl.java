@@ -23,10 +23,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new MyValidatorException("Age can not be null");
         }
-        if (user.getAge() <= 0) {
-            throw new MyValidatorException("Age cannot be equal to or less than 0"
-                    + " ,but you entered: " + user.getAge());
-        }
         if (user.getAge() < MIN_AGE) {
             throw new MyValidatorException("Age cannot be less than " + MIN_AGE
                     + " ,but you entered: " + user.getAge());

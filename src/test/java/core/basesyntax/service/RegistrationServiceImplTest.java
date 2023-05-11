@@ -141,7 +141,7 @@ class RegistrationServiceImplTest {
         defaultUser.setAge(-5);
         MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
                 () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("Age cannot be equal to or less than 0"
+        Assertions.assertEquals("Age cannot be less than " + MIN_AGE
                 + " ,but you entered: " + defaultUser.getAge(), exception.getMessage());
     }
 
