@@ -15,7 +15,9 @@ class RegistrationServiceImplTest {
     private static final long ID = 0;
     private static final String LOGIN_VALID = "aboba@gmail.com";
     private static final String PASSWORD_VALID = "123456";
-    private static final String PASSWORD_AND_EMAIL_INVALID = "12345";
+    private static final String LOGIN_INVALID = "aboba";
+    private static final String PASSWORD_INVALID = "12345";
+
     private static final int AGE_VALID = 18;
     private static final int AGE_INVALID = 17;
 
@@ -74,7 +76,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidLogin_notOk() {
-        user.setLogin(PASSWORD_AND_EMAIL_INVALID);
+        user.setLogin(LOGIN_INVALID);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Login must be at least 6 characters");
@@ -82,7 +84,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidPassword_notOk() {
-        user.setPassword(PASSWORD_AND_EMAIL_INVALID);
+        user.setPassword(PASSWORD_INVALID);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Password must be at least 6 characters");
