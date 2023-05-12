@@ -31,26 +31,31 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkUserAge(User user) {
-        if (user.getAge() == null || user.getAge() < MIN_USER_AGE) {
-            String message = user.getAge() == null ? "Age can't be null."
-                    : "User must be 18 or older.";
-            throw new InvalidAgeException("Incorrect age value. " + message);
+        if (user.getAge() == null) {
+            throw new InvalidAgeException("Incorrect age value. Age can't be null.");
+        }
+        if (user.getAge() < MIN_USER_AGE) {
+            throw new InvalidAgeException("Incorrect age value. User must be 18 or older.");
         }
     }
 
     private void checkUserLogin(User user) {
-        if (user.getLogin() == null || user.getLogin().length() < MIN_PASSWORD_LOGIN_LENGTH) {
-            String message = user.getLogin() == null ? "Login can't be null."
-                    : "Login length less than 6 letters.";
-            throw new InvalidLoginException("Incorrect login value. " + message);
+        if (user.getLogin() == null) {
+            throw new InvalidLoginException("Incorrect login value. Login can't be null.");
+        }
+        if (user.getLogin().length() < MIN_PASSWORD_LOGIN_LENGTH) {
+            throw new InvalidLoginException("Incorrect login value. "
+                    + "Login length less than 6 letters.");
         }
     }
 
     private void checkUserPassword(User user) {
-        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LOGIN_LENGTH) {
-            String message = user.getPassword() == null ? "Password can't be null."
-                    : "Password length less than 6 letters.";
-            throw new InvalidPasswordException("Incorrect password value. " + message);
+        if (user.getPassword() == null) {
+            throw new InvalidPasswordException("Incorrect password value. Password can't be null.");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LOGIN_LENGTH) {
+            throw new InvalidPasswordException("Incorrect password value. "
+                    + "Password length less than 6 letters.");
         }
     }
 
