@@ -26,25 +26,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkUserIsNull(User user) {
         if (user == null) {
-            throw new InvalidArgumentException("Incorrect argument value");
+            throw new InvalidArgumentException("Incorrect argument value. User can't be null.");
         }
     }
 
     private void checkUserAge(User user) {
         if (user.getAge() == null || user.getAge() < MIN_USER_AGE) {
-            throw new InvalidAgeException("Incorrect age value: " + user.getAge());
+            String message = user.getAge() == null ? "Age can't be null."
+                    : "User must be 18 or older.";
+            throw new InvalidAgeException("Incorrect age value. " + message);
         }
     }
 
     private void checkUserLogin(User user) {
         if (user.getLogin() == null || user.getLogin().length() < MIN_PASSWORD_LOGIN_LENGTH) {
-            throw new InvalidLoginException("Incorrect login value");
+            String message = user.getLogin() == null ? "Login can't be null."
+                    : "Login length less than 6 letters.";
+            throw new InvalidLoginException("Incorrect login value. " + message);
         }
     }
 
     private void checkUserPassword(User user) {
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LOGIN_LENGTH) {
-            throw new InvalidPasswordException("Incorrect password value");
+            String message = user.getPassword() == null ? "Password can't be null."
+                    : "Password length less than 6 letters.";
+            throw new InvalidPasswordException("Incorrect password value. " + message);
         }
     }
 
