@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -10,12 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int incorrectAge = 15;
-    private static final int DefaultAge = 18;
-    private static final String incorrectPassword = "afdsf";
-    private static final String DefaultPassword = "abca4567";
-    private static final String DefaultLogin = "username@gmail.com";
-    private static final String incorrectLogin = "abas";
+    private static final int INCORRECT_AGE = 15;
+    private static final int DEFAULT_AGE = 18;
+    private static final String INCORRECT_PASSWORD = "afdsf";
+    private static final String DEFAULT_PASSWORD = "abca4567";
+    private static final String DEFAULT_LOGIN = "username@gmail.com";
+    private static final String INCORRECT_LOGIN = "abas";
     private static RegistrationServiceImpl registrationService;
     private static final User user = new User();
 
@@ -26,51 +27,59 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void beforeEach() {
-        user.setAge(DefaultAge);
-        user.setLogin(DefaultLogin);
-        user.setPassword(DefaultPassword);
+        user.setAge(DEFAULT_AGE);
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(DEFAULT_PASSWORD);
     }
 
     @Test
-    void checkisUser_Null() {
+    void registerUser_null_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null),
                 "User shouldn't be null");
     }
 
     @Test
-    void checkisPassword_Null() {
+    void registerUser_nullPassword_NotOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void checkisPasswordlength_NotOk() {
-        user.setPassword(incorrectPassword);
+    void registerUser_lengthPassword_NotOk() {
+        user.setPassword(INCORRECT_PASSWORD);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void checkisLogin_Null() {
+    void registerUser_nullLogin_NotOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void checkisLoginLength_NotOk() {
-        user.setLogin(incorrectLogin);
+    void registerUser_lengthLogin_NotOk() {
+        user.setLogin(INCORRECT_LOGIN);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
     
     @Test
-    void checkAge_Null() {
+    void registerUser_nullAge_NotOk() {
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void checkAge_notOk() {
-        user.setAge(incorrectAge);
+    void registerUser_amountAge_NotOk() {
+        user.setAge(INCORRECT_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void passwordIsMoreThan6Letters_Ok() {
+        user.setPassword(DEFAULT_PASSWORD);
+        int expected = 8;
+        int actual = registrationService.register(user).getPassword().length();
+        assertEquals(expected, actual);
     }
 
     @Test
