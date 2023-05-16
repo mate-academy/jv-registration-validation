@@ -18,11 +18,6 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     void register_userIsNull_notOk() {
         assertThrows(ValidationException.class, () -> {
@@ -95,5 +90,10 @@ class RegistrationServiceImplTest {
         assertThrows(ValidationException.class, () -> {
             registrationService.register(validUser);
         });
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
