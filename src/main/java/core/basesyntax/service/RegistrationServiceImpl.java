@@ -6,7 +6,7 @@ import core.basesyntax.exception.UserRegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_COUNT_OF_CHAR = 6;
+    private static final int MIN_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -35,9 +35,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().isBlank()) {
             throw new UserRegistrationException("The password cannot consist of spaces");
         }
-        if (user.getPassword().length() < MIN_COUNT_OF_CHAR) {
+        if (user.getPassword().length() < MIN_LENGTH) {
             throw new UserRegistrationException("Password shouldn't be less than "
-                    + MIN_COUNT_OF_CHAR);
+                    + MIN_LENGTH);
         }
     }
 
@@ -48,9 +48,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().isBlank()) {
             throw new UserRegistrationException("The login cannot consist of spaces");
         }
-        if (user.getLogin().length() < MIN_COUNT_OF_CHAR) {
+        if (user.getLogin().length() < MIN_LENGTH) {
             throw new UserRegistrationException("Login shouldn't be less than "
-                    + MIN_COUNT_OF_CHAR);
+                    + MIN_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserRegistrationException("A user already exists with this login");

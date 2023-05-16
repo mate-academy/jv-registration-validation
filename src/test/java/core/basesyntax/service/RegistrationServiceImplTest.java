@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int MIN_COUNT_OF_CHAR = 6;
+    private static final int MIN_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private static final String LOGIN_EXIST_USER = "ExistLogin";
     private static final String LOGIN_DEFAULT_USER = "MercedesCar";
@@ -42,7 +42,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         defaultUser.setLogin(null);
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginIsBlank_NotOk() {
+    void register_loginIsBlank_notOk() {
         defaultUser.setLogin("          ");
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
@@ -61,27 +61,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLessThanMinLengthTwoSymbols_NotOk() {
+    void register_loginLessThanMinLengthTwoSymbols_notOk() {
         defaultUser.setLogin("13");
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
                     () -> registrationService.register(defaultUser));
         assertEquals("Login shouldn't be less than "
-                + MIN_COUNT_OF_CHAR, exception.getMessage());
+                + MIN_LENGTH, exception.getMessage());
     }
 
     @Test
-    void register_loginLessThanMinLengthFifthSymbols_NotOk() {
+    void register_loginLessThanMinLengthFifthSymbols_notOk() {
         defaultUser.setLogin("12345");
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
                     () -> registrationService.register(defaultUser));
         assertEquals("Login shouldn't be less than "
-                + MIN_COUNT_OF_CHAR, exception.getMessage());
+                + MIN_LENGTH, exception.getMessage());
     }
 
     @Test
-    void register_loginExistUser_NotOk() {
+    void register_loginExistUser_notOk() {
         Storage.people.add(existUser);
         defaultUser.setLogin(LOGIN_EXIST_USER);
         UserRegistrationException exception
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         defaultUser.setPassword(null);
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
@@ -101,7 +101,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordIsBlank_NotOk() {
+    void register_passwordIsBlank_notOk() {
         defaultUser.setPassword("          ");
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
@@ -110,27 +110,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessThanMinLengthFifthSymbols_NotOk() {
+    void register_passwordLessThanMinLengthFifthSymbols_notOk() {
         defaultUser.setPassword("12345");
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
                     () -> registrationService.register(defaultUser));
         assertEquals("Password shouldn't be less than "
-                + MIN_COUNT_OF_CHAR, exception.getMessage());
+                + MIN_LENGTH, exception.getMessage());
     }
 
     @Test
-    void register_passwordLessThanMinLengthTwoSymbols_NotOk() {
+    void register_passwordLessThanMinLengthTwoSymbols_notOk() {
         defaultUser.setPassword("12");
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
                     () -> registrationService.register(defaultUser));
         assertEquals("Password shouldn't be less than "
-                + MIN_COUNT_OF_CHAR, exception.getMessage());
+                + MIN_LENGTH, exception.getMessage());
     }
 
     @Test
-    void register_nullAge_NotOk() {
+    void register_nullAge_notOk() {
         defaultUser.setAge(null);
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
@@ -140,7 +140,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThanMin_NotOk() {
+    void register_ageLessThanMin_notOk() {
         defaultUser.setAge(17);
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
@@ -150,7 +150,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThanZero_NotOk() {
+    void register_ageLessThanZero_notOk() {
         defaultUser.setAge(-5);
         UserRegistrationException exception
                 = Assertions.assertThrows(UserRegistrationException.class,
@@ -160,7 +160,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_addUserWithValidData_Ok() {
+    void register_addUserWithValidData_ok() {
         Storage.people.add(existUser);
         registrationService.register(defaultUser);
         assertTrue(Storage.people.contains(defaultUser));
