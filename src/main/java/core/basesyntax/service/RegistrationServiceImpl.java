@@ -8,53 +8,79 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_SIZE = 6;
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_SIZE = 6;
+    private static final String INVALID_PASSWORD_MESSAGE =
+            "Invalid user's password for registration: ";
+    private static final String INVALID_AGE_MESSAGE =
+            "Invalid user's age for registration: ";
+    private static final String INVALID_LOGIN_MESSAGE =
+            "Invalid user's login for registration: ";
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         validateUserData(user);
-        if (storageDao.get(user.getLogin()) == null) {
-            return storageDao.add(user);
-        }
-        return null;
+        return isExistingLogin(user) ? storageDao.add(user) : null;
+    }
+
+    private boolean isExistingLogin(User user) {
+        return storageDao.get(user.getLogin()) == null;
     }
 
     private void validateUserData(User user) {
-        if (user == null) {
-            throw new RegistrationException(
-                    "User do not exist, must be not null-value");
-        }
+        checkNullInstance(user);
         validateLogin(user);
         validateAge(user);
         validatePassword(user);
     }
 
-    private void validatePassword(User user) {
-        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_SIZE) {
+    private void checkNullInstance(User user) {
+        if (user == null) {
             throw new RegistrationException(
-                    "Invalid user password for registration, available: "
-                            + "Notnull and contents at list ["
-                            + MIN_LOGIN_SIZE + "] elements");
+                    "User does not exist, must be not null-value");
+        }
+    }
+
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException(
+                    INVALID_PASSWORD_MESSAGE
+                            + "password can't be null");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_SIZE) {
+            throw new RegistrationException(
+                    INVALID_PASSWORD_MESSAGE
+                            + "length of password is: [" + user.getPassword().length()
+                            + "], allowed minimal length is: ["
+                            + MIN_LOGIN_SIZE + "]");
         }
     }
 
     private void validateAge(User user) {
-        if (user.getAge() == null
-                || user.getAge() < MIN_AGE) {
+        if (user.getAge() == null) {
             throw new RegistrationException(
-                    "Invalid user age for registration, available: "
-                            + "Notnull and at list ["
-                            + MIN_LOGIN_SIZE + "] years");
+                    INVALID_AGE_MESSAGE
+                            + "age can't be null");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException(
+                    INVALID_AGE_MESSAGE
+                            + "user's age is: [" + user.getAge()
+                            + "], allowed minimal age is: ["
+                            + MIN_AGE + "]");
         }
     }
 
     private void validateLogin(User user) {
-        if (user.getLogin() == null
-                || user.getLogin().length() < MIN_LOGIN_SIZE) {
+        if (user.getLogin() == null) {
             throw new RegistrationException(
-                    "Invalid login for registration, available: "
-                            + "Notnull with length at list ["
-                            + MIN_LOGIN_SIZE + "] symbols");
+                    INVALID_LOGIN_MESSAGE + "login can't be null");
+        }
+        if (user.getLogin().length() < MIN_LOGIN_SIZE) {
+            throw new RegistrationException(
+                    INVALID_LOGIN_MESSAGE + "user's login length: ["
+                            + user.getLogin().length()
+                            + "] allowed minimal login length is: ["
+                            + MIN_LOGIN_SIZE + "]");
         }
     }
 }

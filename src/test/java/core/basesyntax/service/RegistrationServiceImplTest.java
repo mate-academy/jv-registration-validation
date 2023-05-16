@@ -8,7 +8,6 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -16,41 +15,18 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final int STANDARD_DB_SET_COUNTER = 3;
     private static final String EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER =
-            "Expected, that user will be return after added to the DB with correct data";
+            "Expected, that the user will return after being added to the DB with correct data.";
     private static final String EXPECTED_MESSAGE_ADDED_TO_DB =
-            "Expected, that user will be added to the DB with correct data";
-    private static final String EXPECTED_MESSAGE_NULL =
-            "Expected, that existing user can't be added to the DB, must return null";
-    private static final String EXPECTED_MESSAGE_NULL_USER =
-            "Expected, that null pointer instead User have to call the RegistrationException";
-    private static final String EXPECTED_MESSAGE_NULL_LOGIN_USER =
-            "Expected, that user with null login call the RegistrationException";
+            "Expected, that the user will be added to the DB with correct data.";
     private static final String EXPECTED_MESSAGE_INVALID_LOGIN_USER =
-            "Expected, that user with invalid login call yhe RegistrationException";
-    private static final String EXPECTED_MESSAGE_NULL_AGE_USER =
-            "Expected, that user with null age call yhe RegistrationException";
-    private static final String EXPECTED_MESSAGE_INVALID_AGE_USER =
-            "Expected, that user with invalid login call yhe RegistrationException";
-    private static final String EXPECTED_MESSAGE_NULL_PASSWORD_USER =
-            "Expected, that user with null password call yhe RegistrationException";
-    private static final String EXPECTED_MESSAGE_INVALID_PASSWORD_USER =
-            "Expected, that user with invalid password call yhe RegistrationException";
-    private static final int ADDED_FIRST_CUSTOM_USER = 3;
-    private static final int ADDED_SECOND_CUSTOM_USER = 4;
-    private static final int ADDED_THIRD_CUSTOM_USER = 5;
-
-    private static User userBob;
-    private static User userAnn;
-    private static User userRoma;
+            "Expected, that a user with an invalid login will call the RegistrationException.";
+    private static final int ADDED_FIRST_CUSTOM_USER = 0;
+    private static final int ADDED_SECOND_CUSTOM_USER = 1;
+    private static final int ADDED_THIRD_CUSTOM_USER = 2;
+    private static final User userBob = new User("user_bob", "qwerty1234", 34);
+    private static final User userAnn = new User("user_ann", "12345678", 18);
+    private static final User userRoma = new User("user_roma", "bobocode", 22);
     private RegistrationService registrationService;
-
-    @BeforeAll
-    static void setDataBase() {
-        userBob = new User("user_bob", "qwerty1234", 34);
-        userAnn = new User("user_ann", "12345678", 18);
-        userRoma = new User("user_roma", "bobocode", 22);
-        Storage.people.addAll(List.of(userAnn, userBob, userRoma));
-    }
 
     @BeforeEach
     void setRegistrationService() {
@@ -59,55 +35,36 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void afterEach() {
-        if (Storage.people.size() > STANDARD_DB_SET_COUNTER) {
-            Storage.people.subList(STANDARD_DB_SET_COUNTER, Storage.people.size()).clear();
-        }
+        Storage.people.clear();
     }
 
     @Test
     @Order(1)
     void registrationUser_nullUser_notOk() {
-        User nullUser = null;
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(nullUser),
-                EXPECTED_MESSAGE_NULL_USER);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(null),
-                EXPECTED_MESSAGE_NULL_USER);
+                "Expected, that a null pointer instead of"
+                        + " User will call the RegistrationException.");
     }
 
     @Test
     @Order(2)
     void registrationUser_nullLogin_notOk() {
-        User userNullLoginFirst = new User(null, "fgjhdn1356nb7", 32);
-        User userNullLoginSecond = new User(null, "234vt7d124v1", 28);
-        User userNullLoginThird = new User(null, "adsfrt4v41", 18);
+        User userNullLogin = new User(null, "fgjhdn1356nb7", 32);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(userNullLoginFirst),
-                EXPECTED_MESSAGE_NULL_LOGIN_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userNullLoginSecond),
-                EXPECTED_MESSAGE_NULL_LOGIN_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userNullLoginThird),
-                EXPECTED_MESSAGE_NULL_LOGIN_USER);
+                () -> registrationService.register(userNullLogin),
+                "Expected, that a user with a null login"
+                        + " will call the RegistrationException.");
     }
 
     @Test
     @Order(3)
     void registrationUser_nullAge_notOk() {
-        User userNullAgeFirst = new User("LoGiNoNe", "fgjhdnrt", null);
-        User userNullAgeSecond = new User("NewLogin", "234vt756b", null);
-        User userNullAgeThird = new User("my_Login", "adsfrtwert3", null);
+        User userNullAge = new User("LoGiNoNe", "fgjhdnrt", null);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(userNullAgeFirst),
-                EXPECTED_MESSAGE_NULL_AGE_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userNullAgeSecond),
-                EXPECTED_MESSAGE_NULL_AGE_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userNullAgeThird),
-                EXPECTED_MESSAGE_NULL_AGE_USER);
+                () -> registrationService.register(userNullAge),
+                "Expected, that a user with a null age "
+                        + "will call the RegistrationException.");
     }
 
     @Test
@@ -133,11 +90,15 @@ class RegistrationServiceImplTest {
     @Test
     @Order(5)
     void registrationUser_existingUser_notOk() {
-        assertNull(registrationService.register(userAnn), EXPECTED_MESSAGE_NULL);
-        assertNull(registrationService.register(userBob), EXPECTED_MESSAGE_NULL);
-        assertNull(registrationService.register(userRoma), EXPECTED_MESSAGE_NULL);
+        Storage.people.addAll(List.of(userAnn, userBob, userRoma));
+        assertNull(registrationService.register(userAnn),
+                "Expected, that an existing user can't be added to the DB and must return null.");
+        assertNull(registrationService.register(userBob),
+                "Expected, that an existing user can't be added to the DB and must return null.");
+        assertNull(registrationService.register(userRoma),
+                "Expected, that an existing user can't be added to the DB and must return null.");
         assertEquals(Storage.people.size(), STANDARD_DB_SET_COUNTER,
-                "Expected, that DB does not be changed");
+                "Expected, that DB does not be changed.");
     }
 
     @Test
@@ -267,13 +228,13 @@ class RegistrationServiceImplTest {
         User userWithInvalidAgeThird = new User("1t5/]9", "password12", Integer.MIN_VALUE);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeFirst),
-                EXPECTED_MESSAGE_INVALID_AGE_USER);
+                "Expected, that a user with an invalid login will call the RegistrationException.");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeSecond),
-                EXPECTED_MESSAGE_INVALID_AGE_USER);
+                "Expected, that a user with an invalid login will call the RegistrationException.");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeThird),
-                EXPECTED_MESSAGE_INVALID_AGE_USER);
+                "Expected, that a user with an invalid login will call the RegistrationException.");
     }
 
     @Test
@@ -333,29 +294,24 @@ class RegistrationServiceImplTest {
         User userWithInvalidAgeThird = new User("1t5/]9", "12345", 43);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeFirst),
-                EXPECTED_MESSAGE_INVALID_PASSWORD_USER);
+                "Expected, that a user with an invalid password "
+                        + "will call the RegistrationException.");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeSecond),
-                EXPECTED_MESSAGE_INVALID_PASSWORD_USER);
+                "Expected, that a user with an invalid password "
+                        + "will call the RegistrationException.");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeThird),
-                EXPECTED_MESSAGE_INVALID_PASSWORD_USER);
+                "Expected, that a user with an invalid password "
+                        + "will call the RegistrationException.");
     }
 
     @Test
     @Order(16)
     void registrationUser_checkUserPasswordNull_notOk() {
-        User userWithInvalidAgeFirst = new User("LogInMy", null, 19);
-        User userWithInvalidAgeSecond = new User("LolGeeen", null, 123);
-        User userWithInvalidAgeThird = new User("HelloHello", null, 45);
+        User userWithInvalidAge = new User("LogInMy", null, 19);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(userWithInvalidAgeFirst),
-                EXPECTED_MESSAGE_NULL_PASSWORD_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userWithInvalidAgeSecond),
-                EXPECTED_MESSAGE_NULL_PASSWORD_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userWithInvalidAgeThird),
-                EXPECTED_MESSAGE_NULL_PASSWORD_USER);
+                () -> registrationService.register(userWithInvalidAge),
+                "Expected, that a user with a null password will call the RegistrationException.");
     }
 }
