@@ -28,8 +28,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_existUser_notOk() {
-        registrationService.register(validUser);
+    void registration_userExists_notOk() {
+        Storage.people.add(validUser);
         assertThrows(UserAlreadyExistException.class,
                 () -> registrationService.register(validUser), "Method should "
                         + "throw UserAlreadyExistException");
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserWithInvalidPassword_notOk() {
+    void registration_userWithInvalidPassword_notOk() {
         User userWithInvalidPassword = new User("123456", "wrong", 20);
         assertThrows(UserRegistrationException.class,
                 () -> registrationService.register(userWithInvalidPassword), "Method should "
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_UserWithNullPassword_notOk() {
+    void registration_userWithNullPassword_notOk() {
         User userWithNullPassword = new User("123456", null, 20);
         assertThrows(UserRegistrationException.class,
                 () -> registrationService.register(userWithNullPassword), "Method should "

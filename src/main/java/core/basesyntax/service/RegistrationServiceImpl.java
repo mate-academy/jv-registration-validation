@@ -18,9 +18,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         isValidUserLogin(user);
         isValidUserPassword(user);
         isValidUserAge(user);
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new UserAlreadyExistException("User: " + user + ", already exist in storage");
-        }
         storageDao.add(user);
         return user;
     }
@@ -34,6 +31,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void isValidUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new UserRegistrationException("User`s login can`t be null");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserAlreadyExistException("User: " + user + ", already exist in storage");
         }
         if (user.getLogin().length() < VALID_LOGIN_LENGTH) {
             throw new UserRegistrationException("Login have to be longer then 6 character but was: "
