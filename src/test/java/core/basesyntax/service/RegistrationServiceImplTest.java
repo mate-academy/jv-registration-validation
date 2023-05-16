@@ -15,10 +15,10 @@ class RegistrationServiceImplTest {
     private static final int DEFAULT_AGE = 18;
     private static final String INCORRECT_PASSWORD = "afdsf";
     private static final String DEFAULT_PASSWORD = "abca4567";
-    private static final String DEFAULT_LOGIN = "username@gmail.com";
+    private static final String DEFAULT_LOGIN = "matestudent@gmail.com";
     private static final String INCORRECT_LOGIN = "abas";
     private static RegistrationServiceImpl registrationService;
-    private static final User user = new User();
+    private static User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -26,7 +26,8 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-    void beforeEach() {
+    void setUp() {
+        user = new User();
         user.setAge(DEFAULT_AGE);
         user.setLogin(DEFAULT_LOGIN);
         user.setPassword(DEFAULT_PASSWORD);
@@ -75,15 +76,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsMoreThan6Letters_Ok() {
+    void passwordLengthValid_OK() {
+        user.setLogin("newlogin@example.com"); // Use a different login
         user.setPassword(DEFAULT_PASSWORD);
+        user.setAge(DEFAULT_AGE);
         int expected = 8;
         int actual = registrationService.register(user).getPassword().length();
         assertEquals(expected, actual);
     }
 
     @Test
-    void loginalreadytaken_notOk() {
+    void register_loginalreadytaken_NotOk() {
         Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
