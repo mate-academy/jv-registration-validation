@@ -7,19 +7,26 @@ import core.basesyntax.InvalidDataException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String DEFAULT_LOGIN = "normalLogin";
-    private static final String DEFAULT_PASSWORD = "12345678";
-    private static final int DEFAULT_AGE = 25;
-    private static final String TEST_INVALID_LOGIN = "login";
+    private static final String DEFAULT_LOGIN = "normal";
+    private static final String DEFAULT_PASSWORD = "123456";
+    private static final int DEFAULT_AGE = 18;
+    private static final String TEST_INVALID_LOGIN = "";
     private static final String TEST_INVALID_PASSWORD = "123";
     private static final int TEST_INVALID_AGE = 10;
+    private static final int TEST_NEGATIVE_AGE = -5;
 
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
     private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
@@ -45,11 +52,6 @@ class RegistrationServiceImplTest {
     void register_invalidLogin_notOk() {
         user.setLogin(TEST_INVALID_LOGIN);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_validLogin_Ok() {
-        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
@@ -84,6 +86,17 @@ class RegistrationServiceImplTest {
     void register_age_notOk() {
         user.setAge(TEST_INVALID_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        user.setAge(TEST_NEGATIVE_AGE);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_validUser_Ok() {
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @AfterEach
