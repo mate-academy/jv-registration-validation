@@ -1,7 +1,11 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.MyValidatorException;
+import core.basesyntax.exception.UserRegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -38,120 +42,131 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void login_Null_NotOk() {
+    void register_nullLogin_NotOk() {
         defaultUser.setLogin(null);
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertNull(defaultUser.getLogin());
-        Assertions.assertEquals("Login can't be null", exception.getMessage());
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertNull(defaultUser.getLogin());
+        assertEquals("Login can't be null", exception.getMessage());
     }
 
     @Test
-    void login_IsBlank_NotOk() {
+    void register_loginIsBlank_NotOk() {
         defaultUser.setLogin("          ");
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("The login cannot consist of spaces", exception.getMessage());
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("The login cannot consist of spaces", exception.getMessage());
     }
 
     @Test
-    void login_LessThanMin_length_2_NotOk() {
+    void register_loginLessThanMinLengthTwoSymbols_NotOk() {
         defaultUser.setLogin("13");
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("Login can't fewer less symbols than "
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("Login shouldn't be less than "
                 + MIN_COUNT_OF_CHAR, exception.getMessage());
     }
 
     @Test
-    void login_LessThanMin_length_5_NotOk() {
+    void register_loginLessThanMinLengthFifthSymbols_NotOk() {
         defaultUser.setLogin("12345");
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("Login can't fewer less symbols than "
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("Login shouldn't be less than "
                 + MIN_COUNT_OF_CHAR, exception.getMessage());
     }
 
     @Test
-    void login_existUser_NotOk() {
+    void register_loginExistUser_NotOk() {
         Storage.people.add(existUser);
         defaultUser.setLogin(LOGIN_EXIST_USER);
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-
-        Assertions.assertEquals("A user already exists with this login", exception.getMessage());
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("A user already exists with this login", exception.getMessage());
     }
 
     @Test
-    void password_Null_NotOk() {
+    void register_nullPassword_NotOk() {
         defaultUser.setPassword(null);
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertNull(defaultUser.getPassword());
-        Assertions.assertEquals("Password can not be null", exception.getMessage());
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertNull(defaultUser.getPassword());
+        assertEquals("Password can not be null", exception.getMessage());
     }
 
     @Test
-    void password_IsBlank_NotOk() {
+    void register_passwordIsBlank_NotOk() {
         defaultUser.setPassword("          ");
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("The password cannot consist of spaces", exception.getMessage());
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("The password cannot consist of spaces", exception.getMessage());
     }
 
     @Test
-    void password_LessThanMin_length_5_NotOk() {
+    void register_passwordLessThanMinLengthFifthSymbols_NotOk() {
         defaultUser.setPassword("12345");
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("Password can't fewer less symbol than "
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("Password shouldn't be less than "
                 + MIN_COUNT_OF_CHAR, exception.getMessage());
     }
 
     @Test
-    void password_LessThanMin_length_2_NotOk() {
+    void register_passwordLessThanMinLengthTwoSymbols_NotOk() {
         defaultUser.setPassword("12");
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("Password can't fewer less symbol than "
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("Password shouldn't be less than "
                 + MIN_COUNT_OF_CHAR, exception.getMessage());
     }
 
     @Test
-    void age_Null_NotOk() {
+    void register_nullAge_NotOk() {
         defaultUser.setAge(null);
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertNull(defaultUser.getAge());
-        Assertions.assertEquals("Age can not be null", exception.getMessage());
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertNull(defaultUser.getAge());
+        assertEquals("Age can not be null", exception.getMessage());
     }
 
     @Test
-    void age_LessThanMin_NotOk() {
+    void register_ageLessThanMin_NotOk() {
         defaultUser.setAge(17);
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("Age cannot be less than " + MIN_AGE
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("Age shouldn't be less than " + MIN_AGE
                 + " ,but you entered: " + defaultUser.getAge(), exception.getMessage());
     }
 
     @Test
-    void age_LessThanZero_NotOk() {
+    void register_ageLessThanZero_NotOk() {
         defaultUser.setAge(-5);
-        MyValidatorException exception = Assertions.assertThrows(MyValidatorException.class,
-                () -> registrationService.register(defaultUser));
-        Assertions.assertEquals("Age cannot be less than " + MIN_AGE
+        UserRegistrationException exception
+                = Assertions.assertThrows(UserRegistrationException.class,
+                    () -> registrationService.register(defaultUser));
+        assertEquals("Age shouldn't be less than " + MIN_AGE
                 + " ,but you entered: " + defaultUser.getAge(), exception.getMessage());
     }
 
     @Test
-    void add_User_WithValidData_Ok() {
+    void register_addUserWithValidData_Ok() {
         Storage.people.add(existUser);
         registrationService.register(defaultUser);
-        Assertions.assertTrue(Storage.people.contains(defaultUser));
-        Assertions.assertEquals(2, Storage.people.size());
-        Assertions.assertEquals(LOGIN_DEFAULT_USER, Storage.people.get(1).getLogin());
-        Assertions.assertEquals(PASSWORD, Storage.people.get(1).getPassword());
-        Assertions.assertEquals(USER_AGE, Storage.people.get(1).getAge());
+        assertTrue(Storage.people.contains(defaultUser));
+        assertEquals(2, Storage.people.size());
+        assertEquals(LOGIN_DEFAULT_USER, Storage.people.get(1).getLogin());
+        assertEquals(PASSWORD, Storage.people.get(1).getPassword());
+        assertEquals(USER_AGE, Storage.people.get(1).getAge());
     }
 }

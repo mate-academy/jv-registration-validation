@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.MyValidatorException;
+import core.basesyntax.exception.UserRegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -15,47 +15,45 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkAge(User user) {
         if (user.getAge() == null) {
-            throw new MyValidatorException("Age can not be null");
+            throw new UserRegistrationException("Age can not be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new MyValidatorException("Age cannot be less than " + MIN_AGE
+            throw new UserRegistrationException("Age shouldn't be less than " + MIN_AGE
                     + " ,but you entered: " + user.getAge());
         }
     }
 
     private void checkPassword(User user) {
         if (user.getPassword() == null) {
-            throw new MyValidatorException("Password can not be null");
+            throw new UserRegistrationException("Password can not be null");
         }
         if (user.getPassword().isBlank()) {
-            throw new MyValidatorException("The password cannot consist of spaces");
+            throw new UserRegistrationException("The password cannot consist of spaces");
         }
         if (user.getPassword().length() < MIN_COUNT_OF_CHAR) {
-            throw new MyValidatorException("Password can't fewer less symbol than "
+            throw new UserRegistrationException("Password shouldn't be less than "
                     + MIN_COUNT_OF_CHAR);
         }
     }
 
     private void checkLogin(User user) {
         if (user.getLogin() == null) {
-            throw new MyValidatorException("Login can't be null");
+            throw new UserRegistrationException("Login can't be null");
         }
         if (user.getLogin().isBlank()) {
-            throw new MyValidatorException("The login cannot consist of spaces");
+            throw new UserRegistrationException("The login cannot consist of spaces");
         }
         if (user.getLogin().length() < MIN_COUNT_OF_CHAR) {
-            throw new MyValidatorException("Login can't fewer less symbols than "
+            throw new UserRegistrationException("Login shouldn't be less than "
                     + MIN_COUNT_OF_CHAR);
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new MyValidatorException("A user already exists with this login");
+            throw new UserRegistrationException("A user already exists with this login");
         }
     }
 }
-
