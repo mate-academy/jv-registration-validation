@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import core.basesyntax.service.UserRegistrationException;
 import core.basesyntax.service.RegistrationServiceImpl;
+import core.basesyntax.service.UserRegistrationException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
