@@ -6,6 +6,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.service.UserRegistrationException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ public class RegistrationServiceImplTest {
     private static final String DEFAULT_LOGIN = "user@gmail.com";
     private static final String DEFAULT_PASSWORD = "abc123";
     private static final String INCORRECT_LOGIN_AND_PASSWORD = "gg";
+    private static final String MASSAGE = "UserRegistrationException error was expected";
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
@@ -38,62 +40,67 @@ public class RegistrationServiceImplTest {
     void register_nullUser_notOk() {
         assertThrows(UserRegistrationException.class,
                 () -> registrationService.register(null),
-                "UserRegistrationException error was expected");
+                MASSAGE);
     }
 
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Age shouldn't be null");
+                MASSAGE);
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Login shouldn't be null");
+                MASSAGE);
     }
 
     @Test
     void register_nullId_notOk() {
         user.setId(null);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Id shouldn't be null");
+                MASSAGE);
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Password shouldn't be null");
+                MASSAGE);
     }
 
     @Test
     void register_ageLessThanEighteen_notOk() {
         user.setAge(INCORRECT_AGE);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Age must be at least 18 years old");
+                MASSAGE);
     }
 
     @Test
-    void register_PasswordLengthLessThanSix_notOk() {
-        user.setLogin(INCORRECT_LOGIN_AND_PASSWORD);
+    void register_passwordLengthLessThanSix_notOk() {
+        user.setPassword(INCORRECT_LOGIN_AND_PASSWORD);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Password must contain at least 6 characters");
+                MASSAGE);
     }
 
     @Test
-    void register_LoginLengthLessThanSix_notOk() {
+    void register_loginLengthLessThanSix_notOk() {
         user.setLogin(INCORRECT_LOGIN_AND_PASSWORD);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Password must contain at least 6 characters");
+                MASSAGE);
     }
 
     @Test
     void register_loginAlreadyTaken_notOk() {
         Storage.people.add(user);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Login already taken");
+                MASSAGE);
+    }
+
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
     }
 }
