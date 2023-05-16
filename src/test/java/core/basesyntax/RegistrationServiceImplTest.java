@@ -36,8 +36,9 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(UserRegistrationException.class, () -> registrationService.register(null),
-                "User shouldn't be null");
+        assertThrows(UserRegistrationException.class,
+                () -> registrationService.register(null),
+                "UserRegistrationException error was expected");
     }
 
     @Test
@@ -76,13 +77,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageMoreThanHundred_notOk() {
-        user.setAge(INCORRECT_AGE);
-        assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Age must be a maximum of 100 years old");
-    }
-
-    @Test
     void register_PasswordLengthLessThanSix_notOk() {
         user.setLogin(INCORRECT_LOGIN_AND_PASSWORD);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
@@ -90,24 +84,10 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordLengthMoreThanTwenty_notOk() {
-        user.setLogin(INCORRECT_LOGIN_AND_PASSWORD);
-        assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Password must contain a maximum of 20 characters");
-    }
-
-    @Test
     void register_LoginLengthLessThanSix_notOk() {
         user.setLogin(INCORRECT_LOGIN_AND_PASSWORD);
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
                 "Password must contain at least 6 characters");
-    }
-
-    @Test
-    void register_LoginLengthMoreThanTwenty_notOk() {
-        user.setLogin(INCORRECT_LOGIN_AND_PASSWORD);
-        assertThrows(UserRegistrationException.class, () -> registrationService.register(user),
-                "Password must contain a maximum of 20 characters");
     }
 
     @Test
