@@ -27,19 +27,22 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("This login is taken");
         }
         if (user.getLogin() == null || user.getLogin().length() < MIN_CHARACTERS) {
-            throw new InvalidDataException("This login least than " + MIN_CHARACTERS + " characters");
+            throw new InvalidDataException("This login least than "
+                    + MIN_CHARACTERS + " characters");
         }
     }
 
     private void isValidPassword(User user) {
         if (user.getPassword() == null || user.getPassword().length() < MIN_CHARACTERS) {
-            throw new InvalidDataException("This password least than " + MIN_CHARACTERS + " characters");
+            throw new InvalidDataException("This password least than "
+                    + MIN_CHARACTERS + " characters");
         }
     }
 
     private void isValidAge(User user) {
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
-            throw new InvalidDataException("Your age least than " + MIN_AGE +" year old");
+            throw new InvalidDataException("Your age least than "
+                    + MIN_AGE + " year old");
         }
     }
 }
