@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -17,9 +16,6 @@ class RegistrationServiceImplTest {
     private static final int ADDED_FIRST_CUSTOM_USER = 0;
     private static final int ADDED_SECOND_CUSTOM_USER = 1;
     private static final int ADDED_THIRD_CUSTOM_USER = 2;
-    private static final User userBob = new User("user_bob", "qwerty1234", 34);
-    private static final User userAnn = new User("user_ann", "12345678", 18);
-    private static final User userRoma = new User("user_roma", "bobocode", 22);
     private RegistrationService registrationService;
 
     @BeforeEach
@@ -81,13 +77,16 @@ class RegistrationServiceImplTest {
     @Test
     @Order(5)
     void registrationUser_existingUser_notOk() {
+        User userBob = new User("user_bob", "qwerty1234", 34);
+        User userAnn = new User("user_ann", "12345678", 18);
+        User userRoma = new User("user_roma", "bobocode", 22);
         Storage.people.addAll(List.of(userAnn, userBob, userRoma));
-        assertNull(registrationService.register(userAnn),
-                "Expected, that an existing user can't be added to the DB and must return null.");
-        assertNull(registrationService.register(userBob),
-                "Expected, that an existing user can't be added to the DB and must return null.");
-        assertNull(registrationService.register(userRoma),
-                "Expected, that an existing user can't be added to the DB and must return null.");
+        assertThrows(RegistrationException.class, () -> registrationService.register(userAnn),
+                "Should throw an exception");
+        assertThrows(RegistrationException.class, () -> registrationService.register(userBob),
+                "Should throw an exception");
+        assertThrows(RegistrationException.class, () -> registrationService.register(userRoma),
+                "Should throw an exception");
         assertEquals(Storage.people.size(), STANDARD_DB_SET_COUNTER,
                 "Expected, that DB does not be changed.");
     }
