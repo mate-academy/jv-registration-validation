@@ -54,11 +54,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_twoEqualsLogin_notOk() {
         Storage.people.add(user);
-        User newUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
-        newUser.setLogin(DEFAULT_LOGIN);
-        newUser.setPassword(DEFAULT_PASSWORD);
-        newUser.setAge(DEFAULT_AGE);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(newUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
