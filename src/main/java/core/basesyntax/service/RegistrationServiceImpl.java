@@ -15,8 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         validateNullValues(user);
         validateLogin(user);
         validatePassword(user);
-        validAge(user);
-        duplicateLogin(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
@@ -24,15 +23,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login cannot be null");
         }
-
         if (user.getPassword() == null) {
             throw new RegistrationException("Password cannot be null");
         }
-
         if (user.getAge() == null) {
             throw new RegistrationException("Age cannot be null");
         }
-
     }
 
     private void validateLogin(User user) {
@@ -49,13 +45,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validAge(User user) {
+    private void validateAge(User user) {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("User should be at least 18 years old");
         }
-    }
-
-    private void duplicateLogin(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with this login already exists");
         }

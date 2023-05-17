@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static User validUser;
-    private static final String MESSAGE = "RegistrationException should be thrown in this case.";
+    private static final String EXCEPTION_MESSAGE =
+            "RegistrationException should be thrown in this case.";
 
     @BeforeAll
     public static void beforeAll() {
@@ -38,42 +39,42 @@ class RegistrationServiceImplTest {
         Storage.people.add(validUser);
         User duplicateUser = new User("goodlog", "newpassword", 25);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(duplicateUser), MESSAGE);
+                registrationService.register(duplicateUser), EXCEPTION_MESSAGE);
     }
 
     @Test
     public void register_userLoginTooShort_NotOk() {
         User user = new User("abc", "password", 20);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(user), MESSAGE);
+                registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
     public void register_userNullLogin_NotOk() {
         User user = new User(null, "password", 20);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(user), MESSAGE);
+                registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
     public void register_userPasswordTooShort_NotOk() {
         User user = new User("johnsmith", "abc", 20);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(user), MESSAGE);
+                registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
     public void register_userNullPassword_NotOk() {
         User userWithNullPassword = new User("johnsmith", null, 20);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(userWithNullPassword), MESSAGE);
+                registrationService.register(userWithNullPassword), EXCEPTION_MESSAGE);
     }
 
     @Test
     public void register_userUnder18_NotOk() {
         User user = new User("johnsmith", "password", 17);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(user), MESSAGE);
+                registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
@@ -94,14 +95,14 @@ class RegistrationServiceImplTest {
     public void register_userNegativeAge_NotOk() {
         User user = new User("johnsmith", "password", -20);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(user), MESSAGE);
+                registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
     public void register_userNullAge_NotOk() {
         User user = new User("johnsmith", "password", null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(user), MESSAGE);
+                registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @AfterEach
