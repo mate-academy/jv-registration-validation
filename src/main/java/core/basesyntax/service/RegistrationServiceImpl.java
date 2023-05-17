@@ -32,12 +32,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already exists");
-        }
         if (user.getLogin().length() < MIN_LENGTH) {
             throw new RegistrationException("Not valid login: " + user.getLogin()
                     + ". Min allowed login length is " + MIN_LENGTH);
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with this login already exists");
         }
     }
 
