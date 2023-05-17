@@ -12,29 +12,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        isNullData(user);
-        if (user.getLogin().length() < MIN_LENGTH) {
-            throw new RegistrationException("Not valid login: " + user.getLogin()
-                    + ". Min allowed login length is " + MIN_LENGTH);
-        }
-
-        if (user.getPassword().length() < MIN_LENGTH) {
-            throw new RegistrationException("Not valid password: " + user.getPassword()
-                    + ". Min allowed password length is " + MIN_LENGTH);
-        }
-
-        if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("User should be at least 18 years old");
-        }
-
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already exists");
-        }
-
+        validateNullValues(user);
+        validateLogin(user);
+        validatePassword(user);
+        validAge(user);
+        duplicateLogin(user);
         return storageDao.add(user);
     }
 
-    private void isNullData(User user) {
+    private void validateNullValues(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login cannot be null");
         }
@@ -47,6 +33,32 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age cannot be null");
         }
 
+    }
+
+    private void validateLogin(User user) {
+        if (user.getLogin().length() < MIN_LENGTH) {
+            throw new RegistrationException("Not valid login: " + user.getLogin()
+                    + ". Min allowed login length is " + MIN_LENGTH);
+        }
+    }
+
+    private void validatePassword(User user) {
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new RegistrationException("Not valid password: " + user.getPassword()
+                    + ". Min allowed password length is " + MIN_LENGTH);
+        }
+    }
+
+    private void validAge(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("User should be at least 18 years old");
+        }
+    }
+
+    private void duplicateLogin(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with this login already exists");
+        }
     }
 }
 
