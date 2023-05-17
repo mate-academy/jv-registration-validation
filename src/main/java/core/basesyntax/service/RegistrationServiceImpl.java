@@ -2,13 +2,45 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.InvalidUserDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    public static final int MIN_AGE = 18;
+    public static final int MIN_LENGTH_PASSWORD_OR_LOGIN = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        return null;
+        checkValidData(user);
+        storageDao.add(user);
+        return storageDao.get(user.getLogin());
+    }
+
+    private void checkValidData(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidUserDataException("This user exist");
+        }
+
+        if (user.getAge() == null) {
+            throw new InvalidUserDataException("Age can't be null");
+        } else if (user.getAge() <= MIN_AGE) {
+            throw new InvalidUserDataException("Not valid age: " + user.getAge()
+                    + ". Min allowed age is " + MIN_AGE);
+        }
+
+        if (user.getLogin() == null) {
+            throw new InvalidUserDataException("Login can't be null");
+        } else if (user.getLogin().length() < MIN_LENGTH_PASSWORD_OR_LOGIN) {
+            throw new InvalidUserDataException("Not valid login: " + user.getLogin()
+                    + ". Min length login is " + MIN_LENGTH_PASSWORD_OR_LOGIN);
+        }
+
+        if (user.getPassword() == null) {
+            throw new InvalidUserDataException("Not valid password: " + user.getPassword()
+                    + ". Min length password is " + MIN_LENGTH_PASSWORD_OR_LOGIN);
+        } else if (user.getPassword().length() < MIN_LENGTH_PASSWORD_OR_LOGIN) {
+            throw new InvalidUserDataException("Password can't be null");
+        }
     }
 }
