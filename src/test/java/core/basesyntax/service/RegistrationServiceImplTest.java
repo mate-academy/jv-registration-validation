@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static final String DEFAULT_LOGIN = "Karabas";
+    private static final String DEFAULT_PASSWORD = "BARABAS";
+    private static final int DEFAULT_AGE = 20;
 
     @BeforeAll
     static void beforeAll() {
@@ -28,64 +31,64 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User(null,"qwerty",23));
+            registrationService.register(new User(null, "DEFAULT_PASSWORD", DEFAULT_AGE));
         });
     }
 
     @Test
     void register_nullPassword_notOk() {
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("Jimmy12",null,23));
+            registrationService.register(new User("DEFAULT_LOGIN", null, DEFAULT_AGE));
         });
     }
 
     @Test
     void register_nullAge_notOk() {
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("Jimmy12","qwerty",null));
+            registrationService.register(new User("DEFAULT_LOGIN", "DEFAULT_PASSWORD", null));
         });
     }
 
     @Test
     void register_invalidPassword_notOk() {
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("Jimmy12","qwert",22));
+            registrationService.register(new User("DEFAULT_LOGIN", "qwert", DEFAULT_AGE));
         });
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("Jimmy12","",22));
+            registrationService.register(new User("DEFAULT_LOGIN", "", DEFAULT_AGE));
         });
     }
 
     @Test
     void register_invalidLogin_notOk() {
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("Jimmy","qwerty",22));
+            registrationService.register(new User("Jimmy", "DEFAULT_PASSWORD", DEFAULT_AGE));
         });
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("","qwerty",22));
+            registrationService.register(new User("", "DEFAULT_PASSWORD", DEFAULT_AGE));
         });
     }
 
     @Test
     void register_invalidAge_notOk() {
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("Jimmy12","qwerty",15));
+            registrationService.register(new User("DEFAULT_LOGIN", "DEFAULT_PASSWORD", 15));
         });
         assertThrows(ValidationException.class, () -> {
-            registrationService.register(new User("Jimmy12","qwerty",-200));
+            registrationService.register(new User("DEFAULT_LOGIN", "DEFAULT_PASSWORD", -200));
         });
     }
 
     @Test
     void register_validData_ok() {
-        User expected = new User("Karabas", "Barabas", 20);
+        User expected = new User("DEFAULT_LOGIN", "DEFAULT_PASSWORD", DEFAULT_AGE);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual, "Users must be equals");
     }
 
     @Test
     void register_userExists_notOk() throws ValidationException {
-        User validUser = new User("Karabas", "Barabas", 20);
+        User validUser = new User("DEFAULT_LOGIN", "DEFAULT_PASSWORD", DEFAULT_AGE);
         Storage.people.add(validUser);
         assertThrows(ValidationException.class, () -> {
             registrationService.register(validUser);
