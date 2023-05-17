@@ -30,10 +30,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(DEFAULT_PASSWORD);
-        user.setAge(DEFAULT_AGE);
+        user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
     }
 
     @Test
@@ -56,8 +53,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_twoEqualsLogin_notOk() {
-        registrationService.register(user);
-        User newUser = new User();
+        Storage.people.add(user);
+        User newUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         newUser.setLogin(DEFAULT_LOGIN);
         newUser.setPassword(DEFAULT_PASSWORD);
         newUser.setAge(DEFAULT_AGE);
