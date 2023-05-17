@@ -10,25 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String LONG_LOGIN = "roberto";
-    private static final String SHORT_LOGIN = "bob";
-    private static final String GOOD_LOGIN = "morris";
-    private static final String LOGIN_WITH_SPACE = "gary  ";
-    private static final String EMPTY_LOGIN = "";
-    private static final int VALID_AGE = 22;
-    private static final int ENOUGH_AGE = 18;
-    private static final int NOT_ENOUGH_AGE = 12;
-    private static final int NEGATIVE_AGE = -10;
-    private static final String LONG_PASSWORD = "robinson134";
-    private static final String SHORT_PASSWORD = "984";
-    private static final String GOOD_PASSWORD = "123456";
-    private static final String PASSWORD_WITH_SPACE = "robi   ";
-    private static final String EMPTY_PASSWORD = "";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private User firstUser;
-    private User secondUser;
-    private User thirdUser;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -39,89 +23,170 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        firstUser = new User(GOOD_LOGIN, LONG_PASSWORD, VALID_AGE);
-        secondUser = new User(LONG_LOGIN, GOOD_PASSWORD, ENOUGH_AGE);
-        thirdUser = new User(GOOD_LOGIN, GOOD_PASSWORD, VALID_AGE);
+        user = new User(RegistrationServiceTestConstants.OVER_MIN_LOGIN,
+                RegistrationServiceTestConstants.OVER_MIN_PASSWORD,
+                RegistrationServiceTestConstants.OVER_MIN_AGE);
     }
 
     @Test
-    void userIsAlreadyRegistered() {
-        storageDao.add(firstUser);
-        User actual = registrationService.register(firstUser);
-        Assertions.assertNotEquals(firstUser, actual);
+    void userIsAlreadyRegistered_NotOk() {
+        storageDao.add(user);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
-    void validUser_Ok() {
-        User actual = registrationService.register(firstUser);
-        Assertions.assertEquals(firstUser, actual);
-        Assertions.assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
-    }
-
-    @Test
-    void invalidLogin_NotOk() {
-        firstUser.setLogin(SHORT_LOGIN);
-        secondUser.setLogin(EMPTY_LOGIN);
-        thirdUser.setLogin(LOGIN_WITH_SPACE);
-        User actualFirstUser = registrationService.register(firstUser);
-        User actualSecondUser = registrationService.register(secondUser);
-        User actualThirdUser = registrationService.register(thirdUser);
-        Assertions.assertNotEquals(firstUser, actualFirstUser);
-        Assertions.assertNotEquals(secondUser, actualSecondUser);
-        Assertions.assertNotEquals(thirdUser, actualThirdUser);
-    }
-
-    @Test
-    void invalidPassword_NotOk() {
-        firstUser.setPassword(SHORT_PASSWORD);
-        secondUser.setPassword(EMPTY_PASSWORD);
-        thirdUser.setPassword(PASSWORD_WITH_SPACE);
-        User actualFirstUser = registrationService.register(firstUser);
-        User actualSecondUser = registrationService.register(secondUser);
-        User actualThirdUser = registrationService.register(thirdUser);
-        Assertions.assertNotEquals(firstUser, actualFirstUser);
-        Assertions.assertNotEquals(secondUser, actualSecondUser);
-        Assertions.assertNotEquals(thirdUser, actualThirdUser);
-    }
-
-    @Test
-    void invalidAge_NotOk() {
-        firstUser.setAge(NOT_ENOUGH_AGE);
-        secondUser.setAge(NEGATIVE_AGE);
-        User actualFirstUser = registrationService.register(firstUser);
-        User actualSecondUser = registrationService.register(secondUser);
-        Assertions.assertNotEquals(firstUser, actualFirstUser);
-        Assertions.assertNotEquals(secondUser, actualSecondUser);
-    }
-
-    @Test
-    void nullUserValue_NotOk() {
+    void nullUser_NotOk() {
         Assertions.assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void nullPasswordValue_NotOk() {
+    void nullLogin_NotOk() {
         Assertions.assertThrows(RegistrationException.class, () -> {
-            firstUser.setPassword(null);
-            registrationService.register(firstUser);
+            user.setLogin(null);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void nullLoginValue_NotOk() {
+    void shortLogin_NotOk() {
+        user.setLogin(RegistrationServiceTestConstants.SHORT_LOGIN);
         Assertions.assertThrows(RegistrationException.class, () -> {
-            firstUser.setLogin(null);
-            registrationService.register(firstUser);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void nullAgeValue_NotOk() {
+    void emptyLogin_NotOk() {
+        user.setLogin(RegistrationServiceTestConstants.EMPTY_LOGIN);
         Assertions.assertThrows(RegistrationException.class, () -> {
-            firstUser.setAge(null);
-            registrationService.register(firstUser);
+            registrationService.register(user);
         });
+    }
+
+    @Test
+    void loginWithSpace_NotOk() {
+        user.setLogin(RegistrationServiceTestConstants.LOGIN_WITH_SPACE);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void minLogin_Ok() {
+        user.setLogin(RegistrationServiceTestConstants.MIN_LOGIN);
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual);
+    }
+
+    @Test
+    void overMinLogin_Ok() {
+        user.setLogin(RegistrationServiceTestConstants.OVER_MIN_LOGIN);
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual);
+    }
+
+    @Test
+    void nullPassword_NotOk() {
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            user.setPassword(null);
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void shortPassword_NotOk() {
+        user.setPassword(RegistrationServiceTestConstants.SHORT_PASSWORD);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void emptyPassword_NotOk() {
+        user.setPassword(RegistrationServiceTestConstants.EMPTY_PASSWORD);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void passwordWithSpace_NotOk() {
+        user.setPassword(RegistrationServiceTestConstants.PASSWORD_WITH_SPACE);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void minPassword_Ok() {
+        user.setPassword(RegistrationServiceTestConstants.MIN_PASSWORD);
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual);
+    }
+
+    @Test
+    void overMinPassword_Ok() {
+        user.setPassword(RegistrationServiceTestConstants.OVER_MIN_PASSWORD);
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual);
+    }
+
+    @Test
+    void nullAge_NotOk() {
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            user.setAge(null);
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void notEnoughAge_NotOk() {
+        user.setAge(RegistrationServiceTestConstants.NOT_ENOUGH_AGE);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void negativeAge_NotOk() {
+        user.setAge(RegistrationServiceTestConstants.NEGATIVE_AGE);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void minAge_Ok() {
+        user.setAge(RegistrationServiceTestConstants.MIN_AGE);
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual);
+    }
+
+    @Test
+    void overMinAge_Ok() {
+        user.setAge(RegistrationServiceTestConstants.OVER_MIN_AGE);
+        User actual = registrationService.register(user);
+        Assertions.assertEquals(user, actual);
+    }
+
+    private static class RegistrationServiceTestConstants {
+        private static final String OVER_MIN_LOGIN = "roberto";
+        private static final String SHORT_LOGIN = "bob";
+        private static final String MIN_LOGIN = "morris";
+        private static final String LOGIN_WITH_SPACE = "gary  ";
+        private static final String EMPTY_LOGIN = "";
+        private static final int OVER_MIN_AGE = 22;
+        private static final int MIN_AGE = 18;
+        private static final int NOT_ENOUGH_AGE = 12;
+        private static final int NEGATIVE_AGE = -10;
+        private static final String OVER_MIN_PASSWORD = "robinson134";
+        private static final String SHORT_PASSWORD = "984";
+        private static final String MIN_PASSWORD = "123456";
+        private static final String PASSWORD_WITH_SPACE = "robi   ";
+        private static final String EMPTY_PASSWORD = "";
     }
 }
