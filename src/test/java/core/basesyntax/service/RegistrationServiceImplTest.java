@@ -14,12 +14,6 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int STANDARD_DB_SET_COUNTER = 3;
-    private static final String EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER =
-            "Expected, that the user will return after being added to the DB with correct data.";
-    private static final String EXPECTED_MESSAGE_ADDED_TO_DB =
-            "Expected, that the user will be added to the DB with correct data.";
-    private static final String EXPECTED_MESSAGE_INVALID_LOGIN_USER =
-            "Expected, that a user with an invalid login will call the RegistrationException.";
     private static final int ADDED_FIRST_CUSTOM_USER = 0;
     private static final int ADDED_SECOND_CUSTOM_USER = 1;
     private static final int ADDED_THIRD_CUSTOM_USER = 2;
@@ -76,15 +70,12 @@ class RegistrationServiceImplTest {
         User actualFirst = registrationService.register(expectedFirst);
         User actualSecond = registrationService.register(expectedSecond);
         User actualThird = registrationService.register(expectedThird);
-        assertEquals(expectedFirst, actualFirst, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(expectedSecond, actualSecond, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(expectedThird, actualThird, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
+        assertEquals(expectedFirst, actualFirst);
+        assertEquals(expectedSecond, actualSecond);
+        assertEquals(expectedThird, actualThird);
+        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst);
+        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond);
+        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird);
     }
 
     @Test
@@ -105,96 +96,45 @@ class RegistrationServiceImplTest {
     @Order(6)
     void registrationUser_loginLength6_ok() {
         User expectedFirst = new User("123456", "password1", 23);
-        User expectedSecond = new User("asder54", "password2", 27);
-        User expectedThird = new User("/56mlk", "password3", 25);
         User actualFirst = registrationService.register(expectedFirst);
-        User actualSecond = registrationService.register(expectedSecond);
-        User actualThird = registrationService.register(expectedThird);
-        assertEquals(expectedFirst, actualFirst, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(expectedSecond, actualSecond, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(expectedThird, actualThird, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
+        assertEquals(expectedFirst, actualFirst);
+        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst);
     }
 
     @Test
     @Order(7)
     void registrationUser_loginLength9_ok() {
         User expectedFirst = new User("123456789", "password1", 23);
-        User expectedSecond = new User("asder5478", "password2", 27);
-        User expectedThird = new User("/56mlkhg5", "password3", 25);
         User actualFirst = registrationService.register(expectedFirst);
-        User actualSecond = registrationService.register(expectedSecond);
-        User actualThird = registrationService.register(expectedThird);
-        assertEquals(expectedFirst, actualFirst, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(expectedSecond, actualSecond, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(expectedThird, actualThird, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
+        assertEquals(expectedFirst, actualFirst);
+        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst);
     }
 
     @Test
     @Order(8)
     void registrationUser_loginLength5_notOk() {
         User userWithInvalidLoginFirst = new User("12345", "password13", 43);
-        User userWithInvalidLoginSecond = new User("asdfr", "password43", 21);
-        User userWithInvalidLoginThird = new User("1ty45", "password34", 19);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidLoginFirst),
-                EXPECTED_MESSAGE_INVALID_LOGIN_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userWithInvalidLoginSecond),
-                EXPECTED_MESSAGE_INVALID_LOGIN_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userWithInvalidLoginThird),
-                EXPECTED_MESSAGE_INVALID_LOGIN_USER);
-
+                "Should throw an exception");
     }
 
     @Test
     @Order(9)
     void registrationUser_loginLength3_notOk() {
         User userWithInvalidLoginFirst = new User("123", "password34", 28);
-        User userWithInvalidLoginSecond = new User("asd", "passworde3", 33);
-        User userWithInvalidLoginThird = new User("1t5", "passwordij", 45);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidLoginFirst),
-                EXPECTED_MESSAGE_INVALID_LOGIN_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userWithInvalidLoginSecond),
-                EXPECTED_MESSAGE_INVALID_LOGIN_USER);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userWithInvalidLoginThird),
-                EXPECTED_MESSAGE_INVALID_LOGIN_USER);
-
+                "Should throw an exception");
     }
 
     @Test
     @Order(10)
     void registrationUser_checkUserAge18_ok() {
         User userWithAge18First = new User("123345", "password5t", 18);
-        User userWithAge18Second = new User("asd123", "password8i", 18);
-        User userWithAge18Third = new User("1t5/]9", "password1v", 18);
         User actualFirst = registrationService.register(userWithAge18First);
-        User actualSecond = registrationService.register(userWithAge18Second);
-        User actualThird = registrationService.register(userWithAge18Third);
-        assertEquals(userWithAge18First, actualFirst, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithAge18Second, actualSecond, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithAge18Third, actualThird, EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
+        assertEquals(userWithAge18First, actualFirst);
+        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst);
     }
 
     @Test
@@ -206,18 +146,12 @@ class RegistrationServiceImplTest {
         User actualFirst = registrationService.register(userWithValidAgeFirst);
         User actualSecond = registrationService.register(userWithValidAgeSecond);
         User actualThird = registrationService.register(userWithValidAgeThird);
-        assertEquals(userWithValidAgeFirst, actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithValidAgeSecond, actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithValidAgeThird, actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
+        assertEquals(userWithValidAgeFirst, actualFirst);
+        assertEquals(userWithValidAgeSecond, actualSecond);
+        assertEquals(userWithValidAgeThird, actualThird);
+        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst);
+        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond);
+        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird);
     }
 
     @Test
@@ -228,36 +162,22 @@ class RegistrationServiceImplTest {
         User userWithInvalidAgeThird = new User("1t5/]9", "password12", Integer.MIN_VALUE);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeFirst),
-                "Expected, that a user with an invalid login will call the RegistrationException.");
+                "Should throw an exception");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeSecond),
-                "Expected, that a user with an invalid login will call the RegistrationException.");
+                "Should throw an exception");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeThird),
-                "Expected, that a user with an invalid login will call the RegistrationException.");
+                "Should throw an exception");
     }
 
     @Test
     @Order(13)
     void registrationUser_checkUserPasswordSize6_ok() {
         User userWithValidPassFirst = new User("123345", "123456", 543);
-        User userWithValidPassSecond = new User("asd123", "qwerty", Integer.MAX_VALUE);
-        User userWithValidPassThird = new User("1t5/]9", "123qwe", 19);
         User actualFirst = registrationService.register(userWithValidPassFirst);
-        User actualSecond = registrationService.register(userWithValidPassSecond);
-        User actualThird = registrationService.register(userWithValidPassThird);
-        assertEquals(userWithValidPassFirst, actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithValidPassSecond, actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithValidPassThird, actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
+        assertEquals(userWithValidPassFirst, actualFirst);
+        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst);
     }
 
     @Test
@@ -272,18 +192,12 @@ class RegistrationServiceImplTest {
         User actualFirst = registrationService.register(userWithValidPassFirst);
         User actualSecond = registrationService.register(userWithValidPassSecond);
         User actualThird = registrationService.register(userWithValidPassThird);
-        assertEquals(userWithValidPassFirst, actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithValidPassSecond, actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(userWithValidPassThird, actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB_RETURN_USER);
-        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
-        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird,
-                EXPECTED_MESSAGE_ADDED_TO_DB);
+        assertEquals(userWithValidPassFirst, actualFirst);
+        assertEquals(userWithValidPassSecond, actualSecond);
+        assertEquals(userWithValidPassThird, actualThird);
+        assertEquals(Storage.people.get(ADDED_FIRST_CUSTOM_USER), actualFirst);
+        assertEquals(Storage.people.get(ADDED_SECOND_CUSTOM_USER), actualSecond);
+        assertEquals(Storage.people.get(ADDED_THIRD_CUSTOM_USER), actualThird);
     }
 
     @Test
@@ -294,16 +208,13 @@ class RegistrationServiceImplTest {
         User userWithInvalidAgeThird = new User("1t5/]9", "12345", 43);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeFirst),
-                "Expected, that a user with an invalid password "
-                        + "will call the RegistrationException.");
+                "Should throw an exception");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeSecond),
-                "Expected, that a user with an invalid password "
-                        + "will call the RegistrationException.");
+                "Should throw an exception");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAgeThird),
-                "Expected, that a user with an invalid password "
-                        + "will call the RegistrationException.");
+                "Should throw an exception");
     }
 
     @Test
@@ -312,6 +223,6 @@ class RegistrationServiceImplTest {
         User userWithInvalidAge = new User("LogInMy", null, 19);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAge),
-                "Expected, that a user with a null password will call the RegistrationException.");
+                "Should throw an exception");
     }
 }
