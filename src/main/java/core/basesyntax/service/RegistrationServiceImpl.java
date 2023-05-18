@@ -68,6 +68,4 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException(message);
         }
     }
-
-
 }
