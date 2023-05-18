@@ -6,7 +6,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_CHARACTERS = 6;
+    private static final int MIN_LENGTH_LOGIN = 6;
+    private static final int MIN_LENGTH_PASSWORD = 6;
     private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -29,9 +30,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Invalid login. Null is not a valid value");
         }
-        if (user.getLogin().length() < MIN_CHARACTERS) {
-            throw new InvalidDataException("This login least than "
-                    + MIN_CHARACTERS + " characters");
+        if (user.getLogin().length() < MIN_LENGTH_LOGIN) {
+            throw new InvalidDataException("Login shouldn't be less "
+                    + MIN_LENGTH_LOGIN + " characters");
         }
         User comparedLogin = storageDao.get(user.getLogin());
         if (comparedLogin != null) {
@@ -43,9 +44,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidDataException("Invalid password. Null is not a valid value");
         }
-        if (user.getPassword().length() < MIN_CHARACTERS) {
-            throw new InvalidDataException("This password least than "
-                    + MIN_CHARACTERS + " characters");
+        if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
+            throw new InvalidDataException("Password shouldn't be less "
+                    + MIN_LENGTH_PASSWORD + " characters");
         }
     }
 

@@ -27,7 +27,6 @@ class RegistrationServiceImplTest extends RegistrationServiceTestConstants {
 
     @Test
     void register_nullUser_notOk() {
-        user = null;
         assertThrows(InvalidDataException.class, () -> registrationService.register(null));
     }
 
