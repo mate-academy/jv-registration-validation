@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeption.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,10 +95,5 @@ public class RegistrationServiceImplTest {
         User user = new User("johnsmith", "password", null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user), EXCEPTION_MESSAGE);
-    }
-
-    @AfterEach
-    void clear() {
-        Storage.people.clear();
     }
 }
