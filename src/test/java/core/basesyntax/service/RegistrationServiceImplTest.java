@@ -87,7 +87,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userExists_notOk() throws RegistrationException {
+    void register_userExists_notOk() {
         User validUser = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         Storage.people.add(validUser);
         assertThrows(RegistrationException.class, () -> {
