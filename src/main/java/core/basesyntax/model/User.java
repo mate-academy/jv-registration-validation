@@ -3,7 +3,7 @@ package core.basesyntax.model;
 import java.util.Objects;
 
 public class User {
-    private static String login;
+    private String login;
     private Long id;
     private String password;
     private Integer age;
@@ -22,7 +22,7 @@ public class User {
         this.id = id;
     }
 
-    public static String getLogin() {
+    public String getLogin() {
         return login;
     }
 

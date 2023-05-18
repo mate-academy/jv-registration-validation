@@ -32,16 +32,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(User user) {
-        if (User.getLogin() == null) {
+        if (user.getLogin() == null) {
             throw new RegistrationException("Login can not be null");
         }
-        if (User.getLogin().trim().length() < MIN_LOGIN_SIZE) {
+        if (user.getLogin().trim().length() < MIN_LOGIN_SIZE) {
             throw new RegistrationException("The login must contain at least 6 characters");
         }
     }
 
     private void checkUserExistence(User user) {
-        if (storageDao.get(User.getLogin()) != null) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User is already registered");
         }
     }
@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can not be null");
         }
-        if (user.getPassword().trim().length() < MIN_PASSWORD_SIZE) {
+        if (user.getPassword().length() < MIN_PASSWORD_SIZE) {
             throw new RegistrationException("The password must contain at least 6 characters");
         }
     }
