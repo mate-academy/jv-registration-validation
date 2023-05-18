@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_getCorrectIdOfUser_Ok() {
+    void register_checkingCorrectnessOfUserNumbering_Ok() {
         register_validUser_ok();
         User newUser = new User();
         newUser.setLogin("second_valid_login@ukr.net");
