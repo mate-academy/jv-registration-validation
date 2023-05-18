@@ -15,8 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         validateUser(user);
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void validateUser(User user) {
@@ -40,11 +39,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Not valid password. "
                     + "Min password's length is " + MIN_LOGIN_LENGTH);
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             String message = "Not valid age: " + user.getAge() + ". Min allowed age is " + MIN_AGE;
             throw new RegistrationException(message);
         }
-        if (user.getAge() > 120) {
+        if (user.getAge() > MAX_AGE) {
             String message = "Are you sure you're not a zombie? You can enter max age: " + MAX_AGE;
             throw new RegistrationException(message);
         }
@@ -57,5 +56,4 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + " is already exist.");
         }
     }
-
 }
