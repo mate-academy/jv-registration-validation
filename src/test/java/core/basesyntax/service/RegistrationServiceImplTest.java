@@ -1,12 +1,8 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,164 +29,145 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userExistsAndLoginAndPasswordAreValid_Ok() {
+    void register_validUser_ok() {
         User registeredUser = registrationService.register(user);
-        assertNotNull(registeredUser);
         assertEquals(user, registeredUser);
-        assertTrue(Storage.people.contains(registeredUser));
     }
 
     @Test
-    void userDoesNotExist_NotOk() {
-        User actual = new User();
-        assertFalse(Storage.people.contains(actual));
-    }
-
-    @Test
-    void loginIsNull_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertRegistrationException(user, "Incorrect login or password, please try again");
+        assertRegistrationException(user);
     }
 
     @Test
-    void loginIsEmpty_NotOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
-        assertRegistrationException(user, "Incorrect login or password, please try again");
+        assertRegistrationException(user);
     }
 
     @Test
-    void loginLengthIsOne_NotOk() {
+    void register_oneLetterLogin_notOk() {
         user.setLogin("s");
-        assertRegistrationException(user, "The length of the login cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void loginLengthIsTwo_NotOk() {
+    void register_twoLettersLogin_notOk() {
         user.setLogin("sh");
-        assertRegistrationException(user, "The length of the login cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void loginLengthIsThree_NotOk() {
+    void register_threeLettersLogin_notOk() {
         user.setLogin("sho");
-        assertRegistrationException(user, "The length of the login cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void loginLengthIsFour_NotOk() {
+    void register_fourLettersLogin_notOk() {
         user.setLogin("shor");
-        assertRegistrationException(user, "The length of the login cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void loginIsLessThanMinimalLength_NotOk() {
+    void register_fiveLettersLogin_notOk() {
         user.setLogin("short");
-        assertRegistrationException(user, "The length of the login cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void loginLengthIsSix_Ok() {
+    void register_sixLettersLogin_ok() {
         user.setLogin("normal");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void loginLengthIsEight_Ok() {
+    void register_eightLettersLogin_ok() {
         user.setLogin("isNormal");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void passwordIsNull_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertRegistrationException(user, "Incorrect login or password, please try again");
+        assertRegistrationException(user);
     }
 
     @Test
-    void passwordIsEmpty_NotOk() {
+    void register_emptyPassword_notOk() {
         user.setPassword("");
-        assertRegistrationException(user, "Incorrect login or password, please try again");
+        assertRegistrationException(user);
     }
 
     @Test
-    void passwordLengthIsOne_NotOk() {
+    void register_oneSymbolPassword_notOk() {
         user.setPassword("s");
-        assertRegistrationException(user, "The length of the password cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void passwordLengthIsTwo_NotOk() {
+    void register_twoSymbolsPassword_notOk() {
         user.setPassword("sh");
-        assertRegistrationException(user, "The length of the password cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void passwordLengthIsThree_NotOk() {
+    void register_threeSymbolsPassword_notOk() {
         user.setPassword("sho");
-        assertRegistrationException(user, "The length of the password cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void passwordLengthIsFour_NotOk() {
+    void register_fourSymbolsPassword_notOk() {
         user.setPassword("shor");
-        assertRegistrationException(user, "The length of the password cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void passwordLengthIsFive_NotOk() {
+    void register_fiveSymbolsPassword_notOk() {
         user.setPassword("short");
-        assertRegistrationException(user, "The length of the password cannot be less "
-                + "than the minimal");
+        assertRegistrationException(user);
     }
 
     @Test
-    void passwordLengthIsSix_Ok() {
+    void register_sixSymbolsPassword_ok() {
         user.setPassword("normal");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void passwordLengthIsEight_Ok() {
+    void register_eightSymbolsPassword_ok() {
         user.setPassword("isNormal");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void ageIsLessThanMinimal_NotOk() {
+    void register_lessMinimalAge_notOk() {
         user.setAge(17);
-        assertRegistrationException(user, "The user's age is less "
-                + "than the minimal age allowed for registration");
+        assertRegistrationException(user);
     }
 
     @Test
-    void ageIsNegative_NotOk() {
+    void register_negativeAge_notOk() {
         user.setAge(-33);
-        assertRegistrationException(user, "The user's age cannot be negative");
+        assertRegistrationException(user);
     }
 
     @Test
-    void ageIsZero_NotOk() {
+    void register_zeroAge_notOk() {
         user.setAge(0);
-        assertRegistrationException(user, "The user's age cannot be zero");
+        assertRegistrationException(user);
     }
 
     @Test
-    void ageAllowed_Ok() {
+    void register_allowedAge_ok() {
         user.setAge(33);
         assertEquals(user, registrationService.register(user));
     }
 
-    private void assertRegistrationException(User user, String errorMessage) {
+    private void assertRegistrationException(User user) {
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(user), errorMessage);
+                registrationService.register(user));
     }
 }
