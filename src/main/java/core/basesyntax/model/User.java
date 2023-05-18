@@ -3,10 +3,16 @@ package core.basesyntax.model;
 import java.util.Objects;
 
 public class User {
+    private static String login;
     private Long id;
-    private String login;
     private String password;
     private Integer age;
+
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
 
     public Long getId() {
         return id;
@@ -16,7 +22,7 @@ public class User {
         this.id = id;
     }
 
-    public String getLogin() {
+    public static String getLogin() {
         return login;
     }
 
