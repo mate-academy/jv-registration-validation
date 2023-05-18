@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-
 import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -37,7 +36,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserDataException("User login is not email");
         }
         if (login.substring(0, login.indexOf("@")).length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidUserDataException("The length of User login is less than 6 characters (up to the @ symbol)");
+            throw new InvalidUserDataException("Login length is less than 6 characters "
+                    + "(up to the @ symbol)");
         }
     }
 
@@ -47,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserDataException("User password is null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidUserDataException("The length of User password is less than 6 characters");
+            throw new InvalidUserDataException("Password length is less than 6 characters");
         }
     }
 
