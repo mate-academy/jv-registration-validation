@@ -15,9 +15,9 @@ class RegistrationServiceImplTest {
     private static User user;
     private static RegistrationServiceImpl registrationService;
 
-    private static final int VALID_AGE = 20;
-    private static final String VALID_LOGIN = "some_login";
-    private static final String VALID_PASSWORD = "12345678";
+    private static final int DEFAULT_VALID_AGE = 20;
+    private static final String DEFAULT_VALID_LOGIN = "some_login";
+    private static final String DEFAULT_VALID_PASSWORD = "12345678";
     private static final int INVALID_AGE = 15;
     private static final String INVALID_LOGIN = "log";
     private static final String INVALID_PASSWORD = "123";
@@ -30,9 +30,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(VALID_AGE);
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
+        user.setAge(DEFAULT_VALID_AGE);
+        user.setLogin(DEFAULT_VALID_LOGIN);
+        user.setPassword(DEFAULT_VALID_PASSWORD);
     }
 
     @Test
@@ -101,7 +101,7 @@ class RegistrationServiceImplTest {
         User user1 = new User();
         user1.setLogin("something interesting");
         user1.setAge(150);
-        user1.setPassword(VALID_PASSWORD);
+        user1.setPassword(DEFAULT_VALID_PASSWORD);
         registrationService.register(user1);
         assertTrue(Storage.people.contains(user), "User with valid age should be registered");
     }
@@ -129,8 +129,8 @@ class RegistrationServiceImplTest {
         assertTrue(Storage.people.contains(user), "User with valid login should be registered");
         User user2 = new User();
         user2.setLogin("some loooooooong login");
-        user2.setAge(VALID_AGE);
-        user2.setPassword(VALID_PASSWORD);
+        user2.setAge(DEFAULT_VALID_AGE);
+        user2.setPassword(DEFAULT_VALID_PASSWORD);
         registrationService.register(user2);
         assertTrue(Storage.people.contains(user), "User with valid login be registered");
     }
@@ -158,7 +158,7 @@ class RegistrationServiceImplTest {
         assertTrue(Storage.people.contains(user), "User with valid password should be registered");
         User user3 = new User();
         user3.setLogin("some login");
-        user3.setAge(VALID_AGE);
+        user3.setAge(DEFAULT_VALID_AGE);
         user3.setPassword("123456789101112131415");
         registrationService.register(user3);
         assertTrue(Storage.people.contains(user), "User with valid password should be registered");
@@ -168,13 +168,13 @@ class RegistrationServiceImplTest {
     void register_ExistedUser_NotOk() {
         User user4 = new User();
         user4.setLogin("the same login");
-        user4.setAge(VALID_AGE);
-        user4.setPassword(VALID_PASSWORD);
+        user4.setAge(DEFAULT_VALID_AGE);
+        user4.setPassword(DEFAULT_VALID_PASSWORD);
         registrationService.register(user4);
         User user5 = new User();
         user5.setLogin("the same login");
-        user5.setAge(VALID_AGE);
-        user5.setPassword(VALID_PASSWORD);
+        user5.setAge(DEFAULT_VALID_AGE);
+        user5.setPassword(DEFAULT_VALID_PASSWORD);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user5),
                         "Already existed user shouldn't be registered, "
                                 + "InvalidDataException should be thrown");
