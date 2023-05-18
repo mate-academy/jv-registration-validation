@@ -8,14 +8,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 100;
-    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_LENGTH = 6;
 
     @Override
     public User register(User user) {
-
         isValid(user);
         return storageDao.add(user);
-
     }
 
     private void isValid(User user) throws UserDataException {
@@ -31,11 +29,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (isNull(user.getAge()) || user.getAge() > MAX_AGE) {
             throw new UserDataException("User's age is not valid.");
         }
-        if (isNull(user.getLogin()) || user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new UserDataException("User's login must at least " + MIN_LOGIN_LENGTH);
+        if (isNull(user.getLogin()) || user.getLogin().length() < MIN_LENGTH) {
+            throw new UserDataException("User's login must at least " + MIN_LENGTH);
         }
-        if (isNull(user.getPassword()) || user.getPassword().length() < MIN_LOGIN_LENGTH) {
-            throw new UserDataException("User's password must at least " + MIN_LOGIN_LENGTH);
+        if (isNull(user.getPassword()) || user.getPassword().length() < MIN_LENGTH) {
+            throw new UserDataException("User's password must at least " + MIN_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserDataException("Login already exist.");

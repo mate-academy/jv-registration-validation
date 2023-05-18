@@ -17,9 +17,9 @@ class RegistrationServiceImplTest {
     private static final int INVALID_AGE = 120;
     private static final String SUCCESS_LOGIN = "SuccessLogin";
     private static final String SUCCESS_PASS = "SuccessPassword";
-    private static final String INC_LOGIN = "Login";
-    private static final String INC_PASS = "Pass";
-    private static final int INC_AGE = 15;
+    private static final String INCORRECT_LOGIN = "Login";
+    private static final String INCORRECT_PASS = "Pass";
+    private static final int INCORRECT_AGE = 15;
 
     @BeforeAll
     static void beforeAll() {
@@ -41,14 +41,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void isNullUser_NotOk() {
+    void register_nullUser_notOk() {
         assertThrows(UserDataException.class,
                 () -> registrationService.register(null),
                     "USER isn't NULL, should throw UserDataException.");
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
@@ -56,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void emptyLogin_NotOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
@@ -80,8 +80,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void lessSixLogin_NotOk() {
-        user.setLogin(INC_LOGIN);
+    void register_lessSixLogin_notOk() {
+        user.setLogin(INCORRECT_LOGIN);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                     "LOGIN must at least 6 characters, "
@@ -98,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void emptyPassword_NotOk() {
+    void register_emptyPassword_notOk() {
         user.setPassword("");
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
@@ -106,8 +106,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void lessSixPassword_NotOk() {
-        user.setPassword(INC_PASS);
+    void register_lessSixPassword_notOk() {
+        user.setPassword(INCORRECT_PASS);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                     "PASSWORD must at least 6 characters, "
@@ -115,23 +115,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void lessMinExistAge_NotOk() {
-        user.setAge(INC_AGE);
+    void register_lessMinExistAge_notOk() {
+        user.setAge(INCORRECT_AGE);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                     "AGE is NULL, should throw UserDataException.");
     }
 
     @Test
-    void negativeAge_NotOk() {
-        user.setAge(-INC_AGE);
+    void register_negativeAge_notOk() {
+        user.setAge(-INCORRECT_AGE);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                     "AGE is Negative, should throw UserDataException.");
     }
 
     @Test
-    void invalidAge_NotOk() {
+    void register_invalidAge_notOk() {
         user.setAge(INVALID_AGE);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
