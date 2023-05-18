@@ -31,25 +31,28 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateUserNotNull(User user) {
         if (user == null) {
-            throw new InvalidUserException("Object user can not be null");
+            throw new InvalidUserException("User can not be null");
         }
     }
 
     private void validateLogin(String login) {
         if (login == null || login.length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidUserException("Invalid login");
+            throw new InvalidUserException("Invalid login. Minimal login "
+                    + "length should be at least 6 characters");
         }
     }
 
     private void validatePassword(String password) {
         if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidUserException("Invalid password");
+            throw new InvalidUserException("Invalid password. Minimal password "
+                    + "length should be at least 6 characters");
         }
     }
 
     private void validateAge(Integer age) {
         if (age == null || age < MIN_AGE) {
-            throw new InvalidUserException("Invalid age");
+            throw new InvalidUserException("Invalid age. Minimal age for "
+                    + "registration - 18 years");
         }
     }
 
