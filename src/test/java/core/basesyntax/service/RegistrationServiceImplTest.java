@@ -14,13 +14,15 @@ class RegistrationServiceImplTest {
     private static final long DEFAULT_ID = 100L;
     private static final String DEFAULT_LOGIN = "login373";
     private static final String SHORT_LOGIN = "login";
+    private static final String MINIMAL_LENGTH_LOGIN = "login3";
     private static final String DEFAULT_PASSWORD = "password373";
-    private static final String SHORT_PASSWORD = "pass";
+    private static final String MINIMAL_LENGTH_PASSWORD = "passwo";
+    private static final String SHORT_PASSWORD = "passw";
     private static final int DEFAULT_AGE = 20;
     private static final Integer MINIMAL_AGE = 18;
     private static final Integer INVALID_AGE = 15;
     private static RegistrationServiceImpl registrService;
-    private static User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -91,10 +93,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_minimalLengthLogin_Ok() {
+        user.setLogin(MINIMAL_LENGTH_LOGIN);
+        User actualUser = registrService.register(user);
+        assertEquals(user, actualUser);
+    }
+
+    @Test
     void register_passwordLessThanMin_notOk() {
         user.setPassword(SHORT_PASSWORD);
         assertThrows(RegistrationException.class,() -> registrService.register(user),
                 "Short password should throw RegistrationException");
+    }
+
+    @Test
+    void register_passwordMinimalLength_Ok() {
+        user.setPassword(MINIMAL_LENGTH_PASSWORD);
+        User actualUser = registrService.register(user);
+        assertEquals(user, actualUser);
     }
 
     @Test

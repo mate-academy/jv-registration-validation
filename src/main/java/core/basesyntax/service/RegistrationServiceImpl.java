@@ -11,6 +11,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        isValidUser(user);
+        return storageDao.add(user);
+    }
+
+    private void isValidUser(User user) {
         if (user == null) {
             throw new RegistrationException("You must fill in all fields");
         }
@@ -18,18 +23,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Id must be a number!");
         }
         if (user.getPassword() == null
-                || user.getPassword().length() <= MIN_LENGTH_LOGIN_AND_PASSWORD) {
+                || user.getPassword().length() < MIN_LENGTH_LOGIN_AND_PASSWORD) {
             throw new RegistrationException("Password must be longer than 6 including");
         }
-        if (user.getLogin() == null || user.getLogin().length() <= MIN_LENGTH_LOGIN_AND_PASSWORD) {
+        if (user.getLogin() == null || user.getLogin().length() < MIN_LENGTH_LOGIN_AND_PASSWORD) {
             throw new RegistrationException("Login must be longer than 6 including");
         }
         if (user.getAge() == null || user.getAge() < MIN_USER_AGE) {
-            throw new RegistrationException("Come back when you're 18");
+            throw new RegistrationException("Your age less than 18. Come back when you're 18");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This login is already in use, try something new");
         }
-        return storageDao.add(user);
     }
 }
