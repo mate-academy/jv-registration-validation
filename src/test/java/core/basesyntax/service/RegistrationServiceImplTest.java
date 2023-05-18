@@ -19,7 +19,7 @@ class RegistrationServiceImplTest {
     private static final String INVALID_LOGIN = "nazar";
     private static final String INVALID_PASSWORD = "12345";
     private static RegistrationServiceImpl registrationService;
-    private static User corectUser;
+    private User corectUser;
 
     @BeforeAll
      static void setUp() {
@@ -37,18 +37,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validUser_OK() {
+    public void register_validUser_ok() {
         registrationService.register(corectUser);
-        assertTrue(Storage.people.contains(corectUser),"Does not add the user");
+        assertTrue(Storage.people.contains(corectUser),"Does not add a correct user");
     }
 
     @Test
-    public void register_NullAge_notOk() {
+    public void register_nullAge_notOk() {
         corectUser.setAge(null);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(corectUser),
-                "Can will NullPointException you need "
-                        + "throw InvalidUserDataException  if you add incorrect age");
+                "Method should "
+                        + "throw InvalidUserDataException");
     }
 
     @Test
@@ -56,17 +56,15 @@ class RegistrationServiceImplTest {
         corectUser.setAge(INVALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(corectUser),
-                "Adding an invalid value  age less  "
-                        + "you need throw InvalidUserDataException  if you add incorrect age");
+                "Method should throw InvalidUserDataException");
     }
 
     @Test
-    public void register_NullLogin_notOk() {
+    public void register_nullLogin_notOk() {
         corectUser.setLogin(null);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(corectUser),
-                "Can will NullPointException you need"
-                        + " throw InvalidUserDataException  if you add incorrect login");
+                "Method should throw InvalidUserDataException");
     }
 
     @Test
@@ -74,32 +72,30 @@ class RegistrationServiceImplTest {
         corectUser.setLogin(INVALID_LOGIN);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(corectUser),
-                "Adding an invalid value you need"
-                        + " throw InvalidUserDataException  if you add incorrect login");
+                "Method should throw InvalidUserDataException");
     }
 
     @Test
-    public void register_NullPassword_notOk() {
+    public void register_nullPassword_notOk() {
         corectUser.setPassword(null);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(corectUser),
-                "Can will NullPointException you need"
-                        + " throw InvalidUserDataException  if you add incorrect password");
+                "Method should throw InvalidUserDataException");
     }
 
     @Test
-    public void register_IncorrectPassword_notOk() {
+    public void register_incorrectPassword_notOk() {
         corectUser.setPassword(INVALID_PASSWORD);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(corectUser),
-                "Adding an invalid value you need"
-                        + " throw InvalidUserDataException  if you add incorrect password");
+                "Method should throw InvalidUserDataException");
     }
 
     @Test
-    public void register_ExistingUser_notOk() {
-        registrationService.register(corectUser);
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(corectUser),
-                "Adding existing user you need throw InvalidUserDataException ");
+    public void register_existingUser_notOk() {
+        Storage.people.add(corectUser);
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(corectUser),
+                "Adding existing user you need throw InvalidUserDataException");
     }
 }
