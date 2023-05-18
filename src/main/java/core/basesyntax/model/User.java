@@ -2,7 +2,7 @@ package core.basesyntax.model;
 
 import java.util.Objects;
 
-public class User {
+public class User implements Cloneable {
     private Long id;
     private String login;
     private String password;
@@ -57,5 +57,14 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(login, password, age);
+    }
+
+    @Override
+    public User clone() {
+        try {
+            return (User) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
