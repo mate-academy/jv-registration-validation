@@ -11,7 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidUserException {
+    public User register(User user) {
 
         if (user.getAge() == null) {
             throw new InvalidUserException("User`s age can`t be null");
@@ -28,6 +28,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < AGE_MINIMUM) {
             throw new InvalidUserException("Invalid user`s age: " + user.getAge()
             + "Min allowed age is: " + AGE_MINIMUM);
+        }
+        if (user.getAge() < 0) {
+            String message = "The age cannot be negative number";
+            throw new InvalidUserException(message);
         }
         if (user.getLogin().length() < LOGIN_AND_PASSWORD_MINIMUM) {
             throw new InvalidUserException("Invalid login: " + user.getLogin()
