@@ -13,41 +13,42 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        loginValidator(user.getLogin());
-        passwordValidator(user.getPassword());
-        ageValidator(user.getAge());
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
         return storageDao.add(user);
     }
 
-    private void loginValidator(String login) {
+    private void validateLogin(String login) {
         if (login == null) {
             throw new ValidationException("Login can`t be null");
         }
         if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new ValidationException("Login too short, required length at least 6");
+            throw new ValidationException("Login " + login + " too short, "
+                    + "required length at least " + MIN_LOGIN_LENGTH);
         }
         if (storageDao.get(login) != null) {
-            throw new ValidationException("User with such login is already exist");
+            throw new ValidationException("User with login: " + login + " - is already exist");
         }
     }
 
-    private void passwordValidator(String password) {
+    private void validatePassword(String password) {
         if (password == null) {
             throw new ValidationException("Password can`t be null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new ValidationException("Password " + password + " too short"
-                    + "required length at least 6");
+            throw new ValidationException("Password " + password + " too short "
+                    + "required length at least " + MIN_PASSWORD_LENGTH);
         }
     }
 
-    private void ageValidator(Integer age) {
+    private void validateAge(Integer age) {
         if (age == null) {
             throw new ValidationException("Age can`t be null");
         }
         if (age < MIN_AGE) {
-            throw new ValidationException("User with age " + age + " too young,"
-                    + "min allowed age is 18");
+            throw new ValidationException("User with age " + age + " too young, "
+                    + "min allowed age is " + MIN_AGE);
         }
     }
 }
