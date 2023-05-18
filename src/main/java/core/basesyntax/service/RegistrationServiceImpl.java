@@ -15,9 +15,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         isUserNull(user);
-        isValidUserLogin(user);
-        isValidUserPassword(user);
-        isValidUserAge(user);
+        validateUserLogin(user);
+        validateUserPassword(user);
+        validateUserAge(user);
         storageDao.add(user);
         return user;
     }
@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isValidUserLogin(User user) {
+    private void validateUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new UserRegistrationException("User`s login can`t be null");
         }
@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isValidUserPassword(User user) {
+    private void validateUserPassword(User user) {
         if (user.getPassword() == null) {
             throw new UserRegistrationException("User`s login can`t be null");
         }
@@ -51,7 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isValidUserAge(User user) {
+    private void validateUserAge(User user) {
         if (user.getAge() == null) {
             throw new UserRegistrationException("User`s age can`t be null");
         }
