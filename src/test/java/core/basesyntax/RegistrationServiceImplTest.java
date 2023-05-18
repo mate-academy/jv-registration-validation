@@ -25,7 +25,7 @@ class RegistrationServiceImplTest {
     @Test
     void registration_userWithValidData_ok() {
         User expected = registrationService.register(validUser);
-        assertEquals(expected, validUser, "User should be equals to each other");
+        assertEquals(expected, validUser, "User should be equal");
     }
 
     @Test
@@ -38,9 +38,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userWithNullInitialization_notOk() {
-        User userWithNull = null;
+        User nullUser = null;
         assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(userWithNull), "Method should "
+                () -> registrationService.register(nullUser), "Method should "
                 + "throw UserRegistrationException");
     }
 
