@@ -12,38 +12,50 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        isValidLogin(user);
-        isValidPassword(user);
-        isValidAge(user);
+        validateUser(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void isValidLogin(User user) {
+    private void validateUser(User user) {
         if (user == null) {
             throw new InvalidDataException("User is null");
+        }
+    }
+
+    private void validateLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new InvalidDataException("Invalid login. Null is not a valid value");
+        }
+        if (user.getLogin().length() < MIN_CHARACTERS) {
+            throw new InvalidDataException("This login least than "
+                    + MIN_CHARACTERS + " characters");
         }
         User comparedLogin = storageDao.get(user.getLogin());
         if (comparedLogin != null) {
             throw new InvalidDataException("This login is taken");
         }
-        if (user.getLogin() == null || user.getLogin().length() < MIN_CHARACTERS) {
-            throw new InvalidDataException("This login least than "
-                    + MIN_CHARACTERS + " characters");
-        }
     }
 
-    private void isValidPassword(User user) {
-        if (user.getPassword() == null || user.getPassword().length() < MIN_CHARACTERS) {
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new InvalidDataException("Invalid password. Null is not a valid value");
+        }
+        if (user.getPassword().length() < MIN_CHARACTERS) {
             throw new InvalidDataException("This password least than "
                     + MIN_CHARACTERS + " characters");
         }
     }
 
-    private void isValidAge(User user) {
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+    private void validateAge(User user) {
+        if (user.getAge() == null) {
+            throw new InvalidDataException("Invalid age. Null is not a valid value");
+        }
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException("Your age least than "
                     + MIN_AGE + " year old");
         }
     }
 }
-

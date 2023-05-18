@@ -11,15 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
-    private static final String DEFAULT_LOGIN = "normal";
-    private static final String DEFAULT_PASSWORD = "123456";
-    private static final int DEFAULT_AGE = 18;
-    private static final String TEST_INVALID_LOGIN = "";
-    private static final String TEST_INVALID_PASSWORD = "123";
-    private static final int TEST_INVALID_AGE = 10;
-    private static final int TEST_NEGATIVE_AGE = -5;
-
+class RegistrationServiceImplTest extends RegistrationServiceTestConstants {
     private static RegistrationService registrationService;
     private User user;
 
@@ -46,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidLogin_notOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin(TEST_INVALID_LOGIN);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
@@ -64,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_notOk() {
+    void register_invalidPasswordLength_notOk() {
         user.setPassword(TEST_INVALID_PASSWORD);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
@@ -76,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_notOk() {
+    void register_InvalidAge_notOk() {
         user.setAge(TEST_INVALID_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
