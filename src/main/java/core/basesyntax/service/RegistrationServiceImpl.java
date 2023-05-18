@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         validateUser(user);
-        Storage.people.add(user);
+        storageDao.add(user);
         if (!Storage.people.contains(user)) {
             throw new RegistrationException("Such a user does not exist or is not registered");
         }
