@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkLoginIsValid(User user) {
         if (user.getLogin().length() < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new UserRegistrationException("Login length must be equals or loner than 6");
+            throw new UserRegistrationException("Login length must be equals or longer than 6");
         }
     }
 
@@ -62,7 +62,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkPasswordIsValid(User user) {
         if (user.getPassword().length() < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new UserRegistrationException("Password length must be equals or loner than 6");
+            throw new UserRegistrationException("Password length must be equals or longer than 6");
         }
     }
 
