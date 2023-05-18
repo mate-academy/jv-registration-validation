@@ -14,30 +14,46 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validateUser(user);
+        validateUserIsNotNull(user);
+        validateLogin(user);
+        validateAge(user);
+        validatePassword(user);
         return storageDao.add(user);
     }
 
-    private void validateUser(User user) {
+    private void validateUserIsNotNull(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
+    }
+
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("Age must be specified");
-        }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password can't be null");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Not valid login: " + user.getLogin()
                     + ". Min login's length is " + MIN_LOGIN_LENGTH);
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("The user with login: " + user.getLogin()
+                    + " is already exist.");
+        }
+    }
+
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null");
+        }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Not valid password. "
                     + "Min password's length is " + MIN_LOGIN_LENGTH);
+        }
+    }
+
+    private void validateAge(User user) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age must be specified");
         }
         if (user.getAge() < MIN_AGE) {
             String message = "Not valid age: " + user.getAge() + ". Min allowed age is " + MIN_AGE;
@@ -51,9 +67,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             String message = "The age cannot be negative number";
             throw new RegistrationException(message);
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("The user with login: " + user.getLogin()
-                    + " is already exist.");
-        }
     }
+
+
 }
