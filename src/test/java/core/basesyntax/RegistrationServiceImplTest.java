@@ -70,6 +70,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullPassword_notOk() {
+        user.setPassword(null);
+        assertThrows(UserDataException.class,
+                () -> registrationService.register(user),
+                "Registration user with NULL password"
+                        + " should throw IncorrectUserDataException.");
+
+    }
+
+    @Test
     void register_negativeAge_notOk() {
         user.setAge(NEGATIVE_INVALID_AGE);
         assertThrows(UserDataException.class,
@@ -102,16 +112,6 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
         assertTrue(Storage.people.contains(user),
                 "Registration user with age = 18 should add user to Storage.");
-    }
-
-    @Test
-    void register_nullPassword_notOk() {
-        user.setPassword(null);
-        assertThrows(UserDataException.class,
-                () -> registrationService.register(user),
-                "Registration user with NULL password"
-                        + " should throw IncorrectUserDataException.");
-
     }
 
     @Test
