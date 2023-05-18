@@ -1,7 +1,9 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
@@ -10,19 +12,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 120;
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -39,19 +37,38 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidUser_Ok() {
+    void register_addValidUser_Ok() {
+        int sizeBefore = Storage.people.size();
         registrationService.register(user);
+        int sizeAfter = Storage.people.size();
         assertTrue(Storage.people.contains(user));
+        assertEquals(1, sizeAfter - sizeBefore);
     }
 
     @Test
-    void register_NullUser_notOk() {
+    void register_addTwoValidUsersWithSameLogin_Ok() {
+        User secondUser = new User();
+        secondUser.setLogin(user.getLogin());
+        secondUser.setAge(MIN_AGE + 15);
+        secondUser.setPassword("00123456");
+        registrationService.register(user);
+        assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
+    }
+
+    @Test
+    void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_invalidLogin_notOk() {
+        user.setLogin("kitty");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -82,6 +99,8 @@ class RegistrationServiceImplTest {
         user.setAge(0);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setAge(MAX_AGE + 1);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setAge(-1);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }

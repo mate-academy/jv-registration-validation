@@ -14,6 +14,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        storageDao.add(user);
+        return user;
+    }
+
+    private void validateUser(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
@@ -42,9 +48,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             String message = "Are you sure you're not a zombie? You can enter max age: " + MAX_AGE;
             throw new RegistrationException(message);
         }
-
-        storageDao.add(user);
-        return user;
+        if (user.getAge() < 0) {
+            String message = "The age cannot be negative number";
+            throw new RegistrationException(message);
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("The user with login: " + user.getLogin()
+                    + " is already exist.");
+        }
     }
 
 }
