@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ShortLogin_NotOk() {
+    void register_ShortLoginLengthFive_NotOk() {
         String shortLogin = "mario";
         user.setLogin(shortLogin);
         try {
@@ -47,7 +47,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ShortPassword_NotOk() {
+    void register_ShortLoginLengthThree_NotOk() {
+        String shortLogin = "Kim";
+        user.setLogin(shortLogin);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when login is shorter than 6 characters");
+    }
+
+    @Test
+    void register_ShortLoginLengthOne_NotOk() {
+        String shortLogin = "P";
+        user.setLogin(shortLogin);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when login is shorter than 6 characters");
+    }
+
+    @Test
+    void register_ShortPasswordLengthFive_NotOk() {
         String shortPassword = "proXX";
         user.setPassword(shortPassword);
         try {
@@ -59,7 +83,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_improperAge_NotOk() {
+    void register_ShortPasswordLengthFour_NotOk() {
+        String shortPassword = "four";
+        user.setPassword(shortPassword);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when password is shorter than 6 characters");
+    }
+
+    @Test
+    void register_ShortPasswordLengthTwo_NotOk() {
+        String shortPassword = "sI";
+        user.setPassword(shortPassword);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when password is shorter than 6 characters");
+    }
+
+    @Test
+    void register_improperAge16_NotOk() {
         int improperAge = 16;
         user.setAge(improperAge);
         try {
@@ -68,6 +116,66 @@ class RegistrationServiceImplTest {
             return;
         }
         fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    }
+
+    @Test
+    void register_improperAge12_NotOk() {
+        int improperAge = 12;
+        user.setAge(improperAge);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    }
+
+    @Test
+    void register_improperAge1_NotOk() {
+        int improperAge = 1;
+        user.setAge(improperAge);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    }
+
+    @Test
+    void register_improperAge5_NotOk() {
+        int improperAge = 5;
+        user.setAge(improperAge);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    }
+
+    @Test
+    void register_noughtAge_NotOk() {
+        int noughtAge = 0;
+        user.setAge(noughtAge);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when age is negative");
+    }
+
+    @Test
+    void register_negativeAge_NotOk() {
+        int negativeAge = -34;
+        user.setAge(negativeAge);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when age is negative");
     }
 
     @Test
@@ -90,30 +198,6 @@ class RegistrationServiceImplTest {
             return;
         }
         fail("\"InvalidInputException\" must be thrown when password is \"null\"");
-    }
-
-    @Test
-    void register_negativeAge_NotOk() {
-        int negativeAge = -34;
-        user.setAge(negativeAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is negative");
-    }
-
-    @Test
-    void register_noughtAge_NotOk() {
-        int noughtAge = 0;
-        user.setAge(noughtAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is negative");
     }
 
     @Test
@@ -180,10 +264,34 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_completelyInvalidUser_notOk() {
+        user.setLogin("BBBq");
+        user.setPassword("kio9");
+        user.setAge(9);
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when user is not valid");
+    }
+
+    @Test
     void get_user_Ok() {
         registrationService.register(user);
         User expected = user;
         User actual = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        user = null;
+        try {
+            registrationService.register(user);
+        } catch (InvalidInputException e) {
+            return;
+        }
+        fail("\"InvalidInputException\" must be thrown when user is null");
     }
 }
