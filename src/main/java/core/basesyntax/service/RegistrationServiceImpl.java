@@ -12,36 +12,49 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-
-        if (user.getAge() == null) {
-            throw new InvalidUserException("User`s age can`t be null");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidUserException("User`s password can`t be null");
-        }
-        if (user.getLogin() == null) {
-            throw new InvalidUserException("User`s login can`t be null");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserException("User already in storage!");
-        }
-        if (user.getAge() < AGE_MINIMUM) {
-            throw new InvalidUserException("Invalid user`s age: " + user.getAge()
-            + "Min allowed age is: " + AGE_MINIMUM);
-        }
-        if (user.getAge() < 0) {
-            String message = "The age cannot be negative number";
-            throw new InvalidUserException(message);
-        }
-        if (user.getLogin().length() < LOGIN_AND_PASSWORD_MINIMUM) {
-            throw new InvalidUserException("Invalid login: " + user.getLogin()
-                    + "Min allowed login length is: " + LOGIN_AND_PASSWORD_MINIMUM);
-        }
-        if (user.getPassword().length() < LOGIN_AND_PASSWORD_MINIMUM) {
-            throw new InvalidUserException("Invalid password: " + user.getPassword()
-                    + "Min allowed password length is: " + LOGIN_AND_PASSWORD_MINIMUM);
-        }
-
+        validateAge(user.getAge());
+        validatePassword(user.getPassword());
+        validateLogin(user.getLogin());
+        validateUniqueLogin(user.getLogin());
         return storageDao.add(user);
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new InvalidUserException("User's age can't be null");
+        }
+        if (age < AGE_MINIMUM) {
+            throw new InvalidUserException("Invalid user's age: " + age
+                    + ". Min allowed age is: " + AGE_MINIMUM);
+        }
+        if (age < 0) {
+            throw new InvalidUserException("The age cannot be a negative number");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password == null) {
+            throw new InvalidUserException("User's password can't be null");
+        }
+        if (password.length() < LOGIN_AND_PASSWORD_MINIMUM) {
+            throw new InvalidUserException("Invalid password: " + password
+                    + ". Min allowed password length is: " + LOGIN_AND_PASSWORD_MINIMUM);
+        }
+    }
+
+    private void validateLogin(String login) {
+        if (login == null) {
+            throw new InvalidUserException("User's login can't be null");
+        }
+        if (login.length() < LOGIN_AND_PASSWORD_MINIMUM) {
+            throw new InvalidUserException("Invalid login: " + login
+                    + ". Min allowed login length is: " + LOGIN_AND_PASSWORD_MINIMUM);
+        }
+    }
+
+    private void validateUniqueLogin(String login) {
+        if (storageDao.get(login) != null) {
+            throw new InvalidUserException("User already exists in the storage");
+        }
     }
 }

@@ -26,27 +26,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidUser_Ok() throws InvalidUserException {
+    void register_validUser_Ok() {
         User actual = registrationService.register(validUser);
         assertEquals(validUser, actual, "Users should be equals");
     }
 
     @Test
-    public void register_UserAgeExactly18_Ok() throws InvalidUserException {
+    public void register_userAgeExactly18_Ok() {
         User actual = new User("johnsmith", "password", 18);
         User registeredUser = registrationService.register(actual);
         assertEquals(actual, registeredUser, "Invalid age: " + actual.getAge());
     }
 
     @Test
-    public void register_UserAgeOver18_Ok() throws InvalidUserException {
+    public void register_userAgeOver18_Ok() {
         User actual = new User("johnsmith", "password", 20);
         User registeredUser = registrationService.register(actual);
         assertEquals(actual, registeredUser, "Invalid age: " + actual.getAge());
     }
 
     @Test
-    public void register_UserNullAge_NotOk() {
+    public void register_userNullAge_NotOk() {
         User actual = new User("johnsmith", "password", null);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(actual),
@@ -58,11 +58,11 @@ class RegistrationServiceImplTest {
         User actual = new User("johnsmith", "password", -20);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(actual),
-                "Invalid password" + actual.getPassword());
+                "Invalid age: " + actual.getAge());
     }
 
     @Test
-    public void register_UserNullPassword_NotOk() {
+    public void register_userNullPassword_NotOk() {
         User actual = new User("johnsmith", null, 20);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(actual),
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_UserPasswordTooShort_NotOk() {
+    public void register_userPasswordTooShort_NotOk() {
         User actual = new User("johnsmith", "abc", 20);
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(actual),
@@ -92,5 +92,13 @@ class RegistrationServiceImplTest {
         assertThrows(InvalidUserException.class, () ->
                 registrationService.register(actual),
                 "Invalid user: " + actual.getLogin());
+    }
+
+    @Test
+    public void register_userLoginTooShort_NotOk() {
+        User actual = new User("john", "password", 20);
+        assertThrows(InvalidUserException.class, () ->
+                        registrationService.register(actual),
+                "Invalid login length: " + actual.getLogin());
     }
 }
