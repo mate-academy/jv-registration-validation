@@ -28,13 +28,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validUser_Ok() {
+    public void register_validUser_ok() {
         User registeredUser = registrationService.register(validUser);
         assertEquals(validUser, registeredUser, "Users should be equal.");
     }
 
     @Test
-    public void register_existingUser_NotOk() {
+    public void register_existingUser_notOk() {
         Storage.people.add(validUser);
         User duplicateUser = new User("goodlog", "newpassword", 25);
         assertThrows(RegistrationException.class, () ->
@@ -42,56 +42,56 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_userLoginTooShort_NotOk() {
+    public void register_userLoginTooShort_notOk() {
         User user = new User("abc", "password", 20);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
-    public void register_userNullLogin_NotOk() {
+    public void register_userNullLogin_notOk() {
         User user = new User(null, "password", 20);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
-    public void register_userPasswordTooShort_NotOk() {
+    public void register_userPasswordTooShort_notOk() {
         User user = new User("johnsmith", "abc", 20);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
-    public void register_userNullPassword_NotOk() {
+    public void register_userNullPassword_notOk() {
         User userWithNullPassword = new User("johnsmith", null, 20);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(userWithNullPassword), EXCEPTION_MESSAGE);
     }
 
     @Test
-    public void register_userUnder18_NotOk() {
+    public void register_userUnder18_notOk() {
         User user = new User("johnsmith", "password", 17);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
-    public void register_userOver18_Ok() {
+    public void register_userValidData_Ok() {
         User user = new User("johnsmith", "password", 19);
         User registeredUser = registrationService.register(user);
-        assertEquals(user, registeredUser, "Incorrect age: " + registeredUser.getAge());
+        assertEquals(user, registeredUser, "Users should be equals to each other");
     }
 
     @Test
-    public void register_userNegativeAge_NotOk() {
+    public void register_userNegativeAge_notOk() {
         User user = new User("johnsmith", "password", -20);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user), EXCEPTION_MESSAGE);
     }
 
     @Test
-    public void register_userNullAge_NotOk() {
+    public void register_userNullAge_notOk() {
         User user = new User("johnsmith", "password", null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user), EXCEPTION_MESSAGE);
