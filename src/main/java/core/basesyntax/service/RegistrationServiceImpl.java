@@ -14,22 +14,22 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         validateUserData(user);
-        storageDao.add(user);
-        return storageDao.get(user.getLogin());
+        return storageDao.add(user);
     }
 
     private void validateUserData(User user) {
         validatePassword(user);
         validateLogin(user);
         validateAge(user);
-        addExistUser(user);
+        validateUniqueUser(user);
     }
 
     private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new InvalidUserDataException("Not valid password: " + user.getPassword()
                     + ". Min length password is " + MIN_LENGTH_PASSWORD);
-        } else if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
+        }
+        if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new InvalidUserDataException("Password can't be null");
         }
     }
@@ -37,7 +37,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new InvalidUserDataException("Login can't be null");
-        } else if (user.getLogin().length() < MIN_LENGTH_LOGIN) {
+        }
+        if (user.getLogin().length() < MIN_LENGTH_LOGIN) {
             throw new InvalidUserDataException("Not valid login: " + user.getLogin()
                     + ". Min length login is " + MIN_LENGTH_LOGIN);
         }
@@ -46,13 +47,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidUserDataException("Age can't be null");
-        } else if (user.getAge() <= MIN_AGE) {
+        }
+        if (user.getAge() <= MIN_AGE) {
             throw new InvalidUserDataException("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
     }
 
-    private void addExistUser(User user) {
+    private void validateUniqueUser(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidUserDataException("A user with this login already exists");
         }

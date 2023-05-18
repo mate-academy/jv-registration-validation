@@ -19,16 +19,16 @@ class RegistrationServiceImplTest {
     private static final String INVALID_LOGIN = "nazar";
     private static final String INVALID_PASSWORD = "12345";
     private static RegistrationServiceImpl registrationService;
-    private User corectUser;
+    private User correctUser;
 
     @BeforeAll
-     static void setUp() {
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
-     void createUser() {
-        corectUser = new User(VALID_LOGIN,VALID_PASSWORD,VALID_AGE);
+    void createUser() {
+        correctUser = new User(VALID_LOGIN,VALID_PASSWORD,VALID_AGE);
     }
 
     @AfterEach
@@ -38,64 +38,63 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_validUser_ok() {
-        registrationService.register(corectUser);
-        assertTrue(Storage.people.contains(corectUser),"Does not add a correct user");
+        registrationService.register(correctUser);
+        assertTrue(Storage.people.contains(correctUser),"Does not add a correct user");
     }
 
     @Test
     public void register_nullAge_notOk() {
-        corectUser.setAge(null);
+        correctUser.setAge(null);
         assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(corectUser),
-                "Method should "
-                        + "throw InvalidUserDataException");
+                () -> registrationService.register(correctUser),
+                "Method should throw InvalidUserDataException");
     }
 
     @Test
     public void register_LessAge_notOk() {
-        corectUser.setAge(INVALID_AGE);
+        correctUser.setAge(INVALID_AGE);
         assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(corectUser),
+                () -> registrationService.register(correctUser),
                 "Method should throw InvalidUserDataException");
     }
 
     @Test
     public void register_nullLogin_notOk() {
-        corectUser.setLogin(null);
+        correctUser.setLogin(null);
         assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(corectUser),
+                () -> registrationService.register(correctUser),
                 "Method should throw InvalidUserDataException");
     }
 
     @Test
     public void register_IncorrectLogin_notOk() {
-        corectUser.setLogin(INVALID_LOGIN);
+        correctUser.setLogin(INVALID_LOGIN);
         assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(corectUser),
+                () -> registrationService.register(correctUser),
                 "Method should throw InvalidUserDataException");
     }
 
     @Test
     public void register_nullPassword_notOk() {
-        corectUser.setPassword(null);
+        correctUser.setPassword(null);
         assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(corectUser),
+                () -> registrationService.register(correctUser),
                 "Method should throw InvalidUserDataException");
     }
 
     @Test
     public void register_incorrectPassword_notOk() {
-        corectUser.setPassword(INVALID_PASSWORD);
+        correctUser.setPassword(INVALID_PASSWORD);
         assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(corectUser),
+                () -> registrationService.register(correctUser),
                 "Method should throw InvalidUserDataException");
     }
 
     @Test
     public void register_existingUser_notOk() {
-        Storage.people.add(corectUser);
+        Storage.people.add(correctUser);
         assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(corectUser),
+                () -> registrationService.register(correctUser),
                 "Adding existing user you need throw InvalidUserDataException");
     }
 }
