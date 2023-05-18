@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void verifyLogin(User user) {
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isEmpty()) {
             throw new UserDataException(UserDataException.class.getName()
                     + " Login is empty");
         }

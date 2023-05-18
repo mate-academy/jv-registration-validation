@@ -24,9 +24,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin(String.valueOf(ValidationConstant.VALID_LOGIN));
-        user.setPassword(String.valueOf(ValidationConstant.VALID_PASSWORD));
-        user.setAge((Integer) ValidationConstant.VALID_AGE.getValue());
+        user.setLogin(ValidationConstant.VALID_LOGIN);
+        user.setPassword(ValidationConstant.VALID_PASSWORD);
+        user.setAge(ValidationConstant.VALID_AGE);
     }
 
     @Test
@@ -73,7 +73,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOk() {
-        user.setAge((Integer) ValidationConstant.NEGATIVE_INVALID_AGE.getValue());
+        user.setAge(ValidationConstant.NEGATIVE_INVALID_AGE);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with age < 0"
@@ -82,7 +82,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageGreaterThenMaxAge_notOk() {
-        user.setAge((Integer) ValidationConstant.INVALID_LARGE_AGE.getValue());
+        user.setAge(ValidationConstant.INVALID_LARGE_AGE);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with age > 110"
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThenEighteen_notOk() {
-        user.setAge((Integer) ValidationConstant.MIN_INVALID_AGE.getValue());
+        user.setAge(ValidationConstant.MIN_INVALID_AGE);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with age < 18"
@@ -100,7 +100,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageValidEighteen_ok() {
-        user.setAge((Integer) ValidationConstant.MIN_VALID_AGE.getValue());
+        user.setAge(ValidationConstant.MIN_VALID_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user),
                 "Registration user with age = 18 should add user to Storage.");
@@ -126,7 +126,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLessThenSix_notOk() {
-        user.setPassword(String.valueOf(ValidationConstant.INVALID_SHORT_PASSWORD.getValue()));
+        user.setPassword(ValidationConstant.INVALID_SHORT_PASSWORD);
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with password length less than six"
