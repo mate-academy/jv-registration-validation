@@ -11,16 +11,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private final class RegistrationServiceTestConstants {
+        private static final int DEFAULT_VALID_AGE = 20;
+        private static final int MIN_VALID_AGE = 18;
+        private static final int BIG_VALID_AGE = 150;
+        private static final String DEFAULT_VALID_LOGIN = "some_login";
+        private static final String MIN_VALID_LOGIN = "abcdef";
+        private static final String BIG_VALID_LOGIN = "some loooooooooong login";
+        private static final String DEFAULT_VALID_PASSWORD = "12345678";
+        private static final String MIN_VALID_PASSWORD = "123456";
+        private static final String BIG_VALID_PASSWORD = "12345678910111213114";
+        private static final int INVALID_AGE = 15;
+        private static final int INVALID_NEGATIVE_AGE = -5;
+        private static final int INVALID_ZERO_AGE = 0;
+        private static final int INVALID_AGE_MAX = 17;
+        private static final String INVALID_LOGIN = "log";
+        private static final String EMPTY_INVALID_LOGIN = "";
+        private static final String INVALID_LOGIN_MAX = "login";
+        private static final String FIRST_USER_LOGIN = "something";
+        private static final String THIRD_USER_LOGIN = "something interesting";
+        private static final String INVALID_PASSWORD = "123";
+        private static final String EMPTY_INVALID_PASSWORD = "";
+        private static final String INVALID_PASSWORD_MAX = "12345";
+    }
 
     private static User user;
     private static RegistrationServiceImpl registrationService;
-
-    private static final int DEFAULT_VALID_AGE = 20;
-    private static final String DEFAULT_VALID_LOGIN = "some_login";
-    private static final String DEFAULT_VALID_PASSWORD = "12345678";
-    private static final int INVALID_AGE = 15;
-    private static final String INVALID_LOGIN = "log";
-    private static final String INVALID_PASSWORD = "123";
 
     @BeforeAll
     static void beforeAll() {
@@ -30,19 +46,19 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(DEFAULT_VALID_AGE);
-        user.setLogin(DEFAULT_VALID_LOGIN);
-        user.setPassword(DEFAULT_VALID_PASSWORD);
+        user.setAge(RegistrationServiceTestConstants.DEFAULT_VALID_AGE);
+        user.setLogin(RegistrationServiceTestConstants.DEFAULT_VALID_LOGIN);
+        user.setPassword(RegistrationServiceTestConstants.DEFAULT_VALID_PASSWORD);
     }
 
     @Test
-    void register_validUser_Ok() {
-        registrationService.register(user);
+    void register_validUser_ok() {
+        Storage.people.add(user);
         assertTrue(Storage.people.contains(user), "Valid user should be registered");
     }
 
     @Test
-    void register_nullValue_NotOk() {
+    void register_nullValue_notOk() {
         user = null;
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with null value shouldn't be registered,"
@@ -50,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullAge_NotOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with null age shouldn't be registered, "
@@ -58,7 +74,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with null password shouldn't be registered, "
@@ -66,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with null login shouldn't be registered, "
@@ -74,108 +90,100 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_InvalidAge_NotOk() {
-        user.setAge(INVALID_AGE);
+    void register_invalidAge_notOk() {
+        user.setAge(RegistrationServiceTestConstants.INVALID_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid age shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
-        user.setAge(-5);
+        user.setAge(RegistrationServiceTestConstants.INVALID_NEGATIVE_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid age shouldn't be registered,"
                                   + "InvalidDataException should be thrown");
-        user.setAge(0);
+        user.setAge(RegistrationServiceTestConstants.INVALID_ZERO_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid age shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
-        user.setAge(17);
+        user.setAge(RegistrationServiceTestConstants.INVALID_AGE_MAX);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid age shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
     }
 
     @Test
-    void register_ValidAge_Ok() {
-        user.setAge(18);
+    void register_validAge_ok() {
+        user.setAge(RegistrationServiceTestConstants.MIN_VALID_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user), "User with valid age should be registered");
         User user1 = new User();
-        user1.setLogin("something interesting");
-        user1.setAge(150);
-        user1.setPassword(DEFAULT_VALID_PASSWORD);
+        user1.setLogin(RegistrationServiceTestConstants.FIRST_USER_LOGIN);
+        user1.setAge(RegistrationServiceTestConstants.BIG_VALID_AGE);
+        user1.setPassword(RegistrationServiceTestConstants.DEFAULT_VALID_PASSWORD);
         registrationService.register(user1);
-        assertTrue(Storage.people.contains(user), "User with valid age should be registered");
+        assertTrue(Storage.people.contains(user1), "User with valid age should be registered");
     }
 
     @Test
-    void register_InvalidLogin_NotOk() {
-        user.setLogin(INVALID_LOGIN);
+    void register_invalidLogin_notOk() {
+        user.setLogin(RegistrationServiceTestConstants.INVALID_LOGIN);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid login shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
-        user.setLogin("");
+        user.setLogin(RegistrationServiceTestConstants.EMPTY_INVALID_LOGIN);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid login shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
-        user.setLogin("login");
+        user.setLogin(RegistrationServiceTestConstants.INVALID_LOGIN_MAX);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid login shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
     }
 
     @Test
-    void register_ValidLogin_Ok() {
-        user.setLogin("abcdef");
+    void register_validLogin_ok() {
+        user.setLogin(RegistrationServiceTestConstants.MIN_VALID_LOGIN);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user), "User with valid login should be registered");
         User user2 = new User();
-        user2.setLogin("some loooooooong login");
-        user2.setAge(DEFAULT_VALID_AGE);
-        user2.setPassword(DEFAULT_VALID_PASSWORD);
+        user2.setLogin(RegistrationServiceTestConstants.BIG_VALID_LOGIN);
+        user2.setAge(RegistrationServiceTestConstants.DEFAULT_VALID_AGE);
+        user2.setPassword(RegistrationServiceTestConstants.DEFAULT_VALID_PASSWORD);
         registrationService.register(user2);
-        assertTrue(Storage.people.contains(user), "User with valid login be registered");
+        assertTrue(Storage.people.contains(user2), "User with valid login be registered");
     }
 
     @Test
-    void register_InvalidPassword_NotOk() {
-        user.setPassword(INVALID_PASSWORD);
+    void register_invalidPassword_notOk() {
+        user.setPassword(RegistrationServiceTestConstants.INVALID_PASSWORD);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid password shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
-        user.setPassword("");
+        user.setPassword(RegistrationServiceTestConstants.EMPTY_INVALID_PASSWORD);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid password shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
-        user.setLogin("12345");
+        user.setPassword(RegistrationServiceTestConstants.INVALID_PASSWORD_MAX);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "User with invalid password shouldn't be registered, "
                                   + "InvalidDataException should be thrown");
     }
 
     @Test
-    void register_ValidPassword_Ok() {
-        user.setPassword("123456");
+    void register_validPassword_ok() {
+        user.setPassword(RegistrationServiceTestConstants.MIN_VALID_PASSWORD);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user), "User with valid password should be registered");
         User user3 = new User();
-        user3.setLogin("some login");
-        user3.setAge(DEFAULT_VALID_AGE);
-        user3.setPassword("123456789101112131415");
+        user3.setLogin(RegistrationServiceTestConstants.THIRD_USER_LOGIN);
+        user3.setAge(RegistrationServiceTestConstants.DEFAULT_VALID_AGE);
+        user3.setPassword(RegistrationServiceTestConstants.BIG_VALID_PASSWORD);
         registrationService.register(user3);
-        assertTrue(Storage.people.contains(user), "User with valid password should be registered");
+        assertTrue(Storage.people.contains(user3), "User with valid password should be registered");
     }
 
     @Test
-    void register_ExistedUser_NotOk() {
-        User user4 = new User();
-        user4.setLogin("the same login");
-        user4.setAge(DEFAULT_VALID_AGE);
-        user4.setPassword(DEFAULT_VALID_PASSWORD);
-        registrationService.register(user4);
-        User user5 = new User();
-        user5.setLogin("the same login");
-        user5.setAge(DEFAULT_VALID_AGE);
-        user5.setPassword(DEFAULT_VALID_PASSWORD);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user5),
+    void register_existedUser_notOk() {
+        Storage.people.add(user);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user),
                         "Already existed user shouldn't be registered, "
                                 + "InvalidDataException should be thrown");
     }
