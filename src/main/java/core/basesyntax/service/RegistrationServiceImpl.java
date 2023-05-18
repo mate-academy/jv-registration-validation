@@ -47,10 +47,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserRegistrationException("Age shouldn't be null!");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new UserRegistrationException("Age shouldn't be less than " + MIN_AGE + " years!");
+            throw new UserRegistrationException("Age shouldn't be less than "
+                    + MIN_AGE + " years!");
         }
         if (user.getAge() > MAX_AGE) {
-            throw new UserRegistrationException("Age shouldn't be more than " + MAX_AGE + " years!");
+            throw new UserRegistrationException("Age shouldn't be more than "
+                    + MAX_AGE + " years!");
         }
     }
 
