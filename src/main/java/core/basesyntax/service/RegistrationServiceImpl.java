@@ -12,38 +12,37 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkNullValues(user);
-        checkLogin(user);
-        checkAge(user);
-        checkPassword(user);
-        checkIfUserExist(user);
-        storageDao.add(user);
-        return user;
+        verifyParametersNotNull(user);
+        verifyLogin(user);
+        verifyAge(user);
+        verifyPassword(user);
+        verifyIfUserExist(user);
+        return storageDao.add(user);
     }
 
-    private void checkNullValues(User user) {
+    private void verifyParametersNotNull(User user) {
         if (user == null) {
             throw new UserDataException(UserDataException.class.getName()
-                    + " User is null");
+                    + " User is NULL");
         }
         if (user.getLogin() == null) {
             throw new UserDataException(UserDataException.class.getName()
-                    + " User login is null");
+                    + " User login is NULL");
         }
         if (user.getAge() == null) {
             throw new UserDataException(UserDataException.class.getName()
-                    + " User age is null");
+                    + " User age is NULL");
         }
     }
 
-    private void checkLogin(User user) {
+    private void verifyLogin(User user) {
         if (user.getLogin().equals("")) {
             throw new UserDataException(UserDataException.class.getName()
                     + " Login is empty");
         }
     }
 
-    private void checkAge(User user) {
+    private void verifyAge(User user) {
         if (user.getAge() > MAX_AGE) {
             throw new UserDataException(UserDataException.class.getName()
                     + " User age is not valid");
@@ -54,18 +53,22 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkPassword(User user) {
-        if (user.getPassword() == null) {
-            throw new UserDataException(UserDataException.class.getName()
-                    + " User password is not valid");
-        }
+    private void verifyPassword(User user) {
+        verifyPasswordNotNull(user);
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new UserDataException(UserDataException.class.getName()
                     + " User password is less than 6 symbols");
         }
     }
 
-    private void checkIfUserExist(User user) {
+    private void verifyPasswordNotNull(User user) {
+        if (user.getPassword() == null) {
+            throw new UserDataException(UserDataException.class.getName()
+                    + " User password is NULL ");
+        }
+    }
+
+    private void verifyIfUserExist(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserDataException(UserDataException.class.getName()
                     + " User already exist");

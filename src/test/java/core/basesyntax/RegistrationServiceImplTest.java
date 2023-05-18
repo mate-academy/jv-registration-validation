@@ -13,16 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String VALID_PASSWORD = "VALID_PASSWORD";
-    private static final String INVALID_SHORT_PASSWORD = "ISP";
-    private static final Integer VALID_AGE = 30;
-    private static final Integer MIN_VALID_AGE = 18;
-    private static final Integer MIN_INVALID_AGE = 16;
-    private static final Integer NEGATIVE_INVALID_AGE = -10;
-    private static final Integer INVALID_LARGE_AGE = 130;
-    private static final String VALID_LOGIN = "VALID_LOGIN";
     private static RegistrationServiceImpl registrationService;
-    private static User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -32,9 +24,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
+        user.setLogin(String.valueOf(ValidationConstant.VALID_LOGIN));
+        user.setPassword(String.valueOf(ValidationConstant.VALID_PASSWORD));
+        user.setAge((Integer) ValidationConstant.VALID_AGE.getValue());
     }
 
     @Test
@@ -81,7 +73,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOk() {
-        user.setAge(NEGATIVE_INVALID_AGE);
+        user.setAge((Integer) ValidationConstant.NEGATIVE_INVALID_AGE.getValue());
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with age < 0"
@@ -90,7 +82,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageGreaterThenMaxAge_notOk() {
-        user.setAge(INVALID_LARGE_AGE);
+        user.setAge((Integer) ValidationConstant.INVALID_LARGE_AGE.getValue());
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with age > 110"
@@ -99,7 +91,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThenEighteen_notOk() {
-        user.setAge(MIN_INVALID_AGE);
+        user.setAge((Integer) ValidationConstant.MIN_INVALID_AGE.getValue());
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with age < 18"
@@ -108,7 +100,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageValidEighteen_ok() {
-        user.setAge(MIN_VALID_AGE);
+        user.setAge((Integer) ValidationConstant.MIN_VALID_AGE.getValue());
         registrationService.register(user);
         assertTrue(Storage.people.contains(user),
                 "Registration user with age = 18 should add user to Storage.");
@@ -134,7 +126,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLessThenSix_notOk() {
-        user.setPassword(INVALID_SHORT_PASSWORD);
+        user.setPassword(String.valueOf(ValidationConstant.INVALID_SHORT_PASSWORD.getValue()));
         assertThrows(UserDataException.class,
                 () -> registrationService.register(user),
                 "Registration user with password length less than six"
