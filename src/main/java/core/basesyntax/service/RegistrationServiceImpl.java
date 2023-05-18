@@ -74,10 +74,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                             + "] allowed minimal login length is: ["
                             + MIN_LOGIN_SIZE + "]");
         }
-        isExistingLogin(user);
-    }
-
-    private void isExistingLogin(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with login: "
                     + user.getLogin()
