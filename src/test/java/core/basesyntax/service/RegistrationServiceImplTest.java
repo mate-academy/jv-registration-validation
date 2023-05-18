@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl service;
     private static User user;
-    private static final long DEFAULT_ID = 200L;
     private static final String DEFAULT_LOGIN = "sasaylalita";
     private static final String DEFAULT_PASSWORD = "qwerty12345";
     private static final int DEFAULT_AGE = 28;
