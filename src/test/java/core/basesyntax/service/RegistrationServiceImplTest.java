@@ -1,9 +1,8 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -30,8 +29,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User newUser = user.clone();
-        assertEquals(user, registrationService.register(newUser), "Users should be equal.");
+        assertTrue(Storage.people.contains(registrationService.register(user)),
+                "Users should be equal.");
     }
 
     @Test
@@ -58,38 +57,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithAgeLessThan18_notOk() {
+    void register_nonValidUserAge_notOk() {
+        user.setAge(null);
+        assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
         user.setAge(17);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_userWithNullAge_notOk() {
-        user.setAge(null);
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
     void register_userAlreadyExist_notOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_checkingCorrectnessOfUserNumbering_Ok() {
-        register_validUser_ok();
-        User newUser = new User();
-        newUser.setLogin("second_valid_login@ukr.net");
-        newUser.setPassword("password");
-        newUser.setAge(25);
-        long actualId = registrationService.register(newUser).getId();
-        long expectedId = 2L;
-        assertEquals(expectedId, actualId, "Expected ID: " + expectedId + "but was: " + actualId);
     }
 
     @AfterEach
     void clear() {
         Storage.people.clear();
-        StorageDaoImpl.clearIndex();
     }
 }

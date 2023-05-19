@@ -22,8 +22,4 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
-
-    public static void clearIndex() {
-        index = 0L;
-    }
 }
