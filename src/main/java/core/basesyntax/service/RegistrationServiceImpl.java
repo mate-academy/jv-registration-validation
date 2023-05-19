@@ -18,12 +18,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUser(User user) {
-        if (Storage.people.contains(user)) {
-            throw new RegistrationException("Such a user already registered");
-        }
+        alreadyRegisteredUser(user);
         validateLogin(user.getLogin());
         validatePassword(user.getPassword());
         validateAge(user.getAge());
+    }
+
+    private void alreadyRegisteredUser(User user) {
+        if (Storage.people.contains(user)) {
+            throw new RegistrationException("Such a user already registered");
+        }
     }
 
     private void validateLogin(String login) {

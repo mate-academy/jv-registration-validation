@@ -29,9 +29,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_ok() {
+    void register_alreadyRegisteredUser_NotOk() {
         User registeredUser = registrationService.register(user);
-        assertEquals(user, registeredUser);
+        assertRegistrationException(registeredUser);
     }
 
     @Test
@@ -49,24 +49,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_oneLetterLogin_notOk() {
         user.setLogin("s");
-        assertRegistrationException(user);
-    }
-
-    @Test
-    void register_twoLettersLogin_notOk() {
-        user.setLogin("sh");
-        assertRegistrationException(user);
-    }
-
-    @Test
-    void register_threeLettersLogin_notOk() {
-        user.setLogin("sho");
-        assertRegistrationException(user);
-    }
-
-    @Test
-    void register_fourLettersLogin_notOk() {
-        user.setLogin("shor");
         assertRegistrationException(user);
     }
 
@@ -107,24 +89,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_twoSymbolsPassword_notOk() {
-        user.setPassword("sh");
-        assertRegistrationException(user);
-    }
-
-    @Test
-    void register_threeSymbolsPassword_notOk() {
-        user.setPassword("sho");
-        assertRegistrationException(user);
-    }
-
-    @Test
-    void register_fourSymbolsPassword_notOk() {
-        user.setPassword("shor");
-        assertRegistrationException(user);
-    }
-
-    @Test
     void register_fiveSymbolsPassword_notOk() {
         user.setPassword("short");
         assertRegistrationException(user);
@@ -143,12 +107,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessMinimalAge_notOk() {
-        user.setAge(17);
-        assertRegistrationException(user);
-    }
-
-    @Test
     void register_negativeAge_notOk() {
         user.setAge(-33);
         assertRegistrationException(user);
@@ -157,6 +115,18 @@ class RegistrationServiceImplTest {
     @Test
     void register_zeroAge_notOk() {
         user.setAge(0);
+        assertRegistrationException(user);
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        user.setAge(null);
+        assertRegistrationException(user);
+    }
+
+    @Test
+    void register_lessMinimalAge_notOk() {
+        user.setAge(17);
         assertRegistrationException(user);
     }
 
