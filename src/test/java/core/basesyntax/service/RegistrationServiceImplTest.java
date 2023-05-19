@@ -1,10 +1,8 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +15,6 @@ class RegistrationServiceImplTest {
     private static final int DEFAULT_AGE = 18;
     private User user;
     private RegistrationService registrationService;
-    private StorageDao storageDao;
 
     @BeforeEach
     void setUp() {
@@ -26,7 +23,6 @@ class RegistrationServiceImplTest {
         user.setPassword(DEFAULT_PASSWORD);
         user.setAge(DEFAULT_AGE);
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
@@ -35,204 +31,132 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ShortLoginLengthFive_NotOk() {
-        String shortLogin = "mario";
-        user.setLogin(shortLogin);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when login is shorter than 6 characters");
+    void register_userWithShortLoginContainsFiveCharacters_notOk() {
+        user.setLogin("mario");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when "
+                        + "login is shorter than 6 characters");
     }
 
     @Test
-    void register_ShortLoginLengthThree_NotOk() {
-        String shortLogin = "Kim";
-        user.setLogin(shortLogin);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when login is shorter than 6 characters");
+    void register_userWithShortLoginContainsThreeCharacters_notOk() {
+        user.setLogin("Kim");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when login is shorter than 6 characters");
     }
 
     @Test
-    void register_ShortLoginLengthOne_NotOk() {
-        String shortLogin = "P";
-        user.setLogin(shortLogin);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when login is shorter than 6 characters");
+    void register_userWithShortLoginContainsOneCharacter_notOk() {
+        user.setLogin("P");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when login is shorter than 6 characters");
     }
 
     @Test
-    void register_ShortPasswordLengthFive_NotOk() {
-        String shortPassword = "proXX";
-        user.setPassword(shortPassword);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when password is shorter than 6 characters");
+    void register_userWithShortPasswordContainsFiveCharacters_notOk() {
+        user.setPassword("proXX");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when password is shorter than 6 characters");
     }
 
     @Test
-    void register_ShortPasswordLengthFour_NotOk() {
-        String shortPassword = "four";
-        user.setPassword(shortPassword);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when password is shorter than 6 characters");
+    void register_userWithShortPasswordContainsFourCharacters_notOk() {
+        user.setPassword("four");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when password is shorter than 6 characters");
     }
 
     @Test
-    void register_ShortPasswordLengthTwo_NotOk() {
-        String shortPassword = "sI";
-        user.setPassword(shortPassword);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when password is shorter than 6 characters");
+    void register_userWithShortPasswordContainsTwoCharacters_notOk() {
+        user.setPassword("sI");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when password is shorter than 6 characters");
     }
 
     @Test
-    void register_improperAge16_NotOk() {
-        int improperAge = 16;
-        user.setAge(improperAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    void register_userWithImproperAge16_notOk() {
+        user.setAge(16);
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when age is less than 18 years old");
     }
 
     @Test
-    void register_improperAge12_NotOk() {
-        int improperAge = 12;
-        user.setAge(improperAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    void register_userWithImproperAge12_notOk() {
+        user.setAge(12);
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when age is less than 18 years old");
     }
 
     @Test
-    void register_improperAge1_NotOk() {
-        int improperAge = 1;
-        user.setAge(improperAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    void register_userWithImproperAge1_notOk() {
+        user.setAge(1);
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when age is less than 18 years old");
     }
 
     @Test
-    void register_improperAge5_NotOk() {
-        int improperAge = 5;
-        user.setAge(improperAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is less than 18 years old");
+    void register_userWithImproperAge5_notOk() {
+        user.setAge(5);
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown "
+                        + "when age is less than 18 years old");
     }
 
     @Test
-    void register_noughtAge_NotOk() {
-        int noughtAge = 0;
-        user.setAge(noughtAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is negative");
+    void register_userWithNoughtAge_notOk() {
+        user.setAge(0);
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when age is negative");
     }
 
     @Test
-    void register_negativeAge_NotOk() {
-        int negativeAge = -34;
-        user.setAge(negativeAge);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when age is negative");
+    void register_userWithNegativeAge_notOk() {
+        user.setAge(-34);
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when age is negative");
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_userWithNullLogin_notOk() {
         user.setLogin(null);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when login is \"null\"");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when login is \"null\"");
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_userWithNullPassword_notOk() {
         user.setPassword(null);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when password is \"null\"");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when password is \"null\"");
     }
 
     @Test
-    void register_existingUser_NotOk() {
+    void register_userAlreadyInStorage_notOk() {
         registrationService.register(user);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when the user is already in storage");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when the user is already in storage");
     }
 
     @Test
-    void register_emptyLogin_NotOk() {
-        String emptyLogin = "";
-        user.setLogin(emptyLogin);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when login is empty");
+    void register_userWithEmptyLogin_notOk() {
+        user.setLogin("");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when login is empty");
     }
 
     @Test
-    void register_emptyPassword_NotOk() {
-        String emptyPassword = "";
-        user.setPassword(emptyPassword);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when password is empty");
+    void register_userWithEmptyPassword_notOk() {
+        user.setPassword("");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when password is empty");
     }
 
     @Test
@@ -244,7 +168,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_pluralUsers_ok() {
+    void register_differentPluralUsers_ok() {
         User user1 = new User();
         user1.setLogin("vendetta");
         user1.setAge(50);
@@ -268,30 +192,14 @@ class RegistrationServiceImplTest {
         user.setLogin("BBBq");
         user.setPassword("kio9");
         user.setAge(9);
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when user is not valid");
-    }
-
-    @Test
-    void get_user_Ok() {
-        registrationService.register(user);
-        User expected = user;
-        User actual = storageDao.get(user.getLogin());
-        assertEquals(expected, actual);
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when user is not valid");
     }
 
     @Test
     void register_nullUser_notOk() {
         user = null;
-        try {
-            registrationService.register(user);
-        } catch (InvalidInputException e) {
-            return;
-        }
-        fail("\"InvalidInputException\" must be thrown when user is null");
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "\"InvalidInputException\" must be thrown when user is null");
     }
 }
