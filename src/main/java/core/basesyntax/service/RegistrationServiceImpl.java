@@ -5,18 +5,18 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 100;
     private static final int MIN_LENGTH = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        isValid(user);
+        validateUser(user);
         return storageDao.add(user);
     }
 
-    private void isValid(User user) throws UserDataException {
+    private void validateUser(User user) throws UserDataException {
         if (isNull(user)) {
             throw new UserDataException("User is null.");
         }
