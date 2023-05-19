@@ -27,9 +27,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserException("Invalid user's age: " + age
                     + ". Min allowed age is: " + AGE_MINIMUM);
         }
-        if (age < 0) {
-            throw new InvalidUserException("The age cannot be a negative number");
-        }
     }
 
     private void validatePassword(String password) {
