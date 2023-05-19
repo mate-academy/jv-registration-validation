@@ -31,10 +31,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new ValidationException(
-                    "Your login ${login} should have length ${MIN_LOGIN_LENGTH} or more");
+                    "Your login " + user.getLogin() + " should have length "
+                            + MIN_LOGIN_LENGTH + " or more");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new ValidationException("Your login ${login} is already taken by another user");
+            throw new ValidationException(
+                    "Your login " + user.getLogin() + " is already taken by another user");
         }
     }
 
@@ -44,7 +46,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new ValidationException(
-                    "Your password ${password} should have length ${MIN_PASSWORD_LENGTH} or more");
+                    "Your password " + user.getPassword() + " should have length "
+                            + MIN_PASSWORD_LENGTH + " or more");
         }
     }
 
@@ -53,7 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("Age shouldn't be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new ValidationException("User can't be under age ${MIN_AGE}");
+            throw new ValidationException("User can't be under age " + MIN_AGE);
         }
     }
 }

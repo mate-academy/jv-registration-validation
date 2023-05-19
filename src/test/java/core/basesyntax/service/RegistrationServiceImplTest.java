@@ -12,17 +12,10 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl service;
-    private static User user;
     private static final String DEFAULT_LOGIN = "sasaylalita";
     private static final String DEFAULT_PASSWORD = "qwerty12345";
     private static final int DEFAULT_AGE = 28;
-
-    private void userInit() {
-        user = new User();
-        user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(DEFAULT_PASSWORD);
-        user.setAge(DEFAULT_AGE);
-    }
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -41,7 +34,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginHasMinimumLength_notOk() {
+    void register_loginHasUnderMinimumLengthOrNull_notOk() {
         user.setLogin("login");
         assertThrows(ValidationException.class, () -> service.register(user));
         user.setLogin("");
@@ -51,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordHasMinimumLength_notOk() {
+    void register_passwordHasUnderMinimumLengthOrNull_notOk() {
         user.setPassword("");
         assertThrows(ValidationException.class, () -> service.register(user));
         user.setPassword("12345");
@@ -61,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageAboveMinimum_notOk() {
+    void register_ageUnderMinimumOrNull_notOk() {
         user.setAge(-23);
         assertThrows(ValidationException.class, () -> service.register(user));
         user.setAge(17);
@@ -71,13 +64,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_uniqueLogin_notOk() {
+    void register_loginDuplicate_notOk() {
         Storage.people.add(user);
         assertThrows(ValidationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_userNotNull_notOk() {
+    void register_userIsNull_notOk() {
         user = null;
         assertThrows(ValidationException.class, () -> service.register(user));
     }
@@ -85,5 +78,12 @@ class RegistrationServiceImplTest {
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    private void userInit() {
+        user = new User();
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setAge(DEFAULT_AGE);
     }
 }
