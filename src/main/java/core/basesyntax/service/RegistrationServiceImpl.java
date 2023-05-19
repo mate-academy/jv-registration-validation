@@ -10,63 +10,51 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
-    @Override
     public User register(User user) {
-        checkUserIsNull(user);
-        isAgeNull(user);
-        isAgeValid(user);
-        checkLoginIsNull(user);
-        checkLoginIsValid(user);
-        isPasswordNull(user);
-        checkPasswordIsValid(user);
-        checkIfUserExists(user);
+        validateNotNull(user);
+        validateAge(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateUserDoesNotExist(user);
         return storageDao.add(user);
     }
 
-    private void checkUserIsNull(User user) {
+    private void validateNotNull(User user) {
         if (user == null) {
             throw new UserRegistrationException("User can't be null");
         }
     }
 
-    private void isAgeNull(User user) {
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new UserRegistrationException("Age can't be null");
         }
-    }
-
-    private void isAgeValid(User user) {
         if (user.getAge() < VALID_AGE) {
             throw new UserRegistrationException("Age is not valid,"
-                    + "must be equals or older than 18");
+                    + "must be equal to or greater than 18");
         }
     }
 
-    private void checkLoginIsNull(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
-            throw new UserRegistrationException("login can't be null");
+            throw new UserRegistrationException("Login can't be null");
         }
-    }
-
-    private void checkLoginIsValid(User user) {
         if (user.getLogin().length() < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new UserRegistrationException("Login length must be equals or longer than 6");
+            throw new UserRegistrationException("Login length must be equal to or longer than 6");
         }
     }
 
-    private void isPasswordNull(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new UserRegistrationException("Password can't be null");
         }
-    }
-
-    private void checkPasswordIsValid(User user) {
         if (user.getPassword().length() < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new UserRegistrationException("Password length must be equals or longer than 6");
+            throw new UserRegistrationException("Password length must "
+                    + "be equal to or longer than 6");
         }
     }
 
-    private void checkIfUserExists(User user) {
+    private void validateUserDoesNotExist(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserRegistrationException("User already exists");
         }

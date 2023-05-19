@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private static User user;
     private static final String VALID_LOGIN = "Volodymyr";
     private static final String INVALID_LOGIN = "abcde";
     private static final int VALID_AGE = 18;
     private static final int INVALID_AGE = 17;
     private static final String VALID_PASSWORD = "Password";
-    private static final String IVALID_PASSWORD = "Badpa";
+    private static final String INVALID_PASSWORD = "Badpa";
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -31,58 +31,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullUser_notOk() {
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(null));
+    void register_nullUser_throwsUserRegistrationException() {
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void null_age_notOK() {
+    void register_nullAge_throwsUserRegistrationException() {
         user.setAge(null);
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(user));
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void null_login_notOk() {
+    void register_nullLogin_throwsUserRegistrationException() {
         user.setLogin(null);
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(user));
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void null_password_notOk() {
+    void register_nullPassword_throwsUserRegistrationException() {
         user.setPassword(null);
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(user));
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void invalid_age_notOk() {
+    void register_invalidAge_throwsUserRegistrationException() {
         user.setAge(INVALID_AGE);
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(user));
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void invalid_login_notOk() {
+    void register_invalidLogin_throwsUserRegistrationException() {
         user.setLogin(INVALID_LOGIN);
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(user));
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void invalidPassword() {
-        user.setPassword(IVALID_PASSWORD);
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(user));
+    void register_invalidPassword_throwsUserRegistrationException() {
+        user.setPassword(INVALID_PASSWORD);
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAlreadyExists() {
+    void register_userAlreadyExists_throwsUserRegistrationException() {
         Storage.people.add(user);
-        assertThrows(UserRegistrationException.class,
-                () -> registrationService.register(user));
-
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 }
