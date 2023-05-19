@@ -13,14 +13,14 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static User UserValid;
+    private static User validUser;
     private static final String EXCEPTION_MESSAGE =
             "RegistrationException should be thrown in this case.";
 
     @BeforeAll
     public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        UserValid = new User("goodlog", "password", 18);
+        validUser = new User("goodlog", "password", 18);
     }
 
     @BeforeEach
@@ -29,14 +29,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validUser_Ok() {
-        User registeredUser = registrationService.register(UserValid);
-        assertEquals(UserValid, registeredUser, "Users should be equal.");
+    public void register_validUser_ok() {
+        User registeredUser = registrationService.register(validUser);
+        assertEquals(validUser, registeredUser, "Users should be equal.");
     }
 
     @Test
     public void register_existingUser_NotOk() {
-        Storage.people.add(UserValid);
+        Storage.people.add(validUser);
         User duplicateUser = new User("goodlog", "newpassword", 25);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(duplicateUser), EXCEPTION_MESSAGE);
