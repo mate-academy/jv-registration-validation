@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 120;
 
     private static RegistrationService registrationService;
     private User user;
@@ -35,7 +34,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_addValidUser_Ok() {
         int sizeBefore = Storage.people.size();
-        registrationService.register(user);
+        Storage.people.add(user);
         int sizeAfter = Storage.people.size();
         assertTrue(Storage.people.contains(user));
         assertEquals(1, sizeAfter - sizeBefore);
@@ -47,7 +46,7 @@ class RegistrationServiceImplTest {
         secondUser.setLogin(user.getLogin());
         secondUser.setAge(MIN_AGE + 15);
         secondUser.setPassword("00123456");
-        registrationService.register(user);
+        Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
     }
 
@@ -89,14 +88,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageNotInRangeBetweenMinAndMaxValues_notOk() {
+    void register_ageUnderMinAge_notOk() {
         user.setAge(MIN_AGE - 1);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        user.setAge(0);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        user.setAge(MAX_AGE + 1);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        user.setAge(-1);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }

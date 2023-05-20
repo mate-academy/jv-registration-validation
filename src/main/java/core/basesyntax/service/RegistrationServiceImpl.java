@@ -7,7 +7,6 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 120;
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -57,14 +56,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() < MIN_AGE) {
             String message = "Not valid age: " + user.getAge() + ". Min allowed age is " + MIN_AGE;
-            throw new RegistrationException(message);
-        }
-        if (user.getAge() > MAX_AGE) {
-            String message = "Are you sure you're not a zombie? You can enter max age: " + MAX_AGE;
-            throw new RegistrationException(message);
-        }
-        if (user.getAge() < 0) {
-            String message = "The age cannot be negative number";
             throw new RegistrationException(message);
         }
     }
