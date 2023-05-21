@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_addValidUser_Ok() {
         int sizeBefore = Storage.people.size();
-        Storage.people.add(user);
+        registrationService.register(user);
         int sizeAfter = Storage.people.size();
         assertTrue(Storage.people.contains(user));
         assertEquals(1, sizeAfter - sizeBefore);
