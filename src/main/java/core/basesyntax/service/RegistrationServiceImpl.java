@@ -21,33 +21,49 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User cannot be null");
         }
-        if (user.getLogin() == null) {
-            throw new RegistrationException("User's login cannot be null");
+        validateLogin(user);
+        validateAge(user);
+        validatePassword(user);
+        validatePresentingInStorage(user);
+    }
+
+    private void validatePresentingInStorage(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException(
+                    String.format("User with login \"%s\" is already in Storage", user.getLogin()));
         }
-        if (user.getAge() == null) {
-            throw new RegistrationException("User's age cannot be null");
-        }
+    }
+
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("User's password cannot be null");
-        }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException(
-                    String.format("Not valid login length: %d. Min allowed login length: %d",
-                            user.getLogin().length(), MIN_LOGIN_LENGTH));
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException(
                     String.format("Not valid password length: %d. Min allowed password length: %d",
                             user.getPassword().length(), MIN_PASSWORD_LENGTH));
         }
+    }
+
+    private void validateAge(User user) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("User's age cannot be null");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException(
                     String.format("Not valid age: %d. Min allowed age: %d",
                             user.getAge(), MIN_AGE));
         }
-        if (storageDao.get(user.getLogin()) != null) {
+    }
+
+    private void validateLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new RegistrationException("User's login cannot be null");
+        }
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException(
-                    String.format("User with login \"%s\" is already in Storage", user.getLogin()));
+                    String.format("Not valid login length: %d. Min allowed login length: %d",
+                            user.getLogin().length(), MIN_LOGIN_LENGTH));
         }
     }
 }
