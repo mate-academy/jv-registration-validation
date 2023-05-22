@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static int MIN_AGE = 18;
+    private static final int MIN_AGE = 18;
     private static RegistrationService registrationService;
     private User user;
 
@@ -22,7 +22,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setAge(18);
+        user.setAge(MIN_AGE);
         user.setLogin("testLogin");
         user.setPassword("testPassword");
     }

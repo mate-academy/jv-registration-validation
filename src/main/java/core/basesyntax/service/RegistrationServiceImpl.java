@@ -13,24 +13,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validate(user);
-        return storageDao.add(user);
-    }
-
-    private void validate(User user) {
-        if (user == null) {
-            throw new RegistrationException("User cannot be null");
-        }
+        validateUserIsNotNull(user);
         validateLogin(user);
         validateAge(user);
         validatePassword(user);
-        validatePresentingInStorage(user);
+        return storageDao.add(user);
     }
 
-    private void validatePresentingInStorage(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException(
-                    String.format("User with login \"%s\" is already in Storage", user.getLogin()));
+    private void validateUserIsNotNull(User user) {
+        if (user == null) {
+            throw new RegistrationException("User cannot be null");
         }
     }
 
@@ -64,6 +56,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException(
                     String.format("Not valid login length: %d. Min allowed login length: %d",
                             user.getLogin().length(), MIN_LOGIN_LENGTH));
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException(
+                    String.format("User with login \"%s\" is already in Storage", user.getLogin()));
         }
     }
 }
