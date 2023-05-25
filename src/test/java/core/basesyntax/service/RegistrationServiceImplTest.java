@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_sameLogin_NotOk() {
+    void register_SameLogin_NotOk() {
         user.setLogin("same_login");
         service.register(user);
         int expected = 1;
@@ -99,7 +99,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_FiveUsers_isOk() {
+    void register_FiveUsers_IsOk() {
         service.register(user);
         user = new User();
         user.setAge(56);
@@ -127,7 +127,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_Not_Ok() {
+    void register_NullUser_NotOk() {
         user = null;
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
