@@ -40,6 +40,9 @@ public class User {
         this.age = age;
     }
 
+    public User() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
