@@ -161,7 +161,7 @@ class RegistrationServiceImplTest {
 
         storageDao.add(user);
         storageDao.add(notSameUser);
-        assertEquals(user,storageDao.get(user.getLogin()));
+        assertEquals(user,storageDao.get(user.getLogin())); //
         assertEquals(notSameUser, storageDao.get(notSameUser.getLogin()));
     }
 }
