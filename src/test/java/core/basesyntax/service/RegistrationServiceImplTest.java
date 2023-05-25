@@ -32,14 +32,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_NotOk() {
-        User user1 = new User(null, null,18);
+        User user1 = new User(null,null,18);
         String actual = user1.getPassword();
         assertNull(actual);
     }
 
     @Test
     void register_lengthPassword_Ok() {
-        User user1 = new User(null, "qwerty",18);
+        User user1 = new User(null,"qwerty",18);
         int length = user1.getPassword().length();
         boolean actual = false;
         if (length > 5) {
@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lengthLogin_NotOk() {
-        User user1 = new User("qwerty", "qwerty",18);
+        User user1 = new User("qwerty","qwerty",18);
         int length = user1.getLogin().length();
         boolean actual = false;
         if (length > 5) {
@@ -61,8 +61,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_age_NotOk() {
-        User user1 = new User("qwerty", "qwerty",18);
-        User user2 = new User("qwerty", "qwerty",17);
+        User user1 = new User("qwerty","qwerty",18);
+        User user2 = new User("qwerty","qwerty",17);
         int actual1 = user1.getAge();
         int actual2 = user2.getAge();
         int expected = 18;
@@ -82,7 +82,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NulPassword_NotOk() {
-        User user = new User("qwerty", null,18);
+        User user = new User("qwerty",null,18);
         RegistrationServiceImpl registrationServiceImpl = new RegistrationServiceImpl();
 
         assertThrows(RegistrationException.class, () -> {
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordLessSixSymbols_NotOk() {
-        User user = new User("qwerty", "qwert",18);
+        User user = new User("qwerty","qwert",18);
         RegistrationServiceImpl registrationServiceImpl = new RegistrationServiceImpl();
 
         assertThrows(RegistrationException.class, () -> {
@@ -112,7 +112,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeLessMinimum_NotOk() {
-        User user = new User("qwerty", "qwerty",17);
+        User user = new User("qwerty","qwerty",17);
         RegistrationServiceImpl registrationServiceImpl = new RegistrationServiceImpl();
 
         assertThrows(RegistrationException.class, () -> {
@@ -123,8 +123,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_AddUser_OK() {
         StorageDao storageDao = new StorageDaoImpl();
-        User user = new User("qwerty", "qwerty",18);
-        User sameUser = new User("qwerty", "qwerty",18);
+        User user = new User("qwerty","qwerty",18);
+        User sameUser = new User("qwerty","qwerty",18);
         boolean sameLogin = user.getLogin().equals(sameUser.getLogin());
         RegistrationServiceImpl registrationServiceImpl = new RegistrationServiceImpl();
         assertTrue(sameLogin);
@@ -137,8 +137,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_sameUsers_NotOk() {
-        User user = new User("qwerty", "qwerty",18);
-        User sameUser = new User("qwerty", "qwerty",18);
+        User user = new User("qwerty","qwerty",18);
+        User sameUser = new User("qwerty","qwerty",18);
         RegistrationServiceImpl registrationServiceImpl = new RegistrationServiceImpl();
         boolean differenceUsers = user.getLogin().equals(sameUser.getLogin());
         StorageDao storageDao = new StorageDaoImpl();
@@ -153,8 +153,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_DifferentUsers_Ok() {
         StorageDao storageDao = new StorageDaoImpl();
-        User user = new User("qwerty", "qwerty",18);
-        User notSameUser = new User("qwertyyy", "qwerty",19);
+        User user = new User("qwerty","qwerty",18);
+        User notSameUser = new User("qwertyyy","qwerty",19);
         boolean differentLogin = user.getLogin()
                 .equals(notSameUser.getLogin());
         assertFalse(differentLogin);
