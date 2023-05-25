@@ -26,7 +26,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_IsOk() {
+    void register_OneUser_IsOk() {
         user.setAge(18);
         user.setLogin("login1");
         user.setPassword("123456");
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullDataInput() {
+    void register_NullDataInputNotOk() {
         user.setLogin(null);
         user.setAge(20);
         user.setPassword("123456");
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UnderMinValue() {
+    void register_UnderMinValue_NotOk() {
         user.setAge(6);
         user.setPassword("123456");
         user.setLogin("login1");
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_sameLogin() {
+    void register_sameLogin_NotOk() {
         user.setAge(22);
         user.setPassword("123654");
         user.setLogin("same_login");
@@ -93,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_Add_Five_Users_isOk() {
+    void register_FiveUsers_isOk() {
         user.setAge(22);
         user.setPassword("123654");
         user.setLogin("same_login");
