@@ -62,10 +62,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_age_NotOk() {
         User user1 = new User();
-        User user2 = new User();
         user1.setLogin("qwerty");
         user1.setPassword("qwerty");
         user1.setAge(18);
+        User user2 = new User();
         user2.setLogin("qwerty");
         user2.setPassword("qwerty");
         user2.setAge(17);
@@ -134,17 +134,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AddUser_OK() {
-        StorageDao storageDao = new StorageDaoImpl();
-        User sameUser = new User();
         user.setLogin("qwerty");
         user.setPassword("qwerty");
         user.setAge(18);
+        User sameUser = new User();
         sameUser.setLogin("qwerty");
         sameUser.setPassword("qwerty");
         sameUser.setAge(18);
         boolean sameLogin = user.getLogin().equals(sameUser.getLogin());
         RegistrationServiceImpl registrationServiceImpl = new RegistrationServiceImpl();
         assertTrue(sameLogin);
+        StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
 
         assertThrows(RegistrationException.class, () -> {
@@ -154,10 +154,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_sameUsers_NotOk() {
-        User sameUser = new User();
         user.setLogin("qwerty");
         user.setPassword("qwerty");
         user.setAge(18);
+        User sameUser = new User();
         sameUser.setLogin("qwerty");
         sameUser.setPassword("qwerty");
         sameUser.setAge(18);
@@ -174,11 +174,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_DifferentUsers_Ok() {
-        StorageDao storageDao = new StorageDaoImpl();
-        User notSameUser = new User();
         user.setLogin("qwerty");
         user.setPassword("qwerty");
         user.setAge(18);
+        User notSameUser = new User();
         notSameUser.setLogin("qwertyyy");
         notSameUser.setPassword("qwerty");
         notSameUser.setAge(19);
@@ -186,6 +185,7 @@ class RegistrationServiceImplTest {
                 .equals(notSameUser.getLogin());
         assertFalse(differentLogin);
 
+        StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
         storageDao.add(notSameUser);
         assertEquals(user,storageDao.get(user.getLogin()));
