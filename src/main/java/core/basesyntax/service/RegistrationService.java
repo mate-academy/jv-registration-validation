@@ -3,5 +3,6 @@ package core.basesyntax.service;
 import core.basesyntax.model.User;
 
 public interface RegistrationService {
-    User register(User user) throws RegistrationException, core.basesyntax.service.RegistrationException;
+    User register(User user) throws RegistrationException,
+            core.basesyntax.service.RegistrationException;
 }

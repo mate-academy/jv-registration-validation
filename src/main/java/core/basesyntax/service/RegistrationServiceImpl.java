@@ -5,8 +5,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
-    int MIN_AGE = 18;
 
     @Override
     public User register(User user) throws RegistrationException {
@@ -23,7 +23,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be less 6 symbols");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Not valid age: " + user.getAge() + ". Min allowed age is " + MIN_AGE);
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ". Min allowed age is " + MIN_AGE);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("Login already exists");
