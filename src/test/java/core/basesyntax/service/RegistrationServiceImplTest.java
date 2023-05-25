@@ -13,26 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    //private static RegistrationService registrationServiceImpl;
-    //private static StorageDao storageDao;
     private static User user = new User();
-    //private static User differentUser;
-    //private static User sameUser;
-
-    /**@BeforeAll
-    static void beforeAll() {
-    RegistrationServiceImpl registrationServiceImpl = new RegistrationServiceImpl();
-    StorageDao storageDao = new StorageDaoImpl();
-    User user = new User();
-    User differentUser = new User();
-    User sameUser = new User();
-    }
-    }*/
-
-    //@AfterEach
-    //void tearDown() {
-    //storageDao = new StorageDaoImpl();
-    //}
 
     @Test
     void register_nullAge_notOk() {
