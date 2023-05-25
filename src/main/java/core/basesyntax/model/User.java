@@ -8,6 +8,9 @@ public class User {
     private String password;
     private Integer age;
 
+    public User() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -38,9 +41,6 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
-    }
-
-    public User() {
     }
 
     @Override
