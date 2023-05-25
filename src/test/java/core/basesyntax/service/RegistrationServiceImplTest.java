@@ -122,4 +122,11 @@ class RegistrationServiceImplTest {
         int actual = Storage.people.size();
         assertEquals(expected, actual);
     }
+
+    @Test
+    void register_NullUser_Not_Ok() {
+        user = null;
+        assertThrows(RegistrationException.class, () -> service.register(user));
+
+    }
 }
