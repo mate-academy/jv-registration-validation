@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullDataInputNotOk() {
+    void register_NullDataInput_NotOk() {
         user.setLogin(null);
         user.setAge(20);
         user.setPassword("123456");
