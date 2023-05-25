@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
@@ -25,10 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("Please enter your login");
         }
-        for (User eachUser : Storage.people) {
-            if (eachUser.getLogin().equals(user.getLogin())) {
-                throw new RegistrationException("This login is already use: " + user.getLogin());
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("This login is already use: " + user.getLogin());
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("User's login must be at least " + MIN_LOGIN_LENGTH

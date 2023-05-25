@@ -22,14 +22,14 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        user.setPassword("123456");
+        user.setLogin("login1");
+        user.setAge(20);
         Storage.people.clear();
     }
 
     @Test
     void register_OneUser_IsOk() {
-        user.setAge(18);
-        user.setLogin("login1");
-        user.setPassword("123456");
         service.register(user);
         int expected = 1;
         int actual = Storage.people.size();
@@ -48,37 +48,43 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullDataInput_NotOk() {
+    void register_NullLogin_NotOk() {
         user.setLogin(null);
-        user.setAge(20);
-        user.setPassword("123456");
         assertThrows(RegistrationException.class, () -> service.register(user));
-        user.setLogin("login1");
+    }
+
+    @Test
+    void register_NullPassword_NotOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_NullAge_NotOk() {
         user.setAge(null);
-        user.setPassword("654321");
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_UnderMinValue_NotOk() {
         user.setAge(6);
-        user.setPassword("123456");
-        user.setLogin("login1");
         assertThrows(RegistrationException.class, () -> service.register(user));
-        user.setAge(20);
+    }
+
+    @Test
+    void register_UnderMinPasswordLength_NotOk() {
         user.setPassword("1");
         assertThrows(RegistrationException.class, () -> service.register(user));
-        user.setPassword("123456");
+    }
+
+    @Test
+    void register_UnderMinLoginLength_NotOk() {
         user.setLogin("1");
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_sameLogin_NotOk() {
-        user.setAge(22);
-        user.setPassword("123654");
         user.setLogin("same_login");
         service.register(user);
         int expected = 1;
@@ -94,14 +100,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_FiveUsers_isOk() {
-        user.setAge(22);
-        user.setPassword("123654");
-        user.setLogin("same_login");
         service.register(user);
         user = new User();
         user.setAge(56);
         user.setPassword("1234579796");
-        user.setLogin("login1");
+        user.setLogin("login2");
         service.register(user);
         user = new User();
         user.setAge(25);
