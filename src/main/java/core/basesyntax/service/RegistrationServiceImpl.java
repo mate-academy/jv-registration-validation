@@ -6,6 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -13,13 +14,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
         }
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Login can't be less 6 symbols");
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password can't be less 6 symbols");
         }
         if (user.getAge() < MIN_AGE) {
