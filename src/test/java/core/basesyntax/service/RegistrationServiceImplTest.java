@@ -1,13 +1,15 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ class RegistrationServiceImplTest {
     private static final Long MAX_ID_LENGTH = 200L;
     private static final String LOGIN_OK = "asdfghjklfgsdcv";
     private static final String LOGIN_WITH_SPACES = "asdfg hjklfg sdcv";
-    private static final String MIN_PASSWORD_LENGTH = "o1t2t3";
+    private static final String MIN_PASSWORD_LENGTH = "o1t2t3#";
     private static final String MAX_PASSWORD_LENGTH = "qwertyuiop[]#$%^&asdfghj";
     private static final String WITHOUT_SPECIAL_SYMBOLS = "password78909876";
     private static final int MIN_AGE = 18;
@@ -53,152 +55,92 @@ class RegistrationServiceImplTest {
     @Test
     void registerUser_NullId_notOk() {
         user.setId(null);
-        try {
-            registrationService.validateUserId(user.getId());
-        } catch (RegistrationException e) {
-            assertEquals("Minimum expected ID length is: " + MIN_ID_LENGTH + "", e.getMessage());
-        }
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidId_LessThanMinLength_notOk() {
         user.setId(MIN_ID_LENGTH - 1);
-        try {
-            registrationService.validateUserId(user.getId());
-        } catch (RegistrationException e) {
-            assertEquals("Invalid User ID Length", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidId_GreaterThanMaxLength_notOk() {
         user.setId(MAX_ID_LENGTH + 1);
-        try {
-            registrationService.validateUserId(user.getId());
-        } catch (RegistrationException e) {
-            assertEquals("Invalid User ID length", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_NullLogin_notOk() {
         user.setLogin(null);
-        try {
-            registrationService.validateUserLogin(user.getLogin());
-        } catch (RegistrationException e) {
-            assertEquals("User Login cannot be null", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidLoginFormat_LessThanMinLength_notOk() {
         user.setLogin(LESS_THAN_MIN_LOGIN_LENGHT);
-        try {
-            registrationService.validateUserLogin(user.getLogin());
-        } catch (RegistrationException e) {
-            assertEquals("User Login lengths less than 6 Symbols", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidLoginFormat_LoginWithSpaces_notOk() {
         user.setLogin(LOGIN_WITH_SPACES);
-        try {
-            registrationService.validateUserLogin(user.getLogin());
-        } catch (RegistrationException e) {
-            assertEquals("User Login cannot contain spaces", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_NullPassword_notOk() {
         user.setPassword(null);
-        try {
-            registrationService.validateUserPassword(user.getPassword());
-        } catch (RegistrationException e) {
-            assertEquals("Password cannot be null.", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_EmptyPassword_notOk() {
         user.setPassword(EMPTY_PASSWORD);
-        try {
-            registrationService.validateUserPassword(user.getPassword());
-        } catch (RegistrationException e) {
-            assertEquals("Password cannot be empty.", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidPasswordFormat_LessThanMinLength_notOk() {
         user.setPassword(MIN_PASSWORD_LENGTH.substring(0, 3));
-        try {
-            registrationService.validateUserPassword(user.getPassword());
-        } catch (RegistrationException e) {
-            assertEquals("Password is shorter than the min length.", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidPasswordFormat_MoreThanMaxLength_notOk() {
         user.setPassword(MAX_PASSWORD_LENGTH + 1);
-        try {
-            registrationService.validateUserPassword(user.getPassword());
-        } catch (RegistrationException e) {
-            assertEquals("Password is bigger than the max length.", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidPasswordFormat_WithoutSpecialSymbols_notOk() {
         user.setPassword(WITHOUT_SPECIAL_SYMBOLS);
-        try {
-            registrationService.validateUserPassword(user.getPassword());
-        } catch (RegistrationException e) {
-            assertEquals("Your password must contain at least one of the following special symbols:"
-                    + " @, #, $, %, ^, &.", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_NullAge_notOk() {
         user.setAge(null);
-        try {
-            registrationService.validateUserAge(user.getAge());
-        } catch (RegistrationException e) {
-            assertEquals("Invalid age range ", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidAge_NegativeAge_notOk() {
         user.setAge(NEGATIVE_AGE);
-        try {
-            registrationService.validateUserAge(user.getAge());
-        } catch (RegistrationException e) {
-            assertEquals("Invalid User age range", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidAge_YoungerThanMinAge_notOk() {
         user.setAge(SMALLER_THAN_MIN_AGE);
-        try {
-            registrationService.validateUserAge(user.getAge());
-        } catch (RegistrationException e) {
-            assertEquals("Invalid User age range", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerUser_InvalidAge_OlderThanMaxAge_notOk() {
         user.setAge(MAX_AGE + 1);
-        try {
-            registrationService.validateUserAge(user.getAge());
-        } catch (RegistrationException e) {
-            assertEquals("Invalid age", e.getMessage());
-        }
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -272,7 +214,11 @@ class RegistrationServiceImplTest {
     @Test
     void registerUser_MaxAge_Ok() {
         user.setAge(MAX_AGE);
-        assertDoesNotThrow(() -> registrationService.register(user));
-        assertTrue(Storage.people.contains(user));
+        try {
+            registrationService.register(user);
+            assertTrue(Storage.people.contains(user));
+        } catch (RegistrationException e) {
+            fail("Unexpected exception thrown: " + e.getMessage());
+        }
     }
 }

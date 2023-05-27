@@ -20,31 +20,22 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         validateUser(user);
+        validateUserLogin(user);
+        validateUserPassword(user);
+        validateUserId(user);
+        validateUserAge(user);
         storageDao.add(user);
         return user;
     }
 
-    User validateUser(User user) {
+    private void validateUser(User user) {
         if (user == null) {
             throw new RegistrationException("User cannot be null!");
         }
-        return user;
     }
 
-    Long validateUserId(Long id) {
-        if (id == null) {
-            throw new RegistrationException("You entered an incorrect ID");
-        }
-        if (id < MIN_ID_LENGTH) {
-            throw new RegistrationException("Invalid User ID length (minimum)!");
-        }
-        if (id > MAX_ID_LENGTH) {
-            throw new RegistrationException("Invalid User ID length (maximum)!");
-        }
-        return id;
-    }
-
-    public String validateUserLogin(String login) {
+    private void validateUserLogin(User user) {
+        String login = user.getLogin();
         if (login == null) {
             throw new RegistrationException("Incorrect Login: Login cannot be null");
         }
@@ -55,43 +46,48 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Invalid User Login length (max): " + login.length());
         }
         if (login.contains(SPACE)) {
-            throw new RegistrationException("User login cannot contain spaces.  " + login);
+            throw new RegistrationException("User login cannot contain spaces. Login: " + login);
         }
-
-        return login;
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("User with this login already exists");
+        }
     }
 
-    String validateUserPassword(String password) {
+    private void validateUserPassword(User user) {
+        String password = user.getPassword();
         if (password == null) {
             throw new RegistrationException("User password cannot be null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Invalid User password length."
-                    + " Your password is shorter than the minimum length : "
-                    + password.length());
+            throw new RegistrationException("Invalid User password length. "
+                    + "Your password is shorter than the minimum length: " + password.length());
         }
         if (password.length() > MAX_PASSWORD_LENGTH) {
             throw new RegistrationException("Invalid User password length."
-                    + " Your password exceeds the maximum length : " + password.length());
+                    + " Your password exceeds the maximum length: " + password.length());
         }
         if (!password.matches(".*[!@#$%^&*()_+=|<>?{}\\[\\]~-].*")) {
-            throw new RegistrationException("User password must contain at least one special symbol"
-                    + password);
+            throw new RegistrationException("User password must contain at least one special symbol");
         }
-        return password;
     }
 
-    void validateUserAge(Integer age) {
+    private void validateUserId(User user) {
+        Long userId = user.getId();
+        if (userId == null) {
+            throw new RegistrationException("User ID cannot be null");
+        }
+        if (userId < MIN_ID_LENGTH || userId > MAX_ID_LENGTH) {
+            throw new RegistrationException("Invalid User ID range: " + userId);
+        }
+    }
+
+    private void validateUserAge(User user) {
+        Integer age = user.getAge();
         if (age == null) {
             throw new RegistrationException("User age cannot be null");
         }
-        if (age < MIN_AGE) {
-            throw new RegistrationException("Invalid User age range :" + age);
-        }
-
-        if (age > MAX_AGE) {
-            throw new RegistrationException("Invalid User age range : " + age);
+        if (age < MIN_AGE || age > MAX_AGE) {
+            throw new RegistrationException("Invalid User age range: " + age);
         }
     }
 }
-
