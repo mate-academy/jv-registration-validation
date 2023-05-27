@@ -67,7 +67,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + " Your password exceeds the maximum length: " + password.length());
         }
         if (!password.matches(".*[!@#$%^&*()_+=|<>?{}\\[\\]~-].*")) {
-            throw new RegistrationException("User password must contain at least one special symbol");
+            throw new RegistrationException("User password must contain "
+                    + "at least one special symbol");
         }
     }
 
