@@ -2,6 +2,7 @@ package core.basesyntax.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.util.ArrayList;
@@ -38,11 +39,11 @@ class StorageDaoImplTest {
 
     @Test
     void validGetUserIfPresent_Ok() {
+        Storage.people.addAll(users);
+        String message = "User with current login should be present";
         String loginFirst = users.get(0).getLogin();
         String loginSecond = users.get(1).getLogin();
         String loginThird = users.get(2).getLogin();
-        Storage.people.addAll(users);
-        String message = "User with current login should be present";
         assertEquals(users.get(0), storageDao.get(loginFirst), message);
         assertEquals(users.get(1), storageDao.get(loginSecond), message);
         assertEquals(users.get(2), storageDao.get(loginThird), message);

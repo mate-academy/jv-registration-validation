@@ -1,8 +1,9 @@
 
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
@@ -115,5 +116,4 @@ class RegistrationServiceImplTest {
         assertEquals(userJustAdult, service.register(userJustAdult), message);
         assertEquals(validUser, service.register(validUser), message);
     }
-
 }
