@@ -7,6 +7,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +22,11 @@ class StorageDaoImplTest {
         users.add(new User("RobertHeinlein", "SpaceTroopers", 52));
         users.add(new User("ArthurClarke", "SpaceOdyssey", 51));
         return users;
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @BeforeEach
