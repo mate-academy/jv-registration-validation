@@ -1,17 +1,17 @@
 package core.basesyntax.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
-    StorageDao storageDao = new StorageDaoImpl();
-    List<User> users;
+    private StorageDao storageDao = new StorageDaoImpl();
+    private List<User> users;
 
     private List<User> getValidUsers() {
         List<User> users = new ArrayList<>();
@@ -50,11 +50,11 @@ class StorageDaoImplTest {
 
     @Test
     void getUserIfAbsent_NotOk() {
+        Storage.people.addAll(users);
+        String message = "The null must be returned for absent user";
         String loginFirst = "StanislavLem";
         String loginSecond = "EdgarPoe";
         String loginThird = "GeorgeMartin";
-        Storage.people.addAll(users);
-        String message = "The null must be returned for absent user";
         assertNull(storageDao.get(loginFirst), message);
         assertNull(storageDao.get(loginSecond), message);
         assertNull(storageDao.get(loginThird), message);

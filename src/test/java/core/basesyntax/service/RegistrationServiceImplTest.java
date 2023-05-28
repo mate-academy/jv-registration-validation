@@ -1,17 +1,18 @@
+
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     static final String VALID_LOG = "LoveCraft";
     static final String VALID_PASS = "NECRONOMICON";
     static final int VALID_AGE = 36;
-    User validUser = new User(VALID_LOG, VALID_PASS, VALID_AGE);
-    RegistrationService service = new RegistrationServiceImpl();
-
+    private User validUser = new User(VALID_LOG, VALID_PASS, VALID_AGE);
+    private RegistrationService service = new RegistrationServiceImpl();
 
     @Test
     void loginIsNull_NotOk() {
@@ -58,7 +59,7 @@ class RegistrationServiceImplTest {
         String emptyPass = "";
         User user = new User(VALID_PASS, emptyPass, VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(user),
-                "Expected RegistrationException to be thrown for empty password ");
+                "Expected RegistrationException to be thrown for empty password");
     }
 
     @Test
@@ -66,7 +67,7 @@ class RegistrationServiceImplTest {
         String shortPass = "short";
         User user = new User(shortPass, VALID_PASS, VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(user),
-                "Expected RegistrationException to be thrown for password shorter than 6 characters");
+                "Expected RegistrationException to be thrown for password shorter than 6 chars");
     }
 
     @Test
