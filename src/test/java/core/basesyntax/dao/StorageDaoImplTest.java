@@ -31,6 +31,7 @@ class StorageDaoImplTest {
     @BeforeEach
     void setUp() {
         users = getValidUsers();
+        Storage.people.clear();
     }
 
     @Test
