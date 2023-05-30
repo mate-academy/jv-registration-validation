@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +14,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final String REGEX_LOGIN = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final Pattern PATTERN_LOGIN = Pattern.compile(REGEX_LOGIN);
     private final StorageDao storageDao = new StorageDaoImpl();
+
+    @Override
+    public User register(User user) {
+        if (isValidData(user)
+                && isValidEmail(user)
+                && isValidPassword(user)
+                && !isUserWithSuchLoginExists(user)) {
+            return storageDao.add(user);
+        }
+
+        return null;
+    }
 
     private boolean isValidData(User user) throws RegistrationException {
         if (user.getLogin() == null || user.getLogin().equals("")) {
@@ -57,17 +68,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("А user with this login already exists");
         }
         return true;
-    }
-
-    @Override
-    public User register(User user) {
-        if (isValidData(user)
-                && isValidEmail(user)
-                && isValidPassword(user)
-                && !isUserWithSuchLoginExists(user)) {
-            return storageDao.add(user);
-        }
-
-        return null;
     }
 }
