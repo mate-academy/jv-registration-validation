@@ -67,6 +67,7 @@ class RegistrationServiceImplTest {
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
 
+    @Test
     void registration_userNameIsMoreSixSymbols_Ok() {
         assertNotNull(registrationService.register(firstUser));
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
