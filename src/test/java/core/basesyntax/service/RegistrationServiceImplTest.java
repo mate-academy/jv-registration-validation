@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,42 +49,33 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_userPasswordIsNull_NotOk() {
-        firstUser.setPassword(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-    }
-
-    @Test
-    void registration_userPasswordIsEmpty_NotOk() {
-        firstUser.setPassword("");
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-    }
-
-    @Test
-    void registration_AgeLessThan18_NotOk() {
-        firstUser.setAge(-6);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-    }
-
-    @Test
-    void registration_AgeIsMore18_Ok() {
-        assertNotNull(registrationService.register(firstUser));
-    }
-
-    @Test
     void registration_userNameLessThanSixSymbols_NotOk() {
+        firstUser.setLogin("exd@ukr.net");
+        assertNull(registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_userNameIsFiveSymbolsEdgeCase_NotOk() {
         firstUser.setLogin("exgsd@ukr.net");
         assertNull(registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userNameIsMoreFiveSymbols_Ok() {
+    void registration_userNameIsSixSymbolsEdgeCase_Ok() {
+        firstUser.setLogin("exampl@hotmail.com");
         assertNotNull(registrationService.register(firstUser));
+        assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
+    }
+
+    void registration_userNameIsMoreSixSymbols_Ok() {
+        assertNotNull(registrationService.register(firstUser));
+        assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
 
     @Test
     void registration_validUser_Ok() {
         assertNotNull(registrationService.register(firstUser));
+        assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
 
     @Test
@@ -102,18 +94,80 @@ class RegistrationServiceImplTest {
     void registration_addAndGetValidUsers_Ok() {
         assertNotNull(registrationService.register(firstUser));
         assertNotNull(registrationService.register(secondUser));
-        assertNotNull(storageDao.get(firstUser.getLogin()));
-        assertNotNull(storageDao.get(secondUser.getLogin()));
+        assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
+        assertEquals(secondUser, storageDao.get(secondUser.getLogin()));
     }
 
     @Test
-    void registration_userPasswordLessThanSixSymbols_NotOk() {
+    void registration_userPasswordIsNull_NotOk() {
+        firstUser.setPassword(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_userPasswordIsEmpty_NotOk() {
+        firstUser.setPassword("");
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_userPasswordIsLessSixSymbols_NotOk() {
+        firstUser.setPassword("1A@");
+        assertNull(registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_userPasswordIsFiveSymbolsEdgeCase_NotOk() {
         firstUser.setPassword("1A@n!");
         assertNull(registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userPasswordIsMoreFiveSymbols_Ok() {
+    void registration_userPasswordIsSixSymbolsEdgeCase_Ok() {
+        firstUser.setPassword("1A@n!$");
         assertNotNull(registrationService.register(firstUser));
+        assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
+    }
+
+    @Test
+    void registration_userPasswordIsMoreSixSymbols_Ok() {
+        assertNotNull(registrationService.register(firstUser));
+        assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
+    }
+
+    @Test
+    void registration_AgeUserIsNull_NotOk() {
+        firstUser.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_NegativeAgeUserLessThan18_NotOk() {
+        firstUser.setAge(-6);
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_AgeUserLessThan18_NotOk() {
+        firstUser.setAge(14);
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_AgeUserIsSeventeenEdgeCase_NotOk() {
+        firstUser.setAge(17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+    }
+
+    @Test
+    void registration_AgeUserIsEighteenEdgeCase_Ok() {
+        assertNotNull(registrationService.register(firstUser));
+        assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
+    }
+
+    @Test
+    void registration_AgeUserIsMoreEighteen_Ok() {
+        assertNotNull(registrationService.register(secondUser));
+        assertEquals(secondUser, storageDao.get(secondUser.getLogin()));
     }
 }

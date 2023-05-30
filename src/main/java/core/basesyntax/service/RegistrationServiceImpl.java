@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null || user.getPassword().equals("")) {
             throw new RegistrationException("Password can't be null or empty");
         }
-        if (user.getAge() < MIN_AGE) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationException("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
