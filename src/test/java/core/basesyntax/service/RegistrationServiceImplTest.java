@@ -37,52 +37,52 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_userLoginIsNull_NotOk() {
+    void registration_UserLoginIsNull_NotOk() {
         firstUser.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userLoginIsEmpty_NotOk() {
+    void registration_UserLoginIsEmpty_NotOk() {
         firstUser.setLogin("");
         assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userNameLessThanSixSymbols_NotOk() {
+    void registration_UserNameLessThanSixSymbols_NotOk() {
         firstUser.setLogin("exd@ukr.net");
         assertNull(registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userNameIsFiveSymbolsEdgeCase_NotOk() {
+    void registration_UserNameIsFiveSymbolsEdgeCase_NotOk() {
         firstUser.setLogin("exgsd@ukr.net");
         assertNull(registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userNameIsSixSymbolsEdgeCase_Ok() {
+    void registration_UserNameIsSixSymbolsEdgeCase_Ok() {
         firstUser.setLogin("exampl@hotmail.com");
         assertNotNull(registrationService.register(firstUser));
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
 
     @Test
-    void registration_userNameIsMoreSixSymbols_Ok() {
+    void registration_UserNameIsMoreSixSymbols_Ok() {
         assertNotNull(registrationService.register(firstUser));
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
 
     @Test
-    void registration_validUser_Ok() {
+    void registration_ValidUser_Ok() {
         assertNotNull(registrationService.register(firstUser));
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
 
     @Test
-    void registration_notValidUser_NotOk() {
+    void registration_NotValidUser_NotOk() {
         firstUser.setLogin("ex@gsd@ukr.net");
-        assertNull(registrationService.register(firstUser));
+        assertNull(registrationService.register(firstUser),"Incorrect user login");
     }
 
     @Test
@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_addAndGetValidUsers_Ok() {
+    void registration_SeveralValidUsers_Ok() {
         assertNotNull(registrationService.register(firstUser));
         assertNotNull(registrationService.register(secondUser));
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
@@ -100,38 +100,38 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_userPasswordIsNull_NotOk() {
+    void registration_UserPasswordIsNull_NotOk() {
         firstUser.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userPasswordIsEmpty_NotOk() {
+    void registration_UserPasswordIsEmpty_NotOk() {
         firstUser.setPassword("");
         assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userPasswordIsLessSixSymbols_NotOk() {
+    void registration_UserPasswordIsLessSixSymbols_NotOk() {
         firstUser.setPassword("1A@");
         assertNull(registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userPasswordIsFiveSymbolsEdgeCase_NotOk() {
+    void registration_UserPasswordIsFiveSymbolsEdgeCase_NotOk() {
         firstUser.setPassword("1A@n!");
         assertNull(registrationService.register(firstUser));
     }
 
     @Test
-    void registration_userPasswordIsSixSymbolsEdgeCase_Ok() {
+    void registration_UserPasswordIsSixSymbolsEdgeCase_Ok() {
         firstUser.setPassword("1A@n!$");
         assertNotNull(registrationService.register(firstUser));
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
 
     @Test
-    void registration_userPasswordIsMoreSixSymbols_Ok() {
+    void registration_UserPasswordIsMoreSixSymbols_Ok() {
         assertNotNull(registrationService.register(firstUser));
         assertEquals(firstUser, storageDao.get(firstUser.getLogin()));
     }
