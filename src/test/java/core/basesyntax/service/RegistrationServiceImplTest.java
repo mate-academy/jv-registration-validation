@@ -6,12 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final User user = new User();
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static User user;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
+
+    @BeforeAll
+    static void setUp() {
+        user = new User();
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @Test
     void userAdded_Ok() {
@@ -96,6 +104,7 @@ class RegistrationServiceImplTest {
         user.setId(15L);
         user.setPassword("Test123");
         storageDao.add(user);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         User user1 = new User();
         user1.setLogin("Test");
         user1.setAge(45);
