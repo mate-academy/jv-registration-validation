@@ -23,11 +23,6 @@ class StorageDaoImplTest {
         return users;
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @BeforeEach
     void setUp() {
         users = getValidUsers();
@@ -35,7 +30,7 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void isAdded_Ok() {
+    void add_isAdded_Ok() {
         assertEquals(users.get(0), storageDao.add(users.get(0)));
         assertEquals(1, Storage.people.size());
         assertEquals(users.get(1), storageDao.add(users.get(1)));
@@ -45,7 +40,7 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void validGetUserIfPresent_Ok() {
+    void get_userIsPresent_Ok() {
         Storage.people.addAll(users);
         String message = "User with current login should be present";
         String loginFirst = users.get(0).getLogin();
@@ -57,7 +52,7 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void getUserIfAbsent_NotOk() {
+    void get_userIsAbsent_NotOk() {
         Storage.people.addAll(users);
         String message = "The null must be returned for absent user";
         String loginFirst = "StanislavLem";
