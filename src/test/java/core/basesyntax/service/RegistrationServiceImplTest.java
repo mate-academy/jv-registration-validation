@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "12345";
     private static final String INVALID_PASSWORD = "1234567";
-    private static RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
 
     @Before
     void init() {
