@@ -1,12 +1,14 @@
 
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     static final String VALID_LOGIN = "LoveCraft";
@@ -14,6 +16,18 @@ class RegistrationServiceImplTest {
     static final int VALID_AGE = 36;
     private User validUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
     private RegistrationService service = new RegistrationServiceImpl();
+
+    @BeforeEach
+    void setUp() {
+        Storage.people.clear();
+    }
+
+    @Test
+    void register_userIsPresent_NotOk() {
+        service.register(validUser);
+        assertThrows(RegistrationException.class, () -> service.register(validUser),
+                "User with current login already added");
+    }
 
     @Test
     void register_nullAge_NotOk() {
@@ -32,8 +46,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsShorterThanValid_NotOk() {
-        String shortLog = "short";
-        User user = new User(shortLog, VALID_PASSWORD, VALID_AGE);
+        String shortLogin = "short";
+        User user = new User(shortLogin, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(user),
                 "Expected RegistrationException to be thrown for login shorter than 6 characters");
     }
@@ -43,8 +57,10 @@ class RegistrationServiceImplTest {
         String minLogin = "abcdef";
         User userMinLogin = new User(minLogin, VALID_PASSWORD, VALID_AGE);
         String message = "User with valid login length must be added";
-        assertEquals(userMinLogin, service.register(userMinLogin), message);
-        assertEquals(validUser, service.register(validUser), message);
+        service.register(userMinLogin);
+        assertEquals(1, Storage.people.size(), message);
+        service.register(validUser);
+        assertEquals(2, Storage.people.size(), message);
     }
 
     @Test
@@ -56,38 +72,36 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordIsEmpty_NotOk() {
-        String emptyPass = "";
-        User user = new User(VALID_PASSWORD, emptyPass, VALID_AGE);
+        String emptyPassword = "";
+        User user = new User(VALID_PASSWORD, emptyPassword, VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(user),
                 "Expected RegistrationException to be thrown for empty password");
     }
 
     @Test
     void register_passwordIsShorterThanValid_NotOk() {
-        String shortPass = "short";
-        User user = new User(shortPass, VALID_PASSWORD, VALID_AGE);
+        String shortPassword = "short";
+        User user = new User(shortPassword, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(user),
                 "Expected RegistrationException to be thrown for password shorter than 6 chars");
     }
 
     @Test
     void register_passwordHasValidLength_Ok() {
-        String minPass = "123456";
-        User userMinPass = new User(VALID_LOGIN, minPass, VALID_AGE);
+        User userMinPass = new User(VALID_LOGIN, "123456", VALID_AGE);
         String message = "User with valid password length must be added";
-        assertEquals(userMinPass, service.register(userMinPass), message);
-        assertEquals(validUser, service.register(validUser), message);
+        service.register(userMinPass);
+        assertEquals(1, Storage.people.size(), message);
+        service.register(validUser);
+        assertEquals(2, Storage.people.size(), message);
     }
 
     @Test
     void register_ageIsLessThanZero_NotOk() {
-        int age1 = -1;
-        int age2 = -10;
-        int age3 = -18;
         String message = "Expected RegistrationException to be thrown for age less 0";
-        User unborn1 = new User(VALID_LOGIN, VALID_PASSWORD, age1);
-        User unborn2 = new User(VALID_LOGIN, VALID_PASSWORD, age2);
-        User unborn3 = new User(VALID_LOGIN, VALID_PASSWORD, age3);
+        User unborn1 = new User(VALID_LOGIN, VALID_PASSWORD, -1);
+        User unborn2 = new User(VALID_LOGIN, VALID_PASSWORD, -10);
+        User unborn3 = new User(VALID_LOGIN, VALID_PASSWORD, -18);
         assertThrows(RegistrationException.class, () -> service.register(unborn1), message);
         assertThrows(RegistrationException.class, () -> service.register(unborn2), message);
         assertThrows(RegistrationException.class, () -> service.register(unborn3), message);
@@ -95,13 +109,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageIsLessThanValid_NotOk() {
-        int age1 = 0;
-        int age2 = 13;
-        int age3 = 17;
         String message = "Expected RegistrationException to be thrown for age less valid";
-        User notAdult1 = new User(VALID_LOGIN, VALID_PASSWORD, age1);
-        User notAdult2 = new User(VALID_LOGIN, VALID_PASSWORD, age2);
-        User notAdult3 = new User(VALID_LOGIN, VALID_PASSWORD, age3);
+        User notAdult1 = new User(VALID_LOGIN, VALID_PASSWORD, 0);
+        User notAdult2 = new User(VALID_LOGIN, VALID_PASSWORD, 13);
+        User notAdult3 = new User(VALID_LOGIN, VALID_PASSWORD, 17);
         assertThrows(RegistrationException.class, () -> service.register(notAdult1), message);
         assertThrows(RegistrationException.class, () -> service.register(notAdult2), message);
         assertThrows(RegistrationException.class, () -> service.register(notAdult3), message);
@@ -109,10 +120,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageIsValid_Ok() {
-        int age = 18;
-        User userJustAdult = new User(VALID_LOGIN, VALID_PASSWORD, age);
+        User userJustAdult = new User(VALID_LOGIN, VALID_PASSWORD, 18);
         String message = "User with valid age must be added";
-        assertEquals(userJustAdult, service.register(userJustAdult), message);
-        assertEquals(validUser, service.register(validUser), message);
+        service.register(userJustAdult);
+        assertEquals(1, Storage.people.size(), message);
+        service.register(validUser);
+        assertEquals(2, Storage.people.size(), message);
     }
 }
