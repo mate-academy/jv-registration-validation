@@ -5,57 +5,65 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static User validUser;
     private static final String VALID_PASSWORD = "12345";
     private static final String INVALID_PASSWORD = "1234567";
     private static RegistrationService registrationService;
+    private static final String EXCEPTION_MESSAGE =
+            "RegistrationException should be thrown in this case.";
 
-    @Before
+    @BeforeEach
     void init() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @Test
     void register_nullAge_notOk() {
-        User user = new User(1L, "Bob", VALID_PASSWORD, 0);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        validUser = new User("Bob", VALID_PASSWORD, 0);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),EXCEPTION_MESSAGE);
     }
 
     @Test
     void register_nullLogin_notOk() {
-        User user = new User(1L, null, INVALID_PASSWORD, 20);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        validUser = new User(null, INVALID_PASSWORD, 20);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),EXCEPTION_MESSAGE);
     }
 
     @Test
     void register_userAlreadyExists_notOk() {
-        User user = new User(1L, "Ivan ivanov", INVALID_PASSWORD, 21);
-        Storage.people.add(user);
-        User userReg = new User(1L, "Ivan ivanov", INVALID_PASSWORD, 21);
-        assertThrows(RegistrationException.class, () -> registrationService.register(userReg));
+        validUser = new User("Ivan ivanov", INVALID_PASSWORD, 21);
+        Storage.people.add(validUser);
+        User userReg = new User("Ivan ivanov", INVALID_PASSWORD, 21);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(userReg),EXCEPTION_MESSAGE);
     }
 
     @Test
     void register_shortPassword_notOk() {
-        User user = new User(1L, "Jane", VALID_PASSWORD, 22);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        validUser = new User("Jane", VALID_PASSWORD, 22);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),EXCEPTION_MESSAGE);
     }
 
     @Test
     void register_lessAge_notOk() {
-        User user = new User(1L, "Nike", VALID_PASSWORD, 15);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        validUser = new User("Nike", VALID_PASSWORD, 15);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),EXCEPTION_MESSAGE);
     }
 
     @Test
     void register_validData() {
         int size = Storage.people.size();
-        User user = new User(1L, "Nike", INVALID_PASSWORD, 22);
-        registrationService.register(user);
+        validUser = new User("Nike", INVALID_PASSWORD, 22);
+        registrationService.register(validUser);
         assertEquals(size + 1, Storage.people.size());
     }
 
