@@ -26,7 +26,6 @@ class RegistrationServiceTest {
     private static final String EMPTY_STRING = "";
     private User user;
 
-
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
@@ -38,13 +37,13 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void InvalidPassword_NotOk() {
+    void invalidPassword_NotOk() {
         user = new User(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void InvalidLogin_NotOk() {
+    void invalidLogin_NotOk() {
         user = new User(INVALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
