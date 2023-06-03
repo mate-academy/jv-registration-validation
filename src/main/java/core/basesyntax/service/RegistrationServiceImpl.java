@@ -34,7 +34,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserRegistrationException("Password must have at least 6 characters!");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new UserRegistrationException("Sorry, but your age does not meet our requirements");
+            throw new UserRegistrationException(
+                    "Sorry, but your age does not meet our requirements");
         }
         return storageDao.add(user);
     }
