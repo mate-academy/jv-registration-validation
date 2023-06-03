@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException("The user cais null");
+            throw new RegistrationException("The user is null");
         }
         if (checkForDuplicateLogins(user)) {
             throw new RegistrationException("The users login can not be duplicated");

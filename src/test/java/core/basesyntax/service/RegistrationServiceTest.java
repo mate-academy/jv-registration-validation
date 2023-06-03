@@ -9,94 +9,125 @@ import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
     private static RegistrationService registrationService;
+    private static final String INVALID_PASSWORD = "pswrd";
+    private static final String INVALID_LOGIN = "login";
+    private static final String EDGE_PASSWORD = "paswrd";
+    private static final String EDGE_LOGIN = "newlog";
+    private static final int INVALID_AGE = 17;
+    private static final int EDGE_AGE = 18;
+    private static final String VALID_PASSWORD = "TheStrongestPassword";
+    private static final String VALID_LOGIN = "NewUser";
+    private static final int VALID_AGE = 30;
+    private static final String EMPTY_STRING = "";
+    private User user;
+
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @BeforeEach
+    void setUp() {
+        Storage.people.clear();
+    }
+
+    @Test
+    void InvalidPassword_NotOk() {
+        user = new User(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void InvalidLogin_NotOk() {
+        user = new User(INVALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
     @Test
     void theAgeIsLowerThanEighteen_NotOk() {
-        User oleh = new User("OlezhaNotToxic", "KuzanBamBam", 17);
-        assertThrows(RegistrationException.class, () -> registrationService.register(oleh));
+        user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void theAgeIsEighteen_Ok() {
-        User sashka = new User("KlymKlym", "loveToPlayWoT", 18);
-        assertEquals(18, sashka.getAge());
-        assertDoesNotThrow(() -> registrationService.register(sashka));
+        user = new User(VALID_LOGIN, VALID_PASSWORD, EDGE_AGE);
+        assertEquals(18, user.getAge());
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
     void validUser_Ok() {
-        User misha = new User("Terminator1337", "funtik9099", 20);
-        assertDoesNotThrow(() -> registrationService.register(misha));
+        user = new User(VALID_LOGIN,VALID_PASSWORD, VALID_AGE);
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
     void passwordLengthEqualsSix_Ok() {
-        User maria = new User("MashkaLubidKashku", "tt55yy", 33);
-        assertEquals(6, maria.getPassword().length());
-        assertDoesNotThrow(() -> registrationService.register(maria));
+        user = new User(VALID_LOGIN,EDGE_PASSWORD,VALID_AGE);
+        assertEquals(6, user.getPassword().length());
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
     void passwordLengthEqualsZero_NotOk() {
-        User oleksandr = new User("Koval's'kii", "", 30);
-        assertEquals(0, oleksandr.getPassword().length());
-        assertThrows(RegistrationException.class, () -> registrationService.register(oleksandr));
+        user = new User(VALID_LOGIN, EMPTY_STRING,VALID_AGE);
+        assertEquals(0, user.getPassword().length());
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void loginLengthEqualsSix_Ok() {
-        User bohdan = new User("Bohdan", "KrutoiChupicka422", 30);
-        assertEquals(6, bohdan.getLogin().length());
-        assertDoesNotThrow(() -> registrationService.register(bohdan));
+        user = new User(EDGE_LOGIN,VALID_PASSWORD,VALID_AGE);
+        assertEquals(6, user.getLogin().length());
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
     void loginLengthEqualsZero_NotOk() {
-        User incognito = new User("", "loveToEatCereal", 32);
-        assertEquals(0, incognito.getLogin().length());
-        assertThrows(RegistrationException.class, () -> registrationService.register(incognito));
+        user = new User(EMPTY_STRING,VALID_PASSWORD, VALID_AGE);
+        assertEquals(0, user.getLogin().length());
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void userNotUnique_NotOk() {
-        User dima = new User("DimaKrutoi", "qwerty2000", 19);
-        Storage.people.add(dima);
+        user = new User(VALID_LOGIN,VALID_PASSWORD,VALID_AGE);
+        Storage.people.add(user);
         assertThrows(RegistrationException.class, ()
-                -> registrationService.register(new User("DimaKrutoi", "qwerty202", 23)));
+                -> registrationService.register(new User(VALID_LOGIN,VALID_PASSWORD,VALID_AGE)));
     }
 
     @Test
     void loginEqualsNull_NotOk() {
-        User dasha = new User(null, "ILoveMyMother", 25);
-        assertNull(dasha.getLogin());
-        assertThrows(RegistrationException.class, () -> registrationService.register(dasha));
+        user = new User(null,VALID_PASSWORD,VALID_AGE);
+        assertNull(user.getLogin());
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void passwordEqualsNull_NotOk() {
-        User georgii = new User("BogBoy422", null, 33);
-        assertNull(georgii.getPassword());
-        assertThrows(RegistrationException.class, () -> registrationService.register(georgii));
+        user = new User(VALID_LOGIN, null, VALID_AGE);
+        assertNull(user.getPassword());
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void ageEqualsNull_NotOk() {
-        User andrii = new User("AndriiDorosliy", "sobaka1", null);
-        assertNull(andrii.getAge());
-        assertThrows(RegistrationException.class, () -> registrationService.register(andrii));
+        user = new User(VALID_LOGIN, VALID_PASSWORD, null);
+        assertNull(user.getAge());
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void userEqualsNull_NotOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(null));
+        user = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
