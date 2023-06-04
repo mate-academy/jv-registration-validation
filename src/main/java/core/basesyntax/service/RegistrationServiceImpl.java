@@ -2,12 +2,12 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMAL_AGE = 18;
     private static final int MINIMAL_PASSWORD_LENGTH = 6;
+    private static final int MINIMAL_LOGIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -17,6 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkPassword(user);
         checkLogin_onNull(user);
         checkUserExsitence(user);
+        checkLogin_onLength(user);
         return storageDao.add(user);
     }
 
@@ -39,10 +40,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("Incorrect user login!");
         }
-        for (User person : Storage.people) {
-            if (user.getLogin().equals(person.getLogin())) {
-                throw new RegistrationException("This login is not available!");
-            }
+    }
+
+    private void checkLogin_onLength(User user) {
+        if (user.getLogin().length() > MINIMAL_LOGIN_LENGTH) {
+            throw new RegistrationException("This login is not available!");
         }
     }
 

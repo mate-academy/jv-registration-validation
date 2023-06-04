@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -16,6 +15,7 @@ class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "1234567";
     private static final String CORRECT_LOGIN = "Ivan Ivanov";
     private static final String NOT_CORRECT_LOGIN = "Nike";
+    private static final String SHORT_LOGIN = "login";
     private static final int CORRECT_AGE = 22;
     private static final int NOT_CORRECT_AGE = 15;
     private static final int NULL_AGE = 0;
@@ -25,7 +25,6 @@ class RegistrationServiceImplTest {
 
     @BeforeAll
     static void init() {
-
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -58,25 +57,32 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_PasswordShort_notOk() {
         validUser = new User(CORRECT_LOGIN, INVALID_PASSWORD, CORRECT_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(validUser), EXCEPTION_MESSAGE);
     }
 
     @Test
-    void register_lessAge_notOk() {
+    void register_AgeLess_notOk() {
         validUser = new User(CORRECT_LOGIN, VALID_PASSWORD, NOT_CORRECT_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(validUser), EXCEPTION_MESSAGE);
     }
 
     @Test
-    void register_validData_ok() {
-        int size = Storage.people.size();
-        validUser = new User(NOT_CORRECT_LOGIN, VALID_PASSWORD, CORRECT_AGE);
+    void register_LoginLess_notOk() {
+        validUser = new User(SHORT_LOGIN, VALID_PASSWORD, CORRECT_AGE);
         registrationService.register(validUser);
-        assertEquals(size + 1, Storage.people.size());
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser), EXCEPTION_MESSAGE);
+    }
+
+    @Test
+    void register_loginTaken_notOk() {
+        Storage.people.add(validUser);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser), EXCEPTION_MESSAGE);
     }
 
     @AfterEach
