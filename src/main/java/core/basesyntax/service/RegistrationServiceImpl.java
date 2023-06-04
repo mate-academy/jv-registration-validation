@@ -12,37 +12,49 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkAge(user.getAge());
-        checkPassword(user.getPassword());
-        checkLogin(user.getLogin());
-        storageDao.add(user);
-        return user;
+        checkUser(user);
+        checkAge(user);
+        checkPassword(user);
+        checkLogin_onNull(user);
+        checkUserExsitence(user);
+        return storageDao.add(user);
     }
 
-    private void checkPassword(String password) {
-        if (password == null) {
-            throw new RegistrationException("Incorrect password!");
+    private void checkUser(User user) {
+        if (user == null) {
+            throw new RegistrationException("User cannot be null!");
         }
-        if (password.length() < MINIMAL_PASSWORD_LENGTH) {
-            throw new RegistrationException("Incorrect password!");
-        }
-
     }
 
-    private void checkLogin(String login) {
-        if (login == null) {
+    private void checkPassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password cannot be zero!");
+        }
+        if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
+            throw new RegistrationException("The password is very short!!");
+        }
+    }
+
+    private void checkLogin_onNull(User user) {
+        if (user.getLogin() == null) {
             throw new RegistrationException("Incorrect user login!");
         }
         for (User person : Storage.people) {
-            if (login.equals(person.getLogin())) {
+            if (user.getLogin().equals(person.getLogin())) {
                 throw new RegistrationException("This login is not available!");
             }
         }
     }
 
-    private void checkAge(Integer age) {
-        if (age < MINIMAL_AGE) {
-            throw new RegistrationException("Incorrect user age!");
+    private void checkUserExsitence(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User is already registered");
+        }
+    }
+
+    private void checkAge(User user) {
+        if (user.getAge() < MINIMAL_AGE) {
+            throw new RegistrationException("The user must be over 18!");
         }
     }
 }
