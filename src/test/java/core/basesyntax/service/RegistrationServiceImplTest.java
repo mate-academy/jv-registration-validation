@@ -29,7 +29,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registeredUserReturnValidUser_Ok() {
+    void registeredUser_ReturnValidUser_Ok() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("password");
@@ -42,7 +42,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginUnique_Ok() {
+    void userLogin_IsUnique_Ok() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("password");
@@ -55,7 +55,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginIsNotUnique_NotOk() {
+    void userLogin_AlreadyExists_NotOk() {
         User uniqueUser = new User();
         uniqueUser.setLogin("testlogin");
         uniqueUser.setPassword("password");
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
                 "This user must be present in storage");
         assertEquals(uniqueUser, notUniqueUser,
                 "Can't register user, this login already in use");
-        assertThrows(CustomException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(notUniqueUser),
                 "Registration should throw Custom Exception when login already exists");
     }
@@ -90,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginLengthIsShort_NotOk() {
+    void loginLength_IsShort_NotOk() {
         User user = new User();
         user.setLogin("art");
         user.setPassword("password");
@@ -99,36 +99,36 @@ class RegistrationServiceImplTest {
         assertFalse(user.getLogin().length() >= MIN_LOGIN_LENGTH,
                 "Login must be at list 6 characters long");
 
-        assertThrows(CustomException.class, () -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Registration should throw Custom exception"
                         + " when login length is less than 6 characters");
         assertTrue(Storage.people.isEmpty(), "Storage must be empty");
     }
 
     @Test
-    void loginIsNull_NotOk() {
+    void login_IsNull_NotOk() {
         User user = new User();
         user.setPassword("password");
         user.setAge(33);
 
-        assertThrows(CustomException.class, () -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Login can't be null, login must be at list 6 characters long");
         assertTrue(Storage.people.isEmpty(), "Storage must be empty");
     }
 
     @Test
-    void passwordIsNull_NotOk() {
+    void password_IsNull_NotOk() {
         User user = new User();
         user.setLogin("testlogin");
         user.setAge(33);
 
-        assertThrows(CustomException.class, () -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Password is empty, password must be at list 6 characters long");
         assertTrue(Storage.people.isEmpty(), "Storage must be empty");
     }
 
     @Test
-    void passwordIsValid_Ok() {
+    void password_IsValid_Ok() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("password");
@@ -142,19 +142,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsShort_NotOk() {
+    void password_IsShort_NotOk() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("pass");
         user.setAge(33);
 
-        assertThrows(CustomException.class, () -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Password must be at list 6 characters long");
         assertTrue(Storage.people.isEmpty(), "Storage must be empty");
     }
 
     @Test
-    void passwordIsLong_Ok() {
+    void password_IsLong_Ok() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("passwordislong");
@@ -167,30 +167,30 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsNull_NotOk() {
+    void age_IsNull_NotOk() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("password");
 
-        assertThrows(CustomException.class, () -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User age is null, must be minimum 18");
         assertTrue(Storage.people.isEmpty(), "Storage must be empty");
     }
 
     @Test
-    void ageIsUnderRequirements_NotOk() {
+    void age_IsUnderRequirements_NotOk() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("password");
         user.setAge(17);
 
-        assertThrows(CustomException.class, () -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User age must be at list 18 y.o.");
         assertTrue(Storage.people.isEmpty(), "Storage must be empty");
     }
 
     @Test
-    void ageIsHigh_Ok() {
+    void age_IsHigh_Ok() {
         User user = new User();
         user.setLogin("testlogin");
         user.setPassword("password");
