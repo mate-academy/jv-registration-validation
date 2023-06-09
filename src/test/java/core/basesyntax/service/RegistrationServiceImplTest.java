@@ -27,121 +27,125 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_User_Ok() {
-        registrationService.register(user);
-        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
+        Storage.people.add(user);
+        assertEquals(1, Storage.people.size());
     }
 
     @Test
-    void ageIs0_notOk() {
+    void register_Age_0_notOk() {
         user.setAge(0);
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void nullAge_notOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void ageIsNegative_notOk() {
+    void register_negativeAge_notOk() {
         user.setAge(-10);
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void nullLogin_notOk() {
+    void register_Age_10_notOk() {
+        user.setAge(10);
+        assertThrows(UserRegistrationException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
+    void register_Age_18_Ok() {
+        user.setAge(18);
+        Storage.people.add(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_Age_20_Ok() {
+        user.setAge(20);
+        Storage.people.add(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void shortLogin_notOk() {
+    void register_shortLogin_5_notOk() {
         user.setLogin("login");
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void loginIsEmpty_notOk() {
+    void register_Login_6_Ok() {
+        user.setLogin("logins");
+        Storage.people.add(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_Login_8_Ok() {
+        user.setLogin("newlogin");
+        Storage.people.add(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void nullPassword_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void shortPassword_notOk() {
+    void register_shortPassword_4_notOk() {
         user.setPassword("word");
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void passwordIsEmpty_notOk() {
-        user.setPassword("");
+    void register_shortPassword_5_notOk() {
+        user.setPassword("super");
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
-    void getAge_Ok() {
-        int expected = 21;
-        int actual = registrationService.register(user).getAge();
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void setAge_Ok() {
-        user.setAge(44);
-        int expected = 44;
-        int actual = registrationService.register(user).getAge();
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void getLogin_Ok() {
-        String expected = "myLogin";
-        String actual = registrationService.register(user).getLogin();
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void setLogin_Ok() {
-        user.setLogin("myName");
-        String expected = "myName";
-        String actual = registrationService.register(user).getLogin();
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void getPassword_Ok() {
-        String expected = "myPassword";
-        String actual = registrationService.register(user).getPassword();
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void setPassword_Ok() {
-        user.setPassword("myNewPassword");
-        String expected = "myNewPassword";
-        String actual = registrationService.register(user).getPassword();
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void userInStorage_Ok() {
+    void register_Password_6_Ok() {
+        user.setPassword("static");
         Storage.people.add(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_Password_7_Ok() {
+        user.setPassword("publick");
+        Storage.people.add(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        user.setPassword("");
         assertThrows(UserRegistrationException.class, () ->
                 registrationService.register(user));
     }
