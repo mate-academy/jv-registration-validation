@@ -8,6 +8,10 @@ public class User {
     private String password;
     private Integer age;
 
+    //We use this constructor to be capable to initialize
+    //a new User with login, password and age
+    //, so we are sure the User has appropriate data and
+    // is ready to be added to the Storage of Users
     public User(String login, String password, Integer age) {
         this.login = login;
         this.password = password;
