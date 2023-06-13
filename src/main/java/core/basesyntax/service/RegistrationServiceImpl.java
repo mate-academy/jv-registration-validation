@@ -23,14 +23,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     public boolean checkLogin(String login) {
         if (login == null) {
             throw new RegistrationException(
-                    "Login can't be empty, login must be at list 6 characters long"
+                    "Login can't be empty, login must be at least "
+                            + REQUIRED_LOGIN_LENGTH
+                            + " characters long"
             );
         }
         if (storageDao.get(login) != null) {
             throw new RegistrationException("User with such login is already registered");
         }
         if (login.length() < REQUIRED_LOGIN_LENGTH) {
-            throw new RegistrationException("User login must be at least 6 characters long");
+            throw new RegistrationException("User login must be at least "
+                    + REQUIRED_LOGIN_LENGTH
+                    + " characters long"
+            );
         }
         return true;
     }
@@ -41,7 +46,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be empty");
         }
         if (password.length() < REQUIRED_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password must be at least 6 characters long");
+            throw new RegistrationException("Password must be at least "
+                    + REQUIRED_PASSWORD_LENGTH
+                    + " characters long"
+            );
         }
         return passwordIsOk;
     }
@@ -52,7 +60,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User age can't be empty or null");
         }
         if (age < MINIMUM_AGE_REQUIREMENTS) {
-            throw new RegistrationException("User age must be at least 18");
+            throw new RegistrationException("User age must be at least "
+                    + MINIMUM_AGE_REQUIREMENTS
+            );
         }
         return ageIsOk;
     }
