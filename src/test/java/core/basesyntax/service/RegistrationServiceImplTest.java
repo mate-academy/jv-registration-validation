@@ -49,7 +49,8 @@ class RegistrationServiceImplTest {
         Storage.people.add(defaultUser);
         User result = storageDao.get(defaultUser.getLogin());
         assertNotNull(storageDao.get(defaultUser.getLogin()));
-        assertEquals(defaultUser, result, "User saved to storage must be the same as User was created");
+        assertEquals(defaultUser, result,
+                "User saved to storage must be the same as User was created");
     }
 
     @Test
@@ -179,9 +180,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void checkAge_ageIsHigh_Ok() {
-        assertTrue(defaultUser.getAge() >= MIN_AGE, "User age must be at list " + MIN_AGE + " y.o.");
+        assertTrue(defaultUser.getAge() >= MIN_AGE,
+                "User age must be at list " + MIN_AGE + " y.o.");
         registrationService.register(defaultUser);
-        assertNotNull(storageDao.get(defaultUser.getLogin()), "User must be added to storage");
+        assertNotNull(storageDao.get(defaultUser.getLogin()),
+                "User must be added to storage");
     }
 
     @AfterEach
