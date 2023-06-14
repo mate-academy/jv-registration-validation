@@ -31,59 +31,54 @@ class RegistrationServiceImplTest {
         defaultUser.setLogin("testLogin");
         defaultUser.setPassword("testPassword");
         defaultUser.setAge(33);
-
     }
 
     @Test
-    void register_ReturnValidUser_Ok() {
+    void register_returnValidUser_ok() {
         registrationService.register(defaultUser);
 
-        User result = storageDao.get(defaultUser.getLogin());
+        User savedUser = storageDao.get(defaultUser.getLogin());
         assertNotNull(storageDao.get(defaultUser.getLogin()), "User should be added to storage");
-        assertEquals(defaultUser, result, "Returned user should be the same as user added");
+        assertEquals(defaultUser, savedUser, "Returned user should be the same as user added");
     }
 
     @Test
-    void checkLogin_LoginUnique_Ok() {
+    void register_loginIsUnique_ok() {
         assertNull(storageDao.get(defaultUser.getLogin()), "Login must be unique");
         Storage.people.add(defaultUser);
-        User result = storageDao.get(defaultUser.getLogin());
+        User savedUser = storageDao.get(defaultUser.getLogin());
         assertNotNull(storageDao.get(defaultUser.getLogin()));
-        assertEquals(defaultUser, result,
+        assertEquals(defaultUser, savedUser,
                 "User saved to storage must be the same as User was created");
     }
 
     @Test
-    void checkLogin_loginExists_NotOk() {
+    void register_loginExists_notOk() {
         User uniqueUser = defaultUser;
         Storage.people.add(uniqueUser);
 
         User notUniqueUser = defaultUser;
-        assertNotNull(storageDao.get(uniqueUser.getLogin()),
-                "This user must be present in storage");
-        assertEquals(uniqueUser, notUniqueUser,
-                "Can't register user, this login already in use");
         assertThrows(RegistrationException.class, () ->
                         registrationService.register(notUniqueUser),
                 "Registration should throw Custom Exception when login already exists");
     }
 
     @Test
-    void checkLogin_loginLength_Ok() {
+    void register_loginLength_ok() {
         User user = defaultUser;
         Storage.people.add(user);
-        User result = storageDao.get(user.getLogin());
+        User savedUser = storageDao.get(user.getLogin());
 
         assertTrue(user.getLogin().length() >= MIN_LOGIN_LENGTH,
                 "Login must be at least "
                         + MIN_LOGIN_LENGTH
                         + " characters long"
         );
-        assertEquals(user, result, "User login must be saved to storage");
+        assertEquals(user, savedUser, "User login must be saved to storage");
     }
 
     @Test
-    void checkLogin_loginLengthIsShort_NotOk() {
+    void register_loginLengthIsShort_notOk() {
         defaultUser.setLogin("art");
 
         assertFalse(defaultUser.getLogin().length() >= MIN_LOGIN_LENGTH,
@@ -101,7 +96,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkLogin_loginIsNull_NotOk() {
+    void register_loginIsNull_notOk() {
         defaultUser.setLogin("");
 
         assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser),
@@ -113,7 +108,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkPassword_passwordIsNull_NotOk() {
+    void register_passwordIsNull_notOk() {
         defaultUser.setPassword("");
 
         assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser),
@@ -125,20 +120,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkPassword_passwordIsValid_Ok() {
+    void register_passwordIsValid_ok() {
+        defaultUser.setPassword("qwerty");
         registrationService.register(defaultUser);
 
-        assertTrue(defaultUser.getLogin().length() >= MIN_PASSWORD_LENGTH,
+        assertTrue(defaultUser.getPassword().length() >= MIN_PASSWORD_LENGTH,
                 "Password must be at least "
                         + MIN_PASSWORD_LENGTH
                         + " characters long"
         );
-        User result = storageDao.get(defaultUser.getLogin());
-        assertEquals(defaultUser, result, "User must be added to storage");
+        User savedUser = storageDao.get(defaultUser.getLogin());
+        assertEquals(defaultUser, savedUser, "User must be added to storage");
     }
 
     @Test
-    void checkPassword_passwordIsShort_NotOk() {
+    void register_passwordIsShort_notOk() {
         defaultUser.setPassword("qwe");
 
         assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser),
@@ -150,8 +146,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkPassword_passwordIsLong_Ok() {
-        assertTrue(defaultUser.getLogin().length() >= MIN_PASSWORD_LENGTH,
+    void register_passwordEdgeCase_notOk() {
+        defaultUser.setPassword("qwert");
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser),
+                "Password must be at least "
+                        + MIN_PASSWORD_LENGTH
+                        + " characters long"
+        );
+        assertTrue(Storage.people.isEmpty(), "Storage must be empty");
+    }
+
+    @Test
+    void register_passwordEdgeCase_ok() {
+        defaultUser.setPassword("qwertyui");
+
+        assertTrue(defaultUser.getPassword().length() >= MIN_PASSWORD_LENGTH,
                 "Password must be at least "
                         + MIN_PASSWORD_LENGTH
                         + " characters long"
@@ -161,7 +171,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkAge_ageIsNull_NotOk() {
+    void register_passwordIsLong_ok() {
+        assertTrue(defaultUser.getPassword().length() >= MIN_PASSWORD_LENGTH,
+                "Password must be at least "
+                        + MIN_PASSWORD_LENGTH
+                        + " characters long"
+        );
+        registrationService.register(defaultUser);
+        assertNotNull(storageDao.get(defaultUser.getLogin()), "User must be added to storage");
+    }
+
+    @Test
+    void register_ageIsNull_notOk() {
         defaultUser.setAge(null);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser),
@@ -170,7 +191,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkAge_ageIsLow_NotOk() {
+    void register_ageIsLow_notOk() {
         defaultUser.setAge(15);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser),
@@ -179,9 +200,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkAge_ageIsHigh_Ok() {
-        assertTrue(defaultUser.getAge() >= MIN_AGE,
-                "User age must be at list " + MIN_AGE + " y.o.");
+    void register_ageIsHigh_ok() {
+        defaultUser.setAge(35);
+
         registrationService.register(defaultUser);
         assertNotNull(storageDao.get(defaultUser.getLogin()),
                 "User must be added to storage");
