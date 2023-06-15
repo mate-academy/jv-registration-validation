@@ -5,9 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int YEAR = 1;
     private static final int MIN_AGE = 18;
-    private static final int MIN_CHAR_TO_CREATE_LOGIN_OR_PASSWORD = 6;
+    private static final int MIN_CREDENTIAL_LENGTH = 6;
+
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -19,22 +19,19 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Needed password for registration process");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("Try another one");
+            throw new RegistrationException("User with this login already exists");
         }
-        if (user.getLogin().length() < MIN_CHAR_TO_CREATE_LOGIN_OR_PASSWORD) {
+        if (user.getLogin().length() < MIN_CREDENTIAL_LENGTH) {
             throw new RegistrationException("Login should have at least 6 characters");
         }
-        if (user.getPassword().length() < MIN_CHAR_TO_CREATE_LOGIN_OR_PASSWORD) {
+        if (user.getPassword().length() < MIN_CREDENTIAL_LENGTH) {
             throw new RegistrationException("Password should have at least 6 characters");
         }
         if (user.getAge() == null) {
             throw new RegistrationException("Enter Your age");
         }
-        if ((user.getAge() < MIN_AGE) && (MIN_AGE - user.getAge() != YEAR)) {
-            throw new RegistrationException("Come again in "
-                    + (MIN_AGE - user.getAge()) + "years");
-        } else if (MIN_AGE - user.getAge() == YEAR) {
-            throw new RegistrationException("Come again in " + (MIN_AGE - user.getAge() + "year"));
+        if ((user.getAge() < MIN_AGE)) {
+            throw new RegistrationException("Come again in later");
         }
         return storageDao.add(user);
     }

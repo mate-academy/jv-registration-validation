@@ -24,7 +24,7 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
     }
 
-    public User createUser(String login, String password, int age) {
+    private User createUser(String login, String password, int age) {
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
@@ -33,7 +33,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginExist_NotOk() {
+    void register_loginExist_NotOk() {
         User user1 = createUser("gooodlogin@gmail.com", "bayraktar",
                 27);
         registrationService.register(user1);
@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkAge_Ok() {
+    void register_checkAge_Ok() {
         User user1 = createUser("gooooodlogin@gmail.com", "bayraktar",
                 27);
         registrationService.register(user1);
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkAge_NotOk() {
+    void register_checkAge_NotOk() {
         User user1 = createUser("goodlogiin@gmail.com", "bayraktar",
                 17);
         assertThrows(RegistrationException.class, () -> {
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageNull_NotOk() {
+    void register_ageNull_NotOk() {
         User user1 = new User();
         user1.setAge(null);
         user1.setPassword("12346987");
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkPassword_Ok() throws RegistrationException {
+    void register_checkPassword_Ok() throws RegistrationException {
         User user1 = createUser("goodlogin@gmail.com", "bayraktar",
                 18);
         registrationService.register(user1);
@@ -80,7 +80,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkPasswordLength_NotOk() {
+    void register_checkPasswordLength_NotOk() {
         User user1 = createUser("goodlogin@gmail.com", "", 19);
         User user2 = createUser("goodlogin2gmmail.com", "99999", 23);
         assertThrows(RegistrationException.class, () -> {
@@ -126,7 +126,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkLoginNull_Ok() {
+    void register_checkLoginNull_NotOk() {
         User user1 = new User();
         user1.setAge(26);
         user1.setPassword("956238");
