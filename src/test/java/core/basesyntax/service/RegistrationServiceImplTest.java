@@ -1,124 +1,97 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String NULL_TESTER_STRING = null;
+    private static final Integer NULL_TESTER_INT = null;
+    private RegistrationService registrationService;
 
-    private static RegistrationServiceImpl registrationService;
-    private StorageDaoImpl storageDao;
-
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    public void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @BeforeEach
-    void setUp() {
-        storageDao = new StorageDaoImpl();
+    @Test
+    public void testRegister_ValidUser_Ok() throws RegistrationException {
+        User user = createDefaultUser();
+        User registeredUser = registrationService.register(user);
+        Assertions.assertEquals(user, registeredUser);
     }
 
-    public User createUser(String login, String password, int age) {
+    @Test
+    public void testRegister_UserWithExistingLogin_NotOk() {
+        User user1 = createDefaultUser();
+        User user2 = createDefaultUser();
+        user2.setPassword("password2");
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user1);
+            registrationService.register(user2);
+        });
+    }
+
+    @Test
+    public void testRegister_InvalidLoginLength_NotOk() {
+        User user = createDefaultUser();
+        user.setLogin("Dima");
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void testRegister_InvalidPasswordLength_NotOk() {
+        User user = createDefaultUser();
+        user.setPassword("pass");
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void testRegister_UnderageUser_NotOk() {
+        User user = createDefaultUser();
+        user.setAge(15);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void testRegister_LoginNull_NotOk() {
+        User user = createDefaultUser();
+        user.setLogin(NULL_TESTER_STRING);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void testRegister_PasswordNull_NotOk() {
+        User user = createDefaultUser();
+        user.setPassword(NULL_TESTER_STRING);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void testRegister_AgeNull_NotOk() {
+        User user = createDefaultUser();
+        user.setAge(NULL_TESTER_INT);
+        Assertions.assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    private User createDefaultUser() {
         User user = new User();
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(age);
+        user.setLogin("Dima123");
+        user.setPassword("password");
+        user.setAge(20);
         return user;
-    }
-
-    @Test
-    void register_Check_Age_Ok() {
-        User user1 = createUser("john1993", "123456", 20);
-        User user2 = createUser("jack1993", "123456", 18);
-        registrationService.register(user1);
-        registrationService.register(user2);
-        assertEquals(storageDao.get("john1993"), user1);
-        assertEquals(storageDao.get("jack1993"), user2);
-    }
-
-    @Test
-    void register_Check_Age_NotOk() {
-        User user1 = createUser("qwerty123", "123456", 15);
-        User user2 = createUser("wanted567", "123456", 12);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
-        });
-    }
-
-    @Test
-    void register_Check_LoginNull_NotOk() {
-        User user1 = createUser(null, "12345ppp6", 20);
-        User user2 = createUser(null, "123456789", 25);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
-        });
-    }
-
-    @Test
-    void register_Check_LoginLessLenght_Ok() {
-        User user1 = createUser("Dima_ops", "12345ppp6", 20);
-        User user2 = createUser("Angelika", "123456789", 25);
-        registrationService.register(user1);
-        registrationService.register(user2);
-        assertEquals(storageDao.get("Dima_ops"), user1);
-        assertEquals(storageDao.get("Angelika"), user2);
-    }
-
-    @Test
-    void register_Check_LoginLessLenght_NotOk() {
-        User user1 = createUser("Dima", "12345ppp6", 20);
-        User user2 = createUser("Ange", "123456789", 25);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
-        });
-    }
-
-    @Test
-    void register_Check_PasswordNull_NotOk() {
-        User user1 = createUser("qwerty1234", null, 20);
-        User user2 = createUser("teddybear", null, 25);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
-        });
-    }
-
-    @Test
-    void register_Check_PasswordMinLenght_Ok() {
-        User user1 = createUser("qwerty1234", "123456", 20);
-        User user2 = createUser("teddybear", "makaroN", 25);
-        registrationService.register(user1);
-        registrationService.register(user2);
-        assertEquals(storageDao.get("qwerty1234"), user1);
-        assertEquals(storageDao.get("teddybear"), user2);
-    }
-
-    @Test
-    void register_Check_PasswordMinLenght_NotOk() {
-        User user1 = createUser("qwerty1234", "tr8", 20);
-        User user2 = createUser("teddybear", "789", 25);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
-        });
     }
 }

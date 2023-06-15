@@ -22,16 +22,16 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + "Try another login");
         }
         if (user.getLogin().length() < MIN_CHARACTERS_FOR_LOGIN_PASSWORD) {
-            throw new RegistrationException("User login length is less than 6");
+            throw new RegistrationException("User login length is less than MIN_CHARACTERS_FOR_LOGIN_PASSWORD");
         }
         if (user.getPassword().length() < MIN_CHARACTERS_FOR_LOGIN_PASSWORD) {
-            throw new RegistrationException("User password length is less than 6");
+            throw new RegistrationException("User password length is less than MIN_CHARACTERS_FOR_LOGIN_PASSWORD");
         }
         if (user.getAge() == null) {
-            throw new RegistrationException("User age was not null");
+            throw new RegistrationException("User age was null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("User age less than 18");
+            throw new RegistrationException("User age less than MIN_AGE");
         }
         return storageDao.add(user);
     }
