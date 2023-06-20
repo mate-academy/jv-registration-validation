@@ -44,6 +44,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Not valid age: " + user.getAge()
                     + ", min age = " + ADULT_AGE);
         }
+        if (user.getAge() < 0) {
+            throw new InvalidDataException("Not valid age: " + user.getAge()
+                    + ", age should be positive");
+        }
         if (user.getLogin() != null) {
             User dubledUser = storageDao.get(user.getLogin());
             if (dubledUser != null) {

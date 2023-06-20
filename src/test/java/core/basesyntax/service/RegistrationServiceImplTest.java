@@ -104,6 +104,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_notValidAge_notOk() {
+        actualUser.setAge(17);
+        expectedUser.setAge(17);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actualUser));
+        actualUser.setAge(-1);
+        expectedUser.setAge(-1);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actualUser));
+    }
+
+    @Test
     void register_validUser_Ok() {
         actualUser = registrationService.register(actualUser);
         assertEquals(expectedUser, actualUser);
@@ -111,7 +121,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_dublicatedUser_notOk() {
-        registrationService.register(actualUser);
+        Storage.people.add(actualUser);
         assertThrows(InvalidDataException.class, () -> registrationService.register(actualUser));
     }
 }
