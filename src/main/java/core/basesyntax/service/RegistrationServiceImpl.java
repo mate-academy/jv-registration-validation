@@ -19,14 +19,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         String login = user.getLogin();
         String password = user.getPassword();
-        int age = user.getAge();
+        Integer age = user.getAge();
 
-        if (login == null || password == null || age == 0) {
-            throw new InvalidUserException("");
+        if (login == null || password == null || age == null) {
+            throw new InvalidUserException("Invalid data:"
+                    + " login,data,age can't be null");
         }
         if (login.length() < MIN_LOGIN_LENGTH
                 || password.length() < MIN_PASSWORD_LENGTH || age < MIN_USER_AGE) {
-            throw new InvalidUserException("Invalid user data");
+            throw new InvalidUserException("Invalid user data: "
+                    + "password and login must include at least six characters "
+                    + "age must be at least 18");
         }
         User existingUser = storageDao.get(login);
         if (existingUser != null) {
