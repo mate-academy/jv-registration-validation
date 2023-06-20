@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_Password_Ok() {
+    void register_validPassword_Ok() {
         actualUser.setPassword("qwerty");
         actualUser = registrationService.register(actualUser);
         expectedUser.setPassword("qwerty");
