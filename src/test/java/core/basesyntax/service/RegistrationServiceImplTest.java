@@ -119,7 +119,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsEighteen_Ok() {
+    void register_userAgeIsMinimum_Ok() {
         User userEighteenAge = new User("shevchenko", "password", 18);
         assertEquals(userEighteenAge, registrationService.register(userEighteenAge));
     }
