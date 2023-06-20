@@ -17,12 +17,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with such login is already in the storage");
         }
-        if (user.getLogin() == null || user.getLogin().length() < MIN_CHAR
-                || user.getLogin().isBlank()) {
-            throw new RegistrationException("Login can't be empty or less than " + MIN_AGE);
+        if (user.getLogin() == null || user.getLogin().length() < MIN_CHAR) {
+            throw new RegistrationException("Login can't be empty or less than " + MIN_CHAR);
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_CHAR
-                || user.getPassword().isBlank()) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_CHAR) {
             throw new RegistrationException("Password can't be null or less than " + MIN_CHAR);
         }
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
