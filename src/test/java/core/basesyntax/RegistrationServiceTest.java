@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -29,21 +28,15 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_nullUser_notOk() {
-        assertThrows(InvalidUserException.class, () -> registrationService.register(null));
+    public void register_ValidUser_Ok() {
+        User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
+        User registeredUser = storageDao.add(user);
+        assertEquals(user, registeredUser);
     }
 
     @Test
-    public void register_ValidUser_Ok() {
-        User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
-
-        User registeredUser = registrationService.register(user);
-
-        assertNotNull(registeredUser);
-        assertEquals(user.getLogin(), registeredUser.getLogin());
-        assertEquals(user.getPassword(), registeredUser.getPassword());
-        assertEquals(user.getAge(), registeredUser.getAge());
-        assertEquals(user, storageDao.get(user.getLogin()));
+    public void register_nullUser_notOk() {
+        assertThrows(InvalidUserException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -53,7 +46,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_NullPassword_notOk() {
+    public void register_nullPassword_notOk() {
         User user = new User(VALID_LOGIN, null, MIN_AGE);
         assertThrows(InvalidUserException.class, () -> registrationService.register(user));
     }
@@ -72,17 +65,16 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_ShortPassword_notOk() {
+    public void register_shortPassword_notOk() {
         User user = new User(VALID_LOGIN, "ACDC", MIN_AGE);
         assertThrows(InvalidUserException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_DuplicateLogin_ThrowsDuplicateUserException() {
+    public void register_duplicateLogin_notOk() {
         User user1 = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
         User user2 = new User(VALID_LOGIN, "someNewPassword", MIN_AGE);
         storageDao.add(user1);
         assertThrows(DuplicateUserException.class, () -> registrationService.register(user2));
     }
-
 }

@@ -10,6 +10,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_USER_AGE = 18;
+    private static final String USER_REQUIREMENTS = "Invalid user data: password "
+            + "and login must include at least six characters age must be at least 18";
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -27,9 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (login.length() < MIN_LOGIN_LENGTH
                 || password.length() < MIN_PASSWORD_LENGTH || age < MIN_USER_AGE) {
-            throw new InvalidUserException("Invalid user data: "
-                    + "password and login must include at least six characters "
-                    + "age must be at least 18");
+            throw new InvalidUserException(USER_REQUIREMENTS);
         }
         User existingUser = storageDao.get(login);
         if (existingUser != null) {
