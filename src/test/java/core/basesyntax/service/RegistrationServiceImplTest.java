@@ -3,131 +3,146 @@ package core.basesyntax.service;
 import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-
-    private final static int MIN_LENGTH_LOGIN = 6;
     private RegistrationService registration;
+    private User user1;
+    private User user2;
+    private User user3;
     @BeforeEach
     void setUp() {
         registration = new RegistrationServiceImpl();
     }
 
-    @Test
-    void add_notFindSuchLogin_ok() {
-        User differentLogin1 = new User("differentLogin1", "password", 18);
-        User differentLogin2 = new User("differentLogin2", "password", 18);
-        User differentLogin3 = new User("differentLogin3", "password", 18);
-        Storage.people.add(differentLogin1);
-        Storage.people.add(differentLogin2);
-        Storage.people.add(differentLogin3);
-        assertEquals(Storage.people.size(), Storage.people.size());
+    @AfterEach
+    void tearDown() {
+        Storage.people = new ArrayList<>();
     }
 
     @Test
-    void add_findSuchLogin_notOK() {
-        User sameLogin1 = new User("sameLogin", "password", 18);
-        User differentUser1 = new User("differentLogin1", "password", 18);
-        Storage.people.add(sameLogin1);
-        Storage.people.add(differentUser1);
-        assertThrows(RegistrationException.class, () ->
-                Storage.people.add(new User("sameLogin", "password", 18)));
-        assertThrows(RegistrationException.class, () ->
-                Storage.people.add(new User("differentLogin2", "password", 18)));
+    void register_userNotNull_ok() {
+        user1 = new User("userLogin", "password", 18);
+        user2 = new User("user22", "password", 19);
+        assertEquals(user1, registration.register(user1));
+        assertEquals(user2, registration.register(user2));
     }
 
     @Test
-    void add_loginIsValid_ok() {
-        User loginIsValid1 = new User("loginValid", "password", 18);
-        User loginIsValid2 = new User("loginValidAlso", "password", 18);
-        User loginIsValid3 = new User("AlsoLoginValid", "password", 18);
-        User loginIsValid4 = new User("login!", "password", 18);
-        User loginNotValid1 = new User("log", "password", 18);
-        User loginNotValid2 = new User("not", "password", 18);
-        User loginNotValid3 = new User("valid", "password", 18);
-        Storage.people.add(loginIsValid1);
-        Storage.people.add(loginIsValid2);
-        Storage.people.add(loginIsValid3);
-        Storage.people.add(loginIsValid4);
-        Storage.people.add(loginNotValid2);
-        Storage.people.add(loginNotValid3);
-        assertTrue(loginIsValid1.getLogin().length() >= MIN_LENGTH_LOGIN);
-        assertTrue(loginIsValid2.getLogin().length() >= MIN_LENGTH_LOGIN);
-        assertTrue(loginIsValid3.getLogin().length() >= MIN_LENGTH_LOGIN);
-        assertTrue(loginIsValid4.getLogin().length() >= MIN_LENGTH_LOGIN);
-        assertThrows(RegistrationException.class, () -> Storage.people.add(loginNotValid1));
-        assertThrows(RegistrationException.class, () -> Storage.people.add(loginNotValid2));
-        assertThrows(RegistrationException.class, () -> Storage.people.add(loginNotValid3));
+    void register_userIsNull_notOk() {
+        user1 = null;
+        assertThrows(RegistrationException.class, () -> registration.register(user1));
     }
 
     @Test
-    void add_loginNotValid_notOk() {
-        User loginNotValid1 = new User("log", "password", 18);
-        User loginNotValid2 = new User("not", "password", 18);
-        User loginNotValid3 = new User("valid", "password", 18);
-        assertTrue(loginNotValid1.getLogin().length() < MIN_LENGTH_LOGIN);
-        assertTrue(loginNotValid2.getLogin().length() < MIN_LENGTH_LOGIN);
-        assertTrue(loginNotValid3.getLogin().length() < MIN_LENGTH_LOGIN);
-
+    void register_notFindSuchLogin_ok() {
+        user1 = new User("differentLogin1", "password", 18);
+        user2 = new User("differentLogin2", "password", 18);
+        assertEquals(user1, registration.register(user1));
+        assertEquals(user2, registration.register(user2));
     }
 
     @Test
-    void add_loginNotNull_ok() {
+    void register_findSuchLogin_notOK() {
+        user1 = new User("login", "password", 18);
+        user2 = new User("login", "password", 18);
+        Storage.people.add(user1);
+        assertThrows(RegistrationException.class, () -> registration.register(user2));
     }
 
     @Test
-    void add_loginIsNull_notOk() {
+    void register_loginNotNull_ok() {
+        user1 = new User("notNull", "password", 18);
+        assertEquals(user1, registration.register(user1));
     }
 
     @Test
-    void add_loginNotEmpty_oK() {
+    void register_loginIsNull_notOk() {
+        user1 = new User(null, "password", 20);
+        assertThrows(RegistrationException.class, () -> registration.register(user1));
     }
 
     @Test
-    void add_loginIsEmpty_notOk() {
+    void register_loginIsValid_ok() {
+        user1 = new User("validLogin", "password", 18);
+        user2 = new User("alsoValidLogin", "password", 20);
+        user3 = new User("edgeLo", "password", 19);
+        assertEquals(user1, registration.register(user1));
+        assertEquals(user2, registration.register(user2));
+        assertEquals(user3, registration.register(user3));
     }
 
     @Test
-    void add_passwordValid_ok() {
+    void register_loginNotValid_notOk() {
+        user1 = new User("edge", "password", 18);
+        user2 = new User("login", "password", 20);
+        assertThrows(RegistrationException.class, () -> registration.register(user1));
+        assertThrows(RegistrationException.class, () -> registration.register(user2));
     }
 
     @Test
-    void add_passwordNotValid_notOk() {
+    void register_passwordNotNull_ok() {
+        user1 = new User("uusseerr", "password", 18);
+        assertEquals(user1, registration.register(user1));
     }
 
     @Test
-    void add_passwordNotNull_ok() {
+    void register_passwordIsNull_notOk() {
+        user1 = new User("userLogin",  null, 20);
+        assertThrows(RegistrationException.class, () -> registration.register(user1));
     }
 
     @Test
-    void add_passwordIsNull_notOk() {
+    void register_passwordValid_ok() {
+        user1 = new User("userLogin", "edgeca", 20);
+        user2 = new User("userLogin2", "ppaasswwoorrdd", 21);
+        assertEquals(user1, registration.register(user1));
+        assertEquals(user2, registration.register(user2));
     }
 
     @Test
-    void add_passwordNotEmpty_ok() {
+    void register_passwordNotValid_notOk() {
+        user1 = new User("userLogin", "cedge", 20);
+        user2 = new User("userLogin2", "dge", 20);
+        assertThrows(RegistrationException.class, () -> registration.register(user1));
+        assertThrows(RegistrationException.class, () -> registration.register(user2));
     }
 
     @Test
-    void add_passwordIsEmpty_notOk() {
+    void register_ageNotNull_ok() {
+        user1 = new User("userLogin", "password", 45);
+        assertEquals(user1, registration.register(user1));
     }
 
     @Test
-    void add_ageIsValid_ok() {
+    void register_ageIsNull_notOk() {
+        user1 = new User("userLogin", "password", null);
+        assertThrows(RegistrationException.class, () -> registration.register(user1));
     }
 
     @Test
-    void add_ageNotValid_notOK() {
+    void register_ageIsValid_ok() {
+        user1 = new User("userLogin1", "password", 18);
+        user2 = new User("userLogin2", "password", 78);
+        user3 = new User("userLogin3", "password", 100);
+        assertEquals(user1, registration.register(user1));
+        assertEquals(user2, registration.register(user2));
+        assertEquals(user3, registration.register(user3));
     }
 
     @Test
-    void add_ageNotNull_ok() {
-    }
-
-    @Test
-    void add_ageIsNull_notOk() {
+    void register_ageNotValid_notOK() {
+        user1 = new User("userLogin1", "password", 17);
+        user2 = new User("userLogin2", "password", 10);
+        user3 = new User("userLogin3", "password", -1);
+        assertThrows(RegistrationException.class, () -> registration.register(user1));
+        assertThrows(RegistrationException.class, () -> registration.register(user2));
+        assertThrows(RegistrationException.class, () -> registration.register(user3));
     }
 }
