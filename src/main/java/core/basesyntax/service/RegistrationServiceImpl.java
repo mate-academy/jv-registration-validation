@@ -2,8 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.InvalidUserDataException;
-import core.basesyntax.exception.UserExistsException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -15,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        requireNotNull(user, "User cannot be null");
+        requireNotNull(user);
         validateUserExistence(user);
         validateUserLogin(user);
         validateUserPassword(user);
@@ -23,42 +22,42 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private void requireNotNull(Object o, String message) {
+    private void requireNotNull(Object o) {
         if (o == null) {
-            throw new IllegalArgumentException(message);
+            throw new RegistrationException("User cannot be null");
         }
     }
 
     private void validateUserExistence(User user) {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new UserExistsException("User with provided login already exists");
+            throw new RegistrationException("User with provided login already exists");
         }
     }
 
     private void validateUserLogin(User user) {
         if (user.getLogin() == null) {
-            throw new IllegalStateException("User's login cannot be null");
+            throw new RegistrationException("User's login cannot be null");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidUserDataException("User's login should be at least 6 symbols");
+            throw new RegistrationException("User's login should be at least 6 symbols");
         }
     }
 
     private void validateUserPassword(User user) {
         if (user.getPassword() == null) {
-            throw new IllegalStateException("User's password cannot be null");
+            throw new RegistrationException("User's password cannot be null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidUserDataException("User's password should be at least 6 symbols");
+            throw new RegistrationException("User's password should be at least 6 symbols");
         }
     }
 
     private void validateUserAge(User user) {
         if (user.getAge() == null) {
-            throw new IllegalStateException("User's age cannot be null");
+            throw new RegistrationException("User's age cannot be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new InvalidUserDataException("User should be at least 18 years old");
+            throw new RegistrationException("User should be at least 18 years old");
         }
     }
 }
