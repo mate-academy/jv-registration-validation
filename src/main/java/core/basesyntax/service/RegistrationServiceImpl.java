@@ -3,11 +3,10 @@ package core.basesyntax.service;
 import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-
 import java.util.List;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final static int MIN_LENGTH = 6;
+    private static final int MIN_LENGTH = 6;
     private static final Integer MIN_AGE = 18;
 
     @Override

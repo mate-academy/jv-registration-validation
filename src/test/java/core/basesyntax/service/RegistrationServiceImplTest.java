@@ -1,29 +1,23 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private RegistrationService registration;
     private User user1;
     private User user2;
     private User user3;
+
     @BeforeEach
     void setUp() {
         registration = new RegistrationServiceImpl();
-    }
-
-    @AfterEach
-    void tearDown() {
-        Storage.people = new ArrayList<>();
     }
 
     @Test
@@ -94,14 +88,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordIsNull_notOk() {
-        user1 = new User("userLogin",  null, 20);
+        user1 = new User("userLogin",null, 20);
         assertThrows(RegistrationException.class, () -> registration.register(user1));
     }
 
     @Test
     void register_passwordValid_ok() {
-        user1 = new User("userLogin", "edgeca", 20);
-        user2 = new User("userLogin2", "ppaasswwoorrdd", 21);
+        user1 = new User("userTest", "edgeca", 20);
+        user2 = new User("userLogin22", "ppaasswwoorrdd", 21);
         assertEquals(user1, registration.register(user1));
         assertEquals(user2, registration.register(user2));
     }
@@ -116,7 +110,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageNotNull_ok() {
-        user1 = new User("userLogin", "password", 45);
+        user1 = new User("userLoginAge", "password", 45);
         assertEquals(user1, registration.register(user1));
     }
 
