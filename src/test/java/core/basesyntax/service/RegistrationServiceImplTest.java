@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static core.basesyntax.db.Storage.getPeople;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -8,7 +9,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private StorageDao storageDao = new StorageDaoImpl();
     private RegistrationService registrationService = new RegistrationServiceImpl();
+    private Storage storage = new Storage();
     private User bob;
 
     @BeforeEach
@@ -25,7 +26,27 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        Storage.people = new ArrayList<>();
+        new Storage();
+    }
+
+    @Test
+    void register_registerUsersByCorrectData_ok() {
+        storageDao.add(bob);
+        bob.setLogin("bob_terminator");
+        storageDao.add(bob);
+        bob.setLogin("bob_jenkins");
+        storageDao.add(bob);
+        int actual = getPeople().size();
+        int expected = 3;
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_getUserByExistLogin_ok() {
+        storageDao.add(bob);
+        String actual = storageDao.get(bob.getLogin()).getLogin();
+        String expected = bob.getLogin();
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -54,31 +75,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addUserByAlreadyCreatedLogin_notOk() {
-        Storage.people.add(bob);
+        storageDao.add(bob);
         bob.setLogin("bob423");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(bob);
         });
-    }
-
-    @Test
-    void register_registerUsersByCorrectData_ok() {
-        Storage.people.add(bob);
-        bob.setLogin("bob_terminator");
-        Storage.people.add(bob);
-        bob.setLogin("bob_jenkins");
-        Storage.people.add(bob);
-        int actual = Storage.people.size();
-        int expected = 3;
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void register_getUserByExistLogin_ok() {
-        Storage.people.add(bob);
-        String actual = storageDao.get(bob.getLogin()).getLogin();
-        String expected = bob.getLogin();
-        assertEquals(expected, actual);
     }
 
     @Test
