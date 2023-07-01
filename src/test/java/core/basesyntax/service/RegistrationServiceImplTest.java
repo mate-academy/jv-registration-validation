@@ -5,12 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -31,8 +28,8 @@ class RegistrationServiceImplTest {
 
         User registeredUser = registrationService.register(user);
 
-        assertNotNull(registeredUser);
-        assertEquals(user, registeredUser);
+        Assertions.assertNotNull(registeredUser);
+        Assertions.assertEquals(user, registeredUser);
     }
 
     @Test
@@ -51,9 +48,9 @@ class RegistrationServiceImplTest {
         newUser.setPassword("newPassword");
         newUser.setAge(35);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
-        assertEquals("User with this login already exists", exception.getMessage());
+        Assertions.assertEquals("User with this login already exists", exception.getMessage());
     }
 
     @Test
@@ -63,9 +60,9 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         user.setAge(25);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals("Login can't be null", exception.getMessage());
+        Assertions.assertEquals("Login can't be null", exception.getMessage());
     }
 
     @Test
@@ -75,9 +72,9 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         user.setAge(25);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals("Login should be at least 6 characters", exception.getMessage());
+        Assertions.assertEquals("Login should be at least 6 characters", exception.getMessage());
     }
 
     @Test
@@ -87,9 +84,9 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         user.setAge(25);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals("Password can't be null", exception.getMessage());
+        Assertions.assertEquals("Password can't be null", exception.getMessage());
     }
 
     @Test
@@ -99,9 +96,9 @@ class RegistrationServiceImplTest {
         user.setPassword("abc");
         user.setAge(25);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals("Password should be at least 6 characters", exception.getMessage());
+        Assertions.assertEquals("Password should be at least 6 characters", exception.getMessage());
     }
 
     @Test
@@ -111,9 +108,9 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         user.setAge(null);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals("User must be at least 18 years old", exception.getMessage());
+        Assertions.assertEquals("User must be at least 18 years old", exception.getMessage());
     }
 
     @Test
@@ -123,9 +120,9 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         user.setAge(16);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals("User must be at least 18 years old", exception.getMessage());
+        Assertions.assertEquals("User must be at least 18 years old", exception.getMessage());
     }
 
     private static class TestStorageDao implements StorageDao {
