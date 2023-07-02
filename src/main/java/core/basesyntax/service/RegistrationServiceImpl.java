@@ -20,22 +20,26 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can't be null");
         }
         if (user.getLogin().length() <= MIN_LOGIN) {
-            throw new RegistrationException("Login error. Minimum login length must be greater than " + MIN_LOGIN);
+            throw new RegistrationException("Login error. Minimum login length must"
+                    + " be greater than " + MIN_LOGIN);
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
         }
         if (user.getPassword().length() <= MIN_PASSWORD) {
-            throw new RegistrationException("Login error. Minimum login length must be greater than " + MIN_PASSWORD);
+            throw new RegistrationException("Login error. Minimum login length must"
+                    + " be greater than " + MIN_PASSWORD);
         }
         if (user.getAge() == null) {
             throw new RegistrationException("Age can't be null");
         }
         if (user.getAge() <= 0) {
-            throw new RegistrationException("Not valid age: " + user.getAge() + ". Age can't be less than zero");
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ". Age can't be less than zero");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Not valid age: " + user.getAge() + ". Min allowed age is " + MIN_AGE);
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ". Min allowed age is " + MIN_AGE);
         }
         if (user.getLogin() != null) {
             User existedUser = storageDao.get(user.getLogin());
