@@ -1,123 +1,166 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.RegistrationException;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    public static final User NULL_USER = null;
-    public static final User USER_WITH_NULL_LOGIN = new User(null, "k!K#F6y97x", 21);
-    public static final User USER_WITH_NULL_PASSWORD = new User("Francesco Patterson", null, 20);
-    public static final User USER_WITH_NULL_AGE = new User("Jameson Anderson", "px2MF9%-p8", null);
-    public static final User USER_WITH_LOGIN_6_CHARACTERS = new User("Harris", "F42u(j(6Ef", 44);
-    public static final User USER_WITH_LOGIN_7_CHARACTERS = new User("Griffin", "2i2dZ_i9F;", 24);
-    public static final User USER_WITH_LOGIN_5_CHARACTERS = new User("Elian", "7;csyX@64Z", 37);
-    public static final User USER_WITH_EMPTY_LOGIN = new User("", "6y#X_hZx27", 22);
-    public static final User USER_WITH_PASSWORD_6_CHARACTERS = new User("Nixon Gray", "tjg^3U", 50);
-    public static final User USER_WITH_PASSWORD_7_CHARACTERS
-            = new User("Philip Anderson", "z;48uiU", 50);
-    public static final User USER_WITH_PASSWORD_5_CHARACTERS = new User("Diego Evans", "4t6)&", 29);
-    public static final User USER_WITH_EMPTY_PASSWORD = new User("Lukas Rodriguez", "", 49);
-    public static final User USER_WITH_ZERO_AGE = new User("Clayton Young", "6S+8(mc4Ku", 0);
-    public static final User USER_AGE_18 = new User("Collin Hayes", "6S+8(mc4Ku", 18);
-    public static final User USER_AGE_19 = new User("Pierson Lee", "7eLj7Jv(@9", 19);
-    public static final User USER_AGE_17 = new User("Jake Barnes", "sjK457_sP@", 17);
-    public static final User USER_WITH_NEGATIVE_AGE = new User("Clayton Young", "6S+8(mc4Ku", -20);
-    public static final User CORRECT_USER = new User("Oliver Gray", "bGcM@r55~6", 20);
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    public static final String STRING_5_CHARACTERS = "Elian";
+    public static final String STRING_6_CHARACTERS = "Harris";
+    public static final String STRING_7_CHARACTERS = "Griffin";
+    public static final String EMPTY_STRING = "";
+    public static final int NEGATIVE_AGE = -20;
+    public static final int ZERO_AGE = 0;
+    public static final int AGE_17 = 17;
+    public static final int AGE_18 = 18;
+    public static final int AGE_19 = 19;
+    private RegistrationService registrationService;
+    private User user;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
+        user = new User(STRING_6_CHARACTERS, STRING_6_CHARACTERS, AGE_18);
     }
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(NULL_USER));
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_nullLogin_notOk() {
+        user.setLogin(null);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_NULL_LOGIN));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
+        user.setPassword(null);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_NULL_PASSWORD));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
+        user.setAge(null);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_NULL_AGE));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_emptyLogin_notOk() {
+        user.setLogin(EMPTY_STRING);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_EMPTY_LOGIN));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_emptyPassword_notOk() {
+        user.setPassword(EMPTY_STRING);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_EMPTY_PASSWORD));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_zeroAge_notOk() {
+        user.setAge(ZERO_AGE);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_ZERO_AGE));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_login5Char_notOk() {
+        user.setLogin(STRING_5_CHARACTERS);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_LOGIN_5_CHARACTERS));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_password5Char_notOk() {
+        user.setPassword(STRING_5_CHARACTERS);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_PASSWORD_5_CHARACTERS));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_negativeAge_notOk() {
+        user.setAge(NEGATIVE_AGE);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(USER_WITH_NEGATIVE_AGE));
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_age17_notOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(USER_AGE_17));
+        user.setAge(AGE_17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_addExistUser_notOk() {
-        registrationService.register(CORRECT_USER);
-        assertThrows(RegistrationException.class, () -> registrationService.register(CORRECT_USER));
+        Storage.people.add(user);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_correctUsers_Ok() {
-        registrationService.register(USER_WITH_LOGIN_6_CHARACTERS);
-        registrationService.register(USER_WITH_LOGIN_7_CHARACTERS);
-        registrationService.register(USER_WITH_PASSWORD_6_CHARACTERS);
-        registrationService.register(USER_WITH_PASSWORD_7_CHARACTERS);
-        registrationService.register(USER_AGE_18);
-        registrationService.register(USER_AGE_19);
+    void register_userWithLogin6Characters_Ok() {
+        user.setLogin(STRING_6_CHARACTERS);
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_userWithLogin7Characters_Ok() {
+        user.setLogin(STRING_7_CHARACTERS);
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_userWithPassword6Characters_Ok() {
+        user.setPassword(STRING_6_CHARACTERS);
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_userWithPassword7Characters_Ok() {
+        user.setPassword(STRING_7_CHARACTERS);
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_userAge18_Ok() {
+        user.setAge(AGE_18);
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_userAge19_Ok() {
+        user.setAge(AGE_19);
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_multipleCall_Ok() {
         for (int i = 0; i < 1000; i++) {
-            registrationService.register(new User("User: " + i, "bGcM@r55~6", 20));
+            registrationService.register(new User(STRING_6_CHARACTERS
+                    + i, STRING_6_CHARACTERS, AGE_18));
         }
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
