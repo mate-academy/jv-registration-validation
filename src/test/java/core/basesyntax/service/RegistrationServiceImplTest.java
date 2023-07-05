@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.utility.RegistrationException;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,13 +14,11 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static List<User> storage;
     private static User initialUser;
 
     @BeforeAll
     static void initializeRegistrationService() {
         registrationService = new RegistrationServiceImpl();
-        storage = new ArrayList<>();
 
     }
 
