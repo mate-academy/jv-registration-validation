@@ -1,6 +1,8 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDaoImpl;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidUserDataException;
 import core.basesyntax.model.User;
@@ -8,8 +10,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final User NULL_USER = null;
@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        expectedUser = new User("correctLogin" , "correctPassword", 18);
+        expectedUser = new User("correctLogin", "correctPassword", 18);
     }
 
     @AfterEach
