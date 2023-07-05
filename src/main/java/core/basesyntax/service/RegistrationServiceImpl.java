@@ -11,7 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) {
+    public User register(User user) throws RegistrationException {
         if (user == null) {
             throw new RegistrationException("User should not be null");
         }
@@ -20,30 +20,32 @@ public class RegistrationServiceImpl implements RegistrationService {
         validateUserPassword(user);
         if (storageDao.get(user.getLogin()) == null) {
             storageDao.add(user);
+        } else {
+            throw new RegistrationException("User with such login already exists");
         }
         return user;
     }
 
     private void validateUserPassword(User user) {
-        if (user.getPassword().length() < MIN_SYMBOLS) {
-            throw new RegistrationException("User password should not be less than "
-                    + MIN_SYMBOLS + " symbols");
+        if (user.getPassword() == null) {
+            throw new RegistrationException("User password should not be null");
         }
         if (user.getPassword().isEmpty()) {
             throw new RegistrationException("User password should not be empty");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("User password should not be null");
+        if (user.getPassword().length() < MIN_SYMBOLS) {
+            throw new RegistrationException("User password should not be less than "
+                    + MIN_SYMBOLS + " symbols");
         }
     }
 
     private void validateUserAge(User user) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("User age should has null/empty value ");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("User age should not be less than "
                     + MIN_AGE + " ages");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("User age should has null/empty value ");
         }
         if (user.getAge() < 0) {
             throw new RegistrationException("User age should not be negative number ");
@@ -54,12 +56,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("User login should not be null value ");
         }
+        if (user.getLogin().isEmpty()) {
+            throw new RegistrationException("User login should not be empty");
+        }
         if (user.getLogin().length() < MIN_SYMBOLS) {
             throw new RegistrationException("User login should not be less than "
                     + MIN_SYMBOLS + " symbols");
-        }
-        if (user.getLogin().isEmpty()) {
-            throw new RegistrationException("User login should not be empty");
         }
     }
 }
