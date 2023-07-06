@@ -42,7 +42,7 @@ class UserTest {
 
     @Test
     void registerUser_nullLogin_exceptionThrown() {
-        User user = createUser (null, "password", 25);
+        User user = createUser(null, "password", 25);
 
         Assertions.assertThrows(InvalidDataException.class, () -> {
             validateUser(user);
@@ -69,7 +69,7 @@ class UserTest {
 
     @Test
     void registerUser_upperAgeLimit_validData_success() {
-        User user = createUser("john_doe","password",150);
+        User user = createUser("john_doe", "password", 150);
 
         Assertions.assertDoesNotThrow(() -> {
             validateUser(user);
