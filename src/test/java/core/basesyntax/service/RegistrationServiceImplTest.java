@@ -37,6 +37,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_Null_User_Validation() {
+        user = null;
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_shortLogin_NotOk() {
         user.setLogin("Bob");
         assertThrows(ValidationException.class, () -> {

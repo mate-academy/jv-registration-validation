@@ -13,6 +13,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new ValidationException("User cannot be null");
+        }
         if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new ValidationException("Login is too short, "
                     + "it must be more than 6 characters");
@@ -22,7 +25,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("Password is too short, "
                     + "it must be more than 6 characters");
         }
-
         if (user.getAge() == null
                 || user.getAge() < MIN_USER_AGE) {
             throw new ValidationException("Not valid age: " + user.getAge()
@@ -30,9 +32,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new ValidationException("User with this login exists try again");
-        }
-        if (user.getLogin() == null || user.getAge() == null || user.getPassword() == null) {
-            throw new ValidationException("Any user value cannot be null");
         }
         return storageDao.add(user);
     }
