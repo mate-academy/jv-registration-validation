@@ -11,22 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService;
     private static final String CORRECT_PASSWORD = "12345678";
     private static final String CORRECT_LOGIN = "TestLogin";
     private static final Integer CORRECT_AGE = 20;
-    private static final Integer AGE_EQUAL_5_YEARS = 5;
-    private static final Integer AGE_EQUAL_17_YEARS = 17;
-    private static final Integer AGE_EQUAL_18_YEARS = 18;
-    private static final Integer AGE_EQUAL_40_YEARS = 40;
     private static final int MIN_LOGIN_OR_PASSWORD_LENGTH = 6;
-    private static final String LOGIN_WITH_LENGTH_6 = "123456";
-    private static final String LOGIN_WITH_LENGTH_20 = "01234567890123456789";
-    private static final String PASSWORD_WITH_LENGTH_3 = "123";
-    private static final String PASSWORD_WITH_LENGTH_5 = "12345";
-    private static final String PASSWORD_WITH_LENGTH_6 = "123456";
-    private static final String PASSWORD_WITH_LENGTH_20 = "01234567890123456789";
     private static User correctUser;
+    private static RegistrationService registrationService;
 
     @BeforeAll
     static void beforeAll() {
@@ -69,7 +59,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkLoginLengthLessThan6_notOk() {
+    void register_checkLoginLengthLessThanRequired_notOk() {
         User userWithLoginLength0 = new User();
         userWithLoginLength0.setPassword(CORRECT_PASSWORD);
         userWithLoginLength0.setAge(CORRECT_AGE);
@@ -96,11 +86,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkLoginLengthEqualOrMore6_Ok() {
+    void register_checkLoginLengthEqualOrMoreThanRequired_Ok() {
         User testUser = new User();
         testUser.setPassword(CORRECT_PASSWORD);
         testUser.setAge(CORRECT_AGE);
-        testUser.setLogin(LOGIN_WITH_LENGTH_6);
+        testUser.setLogin("123456");
         int expectedStorageSize = Storage.people.size() + 1;
         User actualUser = registrationService.register(testUser);
         assertEquals(testUser, actualUser, "Register user" + actualUser
@@ -110,7 +100,7 @@ class RegistrationServiceImplTest {
                 "After registration Storage expected size is "
                 + expectedStorageSize + " but actual Storage size is " + actualStorageSize);
         testUser = new User();
-        testUser.setLogin(LOGIN_WITH_LENGTH_20);
+        testUser.setLogin("01234567890123456789");
         testUser.setPassword(CORRECT_PASSWORD);
         testUser.setAge(CORRECT_AGE);
         expectedStorageSize = Storage.people.size() + 1;
@@ -124,28 +114,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeLessThan18_notOk() {
+    void register_userAgeLessThanRequired_notOk() {
         User userWithAge5 = new User();
         userWithAge5.setPassword(CORRECT_PASSWORD);
         userWithAge5.setLogin(CORRECT_LOGIN);
-        userWithAge5.setAge(AGE_EQUAL_5_YEARS);
+        userWithAge5.setAge(5);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithAge5);
         });
         User userWithAge17 = new User();
         userWithAge17.setPassword(CORRECT_PASSWORD);
         userWithAge17.setLogin(CORRECT_LOGIN + "17");
-        userWithAge17.setAge(AGE_EQUAL_17_YEARS);
+        userWithAge17.setAge(17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithAge17);
         });
     }
 
     @Test
-    void register_userAgeEqualOrMoreThan18_Ok() {
+    void register_userAgeEqualOrMoreThanRequired_Ok() {
         User userWithAge18 = new User();
         userWithAge18.setPassword(CORRECT_PASSWORD);
-        userWithAge18.setAge(AGE_EQUAL_18_YEARS);
+        userWithAge18.setAge(18);
         userWithAge18.setLogin(CORRECT_LOGIN);
         int expectedStorageSize = Storage.people.size() + 1;
         User actualUser = registrationService.register(userWithAge18);
@@ -159,7 +149,7 @@ class RegistrationServiceImplTest {
         User userWithAge40 = new User();
         userWithAge40.setLogin(CORRECT_LOGIN + "40");
         userWithAge40.setPassword(CORRECT_PASSWORD);
-        userWithAge40.setAge(AGE_EQUAL_40_YEARS);
+        userWithAge40.setAge(40);
         expectedStorageSize = Storage.people.size() + 1;
         actualUser = registrationService.register(userWithAge40);
         assertEquals(userWithAge40, actualUser, "Register user" + actualUser
@@ -171,7 +161,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkPasswordLengthLessThan6_notOk() {
+    void register_checkPasswordLengthLessThanRequired_notOk() {
         User userWithPasswordLength0 = new User();
         userWithPasswordLength0.setPassword("");
         userWithPasswordLength0.setAge(CORRECT_AGE);
@@ -180,14 +170,14 @@ class RegistrationServiceImplTest {
             registrationService.register(userWithPasswordLength0);
         });
         User userWithPasswordLength3 = new User();
-        userWithPasswordLength3.setPassword(PASSWORD_WITH_LENGTH_3);
+        userWithPasswordLength3.setPassword("123");
         userWithPasswordLength3.setAge(CORRECT_AGE);
         userWithPasswordLength3.setLogin(CORRECT_LOGIN + "3");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithPasswordLength3);
         });
         User userWithPasswordLength5 = new User();
-        userWithPasswordLength5.setPassword(PASSWORD_WITH_LENGTH_5);
+        userWithPasswordLength5.setPassword("12345");
         userWithPasswordLength5.setAge(CORRECT_AGE);
         userWithPasswordLength5.setLogin(CORRECT_LOGIN + "5");
         assertThrows(RegistrationException.class, () -> {
@@ -196,11 +186,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_checkPasswordLengthEqualOrMore6_Ok() {
+    void register_checkPasswordLengthEqualOrMoreRequired_Ok() {
         User testUser = new User();
-        testUser.setPassword(PASSWORD_WITH_LENGTH_6);
+        testUser.setPassword("123456");
         testUser.setAge(CORRECT_AGE);
-        testUser.setLogin(LOGIN_WITH_LENGTH_6);
+        testUser.setLogin(CORRECT_LOGIN);
         int expectedStorageSize = Storage.people.size() + 1;
         User actualUser = registrationService.register(testUser);
         assertEquals(testUser, actualUser, "Register user" + actualUser
@@ -210,8 +200,8 @@ class RegistrationServiceImplTest {
                 "After registration Storage expected size is "
                 + expectedStorageSize + " but actual Storage size is " + actualStorageSize);
         testUser = new User();
-        testUser.setLogin(LOGIN_WITH_LENGTH_20);
-        testUser.setPassword(PASSWORD_WITH_LENGTH_20);
+        testUser.setLogin(CORRECT_LOGIN + "1");
+        testUser.setPassword("01234567890123456789");
         testUser.setAge(CORRECT_AGE);
         expectedStorageSize = Storage.people.size() + 1;
         actualUser = registrationService.register(testUser);
