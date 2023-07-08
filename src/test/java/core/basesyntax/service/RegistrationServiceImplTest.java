@@ -1,75 +1,101 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
     private User user;
-    private Storage storage;
+    private StorageDao storageDao;
 
     @BeforeEach
     public void setup() {
-        storage = new Storage();
+        registrationService = new RegistrationServiceImpl();
         user = new User();
+        storageDao = new StorageDaoImpl();
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void register_success_Ok() {
+        User actual;
+        try {
+            actual = registrationService.register(user);
+        } catch (ValidationException e) {
+            return;
+        }
+        assertEquals(actual.getLogin(), storageDao.get(actual.getLogin()));
+    }
+
+    @Test
+    void register_anExisting_Login_Not_Ok() {
+        Storage.people.add(user);
+        try {
+            registrationService.register(user);
+        } catch (ValidationException e) {
+            return;
+        }
+        fail("Exception must be throw");
+    }
+
+    @Test
+    void register_loginNull_NotOk() {
         user.setLogin(null);
-        assertThrows(OwnRuntimeException.class, () -> {
+        try {
             registrationService.register(user);
-        });
+        } catch (ValidationException e) {
+            return;
+        }
+        fail("Exception must be throw");
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void register_passwordNull_NotOK() {
         user.setPassword(null);
-        assertThrows(OwnRuntimeException.class, () -> {
+        try {
             registrationService.register(user);
-        });
+        } catch (ValidationException e) {
+            return;
+        }
+        fail("Exception must be throw");
     }
 
     @Test
-    void nullAge_NotOk() {
-        user.setAge(null);
-        assertThrows(OwnRuntimeException.class, () -> {
+    void register_underage_NotOk() {
+        user.setAge(15);
+        try {
             registrationService.register(user);
-        });
+        } catch (ValidationException e) {
+            return;
+        }
+        fail("Exception must be throw");
     }
 
     @Test
-    void smallerThenEighteen_NotOk() {
-        user.setAge(17);
-        assertThrows(OwnRuntimeException.class, () -> {
+    void register_passwordToShort_NotOk() {
+        user.setPassword("12345");
+        try {
             registrationService.register(user);
-        });
+        } catch (ValidationException e) {
+            return;
+        }
+        fail("Exception must be throw");
     }
 
     @Test
-    void registeredUser_NotOk() {
-        boolean actual = storage.people.contains(user.getLogin());
-        assertFalse(actual);
-    }
-
-    @Test
-    void passwordSmallerThenSix_NotOk() {
-        user.setPassword("qwer");
-        assertThrows(OwnRuntimeException.class, () -> {
+    void register_loginToShort_NotOk() {
+        user.setLogin("12345");
+        try {
             registrationService.register(user);
-        });
-    }
-
-    @Test
-    void loginSmallerThenSix_NotOk() {
-        user.setLogin("Bodya");
-        assertThrows(OwnRuntimeException.class, () -> {
-            registrationService.register(user);
-        });
+        } catch (ValidationException e) {
+            return;
+        }
+        fail("Exception must be throw");
     }
 }
