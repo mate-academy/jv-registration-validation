@@ -12,24 +12,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new ValidationException("Login can't be empty");
+        if (user == null) {
+            throw new ValidationException("User cannot be null");
         }
-        if (user.getPassword() == null) {
-            throw new ValidationException("Password can't be empty");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
+        final String login = user.getLogin();
+        final String password = user.getPassword();
+        final Integer age = user.getAge();
+
+        if (storageDao.get(login) != null) {
             throw new ValidationException("Such user is register");
         }
-        if (user.getLogin() == null || user.getLogin().length() < DEFAULT_LOGIN_SIZE) {
+        if (login == null || login.length() < DEFAULT_LOGIN_SIZE) {
             throw new ValidationException("Login must be longer than "
                     + DEFAULT_LOGIN_SIZE + " characters");
         }
-        if (user.getPassword() == null || user.getPassword().length() < DEFAULT_PASSWORD_SIZE) {
+        if (password == null || password.length() < DEFAULT_PASSWORD_SIZE) {
             throw new ValidationException("Password must be longer than "
                     + DEFAULT_PASSWORD_SIZE + " characters");
         }
-        if (user.getAge() < MINIMUM_AGE_FOR_REGISTER) {
+        if (age == null || age < MINIMUM_AGE_FOR_REGISTER) {
             throw new ValidationException("You must be older than " + MINIMUM_AGE_FOR_REGISTER);
         }
         storageDao.add(user);

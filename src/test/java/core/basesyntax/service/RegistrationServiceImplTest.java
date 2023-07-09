@@ -1,7 +1,8 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -11,91 +12,80 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService;
+    private static RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
-    private StorageDao storageDao;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeEach
-    public void setup() {
-        registrationService = new RegistrationServiceImpl();
-        user = new User();
+    void setup() {
         storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
+        Storage.people.clear();
+        user = new User();
+        user.setLogin("Login123");
+        user.setPassword("password123");
+        user.setAge(24);
     }
 
     @Test
-    void register_success_Ok() {
-        User actual;
-        try {
-            actual = registrationService.register(user);
-        } catch (ValidationException e) {
-            return;
-        }
-        assertEquals(actual.getLogin(), storageDao.get(actual.getLogin()));
+    void register_validUser_registrationSuccessful() {
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser);
+        assertEquals(user, registeredUser);
     }
 
     @Test
-    void register_anExisting_Login_Not_Ok() {
-        Storage.people.add(user);
-        try {
+    void register_existingUser_throwValidationException() {
+        storageDao.add(user);
+        assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("Exception must be throw");
+        });
     }
 
     @Test
-    void register_loginNull_NotOk() {
-        user.setLogin(null);
-        try {
+    void register_shortLogin_throwValidationException() {
+        user.setLogin("john");
+        assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("Exception must be throw");
+        });
     }
 
     @Test
-    void register_passwordNull_NotOK() {
-        user.setPassword(null);
-        try {
-            registrationService.register(user);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("Exception must be throw");
-    }
-
-    @Test
-    void register_underage_NotOk() {
-        user.setAge(15);
-        try {
-            registrationService.register(user);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("Exception must be throw");
-    }
-
-    @Test
-    void register_passwordToShort_NotOk() {
+    void register_shortPassword_throwValidationException() {
         user.setPassword("12345");
-        try {
+        assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("Exception must be throw");
+        });
     }
 
     @Test
-    void register_loginToShort_NotOk() {
-        user.setLogin("12345");
-        try {
+    void register_underageUser_throwValidationException() {
+        user.setAge(16);
+        assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("Exception must be throw");
+        });
+    }
+
+    @Test
+    void register_nullUser_throwValidationException() {
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(null);
+        });
+    }
+
+    @Test
+    void register_nullLogin_throwValidationException() {
+        user.setLogin(null);
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullPassword_throwValidationException() {
+        user.setPassword(null);
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
