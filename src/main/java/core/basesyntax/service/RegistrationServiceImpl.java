@@ -20,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         final Integer age = user.getAge();
 
         if (storageDao.get(login) != null) {
-            throw new ValidationException("Such user is register");
+            throw new ValidationException("This user is already registered");
         }
         if (login == null || login.length() < DEFAULT_LOGIN_SIZE) {
             throw new ValidationException("Login must be longer than "

@@ -12,9 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
     private User user;
-    private StorageDao storageDao = new StorageDaoImpl();
+    private StorageDao storageDao;
 
     @BeforeEach
     void setup() {
@@ -28,7 +28,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_registrationSuccessful() {
+    void register_successful_ok() {
         User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
         assertEquals(user, registeredUser);
