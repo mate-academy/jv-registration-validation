@@ -34,21 +34,30 @@ public class RegistrationServiceTest {
     public void register_userWithShortLogin_throwsInvalidUserException() {
         User user = createUser("abc", "password123", 25);
 
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(
+                InvalidUserException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
     public void register_userWithShortPassword_throwsInvalidUserException() {
         User user = createUser("johnsmith", "abc", 25);
 
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(
+                InvalidUserException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
     public void register_underageUser_throwsInvalidUserException() {
         User user = createUser("johnsmith", "password123", 15);
 
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(
+                InvalidUserException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     @Test
@@ -58,7 +67,10 @@ public class RegistrationServiceTest {
 
         User user = createUser("existinguser", "password456", 30);
 
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(
+                InvalidUserException.class,
+                () -> registrationService.register(user)
+        );
     }
 
     private User createUser(String login, String password, int age) {
