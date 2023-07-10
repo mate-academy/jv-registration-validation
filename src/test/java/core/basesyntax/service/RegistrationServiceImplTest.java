@@ -1,4 +1,4 @@
-package core.basesyntax;
+package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -6,14 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidUserDataException;
 import core.basesyntax.model.User;
-import core.basesyntax.service.RegistrationService;
-import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RegisterUserTest {
+class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static final String USER_LOGIN = "TestUser";
     private static final String INVALID_LOGIN = "1234";
@@ -24,12 +22,12 @@ public class RegisterUserTest {
     private static User user = new User();
 
     @BeforeAll
-    static void beforeAll() {
+    public static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         user = new User();
         user.setLogin(USER_LOGIN);
         user.setPassword(USER_PASSWORD);
@@ -37,7 +35,7 @@ public class RegisterUserTest {
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         Storage.people.clear();
     }
 

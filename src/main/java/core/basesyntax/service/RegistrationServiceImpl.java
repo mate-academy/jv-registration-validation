@@ -6,6 +6,8 @@ import core.basesyntax.exception.InvalidUserDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -15,10 +17,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getLogin() == null
                 || user.getAge() == null) {
             throw new NullPointerException("Field can't be null");
-        } else if (user.getAge() < 18) {
+        } else if (user.getAge() < MIN_AGE) {
             throw new InvalidUserDataException(
                     "Age should be equal or greater than 18 " + user.getAge());
-        } else if (user.getPassword().length() < 6 || user.getLogin().length() < 6) {
+        } else if (user.getPassword().length() < MIN_LENGTH
+                || user.getLogin().length() < MIN_LENGTH) {
             throw new InvalidUserDataException(
                     "Password/Login length should be greater than 6 ");
         } else if (storageDao.get(user.getLogin()) != null) {
