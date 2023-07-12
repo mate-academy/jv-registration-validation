@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null || user.getLogin().length() < 6) {
             throw new NotEnoughSizeException("The length of the login must be at least 6");
         }
-        if (user.getPassword() == null ||user.getPassword().length() < 6) {
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new NotEnoughSizeException("The length of the password must be at least 6");
         }
         if (user.getAge() == null || user.getAge() < 18) {
