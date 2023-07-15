@@ -36,67 +36,67 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsNull_NotOk() {
+    void register_userIsNull_NotOk() {
         user = null;
         assertThrows(UserIsNullException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeLessThenEighteen_NotOk() {
+    void register_InvalidAge_NotOk() {
         user.setAge(INCORRECT_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeIsNegative_NotOk() {
+    void register_userAgeIsNegative_NotOk() {
         user.setAge(NEGATIVE_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userAgeIsNull_NotOk() {
+    void register_userAgeIsNull_NotOk() {
         user.setAge(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordLessThanSixCharacters_NotOk() {
+    void register_InvalidPassword_NotOk() {
         user.setPassword(INCORRECT_PASSWORD);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPasswordIsNull_NotOk() {
+    void register_userPasswordIsNull_NotOk() {
         user.setPassword(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userPaswwordIsEmpty_NotOk() {
+    void register_userPaswwordIsEmpty_NotOk() {
         user.setPassword("");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginLessThanSixCharacters_NotOk() {
+    void register_InvalidLogin_NotOk() {
         user.setLogin(INCORRECT_LOGIN);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginIsNull_NotOk() {
+    void register_userLoginIsNull_NotOk() {
         user.setLogin(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userLoginIsEmpty_NotOk() {
+    void register_userLoginIsEmpty_NotOk() {
         user.setLogin("");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserThatIsAlreadyExist_NotOk() {
+    void register_UserThatIsAlreadyExist_NotOk() {
         Storage.people.add(user);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
