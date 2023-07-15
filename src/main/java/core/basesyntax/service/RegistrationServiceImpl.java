@@ -40,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + user.getLogin());
         }
         storageDao.add(user);
-        return user;
+        return storageDao.get(user.getLogin());
     }
 
     private boolean contains(User user) {
