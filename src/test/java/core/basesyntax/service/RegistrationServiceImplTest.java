@@ -10,56 +10,46 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static User preparedForCheckingLoginUser1;
-    private static User preparedForCheckingLoginUser2;
-    private static User preparedForCheckingLoginUser3;
-    private static User nullUser;
-    private static User invalidPasswordUser1;
-    private static User invalidPasswordUser2;
-    private static User validPasswordUser1;
-    private static User validPasswordUser2;
-    private static User nullPasswordUser;
-    private static User invalidAgeUser1;
-    private static User invalidAgeUser2;
-    private static User invalidAgeUser3;
-    private static User validAgeUser1;
-    private static User validAgeUser2;
-    private static User nullLoginUser;
-    private static User invalidLoginUser1;
-    private static User invalidLoginUser2;
-    private static User validLoginUser1;
-    private static User validLoginUser2;
-    private static User sameNameWithUser1;
-    private static User sameNameWithUser2;
-    private static User sameNameWithUser3;
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static final String REALLY_STRONG_PASSWORD = "123456789";
+    private static final int REALLY_COOL_AGE = 30;
+    private static final User preparedForCheckingLoginUser1 =
+            new User("Michael", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User preparedForCheckingLoginUser2 =
+            new User("Patrick", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User preparedForCheckingLoginUser3 =
+            new User("Jackson", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User nullUser = null;
+    private static final User invalidPasswordUser1 = new User("Olivia", "12345", REALLY_COOL_AGE);
+    private static final User invalidPasswordUser2 = new User("Charlotte", "", REALLY_COOL_AGE);
+    private static final User validPasswordUser1 = new User("Sophia", "123456", REALLY_COOL_AGE);
+    private static final User validPasswordUser2 = new User("Isabella", "1234567", REALLY_COOL_AGE);
+    private static final User nullPasswordUser = new User("William", null, REALLY_COOL_AGE);
+    private static final User invalidAgeUser1 = new User("Benjamin", REALLY_STRONG_PASSWORD, 16);
+    private static final User invalidAgeUser2 = new User("Theodore", REALLY_STRONG_PASSWORD, 0);
+    private static final User invalidAgeUser3 = new User("Oliver", REALLY_STRONG_PASSWORD, -7);
+    private static final User validAgeUser1 = new User("Sebastian", REALLY_STRONG_PASSWORD, 19);
+    private static final User validAgeUser2 = new User("Samuel", REALLY_STRONG_PASSWORD, 18);
+    private static final User nullLoginUser =
+            new User(null, REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User invalidLoginUser1 =
+            new User("Carl", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User invalidLoginUser2 =
+            new User("", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User validLoginUser1 = new
+            User("Polina", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User validLoginUser2 = new
+            User("Tetiana", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User sameNameWithUser1 = new
+            User("Michael", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User sameNameWithUser2 = new
+            User("Patrick", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final User sameNameWithUser3 = new
+            User("Jackson", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static RegistrationService registrationService;
 
     @BeforeAll
-    static void prepare() {
-        String reallyStrongPassword = "123456789";
-        int reallyCoolAge = 30;
-        preparedForCheckingLoginUser1 = new User("Michael", reallyStrongPassword, reallyCoolAge);
-        preparedForCheckingLoginUser2 = new User("Patrick", reallyStrongPassword, reallyCoolAge);
-        preparedForCheckingLoginUser3 = new User("Jackson", reallyStrongPassword, reallyCoolAge);
-        nullUser = null;
-        invalidPasswordUser1 = new User("Olivia", "12345", reallyCoolAge);
-        invalidPasswordUser2 = new User("Charlotte", "", reallyCoolAge);
-        validPasswordUser1 = new User("Sophia", "123456", reallyCoolAge);
-        validPasswordUser2 = new User("Isabella", "1234567", reallyCoolAge);
-        nullPasswordUser = new User("William", null, reallyCoolAge);
-        invalidAgeUser1 = new User("Benjamin", reallyStrongPassword, 16);
-        invalidAgeUser2 = new User("Theodore", reallyStrongPassword, 0);
-        invalidAgeUser3 = new User("Oliver", reallyStrongPassword, -7);
-        validAgeUser1 = new User("Sebastian", reallyStrongPassword, 19);
-        validAgeUser2 = new User("Samuel", reallyStrongPassword, 18);
-        invalidLoginUser1 = new User("Carl", reallyStrongPassword, reallyCoolAge);
-        invalidLoginUser2 = new User("", reallyStrongPassword, reallyCoolAge);
-        validLoginUser1 = new User("Polina", reallyStrongPassword, reallyCoolAge);
-        validLoginUser2 = new User("Tetiana", reallyStrongPassword, reallyCoolAge);
-        nullLoginUser = new User(null, reallyStrongPassword, reallyCoolAge);
-        sameNameWithUser1 = new User("Michael", reallyStrongPassword, reallyCoolAge);
-        sameNameWithUser2 = new User("Patrick", reallyStrongPassword, reallyCoolAge);
-        sameNameWithUser3 = new User("Jackson", reallyStrongPassword, reallyCoolAge);
+    static void registrationServiceInitialization() {
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
