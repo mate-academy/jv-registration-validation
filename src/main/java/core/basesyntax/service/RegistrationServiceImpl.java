@@ -32,8 +32,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("User's length of password is " + passwordsLength
                     + ". It shouldn't be shorter than 6 characters!");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidDataException("User is not valid!");
+        int usersAge = user.getAge();
+        if (usersAge < MIN_AGE) {
+            throw new InvalidDataException("User's is not valid! It's " + usersAge + ", but min "
+                    + "age is " + MIN_AGE);
         }
         if (contains(user)) {
             throw new InvalidDataException("The storage already have user with login "
