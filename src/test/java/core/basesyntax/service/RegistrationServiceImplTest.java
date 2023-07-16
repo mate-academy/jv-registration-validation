@@ -19,10 +19,12 @@ class RegistrationServiceImplTest {
     private static final User PREPARED_FOR_CHECKING_LOGIN_USER_3 =
             new User("Jackson", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
     private static final User NULL_USER = null;
-    private static final User INVALID_PASSWORD_USER_1 = new User("Olivia", "12345", REALLY_COOL_AGE);
+    private static final User INVALID_PASSWORD_USER_1 =
+            new User("Olivia", "12345", REALLY_COOL_AGE);
     private static final User INVALID_PASSWORD_USER_2 = new User("Charlotte", "", REALLY_COOL_AGE);
     private static final User VALID_PASSWORD_USER_1 = new User("Sophia", "123456", REALLY_COOL_AGE);
-    private static final User VALID_PASSWORD_USER_2 = new User("Isabella", "1234567", REALLY_COOL_AGE);
+    private static final User VALID_PASSWORD_USER_2 =
+            new User("Isabella", "1234567", REALLY_COOL_AGE);
     private static final User NULL_PASSWORD_USER = new User("William", null, REALLY_COOL_AGE);
     private static final User INVALID_AGE_USER_1 = new User("Benjamin", REALLY_STRONG_PASSWORD, 16);
     private static final User INVALID_AGE_USER_2 = new User("Theodore", REALLY_STRONG_PASSWORD, 0);
