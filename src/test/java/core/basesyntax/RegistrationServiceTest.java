@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.NotEnoughAgeException;
 import core.basesyntax.exceptions.NotEnoughSizeException;
 import core.basesyntax.exceptions.UserIsNullException;
@@ -90,7 +91,7 @@ class RegistrationServiceTest {
 
     @Test
     public void testRegister_ExistingLogin_ReturnsNull() {
-        registrationService.register(EXISTING_USER);
+        Storage.people.add(EXISTING_USER);
         User registeredUser = registrationService.register(NEW_USER_WITH_EXISTING_LOGIN);
         assertNull(registeredUser);
     }
