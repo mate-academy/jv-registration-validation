@@ -7,8 +7,8 @@ import core.basesyntax.exeptions.UserIsNullException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final static int MIN_AGE = 18;
-    private final static int MIN_LENGTH = 6;
+    private final int minAge = 18;
+    private final int minLength = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -16,16 +16,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new UserIsNullException("User can't be null");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+        if (user.getAge() == null || user.getAge() < minAge) {
             throw new InvalidDataException("Invalid user age");
         }
-        if (user.getLogin() == null || user.getLogin().length() < MIN_LENGTH) {
+        if (user.getLogin() == null || user.getLogin().length() < minLength) {
             throw new InvalidDataException("Invalid user login " + user.getLogin()
-                    + ". Login must be bigger than " + MIN_LENGTH + " characters");
+                    + ". Login must be bigger than " + minLength + " characters");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH) {
+        if (user.getPassword() == null || user.getPassword().length() < minLength) {
             throw new InvalidDataException("Invalid user password " + user.getPassword()
-                    + ". Password must be bigger than " + MIN_LENGTH + " characters");
+                    + ". Password must be bigger than " + minLength + " characters");
         }
         if (storageDao.get(user.getLogin()).equals(user)) {
             throw new InvalidDataException("User with this login is already exist");
