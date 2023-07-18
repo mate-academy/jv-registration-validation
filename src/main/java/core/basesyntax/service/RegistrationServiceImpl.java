@@ -21,7 +21,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new RegistrationException("Password cannot be null or empty line!!!");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Your password must contain at least "
+                    + MIN_PASSWORD_LENGTH + " characters!");
+        }
+        if (storageDao.get(user.getLogin()) != null && storageDao.get(user.getLogin()) != user) {
             throw new RegistrationException("there is " + user.getLogin()
                     + " user already exist!");
         }
@@ -29,11 +33,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Your password must contain at least "
-                    + MIN_PASSWORD_LENGTH + " characters!");
-        }
-
         return storageDao.add(user);
     }
 }

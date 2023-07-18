@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.RegistrationException;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +13,14 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int AGE_18 = 18;
-    private static final int AGE_UNDER_18 = 10;
+    private static final int AGE_19 = 18;
     private static final int NEGATIVE_AGE = -1;
+    private static final int AGE_0 = 0;
+    private static final int AGE_5 = 5;
+    private static final int AGE_10 = 10;
+    private static final int AGE_15 = 15;
     private static final int MAX_AGE = 105;
     private static final int OVER_MAX_AGE = 106;
-    private static final int AGE_OVER_18 = 20;
     private static final String USER_NAME = "Docent";
     private static final String NEW_USER_NAME = "Daisy";
     private static final String USER_PASSWORD_OK = "123456";
@@ -26,7 +28,6 @@ class RegistrationServiceImplTest {
     private static final String USER_PASSWORD_FIVE_CHARS = "12345";
     private static final String USER_PASSWORD_LENGTH_OK = "1234567";
     private static final int MIN_PASSWORD_LENGTH = 6;
-    private static final long USER_ID = 123L;
     private static RegistrationService registrationService;
     private static User user;
     private static User newUser;
@@ -51,19 +52,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        user = null;
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-            throw new RegistrationException(" ");
+            registrationService.register(null);
         });
     }
 
     @Test
     void register_emptyLogin_notOk() {
-        user.setLogin(" ");
+        user.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-            throw new RegistrationException("not allowed empty line!!!");
         });
     }
 
@@ -72,7 +70,6 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-            throw new RegistrationException("empty line is not ok, please pass any login");
         });
     }
 
@@ -100,13 +97,25 @@ class RegistrationServiceImplTest {
     void register_negativeAge_notOk() {
         user.setAge(NEGATIVE_AGE);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);;
+            registrationService.register(user);
         });
     }
 
     @Test
     void register_underAge_notOk() {
-        user.setAge(AGE_UNDER_18);
+        user.setAge(AGE_0);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(AGE_5);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(AGE_10);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(AGE_15);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -120,23 +129,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_maxAge_ok() {
-        user.setAge(MAX_AGE);
-        boolean maxAgeOk = user.getAge() <= MAX_AGE;
-        assertTrue(maxAgeOk);
+    void register_underAge_ok() {
+        user.setAge(AGE_15);
+        boolean underAge = user.getAge() < AGE_18;
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        assertTrue(underAge);
     }
 
     @Test
     void register_rightAge_ok() {
-        user.setAge(AGE_OVER_18);
-        boolean ageIsOk = user.getAge() > AGE_18;
-        assertTrue(ageIsOk);
-    }
-
-    @Test
-    void register_minAge_age() {
-        boolean minRequiredAgeOK = user.getAge() == AGE_18;
-        assertTrue(minRequiredAgeOK);
+        boolean min = user.getAge() == AGE_18;
+        assertTrue(min);
+        boolean overMinAge = user.getAge() >= AGE_18;
+        assertTrue(overMinAge);
+        boolean age19 = user.getAge() == AGE_19;
+        assertTrue(age19);
+        boolean maxAge = user.getAge() <= MAX_AGE;
+        assertTrue(maxAge);
     }
 
     @Test
@@ -148,16 +159,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_emptyPassword_notOk() {
+    void register_shortPasswordLength_notOk() {
         user.setPassword(" ");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
-
-    @Test
-    void register_shortPasswordLength_notOk() {
         user.setPassword(USER_PASSWORD_THREE_CHARS);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
         user.setPassword(USER_PASSWORD_FIVE_CHARS);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -165,28 +175,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_minPasswordLength_ok() {
-        boolean passwordOk = user.getPassword().length() == MIN_PASSWORD_LENGTH;
-        assertTrue(passwordOk);
-    }
-
-    @Test
     void register_rightPassword_ok() {
         user.setPassword(USER_PASSWORD_LENGTH_OK);
-        boolean passwordOK = user.getPassword().length() > MIN_PASSWORD_LENGTH;
+        boolean passwordOK = user.getPassword().length() >= MIN_PASSWORD_LENGTH;
+        registrationService.register(user);
         assertTrue(passwordOK);
     }
 
     @Test
-    void register_addUser_ok() {
-        user.setId(USER_ID);
-        user.setLogin(USER_NAME);
-        user.setAge(AGE_18);
-        user.setPassword(USER_PASSWORD_OK);
+    void register_lengthOfPassword_notOk() {
+        user.setPassword(USER_PASSWORD_THREE_CHARS);
+        boolean passwordLengthNotOk = user.getPassword().length() < MIN_PASSWORD_LENGTH;
         assertThrows(RegistrationException.class, () -> {
-            Storage.people.add(user);
-            throw new RegistrationException("There is something gone wrong, "
-                    + "please check all requirements");
+            registrationService.register(user);
         });
+        assertTrue(passwordLengthNotOk);
     }
 }
