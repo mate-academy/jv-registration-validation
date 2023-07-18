@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final int AGE_18 = 18;
     private static final int AGE_19 = 18;
-    private static final int NEGATIVE_AGE = -1;
+    private static final int NEGATIVE_AGE = -2;
     private static final int AGE_0 = 0;
     private static final int AGE_5 = 5;
     private static final int AGE_10 = 10;
