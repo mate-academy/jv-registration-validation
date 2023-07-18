@@ -31,9 +31,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void nullUser_NotOk() {
-        assertThrows(UserNotValidException.class, () ->
-                registrationServiceImpl.register(null),
-                "Null user adding shouldn't work");
+        testInvalidUser(null, "Null user adding shouldn't work");
     }
 
     @Test
@@ -73,7 +71,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_InvalidAgeTest_NotOk() {
         testInvalidAge(null,"null");
-        testInvalidAge(MIN_VALID_AGE - 1,"< than 18");
+        testInvalidAge(MIN_VALID_AGE - 1,"< than 0");
         testInvalidAge(INVALID_AGE_ZERO,"0");
         testInvalidAge(INVALID_AGE_BELOW_ZERO,"< 0");
     }
@@ -90,41 +88,43 @@ class RegistrationServiceImplTest {
 
     private void testValidAge(Integer age, int testNumber) {
         User expected = createValidUser(testNumber);
+
         expected.setAge(age);
         User actual = registrationServiceImpl.register(expected);
-
         assertEquals(expected, actual,
                 "User adding with walid age doesnt work; Age = " + age);
     }
 
     private void testInvalidLogin(String login, String sortOffInvalidLogin) {
-        User userWithInvalidAge = createValidUser();
-        userWithInvalidAge.setLogin(login);
+        User userWithInvalidLogin = createValidUser();
+        String message = "Login " + sortOffInvalidLogin
+                + " should throw UserNotValidException; Login is " + login;
 
-        assertThrows(UserNotValidException.class, () ->
-                        registrationServiceImpl.register(userWithInvalidAge),
-                "Login " + sortOffInvalidLogin
-                        + " should throw UserNotValidException; Login is " + login);
+        userWithInvalidLogin.setLogin(login);
+        testInvalidUser(userWithInvalidLogin, message);
     }
 
     private void testInvalidPassword(String password, String sortOffInvalidPassword) {
-        User userWithInvalidAge = createValidUser();
-        userWithInvalidAge.setPassword(password);
+        User userWithInvalidPassword = createValidUser();
+        String message = "Password " + sortOffInvalidPassword
+                + " should throw UserNotValidException; Password is " + password;
 
-        assertThrows(UserNotValidException.class, () ->
-                        registrationServiceImpl.register(userWithInvalidAge),
-                "Password " + sortOffInvalidPassword
-                        + " should throw UserNotValidException; Password is " + password);
+        userWithInvalidPassword.setPassword(password);
+        testInvalidUser(userWithInvalidPassword, message);
     }
 
     private void testInvalidAge(Integer age, String sortOfInvalidAge) {
         User userWithInvalidAge = createValidUser();
-        userWithInvalidAge.setAge(age);
+        String message = "Age " + sortOfInvalidAge
+                + " should throw UserNotValidException; Age = " + age;
 
+        userWithInvalidAge.setAge(age);
+        testInvalidUser(userWithInvalidAge, message);
+    }
+
+    private void testInvalidUser(User invalidUser, String message) {
         assertThrows(UserNotValidException.class, () ->
-                        registrationServiceImpl.register(userWithInvalidAge),
-                "Age " + sortOfInvalidAge
-                        + " should throw UserNotValidException; Age = " + age);
+                registrationServiceImpl.register(invalidUser), message);
     }
 
     private User createValidUser(int indexOfUser) {
