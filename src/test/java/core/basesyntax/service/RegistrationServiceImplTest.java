@@ -36,7 +36,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThan18_NotOk() {
+    void register_ageLessThanAllowed_NotOk() {
         user.setAge(10);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLessThan6_NotOk() {
+    void register_loginLessThanAllowed_NotOk() {
         user.setLogin("qwer");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
@@ -66,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessThan6_NotOk() {
+    void register_passwordLessThanAllowed_NotOk() {
         user.setPassword("qwert");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
