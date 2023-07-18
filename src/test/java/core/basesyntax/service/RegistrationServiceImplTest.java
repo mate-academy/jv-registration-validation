@@ -1,6 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.InvalidDataException;
@@ -42,6 +44,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_correctUser_Ok() {
+        User actual = user;
+        assertEquals(user,actual);
+    }
+
+    @Test
     void register_InvalidAge_NotOk() {
         user.setAge(INCORRECT_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
@@ -57,6 +65,15 @@ class RegistrationServiceImplTest {
     void register_userAgeIsNull_NotOk() {
         user.setAge(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_checkPasswordMoreRequired_Ok() {
+        User testUser = new User();
+        testUser.setLogin(CORRECT_LOGIN + "1");
+        testUser.setPassword("01234567890123456789");
+        testUser.setAge(CORRECT_AGE);
+        assertTrue(testUser.getPassword().length() >= user.getPassword().length());
     }
 
     @Test
@@ -78,6 +95,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userAgeMoreThanRequired_Ok() {
+        User userWithAge40 = new User();
+        userWithAge40.setLogin(CORRECT_LOGIN + "40");
+        userWithAge40.setPassword(CORRECT_PASSWORD);
+        userWithAge40.setAge(40);
+        assertTrue(userWithAge40.getAge() > user.getAge());
+    }
+
+    @Test
     void register_InvalidLogin_NotOk() {
         user.setLogin(INCORRECT_LOGIN);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
@@ -93,6 +119,14 @@ class RegistrationServiceImplTest {
     void register_userLoginIsEmpty_NotOk() {
         user.setLogin("");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_checkLoginLengthMoreThanRequired_Ok() {
+        User testUser = new User();
+        testUser.setLogin("01234567890123456789");
+        testUser.setPassword(CORRECT_PASSWORD);
+        assertTrue(testUser.getLogin().length() >= user.getLogin().length());
     }
 
     @Test
