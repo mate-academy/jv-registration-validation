@@ -23,9 +23,48 @@ class RegistrationServiceImplTest {
     @Test
     public void register_validUser_ok() {
         User user = new User();
-        user.setLogin("login8843");
+        user.setLogin("login8848");
         user.setPassword("password9475");
         user.setAge(26);
+
+        User registeredUser = registrationService.register(user);
+
+        Assertions.assertNotNull(registeredUser);
+        Assertions.assertEquals(user, registeredUser);
+    }
+
+    @Test
+    public void register_correctPassword_Ok() {
+        User user = new User();
+        user.setLogin("login8843");
+        user.setPassword("correct");
+        user.setAge(32);
+
+        User registeredUser = registrationService.register(user);
+
+        Assertions.assertNotNull(registeredUser);
+        Assertions.assertEquals(user, registeredUser);
+    }
+
+    @Test
+    public void register_correct_eightLength_Password_Ok() {
+        User user = new User();
+        user.setLogin("login88d");
+        user.setPassword("pass1ss2");
+        user.setAge(32);
+
+        User registeredUser = registrationService.register(user);
+
+        Assertions.assertNotNull(registeredUser);
+        Assertions.assertEquals(user, registeredUser);
+    }
+
+    @Test
+    public void register_oldAgeUser_Ok() {
+        User user = new User();
+        user.setLogin("login88433");
+        user.setPassword("correctpass");
+        user.setAge(85);
 
         User registeredUser = registrationService.register(user);
 
@@ -94,12 +133,24 @@ class RegistrationServiceImplTest {
     public void register_shortPassword_notOk() {
         User user = new User();
         user.setLogin("login8843");
-        user.setPassword("usd");
+        user.setPassword("usdtd");
         user.setAge(23);
 
         RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
         Assertions.assertEquals("Password should be at least 6 characters", exception.getMessage());
+    }
+
+    @Test
+    public void register_emptyPassword_notOk() {
+        User user = new User();
+        user.setLogin("login8843");
+        user.setPassword("");
+        user.setAge(23);
+
+        RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        Assertions.assertEquals("Password can't be empty", exception.getMessage());
     }
 
     @Test
@@ -115,11 +166,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_underAge_notOk() {
+    public void register_underageUser_notOk() {
         User user = new User();
         user.setLogin("login8843");
         user.setPassword("password9475");
-        user.setAge(13);
+        user.setAge(17);
 
         RegistrationException exception = Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
