@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exceptions.LoginAlreadyExistsException;
 import core.basesyntax.exceptions.NotEnoughAgeException;
 import core.basesyntax.exceptions.NotEnoughSizeException;
 import core.basesyntax.exceptions.UserIsNullException;
@@ -21,22 +22,25 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NotEnoughAgeException("The age of the user can't be null");
         }
         if (user.getPassword() == null) {
-            throw new NotEnoughSizeException("The length of the password can't be null");
+            throw new NotEnoughSizeException("The password can't be null");
         }
         if (user.getLogin() == null) {
-            throw new NotEnoughSizeException("The length of the login can't be null");
+            throw new NotEnoughSizeException("The login can't be null");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new NotEnoughSizeException("The length of the login must be at least 6");
+            throw new NotEnoughSizeException("The length of the login must be at least "
+                    + MIN_LENGTH);
         }
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new NotEnoughSizeException("The length of the password must be at least 6");
+            throw new NotEnoughSizeException("The length of the password must be at least "
+                    + MIN_LENGTH);
         }
         if (user.getAge() < MIN_AGE) {
-            throw new NotEnoughAgeException("The age of the user must be at least 18");
+            throw new NotEnoughAgeException("The age of the user must be at least " + MIN_AGE);
         }
         if (storageDao.get(user.getLogin()) != null) {
-            return null;
+            throw new LoginAlreadyExistsException("User already exists with login "
+                    + user.getLogin());
         }
         storageDao.add(user);
         return user;
