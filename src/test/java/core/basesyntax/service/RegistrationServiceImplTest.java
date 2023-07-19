@@ -47,8 +47,8 @@ class RegistrationServiceImplTest {
         var invalidDataException = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(INVALID_PASSWORD_USER);
         });
-        assertEquals("User's length of password is " +
-                INVALID_PASSWORD_USER.getPassword().length()
+        assertEquals("User's length of password is "
+                + INVALID_PASSWORD_USER.getPassword().length()
                 + ". It shouldn't be shorter than 6 characters!",
                 invalidDataException.getMessage());
     }
