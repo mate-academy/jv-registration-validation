@@ -25,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         int loginsLength = user.getLogin().length();
         if (loginsLength < MIN_LOGIN_LENGTH) {
             throw new InvalidDataException("User's length of login is " + loginsLength
-                    + ". It shouldn't be shorter than 6 characters!");
+                    + ". It shouldn't be shorter than 6 characters!");// todo
         }
         int passwordsLength = user.getPassword().length();
         if (passwordsLength < MIN_PASSWORD_LENGTH) {
@@ -37,15 +37,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("User's is not valid! It's " + usersAge + ", but min "
                     + "age is " + MIN_AGE);
         }
-        if (contains(user)) {
+        if (checkUserIfExists(user)) {
             throw new InvalidDataException("The storage already have user with login "
-                    + user.getLogin());
+                    + user.getLogin());// todo
         }
         storageDao.add(user);
         return storageDao.get(user.getLogin());
     }
 
-    private boolean contains(User user) {
+    private boolean checkUserIfExists(User user) {
         return storageDao.get(user.getLogin()) != null;
     }
 }

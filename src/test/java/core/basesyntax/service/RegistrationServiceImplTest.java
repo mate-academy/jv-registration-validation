@@ -10,43 +10,31 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String REALLY_STRONG_PASSWORD = "123456789";
-    private static final int REALLY_COOL_AGE = 30;
-    private static final User PREPARED_FOR_CHECKING_LOGIN_USER_1 =
-            new User("Michael", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
-    private static final User PREPARED_FOR_CHECKING_LOGIN_USER_2 =
-            new User("Patrick", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
-    private static final User PREPARED_FOR_CHECKING_LOGIN_USER_3 =
-            new User("Jackson", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+    private static final String VALID_PASSWORD = "123456789";
+    private static final int VALID_AGE = 30;
+    private static final User FIRST_USER_WITH_LOGIN_MICHAEL =
+            new User("Michael", VALID_PASSWORD, VALID_AGE);
     private static final User NULL_USER = null;
-    private static final User INVALID_PASSWORD_USER_1 =
-            new User("Olivia", "12345", REALLY_COOL_AGE);
-    private static final User INVALID_PASSWORD_USER_2 = new User("Charlotte", "", REALLY_COOL_AGE);
-    private static final User VALID_PASSWORD_USER_1 = new User("Sophia", "123456", REALLY_COOL_AGE);
+    private static final User INVALID_PASSWORD_USER =
+            new User("Olivia", "12345", VALID_AGE);
+    private static final User VALID_PASSWORD_USER_1 = new User("Sophia", "123456", VALID_AGE);
     private static final User VALID_PASSWORD_USER_2 =
-            new User("Isabella", "1234567", REALLY_COOL_AGE);
-    private static final User NULL_PASSWORD_USER = new User("William", null, REALLY_COOL_AGE);
-    private static final User INVALID_AGE_USER_1 = new User("Benjamin", REALLY_STRONG_PASSWORD, 16);
-    private static final User INVALID_AGE_USER_2 = new User("Theodore", REALLY_STRONG_PASSWORD, 0);
-    private static final User INVALID_AGE_USER_3 = new User("Oliver", REALLY_STRONG_PASSWORD, -7);
-    private static final User VALID_AGE_USER_1 = new User("Sebastian", REALLY_STRONG_PASSWORD, 19);
-    private static final User VALID_AGE_USER_2 = new User("Samuel", REALLY_STRONG_PASSWORD, 18);
+            new User("Isabella", "1234567", VALID_AGE);
+    private static final User NULL_PASSWORD_USER = new User("William", null, VALID_AGE);
+    private static final User INVALID_AGE_USER = new User("Benjamin", VALID_PASSWORD, 16);
+    private static final User VALID_AGE_USER_1 = new User("Sebastian", VALID_PASSWORD, 19);
+    private static final User VALID_AGE_USER_2 = new User("Samuel", VALID_PASSWORD, 18);
     private static final User NULL_LOGIN_USER =
-            new User(null, REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
-    private static final User INVALID_LOGIN_USER_1 =
-            new User("Carl", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
-    private static final User INVALID_LOGIN_USER_2 =
-            new User("", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+            new User(null, VALID_PASSWORD, VALID_AGE);
+    private static final User INVALID_LOGIN_USER =
+            new User("Carl", VALID_PASSWORD, VALID_AGE);
     private static final User VALID_LOGIN_USER_1 = new
-            User("Polina", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+            User("Polina", VALID_PASSWORD, VALID_AGE);
     private static final User VALID_LOGIN_USER_2 = new
-            User("Tetiana", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
-    private static final User SAME_NAME_WITH_USER_1 = new
-            User("Michael", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
-    private static final User SAME_NAME_WITH_USER_2 = new
-            User("Patrick", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
-    private static final User SAME_NAME_WITH_USER_3 = new
-            User("Jackson", REALLY_STRONG_PASSWORD, REALLY_COOL_AGE);
+            User("Tetiana", VALID_PASSWORD, VALID_AGE);
+    private static final User SECOND_USER_WITH_LOGIN_MICHAEL = new
+            User("Michael", VALID_PASSWORD, VALID_AGE);
+    private static final int MIN_AGE = 18;
     private static RegistrationService registrationService;
 
     @BeforeAll
@@ -55,15 +43,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidPasswordUsers_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(INVALID_PASSWORD_USER_1);
-            registrationService.register(INVALID_PASSWORD_USER_2);
+    void register_invalidPasswordUsers_throwsInvalidDataException() {
+        var invalidDataException = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(INVALID_PASSWORD_USER);
         });
+        assertEquals("User's length of password is " +
+                INVALID_PASSWORD_USER.getPassword().length()
+                + ". It shouldn't be shorter than 6 characters!",
+                invalidDataException.getMessage());
     }
 
     @Test
-    void register_validPasswordUsers_ok() {
+    void register_validPasswordUsers_throwsInvalidDataException() {
         User actual1 = registrationService.register(VALID_PASSWORD_USER_1);
         User actual2 = registrationService.register(VALID_PASSWORD_USER_2);
         assertEquals(VALID_PASSWORD_USER_1, actual1);
@@ -71,23 +62,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPasswordUser_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+    void register_nullPasswordUser_notThrowsInvalidDataException() {
+        var invalidDataException = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(NULL_PASSWORD_USER);
         });
+        assertEquals("User's password is null!", invalidDataException.getMessage());
     }
 
     @Test
-    void register_invalidAgeUser_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(INVALID_AGE_USER_1);
-            registrationService.register(INVALID_AGE_USER_2);
-            registrationService.register(INVALID_AGE_USER_3);
+    void register_invalidAgeUser_notThrowsInvalidDataException() {
+        var invalidDataException = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(INVALID_AGE_USER);
         });
+        assertEquals("User's is not valid! It's " + INVALID_AGE_USER.getAge() + ", but min "
+                + "age is " + MIN_AGE, invalidDataException.getMessage());
     }
 
     @Test
-    void register_validAgeUsers_ok() {
+    void register_validAgeUsers_throwsInvalidDataException() {
         User actual1 = registrationService.register(VALID_AGE_USER_1);
         User actual2 = registrationService.register(VALID_AGE_USER_2);
         assertEquals(VALID_AGE_USER_1, actual1);
@@ -95,22 +87,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullLoginUser_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+    void register_nullLoginUser_notThrowsInvalidDataException() {
+        var invalidDataException = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(NULL_LOGIN_USER);
         });
+        assertEquals("User's login is null!", invalidDataException.getMessage());
     }
 
     @Test
-    void register_invalidLoginUser_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(INVALID_LOGIN_USER_1);
-            registrationService.register(INVALID_LOGIN_USER_2);
+    void register_invalidLoginUser_notThrowsInvalidDataException() {
+        var invalidDataException = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(INVALID_LOGIN_USER);
         });
+        assertEquals("User's length of login is " + INVALID_LOGIN_USER.getLogin().length()
+                + ". It shouldn't be shorter than 6 characters!",
+                invalidDataException.getMessage());
     }
 
     @Test
-    void register_validLoginUsers_ok() {
+    void register_validLoginUsers_throwsInvalidDataException() {
         User actual1 = registrationService.register(VALID_LOGIN_USER_1);
         User actual2 = registrationService.register(VALID_LOGIN_USER_2);
         assertEquals(VALID_LOGIN_USER_1, actual1);
@@ -118,21 +113,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+    void register_nullUser_notThrowsInvalidDataException() {
+        var invalidDataException = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(NULL_USER);
         });
+        assertEquals("User is null!", invalidDataException.getMessage());
     }
 
     @Test
-    void register_sameNameWithUser1_notOk() {
-        Storage.people.add(PREPARED_FOR_CHECKING_LOGIN_USER_1);
-        Storage.people.add(PREPARED_FOR_CHECKING_LOGIN_USER_2);
-        Storage.people.add(PREPARED_FOR_CHECKING_LOGIN_USER_3);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(SAME_NAME_WITH_USER_1);
-            registrationService.register(SAME_NAME_WITH_USER_2);
-            registrationService.register(SAME_NAME_WITH_USER_3);
+    void register_sameNameWithUser1_notThrowsInvalidDataException() {
+        Storage.people.add(FIRST_USER_WITH_LOGIN_MICHAEL);
+        var invalidDataException = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(SECOND_USER_WITH_LOGIN_MICHAEL);
         });
+        assertEquals("The storage already have user with login "
+                + SECOND_USER_WITH_LOGIN_MICHAEL.getLogin(), invalidDataException.getMessage());
     }
 }
