@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,14 +42,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        var nullUser = assertThrows(RuntimeException.class,
+        var nullUser = assertThrows(RegistrationException.class,
                 () -> registrationService.register(null));
         assertEquals("User can`t be a null", nullUser.getMessage());
     }
 
     @Test
     void register_nullLogin_notOk() {
-        var nullLogin = assertThrows(RuntimeException.class,
+        var nullLogin = assertThrows(RegistrationException.class,
                 () -> registrationService.register(
                 new User(null, VALID_PASSWORD, VALID_AGE)));
         assertEquals(ERROR_MESSAGE_INVALID_LOGIN, nullLogin.getMessage());
@@ -56,7 +57,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
-        var nullPassword = assertThrows(RuntimeException.class,
+        var nullPassword = assertThrows(RegistrationException.class,
                 () -> registrationService.register(
                 new User(VALID_LOGIN, null, VALID_AGE)));
         assertEquals(ERROR_MESSAGE_INVALID_PASSWORD, nullPassword.getMessage());
@@ -64,13 +65,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(
+        assertThrows(RegistrationException.class, () -> registrationService.register(
                 new User(VALID_LOGIN, VALID_PASSWORD, null)));
     }
 
     @Test
     void register_invalidLogin_notOK() {
-        var invalidDataLogin = assertThrows(RuntimeException.class,
+        var invalidDataLogin = assertThrows(RegistrationException.class,
                 () -> registrationService.register(
                 new User(INVALID_LOGIN, VALID_PASSWORD, VALID_AGE)));
         assertEquals(ERROR_MESSAGE_INVALID_LOGIN, invalidDataLogin.getMessage());
@@ -78,7 +79,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_emptyLogin_notOK() {
-        var emptyLogin = assertThrows(RuntimeException.class,
+        var emptyLogin = assertThrows(RegistrationException.class,
                 () -> registrationService.register(
                 new User(EMPTY_LOGIN, VALID_PASSWORD, VALID_AGE)));
         assertEquals(ERROR_MESSAGE_INVALID_LOGIN, emptyLogin.getMessage());
@@ -86,7 +87,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidPassword_notOK() {
-        var invalidDataPassword = assertThrows(RuntimeException.class,
+        var invalidDataPassword = assertThrows(RegistrationException.class,
                 () -> registrationService.register(
                 new User(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE)));
         assertEquals(ERROR_MESSAGE_INVALID_PASSWORD, invalidDataPassword.getMessage());
@@ -94,7 +95,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_emptyPassword_notOK() {
-        var emptyPassword = assertThrows(RuntimeException.class,
+        var emptyPassword = assertThrows(RegistrationException.class,
                 () -> registrationService.register(
                         new User(VALID_LOGIN, EMPTY_PASSWORD, VALID_AGE)));
         assertEquals(ERROR_MESSAGE_INVALID_PASSWORD, emptyPassword.getMessage());
@@ -103,7 +104,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_invalidAge_notOk() {
         User user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
-        var invalidAge = assertThrows(RuntimeException.class,
+        var invalidAge = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
         assertEquals("Not valid age: " + user.getAge() + ". Min allowed age is "
                 + MIN_AGE, invalidAge.getMessage());
@@ -112,7 +113,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_zeroAge_notOk() {
         User user = new User(VALID_LOGIN, VALID_PASSWORD, ZERO_AGE);
-        var invalidAge = assertThrows(RuntimeException.class,
+        var invalidAge = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
         assertEquals("Not valid age: " + user.getAge() + ". Min allowed age is "
                 + MIN_AGE, invalidAge.getMessage());
@@ -132,7 +133,7 @@ class RegistrationServiceImplTest {
     void register_userExist_notOk() {
         User user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         Storage.people.add(user);
-        var existUser = assertThrows(RuntimeException.class,
+        var existUser = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
         assertEquals("This login already used: " + user.getLogin(), existUser.getMessage());
     }
