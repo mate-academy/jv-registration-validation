@@ -13,11 +13,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkIsUserNull(user);
+        checkUserForNull(user);
         checkLoginForNull(user);
         checkPasswordForNull(user);
-        checkLoginsLength(user);
-        checkPasswordsLength(user);
+        checkLoginLength(user);
+        checkPasswordLength(user);
         checkAge(user);
         checkUserExistence(user);
         storageDao.add(user);
@@ -36,25 +36,22 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private static void checkAge(User user) {
-        int usersAge = user.getAge();
-        if (usersAge < MIN_AGE) {
-            throw new RegistrationException("User's is not valid! It's " + usersAge + ", but min "
-                    + "age is " + MIN_AGE);
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("User's is not valid! It's " + user.getAge()
+                    + ", but min age is " + MIN_AGE);
         }
     }
 
-    private static void checkPasswordsLength(User user) {
-        int passwordsLength = user.getPassword().length();
-        if (passwordsLength < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("User's length of password is " + passwordsLength
-                    + ". It shouldn't be shorter than 6 characters!");
+    private static void checkPasswordLength(User user) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("User's length of password is "
+                    + user.getPassword().length() + ". It shouldn't be shorter than 6 characters!");
         }
     }
 
-    private static void checkLoginsLength(User user) {
-        int loginsLength = user.getLogin().length();
-        if (loginsLength < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("User's length of login is " + loginsLength
+    private static void checkLoginLength(User user) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException("User's length of login is " + user.getLogin().length()
                     + ". It shouldn't be shorter than 6 characters!");
         }
     }
@@ -71,7 +68,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void checkIsUserNull(User user) {
+    private static void checkUserForNull(User user) {
         if (user == null) {
             throw new RegistrationException("User is null!");
         }
