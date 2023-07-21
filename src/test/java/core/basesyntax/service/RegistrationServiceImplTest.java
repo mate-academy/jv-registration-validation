@@ -44,14 +44,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegister_nullFields_not_Ok() {
+    void testRegister_nullLogin_notOk() {
         User userNullLogin = new User();
         userNullLogin.setPassword(VALID_PASSWORD);
-        User userNullPassword = new User();
-        userNullPassword.setLogin(VALID_LOGIN);
+        userNullLogin.setAge(VALID_AGE);
         assertThrows(UserInvalidDataException.class,
                 () -> registrationService.register(userNullLogin),
                 "method need throw UserInvalidDataException for login: null");
+    }
+
+    @Test
+    void testRegister_nullPassword_notOk() {
+        User userNullPassword = new User();
+        userNullPassword.setLogin(VALID_LOGIN);
+        userNullPassword.setAge(VALID_AGE);
         assertThrows(UserInvalidDataException.class,
                 () -> registrationService.register(userNullPassword),
                 "method need throw UserInvalidDataException for password: null");
