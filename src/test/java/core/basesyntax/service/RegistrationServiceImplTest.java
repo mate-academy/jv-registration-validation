@@ -14,7 +14,7 @@ class RegistrationServiceImplTest {
     private static final int LOGIN_MIN_LENGTH = 6;
     private static final int PASSWORD_MIN_LENGTH = 6;
     private static final int MIN_AGE = 18;
-    private static RegistrationServiceImpl registrationServiceImpl;
+    private static RegistrationService registrationServiceImpl;
     private static User validUser;
 
     @BeforeAll
