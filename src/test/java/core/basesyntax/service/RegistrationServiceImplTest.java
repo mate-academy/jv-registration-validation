@@ -3,8 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.UserInvalidDataException;
 import core.basesyntax.model.User;
@@ -14,14 +12,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
     private static final int VALID_AGE = 21;
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword";
 
     @BeforeAll
     static void beforeAll() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -36,7 +32,7 @@ class RegistrationServiceImplTest {
         user.setAge(19);
         user.setLogin("login1234");
         user.setPassword("password1234");
-        storageDao.add(user);
+        Storage.people.add(user);
         assertThrows(UserInvalidDataException.class, () -> registrationService.register(user),
                 "method need throw UserInvalidDataException for user that contains in storage");
     }
