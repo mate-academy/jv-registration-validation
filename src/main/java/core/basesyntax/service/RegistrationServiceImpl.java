@@ -9,7 +9,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int LOGIN_MIN_LENGTH = 6;
     private static final int PASSWORD_MIN_LENGTH = 6;
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 150;
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -50,11 +49,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(Integer age) {
         if (age == null) {
-            throw new UserRegistrationException("Login can`t be null");
+            throw new UserRegistrationException("Age can`t be null");
         }
-        if (age < MIN_AGE || age > MAX_AGE) {
-            throw new UserRegistrationException(age
-                    + " years is out of bounds of " + MIN_AGE + " - " + MAX_AGE);
+        if (age < MIN_AGE) {
+            throw new UserRegistrationException(age + " years is less then min age " + MIN_AGE);
         }
     }
 }
