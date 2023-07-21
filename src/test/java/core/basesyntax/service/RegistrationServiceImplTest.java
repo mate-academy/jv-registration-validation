@@ -23,11 +23,12 @@ class RegistrationServiceImplTest {
     private static final int VALID_AGE = 19;
     private static final int INVALID_AGE = 17;
     private static final int ZERO_AGE = 0;
-    private static final int MIN_LENGTH = 6;
+    private static final int MIN_LENGTH_PASSWORD = 6;
+    private static final int MIN_LENGTH_LOGIN = 6;
     private static final String ERROR_MESSAGE_INVALID_LOGIN
-            = "Login can't be null or must be more than " + MIN_LENGTH + " characters";
+            = "Login can't be null or must be more than " + MIN_LENGTH_LOGIN + " characters";
     private static final String ERROR_MESSAGE_INVALID_PASSWORD
-            = "Password can't be null or must be more than " + MIN_LENGTH + " characters";
+            = "Password can't be null or must be more than " + MIN_LENGTH_PASSWORD + " characters";
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
