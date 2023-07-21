@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterUserWhoIsRegistered_notOk() {
+    void testRegister_userWhoIsRegistered_notOk() {
         User user = new User();
         user.setAge(19);
         user.setLogin("login1234");
@@ -42,13 +42,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterNull_notOk() {
+    void testRegister_null_notOk() {
         assertThrows(UserInvalidDataException.class, () -> registrationService.register(null),
                 "method need to throw UserInvalidDataException for user: null");
     }
 
     @Test
-    void testRegisterNullFields_not_Ok() {
+    void testRegister_nullFields_not_Ok() {
         User userNullLogin = new User();
         userNullLogin.setPassword(VALID_PASSWORD);
         User userNullPassword = new User();
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterAgeThrowsException_notOk() {
+    void testRegister_nonValidAge_notOk() {
         User userInvalidAge = new User();
         userInvalidAge.setLogin(VALID_LOGIN);
         userInvalidAge.setPassword(VALID_PASSWORD);
@@ -90,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterNonValidLogin_notOk() {
+    void testRegister_nonValidLogin_notOk() {
         User nonValidUser = new User();
         nonValidUser.setPassword(VALID_PASSWORD);
         nonValidUser.setLogin("");
@@ -111,7 +111,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterNonValidPassword_notOk() {
+    void testRegister_nonValidPassword_notOk() {
         User nonValidUser = new User();
         nonValidUser.setPassword("");
         nonValidUser.setLogin(VALID_LOGIN);
@@ -131,7 +131,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterAgeNull_notOk() {
+    void testRegister_ageNull_notOk() {
         User nonValidUser = new User();
         nonValidUser.setPassword(VALID_PASSWORD);
         nonValidUser.setAge(null);
