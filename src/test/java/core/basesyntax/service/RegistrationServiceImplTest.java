@@ -72,7 +72,6 @@ class RegistrationServiceImplTest {
     private static final String MIN_PASSWORD_EXCEPTION_MESSAGE =
             "The password should be at least 6 characters.";
 
-
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
