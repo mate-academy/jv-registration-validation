@@ -29,7 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateLogin(String login) {
         if (login == null) {
-            throw new InvalidUserDataException("Invalid User login was provided. Login can't be null");
+            throw new InvalidUserDataException(
+                    "Invalid User login was provided. Login can't be null");
         }
         if (login.length() < LOGIN_MIN_LENGTH) {
             throw new InvalidUserDataException("Invalid User login was provided: "
@@ -40,7 +41,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validatePassword(String password) {
         if (password == null) {
-            throw new InvalidUserDataException("Invalid User password was provided. Password can't be null");
+            throw new InvalidUserDataException(
+                    "Invalid User password was provided. Password can't be null");
         }
         if (password.length() < PASSWORD_MIN_LENGTH) {
             throw new InvalidUserDataException("Invalid User password was provided: "
