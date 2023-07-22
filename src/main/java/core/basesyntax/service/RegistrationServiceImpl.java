@@ -28,25 +28,34 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(String login) {
-        if (login == null || login.length() < LOGIN_MIN_LENGTH) {
+        if (login == null) {
+            throw new InvalidUserDataException("Invalid User login was provided. Login can't be null");
+        }
+        if (login.length() < LOGIN_MIN_LENGTH) {
             throw new InvalidUserDataException("Invalid User login was provided: "
-                    + login + ". Login can't be null and be less than "
+                    + login + ". Login can't be less than "
                     + LOGIN_MIN_LENGTH + " characters");
         }
     }
 
     private void validatePassword(String password) {
-        if (password == null || password.length() < PASSWORD_MIN_LENGTH) {
+        if (password == null) {
+            throw new InvalidUserDataException("Invalid User password was provided. Password can't be null");
+        }
+        if (password.length() < PASSWORD_MIN_LENGTH) {
             throw new InvalidUserDataException("Invalid User password was provided: "
-                    + password + ". Password can't be null and be less than "
+                    + password + ". Password can't be less than "
                     + PASSWORD_MIN_LENGTH + " characters");
         }
     }
 
     private void validateAge(Integer age) {
-        if (age == null || age < MIN_AGE) {
+        if (age == null) {
+            throw new InvalidUserDataException("Invalid User age was provided. Age can't be null");
+        }
+        if (age < MIN_AGE) {
             throw new InvalidUserDataException("Invalid User age was provided: "
-                    + age + ". Age can't be null or less then " + MIN_AGE);
+                    + age + ". Age can't be less then " + MIN_AGE);
         }
     }
 
