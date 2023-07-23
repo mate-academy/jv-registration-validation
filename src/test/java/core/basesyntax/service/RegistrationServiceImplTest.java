@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static RegistrationService service;
+    private static StorageDao storageDao;
     private static final String EMPTY_LINE = "";
     private static final String ONE_SYMBOL_LINE = "a";
     private static final String THREE_SYMBOLS_LINE = "abc";
@@ -28,6 +31,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     public void setUp() {
+        storageDao = new StorageDaoImpl();
         service = new RegistrationServiceImpl();
     }
 
@@ -37,7 +41,8 @@ public class RegistrationServiceImplTest {
         validUser.setLogin(VALID_LOGIN);
         validUser.setPassword(VALID_PASSWORD);
         validUser.setAge(VALID_AGE);
-        assertEquals(validUser, service.register(validUser));
+        service.register(validUser);
+        assertEquals(validUser, storageDao.get(VALID_LOGIN));
     }
 
     @Test
@@ -46,7 +51,8 @@ public class RegistrationServiceImplTest {
         sixCharactersLoginUser.setLogin(SIX_SYMBOLS_LOGIN);
         sixCharactersLoginUser.setPassword(VALID_PASSWORD);
         sixCharactersLoginUser.setAge(VALID_AGE);
-        assertEquals(sixCharactersLoginUser, service.register(sixCharactersLoginUser));
+        service.register(sixCharactersLoginUser);
+        assertEquals(sixCharactersLoginUser, storageDao.get(SIX_SYMBOLS_LOGIN));
     }
 
     @Test
@@ -55,7 +61,8 @@ public class RegistrationServiceImplTest {
         sixCharactersPasswordUser.setLogin(SIX_SYMBOLS_LINE);
         sixCharactersPasswordUser.setPassword(SIX_SYMBOLS_LINE);
         sixCharactersPasswordUser.setAge(VALID_AGE);
-        assertEquals(sixCharactersPasswordUser, service.register(sixCharactersPasswordUser));
+        service.register(sixCharactersPasswordUser);
+        assertEquals(sixCharactersPasswordUser, storageDao.get(SIX_SYMBOLS_LINE));
     }
 
     @Test
@@ -64,7 +71,8 @@ public class RegistrationServiceImplTest {
         eighteenYearsOldUser.setLogin(SECOND_VALID_LOGIN);
         eighteenYearsOldUser.setPassword(VALID_PASSWORD);
         eighteenYearsOldUser.setAge(EIGHTEEN_AGE);
-        assertEquals(eighteenYearsOldUser, service.register(eighteenYearsOldUser));
+        service.register(eighteenYearsOldUser);
+        assertEquals(eighteenYearsOldUser, storageDao.get(SECOND_VALID_LOGIN));
     }
 
     @Test
