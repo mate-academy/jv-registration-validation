@@ -18,7 +18,7 @@ class RegistrationServiceImplTest {
     public static final String EMPTY_STRING = "";
     public static final int NEGATIVE_USER_AGE = -21;
     public static final int USER_ZERO_AGE = 0;
-    public static final int USER_YOUNG_AGE = 17;
+    public static final int USER_17_AGE = 17;
     public static final int USER_18_AGE = 18;
     public static final int USER_21_AGE = 21;
     private RegistrationService registrationService;
@@ -107,8 +107,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_youngUserAge_notOk() {
-        user.setAge(USER_YOUNG_AGE);
+    void register_UserSeventeenthAge_notOk() {
+        user.setAge(USER_17_AGE);
         assertThrows(RegistrationUserException.class,
                 () -> registrationService.register(user));
     }
@@ -149,14 +149,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAdultAge_Ok() {
+    void register_userEighteenthAge_Ok() {
         user.setAge(USER_18_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
-    void register_userAdultUsaAge_Ok() {
+    void register_userTwentyOneAge_Ok() {
         user.setAge(USER_21_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
