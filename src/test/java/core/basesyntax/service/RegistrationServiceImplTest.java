@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullUser_NotOk() {
+    void register_NullUser_NotOk() {
         assertThrows(UserNotValidException.class, () ->
                 registrationServiceImpl.register(null), "Null user adding shouldn't work");
     }
@@ -88,21 +88,21 @@ class RegistrationServiceImplTest {
     static Stream<Arguments> invalidUsersProvider() {
         String messageBegin = "Invalid user throw UserNotValidException; User has invalid ";
         return Stream.of(
-                arguments(createUserWithAge(17), messageBegin + "age = 17"),
-                arguments(createUserWithAge(11), messageBegin + "age = 11"),
-                arguments(createUserWithAge(0), messageBegin + "age = 0"),
-                arguments(createUserWithAge(-18), messageBegin + "age = -18"),
-                arguments(createUserWithAge(null), messageBegin + "age is null"),
+                arguments(createUserWithLogin("Login"), messageBegin + "login = Login"),
+                arguments(createUserWithLogin("Log"), messageBegin + "login = Log"),
+                arguments(createUserWithLogin(""), messageBegin + "login = empty String"),
+                arguments(createUserWithLogin(null), messageBegin + "login = null"),
 
                 arguments(createUserWithPassword("12345"), messageBegin + "password = 12345"),
                 arguments(createUserWithPassword("123"), messageBegin + "password = 12345"),
                 arguments(createUserWithPassword(""), messageBegin + "password = empty String"),
                 arguments(createUserWithPassword(null), messageBegin + "password = null"),
 
-                arguments(createUserWithLogin("Login"), messageBegin + "login = login"),
-                arguments(createUserWithLogin("Log"), messageBegin + "login = login"),
-                arguments(createUserWithLogin(""), messageBegin + "login = empty String"),
-                arguments(createUserWithLogin(null), messageBegin + "login = null")
+                arguments(createUserWithAge(17), messageBegin + "age = 17"),
+                arguments(createUserWithAge(11), messageBegin + "age = 11"),
+                arguments(createUserWithAge(0), messageBegin + "age = 0"),
+                arguments(createUserWithAge(-18), messageBegin + "age = -18"),
+                arguments(createUserWithAge(null), messageBegin + "age is null")
                 );
     }
 
