@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     @Test
     void checkIfUserWasAdded() {
         StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(USER_WITH_VALID_DATA);
+        registrationService.register(USER_WITH_VALID_DATA);
         User actual = storageDao.get(USER_WITH_VALID_DATA.getLogin());
         User expected = USER_WITH_VALID_DATA;
         assertEquals(expected,actual);
