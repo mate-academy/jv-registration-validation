@@ -1,13 +1,15 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import core.basesyntax.RegistrationServiceException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.RegistrationServiceException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceTest {
     private static final String INVALID_LOGIN = "LOGIN";
@@ -17,7 +19,7 @@ class RegistrationServiceTest {
     private static final String VALID_PASSWORD = "PASSWORD";
     private static final int INVALID_AGE = 15;
     private static final int VALID_AGE = 20;
-    private final static User EXISTING = new User(EXISTING_LOGIN, VALID_PASSWORD, VALID_AGE);
+    private static final User EXISTING = new User(EXISTING_LOGIN, VALID_PASSWORD, VALID_AGE);
     private RegistrationService registrationService;
     private StorageDao storageDao;
 
