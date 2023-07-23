@@ -71,7 +71,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyRegistered_notOk() {
         Storage.people.add(testUser);
-        assertThrows(AlreadyRegisteredException.class, () -> registrationService.register(testUser));
+        assertThrows(AlreadyRegisteredException.class,
+                () -> registrationService.register(testUser));
     }
 
     @Test

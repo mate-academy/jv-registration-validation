@@ -63,6 +63,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         return true;
     }
+
     private boolean isPasswordValid(User user) throws ValidDataException {
         for (Character character : user.getPassword().toCharArray()) {
             if (Character.isLetter(character) || Character.isDigit(character)) {
@@ -72,6 +73,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         return true;
     }
+
     private boolean isLoginValid(User user) throws ValidDataException {
         for (Character character : user.getLogin().toCharArray()) {
             if (Character.isLetter(character) || Character.isDigit(character)) {
