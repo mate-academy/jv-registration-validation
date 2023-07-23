@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.AlreadyRegistered;
+import core.basesyntax.exceptions.AlreadyRegisteredException;
 import core.basesyntax.exceptions.ValidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -19,6 +19,7 @@ class RegistrationServiceImplTest {
     private static final int TEST_YOUNG_AGE = 5;
     private static final String INITIAL_TEST_LOGIN = "Stray228";
     private static final String TEST_SHORT_LOGIN = "Cat";
+    private static final String TEST_WRONG_LOGIN = "C%)( t";
     private static final String INITIAL_TEST_PASSWORD = "123456";
     private static final String TEST_SHORT_PASSWORD = "1234";
     private static final String TEST_WRONG_PASSWORD = "$@*T@G %@*)%)&H";
@@ -70,7 +71,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyRegistered_notOk() {
         Storage.people.add(testUser);
-        assertThrows(AlreadyRegistered.class, () -> registrationService.register(testUser));
+        assertThrows(AlreadyRegisteredException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -119,6 +120,12 @@ class RegistrationServiceImplTest {
     @Test
     void register_wrongPassword_notOk() {
         testUser.setPassword(TEST_WRONG_PASSWORD);
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_wrongLogin_notOk() {
+        testUser.setLogin(TEST_WRONG_LOGIN);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
