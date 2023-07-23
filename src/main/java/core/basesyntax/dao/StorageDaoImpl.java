@@ -22,4 +22,13 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
+
+    public User remote(User user) {
+        if (get(user.getLogin()) != null) {
+            user.setId(--index);
+            Storage.people.remove(user);
+            return user;
+        }
+        return null;
+    }
 }
