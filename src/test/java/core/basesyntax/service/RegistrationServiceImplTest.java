@@ -14,6 +14,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final long INITIAL_TEST_ID = 0L;
+    private static final int INITIAL_TEST_AGE = 18;
+    private static final int TEST_YOUNG_AGE = 5;
+    private static final String INITIAL_TEST_LOGIN = "Stray228";
+    private static final String TEST_SHORT_LOGIN = "Cat";
+    private static final String INITIAL_TEST_PASSWORD = "123456";
+    private static final String TEST_SHORT_PASSWORD = "1234";
+    private static final String TEST_WRONG_PASSWORD = "$@*T@G %@*)%)&H";
     private static final RegistrationServiceImpl registrationService
             = new RegistrationServiceImpl();
     private User testUser;
@@ -22,10 +30,10 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setId(0L);
-        testUser.setLogin("Stray228");
-        testUser.setPassword("12345678");
-        testUser.setAge(18);
+        testUser.setId(INITIAL_TEST_ID);
+        testUser.setLogin(INITIAL_TEST_LOGIN);
+        testUser.setPassword(INITIAL_TEST_PASSWORD);
+        testUser.setAge(INITIAL_TEST_AGE);
     }
 
     @Test
@@ -37,7 +45,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPassword_notOk() {
-        testUser.setPassword("1234");
+        testUser.setPassword(TEST_SHORT_PASSWORD);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
@@ -49,7 +57,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortLogin_notOk() {
-        testUser.setLogin("Cat");
+        testUser.setLogin(TEST_SHORT_LOGIN);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
@@ -67,7 +75,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_youngAge_notOk() {
-        testUser.setAge(5);
+        testUser.setAge(TEST_YOUNG_AGE);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
@@ -108,10 +116,16 @@ class RegistrationServiceImplTest {
         }
     }
 
+    @Test
+    void register_wrongPassword_notOk() {
+        testUser.setPassword(TEST_WRONG_PASSWORD);
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
     @AfterEach
     void onTearDown() {
         testUser.setLogin(testUser.getLogin() + " " + testUserIterator);
-        testUser.setId(testUser.getId() + 1);
         testUserIterator++;
+        testUser.setId(testUser.getId() + testUserIterator);
     }
 }

@@ -38,6 +38,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() < 6 || user.getPassword().length() < 6) {
             throw new ValidDataException("Password must be at least 6 characters long.");
         }
+        for (Character character : user.getPassword().toCharArray()) {
+            if (Character.isLetter(character) || Character.isDigit(character)) {
+                continue;
+            }
+            throw new ValidDataException("Password is not meets a-z A-Z 1-9");
+        }
         if (user.getAge() < 18) {
             throw new ValidDataException("Your age is not acceptable. "
                     + "Come here again after " + (18 - user.getAge())
