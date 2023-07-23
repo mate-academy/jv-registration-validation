@@ -23,13 +23,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new ValidDataException("You did`t fill age field!");
         }
-        // Same login/id check
-        User existingUser = storageDao.get(user.getLogin());
-        if (existingUser != null) {
-            if (existingUser.getId().equals(user.getId())) {
-                throw new AlreadyRegistered("Same id already registered");
-            }
+        // Same login check
+        if (storageDao.get(user.getLogin()) != null
+                && storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
             throw new AlreadyRegistered("Same login already registered");
+        }
+        // Same id check
+        if (storageDao.get(user.getLogin()) != null
+                && storageDao.get(user.getLogin()).getId() != null
+                && storageDao.get(user.getLogin()).getId().equals(user.getId())) {
+            throw new AlreadyRegistered("Same id already registered");
         }
         // Additional validation for password
         if (user.getLogin().length() < 6 || user.getPassword().length() < 6) {

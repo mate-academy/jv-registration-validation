@@ -9,8 +9,9 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private User testUser;
+    private int testUserIterator;
 
     @BeforeEach
     void setUp(){
@@ -75,8 +76,18 @@ class RegistrationServiceImplTest {
         assertDoesNotThrow(() -> {
             registrationService.register(testUser);
         });
-        int testUserIndex = Math.toIntExact(testUser.getId()) - 1;
+        int testUserIndex = Math.toIntExact(testUser.getId());
         assertEquals(Storage.people.get(testUserIndex), testUser);
+    }
+
+    @Test
+    void register_isThatExactlyUserAddedToStorage_okay() {
+        assertDoesNotThrow(() -> {
+            registrationService.register(testUser);
+        });
+        int indexAdded = Math.toIntExact(testUser.getId()) - 1;
+        int receivedExactlyUserId = Math.toIntExact(Storage.people.get(indexAdded).getId()) - 1;
+        assertEquals(indexAdded, receivedExactlyUserId);
     }
 
     @Test
@@ -92,7 +103,9 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void resetStorage() {
-        Storage.people.clear();
+    void onTearDown() {
+        testUser.setLogin(testUser.getLogin() + " " + testUserIterator);
+        testUser.setId(testUser.getId() + 1);
+        testUserIterator++;
     }
 }
