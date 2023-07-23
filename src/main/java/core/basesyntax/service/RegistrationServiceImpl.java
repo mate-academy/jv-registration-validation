@@ -6,6 +6,9 @@ import core.basesyntax.exception.UserNotValidException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    static final int MIN_LOGIN_LENGTH = 6;
+    static final int MIN_PASSWORD_LENGTH = 6;
+    static final int MIN_AGE = 18;
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -13,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         checkUser(user);
         storageDao.add(user);
-        return user;
+        return storageDao.get(user.getLogin());
     }
 
     private void checkUser(User user) {
@@ -36,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     "User with this login exist already. Login is + " + user.getLogin()
             );
         }
-        if (userLogin.length() < 6) {
+        if (userLogin.length() < MIN_LOGIN_LENGTH) {
             throw new UserNotValidException(
                     "Login should be at least 6 symbols. Login is " + userLogin
             );
@@ -49,7 +52,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (userPassword == null) {
             throw new UserNotValidException("Password cant be null");
         }
-        if (userPassword.length() < 6) {
+        if (userPassword.length() < MIN_PASSWORD_LENGTH) {
             throw new UserNotValidException(
                     "Password should be at least 6 symbols. User password is " + userPassword
             );
@@ -64,7 +67,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     "Age of user shouldn't be null."
             );
         }
-        if (userAge < 18) {
+        if (userAge < MIN_AGE) {
             throw new UserNotValidException(
                     "Age should be at least 18. Age is " + userAge
             );
