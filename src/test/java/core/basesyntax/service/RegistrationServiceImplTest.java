@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
@@ -19,9 +21,7 @@ public class RegistrationServiceImplTest {
     private static final String FIVE_SYMBOLS_LINE = "12345";
     private static final String SIX_SYMBOLS_LINE = "Always";
     private static final String VALID_LOGIN = "anotherLogin";
-    private static final String SECOND_VALID_LOGIN = "MateAcademy";
     private static final String SIX_SYMBOLS_LOGIN = "Chance";
-    private static final String ANOTHER_VALID_LOGIN = "veryOriginalLogin";
     private static final String VALID_PASSWORD = "longEnoughPassword";
     private static final int NEGATIVE_AGE = -599;
     private static final int ZERO_AGE = 0;
@@ -29,8 +29,8 @@ public class RegistrationServiceImplTest {
     private static final int EIGHTEEN_AGE = 18;
     private static final int VALID_AGE = 27;
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         storageDao = new StorageDaoImpl();
         service = new RegistrationServiceImpl();
     }
@@ -58,27 +58,27 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_sixCharactersPasswordUser_Ok() {
         User sixCharactersPasswordUser = new User();
-        sixCharactersPasswordUser.setLogin(SIX_SYMBOLS_LINE);
+        sixCharactersPasswordUser.setLogin(VALID_LOGIN);
         sixCharactersPasswordUser.setPassword(SIX_SYMBOLS_LINE);
         sixCharactersPasswordUser.setAge(VALID_AGE);
         service.register(sixCharactersPasswordUser);
-        assertEquals(sixCharactersPasswordUser, storageDao.get(SIX_SYMBOLS_LINE));
+        assertEquals(sixCharactersPasswordUser, storageDao.get(VALID_LOGIN));
     }
 
     @Test
     public void add_eighteenYearsOldUser_Ok() {
         User eighteenYearsOldUser = new User();
-        eighteenYearsOldUser.setLogin(SECOND_VALID_LOGIN);
+        eighteenYearsOldUser.setLogin(VALID_LOGIN);
         eighteenYearsOldUser.setPassword(VALID_PASSWORD);
         eighteenYearsOldUser.setAge(EIGHTEEN_AGE);
         service.register(eighteenYearsOldUser);
-        assertEquals(eighteenYearsOldUser, storageDao.get(SECOND_VALID_LOGIN));
+        assertEquals(eighteenYearsOldUser, storageDao.get(VALID_LOGIN));
     }
 
     @Test
     public void add_negativeAgeUser_not_Ok() {
         User negativeAgeUser = new User();
-        negativeAgeUser.setLogin(ANOTHER_VALID_LOGIN);
+        negativeAgeUser.setLogin(VALID_LOGIN);
         negativeAgeUser.setPassword(VALID_PASSWORD);
         negativeAgeUser.setAge(NEGATIVE_AGE);
         assertThrows(RegistrationException.class, () -> service.register(negativeAgeUser));
@@ -93,7 +93,7 @@ public class RegistrationServiceImplTest {
     public void add_nullLoginUser_notOk() {
         User nullLoginUser = new User();
         nullLoginUser.setLogin(null);
-        nullLoginUser.setPassword(ANOTHER_VALID_LOGIN);
+        nullLoginUser.setPassword(VALID_PASSWORD);
         nullLoginUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(nullLoginUser));
     }
@@ -101,7 +101,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_nullPasswordUser_notOk() {
         User nullPasswordUser = new User();
-        nullPasswordUser.setLogin(ANOTHER_VALID_LOGIN);
+        nullPasswordUser.setLogin(VALID_LOGIN);
         nullPasswordUser.setPassword(null);
         nullPasswordUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(nullPasswordUser));
@@ -128,7 +128,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_emptyPasswordUser_notOk() {
         User emptyPasswordUser = new User();
-        emptyPasswordUser.setLogin(ANOTHER_VALID_LOGIN);
+        emptyPasswordUser.setLogin(VALID_LOGIN);
         emptyPasswordUser.setPassword(EMPTY_LINE);
         emptyPasswordUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(emptyPasswordUser));
@@ -174,7 +174,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_oneSymbolPasswordUser_notOk() {
         User oneSymbolPasswordUser = new User();
-        oneSymbolPasswordUser.setLogin(ANOTHER_VALID_LOGIN);
+        oneSymbolPasswordUser.setLogin(VALID_LOGIN);
         oneSymbolPasswordUser.setPassword(ONE_SYMBOL_LINE);
         oneSymbolPasswordUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(oneSymbolPasswordUser));
@@ -183,7 +183,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_threeSymbolsPasswordUser_notOk() {
         User threeSymbolPasswordUser = new User();
-        threeSymbolPasswordUser.setLogin(ANOTHER_VALID_LOGIN);
+        threeSymbolPasswordUser.setLogin(VALID_LOGIN);
         threeSymbolPasswordUser.setPassword(THREE_SYMBOLS_LINE);
         threeSymbolPasswordUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(threeSymbolPasswordUser));
@@ -192,7 +192,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_fiveSymbolsPasswordUser_notOk() {
         User fiveSymbolPasswordUser = new User();
-        fiveSymbolPasswordUser.setLogin(ANOTHER_VALID_LOGIN);
+        fiveSymbolPasswordUser.setLogin(VALID_LOGIN);
         fiveSymbolPasswordUser.setPassword(FIVE_SYMBOLS_LINE);
         fiveSymbolPasswordUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(fiveSymbolPasswordUser));
@@ -211,7 +211,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_zeroAgeUser_notOk() {
         User zeroAgeUser = new User();
-        zeroAgeUser.setLogin(ANOTHER_VALID_LOGIN);
+        zeroAgeUser.setLogin(VALID_LOGIN);
         zeroAgeUser.setPassword(VALID_PASSWORD);
         zeroAgeUser.setAge(ZERO_AGE);
         assertThrows(RegistrationException.class, () -> service.register(zeroAgeUser));
@@ -220,7 +220,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_seventeenAgeUser_notOk() {
         User seventeenAgeUser = new User();
-        seventeenAgeUser.setLogin(ANOTHER_VALID_LOGIN);
+        seventeenAgeUser.setLogin(VALID_LOGIN);
         seventeenAgeUser.setPassword(VALID_PASSWORD);
         seventeenAgeUser.setAge(SEVENTEEN_AGE);
         assertThrows(RegistrationException.class, () -> service.register(seventeenAgeUser));
@@ -239,17 +239,27 @@ public class RegistrationServiceImplTest {
     @Test
     public void add_noAgeUser_notOk() {
         User noAgeUser = new User();
-        noAgeUser.setLogin(ANOTHER_VALID_LOGIN);
+        noAgeUser.setLogin(VALID_LOGIN);
         noAgeUser.setPassword(VALID_PASSWORD);
         assertThrows(RegistrationException.class, () -> service.register(noAgeUser));
     }
 
     @Test
     public void add_sameLoginUser_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin(VALID_LOGIN);
+        firstUser.setPassword(VALID_PASSWORD);
+        firstUser.setAge(EIGHTEEN_AGE);
+        service.register(firstUser);
         User sameLoginUser = new User();
         sameLoginUser.setLogin(VALID_LOGIN);
         sameLoginUser.setPassword(VALID_PASSWORD);
         sameLoginUser.setAge(VALID_AGE);
         assertThrows(RegistrationException.class, () -> service.register(sameLoginUser));
+    }
+
+    @AfterEach
+    public void resetStorage() {
+        Storage.people.clear();
     }
 }
