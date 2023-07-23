@@ -42,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (Character.isLetter(character) || Character.isDigit(character)) {
                 continue;
             }
-            throw new ValidDataException("Password is not meets a-z A-Z 1-9");
+            throw new ValidDataException("Password is not meets A-Z-a-z-1-9");
         }
         if (user.getAge() < 18) {
             throw new ValidDataException("Your age is not acceptable. "
