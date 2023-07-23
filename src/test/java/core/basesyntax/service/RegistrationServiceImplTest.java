@@ -1,20 +1,26 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.AlreadyRegistered;
 import core.basesyntax.exceptions.ValidDataException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static final RegistrationServiceImpl registrationService
+            = new RegistrationServiceImpl();
     private User testUser;
     private int testUserIterator;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         testUser = new User();
         testUser.setId(0L);
         testUser.setLogin("Stray228");

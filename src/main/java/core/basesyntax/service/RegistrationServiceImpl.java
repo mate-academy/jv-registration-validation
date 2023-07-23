@@ -34,13 +34,14 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && storageDao.get(user.getLogin()).getId().equals(user.getId())) {
             throw new AlreadyRegistered("Same id already registered");
         }
-        // Additional validation for password
+        // Additional validation for password and login
         if (user.getLogin().length() < 6 || user.getPassword().length() < 6) {
             throw new ValidDataException("Password must be at least 6 characters long.");
         }
         if (user.getAge() < 18) {
-            throw new ValidDataException("Your age is not acceptable. " +
-                    "Come here again after " + (18 - user.getAge()) + " year/s \n We will wait for you ;)");
+            throw new ValidDataException("Your age is not acceptable. "
+                    + "Come here again after " + (18 - user.getAge())
+                    + " year/s \n We will wait for you ;)");
         }
         return storageDao.add(user);
     }
