@@ -5,16 +5,19 @@ import static core.basesyntax.service.RegistrationServiceImpl.WHITE_SPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.UserRegistrationException;
 import core.basesyntax.model.User;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
+    private static StorageDaoImpl storageDao;
     private static final int USER_AGE_LESS_18_NOT_OK = 17;
     private static final int USER_AGE_MORE_THAN_18_OK = 30;
     private static final String USER_LOGIN_LENGTH_LESS_6_SYMBOLS_NOT_OK = "Bob";
@@ -25,11 +28,12 @@ class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @ParameterizedTest
-    @MethodSource("register_userData_Ok")
-    void register_addUserToDatabase_Ok(User input) {
+    @MethodSource("register_userData_ok")
+    void register_addUserToDatabase_ok(User input) {
         User actualResult = registrationService.register(input);
         assertEquals(input.getLogin(), actualResult.getLogin());
         assertEquals(input.getPassword(), actualResult.getPassword());
@@ -42,7 +46,22 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> registrationService.register(input));
     }
 
-    private static Stream<Arguments> register_userData_Ok() {
+    @Test
+    void register_addNullUserToDatabase_notOk() {
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(null));
+    }
+
+    @Test
+    void register_addEqualsUsersToDatabase_notOk() {
+        User user = new User(
+                USER_LOGIN_LENGTH_6_SYMBOLS_OK,
+                USER_PASSWORD_LENGTH_6_SYMBOLS_OK,
+                USER_MIN_ACCESSIBLE_AGE);
+        storageDao.add(user);
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
+    }
+
+    private static Stream<Arguments> register_userData_ok() {
         return Stream.of(
                 Arguments.of(new User(
                         USER_LOGIN_LENGTH_6_SYMBOLS_OK,
@@ -96,7 +115,8 @@ class RegistrationServiceImplTest {
                 Arguments.of(new User(
                         USER_LOGIN_LENGTH_6_SYMBOLS_OK,
                         USER_PASSWORD_LENGTH_6_SYMBOLS_OK,
-                        null))
+                        null)),
+                Arguments.of(new User(null, null, null))
         );
     }
 }
