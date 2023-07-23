@@ -24,11 +24,11 @@ class RegistrationServiceImplTest {
     private static final int SECOND_VALID_AGE = 18;
     private static final int THIRD_VALID_AGE = 19;
     private static final int FOURTH_VALID_AGE = 90;
-    private static final String NON_VALID_LOGIN = "Max";
-    private static final String NON_VALID_EDGE_LOGIN = "marty";
-    private static final String NON_VALID_PASSWORD = "dnd";
-    private static final String NON_VALID_EDGE_PASSWORD = "rumba";
-    private static final int NON_VALID_AGE = -15;
+    private static final String THREE_CHARS_LOGIN = "Max";
+    private static final String FIVE_CHARS_EDGE_LOGIN = "marty";
+    private static final String THREE_CHARS_PASSWORD = "dnd";
+    private static final String FIVE_CHARS_EDGE_PASSWORD = "rumba";
+    private static final int NEGATIVE_AGE = -15;
     private static final int NON_VALID_EDGE_AGE = 17;
     private static final String EMPTY_FIELD = "";
     private static final int ZERO_AGE = 0;
@@ -42,18 +42,18 @@ class RegistrationServiceImplTest {
             FOURTH_VALID_PASSWORD, FOURTH_VALID_AGE);
     private static final User SECOND_USER_FOR_REPEAT = new User(FOURTH_VALID_LOGIN,
             FOURTH_VALID_PASSWORD, FOURTH_VALID_AGE);
-    private static final User FIRST_NON_VALID_USER = new User(NON_VALID_LOGIN,
+    private static final User FIRST_NON_VALID_USER = new User(THREE_CHARS_LOGIN,
             SECOND_VALID_PASSWORD, SECOND_VALID_AGE);
     private static final User SECOND_NON_VALID_USER = new User(SECOND_VALID_LOGIN,
-            SECOND_VALID_PASSWORD, NON_VALID_AGE);
+            SECOND_VALID_PASSWORD, NEGATIVE_AGE);
     private static final User THIRD_NON_VALID_USER = new User(THIRD_VALID_LOGIN,
-            NON_VALID_PASSWORD, THIRD_VALID_AGE);
+            THREE_CHARS_PASSWORD, THIRD_VALID_AGE);
     private static final User FIRST_NON_VALID_EDGE_USER = new User(
-            NON_VALID_EDGE_LOGIN, FIRST_VALID_PASSWORD, FIRST_VALID_AGE);
+            FIVE_CHARS_EDGE_LOGIN, FIRST_VALID_PASSWORD, FIRST_VALID_AGE);
     private static final User SECOND_NON_VALID_EDGE_USER = new User(
             FIRST_VALID_LOGIN, FIRST_VALID_PASSWORD, NON_VALID_EDGE_AGE);
     private static final User THIRD_NON_VALID_EDGE_USER = new User(
-            FIRST_VALID_LOGIN, NON_VALID_EDGE_PASSWORD, FIRST_VALID_AGE);
+            FIRST_VALID_LOGIN, FIVE_CHARS_EDGE_PASSWORD, FIRST_VALID_AGE);
     private static final User FOURTH_NON_VALID_USER = new User(null,
             null, null);
     private static final User FIFTH_NON_VALID_USER = new User(FIRST_VALID_LOGIN,
