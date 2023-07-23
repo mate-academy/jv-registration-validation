@@ -19,15 +19,15 @@ class RegistrationServiceImplTest {
     public static final int NEGATIVE_USER_AGE = -21;
     public static final int USER_ZERO_AGE = 0;
     public static final int USER_YOUNG_AGE = 17;
-    public static final int USER_ADULT_AGE = 18;
-    public static final int USER_USA_ADULT_AGE = 21;
+    public static final int USER_18_AGE = 18;
+    public static final int USER_21_AGE = 21;
     private RegistrationService registrationService;
     private User user;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        user = new User(STRING_7_CHARACTER, STRING_7_CHARACTER, USER_ADULT_AGE);
+        user = new User(STRING_7_CHARACTER, STRING_7_CHARACTER, USER_18_AGE);
     }
 
     @Test
@@ -150,14 +150,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAdultAge_Ok() {
-        user.setAge(USER_ADULT_AGE);
+        user.setAge(USER_18_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_userAdultUsaAge_Ok() {
-        user.setAge(USER_USA_ADULT_AGE);
+        user.setAge(USER_21_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
@@ -166,7 +166,7 @@ class RegistrationServiceImplTest {
     void register_multipleCallUser_Ok() {
         for (int i = 0; i < 777; i++) {
             registrationService.register(new User(STRING_7_CHARACTER + i,
-                     STRING_7_CHARACTER, USER_ADULT_AGE));
+                     STRING_7_CHARACTER, USER_18_AGE));
         }
     }
 
