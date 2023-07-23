@@ -1,0 +1,98 @@
+package core.basesyntax.service;
+
+import core.basesyntax.db.Storage;
+import core.basesyntax.exceptions.AlreadyRegistered;
+import core.basesyntax.exceptions.ValidDataException;
+import core.basesyntax.model.User;
+import org.junit.jupiter.api.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class RegistrationServiceImplTest {
+    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private User testUser;
+
+    @BeforeEach
+    void setUp(){
+        testUser = new User();
+        testUser.setId(0L);
+        testUser.setLogin("Stray228");
+        testUser.setPassword("12345678");
+        testUser.setAge(18);
+    }
+
+    @Test
+    void register_user_Ok() {
+        assertDoesNotThrow(() -> {
+            registrationService.register(testUser);
+        });
+    }
+
+    @Test
+    void register_shortPassword_notOk() {
+        testUser.setPassword("1234");
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        testUser.setPassword(null);
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_shortLogin_notOk() {
+        testUser.setLogin("Cat");
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        testUser.setLogin(null);
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_userAlreadyRegistered_notOk() {
+        Storage.people.add(testUser);
+        assertThrows(AlreadyRegistered.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_youngAge_notOk() {
+        testUser.setAge(5);
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        testUser.setAge(null);
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+    }
+
+    @Test
+    void register_userAddedToStorage_okay() {
+        assertDoesNotThrow(() -> {
+            registrationService.register(testUser);
+        });
+        int testUserIndex = Math.toIntExact(testUser.getId()) - 1;
+        assertEquals(Storage.people.get(testUserIndex), testUser);
+    }
+
+    @Test
+    void register_userNotAddedToStorage_okay() {
+        testUser.setAge(null);
+        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
+        try {
+            int testUserIndex = Math.toIntExact(testUser.getId()) - 1;
+            assertNotEquals(Storage.people.get(testUserIndex), testUser);
+        } catch (IndexOutOfBoundsException e) {
+            // Nice!
+        }
+    }
+
+    @AfterEach
+    void resetStorage() {
+        Storage.people.clear();
+    }
+}
