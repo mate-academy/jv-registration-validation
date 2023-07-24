@@ -13,43 +13,55 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationException {
-        //Initial User validation
+        isUserValid(user);
+        return storageDao.add(user);
+    }
+
+    private void isUserValid(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null!");
         }
         if (Storage.people.contains(user)) {
             throw new RegistrationException("This user is already existed in the Storage!");
         }
-        //User's login validation
-        if (user.getLogin() == null) {
+        isLoginValid(user.getLogin());
+        isPasswordValid(user.getPassword());
+        isAgeValid(user.getAge());
+    }
+
+    private void isLoginValid(String login) {
+        if (login == null) {
             throw new RegistrationException("User's login can't be null!");
         }
-        if (user.getLogin().isBlank()) {
+        if (login.isBlank()) {
             throw new RegistrationException("User's login can't consist only white spaces!");
         }
-        if (user.getLogin().length() < MIN_LOGIN_PASSWORD_NUMBER_OF_CHARACTERS) {
+        if (login.length() < MIN_LOGIN_PASSWORD_NUMBER_OF_CHARACTERS) {
             throw new RegistrationException("User's login should be longer than "
                     + MIN_LOGIN_PASSWORD_NUMBER_OF_CHARACTERS + "!");
         }
-        //User's password validation
-        if (user.getPassword() == null) {
+    }
+
+    private void isPasswordValid(String password) {
+        if (password == null) {
             throw new RegistrationException("User's password can't be null!");
         }
-        if (user.getPassword().isBlank()) {
+        if (password.isBlank()) {
             throw new RegistrationException("User's password can't consist only white spaces");
         }
-        if (user.getPassword().length() < MIN_LOGIN_PASSWORD_NUMBER_OF_CHARACTERS) {
+        if (password.length() < MIN_LOGIN_PASSWORD_NUMBER_OF_CHARACTERS) {
             throw new RegistrationException("User's password should be longer than "
                     + MIN_LOGIN_PASSWORD_NUMBER_OF_CHARACTERS + "!");
         }
-        //User's age validation
-        if (user.getAge() == null) {
+    }
+
+    private void isAgeValid(Integer age) {
+        if (age == null) {
             throw new RegistrationException("User's age can't be null!");
         }
-        if (user.getAge() < MIN_AGE) {
+        if (age < MIN_AGE) {
             throw new RegistrationException("User can't be registered with less age than min: "
                     + MIN_AGE + "!");
         }
-        return storageDao.add(user);
     }
 }

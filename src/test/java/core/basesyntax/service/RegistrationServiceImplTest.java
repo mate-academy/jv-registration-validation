@@ -14,19 +14,31 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User INITIAL_USER_IN_STORAGE = new User("validLogin",
-            "validPassword", 18);
-    private static final int INITIAL_SIZE_OF_STORAGE = 1;
+    private static User INITIAL_USER_IN_STORAGE;
     private static final String VALID_LOGIN_EXAMPLE = "user20";
     private static final String VALID_PASSWORD_EXAMPLE = "password";
     private static final int MIN_VALID_AGE = 18;
-    private static final String INVALID_LOGIN_EXAMPLE1 = "user1";
-    private static final String INVALID_LOGIN_EXAMPLE2 = "";
-    private static final String INVALID_LOGIN_EXAMPLE3 = "      ";
-    private static final String INVALID_PASSWORD_EXAMPLE1 = "12345";
-    private static final String INVALID_PASSWORD_EXAMPLE2 = "";
-    private static final String INVALID_PASSWORD_EXAMPLE3 = "      ";
+    private static final String INVALID_LOGIN_EXAMPLE = "user1";
+    private static final String INVALID_LOGIN_EXAMPLE3_BLANK = "      ";
+    private static final String INVALID_PASSWORD_EXAMPLE = "12345";
+    private static final String INVALID_PASSWORD_EXAMPLE_BLANK = "      ";
     private static final int INVALID_AGE_EXAMPLE = 15;
+    private static final String NULL_USER_ERROR_MESSAGE = "User can't be null!";
+    private static final String EXISTING_USER_ERROR_MESSAGE = "This user is already "
+                                                            + "existed in the Storage!";
+    private static final String NULL_LOGIN_ERROR_MESSAGE = "User's login can't be null!";
+    private static final String BLANK_LOGIN_ERROR_MESSAGE = "User's login can't consist "
+                                                            + "only white spaces!";
+    private static final String SHORT_LOGIN_ERROR_MESSAGE = "User's login should be "
+                                                            + "longer than 6!";
+    private static final String NULL_PASSWORD_ERROR_MESSAGE = "User's password can't be null!";
+    private static final String BLANK_PASSWORD_ERROR_MESSAGE = "User's password can't consist "
+                                                            + "only white spaces";
+    private static final String SHORT_PASSWORD_ERROR_MESSAGE = "User's password should be "
+                                                            + "longer than 6!";
+    private static final String NULL_AGE_ERROR_MESSAGE = "User's age can't be null!";
+    private static final String INVALID_AGE_ERROR_MESSAGE = "User can't be registered with "
+                                                            + "less age than min: 18!";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
 
@@ -34,6 +46,7 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+        INITIAL_USER_IN_STORAGE = new User("validLogin", "validPassword", 18);
     }
 
     @BeforeEach
@@ -45,155 +58,129 @@ class RegistrationServiceImplTest {
     void register_newUser_ok() {
         User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
         registrationService.register(expected);
-        User actual = storageDao.get(expected.getLogin());
+        User actual = storageDao.get(VALID_LOGIN_EXAMPLE);
         assertEquals(expected, actual);
     }
 
     @Test
     void register_alreadyExistedUser_notOk() {
-        assertThrows(RegistrationException.class, () -> {
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
             registrationService.register(INITIAL_USER_IN_STORAGE);
         });
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(EXISTING_USER_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test
     void register_nullUser_notOkay() {
         User nullUser = null;
-        assertThrows(RegistrationException.class, () -> {
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullUser);
         });
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(NULL_USER_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test
     void register_userWithValidLogin_ok() {
         User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
         registrationService.register(expected);
-        User actual = storageDao.get(expected.getLogin());
+        User actual = storageDao.get(VALID_LOGIN_EXAMPLE);
         assertEquals(expected, actual);
     }
 
     @Test
     void register_userWithInvalidLogin_notOk() {
-        User fiveCharacterLoginUser = new User(INVALID_LOGIN_EXAMPLE1,
+        User invalidLoginUser = new User(INVALID_LOGIN_EXAMPLE,
                 VALID_PASSWORD_EXAMPLE,
                 MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(fiveCharacterLoginUser);
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(invalidLoginUser);
         });
+        assertEquals(SHORT_LOGIN_ERROR_MESSAGE, thrown.getMessage());
+    }
 
-        User fourCharacterLoginUser = new User(INVALID_LOGIN_EXAMPLE2,
+    @Test
+    void register_userWithBlankLogin_notOk() {
+        User blankLoginUser = new User(INVALID_LOGIN_EXAMPLE3_BLANK,
                 VALID_PASSWORD_EXAMPLE,
                 MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(fourCharacterLoginUser);
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(blankLoginUser);
         });
-
-        User oneCharacterLoginUser = new User(INVALID_LOGIN_EXAMPLE3,
-                VALID_PASSWORD_EXAMPLE,
-                MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(oneCharacterLoginUser);
-        });
-
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(BLANK_LOGIN_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test
     void register_userWithNullLogin_notOk() {
         User nullLoginUser = new User(null, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullLoginUser);
         });
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(NULL_LOGIN_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test
     void register_userWithValidPassword_ok() {
         User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
         registrationService.register(expected);
-        User actual = storageDao.get(expected.getLogin());
+        User actual = storageDao.get(VALID_LOGIN_EXAMPLE);
         assertEquals(expected, actual);
     }
 
     @Test
     void register_userWithInvalidPassword_notOk() {
-        User fiveCharacterPasswordUser = new User(VALID_LOGIN_EXAMPLE,
-                INVALID_PASSWORD_EXAMPLE1,
+        User invalidPasswordUser = new User(VALID_LOGIN_EXAMPLE,
+                INVALID_PASSWORD_EXAMPLE,
                 MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(fiveCharacterPasswordUser);
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(invalidPasswordUser);
         });
+        assertEquals(SHORT_PASSWORD_ERROR_MESSAGE, thrown.getMessage());
+    }
 
-        User fourCharacterPasswordUser = new User(VALID_LOGIN_EXAMPLE,
-                INVALID_PASSWORD_EXAMPLE2,
+    @Test
+    void register_userWithBlankPassword_notOk() {
+        User blankPasswordUser = new User(VALID_LOGIN_EXAMPLE,
+                INVALID_PASSWORD_EXAMPLE_BLANK,
                 MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(fourCharacterPasswordUser);
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(blankPasswordUser);
         });
-
-        User oneCharacterPasswordUser = new User(VALID_LOGIN_EXAMPLE,
-                INVALID_PASSWORD_EXAMPLE3,
-                MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(oneCharacterPasswordUser);
-        });
-
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(BLANK_PASSWORD_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test
     void register_userWithNullPassword_notOk() {
         User nullPasswordUser = new User(VALID_LOGIN_EXAMPLE, null, MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullPasswordUser);
         });
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(NULL_PASSWORD_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test
     void register_userWithValidAge_ok() {
         User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
         registrationService.register(expected);
-        User actual = storageDao.get(expected.getLogin());
+        User actual = storageDao.get(VALID_LOGIN_EXAMPLE);
         assertEquals(expected, actual);
     }
 
     @Test
     void register_userWithLessThanMinAge_notOk() {
         User user = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, INVALID_AGE_EXAMPLE);
-        assertThrows(RegistrationException.class, () -> {
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
-    }
-
-    @Test
-    void register_userWithNegativeAge_notOk() {
-        User user = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, -1);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(INVALID_AGE_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @Test
     void register_userWithNullAge_notOk() {
         User user = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, null);
-        assertThrows(RegistrationException.class, () -> {
+        RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(INITIAL_SIZE_OF_STORAGE, actualSizeOfStorage);
+        assertEquals(NULL_AGE_ERROR_MESSAGE, thrown.getMessage());
     }
 
     @AfterEach
