@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -14,25 +15,25 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new ValidationException("Input User is null");
         }
-        loginValidator(user);
-        passwordValidator(user);
-        ageValidator(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void ageValidator(User user) {
+    private void validateAge(User user) {
+        if (user.getAge() == null) {
+            throw new ValidationException("User age is null");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new ValidationException("Not valid age: "
                     + user.getAge()
                     + ". Min allowed age is "
                     + MIN_AGE);
         }
-        if (user.getAge() == null) {
-            throw new ValidationException("User age is null");
-        }
     }
 
-    private void passwordValidator(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new ValidationException("Password can't be null");
         }
@@ -42,8 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void loginValidator(User user) {
-        User userInStorage = storageDao.get(user.getLogin());
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new ValidationException("Login can't be null");
         }
@@ -51,8 +51,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("Min allowed login length is "
                     + DEFAULT_MIN_CHARACTERS);
         }
-        if (!(userInStorage == null)
-                && user.getLogin().equals(userInStorage.getLogin())) {
+        User userInStorage = storageDao.get(user.getLogin());
+        if (!(userInStorage == null)) {
             throw new ValidationException("Same login was already registered, please try again");
         }
 

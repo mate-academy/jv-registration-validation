@@ -3,21 +3,35 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
+import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService;
-    private StorageDaoImpl storageDao;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
         user = new User();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -83,6 +97,11 @@ class RegistrationServiceImplTest {
         assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_UserWithNullAge_NotOk() {
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
