@@ -13,6 +13,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkUserForNull(user);
+        checkIfUserAlreadyExist(user);
+        checkForValidLength(user);
+        checkForValidAge(user);
+        return storageDao.add(user);
+    }
+
+    private void checkUserForNull(User user) {
         if (user == null) {
             throw new UserRegistrationException("Can't register user, because user is null");
         }
@@ -25,6 +33,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new UserRegistrationException("The login can't be null");
         }
+    }
+
+    private void checkIfUserAlreadyExist(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserRegistrationException("User already exists with login "
+                    + user.getLogin());
+        }
+    }
+
+    private void checkForValidLength(User user) {
         if (user.getLogin().length() < LOGIN_MIN_LENGTH) {
             throw new UserRegistrationException("The length of the login must be at least "
                     + LOGIN_MIN_LENGTH);
@@ -33,15 +51,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserRegistrationException("The length of the password must be at least "
                     + PASSWORD_MIN_LENGTH);
         }
+    }
+
+    private void checkForValidAge(User user) {
         if (user.getAge() < MIN_AGE) {
             throw new UserRegistrationException("The age of the user must be at least " + MIN_AGE);
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new UserRegistrationException("User already exists with login "
-                    + user.getLogin());
-        }
-        storageDao.add(user);
-        return user;
     }
 }
 
