@@ -52,7 +52,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isNullUser() {
+    void register_isNullUser_NotOk() {
         User nullUser = null;
         assertThrows(NullPointerException.class, () -> {
             registerServiceTest.register(nullUser);
@@ -60,7 +60,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isNullLogin() {
+    void register_isNullLogin_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(1));
@@ -71,7 +71,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isNullPassword() {
+    void register_isNullPassword_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(3));
@@ -82,7 +82,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isNullPAge() {
+    void register_isNullAge_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(2));
@@ -93,7 +93,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isEmptyLogin() {
+    void register_isEmptyLogin_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(6));
@@ -104,7 +104,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isEmptyPassword() {
+    void register_isEmptyPassword_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(7));
@@ -115,7 +115,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isLoginLength_LessThan_Six() {
+    void register_isLoginLength_LessThan_Six_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(0));
@@ -126,7 +126,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isPasswordLength_LessThan_Six() {
+    void register_isPasswordLength_LessThan_Six_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(4));
@@ -137,7 +137,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isAge_LessThan_Range() {
+    void register_isAgeLessThanRange_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(5));
@@ -148,7 +148,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isNegativeAge() {
+    void register_isNegativeAge_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(8));
@@ -159,7 +159,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void isLoginStartWithNumbers() {
+    void register_isLoginStartWithNumbers_NotOk() {
         List<User> actual = initUsersList();
         try {
             registerServiceTest.register(actual.get(9));
@@ -170,7 +170,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void getUserByLogin() {
+    void registerData_getUserByLogin_NotOk() {
         try {
             RegistrationServiceImpl registerSpecialService =
                     (RegistrationServiceImpl) registerServiceTest;
@@ -182,7 +182,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void getUserByLoginCorrect() {
+    void registerData_getUserByLoginCorrect_Ok() {
         String correctLogin = "RitaVonalich";
         RegistrationServiceImpl registerSpecialService =
                 (RegistrationServiceImpl) registerServiceTest;
@@ -192,7 +192,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void registerSameUser_AlreadyRegisted() {
+    void registerData_registerSameUserAlreadyRegisted_NotOk() {
         List<User> actual = initCorrectUsersList();
         try {
             registerServiceTest.register(actual.get(0));
