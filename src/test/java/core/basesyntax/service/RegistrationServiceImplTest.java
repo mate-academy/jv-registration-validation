@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.UserInvalidDataException;
@@ -28,8 +29,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void testRegister_userWhoIsRegistered_notOk() {
-        User user = new User("login1234", "password1234", 19);
-        Storage.people.add(user);
+        User validUser = new User("login1234", "password1234", 19);
+        Storage.people.add(validUser);
+        assertTrue(Storage.people.contains(validUser));
         assertThrows(UserInvalidDataException.class,
                 () -> registrationService.register(new User("login1234", "password1234", 19)),
                 "method need throw UserInvalidDataException for user that contains in storage");
@@ -68,12 +70,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void testRegister_validUser_ok() {
-        User validUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        assertEquals(validUser, registrationService.register(validUser),
-                "method need return user: " + validUser);
-        User anotherValidUser = new User("valid login number two", VALID_PASSWORD, VALID_AGE);
-        assertEquals(anotherValidUser, registrationService.register(anotherValidUser),
-                "method need return user: " + anotherValidUser);
+        for (int i = 0; i < 100; i++) {
+            User validUser = new User(VALID_LOGIN + i, VALID_PASSWORD + i, VALID_AGE + i);
+            assertEquals(validUser, registrationService.register(validUser),
+                    "method need return user: " + validUser);
+            assertTrue(Storage.people.contains(validUser));
+        }
     }
 
     @Test
