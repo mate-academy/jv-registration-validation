@@ -148,6 +148,7 @@ class RegistrationServiceImplTest {
         testUser.setLogin("");
         assertTrue(testUser.getLogin().length() <= user.getLogin().length());
     }
+
     @Test
     void register_UserThatIsAlreadyExist_NotOk() {
         Storage.people.add(user);
