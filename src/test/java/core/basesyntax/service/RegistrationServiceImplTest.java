@@ -17,8 +17,9 @@ class RegistrationServiceImplTest {
     private static final String PASSWORD_LESS_THAN_6_CHARACTERS = "12345";
     private static final int AGE_LESS_THAN_MIN = 10;
     private static final int MIN_AGE = 18;
+    private static final int MIN_LENGTH = 6;
     private static RegistrationService registrationService;
-    private User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
+    private User validUser = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
 
     @BeforeAll
     static void beforeAll() {
@@ -27,86 +28,91 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(null);
-        });
+        assertThrows(RegistrationException.class, () ->
+                        registrationService.register(null),
+                "If user is Null - Registration Exception should be thrown");
     }
 
     @Test
     void register_nullLogin_notOk() {
-        user.setLogin(null);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        validUser.setLogin(null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),
+                "If user's login is Null - Registration Exception should be thrown");
+
     }
 
     @Test
     void register_nullPassword_notOk() {
-        user.setPassword(null);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        validUser.setPassword(null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),
+                "If user's password is Null - Registration Exception should be thrown");
     }
 
     @Test
     void register_nullAge_notOk() {
-        user.setAge(null);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        validUser.setAge(null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),
+                "If user's age is Null - Registration Exception should be thrown");
     }
 
     @Test
     void register_minLogin_notOk() {
-        user.setLogin(LOGIN_LESS_THAN_6_CHARACTERS);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        validUser.setLogin(LOGIN_LESS_THAN_6_CHARACTERS);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),
+                "If user's login length is less than " + MIN_LENGTH
+                        + " Registration Exception should be thrown");
     }
 
     @Test
     void register_minPassword_notOk() {
-        user.setPassword(PASSWORD_LESS_THAN_6_CHARACTERS);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        validUser.setPassword(PASSWORD_LESS_THAN_6_CHARACTERS);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser),
+                "If user's password length is less than " + MIN_LENGTH
+                        + " Registration Exception should be thrown");
     }
 
     @Test
     void register_minAge_notOk() {
-        user.setAge(AGE_LESS_THAN_MIN);
-        assertThrows(RegistrationException.class,() -> {
-            registrationService.register(user);
-        });
+        validUser.setAge(AGE_LESS_THAN_MIN);
+        assertThrows(RegistrationException.class,() ->
+                registrationService.register(validUser),
+                "If user's age is less than " + MIN_AGE
+                        + " Registration Exception should be thrown");
     }
 
     @Test
     void register_existingUser_notOk() {
-        Storage.people.add(user);
-        assertThrows(RegistrationException.class,() -> {
-            registrationService.register(user);
-        });
+        Storage.people.add(validUser);
+        assertThrows(RegistrationException.class,() ->
+                registrationService.register(validUser),
+                "If user already exist in storage Registration Exception should be thrown");
+
     }
 
     @Test
     void register_validLogin_ok() {
-        user.setLogin(VALID_LOGIN);
-        registrationService.register(user);
-        assertTrue(Storage.people.contains(user));
+        validUser.setLogin(VALID_LOGIN);
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser));
     }
 
     @Test
     void register_validPassword_ok() {
-        user.setPassword(VALID_LOGIN);
-        registrationService.register(user);
-        assertTrue(Storage.people.contains(user));
+        validUser.setPassword(VALID_LOGIN);
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser));
     }
 
     @Test
     void register_validAge_ok() {
-        user.setAge(MIN_AGE);
-        registrationService.register(user);
-        assertTrue(Storage.people.contains(user));
+        validUser.setAge(MIN_AGE);
+        registrationService.register(validUser);
+        assertTrue(Storage.people.contains(validUser));
     }
 
     @AfterEach
