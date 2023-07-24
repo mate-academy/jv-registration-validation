@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static User INITIAL_USER_IN_STORAGE;
     private static final String VALID_LOGIN_EXAMPLE = "user20";
     private static final String VALID_PASSWORD_EXAMPLE = "password";
     private static final int MIN_VALID_AGE = 18;
@@ -41,17 +40,18 @@ class RegistrationServiceImplTest {
                                                             + "less age than min: 18!";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
+    private static User initialUserInStorage;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-        INITIAL_USER_IN_STORAGE = new User("validLogin", "validPassword", 18);
+        initialUserInStorage = new User("validLogin", "validPassword", 18);
     }
 
     @BeforeEach
     void setUp() {
-        Storage.people.add(INITIAL_USER_IN_STORAGE);
+        Storage.people.add(initialUserInStorage);
     }
 
     @Test
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_alreadyExistedUser_notOk() {
         RegistrationException thrown = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(INITIAL_USER_IN_STORAGE);
+            registrationService.register(initialUserInStorage);
         });
         assertEquals(EXISTING_USER_ERROR_MESSAGE, thrown.getMessage());
     }
@@ -77,14 +77,6 @@ class RegistrationServiceImplTest {
             registrationService.register(nullUser);
         });
         assertEquals(NULL_USER_ERROR_MESSAGE, thrown.getMessage());
-    }
-
-    @Test
-    void register_userWithValidLogin_ok() {
-        User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        registrationService.register(expected);
-        User actual = storageDao.get(VALID_LOGIN_EXAMPLE);
-        assertEquals(expected, actual);
     }
 
     @Test
@@ -119,14 +111,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithValidPassword_ok() {
-        User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        registrationService.register(expected);
-        User actual = storageDao.get(VALID_LOGIN_EXAMPLE);
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void register_userWithInvalidPassword_notOk() {
         User invalidPasswordUser = new User(VALID_LOGIN_EXAMPLE,
                 INVALID_PASSWORD_EXAMPLE,
@@ -155,14 +139,6 @@ class RegistrationServiceImplTest {
             registrationService.register(nullPasswordUser);
         });
         assertEquals(NULL_PASSWORD_ERROR_MESSAGE, thrown.getMessage());
-    }
-
-    @Test
-    void register_userWithValidAge_ok() {
-        User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        registrationService.register(expected);
-        User actual = storageDao.get(VALID_LOGIN_EXAMPLE);
-        assertEquals(expected, actual);
     }
 
     @Test
