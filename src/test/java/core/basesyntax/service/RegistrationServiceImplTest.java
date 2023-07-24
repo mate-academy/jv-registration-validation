@@ -1,12 +1,12 @@
 package core.basesyntax.service;
 
-import core.basesyntax.db.Storage;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -51,11 +51,9 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
-
     @Test
     void register_validUser_ok() {
         User user = new User("logiin", "123456", 20);
         assertEquals(user, registrationService.register(user));
     }
-
-    }
+}

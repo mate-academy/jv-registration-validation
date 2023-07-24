@@ -1,12 +1,11 @@
 package core.basesyntax.service;
 
+import static core.basesyntax.db.Storage.people;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
-
-import static core.basesyntax.db.Storage.people;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_AND_PASSWORD_LENGTH = 6;
@@ -19,13 +18,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User is null");
         }
 
-    isAllUserFieldsNotNull(user);
-    isUserNew(user);
-    isLoginValid(user);
-    isPasswordValid(user);
-    isUserAlreadyGrownup(user);
-
-    return storageDao.add(user);
+        isAllUserFieldsNotNull(user);
+        isUserNew(user);
+        isLoginValid(user);
+        isPasswordValid(user);
+        isUserAlreadyGrownup(user);
+        return storageDao.add(user);
     }
 
     private boolean isUserNew(User user) {
@@ -50,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean isUserAlreadyGrownup(User user) {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Sorry, here is link to Disney`s site - disney.com");
         }
         return true;
