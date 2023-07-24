@@ -20,16 +20,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validator(User user) {
-        checkIfUserHasNoData(user);
+        checkIfUserIsNull(user);
         checkIfUserAlreadyExist(user);
         validateLogin(user);
         validatePassword(user);
         validateAge(user);
     }
 
-    private void checkIfUserHasNoData(User user) {
+    private void checkIfUserIsNull(User user) {
         if (user == null) {
-            throw new NoValidDataException("User can't be added. "
+            throw new NoValidDataException("This user is null. "
                     + "Please set all fields for users");
         }
     }
@@ -41,20 +41,29 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(User user) {
-        checkIfUserHasNotLogin(user);
+        checkIfFieldIsNull(user.getLogin(), "You can't create account without login."
+                + " Please, set your login");
         checkCharactersInUsersLogin(user);
         checkIfUserHasInvalidLoginLength(user);
     }
 
     private void validatePassword(User user) {
-        checkIfUserHasNotPassword(user);
+        checkIfFieldIsNull(user.getPassword(),"You can't create account without password."
+                + " Please, set your password");
         checkCharactersInUsersPassword(user);
         checkIfUserHasInvalidPasswordLength(user);
     }
 
     private void validateAge(User user) {
-        checkIfUserDoesNotSetAge(user);
+        checkIfFieldIsNull(user.getAge(), "You can't add user without age."
+                + " Please, enter you age");
         checkIfUserHasInvalidAge(user);
+    }
+
+    private void checkIfFieldIsNull(Object fieldValue, String exceptionMessage) {
+        if (fieldValue == null) {
+            throw new NoValidDataException(exceptionMessage);
+        }
     }
 
     private void checkIfUserHasInvalidLoginLength(User user) {
@@ -78,12 +87,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (!onlyLetters) {
             throw new NoValidDataException("Login must contain only characters");
-        }
-    }
-
-    private void checkIfUserHasNotLogin(User user) {
-        if (user.getLogin() == null) {
-            throw new NoValidDataException("You can't add user without login");
         }
     }
 
@@ -113,23 +116,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkIfUserHasNotPassword(User user) {
-        if (user.getPassword() == null) {
-            throw new NoValidDataException("You can't create account without password."
-                    + " Please, set your password");
-        }
-    }
-
     private void checkIfUserHasInvalidAge(User user) {
         if (user.getAge() < VALID_AGE) {
             throw new NoValidDataException("Service is available for 18+ only");
-        }
-    }
-
-    private void checkIfUserDoesNotSetAge(User user) {
-        if (user.getAge() == null) {
-            throw new NoValidDataException("You can't add user without age."
-                    + " Please, enter you age");
         }
     }
 }
