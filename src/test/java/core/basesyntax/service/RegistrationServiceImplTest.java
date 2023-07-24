@@ -21,7 +21,40 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationOfUserWithInvalidLogin_NotOk() {
+    void register_UserWithNullLogin_MotOk() {
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_UserWithFiveLengthLogin_NotOk() {
+        user.setLogin("Seven");
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_UserWithSixLengthLogin_Ok() {
+        user.setLogin("Eleven");
+        user.setPassword("RandomPassword");
+        user.setAge(23);
+        registrationService.register(user);
+        User actual = storageDao.get("Eleven");
+        User expected = user;
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_UserWithNullPassword_NotOk() {
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_UserWithLoginUnderMinLength_NotOk() {
         user.setLogin("byaka");
         user.setPassword("123456");
         assertThrows(ValidationException.class, () -> {
@@ -30,7 +63,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationOfUserWithInvalidPassword_NotOk() {
+    void register_UserWithPasswordUnderMinLength_NotOk() {
         user.setLogin("Kalyabaka");
         user.setPassword("12345");
         assertThrows(ValidationException.class, () -> {
@@ -39,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationOfUserWithIvalidAge_NotOk() {
+    void register_UserWithAgeUnderMinAge_NotOk() {
         user.setLogin("Zaluzhniy112");
         user.setPassword("1234567");
         user.setAge(17);
@@ -49,24 +82,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationOfValidUser_Ok() {
+    void register_CorrectUser_Ok() {
         user.setLogin("DenisShvagro123");
         user.setPassword("qazwsxedc123");
         user.setAge(25);
         registrationService.register(user);
         User actual = storageDao.get("DenisShvagro123");
         User expected = user;
-        assertEquals(expected, actual, "Incorrect user returned from Storage");
+        assertEquals(expected, actual);
     }
 
     @Test
-    void registrationOfMultipleUsers_Ok() {
+    void register_MultipleUsers_Ok() {
         user.setLogin("KumMichael");
         user.setPassword("xedc123");
         user.setAge(25);
         registrationService.register(user);
         User actual = storageDao.get("KumMichael");
-        assertEquals(user, actual, "Incorrect user returned from Storage");
+        assertEquals(user, actual);
         User secondUser = new User();
         secondUser.setLogin("Abrakadabra");
         secondUser.setPassword("qwer123");
@@ -77,7 +110,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationOfUserWithNotUniqueLogin_NotOk() {
+    void register_UserWithNotUniqueLogin_NotOk() {
         user.setLogin("AbyssWalker");
         user.setPassword("234235246");
         user.setAge(19);
