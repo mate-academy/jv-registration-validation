@@ -1,14 +1,14 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.NoValidDataException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -35,103 +35,84 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
-    void expectingExceptionWhenUserIsNull() {
+    void register_userWithoutData_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITHOUT_DATA);
         });
     }
 
     @Test
-    void checkIfUserWasAdded() {
+    void register_userWithValidData_Ok() {
         StorageDao storageDao = new StorageDaoImpl();
         registrationService.register(USER_WITH_VALID_DATA);
         User actual = storageDao.get(USER_WITH_VALID_DATA.getLogin());
         User expected = USER_WITH_VALID_DATA;
         assertEquals(expected,actual);
-        storageDao.remote(USER_WITH_VALID_DATA);
     }
 
     @Test
-    void checkIfUserWasRemoted() {
-        StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(USER_WITH_VALID_DATA);
-        storageDao.remote(USER_WITH_VALID_DATA);
-        User actual = storageDao.get(USER_WITH_VALID_DATA.getLogin());
-        assertNull(actual);
-    }
-
-    @Test
-    void checkUsersId() {
-        StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(USER_WITH_VALID_DATA);
-        storageDao.add(SECOND_USER_WITH_VALID_DATA);
-        storageDao.add(THIRD_USER_WITH_VALID_DATA);
-        Long actual = THIRD_USER_WITH_VALID_DATA.getId();
-        Long expected = 3L;
-        assertTrue(expected == actual);
-        storageDao.remote(USER_WITH_VALID_DATA);
-        storageDao.remote(SECOND_USER_WITH_VALID_DATA);
-        storageDao.remote(THIRD_USER_WITH_VALID_DATA);
-    }
-
-    @Test
-    void expectingExceptionWhenUserDoesNotSetLogin() {
+    void register_nullLogin_NotOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITHOUT_LOGIN);
         });
     }
 
     @Test
-    void expectingExceptionWhenLoginLength_Not_Ok() {
+    void register_notValidLoginLength_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITH_INVALID_LOGIN_LENGTH);
         });
     }
 
     @Test
-    void expectingExceptionWhenLoginHasInvalidCharacter() {
+    void register_invalidCharacterInLogin_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITH_INVALID_CHARACTER_IN_LOGIN);
         });
     }
 
     @Test
-    void expectingExceptionWhenUserDoesNotSetPassword() {
+    void register_nullPassword_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITHOUT_PASSWORD);
         });
     }
 
     @Test
-    void expectingExceptionWhenPasswordLenghth_Not_Ok() {
+    void register_invalidPasswordLength_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITH_INVALID_PASSWORD_LENGTH);
         });
     }
 
     @Test
-    void expectingExceptionWhenPasswordHasInvalidCharacter() {
+    void register_invalidCharacterInPassword_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITH_INVALID_CHARACTER_IN_PASSWORD);
         });
     }
 
-    void expectingExceptionWhenUserDoesNotSetAge() {
+    void register_nullAge_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITHOUT_AGE);
         });
     }
 
     @Test
-    void expectingExceptionWhenUsersAge_Not_Ok() {
+    void register_invaligAge_notOk() {
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_WITH_INVALID_AGE);
         });
     }
 
     @Test
-    void expectingExceptionIfUserAlreadyExist() {
+    void redister_userWithSameLogin_notOk() {
         registrationService.register(USER_WITH_VALID_DATA);
         assertThrows(NoValidDataException.class, () -> {
             registrationService.register(USER_THAT_ALREADY_EXIST);

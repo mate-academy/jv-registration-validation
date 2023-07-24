@@ -6,8 +6,10 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int VALID_LOGIN_LENGTH = 6;
-    private static final int VALID_PASSWORD_LENGTH = 6;
+    private static final int VALID_LOGIN_LENGTH_MIN = 6;
+    private static final int VALID_LOGIN_LENGTH_MAX = 20;
+    private static final int VALID_PASSWORD_LENGTH_MIN = 6;
+    private static final int VALID_PASSWORD_LENGTH_MAX = 20;
     private static final int VALID_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -27,7 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkIfUserHasNoData(User user) {
         if (user == null) {
-            throw new NoValidDataException("User can't be added");
+            throw new NoValidDataException("User can't be added. "
+                    + "Please set all fields for users");
         }
     }
 
@@ -55,9 +58,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkIfUserHasInvalidLoginLength(User user) {
-        if (user.getLogin().length() < VALID_LOGIN_LENGTH) {
+        int loginLength = user.getLogin().length();
+        if (loginLength < VALID_LOGIN_LENGTH_MIN || loginLength > VALID_LOGIN_LENGTH_MAX) {
             throw new NoValidDataException("Incorrect login length. "
-                    + "Login must contain at least 6 character");
+                    + "Login must contain at least " + VALID_LOGIN_LENGTH_MIN
+                    + "  and less then " + VALID_LOGIN_LENGTH_MAX + " characters");
         }
     }
 
@@ -83,9 +88,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkIfUserHasInvalidPasswordLength(User user) {
-        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
+        int passwordLength = user.getPassword().length();
+        if (passwordLength < VALID_PASSWORD_LENGTH_MIN
+                || passwordLength > VALID_PASSWORD_LENGTH_MAX) {
             throw new NoValidDataException("Incorrect password length. "
-                    + "Password must contain at least 6 character");
+                    + "Login must contain at least " + VALID_PASSWORD_LENGTH_MIN
+                    + "  and less then " + VALID_PASSWORD_LENGTH_MAX + " characters");
         }
     }
 
