@@ -21,7 +21,6 @@ class RegistrationServiceImplTest {
     private static final String SHORTEST_VALID_LOGIN = "LoginN";
     private static final String SHORTEST_VALID_PASSWORD = "123456";
     private static final Integer MIN_VALID_AGE = RegistrationServiceImpl.MIN_AGE;
-
     private RegistrationServiceImpl registrationServiceImpl;
 
     @BeforeEach
@@ -40,7 +39,6 @@ class RegistrationServiceImplTest {
     void register_ExistedUserTest_NotOk() {
         User firstUser = createValidUser();
         User sameUser = createValidUser();
-
         Storage.people.add(firstUser);
         assertThrows(UserNotValidException.class, () ->
                         registrationServiceImpl.register(sameUser),
@@ -51,28 +49,22 @@ class RegistrationServiceImplTest {
     @MethodSource("validUsersProvider")
     void register_validUsers_Ok(User validUser, String message) {
         User expected = validUser;
-
         assertDoesNotThrow(() -> {
             User actual = registrationServiceImpl.register(validUser);
-
             assertNotNull(actual, message);
             assertEquals(expected, actual, message);
             assertTrue(Storage.people.contains(expected), message);
         }, message);
-
     }
 
     static Stream<Arguments> validUsersProvider() {
         String messageStArt = "register() valid user doesnt work; ";
         return Stream.of(
                 arguments(createValidUser(), messageStArt),
-
                 arguments(createUserWithLogin("Login1"), messageStArt + "Login = Login1"),
                 arguments(createUserWithLogin("LoginLogin"), messageStArt + "Login = LoginLogin"),
-
                 arguments(createUserWithPassword("1234567"), messageStArt + "Password = 1234567"),
                 arguments(createUserWithPassword("87654321"), messageStArt + "Password = 87654321"),
-
                 arguments(createUserWithAge(19), messageStArt + "Age = 19"),
                 arguments(createUserWithAge(40), messageStArt + "Age = 40")
                 );
@@ -92,12 +84,10 @@ class RegistrationServiceImplTest {
                 arguments(createUserWithLogin("Log"), messageBegin + "login = Log"),
                 arguments(createUserWithLogin(""), messageBegin + "login = empty String"),
                 arguments(createUserWithLogin(null), messageBegin + "login = null"),
-
                 arguments(createUserWithPassword("12345"), messageBegin + "password = 12345"),
                 arguments(createUserWithPassword("123"), messageBegin + "password = 12345"),
                 arguments(createUserWithPassword(""), messageBegin + "password = empty String"),
                 arguments(createUserWithPassword(null), messageBegin + "password = null"),
-
                 arguments(createUserWithAge(17), messageBegin + "age = 17"),
                 arguments(createUserWithAge(11), messageBegin + "age = 11"),
                 arguments(createUserWithAge(0), messageBegin + "age = 0"),
