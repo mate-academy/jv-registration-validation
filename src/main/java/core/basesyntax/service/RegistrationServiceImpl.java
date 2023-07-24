@@ -34,10 +34,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void isUserInvalid(User user) {
-        isNotExisting(user.getLogin());
         isLoginLengthCorrect(user.getLogin());
         isPasswordLengthCorrect(user.getPassword());
         isAgeAppropriate(user.getAge());
+        isNotExisting(user.getLogin());
     }
 
     private void isNotExisting(String login) {
