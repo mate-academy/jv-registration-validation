@@ -4,26 +4,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword";
     private static final Integer VALID_AGE = 20;
     private static final String INVALID_LOGIN = "v";
     private static final String INVALID_PASSWORD = "p";
     private static final Integer INVALID_AGE = 10;
-    private static final String NOT_EXISTING_LOGIN = "notExisting";
     private static final int PASSWORD_MINIMAL_LENGTH = 6;
     private static final int LOGIN_MINIMAL_LENGTH = 6;
     private static final int USER_MINIMAL_AGE = 18;
-    private static StorageDaoImpl storage;
+    private static StorageDao storage;
     private static RegistrationService registrationService;
 
     @BeforeAll
@@ -32,9 +32,13 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @BeforeEach
+    void cleanStorage() {
+        Storage.people.clear();
+    }
+
     @Test
     void registration_validUserData() {
-        Storage.people.clear();
         User validUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         registrationService.register(validUser);
         User userFromStorage = storage.get(validUser.getLogin());
@@ -55,7 +59,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userAgeLessThan18_notOk() {
-        Storage.people.clear();
         User underAgeUser = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
         RegistrationException actual = assertThrows(RegistrationException.class, () -> {
             registrationService.register(underAgeUser);
@@ -67,7 +70,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userLoginInvalid_notOk() {
-        Storage.people.clear();
         User invalidLoginUser = new User(INVALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         RegistrationException actual = assertThrows(RegistrationException.class, () -> {
             registrationService.register(invalidLoginUser);
@@ -79,7 +81,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userPasswordInvalid_notOk() {
-        Storage.people.clear();
         User invalidPasswordUser = new User(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
         RegistrationException actual = assertThrows(RegistrationException.class, () -> {
             registrationService.register(invalidPasswordUser);
@@ -91,7 +92,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userNull_notOk() {
-        Storage.people.clear();
         RegistrationException actual = assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
@@ -101,7 +101,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userLoginNull_notOk() {
-        Storage.people.clear();
         User loginNullUser = new User(null, VALID_PASSWORD, VALID_AGE);
         RegistrationException actual = assertThrows(RegistrationException.class, () -> {
             registrationService.register(loginNullUser);
@@ -112,7 +111,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userPasswordNull_notOk() {
-        Storage.people.clear();
         User passwordNullUser = new User(VALID_LOGIN, null, VALID_AGE);
         RegistrationException actual = assertThrows(RegistrationException.class, () -> {
             registrationService.register(passwordNullUser);
@@ -123,7 +121,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void registration_userAgeNull_notOk() {
-        Storage.people.clear();
         User ageNullUser = new User(VALID_LOGIN, VALID_PASSWORD, null);
         RegistrationException actual = assertThrows(RegistrationException.class, () -> {
             registrationService.register(ageNullUser);

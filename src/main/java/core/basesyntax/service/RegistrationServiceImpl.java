@@ -47,21 +47,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void isLoginLengthCorrect(String login) {
-        if (login == null || login.length() < LOGIN_MINIMAL_LENGTH) {
+        if (login.length() < LOGIN_MINIMAL_LENGTH) {
             throw new RegistrationException(
                     "Login has to be " + LOGIN_MINIMAL_LENGTH + " letters or longer!");
         }
     }
 
     private void isPasswordLengthCorrect(String password) {
-        if (password == null || password.length() < PASSWORD_MINIMAL_LENGTH) {
+        if (password.length() < PASSWORD_MINIMAL_LENGTH) {
             throw new RegistrationException(
                     "Password has to be " + PASSWORD_MINIMAL_LENGTH + " chars or longer!");
         }
     }
 
     private void isAgeAppropriate(Integer age) {
-        if (age == null || age < USER_MINIMAL_AGE) {
+        if (age < USER_MINIMAL_AGE) {
             throw new RegistrationException(
                     "To register user must be older than " + USER_MINIMAL_AGE + " years!");
         }
