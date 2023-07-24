@@ -74,16 +74,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_existUser_Exception_notOk() {
-        Storage.people.add(VALID_USER);
-        RegistrationException invalidDataException = assertThrows(RegistrationException.class,
-                () -> {
-                regService.register(VALID_USER);
-                });
-        assertEquals("User with this login already exists", invalidDataException.getMessage());
-    }
-
-    @Test
     void register_invalidLogin_Exception_notOk() {
         RegistrationException invalidDataException = assertThrows(RegistrationException.class,
                 () -> {
@@ -92,6 +82,16 @@ class RegistrationServiceImplTest {
         assertEquals("Not valid login length: "
                 + INVALID_LOGIN_USER.getLogin().length()
                 + ". Min allowed login length is " + MIN_LENGTH, invalidDataException.getMessage());
+    }
+
+    @Test
+    void register_existUser_Exception_notOk() {
+        Storage.people.add(VALID_USER);
+        RegistrationException invalidDataException = assertThrows(RegistrationException.class,
+                () -> {
+                    regService.register(VALID_USER);
+                });
+        assertEquals("User with this login already exists", invalidDataException.getMessage());
     }
 
     @Test
