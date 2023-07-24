@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -45,20 +46,18 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @Test
-    void register_validUser_ok() {
-        User validUser = createUser(FIFTEEN_CHARS_VALID_LOGIN,
-                SIX_CHARS_VALID_PASSWORD, EIGHTEEN_VALID_AGE);
-        User registeredUser = registrationService.register(validUser);
-        assertEquals(validUser, registeredUser);
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void register_userNotNull_ok() {
-        User validUser = createUser(SIX_CHARS_VALID_LOGIN,
+    void register_validUserAndNotNull_ok() {
+        User validUser = createUser(FIFTEEN_CHARS_VALID_LOGIN,
                 SIX_CHARS_VALID_PASSWORD, EIGHTEEN_VALID_AGE);
-        User actualUser = registrationService.register(validUser);
-        assertNotNull(actualUser);
+        User registeredUser = registrationService.register(validUser);
+        assertNotNull(registeredUser);
+        assertEquals(validUser, registeredUser);
     }
 
     @Test
