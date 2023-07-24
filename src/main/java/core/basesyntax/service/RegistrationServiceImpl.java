@@ -21,12 +21,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User can't be null!");
         }
-        if (Storage.people.contains(user)) {
-            throw new RegistrationException("This user is already existed in the Storage!");
-        }
         isLoginValid(user.getLogin());
         isPasswordValid(user.getPassword());
         isAgeValid(user.getAge());
+        if (Storage.people.contains(user)) {
+            throw new RegistrationException("This user is already existed in the Storage!");
+        }
     }
 
     private void isLoginValid(String login) {
