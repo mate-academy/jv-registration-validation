@@ -98,7 +98,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordIsValid_ok() {
-        user.setPassword(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
