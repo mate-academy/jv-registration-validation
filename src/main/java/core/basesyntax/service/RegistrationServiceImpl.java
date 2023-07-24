@@ -30,25 +30,23 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateLogin(User user) {
         String userLogin = user.getLogin();
-
         if (userLogin == null) {
             throw new UserNotValidException("Login of user cant be null");
-        }
-        if (storageDao.get(userLogin) != null) {
-            throw new UserNotValidException(
-                    "User with this login exist already. Login is + " + user.getLogin()
-            );
         }
         if (userLogin.length() < MIN_LOGIN_LENGTH) {
             throw new UserNotValidException(
                     "Login should be at least 6 symbols. Login is " + userLogin
             );
         }
+        if (storageDao.get(userLogin) != null) {
+            throw new UserNotValidException(
+                    "User with this login exist already. Login is + " + user.getLogin()
+            );
+        }
     }
 
     private void validatePassword(User user) {
         String userPassword = user.getPassword();
-
         if (userPassword == null) {
             throw new UserNotValidException("Password cant be null");
         }
@@ -61,7 +59,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateAge(User user) {
         Integer userAge = user.getAge();
-
         if (userAge == null) {
             throw new UserNotValidException(
                     "Age of user shouldn't be null."

@@ -30,18 +30,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_NotOk() {
+    void register_nullUser_NotOk() {
         assertThrows(UserNotValidException.class, () ->
                 registrationServiceImpl.register(null), "Null user adding shouldn't work");
     }
 
     @Test
-    void register_ExistedUserTest_NotOk() {
-        User firstUser = createValidUser();
-        User sameUser = createValidUser();
-        Storage.people.add(firstUser);
+    void register_existedUser_NotOk() {
+        User user = createValidUser();
+        User existedUser = createValidUser();
+        Storage.people.add(user);
         assertThrows(UserNotValidException.class, () ->
-                        registrationServiceImpl.register(sameUser),
+                        registrationServiceImpl.register(existedUser),
                 "Adding user with existed login shouldn't work");
     }
 
