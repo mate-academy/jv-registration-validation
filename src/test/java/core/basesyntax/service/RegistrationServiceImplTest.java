@@ -103,7 +103,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validPassword_ok() {
-        validUser.setPassword(VALID_LOGIN);
+        validUser.setPassword(VALID_PASSWORD);
         registrationService.register(validUser);
         assertTrue(Storage.people.contains(validUser));
     }

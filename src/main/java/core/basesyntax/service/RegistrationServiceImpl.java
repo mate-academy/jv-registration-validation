@@ -26,14 +26,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void checkForValidAge(User user) {
+    private void checkForValidAge(User user) {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Not valid age: "
                     + user.getAge() + ". Min allowed age is " + MIN_AGE);
         }
     }
 
-    private static void checkForValidLength(User user) {
+    private void checkForValidLength(User user) {
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new RegistrationException("Password length is less than " + MIN_LENGTH);
         }
@@ -42,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void checkForNull(User user) {
+    private void checkForNull(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
