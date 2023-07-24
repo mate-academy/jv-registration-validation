@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int MIN_LOGIN = 6;
+    private static final int MIN_PASSWORD = 6;
     private static final int MIN_AGE = 18;
     private static final int BAD_AGE = 16;
     private static final int GOOD_AGE = 20;
@@ -47,7 +49,7 @@ class RegistrationServiceImplTest {
     void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
-        });
+        }, "User can't be null");
     }
 
     @Test
@@ -55,7 +57,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Login can't be null");
     }
 
     @Test
@@ -63,7 +65,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Password can't be null");
     }
 
     @Test
@@ -71,7 +73,7 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Age can't be null");
     }
 
     @Test
@@ -79,7 +81,7 @@ class RegistrationServiceImplTest {
         user.setLogin(BAD_LOGIN);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Login must be more then " + MIN_LOGIN + "characters");
     }
 
     @Test
@@ -87,7 +89,7 @@ class RegistrationServiceImplTest {
         user.setPassword(BAD_PASSWORD);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Password must be more then " + MIN_PASSWORD + "characters");
     }
 
     @Test
@@ -95,7 +97,7 @@ class RegistrationServiceImplTest {
         user.setAge(BAD_AGE);
         assertThrows(RegistrationException.class,() -> {
             registrationService.register(user);
-        });
+        }, "You age should be at least " + MIN_AGE);
     }
 
     @Test
@@ -103,7 +105,7 @@ class RegistrationServiceImplTest {
         Storage.people.add(user);
         assertThrows(RegistrationException.class,() -> {
             registrationService.register(user);
-        });
+        },"User already exist in storage");
     }
 
     @Test
