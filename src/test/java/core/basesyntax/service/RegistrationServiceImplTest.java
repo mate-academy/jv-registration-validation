@@ -6,44 +6,50 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import core.basesyntax.InvalidUserException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final Long VALID_ID = 1L;
+    private static final int VALID_AGE = 18;
+    private static final String VALID_LOGIN = "newUser";
+    private static final String VALID_PASSWORD = "newUser";
+
+    private static final int INVALID_AGE = 15;
+    private static final String INVALID_LOGIN = "mate";
+    private static final String INVALID_PASSWORD = "mate";
+
     private static RegistrationService registrationService;
     private static User user;
 
     @BeforeAll
-    static void beforeAll() throws InvalidUserException {
+    static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         user = new User();
-        user.setId(1L);
-        user.setLogin("newUser");
-        user.setPassword("newUser");
-        user.setAge(22);
+        user.setId(VALID_ID);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
     }
 
     @Test
-    void validUserIsCreated_Ok() throws InvalidUserException {
-        User newUser = new User();
-        newUser.setId(1L);
-        newUser.setLogin("HelloMate");
-        newUser.setPassword("HelloMate");
-        newUser.setAge(22);
-        User actual = registrationService.register(newUser);
-        assertTrue(actual.equals(newUser));
+    void validUserIsCreated_Ok() {
+        User actual = registrationService.register(user);
+        assertTrue(actual.equals(user));
     }
 
     @Test
-    void userIsNull_NotOk() throws InvalidUserException {
+    void userIsNull_NotOk() {
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void ageIsNull_NotOk() throws InvalidUserException {
+    void ageIsNull_NotOk() {
         user.setAge(null);
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
@@ -51,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginIsNull_NotOk() throws InvalidUserException { // implement
+    void loginIsNull_NotOk() {
         user.setLogin(null);
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
@@ -59,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsNull_NotOk() throws InvalidUserException { // implement
+    void passwordIsNull_NotOk() {
         user.setPassword(null);
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
@@ -67,7 +73,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAlreadyExists_NotOk() throws InvalidUserException {
+    void userAlreadyExists_NotOk() {
         StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
         assertThrows(InvalidUserException.class, () -> {
@@ -76,26 +82,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void tooShortLogin_NotOk() throws InvalidUserException {
-        user.setLogin("mate");
+    void tooShortLogin_NotOk() {
+        user.setLogin(INVALID_LOGIN);
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void tooShortPassword_NotOk() throws InvalidUserException {
-        user.setPassword("mate");
+    void tooShortPassword_NotOk() {
+        user.setPassword(INVALID_PASSWORD);
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void tooYoungUser_NotOk() throws InvalidUserException {
-        user.setAge(15);
+    void tooYoungUser_NotOk() {
+        user.setAge(INVALID_AGE);
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
