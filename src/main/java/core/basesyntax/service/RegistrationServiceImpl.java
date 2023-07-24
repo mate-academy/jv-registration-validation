@@ -11,7 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidUserException {
+    public User register(User user) {
         checkForNulls(user);
         checkIfUserExists(user);
         checkForValidParameters(user);
