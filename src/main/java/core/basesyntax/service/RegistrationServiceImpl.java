@@ -14,21 +14,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkUser(user);
+        validateUser(user);
         storageDao.add(user);
         return storageDao.get(user.getLogin());
     }
 
-    private void checkUser(User user) {
+    private void validateUser(User user) {
         if (user == null) {
             throw new UserNotValidException("User cant be null");
         }
-        checkLoginIsOk(user);
-        checkPasswordIsOk(user);
-        checkAge(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
     }
 
-    private void checkLoginIsOk(User user) {
+    private void validateLogin(User user) {
         String userLogin = user.getLogin();
 
         if (userLogin == null) {
@@ -46,7 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkPasswordIsOk(User user) {
+    private void validatePassword(User user) {
         String userPassword = user.getPassword();
 
         if (userPassword == null) {
@@ -59,7 +59,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkAge(User user) {
+    private void validateAge(User user) {
         Integer userAge = user.getAge();
 
         if (userAge == null) {
