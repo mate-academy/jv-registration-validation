@@ -22,6 +22,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserWithNullLogin_MotOk() {
+        user.setPassword("password");
+        user.setAge(42);
         assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
         });
@@ -30,6 +32,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_UserWithFiveLengthLogin_NotOk() {
         user.setLogin("Seven");
+        user.setPassword("fivefsda");
+        user.setAge(20);
         assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
         });
