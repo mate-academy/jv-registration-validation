@@ -32,8 +32,8 @@ class RegistrationServiceImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("register_userData_ok")
-    void register_addUserToDatabase_ok(User input) {
+    @MethodSource("register_validUser_ok")
+    void register_addUserWithValidData_ok(User input) {
         User actualResult = registrationService.register(input);
         assertEquals(input.getLogin(), actualResult.getLogin());
         assertEquals(input.getPassword(), actualResult.getPassword());
@@ -41,18 +41,18 @@ class RegistrationServiceImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("register_userData_NotOk")
-    void register_addUserToDatabase_notOk(User input) {
+    @MethodSource("register_invalidUser_NotOk")
+    void register_addUserWithNotValidData_notOk(User input) {
         assertThrows(UserRegistrationException.class, () -> registrationService.register(input));
     }
 
     @Test
-    void register_addNullUserToDatabase_notOk() {
+    void register_addNullUser_notOk() {
         assertThrows(UserRegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_addEqualsUsersToDatabase_notOk() {
+    void register_addExistingUser_notOk() {
         User user = new User(
                 USER_LOGIN_LENGTH_6_SYMBOLS_OK,
                 USER_PASSWORD_LENGTH_6_SYMBOLS_OK,
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
-    private static Stream<Arguments> register_userData_ok() {
+    private static Stream<Arguments> register_validUser_ok() {
         return Stream.of(
                 Arguments.of(new User(
                         USER_LOGIN_LENGTH_6_SYMBOLS_OK,
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
         );
     }
 
-    private static Stream<Arguments> register_userData_NotOk() {
+    private static Stream<Arguments> register_invalidUser_NotOk() {
         return Stream.of(
                 Arguments.of(new User(
                         USER_LOGIN_LENGTH_LESS_6_SYMBOLS_NOT_OK,
@@ -120,8 +120,3 @@ class RegistrationServiceImplTest {
         );
     }
 }
-
-
-
-
-
