@@ -12,33 +12,53 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        userNonNull(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
+        checkIfContainsInStorage(user);
+        return storageDao.add(user);
+    }
+
+    private static void userNonNull(User user) {
         if (user == null) {
             throw new UserInvalidDataException("User can't be null");
         }
-        if (user.getLogin() == null) {
-            throw new UserInvalidDataException("Login can't be null");
-        }
-        if (user.getPassword() == null) {
-            throw new UserInvalidDataException("Password can't be null");
-        }
-        if (user.getAge() == null) {
-            throw new UserInvalidDataException("Age can't be null");
-        }
+    }
+
+    private void checkIfContainsInStorage(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserInvalidDataException("User " + user.getLogin() + " already registered");
+        }
+    }
+
+    private static void validateAge(User user) {
+        if (user.getAge() == null) {
+            throw new UserInvalidDataException("Age can't be null");
         }
         if (user.getAge() < MINIMUM_AGE) {
             throw new UserInvalidDataException("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + MINIMUM_AGE);
         }
-        if (user.getLogin().length() < MINIMUM_LENGTH) {
-            throw new UserInvalidDataException("Not valid Login: " + user.getLogin()
-                    + ". Min allowed Login is " + MINIMUM_LENGTH);
+    }
+
+    private static void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new UserInvalidDataException("Password can't be null");
         }
         if (user.getPassword().length() < MINIMUM_LENGTH) {
             throw new UserInvalidDataException("Not valid password: " + user.getPassword()
                     + ". Min allowed password is " + MINIMUM_LENGTH);
         }
-        return storageDao.add(user);
+    }
+
+    private static void validateLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new UserInvalidDataException("Login can't be null");
+        }
+        if (user.getLogin().length() < MINIMUM_LENGTH) {
+            throw new UserInvalidDataException("Not valid Login: " + user.getLogin()
+                    + ". Min allowed Login is " + MINIMUM_LENGTH);
+        }
     }
 }
