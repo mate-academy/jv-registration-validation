@@ -31,6 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("User age is null");
         }
     }
+
     private void passwordValidator(User user) {
         if (user.getPassword() == null) {
             throw new ValidationException("Password can't be null");
