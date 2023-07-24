@@ -12,57 +12,25 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static final String FIFTEEN_CHARS_LOGIN = "Traineeeeeeeeee";
-    private static final String SIX_CHARS_LOGIN = "Taylor";
-    private static final String SEVENTEEN_CHARS_LOGIN = "GeorgeTheMagician";
-    private static final String SEVEN_CHARS_LOGIN = "abcabcc";
-    private static final String EIGHT_CHARS_PASSWORD = "password";
-    private static final String SIX_CHARS_PASSWORD = "Swifty";
-    private static final String NINE_CHARS_PASSWORD = "333666999";
-    private static final String SYMBOL_SIX_CHARS_PASSWORD = "!@#$%^";
-    private static final int TWENTY_FIVE_AGES = 25;
-    private static final int EIGHTEEN_AGES = 18;
-    private static final int NINETEEN_AGES = 19;
-    private static final int NINETY_AGES = 90;
-    private static final String THREE_CHARS_LOGIN = "Max";
-    private static final String FIVE_CHARS_EDGE_LOGIN = "marty";
-    private static final String THREE_CHARS_PASSWORD = "dnd";
-    private static final String FIVE_CHARS_EDGE_PASSWORD = "rumba";
-    private static final int NEGATIVE_AGE = -15;
-    private static final int NON_VALID_EDGE_AGE = 17;
-    private static final String EMPTY_FIELD = "";
-    private static final int ZERO_AGE = 0;
-    private static final User FIRST_VALID_USER =
-            new User(FIFTEEN_CHARS_LOGIN, SIX_CHARS_PASSWORD, EIGHTEEN_AGES);
-    private static final User SECOND_VALID_USER =
-            new User(SIX_CHARS_LOGIN, SIX_CHARS_PASSWORD, EIGHTEEN_AGES);
-    private static final User THIRD_VALID_USER =
-            new User(SEVENTEEN_CHARS_LOGIN, NINE_CHARS_PASSWORD, NINETEEN_AGES);
-    private static final User FIRST_USER_FOR_REPEAT =
-            new User(SEVEN_CHARS_LOGIN, SYMBOL_SIX_CHARS_PASSWORD, NINETY_AGES);
-    private static final User SECOND_USER_FOR_REPEAT =
-            new User(SEVEN_CHARS_LOGIN, SYMBOL_SIX_CHARS_PASSWORD, NINETY_AGES);
-    private static final User NON_VALID_LOGIN_USER =
-            new User(THREE_CHARS_LOGIN, SIX_CHARS_PASSWORD, EIGHTEEN_AGES);
-    private static final User NON_VALID_AGE_USER =
-            new User(SIX_CHARS_LOGIN, SIX_CHARS_PASSWORD, NEGATIVE_AGE);
-    private static final User NON_VALID_PASSWORD_USER =
-            new User(SEVENTEEN_CHARS_LOGIN, THREE_CHARS_PASSWORD, NINETEEN_AGES);
-    private static final User NON_VALID_EDGE_LOGIN_USER =
-            new User(FIVE_CHARS_EDGE_LOGIN, EIGHT_CHARS_PASSWORD, TWENTY_FIVE_AGES);
-    private static final User NON_VALID_EDGE_AGE_USER =
-            new User(FIFTEEN_CHARS_LOGIN, EIGHT_CHARS_PASSWORD, NON_VALID_EDGE_AGE);
-    private static final User NON_VALID_EDGE_PASSWORD_USER =
-            new User(FIFTEEN_CHARS_LOGIN, FIVE_CHARS_EDGE_PASSWORD, TWENTY_FIVE_AGES);
-    private static final User NON_VALID_NULL_ALL_FIELDS_USER =
-            new User(null, null, null);
-    private static final User NON_VALID_NULL_PASSWORD_AND_AGE_USER =
-            new User(FIFTEEN_CHARS_LOGIN, null, null);
-    private static final User NON_VALID_NULL_AGE_USER =
-            new User(FIFTEEN_CHARS_LOGIN, EIGHT_CHARS_PASSWORD, null);
-    private static final User NON_VALID_EMPTY_FIELDS_USER =
-            new User(EMPTY_FIELD, EMPTY_FIELD, ZERO_AGE);
-    private static final User NON_VALID_NULL_USER = null;
+    private static final String FIFTEEN_CHARS_VALID_LOGIN = "Traineeeeeeeeee";
+    private static final String SIX_CHARS_VALID_LOGIN = "Taylor";
+    private static final String SEVENTEEN_CHARS_VALID_LOGIN = "GeorgeTheMagician";
+    private static final String SEVEN_CHARS_VALID_LOGIN = "abcabcc";
+    private static final String EIGHT_CHARS_VALID_PASSWORD = "password";
+    private static final String SIX_CHARS_VALID_PASSWORD = "Swifty";
+    private static final String SYMBOL_SIX_CHARS_VALID_PASSWORD = "!@#$%^";
+    private static final int TWENTY_FIVE_VALID_AGE = 25;
+    private static final int EIGHTEEN_VALID_AGE = 18;
+    private static final int NINETEEN_VALID_AGE = 19;
+    private static final int NINETY_VALID_AGE = 90;
+    private static final String THREE_CHARS_NON_VALID_LOGIN = "Max";
+    private static final String FIVE_CHARS_NON_VALID_LOGIN = "marty";
+    private static final String THREE_CHARS_NON_VALID_PASSWORD = "dnd";
+    private static final String FIVE_CHARS_NON_VALID_PASSWORD = "rumba";
+    private static final String EMPTY_NON_VALID_FIELD = "";
+    private static final int NEGATIVE_NON_VALID_AGE = -15;
+    private static final int SEVENTEEN_NON_VALID_AGE = 17;
+    private static final int ZERO_NON_VALID_AGE = 0;
     private static final String NULL_FIELDS_EXCEPTION_MESSAGE =
             "All fields should be filled.";
     private static final String MIN_LOGIN_EXCEPTION_MESSAGE =
@@ -79,80 +47,126 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User registeredUser = registrationService.register(FIRST_VALID_USER);
-        assertNotNull(registeredUser);
-        assertEquals(FIRST_VALID_USER, registeredUser);
+        User validUser = createUser(FIFTEEN_CHARS_VALID_LOGIN,
+                SIX_CHARS_VALID_PASSWORD, EIGHTEEN_VALID_AGE);
+        User registeredUser = registrationService.register(validUser);
+        assertEquals(validUser, registeredUser);
     }
 
     @Test
-    void register_multipleUserRegistration_ok() {
-        User actualSecondUser = registrationService.register(SECOND_VALID_USER);
-        assertNotNull(actualSecondUser);
-        assertEquals(SECOND_VALID_USER, actualSecondUser);
-        User actualFirstUser = registrationService.register(THIRD_VALID_USER);
-        assertNotNull(actualFirstUser);
-        assertEquals(THIRD_VALID_USER, actualFirstUser);
+    void register_userNotNull_ok() {
+        User validUser = createUser(SIX_CHARS_VALID_LOGIN,
+                SIX_CHARS_VALID_PASSWORD, EIGHTEEN_VALID_AGE);
+        User actualUser = registrationService.register(validUser);
+        assertNotNull(actualUser);
     }
 
     @Test
-    void register_usersWithNullFields_notOk() {
-        RegistrationException registrationException1 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_NULL_ALL_FIELDS_USER));
-        RegistrationException registrationException2 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_NULL_PASSWORD_AND_AGE_USER));
-        RegistrationException registrationException3 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_NULL_AGE_USER));
-        assertEquals(NULL_FIELDS_EXCEPTION_MESSAGE,
-                registrationException1.getMessage());
-        assertEquals(NULL_FIELDS_EXCEPTION_MESSAGE,
-                registrationException2.getMessage());
-        assertEquals(NULL_FIELDS_EXCEPTION_MESSAGE,
-                registrationException3.getMessage());
-    }
-
-    @Test
-    void register_loginAgePassword_notOk() {
-        RegistrationException registrationException1 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_LOGIN_USER));
-        assertEquals(MIN_LOGIN_EXCEPTION_MESSAGE,
-                registrationException1.getMessage());
-        RegistrationException registrationException2 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_AGE_USER));
-        assertEquals(MIN_AGE_EXCEPTION_MESSAGE,
-                registrationException2.getMessage());
-        RegistrationException registrationException3 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_PASSWORD_USER));
-        assertEquals(MIN_PASSWORD_EXCEPTION_MESSAGE,
-                registrationException3.getMessage());
-
-        RegistrationException registrationException4 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_EDGE_LOGIN_USER));
-        assertEquals(MIN_LOGIN_EXCEPTION_MESSAGE,
-                registrationException4.getMessage());
-        RegistrationException registrationException5 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_EDGE_AGE_USER));
-        assertEquals(MIN_AGE_EXCEPTION_MESSAGE,
-                registrationException5.getMessage());
-        RegistrationException registrationException8 = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_EDGE_PASSWORD_USER));
-        assertEquals(MIN_PASSWORD_EXCEPTION_MESSAGE,
-                registrationException8.getMessage());
-    }
-
-    @Test
-    void register_userWithEmptyData_notOk() {
+    void register_userWithNullLogin_notOk() {
+        User nonValidUser = createUser(null, 
+                SIX_CHARS_VALID_PASSWORD, EIGHTEEN_VALID_AGE);
         RegistrationException registrationException = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_EMPTY_FIELDS_USER));
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(NULL_FIELDS_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithNullPassword_notOk() {
+        User nonValidUser = createUser(FIFTEEN_CHARS_VALID_LOGIN,
+                null, NINETY_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(NULL_FIELDS_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithNullAge_notOk() {
+        User nonValidUser = createUser(FIFTEEN_CHARS_VALID_LOGIN,
+                EIGHT_CHARS_VALID_PASSWORD, null);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(NULL_FIELDS_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithThreeCharsLogin_notOk() {
+        User nonValidUser = createUser(THREE_CHARS_NON_VALID_LOGIN,
+                SIX_CHARS_VALID_PASSWORD, EIGHTEEN_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(MIN_LOGIN_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithFiveCharsLogin_notOk() {
+        User nonValidUser = createUser(FIVE_CHARS_NON_VALID_LOGIN,
+                EIGHT_CHARS_VALID_PASSWORD, TWENTY_FIVE_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(MIN_LOGIN_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithNegativeAge_notOk() {
+        User nonValidUser = createUser(SIX_CHARS_VALID_LOGIN,
+                SIX_CHARS_VALID_PASSWORD, NEGATIVE_NON_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(MIN_AGE_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithSeventeenAge_notOk() {
+        User nonValidUser = createUser(FIFTEEN_CHARS_VALID_LOGIN,
+                EIGHT_CHARS_VALID_PASSWORD, SEVENTEEN_NON_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(MIN_AGE_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithThreeCharsPassword_notOk() {
+        User nonValidUser = createUser(SEVENTEEN_CHARS_VALID_LOGIN,
+                THREE_CHARS_NON_VALID_PASSWORD, NINETEEN_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(MIN_PASSWORD_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithFiveCharsPassword_notOk() {
+        User nonValidUser = createUser(FIFTEEN_CHARS_VALID_LOGIN,
+                FIVE_CHARS_NON_VALID_PASSWORD, TWENTY_FIVE_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
+        assertEquals(MIN_PASSWORD_EXCEPTION_MESSAGE,
+                registrationException.getMessage());
+    }
+
+    @Test
+    void register_userWithEmptyFields_notOk() {
+        User nonValidUser = createUser(EMPTY_NON_VALID_FIELD,
+                EMPTY_NON_VALID_FIELD, ZERO_NON_VALID_AGE);
+        RegistrationException registrationException = assertThrows(
+                RegistrationException.class,
+                () -> registrationService.register(nonValidUser));
         assertEquals(MIN_LOGIN_EXCEPTION_MESSAGE,
                 registrationException.getMessage());
     }
@@ -161,18 +175,27 @@ class RegistrationServiceImplTest {
     void register_nullUser_notOk() {
         RegistrationException registrationException = assertThrows(
                 RegistrationException.class, () -> registrationService.register(
-                        NON_VALID_NULL_USER));
+                        null));
         assertEquals("User shouldn't be null.",
                 registrationException.getMessage());
     }
 
     @Test
     void register_existingUser_notOk() {
-        Storage.people.add(FIRST_USER_FOR_REPEAT);
+        User validUser = createUser(SEVEN_CHARS_VALID_LOGIN,
+                SYMBOL_SIX_CHARS_VALID_PASSWORD, NINETY_VALID_AGE);
+        User repeatedValidUser = createUser(SEVEN_CHARS_VALID_LOGIN,
+                SYMBOL_SIX_CHARS_VALID_PASSWORD, NINETY_VALID_AGE);
+        Storage.people.add(validUser);
         RegistrationException registrationException = assertThrows(
-                RegistrationException.class, () -> registrationService.register(
-                        SECOND_USER_FOR_REPEAT));
-        assertEquals("User already exists with login " + SECOND_USER_FOR_REPEAT.getLogin(),
+                RegistrationException.class,
+                () -> registrationService.register(repeatedValidUser));
+        assertEquals("User already exists with login "
+                        + repeatedValidUser.getLogin(),
                 registrationException.getMessage());
+    }
+
+    private User createUser(String login, String password, Integer age) {
+        return new User(login, password, age);
     }
 }
