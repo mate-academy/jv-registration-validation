@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -18,13 +19,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("Such a user is already registered!");
         }
-        loginValidation(user.getLogin());
-        passwordValidation(user.getPassword());
-        ageValidation(user.getAge());
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
         return storageDao.add(user);
     }
 
-    private void loginValidation(String login) {
+    private void validateLogin(String login) {
         if (login == null) {
             throw new InvalidDataException("Login can't be null!");
         }
@@ -34,18 +35,20 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void passwordValidation(String password) {
+    private void validatePassword(String password) {
         if (password == null) {
             throw new InvalidDataException("Password can't be null!");
         }
-
         if (password.length() < MINIMUM_PASSWORD_LENGTH) {
             throw new InvalidDataException("Not valid user's password " + password
                     + ". Min allowed password length is " + MINIMUM_PASSWORD_LENGTH);
         }
     }
 
-    private void ageValidation(int age) {
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new InvalidDataException("Age can't be null!");
+        }
         if (age < MINIMUM_AGE) {
             throw new InvalidDataException("Not valid user's age " + age
                     + ". Min allowed age is " + MINIMUM_AGE);
