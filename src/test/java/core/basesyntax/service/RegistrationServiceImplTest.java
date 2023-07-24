@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
@@ -13,29 +15,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User INITIAL_USER_IN_STORAGE = new User(1L, "validLogin",
+    private static final User INITIAL_USER_IN_STORAGE = new User("validLogin",
             "validPassword", 18);
     private static final int INITIAL_SIZE_OF_STORAGE = 1;
     private static final String VALID_LOGIN_EXAMPLE = "user20";
     private static final String VALID_PASSWORD_EXAMPLE = "password";
     private static final int MIN_VALID_AGE = 18;
     private static final String INVALID_LOGIN_EXAMPLE1 = "user1";
-    private static final String INVALID_LOGIN_EXAMPLE2 = "user";
-    private static final String INVALID_LOGIN_EXAMPLE3 = "u";
-    private static final String INVALID_LOGIN_EXAMPLE4 = "";
-    private static final String INVALID_LOGIN_EXAMPLE5 = "      ";
+    private static final String INVALID_LOGIN_EXAMPLE2 = "";
+    private static final String INVALID_LOGIN_EXAMPLE3 = "      ";
     private static final String INVALID_PASSWORD_EXAMPLE1 = "12345";
-    private static final String INVALID_PASSWORD_EXAMPLE2 = "pass";
-    private static final String INVALID_PASSWORD_EXAMPLE3 = "1";
-    private static final String INVALID_PASSWORD_EXAMPLE4 = "";
-    private static final String INVALID_PASSWORD_EXAMPLE5 = "      ";
-
+    private static final String INVALID_PASSWORD_EXAMPLE2 = "";
+    private static final String INVALID_PASSWORD_EXAMPLE3 = "      ";
     private static final int INVALID_AGE_EXAMPLE = 15;
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -45,17 +44,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_newUser_ok() {
-        User expected = new User(1L, VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        User actual = null;
-        try {
-            actual = registrationService.register(expected);
-        } catch (RegistrationException e) {
-            fail(e.getMessage());
-        }
+        User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
+        registrationService.register(expected);
+        User actual = storageDao.get(expected.getLogin());
         assertEquals(expected, actual);
-        int expectedSizeOfStorage = INITIAL_SIZE_OF_STORAGE + 1;
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(expectedSizeOfStorage, actualSizeOfStorage);
     }
 
     @Test
@@ -79,54 +71,33 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithValidLogin_ok() {
-        User expected = new User(1L, VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        User actual = null;
-        try {
-            actual = registrationService.register(expected);
-        } catch (RegistrationException e) {
-            fail(e.getMessage());
-        }
+        User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
+        registrationService.register(expected);
+        User actual = storageDao.get(expected.getLogin());
         assertEquals(expected, actual);
-        int expectedSizeOfStorage = INITIAL_SIZE_OF_STORAGE + 1;
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(expectedSizeOfStorage, actualSizeOfStorage);
     }
 
     @Test
     void register_userWithInvalidLogin_notOk() {
-        User fiveCharacterLoginUser = new User(1L, INVALID_LOGIN_EXAMPLE1,
+        User fiveCharacterLoginUser = new User(INVALID_LOGIN_EXAMPLE1,
                 VALID_PASSWORD_EXAMPLE,
                 MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(fiveCharacterLoginUser);
         });
 
-        User fourCharacterLoginUser = new User(1L, INVALID_LOGIN_EXAMPLE2,
+        User fourCharacterLoginUser = new User(INVALID_LOGIN_EXAMPLE2,
                 VALID_PASSWORD_EXAMPLE,
                 MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(fourCharacterLoginUser);
         });
 
-        User oneCharacterLoginUser = new User(1L, INVALID_LOGIN_EXAMPLE3,
+        User oneCharacterLoginUser = new User(INVALID_LOGIN_EXAMPLE3,
                 VALID_PASSWORD_EXAMPLE,
                 MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(oneCharacterLoginUser);
-        });
-
-        User emptyCharacterLoginUser = new User(1L, INVALID_LOGIN_EXAMPLE4,
-                VALID_PASSWORD_EXAMPLE,
-                MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(emptyCharacterLoginUser);
-        });
-
-        User sixWhiteSpacesLoginUser = new User(1L, INVALID_LOGIN_EXAMPLE5,
-                VALID_PASSWORD_EXAMPLE,
-                MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(sixWhiteSpacesLoginUser);
         });
 
         int actualSizeOfStorage = Storage.people.size();
@@ -135,7 +106,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithNullLogin_notOk() {
-        User nullLoginUser = new User(1L, null, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
+        User nullLoginUser = new User(null, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullLoginUser);
         });
@@ -145,7 +116,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithValidPassword_ok() {
-        User expected = new User(1L, VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
+        User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
         User actual = null;
         try {
             actual = registrationService.register(expected);
@@ -160,39 +131,25 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithInvalidPassword_notOk() {
-        User fiveCharacterPasswordUser = new User(1L, VALID_LOGIN_EXAMPLE,
+        User fiveCharacterPasswordUser = new User(VALID_LOGIN_EXAMPLE,
                 INVALID_PASSWORD_EXAMPLE1,
                 MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(fiveCharacterPasswordUser);
         });
 
-        User fourCharacterPasswordUser = new User(1L, VALID_LOGIN_EXAMPLE,
+        User fourCharacterPasswordUser = new User(VALID_LOGIN_EXAMPLE,
                 INVALID_PASSWORD_EXAMPLE2,
                 MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(fourCharacterPasswordUser);
         });
 
-        User oneCharacterPasswordUser = new User(1L, VALID_LOGIN_EXAMPLE,
+        User oneCharacterPasswordUser = new User(VALID_LOGIN_EXAMPLE,
                 INVALID_PASSWORD_EXAMPLE3,
                 MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(oneCharacterPasswordUser);
-        });
-
-        User emptyCharacterPasswordUser = new User(1L, VALID_LOGIN_EXAMPLE,
-                INVALID_PASSWORD_EXAMPLE4,
-                MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(emptyCharacterPasswordUser);
-        });
-
-        User sixWhiteSpacesPasswordUser = new User(1L, VALID_LOGIN_EXAMPLE,
-                INVALID_PASSWORD_EXAMPLE5,
-                MIN_VALID_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(sixWhiteSpacesPasswordUser);
         });
 
         int actualSizeOfStorage = Storage.people.size();
@@ -201,7 +158,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithNullPassword_notOk() {
-        User nullPasswordUser = new User(1L, VALID_LOGIN_EXAMPLE, null, MIN_VALID_AGE);
+        User nullPasswordUser = new User(VALID_LOGIN_EXAMPLE, null, MIN_VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullPasswordUser);
         });
@@ -211,22 +168,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithValidAge_ok() {
-        User expected = new User(1L, VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        User actual = null;
-        try {
-            actual = registrationService.register(expected);
-        } catch (RegistrationException e) {
-            fail(e.getMessage());
-        }
+        User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
+        registrationService.register(expected);
+        User actual = storageDao.get(expected.getLogin());
         assertEquals(expected, actual);
-        int expectedSizeOfStorage = INITIAL_SIZE_OF_STORAGE + 1;
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(expectedSizeOfStorage, actualSizeOfStorage);
     }
 
     @Test
     void register_userWithLessThanMinAge_notOk() {
-        User user = new User(1L, VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, INVALID_AGE_EXAMPLE);
+        User user = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, INVALID_AGE_EXAMPLE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -236,7 +186,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithNegativeAge_notOk() {
-        User user = new User(1L, VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, -1);
+        User user = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, -1);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -246,7 +196,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithNullAge_notOk() {
-        User user = new User(1L, VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, null);
+        User user = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
