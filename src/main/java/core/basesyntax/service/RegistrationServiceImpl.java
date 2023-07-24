@@ -25,13 +25,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new RegistrationException("Null login is not supported!");
         }
-        if (storageDao.get(login) != null) {
-            throw new RegistrationException("User with login " + "\"" + login + "\""
-                    + " is already registered");
-        }
         if (login.length() < MIN_LOGIN_PASSWORD_LENGTH) {
             throw new RegistrationException("\"" + login
                     + "\"" + " login is less than 6 characters");
+        }
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("User with login " + "\"" + login + "\""
+                    + " is already registered");
         }
     }
 
