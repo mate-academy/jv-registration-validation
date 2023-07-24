@@ -82,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_CorrectUser_Ok() {
+    void register_AddValidUserData_Ok() {
         user.setLogin("DenisShvagro123");
         user.setPassword("qazwsxedc123");
         user.setAge(25);

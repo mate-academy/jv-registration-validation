@@ -11,13 +11,27 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new ValidationException("Login can't be null");
+        if (user == null) {
+            throw new ValidationException("Input User is null");
         }
-        if (user.getLogin().length() < DEFAULT_MIN_CHARACTERS) {
-            throw new ValidationException("Min allowed login length is "
-                    + DEFAULT_MIN_CHARACTERS);
+        loginValidator(user);
+        passwordValidator(user);
+        ageValidator(user);
+        return storageDao.add(user);
+    }
+
+    private void ageValidator(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new ValidationException("Not valid age: "
+                    + user.getAge()
+                    + ". Min allowed age is "
+                    + MIN_AGE);
         }
+        if (user.getAge() == null) {
+            throw new ValidationException("User age is null");
+        }
+    }
+    private void passwordValidator(User user) {
         if (user.getPassword() == null) {
             throw new ValidationException("Password can't be null");
         }
@@ -25,17 +39,21 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("Min allowed password length is "
                     + DEFAULT_MIN_CHARACTERS);
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new ValidationException("Not valid age: "
-                    + user.getAge()
-                    + ". Min allowed age is "
-                    + MIN_AGE);
-        }
+    }
+
+    private void loginValidator(User user) {
         User userInStorage = storageDao.get(user.getLogin());
+        if (user.getLogin() == null) {
+            throw new ValidationException("Login can't be null");
+        }
+        if (user.getLogin().length() < DEFAULT_MIN_CHARACTERS) {
+            throw new ValidationException("Min allowed login length is "
+                    + DEFAULT_MIN_CHARACTERS);
+        }
         if (!(userInStorage == null)
                 && user.getLogin().equals(userInStorage.getLogin())) {
             throw new ValidationException("Same login was already registered, please try again");
         }
-        return storageDao.add(user);
+
     }
 }
