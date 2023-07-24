@@ -12,9 +12,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        storageDao.add(user);
+        return storageDao.get(user.getLogin());
+    }
+
+    private void validateUser(User user) {
         if (user == null) {
             throw new RegistrationUserException("User can't be null");
         }
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
+    }
+
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationUserException("User password can't be null");
+        }
+        if (user.getPassword().length() < MINIMUM_VALID_LENGTH) {
+            throw new RegistrationUserException("Password can't be shorter than "
+                    + MINIMUM_VALID_LENGTH + "characters");
+        }
+    }
+
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationUserException("Login can't be null");
         }
@@ -26,13 +48,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationUserException("User with login "
                     + user.getLogin() + " already exist");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationUserException("User password can't be null");
-        }
-        if (user.getPassword().length() < MINIMUM_VALID_LENGTH) {
-            throw new RegistrationUserException("Password can't be shorter than "
-                    + MINIMUM_VALID_LENGTH + "characters");
-        }
+    }
+
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new RegistrationUserException("User age can't be null");
         }
@@ -40,6 +58,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationUserException("User age can't be less than "
                     + MINIMUM_ADULT_USERS_AGE + "years old");
         }
-        return storageDao.add(user);
     }
+
 }

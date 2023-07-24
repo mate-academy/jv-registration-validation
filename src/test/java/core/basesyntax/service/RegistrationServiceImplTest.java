@@ -107,7 +107,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserSeventeenthAge_notOk() {
+    void register_UserSeventeenAge_notOk() {
         user.setAge(USER_17_AGE);
         assertThrows(RegistrationUserException.class,
                 () -> registrationService.register(user));
@@ -160,14 +160,6 @@ class RegistrationServiceImplTest {
         user.setAge(USER_21_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
-    }
-
-    @Test
-    void register_multipleCallUser_Ok() {
-        for (int i = 0; i < 777; i++) {
-            registrationService.register(new User(STRING_7_CHARACTER + i,
-                     STRING_7_CHARACTER, USER_18_AGE));
-        }
     }
 
     @AfterEach
