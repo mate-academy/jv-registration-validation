@@ -15,28 +15,40 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidDataException("Can't register null user!");
         }
-        if (user.getLogin() == null) {
-            throw new InvalidDataException("Login can't be null!");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidDataException("Password can't be null!");
-        }
-        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
-            throw new InvalidDataException("Not valid user's login " + user.getLogin()
-                    + ". Min allowed login length is " + MINIMUM_LOGIN_LENGTH);
-        }
-        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new InvalidDataException("Not valid user's password " + user.getPassword()
-                    + ". Min allowed password length is " + MINIMUM_PASSWORD_LENGTH);
-        }
-        if (user.getAge() < MINIMUM_AGE) {
-            throw new InvalidDataException("Not valid user's age " + user.getAge()
-                    + ". Min allowed age is " + MINIMUM_AGE);
-        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("Such a user is already registered!");
         }
-        storageDao.add(user);
-        return storageDao.get(user.getLogin());
+        loginValidation(user.getLogin());
+        passwordValidation(user.getPassword());
+        ageValidation(user.getAge());
+        return storageDao.add(user);
+    }
+
+    private void loginValidation(String login) {
+        if (login == null) {
+            throw new InvalidDataException("Login can't be null!");
+        }
+        if (login.length() < MINIMUM_LOGIN_LENGTH) {
+            throw new InvalidDataException("Not valid user's login " + login
+                    + ". Min allowed login length is " + MINIMUM_LOGIN_LENGTH);
+        }
+    }
+
+    private void passwordValidation(String password) {
+        if (password == null) {
+            throw new InvalidDataException("Password can't be null!");
+        }
+
+        if (password.length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new InvalidDataException("Not valid user's password " + password
+                    + ". Min allowed password length is " + MINIMUM_PASSWORD_LENGTH);
+        }
+    }
+
+    private void ageValidation(int age) {
+        if (age < MINIMUM_AGE) {
+            throw new InvalidDataException("Not valid user's age " + age
+                    + ". Min allowed age is " + MINIMUM_AGE);
+        }
     }
 }

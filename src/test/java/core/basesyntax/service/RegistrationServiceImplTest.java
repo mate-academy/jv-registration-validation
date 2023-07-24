@@ -10,42 +10,31 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
+    private static final String VALID_LOGIN = "Denis123";
     private static final String VALID_PASSWORD = "qwerty";
     private static final int VALID_AGE = 23;
-    private static final User VALID_LOGIN_1_USER = new User("gabriel",
-            VALID_PASSWORD, VALID_AGE);
-    private static final User VALID_LOGIN_2_USER = new User("kate2006",
-            VALID_PASSWORD, VALID_AGE);
-    private static final User INVALID_LOGIN_1_USER = new User("max",
-            VALID_PASSWORD, VALID_AGE);
-    private static final User INVALID_LOGIN_2_USER = new User("",
-            VALID_PASSWORD, VALID_AGE);
+    private static final String SHORT_LOGIN = "Den";
+    private static final String SHORT_PASSWORD = "ytr";
+    private static final int NEGATIVE_AGE = -7;
+    private static final int BELOW_MIN_AGE = 17;
+    private static final User NULL_USER = null;
     private static final User NULL_LOGIN_USER = new User(null,
             VALID_PASSWORD, VALID_AGE);
-    private static final User INVALID_PASSWORD_1_USER = new User("Oleksandr",
-            "ghabf", VALID_AGE);
-    private static final User INVALID_PASSWORD_2_USER = new User("Volodymyr",
-            "abc", VALID_AGE);
-    private static final User INVALID_PASSWORD_3_USER = new User("Yevhen",
-            "", VALID_AGE);
-    private static final User VALID_PASSWORD_1_USER = new User("patrick",
-            "tyfhhfaa", VALID_AGE);
-    private static final User VALID_PASSWORD_2_USER = new User("Denius",
-            "lalakfjg", VALID_AGE);
     private static final User NULL_PASSWORD_USER = new User("max",
             null, VALID_AGE);
-    private static final User INVALID_AGE_1_USER = new User("Viktoriya",
-            VALID_PASSWORD, 16);
-    private static final User INVALID_AGE_2_USER = new User("max",
-            VALID_PASSWORD, -7);
-    private static final User VALID_AGE_1_USER = new User("engine768",
+    private static final User USER_WITH_SHORT_LOGIN = new User(SHORT_LOGIN, VALID_PASSWORD,
+            VALID_AGE);
+    private static final User USER_WITH_SHORT_PASSWORD = new User("Maksim1",
+            SHORT_PASSWORD, VALID_AGE);
+    private static final User USER_WITH_NEGATIVE_AGE = new User("Oleksandr",
+            VALID_PASSWORD, NEGATIVE_AGE);
+    private static final User USER_BELOW_MIN_AGE = new User("roman2", VALID_PASSWORD,
+            BELOW_MIN_AGE);
+    private static final User VALID_USER_1 = new User("bohdan783",
             VALID_PASSWORD, VALID_AGE);
-    private static final User VALID_AGE_2_USER = new User("car123456",
-            VALID_PASSWORD, VALID_AGE);
-    private static final User NULL_USER = null;
-    private static final User VALID_USER = new User("Machine",
-            VALID_PASSWORD, VALID_AGE);
-    private static final User EXISTING_USER = new User("Machine",
+    private static final User VALID_USER_2 = new User("Yevheniy", VALID_PASSWORD,
+            VALID_AGE);
+    private static final User EXISTING_USER = new User("Yevheniy",
             VALID_PASSWORD, VALID_AGE);
 
     @BeforeAll
@@ -54,78 +43,57 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidLogin_NotOk() {
+    void register_validUser_ok() {
+        User registeredUser = registrationService.register(VALID_USER_1);
+        assertEquals(VALID_USER_1, registeredUser);
+    }
+
+    @Test
+    void register_invalidLogin_notOk() {
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(INVALID_LOGIN_1_USER);
-            registrationService.register(INVALID_LOGIN_2_USER);
+            registrationService.register(USER_WITH_SHORT_LOGIN);
         });
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(NULL_LOGIN_USER);
         });
     }
 
     @Test
-    void register_validLogin_Ok() {
-        User actual1 = registrationService.register(VALID_LOGIN_1_USER);
-        User actual2 = registrationService.register(VALID_LOGIN_2_USER);
-        assertEquals(VALID_LOGIN_1_USER, actual1);
-        assertEquals(VALID_LOGIN_2_USER, actual2);
-    }
-
-    @Test
-    void register_invalidPassword_NotOk() {
+    void register_invalidPassword_notOk() {
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(INVALID_PASSWORD_1_USER);
-            registrationService.register(INVALID_PASSWORD_2_USER);
-            registrationService.register(INVALID_PASSWORD_3_USER);
+            registrationService.register(USER_WITH_SHORT_PASSWORD);
         });
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(NULL_PASSWORD_USER);
         });
     }
 
     @Test
-    void register_validPassword_Ok() {
-        User actual1 = registrationService.register(VALID_PASSWORD_1_USER);
-        User actual2 = registrationService.register(VALID_PASSWORD_2_USER);
-        assertEquals(VALID_PASSWORD_1_USER, actual1);
-        assertEquals(VALID_PASSWORD_2_USER, actual2);
-    }
-
-    @Test
-    void register_invalidAge_NotOk() {
+    void register_invalidAge_notOk() {
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(INVALID_AGE_1_USER);
-            registrationService.register(INVALID_AGE_2_USER);
+            registrationService.register(USER_BELOW_MIN_AGE);
+            registrationService.register(USER_WITH_NEGATIVE_AGE);
         });
     }
 
     @Test
-    void register_validAge_Ok() {
-        User actual1 = registrationService.register(VALID_AGE_1_USER);
-        User actual2 = registrationService.register(VALID_AGE_2_USER);
-        assertEquals(VALID_AGE_1_USER, actual1);
-        assertEquals(VALID_AGE_2_USER, actual2);
-    }
-
-    @Test
-    void register_nullUser_NotOk() {
+    void register_nullUser_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(NULL_USER);
         });
     }
 
     @Test
-    void register_alreadyExistingUser_NotOk() {
-        Storage.people.add(VALID_USER);
+    void register_existingUser_notOk() {
+        Storage.people.add(VALID_USER_2);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(EXISTING_USER);
         });
