@@ -13,8 +13,15 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
+    private static final int BAD_AGE = 16;
+    private static final int GOOD_AGE = 20;
     private static final String LOGIN = "Oleksandr";
+    private static final String BAD_LOGIN = "Osa";
+    private static final String GOOD_LOGIN = "CorrectLogin";
     private static final String PASSWORD = "rytop12Qt";
+    private static final String BAD_PASSWORD = "123";
+    private static final String GOOD_PASSWORD = "qwerty987";
+
     private static RegistrationService registrationService;
     private User user;
 
@@ -69,7 +76,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minLogin_notOk() {
-        user.setLogin("Osa");
+        user.setLogin(BAD_LOGIN);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -77,7 +84,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minPassword_notOk() {
-        user.setPassword("123");
+        user.setPassword(BAD_PASSWORD);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -85,7 +92,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minAge_notOk() {
-        user.setAge(16);
+        user.setAge(BAD_AGE);
         assertThrows(RegistrationException.class,() -> {
             registrationService.register(user);
         });
@@ -101,21 +108,21 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_correctLogin_ok() {
-        user.setLogin("CorrectLogin");
+        user.setLogin(GOOD_LOGIN);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_correctPassword_ok() {
-        user.setPassword("qwerty987");
+        user.setPassword(GOOD_PASSWORD);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_correctAge_ok() {
-        user.setAge(20);
+        user.setAge(GOOD_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
