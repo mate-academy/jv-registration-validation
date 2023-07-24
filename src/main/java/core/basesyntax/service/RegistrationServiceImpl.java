@@ -44,13 +44,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User " + user.getLogin()
-                    + " already exist in storage.");
-        }
         if (user.getLogin().length() < MIN_LOGIN) {
             throw new RegistrationException("Not valid login " + user.getLogin()
                     + " Min allowed login is " + MIN_LOGIN);
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User " + user.getLogin()
+                    + " already exist in storage.");
         }
     }
 

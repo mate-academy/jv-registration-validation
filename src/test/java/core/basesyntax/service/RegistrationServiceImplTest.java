@@ -14,15 +14,16 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final int MIN_LOGIN = 6;
     private static final int MIN_PASSWORD = 6;
-    private static final int MIN_AGE = 18;
-    private static final int BAD_AGE = 16;
-    private static final int GOOD_AGE = 20;
+    private static final int VALID_MIN_AGE = 18;
+    private static final int INVALID_AGE = 17;
+    private static final int VALID_AGE = 18;
+
     private static final String LOGIN = "Oleksandr";
-    private static final String BAD_LOGIN = "Osa";
-    private static final String GOOD_LOGIN = "CorrectLogin";
-    private static final String PASSWORD = "rytop12Qt";
-    private static final String BAD_PASSWORD = "123";
-    private static final String GOOD_PASSWORD = "qwerty987";
+    private static final String INVALID_LOGIN = "Osano";
+    private static final String VALID_LOGIN = "Correc";
+    private static final String PASSWORD = "rytop1";
+    private static final String INVALID_PASSWORD = "12345";
+    private static final String VALID_PASSWORD = "123456";
 
     private static RegistrationService registrationService;
     private User user;
@@ -37,7 +38,7 @@ class RegistrationServiceImplTest {
         user = new User();
         user.setLogin(LOGIN);
         user.setPassword(PASSWORD);
-        user.setAge(MIN_AGE);
+        user.setAge(VALID_MIN_AGE);
     }
 
     @AfterEach
@@ -78,7 +79,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minLogin_notOk() {
-        user.setLogin(BAD_LOGIN);
+        user.setLogin(INVALID_LOGIN);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         }, "Login must be more then " + MIN_LOGIN + "characters");
@@ -86,7 +87,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minPassword_notOk() {
-        user.setPassword(BAD_PASSWORD);
+        user.setPassword(INVALID_PASSWORD);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         }, "Password must be more then " + MIN_PASSWORD + "characters");
@@ -94,10 +95,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_minAge_notOk() {
-        user.setAge(BAD_AGE);
+        user.setAge(INVALID_AGE);
         assertThrows(RegistrationException.class,() -> {
             registrationService.register(user);
-        }, "You age should be at least " + MIN_AGE);
+        }, "You age should be at least " + INVALID_AGE);
     }
 
     @Test
@@ -110,21 +111,21 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_correctLogin_ok() {
-        user.setLogin(GOOD_LOGIN);
+        user.setLogin(VALID_LOGIN);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_correctPassword_ok() {
-        user.setPassword(GOOD_PASSWORD);
+        user.setPassword(VALID_PASSWORD);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_correctAge_ok() {
-        user.setAge(GOOD_AGE);
+        user.setAge(VALID_AGE);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
