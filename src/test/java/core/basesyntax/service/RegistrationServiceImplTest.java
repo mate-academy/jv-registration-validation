@@ -5,15 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exeptions.InvalidDataException;
-import core.basesyntax.exeptions.UserIsNullException;
+import core.basesyntax.exeptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String CORRECT_LOGIN = "correctLogin";
+    private static final String CORRECT_LOGIN = "corect";
     private static final String INCORRECT_LOGIN = "login";
     private static final String CORRECT_PASSWORD = "qwerty";
     private static final String INCORRECT_PASSWORD = "pass";
@@ -39,59 +38,68 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsNull_NotOk() {
-        user = null;
-        assertThrows(UserIsNullException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_correctUser_Ok() {
-        User actual = user;
-        assertEquals(user,actual);
+        assertEquals(user,registrationService.register(user));
     }
 
     @Test
     void register_InvalidAge_NotOk() {
         user.setAge(INCORRECT_AGE);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userAgeIsNegative_NotOk() {
         user.setAge(NEGATIVE_AGE);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userAgeIsNull_NotOk() {
         user.setAge(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_checkPasswordMoreRequired_Ok() {
+    void register_checkLengthPassword_Ok() {
         User testUser = new User();
-        testUser.setLogin(CORRECT_LOGIN + "1");
         testUser.setPassword("01234567890123456789");
-        testUser.setAge(CORRECT_AGE);
         assertTrue(testUser.getPassword().length() >= user.getPassword().length());
+        testUser.setPassword("123456");
+        assertTrue(testUser.getPassword().length() >= user.getPassword().length());
+    }
+
+    @Test
+    void register_checkLengthPassword_NotOk() {
+        User testUser = new User();
+        testUser.setPassword("01234");
+        assertTrue(testUser.getPassword().length() <= user.getPassword().length());
+        testUser.setPassword("123");
+        assertTrue(testUser.getPassword().length() <= user.getPassword().length());
+        testUser.setPassword("");
+        assertTrue(testUser.getPassword().length() <= user.getPassword().length());
     }
 
     @Test
     void register_InvalidPassword_NotOk() {
         user.setPassword(INCORRECT_PASSWORD);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userPasswordIsNull_NotOk() {
         user.setPassword(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userPasswordIsEmpty_NotOk() {
         user.setPassword("");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -106,32 +114,43 @@ class RegistrationServiceImplTest {
     @Test
     void register_InvalidLogin_NotOk() {
         user.setLogin(INCORRECT_LOGIN);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userLoginIsNull_NotOk() {
         user.setLogin(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_userLoginIsEmpty_NotOk() {
         user.setLogin("");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_checkLoginLengthMoreThanRequired_Ok() {
+    void register_checkLoginLength_Ok() {
         User testUser = new User();
         testUser.setLogin("01234567890123456789");
-        testUser.setPassword(CORRECT_PASSWORD);
+        assertTrue(testUser.getLogin().length() >= user.getLogin().length());
+        testUser.setLogin("012345");
         assertTrue(testUser.getLogin().length() >= user.getLogin().length());
     }
 
     @Test
+    void register_checkLoginLength_NotOk() {
+        User testUser = new User();
+        testUser.setLogin("01234");
+        assertTrue(testUser.getLogin().length() <= user.getLogin().length());
+        testUser.setLogin("012");
+        assertTrue(testUser.getLogin().length() <= user.getLogin().length());
+        testUser.setLogin("");
+        assertTrue(testUser.getLogin().length() <= user.getLogin().length());
+    }
+    @Test
     void register_UserThatIsAlreadyExist_NotOk() {
         Storage.people.add(user);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
