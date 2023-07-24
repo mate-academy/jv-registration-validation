@@ -13,51 +13,57 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || !isUserValid(user)) {
-            throw new RegistrationException("The user data is invalid!");
-        }
+        isDataNull(user);
+        isUserInvalid(user);
         return storageDao.add(user);
     }
 
-    private boolean isUserValid(User user) {
-        if (! (isNotExisting(user.getLogin())
-                && isLoginLengthCorrect(user.getLogin())
-                && isPasswordLengthCorrect(user.getPassword())
-                && isAgeAppropriate(user.getAge()))) {
-            throw new RegistrationException("Your data is invalid!");
+    private void isDataNull(User user) {
+        if (user == null) {
+            throw new RegistrationException("User cannot be null!");
         }
-        return true;
+        if (user.getLogin() == null) {
+            throw new RegistrationException("User login cannot be null!");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("User age cannot be null!");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("User password cannot be null!");
+        }
     }
 
-    private boolean isNotExisting(String login) {
+    private void isUserInvalid(User user) {
+        isNotExisting(user.getLogin());
+        isLoginLengthCorrect(user.getLogin());
+        isPasswordLengthCorrect(user.getPassword());
+        isAgeAppropriate(user.getAge());
+    }
+
+    private void isNotExisting(String login) {
         if (storageDao.get(login) != null) {
             throw new RegistrationException("The user already exists in storage!");
         }
-        return true;
     }
 
-    private boolean isLoginLengthCorrect(String login) {
+    private void isLoginLengthCorrect(String login) {
         if (login == null || login.length() < LOGIN_MINIMAL_LENGTH) {
             throw new RegistrationException(
                     "Login has to be " + LOGIN_MINIMAL_LENGTH + " letters or longer!");
         }
-        return true;
     }
 
-    private boolean isPasswordLengthCorrect(String password) {
+    private void isPasswordLengthCorrect(String password) {
         if (password == null || password.length() < PASSWORD_MINIMAL_LENGTH) {
             throw new RegistrationException(
                     "Password has to be " + PASSWORD_MINIMAL_LENGTH + " chars or longer!");
         }
-        return true;
     }
 
-    private boolean isAgeAppropriate(Integer age) {
+    private void isAgeAppropriate(Integer age) {
         if (age == null || age < USER_MINIMAL_AGE) {
             throw new RegistrationException(
                     "To register user must be older than " + USER_MINIMAL_AGE + " years!");
         }
-        return true;
     }
-
 }

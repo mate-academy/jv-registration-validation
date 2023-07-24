@@ -1,12 +1,11 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,16 +13,16 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
 
-    private static final User VALID_USER = new User("username", "qwerty1", 20);
-    private static final User NEW_USER = new User("newUser", "qwerty1", 20);
-    private static final User INVALID_USER = new User("in_us", "qty1", 10);
-    private static final User NULL_USER = null;
-    private static final User UNDERAGE_USER = new User("underageUser", "qwerty1", 15);
-    private static final User INVALID_LOGIN_USER = new User("1n", "qwerty1", 20);
-    private static final User INVALID_PASSWORD_USER = new User("invalidPasswordUser", "in_p", 20);
-    private static final User NULL_LOGIN_USER = new User(null, "qwerty1", 15);
-    private static final User NULL_PASSWORD_USER = new User("nullPassword", null, 20);
-    private static final User NULL_AGE_USER = new User("nullAge", "qwety1", null);
+    private static final String VALID_LOGIN = "validLogin";
+    private static final String VALID_PASSWORD = "validPassword";
+    private static final Integer VALID_AGE = 20;
+    private static final String INVALID_LOGIN = "v";
+    private static final String INVALID_PASSWORD = "p";
+    private static final Integer INVALID_AGE = 10;
+    private static final String NOT_EXISTING_LOGIN = "notExisting";
+    private static final int PASSWORD_MINIMAL_LENGTH = 6;
+    private static final int LOGIN_MINIMAL_LENGTH = 6;
+    private static final int USER_MINIMAL_AGE = 18;
     private static StorageDaoImpl storage;
     private static RegistrationService registrationService;
 
@@ -34,79 +33,102 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userDataValidRegistration() {
-        registrationService.register(VALID_USER);
-        User userFromStorage = storage.get(VALID_USER.getLogin());
-        assertEquals(VALID_USER, userFromStorage, "User data is invalid!");
+    void registration_validUserData() {
+        Storage.people.clear();
+        User validUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        registrationService.register(validUser);
+        User userFromStorage = storage.get(validUser.getLogin());
+        assertEquals(validUser, userFromStorage, "User data is invalid!");
     }
 
     @Test
-    void userDataInvalidRegistration_notOK() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(INVALID_USER);
+    void registration_existingUser_notOk() {
+        User existingUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        registrationService.register(existingUser);
+        assertNotNull(storage.get(existingUser.getLogin()));
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(existingUser);
         });
+        String expectedMessage = "The user already exists in storage!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 
     @Test
-    void registrationExistingUser_notOk() {
-        assertNotNull(storage.get(VALID_USER.getLogin()));
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(VALID_USER);
+    void registration_userAgeLessThan18_notOk() {
+        Storage.people.clear();
+        User underAgeUser = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(underAgeUser);
         });
+        String expectedMessage = "To register user must be older than "
+                + USER_MINIMAL_AGE + " years!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 
     @Test
-    void userUnderage_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(UNDERAGE_USER);
+    void registration_userLoginInvalid_notOk() {
+        Storage.people.clear();
+        User invalidLoginUser = new User(INVALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(invalidLoginUser);
         });
+        String expectedMessage = "Login has to be " + LOGIN_MINIMAL_LENGTH
+                + " letters or longer!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 
     @Test
-    void userInvalidLogin_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(INVALID_LOGIN_USER);
+    void registration_userPasswordInvalid_notOk() {
+        Storage.people.clear();
+        User invalidPasswordUser = new User(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(invalidPasswordUser);
         });
+        String expectedMessage = "Password has to be " + PASSWORD_MINIMAL_LENGTH
+                + " chars or longer!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 
     @Test
-    void userInvalidPassword_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(INVALID_PASSWORD_USER);
+    void registration_userNull_notOk() {
+        Storage.people.clear();
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(null);
         });
+        String expectedMessage = "User cannot be null!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 
     @Test
-    void registrationNotExistingUser() {
-        assertNull(storage.get(NEW_USER.getLogin()));
-        assertDoesNotThrow(() -> registrationService.register(NEW_USER));
-    }
-
-    @Test
-    void userNull_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(NULL_USER);
+    void registration_userLoginNull_notOk() {
+        Storage.people.clear();
+        User loginNullUser = new User(null, VALID_PASSWORD, VALID_AGE);
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(loginNullUser);
         });
+        String expectedMessage = "User login cannot be null!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 
     @Test
-    void userAgeNull_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(NULL_AGE_USER);
+    void registration_userPasswordNull_notOk() {
+        Storage.people.clear();
+        User passwordNullUser = new User(VALID_LOGIN, null, VALID_AGE);
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(passwordNullUser);
         });
+        String expectedMessage = "User password cannot be null!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 
     @Test
-    void userLoginNull_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(NULL_LOGIN_USER);
+    void registration_userAgeNull_notOk() {
+        Storage.people.clear();
+        User ageNullUser = new User(VALID_LOGIN, VALID_PASSWORD, null);
+        RegistrationException actual = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(ageNullUser);
         });
-    }
-
-    @Test
-    void userPasswordNull_notOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(NULL_PASSWORD_USER);
-        });
+        String expectedMessage = "User age cannot be null!";
+        assertEquals(expectedMessage, actual.getMessage());
     }
 }
