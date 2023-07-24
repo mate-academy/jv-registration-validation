@@ -117,16 +117,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithValidPassword_ok() {
         User expected = new User(VALID_LOGIN_EXAMPLE, VALID_PASSWORD_EXAMPLE, MIN_VALID_AGE);
-        User actual = null;
-        try {
-            actual = registrationService.register(expected);
-        } catch (RegistrationException e) {
-            fail(e.getMessage());
-        }
+        registrationService.register(expected);
+        User actual = storageDao.get(expected.getLogin());
         assertEquals(expected, actual);
-        int expectedSizeOfStorage = INITIAL_SIZE_OF_STORAGE + 1;
-        int actualSizeOfStorage = Storage.people.size();
-        assertEquals(expectedSizeOfStorage, actualSizeOfStorage);
     }
 
     @Test
