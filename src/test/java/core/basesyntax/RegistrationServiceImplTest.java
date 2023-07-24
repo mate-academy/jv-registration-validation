@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
@@ -15,70 +13,78 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
+    private static final String VALID_LOGIN = "kandibober";
+    private static final String VALID_PASSWORD = "ibrahim13";
+    private static final String INVALID_LOGIN = "kandi";
+    private static final String INVALID_PASSWORD = "ibr13";
+    private static final int VALID_AGE = 25;
+    private static final int INVALID_AGE = 10;
     private RegistrationService registrationService;
-    private StorageDao storageDao;
 
     @BeforeEach
     public void setUp() {
         Storage.people.clear();
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
     @Test
     public void register_validUser_ok() {
-        User user = createUser("kandibober", "ibrahim13", 33);
-        User registeredUser = registrationService.register(user);
-        assertNotNull(registeredUser);
-        assertNotNull(registeredUser.getId());
-        assertEquals(user.getLogin(), registeredUser.getLogin());
-        assertEquals(user.getPassword(), registeredUser.getPassword());
-        assertEquals(user.getAge(), registeredUser.getAge());
+        User expected = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        User actual = registrationService.register(expected);
+        assertNotNull(actual);
+        assertEquals(expected.getLogin(), actual.getLogin());
+        assertEquals(expected.getAge(), actual.getAge());
+        assertEquals(expected.getPassword(), actual.getPassword());
+    }
+
+    @Test
+    void register_userIsNull_exceptionThrown() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
     public void register_userWithExistingLogin_exceptionThrown() {
-        User user = createUser("kandibober", "ibrahim13", 25);
-        storageDao.add(user);
-
-        User userWithSameLogin = createUser("kandibober", "ibrahim13", 30);
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        registrationService.register(user);
+        User userWithSameLogin = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithSameLogin));
     }
 
     @Test
     public void register_nullLogin_exceptionThrown() {
-        User user = createUser(null, "ibrahim13", 25);
+        User user = createUser(null, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     public void register_shortLogin_exceptionThrown() {
-        User user = createUser("kandi", "ibrahim13", 25);
+        User user = createUser(INVALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     public void register_nullPassword_exceptionThrown() {
-        User user = createUser("kandibober", null, 25);
+        User user = createUser(VALID_LOGIN, null, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     public void register_shortPassword_exceptionThrown() {
-        User user = createUser("kandibober", "ibr13", 25);
+        User user = createUser(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     public void register_nullAge_exceptionThrown() {
-        User user = createUser("kandibober", "ibrahim13", null);
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     public void register_underageUser_exceptionThrown() {
-        User user = createUser("kandibober", "ibrahim13", 16);
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 

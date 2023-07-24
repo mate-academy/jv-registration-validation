@@ -13,22 +13,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
-        }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Invalid login. Login should "
-                                            + "be at least 6 characters long.");
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null.");
         }
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age can't be null.");
+        }
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException("Invalid login. Login should "
+                    + "be at least 6 characters long.");
+        }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Invalid password. Password should be"
                                             + " at least 6 characters long.");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("Age can't be null.");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Invalid age. Age should be at least 18.");
