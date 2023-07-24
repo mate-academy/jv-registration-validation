@@ -32,8 +32,8 @@ class RegistrationServiceImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("register_validUser_ok")
-    void register_addUserWithValidData_ok(User input) {
+    @MethodSource("validUserDataEntry")
+    void register_userWithValidData_ok(User input) {
         User actualResult = registrationService.register(input);
         assertEquals(input.getLogin(), actualResult.getLogin());
         assertEquals(input.getPassword(), actualResult.getPassword());
@@ -41,18 +41,18 @@ class RegistrationServiceImplTest {
     }
 
     @ParameterizedTest
-    @MethodSource("register_invalidUser_NotOk")
-    void register_addUserWithNotValidData_notOk(User input) {
+    @MethodSource("invalidUserDataEntry")
+    void register_userWithNotValidData_notOk(User input) {
         assertThrows(UserRegistrationException.class, () -> registrationService.register(input));
     }
 
     @Test
-    void register_addNullUser_notOk() {
+    void register_nullUser_notOk() {
         assertThrows(UserRegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_addExistingUser_notOk() {
+    void register_existedUser_notOk() {
         User user = new User(
                 USER_LOGIN_LENGTH_6_SYMBOLS_OK,
                 USER_PASSWORD_LENGTH_6_SYMBOLS_OK,
@@ -61,20 +61,20 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
     }
 
-    private static Stream<Arguments> register_validUser_ok() {
+    private static Stream<Arguments> validUserDataEntry() {
         return Stream.of(
                 Arguments.of(new User(
-                        USER_LOGIN_LENGTH_6_SYMBOLS_OK,
-                        USER_PASSWORD_LENGTH_6_SYMBOLS_OK,
+                        "Alex123",
+                        "alex123",
                         USER_MIN_ACCESSIBLE_AGE)),
                 Arguments.of(new User(
-                        USER_LOGIN_LENGTH_6_SYMBOLS_OK,
-                        USER_PASSWORD_LENGTH_6_SYMBOLS_OK,
-                        USER_AGE_MORE_THAN_18_OK))
+                        "Alice123",
+                        "alice123",
+                        30))
         );
     }
 
-    private static Stream<Arguments> register_invalidUser_NotOk() {
+    private static Stream<Arguments> invalidUserDataEntry() {
         return Stream.of(
                 Arguments.of(new User(
                         USER_LOGIN_LENGTH_LESS_6_SYMBOLS_NOT_OK,

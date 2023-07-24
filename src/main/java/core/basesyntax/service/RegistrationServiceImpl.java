@@ -53,14 +53,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserRegistrationException("User login "
                     + user.getLogin() + " is not specified. Login can't be null");
         }
-        if (user.equals(storageDao.get(user.getLogin()))) {
-            throw new UserRegistrationException("User by specified login "
-                    + user.getLogin() + " already exist");
-        }
         if (user.getLogin().length() < USER_LOGIN_LENGTH) {
             throw new UserRegistrationException("User login length "
                     + user.getLogin().length()
                     + " less than " + USER_LOGIN_LENGTH + " symbols");
+        }
+        if (user.equals(storageDao.get(user.getLogin()))) {
+            throw new UserRegistrationException("User by specified login "
+                    + user.getLogin() + " already exist");
         }
     }
 }
