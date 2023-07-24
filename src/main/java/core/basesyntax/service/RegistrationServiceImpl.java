@@ -7,14 +7,14 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int AGE_THRESHOLD = 18;
-    private static final int MIN_NUMBER_OF_CHARS = 6;
+    private static final int MIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         checkForNulls(user);
-        checkIfUserExists(user);
         checkForValidParameters(user);
+        checkIfUserExists(user);
         storageDao.add(user);
         return user;
     }
@@ -26,14 +26,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private static void checkForValidParameters(User user) {
+        if (user.getAge() < 0) {
+            throw new InvalidUserException("Not valid age: " + user.getAge() + ". It can't be negative. Min allowed age is " + AGE_THRESHOLD);
+        }
         if (user.getAge() < AGE_THRESHOLD) {
-            throw new InvalidUserException("User is too young");
+            throw new InvalidUserException("Not valid age: " + user.getAge() + ". Min allowed age is " + AGE_THRESHOLD);
         }
-        if (user.getLogin().length() < MIN_NUMBER_OF_CHARS) {
-            throw new InvalidUserException("User's login is too short");
+        if (user.getLogin().length() < MIN_LENGTH) {
+            throw new InvalidUserException("Not valid User's login. Min allowed age is " + MIN_LENGTH);
         }
-        if (user.getPassword().length() < MIN_NUMBER_OF_CHARS) {
-            throw new InvalidUserException("User's password is too short");
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new InvalidUserException("Not valid User's password. Min allowed age is " + MIN_LENGTH);
         }
     }
 
