@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.InvalidUserException;
 import core.basesyntax.model.User;
 
 public interface RegistrationService {

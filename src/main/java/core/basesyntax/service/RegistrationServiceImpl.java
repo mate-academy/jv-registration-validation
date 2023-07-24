@@ -27,16 +27,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private static void checkForValidParameters(User user) {
         if (user.getAge() < 0) {
-            throw new InvalidUserException("Not valid age: " + user.getAge() + ". It can't be negative. Min allowed age is " + AGE_THRESHOLD);
+            throw new InvalidUserException("Not valid age: " + user.getAge()
+                    + ". It can't be negative. Min allowed age is " + AGE_THRESHOLD);
         }
         if (user.getAge() < AGE_THRESHOLD) {
-            throw new InvalidUserException("Not valid age: " + user.getAge() + ". Min allowed age is " + AGE_THRESHOLD);
+            throw new InvalidUserException("Not valid age: " + user.getAge()
+                    + ". Min allowed age is " + AGE_THRESHOLD);
         }
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new InvalidUserException("Not valid User's login. Min allowed age is " + MIN_LENGTH);
+            throw new InvalidUserException("Not valid User's login. Min allowed age is "
+                    + MIN_LENGTH);
         }
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new InvalidUserException("Not valid User's password. Min allowed age is " + MIN_LENGTH);
+            throw new InvalidUserException("Not valid User's password. Min allowed age is "
+                    + MIN_LENGTH);
         }
     }
 
