@@ -7,6 +7,8 @@ import core.basesyntax.exceptions.ValidDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final byte MIN_AUTHORIZATION_LENGTH = 6;
+    private static final byte MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -14,7 +16,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkNulls(user);
         isLoginNotRegistered(user);
         isIdNotRegistered(user);
-        isPasswordLoginLengthValid(user);
+        isLoginLengthValid(user);
+        isPasswordLengthValid(user);
         isPasswordValid(user);
         isLoginValid(user);
         isAgeValid(user);
@@ -39,8 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean isLoginNotRegistered(User user) throws AlreadyRegisteredException {
         // Same login check
-        if (storageDao.get(user.getLogin()) != null
-                && storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new AlreadyRegisteredException("Same login already registered");
         }
         return true;
@@ -56,17 +58,25 @@ public class RegistrationServiceImpl implements RegistrationService {
         return true;
     }
 
-    private boolean isPasswordLoginLengthValid(User user) throws ValidDataException {
-        // Additional validation for password and login
-        if (user.getLogin().length() < 6 || user.getPassword().length() < 6) {
+    private boolean isPasswordLengthValid(User user) throws ValidDataException {
+        // Additional validation for password
+        if (user.getPassword().length() < MIN_AUTHORIZATION_LENGTH) {
             throw new ValidDataException("Password must be at least 6 characters long.");
+        }
+        return true;
+    }
+
+    private boolean isLoginLengthValid(User user) throws ValidDataException {
+        // Additional validation for login
+        if (user.getLogin().length() < MIN_AUTHORIZATION_LENGTH) {
+            throw new ValidDataException("Login must be at least 6 characters long.");
         }
         return true;
     }
 
     private boolean isPasswordValid(User user) throws ValidDataException {
         for (Character character : user.getPassword().toCharArray()) {
-            if (Character.isLetter(character) || Character.isDigit(character)) {
+            if (Character.isLetterOrDigit(character)) {
                 continue;
             }
             throw new ValidDataException("Password is not meets A-Z-a-z-1-9");
@@ -85,9 +95,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean isAgeValid(User user) throws ValidDataException {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             throw new ValidDataException("Your age is not acceptable. "
-                    + "Come here again after " + (18 - user.getAge())
+                    + "Come here again after " + (MIN_AGE - user.getAge())
                     + " year/s \n We will wait for you ;)");
         }
         return true;

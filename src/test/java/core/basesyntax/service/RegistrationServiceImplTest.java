@@ -2,9 +2,10 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.AlreadyRegisteredException;
 import core.basesyntax.exceptions.ValidDataException;
@@ -25,6 +26,7 @@ class RegistrationServiceImplTest {
     private static final String TEST_WRONG_PASSWORD = "$@*T@G %@*)%)&H";
     private static final RegistrationServiceImpl registrationService
             = new RegistrationServiceImpl();
+    private StorageDaoImpl storageDao = new StorageDaoImpl();
     private User testUser;
     private int testUserIterator;
 
@@ -92,8 +94,9 @@ class RegistrationServiceImplTest {
         assertDoesNotThrow(() -> {
             registrationService.register(testUser);
         });
-        int testUserIndex = Math.toIntExact(testUser.getId());
-        assertEquals(Storage.people.get(testUserIndex), testUser);
+        User actual = storageDao.get(testUser.getLogin());
+        User expected = testUser;
+        assertEquals(expected,actual);
     }
 
     @Test
@@ -101,21 +104,17 @@ class RegistrationServiceImplTest {
         assertDoesNotThrow(() -> {
             registrationService.register(testUser);
         });
-        int indexAdded = Math.toIntExact(testUser.getId()) - 1;
-        int receivedExactlyUserId = Math.toIntExact(Storage.people.get(indexAdded).getId()) - 1;
-        assertEquals(indexAdded, receivedExactlyUserId);
+        User actual = storageDao.get(testUser.getLogin());
+        User expected = testUser;
+        assertEquals(expected,actual);
     }
 
     @Test
     void register_userNotAddedToStorage_okay() {
         testUser.setAge(null);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
-        try {
-            int testUserIndex = Math.toIntExact(testUser.getId()) - 1;
-            assertNotEquals(Storage.people.get(testUserIndex), testUser);
-        } catch (IndexOutOfBoundsException e) {
-            // Nice!
-        }
+        User noExistingUser = storageDao.get(testUser.getLogin());
+        assertNull(noExistingUser);
     }
 
     @Test
