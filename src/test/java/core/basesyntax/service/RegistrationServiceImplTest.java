@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.InvalidUserException;
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -74,8 +72,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userAlreadyExists_NotOk() {
-        StorageDao storageDao = new StorageDaoImpl();
-        storageDao.add(user);
+        Storage.people.add(user);
         assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
         });
