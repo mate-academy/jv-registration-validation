@@ -2,7 +2,11 @@ package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "test_test";
@@ -13,6 +17,7 @@ class RegistrationServiceImplTest {
     private static final int INVALID_AGE = 14;
     private static RegistrationService registrationService;
     private User validUser;
+
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
@@ -30,8 +35,8 @@ class RegistrationServiceImplTest {
     void register_nullUser_notOK() {
         Assertions.assertThrows(InvalidUserException.class, () ->
                 registrationService.register(null),
-        "InvalidUserException should be thrown if the user is NULL"
-                );
+                "InvalidUserException should be thrown if the user is NULL"
+        );
     }
 
     @Test
@@ -45,35 +50,40 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         validUser.setLogin(null);
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(validUser));
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                registrationService.register(validUser));
     }
 
     @Test
     void register_nullPassword_notOK() {
         validUser.setPassword(null);
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(validUser));
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                registrationService.register(validUser));
     }
 
     @Test
     void register_notValidAge_notOK() {
         validUser.setAge(INVALID_AGE);
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(validUser));
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                registrationService.register(validUser));
     }
 
     @Test
     void register_notValidPassword_notOK() {
         validUser.setPassword(INVALID_PASSWORD);
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(validUser));
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                registrationService.register(validUser));
     }
 
     @Test
     void register_notValidLogin_notOK() {
         validUser.setLogin(INVALID_LOGIN);
-        Assertions.assertThrows(InvalidUserException.class, () -> registrationService.register(validUser));
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                registrationService.register(validUser));
     }
 
     @AfterEach
     void tearDown() {
         Storage.people.clear();
     }
- }
+}
