@@ -1,7 +1,9 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.UserRegistrationException;
@@ -41,6 +43,8 @@ class RegistrationServiceImplTest {
         User expected = User.of(VALID_LOGIN, VALID_PASSWORD, 37);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
+        assertTrue(Storage.people.contains(actual));
+
     }
 
     @Test
@@ -49,6 +53,7 @@ class RegistrationServiceImplTest {
         User expected = User.of(minLengthLogin, VALID_PASSWORD, 56);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
+        assertTrue(Storage.people.contains(actual));
     }
 
     @Test
@@ -56,6 +61,7 @@ class RegistrationServiceImplTest {
         User expected = User.of(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
+        assertTrue(Storage.people.contains(actual));
     }
 
     @Test
@@ -64,6 +70,7 @@ class RegistrationServiceImplTest {
         User expected = User.of(VALID_LOGIN, minLengthPassword, 75);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
+        assertTrue(Storage.people.contains(actual));
     }
 
     @Test
@@ -91,6 +98,7 @@ class RegistrationServiceImplTest {
             registrationService.register(invalidLoginUser);
         }, "Login " + invalidLogin + " with length " + invalidLogin.length()
                 + " is invalid by min length " + LOGIN_MIN_LENGTH);
+        assertFalse(Storage.people.contains(invalidLoginUser));
     }
 
     @Test
@@ -99,6 +107,7 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(nullLoginUser);
         }, "Login can`t be null");
+        assertFalse(Storage.people.contains(nullLoginUser));
     }
 
     @Test
@@ -109,6 +118,7 @@ class RegistrationServiceImplTest {
             registrationService.register(invalidPasswordUser);
         }, invalidPassword.length() + " password length is invalid for min length "
                 + PASSWORD_MIN_LENGTH);
+        assertFalse(Storage.people.contains(invalidPasswordUser));
     }
 
     @Test
@@ -117,15 +127,17 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(nullPasswordUser);
         }, "Password can`t be null");
+        assertFalse(Storage.people.contains(nullPasswordUser));
     }
 
     @Test
     void invalidUserCase_ageLessThenMinAge() {
         Integer invalidAge = MIN_AGE - 1;
-        User invalidAgeUserLover = User.of(VALID_LOGIN, VALID_PASSWORD, invalidAge);
+        User invalidAgeUser = User.of(VALID_LOGIN, VALID_PASSWORD, invalidAge);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(invalidAgeUserLover);
+            registrationService.register(invalidAgeUser);
         }, invalidAge + " years is less then min age " + MIN_AGE);
+        assertFalse(Storage.people.contains(invalidAgeUser));
     }
 
     @Test
@@ -136,6 +148,7 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(negativeAgeUser);
         }, negativeAge + " years is less then min age " + MIN_AGE);
+        assertFalse(Storage.people.contains(negativeAgeUser));
     }
 
     @Test
@@ -144,5 +157,6 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(nullAgeUser);
         }, "Age can`t be null");
+        assertFalse(Storage.people.contains(nullAgeUser));
     }
 }
