@@ -25,11 +25,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void nullCheck(User user) {
         if (user == null) {
             throw new UserRegistrationException("User" + NULL_MESSAGE);
-        } else if (user.getLogin() == null) {
+        }
+        if (user.getLogin() == null) {
             throw new UserRegistrationException("Login" + NULL_MESSAGE);
-        } else if (user.getAge() == null) {
+        }
+        if (user.getAge() == null) {
             throw new UserRegistrationException("Age" + NULL_MESSAGE);
-        } else if (user.getPassword() == null) {
+        }
+        if (user.getPassword() == null) {
             throw new UserRegistrationException("Password" + NULL_MESSAGE);
         }
     }

@@ -22,14 +22,6 @@ class RegistrationServiceImplTest {
 
     @BeforeAll
     static void beforeAll() {
-        if (VALID_LOGIN.length() < LOGIN_MIN_LENGTH) {
-            throw new RuntimeException("Valid login should has length at least "
-                    + LOGIN_MIN_LENGTH);
-        }
-        if (VALID_PASSWORD.length() < PASSWORD_MIN_LENGTH) {
-            throw new RuntimeException("Valid password should has length at least "
-                    + PASSWORD_MIN_LENGTH);
-        }
         registrationService = new RegistrationServiceImpl();
     }
 
