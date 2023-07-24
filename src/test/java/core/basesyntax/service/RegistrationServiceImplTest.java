@@ -30,14 +30,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerNullUser() {
+    public void register_nullUser_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(null));
         assertEquals("User can't be null", registrationException.getMessage());
     }
 
     @Test
-    public void registerValidUser() {
+    public void register_validUser_ok() {
         User expectedUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         User actualUser = registrationService.register(expectedUser);
         assertEquals(expectedUser, actualUser);
@@ -45,23 +45,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerNullPassword() {
+    public void register_nullPassword_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(VALID_LOGIN,
                         null, VALID_AGE)));
-        assertEquals("Login and password can't be null", registrationException.getMessage());
+        assertEquals("Password can't be null", registrationException.getMessage());
     }
 
     @Test
-    public void registerNullLogin() {
+    public void register_nullLogin_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(null,
                         VALID_PASSWORD, VALID_AGE)));
-        assertEquals("Login and password can't be null", registrationException.getMessage());
+        assertEquals("Login can't be null", registrationException.getMessage());
     }
 
     @Test
-    public void registerNullAge() {
+    public void register_nullAge_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(VALID_LOGIN,
                         VALID_PASSWORD, null)));
@@ -69,25 +69,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerNotValidLogin() {
+    public void register_notValidLogin_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(NOT_VALID_LOGIN,
                         VALID_PASSWORD, VALID_AGE)));
-        assertEquals("Login and password must be longer than " + MIN_FIELD_LENGTH,
+        assertEquals("Login must be longer than " + MIN_FIELD_LENGTH,
                 registrationException.getMessage());
     }
 
     @Test
-    public void registerNotValidPassword() {
+    public void register_notValidPassword_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(VALID_LOGIN,
                         NOT_VALID_PASSWORD, VALID_AGE)));
-        assertEquals("Login and password must be longer than " + MIN_FIELD_LENGTH,
+        assertEquals("Password must be longer than " + MIN_FIELD_LENGTH,
                 registrationException.getMessage());
     }
 
     @Test
-    public void registerNotValidAge() {
+    public void register_notValidAge_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(VALID_LOGIN,
                         VALID_PASSWORD, NOT_VALID_AGE)));
@@ -96,25 +96,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerEmptyLogin() {
+    public void register_emptyLogin_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(EMPTY_STRING,
                         VALID_PASSWORD, VALID_AGE)));
-        assertEquals("Login and password can't be empty",
+        assertEquals("Login can't be empty",
                 registrationException.getMessage());
     }
 
     @Test
-    public void registerEmptyPassword() {
+    public void register_emptyPassword_throwsException() {
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(VALID_LOGIN,
                         EMPTY_STRING, VALID_AGE)));
-        assertEquals("Login and password can't be empty",
+        assertEquals("Password can't be empty",
                 registrationException.getMessage());
     }
 
     @Test
-    public void registerExistingLogin() {
+    public void register_existingLogin_throwsException() {
         Storage.people.add(EXISTING_USER);
         RegistrationException registrationException = assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User(VALID_LOGIN,

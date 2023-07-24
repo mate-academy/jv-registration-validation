@@ -17,18 +17,26 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
-        if (user.getLogin() == null
-                || user.getPassword() == null) {
-            throw new RegistrationException("Login and password can't be null");
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login can't be null");
         }
-        if (user.getLogin().equals(EMPTY_STRING) || user.getPassword().equals(EMPTY_STRING)) {
-            throw new RegistrationException("Login and password can't be empty");
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null");
         }
-        if (user.getPassword().length() < MIN_FIELD_LENGTH
-                || user.getLogin().length() < MIN_FIELD_LENGTH) {
-            throw new RegistrationException("Login and password must be longer than "
+        if (user.getLogin().equals(EMPTY_STRING)) {
+            throw new RegistrationException("Login can't be empty");
+        }
+        if (user.getPassword().equals(EMPTY_STRING)) {
+            throw new RegistrationException("Password can't be empty");
+        }
+        if (user.getPassword().length() < MIN_FIELD_LENGTH) {
+            throw new RegistrationException("Password must be longer than "
                     + MIN_FIELD_LENGTH);
 
+        }
+        if (user.getLogin().length() < MIN_FIELD_LENGTH) {
+            throw new RegistrationException("Login must be longer than "
+                    + MIN_FIELD_LENGTH);
         }
         if (user.getAge() == null) {
             throw new RegistrationException("User age can't be null");
