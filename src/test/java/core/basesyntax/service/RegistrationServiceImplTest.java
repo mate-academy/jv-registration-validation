@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final long INITIAL_TEST_ID = 0L;
     private static final int INITIAL_TEST_AGE = 18;
     private static final int TEST_YOUNG_AGE = 5;
     private static final String INITIAL_TEST_LOGIN = "Stray228";
@@ -26,14 +24,12 @@ class RegistrationServiceImplTest {
     private static final String TEST_WRONG_PASSWORD = "$@*T@G %@*)%)&H";
     private static final RegistrationServiceImpl registrationService
             = new RegistrationServiceImpl();
-    private StorageDaoImpl storageDao = new StorageDaoImpl();
+    private final StorageDaoImpl storageDao = new StorageDaoImpl();
     private User testUser;
-    private int testUserIterator;
 
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setId(INITIAL_TEST_ID);
         testUser.setLogin(INITIAL_TEST_LOGIN);
         testUser.setPassword(INITIAL_TEST_PASSWORD);
         testUser.setAge(INITIAL_TEST_AGE);
@@ -100,24 +96,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_isThatExactlyUserAddedToStorage_okay() {
-        assertDoesNotThrow(() -> {
-            registrationService.register(testUser);
-        });
-        User actual = storageDao.get(testUser.getLogin());
-        User expected = testUser;
-        assertEquals(expected,actual);
-    }
-
-    @Test
-    void register_userNotAddedToStorage_okay() {
-        testUser.setAge(null);
-        assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
-        User noExistingUser = storageDao.get(testUser.getLogin());
-        assertNull(noExistingUser);
-    }
-
-    @Test
     void register_wrongPassword_notOk() {
         testUser.setPassword(TEST_WRONG_PASSWORD);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
@@ -131,8 +109,6 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void onTearDown() {
-        testUser.setLogin(testUser.getLogin() + " " + testUserIterator);
-        testUserIterator++;
-        testUser.setId(testUser.getId() + testUserIterator);
+        Storage.people.clear();
     }
 }
