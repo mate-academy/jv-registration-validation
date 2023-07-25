@@ -82,6 +82,15 @@ class RegistrationServiceImplTest {
                 registrationService.register(validUser));
     }
 
+    @Test
+    void register_userAlreadyRegistered_notOK() {
+        User registeredUser = registrationService.register(validUser);
+        Assertions.assertNotNull(registeredUser);
+        Assertions.assertNotEquals(0, registeredUser.getId());
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                        registrationService.register(validUser));
+    }
+
     @AfterEach
     void tearDown() {
         Storage.people.clear();
