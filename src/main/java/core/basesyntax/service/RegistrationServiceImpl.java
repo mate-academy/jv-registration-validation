@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.ValidatorException;
+import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -16,12 +16,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NullPointerException("User cant be null!!!");
         }
 
-        loginValidator(user);
-        passwordValidator(user);
-        ageValidator(user);
+        loginValidation(user);
+        passwordValidation(user);
+        ageValidation(user);
 
         if (storageDao.get(user.getLogin()) != null) {
-            throw new ValidatorException("User is already exist");
+            throw new ValidationException("User is already exist");
         }
         storageDao.add(user);
         return user;
@@ -30,47 +30,44 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User getUserByLogin(String login) {
         User findedUser = storageDao.get(login);
         if (findedUser == null) {
-            throw new ValidatorException("User is not register yet");
+            throw new ValidationException("User is not register yet");
         }
         return findedUser;
     }
 
-    private void loginValidator(User user) {
+    private void loginValidation(User user) {
         if (user.getLogin() == null) {
-            throw new ValidatorException("User login can not be null");
+            throw new ValidationException("User login can not be null");
         }
         if (user.getLogin().isEmpty()) {
-            throw new ValidatorException("User login can not be empty");
+            throw new ValidationException("User login can not be empty");
         }
         if (user.getLogin().length() < DEFAULT_LOGIN_PASSWORD_LENGTH) {
-            throw new ValidatorException("User login length cant be less 6 characters");
+            throw new ValidationException("User login length cant be less " + DEFAULT_LOGIN_PASSWORD_LENGTH + " characters");
         }
         if (Character.isDigit(user.getLogin().charAt(0))) {
-            throw new ValidatorException("User login cant start with number!");
+            throw new ValidationException("User login cant start with number!");
         }
     }
 
-    private void passwordValidator(User user) {
+    private void passwordValidation(User user) {
         if (user.getPassword() == null) {
-            throw new ValidatorException("User password can not be null");
+            throw new ValidationException("User password can not be null");
         }
         if (user.getPassword().isEmpty()) {
-            throw new ValidatorException("User password can not be empty");
+            throw new ValidationException("User password can not be empty");
         }
         if (user.getPassword().length() < DEFAULT_LOGIN_PASSWORD_LENGTH) {
-            throw new ValidatorException("User password length cant be less 6 characters");
+            throw new ValidationException("User password length cant be less " + DEFAULT_LOGIN_PASSWORD_LENGTH + " characters");
         }
     }
 
-    private void ageValidator(User user) {
+    private void ageValidation(User user) {
         if (user.getAge() == null) {
-            throw new ValidatorException("User age can not be null");
+            throw new ValidationException("User age can not be null");
         }
         if (user.getAge() < MINIMUM_AGE_REGISTRATION) {
-            throw new ValidatorException("User age cant be less 18");
-        }
-        if (user.getAge() < 0) {
-            throw new ValidatorException("User age cant be negative");
+            throw new ValidationException("User age cant be less " + MINIMUM_AGE_REGISTRATION);
         }
     }
 }
