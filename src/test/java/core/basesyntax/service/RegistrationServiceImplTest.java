@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String EMPTY_STRING = " ";
+    private static final String EMPTY_STRING = "";
     private static final String VALID_PASSWORD = "abcdef";
     private static final String NOT_VALID_PASSWORD = "abcde";
     private static final String VALID_LOGIN = "fedcba";

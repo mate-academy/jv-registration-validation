@@ -8,7 +8,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_FIELD_LENGTH = 6;
     private static final int MIN_VALID_AGE = 18;
-    private static final String EMPTY_STRING = " ";
+    private static final String EMPTY_STRING = "";
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -49,7 +49,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User with login: " + user.getLogin()
                     + " already exists");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
