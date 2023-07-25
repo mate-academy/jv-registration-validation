@@ -43,7 +43,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("User login can not be empty");
         }
         if (user.getLogin().length() < DEFAULT_LOGIN_PASSWORD_LENGTH) {
-            throw new ValidationException("User login length cant be less " + DEFAULT_LOGIN_PASSWORD_LENGTH + " characters");
+            throw new ValidationException("User login length cant be less "
+                    + DEFAULT_LOGIN_PASSWORD_LENGTH + " characters");
         }
         if (Character.isDigit(user.getLogin().charAt(0))) {
             throw new ValidationException("User login cant start with number!");
@@ -58,7 +59,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("User password can not be empty");
         }
         if (user.getPassword().length() < DEFAULT_LOGIN_PASSWORD_LENGTH) {
-            throw new ValidationException("User password length cant be less " + DEFAULT_LOGIN_PASSWORD_LENGTH + " characters");
+            throw new ValidationException("User password length cant be less "
+                    + DEFAULT_LOGIN_PASSWORD_LENGTH + " characters");
         }
     }
 
