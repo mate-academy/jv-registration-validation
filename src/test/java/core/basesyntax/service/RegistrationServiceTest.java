@@ -114,7 +114,7 @@ class RegistrationServiceTest {
     @Test
     void register_validUser_Ok() {
         assertEquals(registrationService.register(VALID_USER), VALID_USER,
-                "This method should register valid user: " + VALID_USER.toString());
+                "This method should register valid user: " + VALID_USER);
     }
 
     @Test
