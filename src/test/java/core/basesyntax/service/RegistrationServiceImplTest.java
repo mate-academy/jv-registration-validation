@@ -48,8 +48,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithValidData_Ok() {
-        registrationService.register(user);
-        User actual = Storage.people.get(0);
+        User actual = registrationService.register(user);
         User expected = user;
         assertEquals(expected,actual);
     }
@@ -71,9 +70,8 @@ class RegistrationServiceImplTest {
         NoValidDataException exception = assertThrows(NoValidDataException.class, () -> {
             registrationService.register(user);
         });
-        String expected = "Incorrect login length. "
-                + "Login must contain at least " + 6
-                + "  and less then " + 20 + " characters";
+        String expected = "Incorrect login length. Login must contain at least 6"
+                + "  and less then 20 characters";
         assertEquals(expected, exception.getMessage());
     }
 
@@ -104,9 +102,8 @@ class RegistrationServiceImplTest {
         NoValidDataException exception = assertThrows(NoValidDataException.class, () -> {
             registrationService.register(user);
         });
-        String expected = "Incorrect password length. "
-                + "Login must contain at least " + 6
-                + "  and less then " + 20 + " characters";
+        String expected = "Incorrect password length. Login must contain at least 6"
+                + "  and less then 20 characters";
         assertEquals(expected, exception.getMessage());
     }
 

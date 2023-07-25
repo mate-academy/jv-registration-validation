@@ -15,11 +15,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validator(user);
+        validateUsersData(user);
         return storageDao.add(user);
     }
 
-    private void validator(User user) {
+    private void validateUsersData(User user) {
         checkIfUserIsNull(user);
         validateLogin(user);
         validatePassword(user);
@@ -76,11 +76,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkCharactersInUsersLogin(User user) {
-        String login = user.getLogin();
         boolean onlyLetters = true;
-        for (int i = 0; i < login.length(); i++) {
-            char ch = login.charAt(i);
-            if (!Character.isLetter(ch)) {
+        char [] login = user.getLogin().toCharArray();
+        for (char character : login) {
+            if (!Character.isLetter(character)) {
                 onlyLetters = false;
                 break;
             }
@@ -101,11 +100,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkCharactersInUsersPassword(User user) {
-        String password = user.getPassword();
         boolean onlyLettersAndDigits = true;
-        for (int i = 0; i < password.length(); i++) {
-            char ch = password.charAt(i);
-            if (!Character.isLetterOrDigit(ch)) {
+        char [] password = user.getPassword().toCharArray();
+        for (char symbol : password) {
+            if (!Character.isLetterOrDigit(symbol)) {
                 onlyLettersAndDigits = false;
                 break;
             }
@@ -118,7 +116,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkIfUserHasInvalidAge(User user) {
         if (user.getAge() < VALID_AGE) {
-            throw new NoValidDataException("Service is available for 18+ only");
+            throw new NoValidDataException("Service is available for " 
+                    + VALID_AGE + "+ only");
         }
     }
 }
