@@ -17,8 +17,8 @@ public class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "ibrahim13";
     private static final String INVALID_LOGIN = "kandi";
     private static final String INVALID_PASSWORD = "ibr13";
-    private static final int VALID_AGE = 25;
-    private static final int INVALID_AGE = 10;
+    private static final int VALID_AGE = 18;
+    private static final int INVALID_AGE = 17;
     private RegistrationService registrationService;
 
     @BeforeEach
@@ -46,7 +46,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_userWithExistingLogin_exceptionThrown() {
         User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        registrationService.register(user);
+        Storage.people.add(user);
         User userWithSameLogin = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithSameLogin));
