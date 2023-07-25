@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
     private static final String INVALID_LOGIN = "LOGIN";
-    private static final String VALID_LOGIN = "LOGIN@GMAIL";
+    private static final String VALID_LOGIN = "LOGIN@";
     private static final String EXISTING_LOGIN = "LOGIN_OLEG";
     private static final String INVALID_PASSWORD = "PASS";
-    private static final String VALID_PASSWORD = "PASSWORD";
+    private static final String VALID_PASSWORD = "PASSWO";
     private static final int INVALID_AGE = 15;
     private static final int VALID_AGE = 20;
     private static final User EXISTING = new User(EXISTING_LOGIN, VALID_PASSWORD, VALID_AGE);

@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationServiceException("Can't register user, login is null");
         }
-        if (user.getLogin().length() <= MIN_PASSWORD_AND_EMAIL_LENGTH) {
+        if (user.getLogin().length() < MIN_PASSWORD_AND_EMAIL_LENGTH) {
             throw new RegistrationServiceException("Can't register user, login "
                     + user.getLogin() + " is to small");
         }
@@ -29,14 +29,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RegistrationServiceException("Can't register user, password is null");
         }
-        if (user.getPassword().length() <= MIN_PASSWORD_AND_EMAIL_LENGTH) {
+        if (user.getPassword().length() < MIN_PASSWORD_AND_EMAIL_LENGTH) {
             throw new RegistrationServiceException("Can't register user, password "
                     + user.getPassword() + " is to small");
         }
         if (user.getAge() == null) {
             throw new RegistrationServiceException("Can't register user, age is null");
         }
-        if (user.getAge() <= MIN_USER_AGE) {
+        if (user.getAge() < MIN_USER_AGE) {
             throw new RegistrationServiceException("Can't register user, age "
                     + user.getAge() + " is to small");
         }
