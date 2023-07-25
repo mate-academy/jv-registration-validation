@@ -66,6 +66,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserWithNullPassword_NotOk() {
+        user.setLogin("Apophis");
+        user.setAge(20);
         assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
         });
@@ -73,8 +75,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserWithLoginUnderMinLength_NotOk() {
-        user.setLogin("byaka");
+        user.setLogin("bak");
         user.setPassword("123456");
+        user.setAge(19);
         assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
         });
@@ -84,6 +87,7 @@ class RegistrationServiceImplTest {
     void register_UserWithPasswordUnderMinLength_NotOk() {
         user.setLogin("Kalyabaka");
         user.setPassword("12345");
+        user.setAge(40);
         assertThrows(ValidationException.class, () -> {
             registrationService.register(user);
         });
@@ -101,6 +105,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserWithNullAge_NotOk() {
+        user.setLogin("Neverwinter");
+        user.setPassword("MateAcademy");
         assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 

@@ -52,7 +52,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + DEFAULT_MIN_CHARACTERS);
         }
         User userInStorage = storageDao.get(user.getLogin());
-        if (!(userInStorage == null)) {
+        if (userInStorage != null) {
             throw new ValidationException("Same login was already registered, please try again");
         }
 
