@@ -21,10 +21,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validator(User user) {
         checkIfUserIsNull(user);
-        checkIfUserAlreadyExist(user);
         validateLogin(user);
         validatePassword(user);
         validateAge(user);
+        checkIfUserAlreadyExist(user);
     }
 
     private void checkIfUserIsNull(User user) {
