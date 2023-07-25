@@ -76,6 +76,12 @@ class RegistrationServiceTest {
     }
 
     @Test
+    void nullAgeRegistration() {
+        User user = new User(VALID_LOGIN, VALID_PASSWORD, null);
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void invalidAgeRegistration() {
         User user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
         assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
