@@ -25,13 +25,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new RegistrationException("Null login is not supported!");
         }
-        if (login.length() < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("\"" + login
-                    + "\"" + " login is less than 6 characters");
-        }
         if (storageDao.get(login) != null) {
             throw new RegistrationException("User with login " + "\"" + login + "\""
                     + " is already registered");
+        }
+        if (login.length() < MIN_LOGIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("\"" + login
+                    + "\"" + " login is less than " + MIN_LOGIN_PASSWORD_LENGTH + " characters");
         }
     }
 
@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (password.length() < MIN_LOGIN_PASSWORD_LENGTH) {
             throw new RegistrationException("\"" + password + "\""
-                    + " password is less than 6 characters");
+                    + " password is less than " + MIN_LOGIN_PASSWORD_LENGTH + " characters");
         }
     }
 
@@ -50,7 +50,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Null age is not supported!");
         }
         if (age < MIN_REQUIRED_AGE) {
-            throw new RegistrationException(age + " years old is less than 18 years old");
+            throw new RegistrationException(age + " years old is less than"
+                    + MIN_REQUIRED_AGE + "years old");
         }
     }
 }
