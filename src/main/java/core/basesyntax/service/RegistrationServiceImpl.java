@@ -14,13 +14,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws AlreadyRegisteredException, ValidDataException {
         checkNulls(user);
-        isLoginNotRegistered(user);
-        isIdNotRegistered(user);
         isLoginLengthValid(user);
         isPasswordLengthValid(user);
+        isLoginNotRegistered(user);
         isPasswordValid(user);
-        isLoginValid(user);
         isAgeValid(user);
+        isLoginValid(user);
+        isIdNotRegistered(user);
         return storageDao.add(user);
     }
 
