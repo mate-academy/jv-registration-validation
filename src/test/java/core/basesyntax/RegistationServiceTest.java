@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.ValidationException;
@@ -33,73 +34,137 @@ class RegistationServiceTest {
 
     @Test
     void register_isNullLogin_notOk() {
-        User actual = new User(null, "655234322", 21);
+        User actualUser = new User(null, "655234322", 21);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
     @Test
     void register_isNullPassword_notOk() {
-        User actual = new User("NickKarlosn", null, 43);
+        User actualUser = new User("NickKarlosn", null, 43);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
     @Test
     void register_isNullAge_notOk() {
-        User actual = new User("AlexFreedom", "543234113", null);
+        User actualUser = new User("AlexFreedom", "543234113", null);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
     @Test
     void register_isEmptyLogin_notOk() {
-        User actual = new User("", "3243234", 43);
+        User actualUser = new User("", "3243234", 43);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
     @Test
     void register_isEmptyPassword_notOk() {
-        User actual = new User("LizaVavilova", "", 24);
+        User actualUser = new User("LizaVavilova", "", 24);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
     @Test
-    void register_isLoginLength_notOk() {
-        User actual = new User("BobA", "4385482", 43);
+    void register_isLogin_3_Length_notOk() {
+        User actualUser = new User("Bob", "4385482", 43);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
     @Test
-    void register_isPasswordLength_notOk() {
-        User actual = new User("YuliaMikovskay", "3244", 56);
+    void register_isLogin_5_Length_notOk() {
+        User actualUser = new User("BobAl", "4385482", 43);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
     @Test
-    void register_isAgeLessThanRange_notOk() {
-        User actual = new User("AlenTurke", "3243234", 17);
+    void register_isLogin_6_Length_is_Ok() {
+        User actualUser = new User("BobAly", "4385482", 43);
+        registerServiceTest.register(actualUser);
+        boolean expected = Storage.people.contains(actualUser);
+        assertTrue(expected);
+    }
+
+    @Test
+    void register_isLogin_8_Length_is_Ok() {
+        User actualUser = new User("BobAlyni", "4385482", 43);
+        registerServiceTest.register(actualUser);
+        boolean expected = Storage.people.contains(actualUser);
+        assertTrue(expected);
+    }
+
+    @Test
+    void register_isPasswordLength_3_notOk() {
+        User actualUser = new User("YuliaMikovskay", "324", 56);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
+    }
+
+    @Test
+    void register_isPasswordLength_5_notOk() {
+        User actualUser = new User("AlenTurke", "32435", 43);
+        assertThrows(ValidationException.class, () -> {
+            registerServiceTest.register(actualUser);
+        });
+    }
+
+    @Test
+    void register_isPasswordLength_6_is_Ok() {
+        User actualUser = new User("AlenTurke", "324353", 43);
+        registerServiceTest.register(actualUser);
+        boolean expected = Storage.people.contains(actualUser);
+        assertTrue(expected);
+    }
+
+    @Test
+    void register_isPasswordLength_8_is_Ok() {
+        User actualUser = new User("AlenTurke", "32435334", 43);
+        registerServiceTest.register(actualUser);
+        boolean expected = Storage.people.contains(actualUser);
+        assertTrue(expected);
+    }
+
+    @Test
+    void register_isAgeLessThan_18_not_Ok() {
+        User actualUser = new User("AlenTurke", "324353", 17);
+        assertThrows(ValidationException.class, () -> {
+            registerServiceTest.register(actualUser);
+        });
+    }
+
+    @Test
+    void register_isAge_18_is_Ok() {
+        User actualUser = new User("AlenTurke", "324353", 18);
+        registerServiceTest.register(actualUser);
+        boolean expected = Storage.people.contains(actualUser);
+        assertTrue(expected);
+    }
+
+    @Test
+    void register_isAge_24_is_Ok() {
+        User actualUser = new User("AlenTurke", "324353", 24);
+        registerServiceTest.register(actualUser);
+        boolean expected = Storage.people.contains(actualUser);
+        assertTrue(expected);
     }
 
     @Test
     void register_isLoginStartWithNumbers_notOk() {
-        User actual = new User("4LizaValencia", "43243234", 54);
+        User actualUser = new User("4LizaValencia", "43243234", 54);
         assertThrows(ValidationException.class, () -> {
-            registerServiceTest.register(actual);
+            registerServiceTest.register(actualUser);
         });
     }
 
