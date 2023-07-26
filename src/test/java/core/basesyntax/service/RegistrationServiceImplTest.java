@@ -22,7 +22,7 @@ class RegistrationServiceImplTest {
     private static final String INITIAL_TEST_PASSWORD = "123456";
     private static final String TEST_SHORT_PASSWORD = "1234";
     private static final String TEST_WRONG_PASSWORD = "$@*T@G %@*)%)&H";
-    private static final RegistrationServiceImpl registrationService
+    private static final RegistrationService registrationService
             = new RegistrationServiceImpl();
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
     private User testUser;
