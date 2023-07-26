@@ -18,9 +18,11 @@ class RegistrationServiceImplTest {
     private static final int SMALL_AGE = 15;
     private static final String SMALL_LOGIN = "bad";
     private static final String EMPTY_LOGIN = "";
+    private static final String NULL_LOGIN = null;
     private static final String FIVE_LETTERS_LOGIN = "worst";
     private static final String SMALL_PASSWORD = "bad";
     private static final String EMPTY_PASSWORD = "";
+    private static final String NULL_PASSWORD = null;
     private static final String FIVE_LETTERS_PASSWORD = "worst";
     private RegistrationService registrationService;
 
@@ -45,6 +47,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullUser_notOk() {
+        User actualUser = null;
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(actualUser);
+        });
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        User actualUser = validUserSetUp();
+        actualUser.setPassword(NULL_LOGIN);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(actualUser);
+        });
+    }
+
+    @Test
     void register_smallLogin_notOk() {
         User actualUser = validUserSetUp();
         actualUser.setPassword(SMALL_LOGIN);
@@ -66,6 +85,15 @@ class RegistrationServiceImplTest {
     void register_emptyLogin_notOk() {
         User actualUser = validUserSetUp();
         actualUser.setPassword(EMPTY_LOGIN);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(actualUser);
+        });
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        User actualUser = validUserSetUp();
+        actualUser.setPassword(NULL_PASSWORD);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(actualUser);
         });
