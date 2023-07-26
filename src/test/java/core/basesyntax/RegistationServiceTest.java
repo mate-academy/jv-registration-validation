@@ -72,7 +72,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void register_isLoginLength_LessThan_Six_notOk() {
+    void register_isLoginLength_notOk() {
         User actual = new User("BobA", "4385482", 43);
         assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
@@ -80,7 +80,7 @@ class RegistationServiceTest {
     }
 
     @Test
-    void register_isPasswordLength_LessThan_Six_notOk() {
+    void register_isPasswordLength_notOk() {
         User actual = new User("YuliaMikovskay", "3244", 56);
         assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
