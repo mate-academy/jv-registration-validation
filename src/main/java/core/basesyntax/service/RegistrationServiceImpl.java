@@ -11,10 +11,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        userCheck(user);
+        loginCheck(user);
+        passwordCheck(user);
+        ageCheck(user);
+        return storageDao.add(user);
+    }
+
+    private void userCheck(User user) {
         if (user == null) {
             throw new RegistrationException("The entered data is incorrect. "
                     + "The user may not exist.");
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("The entered data is incorrect. "
+                    + "Perhaps the user already exists.");
+        }
+    }
+
+    private void loginCheck(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Please enter a login");
         }
@@ -22,6 +37,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("The login " + user.getLogin()
                     + " is incorrect.");
         }
+    }
+
+    private void passwordCheck(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("Please enter a password");
         }
@@ -29,13 +47,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("The password " + user.getPassword()
                     + " is incorrect.");
         }
+    }
+
+    private void ageCheck(User user) {
         if (user.getAge() < MINIMUM_VALID_AGE) {
             throw new RegistrationException("The user is underage.");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("The entered data is incorrect. "
-                    + "Perhaps the user already exists.");
-        }
-        return storageDao.add(user);
     }
 }
