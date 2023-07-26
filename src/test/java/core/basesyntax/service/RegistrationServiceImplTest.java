@@ -44,9 +44,9 @@ class RegistrationServiceImplTest {
         User user1 = setUpUser(DEFAULT_AGE, DEFAULT_LOGIN, DEFAULT_PASSWORD);
 
         registrationService.register(user1);
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user1));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user1));
     }
-
 
     @Test
     void register_loginLength_ok() {
@@ -65,11 +65,16 @@ class RegistrationServiceImplTest {
         User user3 = setUpUser(DEFAULT_AGE, "      ", DEFAULT_PASSWORD);
         User user4 = setUpUser(DEFAULT_AGE, "                 ", DEFAULT_PASSWORD);
 
-        Assertions.assertThrows(UserNullPointerException.class, () -> registrationService.register(user0));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user1));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user2));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user3));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user4));
+        Assertions.assertThrows(UserNullPointerException.class,
+                () -> registrationService.register(user0));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user1));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user2));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user3));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user4));
     }
 
     @Test
@@ -89,11 +94,16 @@ class RegistrationServiceImplTest {
         User user3 = setUpUser(DEFAULT_AGE, DEFAULT_LOGIN, "      ");
         User user4 = setUpUser(DEFAULT_AGE, DEFAULT_LOGIN, "                 ");
 
-        Assertions.assertThrows(UserNullPointerException.class, () -> registrationService.register(user0));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user1));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user2));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user3));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user4));
+        Assertions.assertThrows(UserNullPointerException.class,
+                () -> registrationService.register(user0));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user1));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user2));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user3));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user4));
     }
 
     @Test
@@ -111,14 +121,18 @@ class RegistrationServiceImplTest {
         User user2 = setUpUser(2, DEFAULT_LOGIN, DEFAULT_PASSWORD);
         User user3 = setUpUser(-20, DEFAULT_LOGIN, DEFAULT_PASSWORD);
 
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user1));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user2));
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user3));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user1));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user2));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user3));
     }
 
     @Test
     void register_userNull_Ok() {
-        Assertions.assertThrows(UserNullPointerException.class, () -> registrationService.register(null));
+        Assertions.assertThrows(UserNullPointerException.class,
+                () -> registrationService.register(null));
     }
 
 }
