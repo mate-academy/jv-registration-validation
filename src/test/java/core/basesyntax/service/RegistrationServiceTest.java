@@ -7,10 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+class RegistrationServiceTest {
     private static final String EMPTY_STRING = "";
     private static final String VALID_PASSWORD = "abcdef";
     private static final String NOT_VALID_PASSWORD = "abcde";
@@ -21,12 +22,16 @@ class RegistrationServiceImplTest {
     private static final Integer NOT_VALID_AGE = 17;
     private static final int MIN_FIELD_LENGTH = 6;
 
-    private RegistrationServiceImpl registrationService;
+    private static RegistrationService registrationService;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
-    void setUp() {
+     void setUp() {
         Storage.people.clear();
-        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
