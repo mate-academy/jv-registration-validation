@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final User NULL_USER = null;
-    private static final String NULL_LOGIN = null;
     private static final Integer NULL_AGE = null;
+    private static final String NULL_LOGIN = null;
     private static final String NULL_PASSWORD = null;
     private static final String VALID_LOGIN1 = "Andrew";
     private static final String VALID_LOGIN2 = "Penelopa";
