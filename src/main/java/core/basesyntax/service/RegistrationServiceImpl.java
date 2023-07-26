@@ -8,7 +8,6 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
-
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -17,7 +16,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
-
         return storageDao.add(user);
     }
 
@@ -50,7 +48,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + user.getPassword().length()
                     + ". Min allowed password length is " + MIN_LENGTH);
         }
-
     }
 
     private void checkAge(User user) {
@@ -63,6 +60,4 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + ". Min allowed age is " + MIN_AGE);
         }
     }
-
 }
-

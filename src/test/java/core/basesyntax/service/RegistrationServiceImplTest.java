@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,6 @@ class RegistrationServiceImplTest {
     private static final String NULL_PASSWORD = null;
     private static final String VALID_LOGIN1 = "Andrew";
     private static final String VALID_LOGIN2 = "Penelopa";
-
     private static final String VALID_PWD = "1234567";
     private static final int VALID_AGE = 20;
     private static final String INVALID_LOGIN = "Andr";
@@ -131,4 +131,8 @@ class RegistrationServiceImplTest {
         assertEquals(validUser3, VALID_USER3);
     }
 
+    @AfterAll
+    static void afterAll() {
+        Storage.people.clear();
+    }
 }
