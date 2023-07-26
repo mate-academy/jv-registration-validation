@@ -32,25 +32,18 @@ class RegistrationServiceImplTest {
     void register_successfully_Ok() {
         User actual = registrationService.register(validUser);
         assertNotNull(actual);
-    }
-
-    @Test
-    void register_userWasPutInList_Ok() {
-        registrationService.register(validUser);
         StorageDao storageDao = new StorageDaoImpl();
-        String actual = storageDao.get(validUser.getLogin()).getLogin();
-        assertEquals(validUser.getLogin(), actual);
-    }
-
-    @Test
-    void register_returnCorrectUser_Ok() {
-        String actual = registrationService.register(validUser).getLogin();
-        assertEquals(validUser.getLogin(), actual);
+        String actualLogin = storageDao.get(validUser.getLogin()).getLogin();
+        assertEquals(validUser.getLogin(), actualLogin);
     }
 
     @Test
     void register_userAlreadyExists_NotOk() {
-        Storage.people.add(validUser);
+        User userWithSameLogin = new User();
+        userWithSameLogin.setLogin("User123");
+        userWithSameLogin.setAge(35);
+        userWithSameLogin.setPassword("4659743");
+        Storage.people.add(userWithSameLogin);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(validUser);
         });
@@ -73,31 +66,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginExactLength_Ok() {
+    void register_userLoginLength_Ok() {
         validUser.setLogin("User12");
         User actual = registrationService.register(validUser);
         assertNotNull(actual);
-    }
-
-    @Test
-    void register_userLoginOverLength_Ok() {
+        Storage.people.clear();
         validUser.setLogin("User12465786");
-        User actual = registrationService.register(validUser);
+        actual = registrationService.register(validUser);
         assertNotNull(actual);
     }
 
     @Test
-    void register_userPasswordExactLength_Ok() {
+    void register_userPasswordLength_Ok() {
         validUser.setPassword("123456");
         User actual = registrationService.register(validUser);
         assertNotNull(actual);
-    }
-
-    @Test
-    void register_userPasswordOverLength_Ok() {
-        validUser.setPassword("1234567890");
-        User actual2 = registrationService.register(validUser);
-        assertNotNull(actual2);
+        Storage.people.clear();
+        validUser.setPassword("12345678");
+        actual = registrationService.register(validUser);
+        assertNotNull(actual);
     }
 
     @Test
@@ -118,7 +105,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lowerThanAgeLimit_NotOk() {
-        validUser.setAge(15);
+        validUser.setAge(0);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
+        validUser.setAge(12);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
+
+        validUser.setAge(17);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(validUser);
         });
