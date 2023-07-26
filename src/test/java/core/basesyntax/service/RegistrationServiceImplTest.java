@@ -36,57 +36,57 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_Ok() {
+    void register_user_OK() {
         assertDoesNotThrow(() -> {
             registrationService.register(testUser);
         });
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_shortPassword_notOK() {
         testUser.setPassword(TEST_SHORT_PASSWORD);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_nullPassword_notOk() {
+    void register_nullPassword_notOK() {
         testUser.setPassword(null);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_shortLogin_notOk() {
+    void register_shortLogin_notOK() {
         testUser.setLogin(TEST_SHORT_LOGIN);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_nullLogin_notOk() {
+    void register_nullLogin_notOK() {
         testUser.setLogin(null);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_userAlreadyRegistered_notOk() {
+    void register_userAlreadyRegistered_notOK() {
         Storage.people.add(testUser);
         assertThrows(AlreadyRegisteredException.class,
                 () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_youngAge_notOk() {
+    void register_youngAge_notOK() {
         testUser.setAge(TEST_YOUNG_AGE);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_nullAge_notOk() {
+    void register_nullAge_notOK() {
         testUser.setAge(null);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_userAddedToStorage_okay() {
+    void register_userAddedToStorage_OK() {
         assertDoesNotThrow(() -> {
             registrationService.register(testUser);
         });
@@ -96,13 +96,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_wrongPassword_notOk() {
+    void register_wrongPassword_notOK() {
         testUser.setPassword(TEST_WRONG_PASSWORD);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_wrongLogin_notOk() {
+    void register_wrongLogin_notOK() {
         testUser.setLogin(TEST_WRONG_LOGIN);
         assertThrows(ValidDataException.class, () -> registrationService.register(testUser));
     }
