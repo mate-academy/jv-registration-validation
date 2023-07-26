@@ -1,32 +1,30 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistationServiceTest {
     private static RegistrationService registerServiceTest;
-    private static List<User> users = initCorrectUsersList();
+    private static StorageDaoImpl storageDao;
 
-    @BeforeAll
-    static void createService() {
+    @BeforeEach
+    void initService() {
+        Storage.people.clear();
         registerServiceTest = new RegistrationServiceImpl();
-        for (User user : users) {
-            registerServiceTest.register(user);
-        }
     }
 
     @Test
-    void register_isNullUser_NotOk() {
+    void register_isNullUser_notOk() {
         User nullUser = null;
         assertThrows(NullPointerException.class, () -> {
             registerServiceTest.register(nullUser);
@@ -34,144 +32,107 @@ class RegistationServiceTest {
     }
 
     @Test
-    void register_isNullLogin_NotOk() {
+    void register_isNullLogin_notOk() {
         User actual = new User(null, "655234322", 21);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if login is null");
+        });
     }
 
     @Test
-    void register_isNullPassword_NotOk() {
+    void register_isNullPassword_notOk() {
         User actual = new User("NickKarlosn", null, 43);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if password is null");
+        });
     }
 
     @Test
-    void register_isNullAge_NotOk() {
+    void register_isNullAge_notOk() {
         User actual = new User("AlexFreedom", "543234113", null);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if age is null");
+        });
     }
 
     @Test
-    void register_isEmptyLogin_NotOk() {
+    void register_isEmptyLogin_notOk() {
         User actual = new User("", "3243234", 43);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if login is empty");
+        });
     }
 
     @Test
-    void register_isEmptyPassword_NotOk() {
+    void register_isEmptyPassword_notOk() {
         User actual = new User("LizaVavilova", "", 24);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if password is empty");
+        });
     }
 
     @Test
-    void register_isLoginLength_LessThan_Six_NotOk() {
+    void register_isLoginLength_LessThan_Six_notOk() {
         User actual = new User("BobA", "4385482", 43);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if login length less than 6");
+        });
     }
 
     @Test
-    void register_isPasswordLength_LessThan_Six_NotOk() {
+    void register_isPasswordLength_LessThan_Six_notOk() {
         User actual = new User("YuliaMikovskay", "3244", 56);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if password length less than 6");
+        });
     }
 
     @Test
-    void register_isAgeLessThanRange_NotOk() {
+    void register_isAgeLessThanRange_notOk() {
         User actual = new User("AlenTurke", "3243234", 17);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if age less than 18");
+        });
     }
 
     @Test
-    void register_isLoginStartWithNumbers_NotOk() {
+    void register_isLoginStartWithNumbers_notOk() {
         User actual = new User("4LizaValencia", "43243234", 54);
-        try {
+        assertThrows(ValidationException.class, () -> {
             registerServiceTest.register(actual);
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if login starts with number");
+        });
     }
 
     @Test
-    void registerData_getUserByLogin_NotOk() {
-        try {
-            RegistrationServiceImpl registerSpecialService =
-                    (RegistrationServiceImpl) registerServiceTest;
-            registerSpecialService.getUserByLogin("YuilaMelek");
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if user does not exist");
+    void registerData_getUserByLogin_notOk() {
+        User user1 = new User("FillCurrent", "12345678", 23);
+        User user2 = new User("JhonMelkavich", "987654321", 34);
+        StorageDaoImpl storageDao = new StorageDaoImpl();
+        storageDao.add(user1);
+        storageDao.add(user2);
+        String loginUser = "YuilaMelek";
+        boolean actual = storageDao.isContainsUserInList(loginUser);
+        assertFalse(actual);
     }
 
     @Test
     void registerData_getUserByLoginCorrect_Ok() {
-        String correctLogin = "RitaVonalich";
-        RegistrationServiceImpl registerSpecialService =
-                (RegistrationServiceImpl) registerServiceTest;
-        boolean actual = registerSpecialService.getUserByLogin(correctLogin) != null
-                ? true : false;
+        User user1 = new User("FillCurrent", "12345678", 23);
+        User user2 = new User("JhonMelkavich", "987654321", 34);
+        StorageDaoImpl storageDao = new StorageDaoImpl();
+        storageDao.add(user1);
+        storageDao.add(user2);
+        String loginUser = "FillCurrent";
+        boolean actual = storageDao.isContainsUserInList(loginUser);
         assertTrue(actual);
     }
 
     @Test
-    void registerData_registerSameUserAlreadyRegisted_NotOk() {
-        List<User> actual = initCorrectUsersList();
-        try {
-            registerServiceTest.register(actual.get(0));
-        } catch (ValidationException e) {
-            return;
-        }
-        fail("ValidatorException should be thrown if user is already exist");
-    }
-
-    private static List<User> initCorrectUsersList() {
-        List<User> correctList = new ArrayList<>();
-        correctList.add(new User("FillCurrent", "12345678", 23));
-        correctList.add(new User("JhonMelkavich", "987654321", 34));
-        correctList.add(new User("AlenaBekovskay", "123987654", 18));
-        correctList.add(new User("RitaVonalich", "999384633", 37));
-
-        return correctList;
+    void registerData_registerSameUserAlreadyRegisted_notOk() {
+        User user1 = new User("FillCurrent", "12345678", 23);
+        registerServiceTest.register(user1);
+        assertThrows(ValidationException.class, () -> {
+            registerServiceTest.register(user1);
+        });
     }
 }

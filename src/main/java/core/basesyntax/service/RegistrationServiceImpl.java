@@ -27,14 +27,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    public User getUserByLogin(String login) {
-        User findedUser = storageDao.get(login);
-        if (findedUser == null) {
-            throw new ValidationException("User is not register yet");
-        }
-        return findedUser;
-    }
-
     private void loginValidation(User user) {
         if (user.getLogin() == null) {
             throw new ValidationException("User login can not be null");
