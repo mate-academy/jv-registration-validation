@@ -10,16 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User firstUser = new User("firstUser", "123456", 22);
-    private static final User secondUser = new User("secondUser", "myPassword", 16);
-    private static final User thirdUser = new User("thirdUser", "small", 19);
-    private static final User fourthUser = new User("fourthUser", "password", 18);
-    private static final User fifthUser = new User("fifthUser", null, 21);
-    private static final User sixthUser = new User("sixthUser", "password", null);
-    private static final User seventhUser = new User(null, "validPassword", 19);
-    private static final User eighthUser = new User("eighthUser", "validPassword", -1);
-    private static final User ninthUser = new User("small", "validPassword", 18);
-    private static final User sameFirstUser = new User("firstUser", "validPassword", 23);
     private RegistrationService service;
 
     @BeforeEach
@@ -29,70 +19,70 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_validCase_Ok() {
+        final User firstUser = new User("firstUser", "123456", 22);
+        final User secondUser = new User("secondUser", "password", 18);
+        User firstActual = service.register(firstUser);
+        assertEquals(firstUser, firstActual);
+        User secondActual = service.register(secondUser);
+        assertEquals(secondUser, secondActual);
+        assertEquals(2, Storage.people.size());
+    }
+
+    @Test
     void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> service.register(null));
     }
 
     @Test
-    void register_validCase_Ok() {
-        User actual = service.register(firstUser);
-        assertEquals(firstUser, actual);
-        User actual2 = service.register(fourthUser);
-        assertEquals(fourthUser, actual2);
-        assertEquals(2, Storage.people.size());
-    }
-
-    @Test
     void register_ageLessMinAge_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(secondUser));
+        final User user = new User("firstUser", "myPassword", 16);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_passwordLessMinLength_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(thirdUser));
+        final User user = new User("firstUser", "small", 19);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(fifthUser));
+        final User user = new User("firstUser", null, 21);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(sixthUser));
+        final User user = new User("firstUser", "password", null);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_nullLogin_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(seventhUser));
+        final User user = new User(null, "validPassword", 19);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_negativeAge_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(eighthUser));
+        final User user = new User("firstUser", "validPassword", -1);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_loginLessMinLength_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(ninthUser));
+        final User user = new User("small", "validPassword", 18);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_sameLogin_notOk() {
-        User actual = service.register(firstUser);
-        assertEquals(firstUser, actual);
-        assertThrows(RegistrationException.class, () -> service.register(sameFirstUser));
+        final User user = new User("firstUser", "123456", 22);
+        final User sameUser = new User("firstUser", "validPassword", 23);
+        User actual = service.register(user);
+        assertEquals(user, actual);
+        assertEquals(1, Storage.people.size());
+        assertThrows(RegistrationException.class, () -> service.register(sameUser));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
