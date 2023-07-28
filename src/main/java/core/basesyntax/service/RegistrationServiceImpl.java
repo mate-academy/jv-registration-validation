@@ -8,7 +8,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMAL_AGE = 18;
     private static final int MINIMAL_LOGIN_LENGTH = 6;
     private static final int MINIMAL_PASSWORD_LENGTH = 6;
-    private long nextId = 1;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -35,10 +34,14 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + ". Min allowed age is " + MINIMAL_AGE);
         }
         if (storageDao.get(user.getLogin()) == null) {
-            user.setId(nextId++);
             return storageDao.add(user);
         } else {
             throw new RegistrationException("User with such login already exists");
         }
+    }
+
+    @Override
+    public boolean clearStorage() {
+        return storageDao.clearStorage();
     }
 }
