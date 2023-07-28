@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.Test;
@@ -26,11 +27,18 @@ public class RegistrationValidationTests {
     }
 
     @Test
+    public void register_null_user_registration_NotOK() {
+        assertThrows(RegistrationException.class, () ->
+                        registrationService.register(null),
+                "Registration method should not register NULL user");
+    }
+
+    @Test
     public void register_duplicate_user_registration_NotOk() {
         User validUser2 = new User("somelogin", "userpa", 25);
         User sameLoginAsValidUser2 = new User("somelogin", "userpass", 56);
         registrationService.register(validUser2);
-        assertThrows(RuntimeException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(sameLoginAsValidUser2),
                 "Registration method should not accept user with login name used "
                         + "by previously registered users");
@@ -39,9 +47,13 @@ public class RegistrationValidationTests {
     @Test
     public void register_age_of_User_NotOK() {
         User userWrongAge = new User("someuser3", "user3password", 17);
-        assertThrows(RuntimeException.class, () ->
+        User userWrongAge2 = new User("someuser3", "user3password", 120);
+        assertThrows(RegistrationException.class, () ->
                         registrationService.register(userWrongAge),
                 "Registration of user with age under 18 should not be allowed");
+        assertThrows(RegistrationException.class, () ->
+                        registrationService.register(userWrongAge2),
+                "Registration of user with unreasonable age shoud not be possible");
     }
 
     @Test

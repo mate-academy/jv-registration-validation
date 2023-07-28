@@ -26,9 +26,6 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public boolean clearStorage() {
         Storage.people.clear();
-        if (Storage.people.size() == 0) {
-            return true;
-        }
-        return false;
+        return Storage.people.size() == 0;
     }
 }

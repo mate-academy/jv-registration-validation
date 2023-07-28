@@ -6,6 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMAL_AGE = 18;
+    private static final int MAX_AGE = 120;
     private static final int MINIMAL_LOGIN_LENGTH = 6;
     private static final int MINIMAL_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -13,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException("User wasnt created");
+            throw new RegistrationException("User wasnt created, User cant be Null");
         }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
@@ -29,9 +30,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be less than "
                     + MINIMAL_PASSWORD_LENGTH + " characters");
         }
-        if (user.getAge() < MINIMAL_AGE) {
+        if (user.getAge() < MINIMAL_AGE || user.getAge() > MAX_AGE) {
             throw new RegistrationException("Not valid age: " + user.getAge()
-                    + ". Min allowed age is " + MINIMAL_AGE);
+                    + "Age range is from " + MINIMAL_AGE + " to " + MAX_AGE);
         }
         if (storageDao.get(user.getLogin()) == null) {
             return storageDao.add(user);
