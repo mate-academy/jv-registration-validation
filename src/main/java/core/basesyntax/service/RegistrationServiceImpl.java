@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.NotValidationUser;
+import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -13,25 +13,28 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NotValidationUser("User cannot be null");
+            throw new ValidationException("User cannot be null");
         }
         if (user.getLogin() == null) {
-            throw new NotValidationUser("User login cannot be null");
+            throw new ValidationException("User login cannot be null");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new NotValidationUser("User login cannot be less than six characters");
+            throw new ValidationException("User login cannot be less than "
+                    + MIN_LENGTH + " characters");
         }
         if (user.getPassword() == null) {
-            throw new NotValidationUser("User password cannot be null");
+            throw new ValidationException("User password cannot be null");
         }
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new NotValidationUser("User password cannot be less than six characters");
+            throw new ValidationException("User password cannot be less than "
+                    + MIN_LENGTH + " characters");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new NotValidationUser("User age cannot be less than eighteen years");
+            throw new ValidationException("User age cannot be less than "
+                    + MIN_AGE + " years");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new NotValidationUser("A user with this login is already in the list");
+            throw new ValidationException("A user with this login is already in the list");
         }
         return storageDao.add(user);
     }
