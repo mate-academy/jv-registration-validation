@@ -31,26 +31,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullValue_notOk() {
+    void registrationService_nullValue_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void loginAlreadyExist_notOk() {
+    void registrationService_loginAlreadyExist_notOk() {
         User user = createUser(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         registrationService.register(user);
+        User userWithSameLogin = createUser(DEFAULT_LOGIN, "asdhnkjhoau12", 26);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(userWithSameLogin);
         });
     }
 
     @Test
-    void loginIsTooShort_notOk() {
+    void registrationService_loginIsTooShort_notOk() {
         User user = createUser("DEFAU", DEFAULT_PASSWORD, DEFAULT_AGE);
+        User userNotEnoughChars = createUser("gia  ", DEFAULT_PASSWORD, DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
+        });
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(userNotEnoughChars);
         });
         user.setLogin("Def");
         assertThrows(RegistrationException.class, () -> {
@@ -63,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsTooShort_notOk() {
+    void registrationService_passwordIsTooShort_notOk() {
         User user = createUser(DEFAULT_LOGIN, "qwe", DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -75,7 +80,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void belowAge_notOk() {
+    void registrationService_belowAge_notOk() {
         User user = createUser(DEFAULT_LOGIN, DEFAULT_PASSWORD, 10);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -83,14 +88,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationComplete_ok() {
+    void registrationService_registrationComplete_ok() {
         User user = createUser(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         registrationService.register(user);
         assertEquals(storageDao.get(user.getLogin()), user);
     }
 
     @Test
-    void passwordIsNull_notOk() {
+    void registrationService_passwordIsNull_notOk() {
         User user = createUser(DEFAULT_LOGIN, null, DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -98,7 +103,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginIsNull_notOk() {
+    void registrationService_loginIsNull_notOk() {
         User user = createUser(null, DEFAULT_PASSWORD, DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -106,7 +111,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsNull_notOk() {
+    void registrationService_ageIsNull_notOk() {
         User user = createUser(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> {
@@ -115,7 +120,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsTooBig_notOk() {
+    void registrationService_ageIsTooBig_notOk() {
         User user = createUser(DEFAULT_LOGIN, DEFAULT_PASSWORD, Integer.MAX_VALUE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -123,7 +128,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageIsNegative_notOk() {
+    void registrationService_ageIsNegative_notOk() {
         User user = createUser(DEFAULT_LOGIN, DEFAULT_PASSWORD, -10);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -131,13 +136,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void wrongUserLogin_NotOk() {
-        User userNotEnoughChars = createUser("gia  ", DEFAULT_PASSWORD, DEFAULT_AGE);
+    void registrationService_wrongUserLogin_NotOk() {
         User userWithSpaces = createUser("                ", DEFAULT_PASSWORD, DEFAULT_AGE);
         User userOkButSpaces = createUser("giantking   123", DEFAULT_PASSWORD, DEFAULT_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userNotEnoughChars);
-        });
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithSpaces);
         });
@@ -147,9 +148,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void wrongUserPassword_NotOk() {
+    void registrationService_wrongUserPassword_NotOk() {
         User userOnlySpaces = createUser(DEFAULT_LOGIN, "              ", DEFAULT_AGE);
-        User userOkButSpaces = createUser(DEFAULT_LOGIN, "gia12", DEFAULT_AGE);
+        User userOkButSpaces = createUser(DEFAULT_LOGIN, "gia  12", DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userOkButSpaces);
         });
