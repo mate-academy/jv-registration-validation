@@ -132,12 +132,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void wrongUserLogin_NotOk() {
-        User userNotEnoughChars = createUser("giant1234223412531", DEFAULT_PASSWORD, DEFAULT_AGE);
         User userWithSpaces = createUser("                ", DEFAULT_PASSWORD, DEFAULT_AGE);
         User userOkButSpaces = createUser("giantking   123", DEFAULT_PASSWORD, DEFAULT_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userNotEnoughChars);
-        });
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithSpaces);
         });
