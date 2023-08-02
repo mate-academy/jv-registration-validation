@@ -10,8 +10,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int LOGIN_LENGTH = 6;
     private static final int PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private int count = 0;
-    private boolean canContinue = false;
 
     @Override
     public User register(User user) {
@@ -46,40 +44,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().contains(" ")) {
             throw new RegistrationException("Login should not contain WhiteSpaces");
         }
-
-        for (Character chars: user.getLogin().toCharArray()) {
-            if (Character.isLetter(chars)) {
-                count++;
-            }
-            if (count == LOGIN_LENGTH) {
-                count = 0;
-                canContinue = true;
-                break;
-            }
-        }
-
-        if (!canContinue) {
-            throw new RegistrationException("Wrong login, you need at least 6 characters");
-        }
-
-        canContinue = false;
-
-        for (Character character: user.getPassword().toCharArray()) {
-            if (Character.isLetter(character)) {
-                count++;
-            }
-            if (count == PASSWORD_LENGTH) {
-                count = 0;
-                canContinue = true;
-                break;
-            }
-        }
-
-        if (!canContinue) {
-            throw new RegistrationException("Wrong password, you need at least 6 characters");
-        }
-
-        canContinue = false;
 
         storageDao.add(user);
 

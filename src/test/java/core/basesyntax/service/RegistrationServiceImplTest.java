@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void loginIsTooShort_notOk() {
-        User user = createUser("DEFAU1234512", DEFAULT_PASSWORD, DEFAULT_AGE);
+        User user = createUser("DEFAU", DEFAULT_PASSWORD, DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -132,8 +132,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void wrongUserLogin_NotOk() {
+        User userNotEnoughChars = createUser("gia  ", DEFAULT_PASSWORD, DEFAULT_AGE);
         User userWithSpaces = createUser("                ", DEFAULT_PASSWORD, DEFAULT_AGE);
         User userOkButSpaces = createUser("giantking   123", DEFAULT_PASSWORD, DEFAULT_AGE);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(userNotEnoughChars);
+        });
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithSpaces);
         });
@@ -145,16 +149,12 @@ class RegistrationServiceImplTest {
     @Test
     void wrongUserPassword_NotOk() {
         User userOnlySpaces = createUser(DEFAULT_LOGIN, "              ", DEFAULT_AGE);
-        User userOkButSpaces = createUser(DEFAULT_LOGIN, "giantk    123", DEFAULT_AGE);
-        User userNotEnoughChars = createUser(DEFAULT_LOGIN, "giant1234124", DEFAULT_AGE);
+        User userOkButSpaces = createUser(DEFAULT_LOGIN, "gia12", DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userOkButSpaces);
         });
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userOnlySpaces);
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userNotEnoughChars);
         });
     }
 
