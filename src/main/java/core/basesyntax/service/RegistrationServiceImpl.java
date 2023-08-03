@@ -14,8 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         isAgeValid(user);
         isLoginValid(user);
         isPasswordValid(user);
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void isAgeValid(User user) {

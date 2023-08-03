@@ -28,8 +28,8 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         testUser.setLogin("logins");
-        testUser.setPassword("password");
-        testUser.setAge(20);
+        testUser.setPassword("passwo");
+        testUser.setAge(18);
     }
 
     @AfterEach
@@ -46,7 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_notValidAge_notOk() {
+    void register_lessMinAge_notOk() {
         User actual = testUser;
         actual.setAge(8);
         assertThrows(RegistrationException.class, () ->
@@ -54,9 +54,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validAge_Ok() {
+    void registration_negativeAge_notOk() {
         User actual = testUser;
-        assertDoesNotThrow(() -> registrationService.register(actual));
+        actual.setAge(-18);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(actual));
     }
 
     @Test
@@ -68,9 +70,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_notValidLogin_notOk() {
+    void register_shortLogin_notOk() {
         User actual = testUser;
         actual.setLogin("log");
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(actual));
+        actual.setLogin("login");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
     }
@@ -81,13 +86,7 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
     }
-
-    @Test
-    void register_validLogin_Ok() {
-        User actual = testUser;
-        assertDoesNotThrow(() -> registrationService.register(actual));
-    }
-
+    
     @Test
     void register_nullPassword_notOk() {
         User actual = testUser;
@@ -97,24 +96,44 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_notValidPassword_notOk() {
+    void register_shortPassword_notOk() {
         User actual = testUser;
         actual.setPassword("pas");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
+        actual.setPassword("passw");
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(actual));
     }
-
+    
     @Test
-    void register_validPassword_Ok() {
-        User actual = testUser;
-        assertDoesNotThrow(() -> registrationService.register(actual));
-    }
-
-    @Test
-    void userIsStorageAfterRegistration_Ok() {
+    void userIsStorageAfterRegistration_ok() {
         registrationService.register(testUser);
         String actual = storageDao.get(testUser.getLogin()).getLogin();
         String expected = testUser.getLogin();
         assertEquals(expected,actual);
+    }
+
+    @Test
+    void storagePeopleAdd_ok() {
+        Storage.people.add(testUser);
+        String actual = testUser.getLogin();
+        String expected = storageDao.get(testUser.getLogin()).getLogin();
+        assertEquals(expected,actual);
+    }
+
+    @Test
+    void registration_longLoginPassword_ageMoreMinAgge_ok() {
+        User actual = testUser;
+        actual.setAge(28);
+        actual.setLogin("logins78");
+        actual.setPassword("password");
+        assertDoesNotThrow(() -> registrationService.register(actual));
+    }
+
+    @Test
+    void registration_testUser_ok() {
+        User actual = testUser;
+        assertDoesNotThrow(() -> registrationService.register(actual));
     }
 }
