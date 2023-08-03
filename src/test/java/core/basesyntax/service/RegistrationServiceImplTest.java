@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -31,83 +32,73 @@ class RegistrationServiceImplTest {
         testUser.setAge(20);
     }
 
-    @Test
-    void register_nullAge_NotOk() {
-        User actual = new User();
-        actual.setAge(null);
-        actual.setPassword("password");
-        actual.setLogin("logins");
-        assertThrows(NullPointerException.class, () ->
-                registrationService.register(actual));
-
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void register_notValidAge_NotOk() {
-        User actual = new User();
-        actual.setAge(8);
-        actual.setPassword("password");
-        actual.setLogin("logins");
+    void register_nullAge_notOk() {
+        User actual = testUser;
+        actual.setAge(null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
-
     }
 
     @Test
-    void register_validAge_OK() {
+    void register_notValidAge_notOk() {
+        User actual = testUser;
+        actual.setAge(8);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(actual));
+    }
+
+    @Test
+    void register_validAge_Ok() {
         User actual = testUser;
         assertDoesNotThrow(() -> registrationService.register(actual));
     }
 
     @Test
-    void register_nullLogin_NotOk() {
-        User actual = new User();
-        actual.setAge(18);
+    void register_nullLogin_notOk() {
+        User actual = testUser;
         actual.setLogin(null);
-        actual.setPassword("password");
-        assertThrows(NullPointerException.class, () ->
-                registrationService.register(actual));
-    }
-
-    @Test
-    void register_notValidLogin_Not_Ok() {
-        User actual = new User();
-        actual.setAge(18);
-        actual.setLogin("log");
-        actual.setPassword("password");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
     }
 
     @Test
-    void register_loginIsStorage_NotOk() {
+    void register_notValidLogin_notOk() {
+        User actual = testUser;
+        actual.setLogin("log");
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(actual));
+    }
+
+    @Test
+    void register_loginIsStorage_notOk() {
         storageDao.add(testUser);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
-
     }
 
     @Test
-    void register_validLogin_OK() {
+    void register_validLogin_Ok() {
         User actual = testUser;
         assertDoesNotThrow(() -> registrationService.register(actual));
     }
 
     @Test
-    void register_nullPassword_NotOk() {
-        User actual = new User();
-        actual.setAge(18);
-        actual.setLogin("logins");
+    void register_nullPassword_notOk() {
+        User actual = testUser;
         actual.setPassword(null);
-        assertThrows(NullPointerException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
     }
 
     @Test
-    void register_notValidPassword_NotOk() {
-        User actual = new User();
-        actual.setAge(18);
-        actual.setLogin("logins");
+    void register_notValidPassword_notOk() {
+        User actual = testUser;
         actual.setPassword("pas");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
@@ -119,8 +110,11 @@ class RegistrationServiceImplTest {
         assertDoesNotThrow(() -> registrationService.register(actual));
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
+    @Test
+    void userIsStorageAfterRegistration_Ok() {
+        registrationService.register(testUser);
+        String actual = storageDao.get(testUser.getLogin()).getLogin();
+        String expected = testUser.getLogin();
+        assertEquals(expected,actual);
     }
 }
