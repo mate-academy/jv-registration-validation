@@ -32,8 +32,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLessCharacters_notOk() {
+    void register_passwordTheeLessCharacters_notOk() {
         User user = new User("abcbdddal", "abc", 20);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_passwordFiveLessCharacters_notOk() {
+        User user = new User("abcbdddal", "abcdf", 20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -48,8 +56,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLessCharacters_notOk() {
+    void register_loginThreeLessCharacters_notOk() {
         User user = new User("abc", "abscdsj", 20);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginFiveLessCharacters_notOk() {
+        User user = new User("abcdf", "abscdsj", 20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -71,8 +87,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_ok() {
+    void register_userEightLength_ok() {
         User user = new User("adfghjkl", "akjhytvd", 20);
+        assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
+    void register_userSixLength_ok() {
+        User user = new User("adfghj", "akjhyt", 20);
         assertEquals(user, registrationService.register(user));
     }
 }
