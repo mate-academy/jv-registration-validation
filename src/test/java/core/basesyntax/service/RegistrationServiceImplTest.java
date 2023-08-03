@@ -66,13 +66,15 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_shortPassword_notOk() {
+    void register_shortPassword_notOk() {
+        validUser.setPassword("a");
+        assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
+        validUser.setPassword("ab");
+        assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
         validUser.setPassword("abc");
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
-    }
-
-    @Test
-    public void register_shortPassword5_notOk() {
+        validUser.setPassword("abcd");
+        assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
         validUser.setPassword("abcdf");
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
     }
