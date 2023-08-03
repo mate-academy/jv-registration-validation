@@ -24,7 +24,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordNull_NotOK() {
+    void register_nullPassword_notOk() {
         User user = new User("abcbdddal",null, 20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLessCharacters_NotOK() {
+    void register_passwordLessCharacters_notOk() {
         User user = new User("abcbdddal", "abc", 20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginNull_NotOK() {
+    void register_nullLogin_notOk() {
         User user = new User(null,"abscdsj", 20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginLessCharacters_NotOK() {
+    void register_loginLessCharacters_notOk() {
         User user = new User("abc", "abscdsj", 20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -56,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageNull_NotOK() {
+    void register_nullAge_notOk() {
         User user = new User("abscdsj", "abscdds", null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -64,14 +64,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageLess_NotOK() {
+    void register_ageLess_notOk() {
         User user = new User("abscdsj", "abscdds",12);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
     }
 
     @Test
-    void user_OK() {
+    void register_user_ok() {
         User user = new User("adfghjkl", "akjhytvd", 20);
         assertEquals(user, registrationService.register(user));
     }
