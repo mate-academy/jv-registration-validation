@@ -1,11 +1,14 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -21,8 +24,27 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validUser_ok() {
-        User registeredUser = assertDoesNotThrow(() -> registrationService.register(validUser));
+    void register_validUser_ok() {
+        String login = "testuser_" + System.currentTimeMillis();
+        String password = "123456";
+        int age = 25;
+        User user = new User(login, password, age);
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser);
+        assertEquals(login, registeredUser.getLogin());
+        assertEquals(password, registeredUser.getPassword());
+        assertEquals(age, registeredUser.getAge());
+    }
+
+    @Test
+    void register_duplicateUser_notOk() {
+        String login = "testuser";
+        String password = "123456";
+        int age = 25;
+        User user = new User(login, password, age);
+        registrationService.register(user);
+        Assertions.assertThrows(RegistrationException.class, () -> registrationService
+                .register(new User(login, "different_password", 30)));
     }
 
     @Test
@@ -86,8 +108,20 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_underAge_notOk() {
-        validUser.setAge(15);
-        assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
+    void register_maxLengthPasswordPlusOne_notOk() {
+        String login = "testuser";
+        String password = "1234567";
+        int age = 25;
+        Assertions.assertThrows(RegistrationException.class, () -> registrationService
+                .register(new User(login, password, age)));
+    }
+
+    @Test
+    void register_underAge_notOk() {
+        String login = "testuser";
+        String password = "123456";
+        int age = 15;
+        Assertions.assertThrows(RegistrationException.class, () -> registrationService
+                .register(new User(login, password, age)));
     }
 }
