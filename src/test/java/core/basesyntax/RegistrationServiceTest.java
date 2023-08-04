@@ -20,9 +20,9 @@ public class RegistrationServiceTest {
     private static final String INCORRECT_PASSWORD = "123";
     private static final String BORDER_PASSWORD = "123456";
     private static final int CORRECT_AGE = 22;
-    private static final int IN_CORRECT_AGE = 15;
+    private static final int INCORRECT_AGE = 15;
     private static final int BORDER_AGE = 18;
-    private static final int NEG_AGE = -1;
+    private static final int NEG_AGE = - 1;
     private static final User testUser = new User();
     private static final User testUserNew = new User();
     private static RegistrationService registrationService;
@@ -44,15 +44,15 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_loginGreaterThanMinimum_ok() throws RegistrationException {
+    void register_loginValid_ok() {
         String login = CORRECT_LOGIN;
         testUser.setLogin(login);
         registrationService.register(testUser);
-        Assertions.assertEquals(login,testUser.getLogin());
+        Assertions.assertEquals(login, testUser.getLogin());
     }
 
     @Test
-    void register_loginLesserThanMinimum_notOk() {
+    void register_loginTooShort_notOk() {
         testUser.setLogin(INCORRECT_LOGIN);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(testUser));
@@ -66,11 +66,10 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_minimumLogin_ok() throws RegistrationException {
-        String login = BORDER_LOGIN;
-        testUser.setLogin(login);
+    void register_minimumShortLogin_ok() {
+        testUser.setLogin(BORDER_LOGIN);
         registrationService.register(testUser);
-        Assertions.assertEquals(login,testUser.getLogin());
+        Assertions.assertEquals(BORDER_LOGIN, testUser.getLogin());
     }
 
     @Test
@@ -81,15 +80,15 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_passwordGreaterThanMinimum_ok() throws RegistrationException {
+    void register_passwordValid_ok() {
         String password = CORRECT_PASSWORD;
         testUser.setPassword(password);
         registrationService.register(testUser);
-        Assertions.assertEquals(password,testUser.getPassword());
+        Assertions.assertEquals(password, testUser.getPassword());
     }
 
     @Test
-    void register_passwordLesserThanMinimum_notOk() {
+    void register_passwordTooShor_notOk() {
         testUser.setPassword(INCORRECT_PASSWORD);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(testUser));
@@ -103,11 +102,11 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_minimumPassword_ok() throws RegistrationException {
+    void register_minimumShortPassword_ok() {
         String password = BORDER_PASSWORD;
         testUser.setPassword(password);
         registrationService.register(testUser);
-        Assertions.assertEquals(password,testUser.getPassword());
+        Assertions.assertEquals(password, testUser.getPassword());
     }
 
     @Test
@@ -132,46 +131,46 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_borderAge_ok() throws RegistrationException {
+    void register_borderAge_ok() {
         int age = BORDER_AGE;
         testUser.setAge(age);
         registrationService.register(testUser);
-        Assertions.assertEquals(age,testUser.getAge());
+        Assertions.assertEquals(age, testUser.getAge());
     }
 
     @Test
-    void register_allowableAge_ok() throws RegistrationException {
+    void register_allowableAge_ok() {
         int age = CORRECT_AGE;
         testUser.setAge(age);
         registrationService.register(testUser);
-        Assertions.assertEquals(age,testUser.getAge());
+        Assertions.assertEquals(age, testUser.getAge());
     }
 
     @Test
     void register_unlawfulAge_notOk() {
-        testUser.setAge(IN_CORRECT_AGE);
+        testUser.setAge(INCORRECT_AGE);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(testUser));
     }
 
     @Test
-    void register_allowableUser_ok() throws RegistrationException {
-        Assertions.assertEquals(testUser,registrationService.register(testUser));
+    void register_allowableUser_ok() {
+        Assertions.assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_registrationNewUser_ok() throws RegistrationException {
+    void register_validUser_ok_ok() {
         Storage.people.add(testUser);
         User user = registrationService.register(testUserNew);
-        Assertions.assertEquals(2,Storage.people.size());
-        Assertions.assertEquals(testUserNew,user);
+        Assertions.assertEquals(2, Storage.people.size());
+        Assertions.assertEquals(testUserNew, user);
     }
 
     @Test
-    void register_registrationExistingUser_notOk() throws RegistrationException {
+    void register_registrationExistingUser_notOk() {
         Storage.people.add(testUser);
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(testUser));
-        Assertions.assertEquals(1,Storage.people.size());
+        Assertions.assertEquals(1, Storage.people.size());
     }
 }
