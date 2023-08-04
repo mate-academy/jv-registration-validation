@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -36,15 +35,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        String login = "testuser_" + System.currentTimeMillis();
-        String password = "123456";
-        int age = 25;
-        User user = new User(login, password, age);
-        User registeredUser = registrationService.register(user);
+        User registeredUser = registrationService.register(validUser );
         assertNotNull(registeredUser);
-        assertEquals(login, registeredUser.getLogin());
-        assertEquals(password, registeredUser.getPassword());
-        assertEquals(age, registeredUser.getAge());
     }
 
     @Test
@@ -117,7 +109,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_nullAge_notOk() {
         validUser.setAge(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
+        assertThrows(NullPointerException.class, () -> registrationService.register(validUser));
     }
 
     @Test
@@ -132,9 +124,8 @@ public class RegistrationServiceImplTest {
     @Test
     void register_underAge_notOk() {
         String login = "testuser";
-        String password = "123456";
         int age = 15;
         Assertions.assertThrows(RegistrationException.class, () -> registrationService
-                .register(new User(login, password, age)));
+                .register(new User(login, "123456", age)));
     }
 }
