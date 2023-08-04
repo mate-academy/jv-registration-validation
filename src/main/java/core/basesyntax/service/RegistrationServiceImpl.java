@@ -4,7 +4,9 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
-import static core.basesyntax.utils.UserValidator.*;
+import static core.basesyntax.utils.UserValidator.checkAge;
+import static core.basesyntax.utils.UserValidator.checkLogin;
+import static core.basesyntax.utils.UserValidator.checkPassword;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
