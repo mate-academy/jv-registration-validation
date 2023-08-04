@@ -35,7 +35,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User registeredUser = registrationService.register(validUser );
+        User registeredUser = registrationService.register(validUser);
         assertNotNull(registeredUser);
     }
 
