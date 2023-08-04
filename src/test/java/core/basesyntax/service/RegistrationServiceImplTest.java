@@ -34,13 +34,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_ok() {
+    void registerValidUser_ok() {
         User registeredUser = registrationService.register(validUser);
         assertNotNull(registeredUser);
     }
 
     @Test
-    void register_duplicateUser_notOk() {
+    void registerDuplicateUser_notOk() {
         String login = "testuser";
         String password = "123456";
         int age = 25;
@@ -51,25 +51,25 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_nullLogin_notOk() {
+    public void registerNullLogin_notOk() {
         validUser.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    public void register_shortLogin_notOk() {
+    public void registerShortLogin_notOk() {
         validUser.setLogin("abc");
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    public void register_nullPassword_notOk() {
+    public void registerNullPassword_notOk() {
         validUser.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void registerShortPassword_notOk() {
         validUser.setPassword("a");
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
         validUser.setPassword("ab");
@@ -83,46 +83,37 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_minLengthPassword_ok() {
+    public void registerMinLengthPassword_ok() {
         validUser.setPassword("abcdef");
         assertDoesNotThrow(() -> registrationService.register(validUser));
     }
 
     @Test
-    public void register_maxLengthPassword_ok() {
+    public void registerMaxLengthPassword_ok() {
         validUser.setPassword("abcdefgh");
         assertDoesNotThrow(() -> registrationService.register(validUser));
     }
 
     @Test
-    public void register_emptyPassword_notOk() {
+    public void registerEmptyPasswordNot_ok() {
         validUser.setPassword("");
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    public void register_blankPassword_notOk() {
+    public void registerBlankPasswordNot_ok() {
         validUser.setPassword("   ");
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    public void register_nullAge_notOk() {
+    public void registerNullAge_notOk() {
         validUser.setAge(null);
         assertThrows(NullPointerException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    void register_maxLengthPasswordPlusOne_notOk() {
-        String login = "testuser";
-        String password = "1234567";
-        int age = 25;
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService
-                .register(new User(login, password, age)));
-    }
-
-    @Test
-    void register_underAge_notOk() {
+    void registerUnderAge_notOk() {
         String login = "testuser";
         int age = 15;
         Assertions.assertThrows(RegistrationException.class, () -> registrationService
