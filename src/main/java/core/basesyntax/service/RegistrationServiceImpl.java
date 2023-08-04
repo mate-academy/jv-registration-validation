@@ -33,12 +33,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
-        if ((user.getId() == null)) {
-            throw new RegistrationException("Id cannot be null");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User: " + user.getLogin() + " already registered");
         }
-        if (storageDao.get(user.getLogin()) == null) {
-            storageDao.add(user);
-        }
+        storageDao.add(user);
         return user;
     }
 }
