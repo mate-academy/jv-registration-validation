@@ -81,7 +81,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginIsStorage_notOk() {
+    void register_loginIsTaken_notOk() {
         storageDao.add(testUser);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(testUser));
@@ -107,7 +107,7 @@ class RegistrationServiceImplTest {
     }
     
     @Test
-    void userIsStorageAfterRegistration_ok() {
+    void register_loginIsTakenAfterRegistration_ok() {
         registrationService.register(testUser);
         String actual = storageDao.get(testUser.getLogin()).getLogin();
         String expected = testUser.getLogin();
@@ -115,7 +115,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void storagePeopleAdd_ok() {
+    void storagePeopleAdd_loginIsTake_ok() {
         Storage.people.add(testUser);
         String actual = testUser.getLogin();
         String expected = storageDao.get(testUser.getLogin()).getLogin();
@@ -123,7 +123,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_longLoginPassword_ageMoreMinAgge_ok() {
+    void register_moreMinLengthDataLoginPasswordAge_ok() {
         User actual = testUser;
         actual.setAge(28);
         actual.setLogin("logins78");
@@ -132,7 +132,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_testUser_ok() {
+    void register_validData_ok() {
         User actual = testUser;
         assertDoesNotThrow(() -> registrationService.register(actual));
     }
