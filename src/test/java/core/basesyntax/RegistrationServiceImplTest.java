@@ -61,17 +61,17 @@ class RegistrationServiceImplTest {
         });
     }
 
-        @Test
+    @Test
         void registrationSuccess() {
-            User actual = registrationService.register(validUser);
-            assertNotNull(actual);
-            StorageDao storageDao = new StorageDaoImpl();
-            String actualLogin = storageDao.get(validUser.getLogin()).getLogin();
-            assertEquals(validUser.getLogin(), actualLogin);
-        }
+        User actual = registrationService.register(validUser);
+        assertNotNull(actual);
+        StorageDao storageDao = new StorageDaoImpl();
+        String actualLogin = storageDao.get(validUser.getLogin()).getLogin();
+        assertEquals(validUser.getLogin(), actualLogin);
+    }
 
     @Test
-    void userAlreadyExists_NotOk() {
+        void userAlreadyExists_NotOk() {
         User userWithSameLogin = new User();
         userWithSameLogin.setLogin("Mutaborrr");
         userWithSameLogin.setAge(43);
@@ -81,32 +81,33 @@ class RegistrationServiceImplTest {
             registrationService.register(validUser);
         });
     }
-        @Test
-        void userLoginLength_NotOk() {
-            validUser.setLogin("");
-            assertThrows(UserRegistrationException.class, () -> {
-                registrationService.register(validUser);
-            });
-            validUser.setLogin("Mut");
-            assertThrows(UserRegistrationException.class, () -> {
-                registrationService.register(validUser);
-            });
-            validUser.setLogin("Mut12");
-            assertThrows(UserRegistrationException.class, () -> {
-                registrationService.register(validUser);
-            });
-        }
 
-        @Test
+    @Test
+        void userLoginLength_NotOk() {
+        validUser.setLogin("");
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
+        validUser.setLogin("Mut");
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
+        validUser.setLogin("Mut12");
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
+    }
+
+    @Test
         void userLoginLength_Ok() {
-            validUser.setLogin("Mutab1");
-            User actual = registrationService.register(validUser);
-            assertNotNull(actual);
-            Storage.people.clear();
-            validUser.setLogin("Mutaborrrrr");
-            actual = registrationService.register(validUser);
-            assertNotNull(actual);
-        }
+        validUser.setLogin("Mutab1");
+        User actual = registrationService.register(validUser);
+        assertNotNull(actual);
+        Storage.people.clear();
+        validUser.setLogin("Mutaborrrrr");
+        actual = registrationService.register(validUser);
+        assertNotNull(actual);
+    }
 
     @Test
     void userPasswordLength_Ok() {
@@ -153,7 +154,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void OldEnoughToAccess_Ok() {
+    void oldEnoughToAccess_Ok() {
         validUser.setAge(43);
         User actual = registrationService.register(validUser);
         assertNotNull(actual);
