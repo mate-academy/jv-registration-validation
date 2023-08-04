@@ -7,20 +7,31 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
     private User validUser;
+
+    @BeforeAll
+    public static void setUpClass() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     public void setUp() {
-        registrationService = new RegistrationServiceImpl();
         String login = "john_doe_" + System.currentTimeMillis();
         String password = "strong_password";
         int age = 25;
         validUser = new User(login, password, age);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        registrationService.clearStorage();
     }
 
     @Test
