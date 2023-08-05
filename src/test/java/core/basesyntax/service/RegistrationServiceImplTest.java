@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -12,8 +11,12 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RegistrationServiceImplTest {
     private static final int EXPECTED_ID = 1;
     private static final int MIN_CORRECT_AGE = 18;
@@ -21,6 +24,7 @@ class RegistrationServiceImplTest {
     private static final int MIN_INCORRECT_AGE = -100;
     private static final int MIN_AGE_LESS_18 = 1;
     private static final int MAX_CORRECT_TESTING_AGE = 100;
+    private static final int METHOD_EXECUTION_SEQUENCE_NUMBER = 1;
     private static final String CORRECT_LOGIN = "correctLogin";
     private static final String TEST_LOGIN_SECOND = "testLoginSecond";
     private static final String TEST_LOGIN_FOR_AGE = "testLoginForAge";
@@ -51,8 +55,9 @@ class RegistrationServiceImplTest {
         user.setAge(MIN_CORRECT_AGE);
     }
 
+    @Order(METHOD_EXECUTION_SEQUENCE_NUMBER)
     @Test
-    void register_newUser_Ok() {
+    void register_validUser_Ok() {
         User actualUser = registrationService.register(user);
 
         assertEquals(user, actualUser);
@@ -67,6 +72,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginPresentInStorage_notOk() {
         user.setLogin(TEST_LOGIN_SECOND);
+        user.setPassword(passwordsByLogin.get(TEST_LOGIN_SECOND));
         storageDao.add(user);
 
         runAssertThrows(user);
@@ -105,7 +111,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThen0Or0_notOk() {
+    void register_ageLessThenOrZero_notOk() {
         for (int i = MAX_INCORRECT_AGE; i >= MIN_INCORRECT_AGE; i--) {
             user.setAge(i);
 
@@ -129,12 +135,8 @@ class RegistrationServiceImplTest {
             user.setLogin(TEST_LOGIN_FOR_AGE + i);
             user.setAge(i);
 
-            runAssertDoesNotThrow(user);
+            registrationService.register(user);
         }
-    }
-
-    private void runAssertDoesNotThrow(User user) {
-        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     private void runAssertThrows(User user) {
