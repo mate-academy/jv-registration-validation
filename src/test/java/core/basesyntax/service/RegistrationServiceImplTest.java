@@ -124,7 +124,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validData_ok() {
+    void register_validUser_ok() {
         User actual = testUser;
         assertDoesNotThrow(() -> registrationService.register(actual));
     }
