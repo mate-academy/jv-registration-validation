@@ -6,7 +6,4 @@ public interface StorageDao {
     User add(User user);
 
     User get(String login);
-
-    void deleteAll();
-
 }

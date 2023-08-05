@@ -9,10 +9,10 @@ public class UserValidator {
     private static final int MIN_PASSWORD_LENGTH = 6;
 
     public static void checkAge(User user) {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("User must be at least 18 years old");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+        if (user.getAge() == null) {
             throw new RegistrationException("User must be at least 18 years old");
         }
     }

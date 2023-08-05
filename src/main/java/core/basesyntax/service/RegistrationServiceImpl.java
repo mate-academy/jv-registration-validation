@@ -24,6 +24,5 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void clearStorage() {
-        storageDao.deleteAll();
     }
 }
