@@ -27,9 +27,9 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        testUser.setLogin("logins");
-        testUser.setPassword("passwo");
-        testUser.setAge(18);
+        testUser.setLogin("logins78");
+        testUser.setPassword("password");
+        testUser.setAge(38);
     }
 
     @AfterEach
@@ -115,19 +115,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void storagePeopleAdd_loginIsTake_ok() {
-        Storage.people.add(testUser);
-        String actual = testUser.getLogin();
-        String expected = storageDao.get(testUser.getLogin()).getLogin();
-        assertEquals(expected,actual);
-    }
-
-    @Test
-    void register_moreMinLengthDataLoginPasswordAge_ok() {
+    void register_minLengthLoginPassword_ok() {
         User actual = testUser;
-        actual.setAge(28);
-        actual.setLogin("logins78");
-        actual.setPassword("password");
+        actual.setAge(18);
+        actual.setLogin("logins");
+        actual.setPassword("passwo");
         assertDoesNotThrow(() -> registrationService.register(actual));
     }
 
