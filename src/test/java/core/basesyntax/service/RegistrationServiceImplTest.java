@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +31,7 @@ public class RegistrationServiceImplTest {
 
     @AfterEach
     public void tearDown() {
-        registrationService.clearStorage();
+        Storage.people.clear();
     }
 
     @Test
@@ -109,7 +110,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void registerNullAge_notOk() {
         validUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(validUser));
     }
 
     @Test

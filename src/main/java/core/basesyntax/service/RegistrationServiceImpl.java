@@ -1,28 +1,27 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.utils.UserValidator.checkAge;
-import static core.basesyntax.utils.UserValidator.checkLogin;
-import static core.basesyntax.utils.UserValidator.checkPassword;
-
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import core.basesyntax.utils.UserValidator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private final List<User> registeredUsers = new ArrayList<>();
+    private final UserValidator userValidator = new UserValidator();
 
     @Override
     public User register(User user) {
-        checkAge(user);
-        checkLogin(user);
-        checkPassword(user);
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already exists");
+        userValidator.validate(user);
+        if (duplicateUser(user)) {
+            throw new RegistrationException("User already exists");
         }
-        return storageDao.add(user);
+        registeredUsers.add(user);
+        return user;
     }
 
-    @Override
-    public void clearStorage() {
+    private boolean duplicateUser(User newUser) {
+        return registeredUsers.stream()
+                .anyMatch(user -> user.getLogin().equals(newUser.getLogin()));
     }
 }
