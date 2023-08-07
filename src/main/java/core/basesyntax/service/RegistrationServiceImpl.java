@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         validDaraAge(user);
         validDataLogin(user);
-        isPasswordValid(user);
+        validDataPassword(user);
         return storageDao.add(user);
     }
 
@@ -44,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isPasswordValid(User user) {
+    private void validDataPassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can`t be null");
         }
