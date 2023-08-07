@@ -39,11 +39,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validDataUser_ok() {
-        registrationService.register(testUser);
+        assertDoesNotThrow(() -> registrationService.register(testUser));
         String actual = storageDao.get(testUser.getLogin()).getLogin();
         String expected = testUser.getLogin();
         assertEquals(expected,actual);
-        assertDoesNotThrow(() -> registrationService.register(testUser));
     }
 
     @Test
