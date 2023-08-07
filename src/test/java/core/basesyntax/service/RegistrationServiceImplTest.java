@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User validUser;
+    private boolean isUnderAge(int age) {
+        return age < 18;
+    }
 
     @BeforeAll
     public static void setUpClass() {
@@ -116,8 +119,14 @@ public class RegistrationServiceImplTest {
     @Test
     void registerUnderAge_notOk() {
         String login = "testuser";
-        int age = 15;
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService
-                .register(new User(login, "123456", age)));
+        int age = 0;
+
+        if (isUnderAge(age)) {
+            assertThrows(RegistrationException.class, () -> registrationService
+                    .register(new User(login, "123456", age)));
+        } else {
+            assertDoesNotThrow(() -> registrationService
+                    .register(new User(login, "123456", age)));
+        }
     }
 }
