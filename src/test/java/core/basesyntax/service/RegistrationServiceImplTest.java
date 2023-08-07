@@ -51,6 +51,9 @@ class RegistrationServiceImplTest {
         actual.setAge(8);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
+        actual.setAge(17);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(actual));
     }
 
     @Test
