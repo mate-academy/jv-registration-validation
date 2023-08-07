@@ -5,20 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.UserInvalidDataException;
 import core.basesyntax.model.User;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class RegistrationServiceImplTest {
-    private static final int EXPECTED_ID = 1;
     private static final int MIN_CORRECT_AGE = 18;
     private static final int MAX_INCORRECT_AGE = 0;
     private static final int MIN_INCORRECT_AGE = -100;
@@ -55,13 +51,15 @@ class RegistrationServiceImplTest {
         user.setAge(MIN_CORRECT_AGE);
     }
 
-    @Order(METHOD_EXECUTION_SEQUENCE_NUMBER)
     @Test
     void register_validUser_Ok() {
         User actualUser = registrationService.register(user);
+        User expectedUser = storageDao.get(user.getLogin());
+        long actualUserId = actualUser.getId();
+        long expectedUserId = expectedUser.getId();
 
-        assertEquals(user, actualUser);
-        assertEquals(EXPECTED_ID, actualUser.getId());
+        assertEquals(expectedUser, actualUser);
+        assertEquals(expectedUserId, actualUserId);
     }
 
     @Test
@@ -73,20 +71,27 @@ class RegistrationServiceImplTest {
     void register_loginPresentInStorage_notOk() {
         user.setLogin(TEST_LOGIN_SECOND);
         user.setPassword(passwordsByLogin.get(TEST_LOGIN_SECOND));
-        storageDao.add(user);
+        user.setAge(MIN_CORRECT_AGE);
+        Storage.people.add(user);
 
-        runAssertThrows(user);
+        User repitedUser = new User();
+        repitedUser.setLogin(TEST_LOGIN_SECOND);
+        repitedUser.setPassword(passwordsByLogin.get(TEST_LOGIN_SECOND));
+        repitedUser.setAge(MIN_CORRECT_AGE);
+        runAssertThrows(repitedUser);
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
+        user.setPassword(passwordsByLogin.get(CORRECT_LOGIN));
+        user.setAge(MIN_CORRECT_AGE);
 
         runAssertThrows(user);
     }
 
     @Test
-    void register_loginLengthLessThen6_notOk() {
+    void register_shortLogin_notOk() {
         for (String shortLogin : shortLogins) {
             user.setLogin(shortLogin);
 
@@ -96,18 +101,29 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
+        user.setLogin(CORRECT_LOGIN);
         user.setPassword(null);
+        user.setAge(MIN_CORRECT_AGE);
 
         runAssertThrows(user);
     }
 
     @Test
-    void register_passwordLengthLessThen6_notOk() {
+    void register_shortPassword_notOk() {
         for (String shortPassword : shortPasswords) {
             user.setPassword(shortPassword);
 
             runAssertThrows(user);
         }
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        user.setLogin(CORRECT_LOGIN);
+        user.setPassword(passwordsByLogin.get(CORRECT_LOGIN));
+        user.setAge(null);
+
+        runAssertThrows(user);
     }
 
     @Test

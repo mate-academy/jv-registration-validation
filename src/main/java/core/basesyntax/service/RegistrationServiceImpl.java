@@ -12,12 +12,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        verifyData(user);
+        verifyUser(user);
         storageDao.add(user);
         return user;
     }
 
-    private void verifyData(User user) {
+    private void verifyUser(User user) {
         if (user == null) {
             throw new UserInvalidDataException(
                     "You cannot pass a null value to a method");
@@ -29,6 +29,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new UserInvalidDataException(
                     "User password cannot be null");
+        }
+        if (user.getAge() == null) {
+            throw new UserInvalidDataException(
+                    "User age cannot be null");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
             throw new UserInvalidDataException(
