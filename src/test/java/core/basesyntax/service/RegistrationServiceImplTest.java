@@ -136,7 +136,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThen18_notOk() {
+    void register_ageLessThenMinCorrectAge_notOk() {
         for (int i = MIN_AGE_LESS_18; i < MIN_CORRECT_AGE; i++) {
             user.setAge(i);
 
@@ -145,7 +145,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageOver18_Ok() {
+    void register_ageGreaterOrEqualMinCorrectAge_Ok() {
         for (int i = MIN_CORRECT_AGE; i <= MAX_CORRECT_TESTING_AGE; i++) {
             setUser();
             user.setLogin(TEST_LOGIN_FOR_AGE + i);
