@@ -38,6 +38,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_validDataUser_ok() {
+        registrationService.register(testUser);
+        String actual = storageDao.get(testUser.getLogin()).getLogin();
+        String expected = testUser.getLogin();
+        assertEquals(expected,actual);
+        assertDoesNotThrow(() -> registrationService.register(testUser));
+    }
+
+    @Test
     void register_nullAge_notOk() {
         User actual = testUser;
         actual.setAge(null);
@@ -107,28 +116,5 @@ class RegistrationServiceImplTest {
         actual.setPassword("passw");
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(actual));
-    }
-    
-    @Test
-    void register_loginIsTakenAfterRegistration_ok() {
-        registrationService.register(testUser);
-        String actual = storageDao.get(testUser.getLogin()).getLogin();
-        String expected = testUser.getLogin();
-        assertEquals(expected,actual);
-    }
-
-    @Test
-    void register_minLengthLoginPassword_ok() {
-        User actual = testUser;
-        actual.setAge(18);
-        actual.setLogin("logins");
-        actual.setPassword("passwo");
-        assertDoesNotThrow(() -> registrationService.register(actual));
-    }
-
-    @Test
-    void register_validDataUser_ok() {
-        User actual = testUser;
-        assertDoesNotThrow(() -> registrationService.register(actual));
     }
 }

@@ -11,13 +11,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validDaraAge(user);
-        validDataLogin(user);
-        validDataPassword(user);
+        validateAge(user);
+        validateLogin(user);
+        validatePassword(user);
         return storageDao.add(user);
     }
 
-    private void validDaraAge(User user) {
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new RegistrationException("Age can`t be null");
         }
@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validDataLogin(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can`t be null");
         }
@@ -44,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validDataPassword(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can`t be null");
         }
