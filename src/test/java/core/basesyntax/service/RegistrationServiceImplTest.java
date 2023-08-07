@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User validUser;
+
     private boolean isUnderAge(int age) {
         return age < 18;
     }
