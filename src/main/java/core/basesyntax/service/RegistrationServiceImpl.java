@@ -5,9 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -15,7 +15,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceException("Login can't be null! You should enter login!");
         }
         if (user.getPassword() == null) {
-            throw new RegistrationServiceException("Password can't be null! You should enter password!");
+            throw new RegistrationServiceException("Password can't be null! " +
+                    "You should enter password!");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("You entered age: " + user.getAge()
@@ -28,8 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RuntimeException("User's password should be at least 6 characters");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("User with login " + user.getLogin() +
-                    " is already exist! You should create another login.");
+            throw new RuntimeException("User with login " + user.getLogin()
+                    + " is already exist! You should create another login.");
         }
         return storageDao.add(user);
     }
