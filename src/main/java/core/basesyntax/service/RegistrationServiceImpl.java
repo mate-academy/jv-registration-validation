@@ -15,8 +15,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceException("Login can't be null! You should enter login!");
         }
         if (user.getPassword() == null) {
-            throw new RegistrationServiceException("Password can't be null! " +
-                    "You should enter password!");
+            throw new RegistrationServiceException("Password can't be null! "
+                    + "You should enter password!");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RuntimeException("You entered age: " + user.getAge()
