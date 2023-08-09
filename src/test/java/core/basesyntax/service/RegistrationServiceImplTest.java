@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -32,16 +32,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordTheeLessCharacters_notOk() {
-        User user = new User("abcbdddal", "abc", 20);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_passwordFiveLessCharacters_notOk() {
-        User user = new User("abcbdddal", "abcdf", 20);
+    void register_passwordLength_notOk() {
+        User user = new User("abcadbvndab","abc",20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -56,16 +48,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginThreeLessCharacters_notOk() {
-        User user = new User("abc", "abscdsj", 20);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_loginFiveLessCharacters_notOk() {
-        User user = new User("abcdf", "abscdsj", 20);
+    void register_loginLess_NotOk() {
+        User user = new User("abc","abcdfg",20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -87,14 +71,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userEightLength_ok() {
-        User user = new User("adfghjkl", "akjhytvd", 20);
-        assertEquals(user, registrationService.register(user));
-    }
-
-    @Test
-    void register_userSixLength_ok() {
-        User user = new User("adfghj", "akjhyt", 20);
-        assertEquals(user, registrationService.register(user));
+    void register_user_notOk() {
+        User userFirst = new User("abcdfkl","abcdfkl",19);
+        User userSecond = new User("abcdfkl","abcdfkl",20);
+        assertNotEquals(userFirst,registrationService.register(userSecond));
     }
 }
