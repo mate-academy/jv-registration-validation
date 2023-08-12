@@ -1,12 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import core.basesyntax.exception.NotValidUserException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "Arsen04";
