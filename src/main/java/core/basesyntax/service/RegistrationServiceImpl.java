@@ -25,7 +25,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new NotValidUserException("Age can't be null");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new NotValidUserException("Length of the login can't be " + user.getLogin().length() + " it, must be at least " + MIN_LENGTH);
+            throw new NotValidUserException("Length of the login can't be "
+                    + user.getLogin().length() + " it, must be at least " + MIN_LENGTH);
         }
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new NotValidUserException("Length of the password can't be "
