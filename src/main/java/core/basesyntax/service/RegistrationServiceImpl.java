@@ -5,8 +5,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_LOGIN_CHARS = 6;
-    private static final int MIN_PASSWORD_CHARS = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -21,10 +21,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("There is already such a user in the storage!");
         }
-        if (user.getLogin().length() < MIN_LOGIN_CHARS) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new InvalidDataException("Login length must be more than 6!");
         }
-        if (user.getPassword().length() < MIN_PASSWORD_CHARS) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidDataException("Password length must be more than 6!");
         }
         if (user.getAge() < MIN_AGE) {

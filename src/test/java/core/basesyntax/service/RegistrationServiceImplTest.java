@@ -22,76 +22,62 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         users = new ArrayList<>();
-        
-        User validUser = new User(45534554L, "userNumberOne", "123412346", 18);
-        
-        User smallLoginUser = new User(4553712354L, "user2", "456456754", 19);
-
-        User smallPasswordUser = new User(12547646854L, "userNumberThree", "34568", 20);
-
-        User smallAgeUser = new User(2357568L, "userNumberFour", "345645745684", 16);
-
-        User nullLoginUser = new User(456356734L, null, "3465346345", 31);
-
-        User nullPasswordUser = new User(456356734L, "nullPasswordUser", null, 31);
-
-        User recurringUser = new User(34534573L, "recurringUser", "235357457", 20);
-        
+        User validUser = new User(45534554L, "ValidUser", "123412346", 18);
         users.add(validUser);
-        users.add(smallLoginUser);
-        users.add(smallPasswordUser);
-        users.add(smallAgeUser);
-        users.add(nullLoginUser);
-        users.add(nullPasswordUser);
-        users.add(recurringUser);
     }
 
     @Test
-    void registerSuccessful_Ok() {
+    void register_validUser_ok() {
         User actual = users.get(0);
+        actual.setLogin("validUser");
         assertEquals(actual, registrationService.register(actual));
     }
 
     @Test
-    void storageContainsUser_notOk() {
-        registrationService.register(users.get(6));
+    void register_storageContainsUser_notOk() {
+        registrationService.register(users.get(0));
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(6));
+            registrationService.register(users.get(0));
         });
     }
 
     @Test
-    void loginLessThanSixChars_NotOk() {
+    void register_loginLessThanSixChars_notOk() {
+        users.get(0).setLogin("asdas");
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(1));
+            registrationService.register(users.get(0));
         });
     }
 
     @Test
-    void passwordLessThanSixChars_NotOk() {
+    void register_passwordLessThanSixChars_notOk() {
+        users.get(0).setPassword("asdas");
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(2));
+            registrationService.register(users.get(0));
         });
     }
 
     @Test
-    void ageLessThanEighteen_NotOk() {
+    void register_ageLessThanEighteen_notOk() {
+        users.get(0).setAge(16);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(3));
+            registrationService.register(users.get(0));
         });
     }
 
     @Test
-    void nullLogin_notOk() {
+    void register_nullLogin_notOk() {
+        users.get(0).setLogin(null);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(4));
+            registrationService.register(users.get(0));
         });
     }
 
     @Test
-    void nullPassword_notOk() {
+    void register_nullPassword_notOk() {
+        users.get(0).setPassword(null);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(5));
+            registrationService.register(users.get(0));
         });
     }
 }
