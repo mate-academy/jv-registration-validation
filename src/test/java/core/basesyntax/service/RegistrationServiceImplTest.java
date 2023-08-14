@@ -3,16 +3,18 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String INVALID_LOGIN = "asdas";
+    private static final String INVALID_PASSWORD = "12314";
+    private static final int INVALID_AGE = 16;
     private static RegistrationServiceImpl registrationService;
-    private List<User> users;
+    private User validUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -21,63 +23,49 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        users = new ArrayList<>();
-        User validUser = new User(45534554L, "ValidUser", "123412346", 18);
-        users.add(validUser);
+        validUser = new User("ValidUser", "123412346", 18);
     }
 
     @Test
     void register_validUser_ok() {
-        User actual = users.get(0);
-        actual.setLogin("validUser");
-        assertEquals(actual, registrationService.register(actual));
+        validUser.setLogin("validUser");
+        User actual = registrationService.register(validUser);
+        assertEquals(validUser, actual);
     }
 
     @Test
-    void register_storageContainsUser_notOk() {
-        registrationService.register(users.get(0));
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(0));
-        });
+    void register_emailAlreadyExists_notOk() {
+        Storage.people.add(validUser);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 
     @Test
     void register_loginLessThanSixChars_notOk() {
-        users.get(0).setLogin("asdas");
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(0));
-        });
+        validUser.setLogin(INVALID_LOGIN);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 
     @Test
     void register_passwordLessThanSixChars_notOk() {
-        users.get(0).setPassword("asdas");
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(0));
-        });
+        validUser.setPassword(INVALID_PASSWORD);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 
     @Test
     void register_ageLessThanEighteen_notOk() {
-        users.get(0).setAge(16);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(0));
-        });
+        validUser.setAge(INVALID_AGE);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
-        users.get(0).setLogin(null);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(0));
-        });
+        validUser.setLogin(null);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 
     @Test
     void register_nullPassword_notOk() {
-        users.get(0).setPassword(null);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(users.get(0));
-        });
+        validUser.setPassword(null);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 }
