@@ -24,9 +24,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullValue_notOk() {
+    void register_nullPasswordValue_notOk() {
         User user = new User();
         user.setLogin("12345");
+        assertThrows(RuntimeException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_nullLoginValue_notOk() {
+        User user = new User();
+        user.setPassword("Password");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
@@ -36,78 +45,79 @@ class RegistrationServiceImplTest {
     void register_loginLengthFiveOrLessCharacters_notOk() {
         User user = new User();
         user.setLogin("12345");
-        user.setPassword("userpassword");
+        user.setPassword("Password");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_loginLengthMoreFiveCharacters_Ok() {
+    void register_loginLengthMoreFiveCharacters_ok() {
         User user = new User();
         user.setLogin("123456");
-        user.setPassword("userpassword");
         int actual = user.getLogin().length();
         int expectLoginLength = 6;
         assertTrue(expectLoginLength <= actual);
     }
 
     @Test
-    void storageDao_addUserToStorage_ok() {
+    void register_addUserToStorage_ok() {
         User user = new User();
-        user.setId(1L);
-        user.setPassword("1234562");
-        user.setLogin("Cat");
+        user.setPassword("Password");
+        user.setLogin("Userfile");
         user.setAge(19);
-        storageDao.add(user);
-        User actual = storageDao.get("Cat");
+        registrationService.register(user);
+        User actual = storageDao.get("Userfile");
         assertEquals(user, actual);
     }
 
     @Test
     void storageDao_getUserFromStorage_ok() {
         User userTiger = new User();
-        userTiger.setId(2L);
-        userTiger.setPassword("1234569");
-        userTiger.setLogin("Tiger");
+        userTiger.setPassword("Password");
+        userTiger.setLogin("Tigers");
         userTiger.setAge(20);
-        storageDao.add(userTiger);
-        User actual = storageDao.get("Tiger");
+        registrationService.register(userTiger);
+        User actual = storageDao.get("Tigers");
         assertEquals(userTiger, actual);
     }
 
     @Test
     void storageDao_getFromStorageMissingValue_notOk() {
         User user1 = new User();
-        user1.setPassword("1234564");
-        user1.setLogin("Cobra");
+        user1.setPassword("UnitTest123");
+        user1.setLogin("Cobras");
+        user1.setAge(22);
         User user2 = new User();
-        user2.setPassword("1234565");
-        user2.setLogin("Tiger");
-        storageDao.add(user1);
-        storageDao.add(user2);
-        User actual = storageDao.get("Mouse");
-        assertEquals(null, actual);
+        user2.setPassword("UnitTest123");
+        user2.setLogin("Tigers");
+        user2.setAge(21);
+        registrationService.register(user1);
+        registrationService.register(user2);
+        User actual = storageDao.get("Horses");
+        assertNull(actual);
     }
 
     @Test
     void storageDao_getNonExistUser_notOk() {
         User user1 = new User();
-        user1.setPassword("12345612");
-        user1.setLogin("Cobra");
+        user1.setPassword("UnitTest2");
+        user1.setLogin("CobraSet");
+        user1.setAge(32);
         User user2 = new User();
-        user2.setPassword("12345622");
-        user2.setLogin("Cobra");
-        storageDao.add(user1);
-        storageDao.add(user2);
-        User actual = storageDao.get("Mouse");
+        user2.setPassword("UnitTest1");
+        user2.setLogin("CobraMap");
+        user2.setAge(43);
+        registrationService.register(user1);
+        registrationService.register(user2);
+        User actual = storageDao.get("MouseSet");
         assertNull(actual);
     }
 
     @Test
     void register_passwordLengthFiveOrLessCharacters_notOk() {
         User user = new User();
-        user.setLogin("1234567");
+        user.setLogin("UnitTest123");
         user.setPassword("passw");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -115,10 +125,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordContainAtLeastOneUpperLetter_Ok() {
+    void register_passwordContainAtLeastOneUpperLetter_ok() {
         User user = new User();
-        user.setLogin("1234567");
-        user.setPassword("psSs123");
+        user.setLogin("userfile");
+        user.setPassword("passw");
         user.setAge(22);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -126,17 +136,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLengthSixOrMoreCharacters_Ok() {
+    void register_passwordLengthSixOrMoreCharacters_ok() {
         User user = new User();
         user.setLogin("1234567");
-        user.setPassword("password");
+        user.setPassword("Password");
         int actual = user.getPassword().length();
         int expect = 6;
         assertTrue(expect <= actual);
     }
 
     @Test
-    void register_AgeLessThan18_notOk() {
+    void register_ageLessThan18_notOk() {
         User user = new User();
         user.setPassword("password");
         user.setLogin("Petrenko");
@@ -147,7 +157,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeMoreThan17_Ok() {
+    void register_ageMoreThan17_ok() {
         User user = new User();
         user.setPassword("password");
         user.setLogin("Petrenko");
