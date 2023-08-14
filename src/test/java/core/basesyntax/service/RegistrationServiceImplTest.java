@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +27,13 @@ class RegistrationServiceImplTest {
         validUser = new User("ValidUser", "123412346", 18);
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
     void register_validUser_ok() {
-        validUser.setLogin("validUser");
         User actual = registrationService.register(validUser);
         assertEquals(validUser, actual);
     }
@@ -40,19 +45,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLessThanSixChars_notOk() {
+    void register_loginLessThanMinimum_notOk() {
         validUser.setLogin(INVALID_LOGIN);
         assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    void register_passwordLessThanSixChars_notOk() {
+    void register_passwordLessThanMinimum_notOk() {
         validUser.setPassword(INVALID_PASSWORD);
         assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
 
     @Test
-    void register_ageLessThanEighteen_notOk() {
+    void register_ageLessThanMinimum_notOk() {
         validUser.setAge(INVALID_AGE);
         assertThrows(InvalidDataException.class, () -> registrationService.register(validUser));
     }
