@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -27,20 +26,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(null, TEST_PASSWORD, TEST_AGE)));
+        User user = new User(null, TEST_PASSWORD, TEST_AGE);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, null, TEST_AGE)));
+        User user = new User(TEST_LOGIN, null, TEST_AGE);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, TEST_PASSWORD, null)));
+        User user = new User(TEST_LOGIN, TEST_PASSWORD, null);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
@@ -53,74 +52,98 @@ class RegistrationServiceImplTest {
     @Test
     void register_existingLogin_notOk() {
         Storage.people.add(new User(DEFAULT_LOGIN, TEST_PASSWORD, TEST_AGE));
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(DEFAULT_LOGIN, TEST_PASSWORD, TEST_AGE)));
+        User user = new User(DEFAULT_LOGIN, TEST_PASSWORD, TEST_AGE);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_loginLessThanSixCharacters_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User("", TEST_PASSWORD, TEST_AGE)));
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User("abc", TEST_PASSWORD, TEST_AGE)));
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User("abcde", TEST_PASSWORD, TEST_AGE)));
+    void register_loginIsBlank_notOk() {
+        User user = new User("", TEST_PASSWORD, TEST_AGE);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_loginAtLeastSixCharacters_ok() {
+    void register_loginIsFiveCharacters_notOk() {
+        User user = new User("abcde", TEST_PASSWORD, TEST_AGE);
+        assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_loginIsSixCharacters_ok() {
         User userLoginSixChars = new User("abcdef", TEST_PASSWORD, TEST_AGE);
-        User userLoginSevenChars = new User("abcdefg", TEST_PASSWORD, TEST_AGE);
         service.register(userLoginSixChars);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_loginIsSevenPlusCharacters_ok() {
+        User userLoginSevenChars = new User("abcdefg", TEST_PASSWORD, TEST_AGE);
+        User userLoginSevenPlusChars = new User("abcdefgh", TEST_PASSWORD, TEST_AGE);
         service.register(userLoginSevenChars);
-        assertTrue(Storage.people.contains(userLoginSixChars));
-        assertTrue(Storage.people.contains(userLoginSevenChars));
+        service.register(userLoginSevenPlusChars);
+        assertEquals(2, Storage.people.size());
     }
 
     @Test
-    void register_passwordLessThanSixCharacters_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, "", TEST_AGE)));
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, "abc", TEST_AGE)));
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, "abcde", TEST_AGE)));
+    void register_passwordIsBlank_notOk() {
+        User user = new User(TEST_LOGIN, "", TEST_AGE);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_passwordAtLeastSixCharacters_ok() {
-        User userPasswordSixChars = new User(TEST_LOGIN, "abcdef", TEST_AGE);
-        User userPasswordSevenChars = new User(TEST_LOGIN_1, "abcdefg", TEST_AGE);
-        service.register(userPasswordSixChars);
+    void register_passwordIsFiveCharacters_notOk() {
+        User user = new User(TEST_LOGIN, "abcde", TEST_AGE);
+        assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_passwordIsSixCharacters_ok() {
+        User user = new User(TEST_LOGIN, "abcdef", TEST_AGE);
+        service.register(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_passwordIsSevenPlusCharacters_ok() {
+        User userPasswordSevenChars = new User(TEST_LOGIN, "abcdefg", TEST_AGE);
+        User userPasswordSevenPlusChars = new User(TEST_LOGIN_1, "abcdefgh", TEST_AGE);
         service.register(userPasswordSevenChars);
-        assertTrue(Storage.people.contains(userPasswordSixChars));
-        assertTrue(Storage.people.contains(userPasswordSevenChars));
+        service.register(userPasswordSevenPlusChars);
+        assertEquals(2, Storage.people.size());
     }
 
     @Test
-    void register_ageNotPositive_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, TEST_PASSWORD, -1)));
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, TEST_PASSWORD, 0)));
+    void register_ageIsNegative_notOk() {
+        User user = new User(TEST_LOGIN, TEST_PASSWORD, -1);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_ageUnderEighteen_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, TEST_PASSWORD, 1)));
-        assertThrows(RegistrationException.class,
-                () -> service.register(new User(TEST_LOGIN, TEST_PASSWORD, 17)));
+    void register_ageIsZero_notOk() {
+        User user = new User(TEST_LOGIN, TEST_PASSWORD, 0);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_ageAtLeastEighteen_ok() {
-        User userAgeEighteen = new User(TEST_LOGIN, TEST_PASSWORD, 18);
-        User userAgeNineteen = new User(TEST_LOGIN_1, TEST_PASSWORD, 19);
-        service.register(userAgeEighteen);
+    void register_agePositiveUnderEighteen_notOk() {
+        User user = new User(TEST_LOGIN, TEST_PASSWORD, 17);
+        assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_ageIsEighteen_ok() {
+        User user = new User(TEST_LOGIN, TEST_PASSWORD, 18);
+        service.register(user);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
+    void register_ageIsNineteenPlus_ok() {
+        User userAgeNineteen = new User(TEST_LOGIN, TEST_PASSWORD, 19);
+        User userAgeNineteenPlus = new User(TEST_LOGIN_1, TEST_PASSWORD, 25);
         service.register(userAgeNineteen);
-        assertTrue(Storage.people.contains(userAgeEighteen));
-        assertTrue(Storage.people.contains(userAgeNineteen));
+        service.register(userAgeNineteenPlus);
+        assertEquals(2, Storage.people.size());
     }
 
     @Test

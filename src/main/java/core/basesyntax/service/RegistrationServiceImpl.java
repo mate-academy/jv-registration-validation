@@ -5,26 +5,21 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int CHARACTERS_LIMIT = 6;
-    private static final int APPROPRIATE_AGE = 18;
+    private static final int MIN_LIMIT = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        nullChecking(user);
+        checkingFieldsForNull(user);
         loginChecking(user);
-
-        if (user.getPassword().length() < CHARACTERS_LIMIT) {
-            throw new RegistrationException("Password should be at least 6 characters");
-        }
-
+        passwordChecking(user);
         ageChecking(user);
-
         storageDao.add(user);
         return user;
     }
 
-    private void nullChecking(User user) {
+    private void checkingFieldsForNull(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login cannot be null");
         }
@@ -40,8 +35,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("The user with such login already exists");
         }
-        if (user.getLogin().length() < CHARACTERS_LIMIT) {
+        if (user.getLogin().equals("")) {
+            throw new RegistrationException("Login should not be blank");
+        }
+        if (user.getLogin().length() < MIN_LIMIT) {
             throw new RegistrationException("Login should be at least 6 characters");
+        }
+    }
+
+    private void passwordChecking(User user) {
+        if (user.getPassword().length() < MIN_LIMIT) {
+            throw new RegistrationException("Password should be at least 6 characters");
         }
     }
 
@@ -49,8 +53,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() <= 0) {
             throw new RegistrationException("Age should be a positive number");
         }
-        if (user.getAge() < APPROPRIATE_AGE) {
-            throw new RegistrationException("You are under " + APPROPRIATE_AGE + " years old");
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("You are under " + MIN_AGE + " years old");
         }
     }
 }
