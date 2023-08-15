@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,17 +25,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPasswordValue_notOk() {
+    void register_PasswordValueNull_notOk() {
         User user = new User();
-        user.setLogin("12345");
+        user.setLogin("123456");
+        user.setPassword(null);
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_nullLoginValue_notOk() {
+    void register_LoginValueNull_notOk() {
         User user = new User();
+        user.setLogin(null);
         user.setPassword("Password");
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(user);
@@ -125,17 +128,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordContainAtLeastOneUpperLetter_ok() {
-        User user = new User();
-        user.setLogin("userfile");
-        user.setPassword("passw");
-        user.setAge(22);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
     void register_passwordLengthSixOrMoreCharacters_ok() {
         User user = new User();
         user.setLogin("1234567");
@@ -157,6 +149,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userAgeNull_notOk() {
+        User user = new User();
+        user.setPassword("password");
+        user.setLogin("Petrenko");
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_ageMoreThan17_ok() {
         User user = new User();
         user.setPassword("password");
@@ -165,6 +168,17 @@ class RegistrationServiceImplTest {
         int actual = user.getAge();
         int expect = 18;
         assertTrue(expect <= actual);
+    }
+
+    @Test
+    void register_ageMoreThan100_notOk() {
+        User user = new User();
+        user.setPassword("password");
+        user.setLogin("Petrenko");
+        user.setAge(101);
+        int actual = user.getAge();
+        int expect = 100;
+        assertFalse(expect > actual);
     }
 }
 

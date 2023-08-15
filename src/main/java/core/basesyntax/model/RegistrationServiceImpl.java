@@ -6,8 +6,9 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.service.RegistrationService;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    static final int AGE_PERMISION = 18;
-    static final int MIN_PASSWORD_AND_LOGIN_LENGTH = 6;
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 100;
+    private static final int MIN_PASSWORD_AND_LOGIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -30,14 +31,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("This user exist in storage, please change your "
                     + "login");
         }
-        if (user.getAge() < AGE_PERMISION || user.getAge() == null) {
+        if (user.getAge() == null || user.getAge().intValue() < MIN_AGE
+                || user.getAge().intValue() > MAX_AGE) {
             throw new RegistrationException("Person with your age doesn't allow to registration "
                     + "in this servise");
-        }
-        if (!user.getPassword().matches(".*[A-Z].*") && !user.getPassword()
-                .matches(".*[a-z].*")) {
-            throw new RegistrationException("Password need to contain at least one character "
-                    + "in UpperCaseletter and LowerCase");
         }
         storageDao.add(user);
         return user;
