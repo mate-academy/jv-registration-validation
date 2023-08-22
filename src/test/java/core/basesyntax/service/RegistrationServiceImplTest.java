@@ -6,13 +6,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RegistrationServiceImplTest {
+    private static User validUser;
     private User loginUserTest;
     private User passwordUserTest;
     private User ageUserTest;
-    private static User validUser;
     private RegistrationService registrationService;
 
     @BeforeAll
