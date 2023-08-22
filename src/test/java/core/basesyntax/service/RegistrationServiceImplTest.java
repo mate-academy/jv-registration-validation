@@ -41,30 +41,35 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOK() {
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(null));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
     void register_nullLogin_notOK() {
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(loginUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(loginUserTest));
     }
 
     @Test
     void register_emptyLogin_notOK() {
         loginUserTest.setLogin("");
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(loginUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(loginUserTest));
     }
 
     @Test
     void register_3lengthLogin_notOk() {
         loginUserTest.setLogin("abc");
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(loginUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(loginUserTest));
     }
 
     @Test
     void register_5LengthLogin_notOk() {
         loginUserTest.setLogin("abcde");
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(loginUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(loginUserTest));
     }
 
     @Test
@@ -84,31 +89,36 @@ class RegistrationServiceImplTest {
     void register_loginAlreadyExists_NotOk() {
         Storage.people.add(validUser);
         loginUserTest.setLogin("login1");
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(loginUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(loginUserTest));
         Storage.people.remove(validUser);
     }
 
     @Test
     void register_nullPassword_NotOk() {
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(passwordUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(passwordUserTest));
     }
 
     @Test
     void register_emptyPassword_NotOk() {
         passwordUserTest.setPassword("");
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(passwordUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(passwordUserTest));
     }
 
     @Test
     void register_3LengthPassword_NotOk() {
         passwordUserTest.setPassword("123");
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(passwordUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(passwordUserTest));
     }
 
     @Test
     void register_5LengthPassword_NotOk() {
         passwordUserTest.setPassword("12345");
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(passwordUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(passwordUserTest));
     }
 
     @Test
@@ -126,25 +136,29 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_NotOk() {
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(ageUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(ageUserTest));
     }
 
     @Test
     void register_negativeAge_NotOk() {
         ageUserTest.setAge(-10);
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(ageUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(ageUserTest));
     }
 
     @Test
     void register_zeroAge_NotOk() {
         ageUserTest.setAge(0);
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(ageUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(ageUserTest));
     }
 
     @Test
     void register_17Age_NotOk() {
         ageUserTest.setAge(17);
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(ageUserTest));
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(ageUserTest));
     }
 
     @Test
