@@ -76,23 +76,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_negativeAge_notOK() {
-        assertThrows(RegistrationException.class, () -> {
-            testUser.setAge(-4);
-            registrationService.register(testUser);
-        });
-    }
-
-    @Test
     void register_minAge_OK() {
         testUser.setAge(18);
         assertEquals(testUser, registrationService.register(testUser));
     }
 
     @Test
-    void register_zeroAge_notOK() {
+    void register_lowAge_notOK() {
         assertThrows(RegistrationException.class, () -> {
-            testUser.setAge(0);
+            testUser.setAge(5);
             registrationService.register(testUser);
         });
     }
@@ -103,7 +95,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLengthEquals5_notOK() {
+    void register_shortLogin_notOK() {
         assertThrows(RegistrationException.class, () -> {
             testUser.setLogin("Login");
             registrationService.register(testUser);
@@ -111,7 +103,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLengthEquals5_notOK() {
+    void register_shortPassword_notOK() {
         assertThrows(RegistrationException.class, () -> {
             testUser.setPassword("12345");
             registrationService.register(testUser);
@@ -137,7 +129,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_registerUserWithSameLogin_notOK() {
         assertThrows(RegistrationException.class, () -> {
-            testUser = Storage.people.get(1);
+            testUser.setLogin(Storage.people.get(1).getLogin());
             registrationService.register(testUser);
         });
     }
