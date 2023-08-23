@@ -56,11 +56,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginLength_Ok() {
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+        User actual1 = registrationService.register(user);
+        assertEquals(user, actual1);
         user.setLogin("login123");
-        actual = registrationService.register(user);
-        assertEquals(user, actual);
+        User actual2 = registrationService.register(user);
+        assertEquals(user, actual2);
     }
 
     @Test
@@ -96,11 +96,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLength_Ok() {
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+        User actual1 = registrationService.register(user);
+        assertEquals(user, actual1);
         user.setPassword("12345678");
-        actual = registrationService.register(user);
-        assertEquals(user, actual);
+        User actual2 = registrationService.register(user);
+        assertEquals(user, actual2);
     }
 
     @Test
@@ -125,10 +125,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_age_Ok() {
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+        User actual1 = registrationService.register(user);
+        assertEquals(user, actual1);
         user.setAge(30);
-        actual = registrationService.register(user);
-        assertEquals(user, actual);
+        User actual2 = registrationService.register(user);
+        assertEquals(user, actual2);
     }
 }
