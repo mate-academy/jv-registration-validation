@@ -49,25 +49,17 @@ class RegistrationServiceImplTest {
         user.setLogin("abc");
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_5LengthLogin_notOk() {
         user.setLogin("abcde");
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_6LengthLogin_Ok() {
+    void register_loginLength_Ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
-    }
-
-    @Test
-    void register_8LengthLogin_Ok() {
         user.setLogin("login123");
-        User actual = registrationService.register(user);
+        actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
@@ -93,29 +85,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_3LengthPassword_NotOk() {
+    void register_shortPassword_NotOk() {
         user.setPassword("123");
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_5LengthPassword_NotOk() {
         user.setPassword("12345");
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_6LengthPassword_Ok() {
+    void register_passwordLength_Ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
-    }
-
-    @Test
-    void register_8LengthPassword_Ok() {
         user.setPassword("12345678");
-        User actual = registrationService.register(user);
+        actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
@@ -127,36 +111,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_negativeAge_NotOk() {
+    void register_age_NotOk() {
         user.setAge(-10);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_zeroAge_NotOk() {
         user.setAge(0);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_17Age_NotOk() {
         user.setAge(17);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_18Age_Ok() {
+    void register_age_Ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
-    }
-
-    @Test
-    void register_30Age_Ok() {
         user.setAge(30);
-        User actual = registrationService.register(user);
+        actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 }
