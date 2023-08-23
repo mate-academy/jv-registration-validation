@@ -58,6 +58,7 @@ class RegistrationServiceImplTest {
     void register_loginLength_Ok() {
         User actual1 = registrationService.register(user);
         assertEquals(user, actual1);
+        Storage.people.clear();
         user.setLogin("login123");
         User actual2 = registrationService.register(user);
         assertEquals(user, actual2);
@@ -98,6 +99,7 @@ class RegistrationServiceImplTest {
     void register_passwordLength_Ok() {
         User actual1 = registrationService.register(user);
         assertEquals(user, actual1);
+        Storage.people.clear();
         user.setPassword("12345678");
         User actual2 = registrationService.register(user);
         assertEquals(user, actual2);
@@ -127,6 +129,7 @@ class RegistrationServiceImplTest {
     void register_age_Ok() {
         User actual1 = registrationService.register(user);
         assertEquals(user, actual1);
+        Storage.people.clear();
         user.setAge(30);
         User actual2 = registrationService.register(user);
         assertEquals(user, actual2);
