@@ -55,16 +55,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLength_Ok() {
-        User actual1 = registrationService.register(user);
-        assertEquals(user, actual1);
-        Storage.people.clear();
-        user.setLogin("login123");
-        User actual2 = registrationService.register(user);
-        assertEquals(user, actual2);
-    }
-
-    @Test
     void register_loginAlreadyExists_NotOk() {
         Storage.people.add(user);
         assertThrows(InvalidUserDataException.class,
@@ -96,16 +86,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLength_Ok() {
-        User actual1 = registrationService.register(user);
-        assertEquals(user, actual1);
-        Storage.people.clear();
-        user.setPassword("12345678");
-        User actual2 = registrationService.register(user);
-        assertEquals(user, actual2);
-    }
-
-    @Test
     void register_nullAge_NotOk() {
         user.setAge(null);
         assertThrows(InvalidUserDataException.class,
@@ -126,12 +106,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_Ok() {
-        User actual1 = registrationService.register(user);
-        assertEquals(user, actual1);
+    void register_ok() {
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
         Storage.people.clear();
+
+        user.setLogin("login123");
+        actual = registrationService.register(user);
+        assertEquals(user, actual);
+        Storage.people.clear();
+
+        user.setPassword("12345678");
+        actual = registrationService.register(user);
+        assertEquals(user, actual);
+        Storage.people.clear();
+
         user.setAge(30);
-        User actual2 = registrationService.register(user);
-        assertEquals(user, actual2);
+        actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 }
