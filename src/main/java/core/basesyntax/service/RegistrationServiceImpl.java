@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Login should contain at least 6 symbols");
         }
         if (user.getPassword() == null) {
-            throw new InvalidDataException("Password can`t be null and should contain at least 6 symbols");
+            throw new InvalidDataException("Password can`t be null");
         }
         if (user.getPassword().length() <= MIN_LENGTH) {
             throw new InvalidDataException("Password should contain at least 6 symbols");
