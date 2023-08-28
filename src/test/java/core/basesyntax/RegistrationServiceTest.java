@@ -5,145 +5,160 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static User defaultUser;
+    private static final String CORRECT_LOGIN = "CorrectUserLogin";
+    private static final String CORRECT_PASSWORD = "12345678";
+    private static final int CORRECT_AGE = 20;
     private static User user;
-    private static RegistrationService service;
-    private static int counter = 0;
-    private static int expectedSize = 0;
+    private static RegistrationService registrationService;
 
     @BeforeAll
     static void beforeAll() {
-        defaultUser = new User();
-        defaultUser.setId(1L);
-        defaultUser.setLogin("CorrectLogin");
-        defaultUser.setAge(19);
-        defaultUser.setPassword("Password");
-        service = new RegistrationServiceImpl();
-        service.register(defaultUser);
-        expectedSize++;
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setId(1312422L);
-        user.setLogin("SetUpLogin" + counter++);
-        user.setAge(19);
-        user.setPassword("Password");
+        user.setLogin(CORRECT_LOGIN);
+        user.setAge(CORRECT_AGE);
+        user.setPassword(CORRECT_PASSWORD);
     }
 
     @Test
-    void addCorrectUser1_Ok() {
-        Assertions.assertEquals(user, service.register(user));
-        expectedSize++;
-        Assertions.assertEquals(expectedSize, Storage.people.size());
-    }
-
-    @Test
-    void addCorrectUser2_Ok() {
-        Assertions.assertEquals(user, service.register(user));
-        expectedSize++;
+    void addCorrectUsers_Ok() {
+        Assertions.assertEquals(user, registrationService.register(user));
+        user = new User();
+        user.setLogin("Login1234");
+        user.setPassword(CORRECT_PASSWORD);
+        user.setAge(CORRECT_AGE);
+        Assertions.assertEquals(user, registrationService.register(user));
+        int expectedSize = 2;
         Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
     void addUserWithLoginEdgeLength_Ok() {
         user.setLogin("Login1");
-        Assertions.assertEquals(user, service.register(user));
+        Assertions.assertEquals(user, registrationService.register(user));
         user = new User();
-        user.setLogin("Login1223");
-        user.setPassword("1234567");
-        user.setAge(20);
-        Assertions.assertEquals(user, service.register(user));
-        expectedSize += 2;
+        user.setLogin("Login12");
+        user.setPassword(CORRECT_PASSWORD);
+        user.setAge(CORRECT_AGE);
+        Assertions.assertEquals(user, registrationService.register(user));
+        int expectedSize = 2;
         Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
     void addUserWithLoginLessSix_NotOk() {
-        user.setLogin("Login");
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
-        user = new User();
         user.setLogin("Log");
-        user.setPassword("1234567");
-        user.setAge(20);
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setLogin("Login");
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        int expectedSize = 0;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
     void addExistingUser_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(defaultUser));
+        registrationService.register(user);
         User existingUser = new User();
-        existingUser.setId(defaultUser.getId());
-        existingUser.setLogin(defaultUser.getLogin());
-        existingUser.setPassword(defaultUser.getPassword());
-        existingUser.setAge(defaultUser.getAge());
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(existingUser));
+        existingUser.setId(user.getId());
+        existingUser.setLogin(user.getLogin());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setAge(user.getAge());
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(existingUser));
+        int expectedSize = 1;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
     void addUserWithPasswordLessSix_NotOk() {
         user.setPassword("12345");
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
-        user = new User();
-        user.setLogin("CorrectLogin");
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
         user.setPassword("abc");
-        user.setAge(20);
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        int expectedSize = 0;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
     void addUserWithPasswordEdgeLength_Ok() {
         user.setPassword("123456");
-        Assertions.assertEquals(user, service.register(user));
-        expectedSize++;
+        Assertions.assertEquals(user, registrationService.register(user));
+        int expectedSize = 1;
         Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
-    void addUserWithNullValues_NotOk() {
-        User nullLoginUser = new User();
-        nullLoginUser.setPassword("123456");
-        nullLoginUser.setAge(20);
-        User nullPasswordUser = new User();
-        nullPasswordUser.setLogin("123456");
-        nullPasswordUser.setAge(20);
-        User nullAgeUser = new User();
-        nullAgeUser.setLogin("123456");
-        nullAgeUser.setPassword("password");
-        User nullValuesUser = new User();
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(null));
+    void addNullUser() {
         Assertions.assertThrows(RegistrationException.class,
-                () -> service.register(nullValuesUser));
+                () -> registrationService.register(null));
+        int expectedSize = 0;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
+    }
+
+    @Test
+    void addUserWithNullLogin() {
+        user.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
-                () -> service.register(nullLoginUser));
+                () -> registrationService.register(user));
+        int expectedSize = 0;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
+    }
+
+    @Test
+    void addUserWithNullPassword() {
+        user.setPassword(null);
         Assertions.assertThrows(RegistrationException.class,
-                () -> service.register(nullPasswordUser));
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(nullAgeUser));
+                () -> registrationService.register(user));
+        int expectedSize = 0;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
+    }
+
+    @Test
+    void addUserWithNullAge() {
+        user.setAge(null);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        int expectedSize = 0;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
     void addUserAgeEdgeValues_Ok() {
         user.setAge(18);
-        Assertions.assertEquals(user, service.register(user));
-        expectedSize++;
+        Assertions.assertEquals(user, registrationService.register(user));
+        int expectedSize = 1;
         Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 
     @Test
     void addUserWithAgeLess_NotOk() {
-        user.setAge(17);
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
-        user = new User();
-        user.setLogin("LoginLoginLogin");
-        user.setLogin("PasswordPassword");
         user.setAge(16);
-        Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setAge(17);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        int expectedSize = 0;
+        Assertions.assertEquals(expectedSize, Storage.people.size());
     }
 }
