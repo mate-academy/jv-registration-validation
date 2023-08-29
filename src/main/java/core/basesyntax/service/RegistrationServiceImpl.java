@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new UserRegistrationException("User can't be null");
+            throw new UserRegistrationException(nullErrorMessage("User"));
         }
         checkLogin(user.getLogin());
         checkPassword(user.getPassword());
@@ -49,7 +49,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new UserRegistrationException(nullErrorMessage("Age"));
         }
-        if (age < 18) {
+        if (age < MIN_VALID_AGE) {
             throw new UserRegistrationException("Minimum age to register " + MIN_VALID_AGE);
         }
     }
