@@ -30,7 +30,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can`t be null");
         }
         if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login length is less then 6 symbols");
+            throw new RegistrationException("Login length is less then "
+                    + MIN_LOGIN_LENGTH + " symbols");
         }
     }
 
@@ -39,7 +40,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can`t be null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password length is less then 6 symbols");
+            throw new RegistrationException("Password length is less then "
+                    + MIN_PASSWORD_LENGTH + " symbols");
         }
     }
 
@@ -48,7 +50,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age can`t be null");
         }
         if (age < MIN_AGE) {
-            throw new RegistrationException("Only users over the age of 18 are allowed");
+            throw new RegistrationException("Only users over the age of "
+                    + MIN_AGE + " are allowed");
         }
     }
 }
