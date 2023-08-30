@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Feel free to remove this class and create your own.
  */
-public class HelloWorldTest {
-
+public class RegistrationServiceImplTest {
     private static final int LOGIN_MIN_LENGHT = 6;
     private static final int USER_PWD_MIN_LENGHT = 6;
     private static final int USER_MIN_AGE = 18;
@@ -26,7 +25,14 @@ public class HelloWorldTest {
         user.setLogin("Alice66");
         user.setAge(20);
         user.setPassword("QWERT666");
+    }
 
+    @Test
+    void userNull_notOk() {
+        user = null;
+        assertThrows(DataNotVaidExeption.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
@@ -69,8 +75,8 @@ public class HelloWorldTest {
     void isUserLoginNotUnique() {
         User user1 = new User();
         user1.setLogin("Alice66");
-        user1.setAge(26);
-        user1.setPassword("QWERT6666");
+        user1.setAge(20);
+        user1.setPassword("QWERT666");
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
             registrationService.register(user1);

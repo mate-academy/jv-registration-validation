@@ -14,29 +14,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-
+        if (user == null) {
+            throw new DataNotVaidExeption("User can`t be NULL");
+        }
         if (user.getPassword() == null || user.getLogin() == null) {
             throw new DataNotVaidExeption("Login and password can`t be null");
         }
-
         if (Storage.people.size() > 0) {
             for (int i = 0; i < Storage.people.size(); i++) {
 
-                if (Storage.people.get(i).getLogin() == (user.getLogin())) {
+                if (storageDao.get(user.getLogin()).equals(user)) {
                     throw new DataNotVaidExeption("This login already exist");
                 }
             }
-
         }
         if (user.getAge() < 0 || user.getAge() > Integer.MAX_VALUE) {
             throw new DataNotVaidExeption("Age not correct");
         }
-
         if (user.getLogin().length() < LOGIN_MIN_LENGHT) {
             throw new DataNotVaidExeption("Login must be longer than 6 characters");
-        }
-        if (user.getAge() < USER_MIN_AGE) {
-            throw new DataNotVaidExeption("User must be adult");
         }
         if (user.getPassword().length() < USER_PWD_LENGHT) {
             throw new DataNotVaidExeption("Password must be longer than 6 characters");
