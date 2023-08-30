@@ -49,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLength_notOk() {
+    void register_invalidLoginLength_notOk() {
         user.setLogin(SHORT_LOGIN);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setLogin(EMPTY_STRING);
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLength_notOk() {
+    void register_invalidPasswordLength_notOk() {
         user.setPassword(SHORT_PASSWORD);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setPassword(EMPTY_STRING);
@@ -89,7 +89,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_ok() {
+    void register_validUser_ok() {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }

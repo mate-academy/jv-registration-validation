@@ -19,9 +19,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkValidLogin(user.getLogin());
         checkValidPassword(user.getPassword());
         checkValidAge(user.getAge());
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already exists");
-        }
         return storageDao.add(user);
     }
 
@@ -29,8 +26,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new RegistrationException("Login can't be null");
         }
-        if (login.trim().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login must be at least 6 characters");
+        if (login.length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException(
+                    "Login must be at least " + MIN_LOGIN_LENGTH + " characters"
+            );
+        }
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("User with this login already exists");
         }
     }
 
@@ -38,8 +40,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new RegistrationException("Password can't be null");
         }
-        if (password.trim().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password must be at least 6 characters");
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException(
+                    "Password must be at least" + MIN_PASSWORD_LENGTH + "characters"
+            );
         }
     }
 
