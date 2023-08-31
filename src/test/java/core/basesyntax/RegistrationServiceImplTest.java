@@ -102,8 +102,8 @@ public class RegistrationServiceImplTest {
         user.setLogin("Alice66");
         user.setAge(20);
         user.setPassword("QWERT666");
-        assertEquals("Alice66" ,user.getLogin());
-        assertEquals(20 ,user.getAge());
-        assertEquals("QWERT666" ,user.getPassword());
+        assertEquals("Alice66", user.getLogin());
+        assertEquals(20, user.getAge());
+        assertEquals("QWERT666", user.getPassword());
     }
 }

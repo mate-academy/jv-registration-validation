@@ -21,9 +21,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DataNotVaidExeption("Login and password can`t be null");
         }
         if (Storage.people.size() > 0) {
-                if (storageDao.get(user.getLogin()) != null) {
-                    throw new DataNotVaidExeption("This login already exist");
-                }
+            if (storageDao.get(user.getLogin()) != null) {
+                throw new DataNotVaidExeption("This login already exist");
+            }
         }
         if (user.getAge() < 0 || user.getAge() > Integer.MAX_VALUE) {
             throw new DataNotVaidExeption("Age not correct");
