@@ -21,12 +21,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DataNotVaidExeption("Login and password can`t be null");
         }
         if (Storage.people.size() > 0) {
-            for (int i = 0; i < Storage.people.size(); i++) {
-
-                if (storageDao.get(user.getLogin()).equals(user)) {
+                if (storageDao.get(user.getLogin()) != null) {
                     throw new DataNotVaidExeption("This login already exist");
                 }
-            }
         }
         if (user.getAge() < 0 || user.getAge() > Integer.MAX_VALUE) {
             throw new DataNotVaidExeption("Age not correct");
@@ -36,12 +33,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword().length() < USER_PWD_LENGHT) {
             throw new DataNotVaidExeption("Password must be longer than 6 characters");
-        }
-        if (user.getLogin() == null) {
-            throw new DataNotVaidExeption("Login can't be null");
-        }
-        if (user.getPassword() == null) {
-            throw new DataNotVaidExeption("Password can't be null");
         }
         if (user.getAge() < USER_MIN_AGE) {
             throw new DataNotVaidExeption("Not valid age: " + user.getAge()

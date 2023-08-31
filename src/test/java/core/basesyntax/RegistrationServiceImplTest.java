@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
@@ -8,9 +9,6 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Feel free to remove this class and create your own.
- */
 public class RegistrationServiceImplTest {
     private static final int LOGIN_MIN_LENGHT = 6;
     private static final int USER_PWD_MIN_LENGHT = 6;
@@ -28,7 +26,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void userNull_notOk() {
+    void get_UserNull_notOk() {
         user = null;
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
@@ -36,7 +34,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginLenghtLessSixCharacters_Is_NOt_OK() {
+    void getLogin_LessSixCharacters_notOk() {
 
         user.setLogin("abcd");
         assertThrows(DataNotVaidExeption.class, () -> {
@@ -45,7 +43,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void pwdLessSixCharacters() {
+    void get_PwdLessSixCharacters_notOk() {
 
         user.setPassword("qwert");
         assertThrows(DataNotVaidExeption.class, () -> {
@@ -54,7 +52,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeAdult() {
+    void get_UserAgeNotAdult_notOk() {
 
         user.setAge(5);
         assertThrows(DataNotVaidExeption.class, () -> {
@@ -63,7 +61,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeLessZeroNotOK() {
+    void get_UserAgeLessZero_notOk() {
         user.setAge(-1);
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
@@ -72,7 +70,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void isUserLoginNotUnique() {
+    void get_UserLoginNotUnique_notOk() {
         User user1 = new User();
         user1.setLogin("Alice66");
         user1.setAge(20);
@@ -84,7 +82,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkNullDataNotOK() {
+    void set_NullPwd_notOk() {
         user.setPassword(null);
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
@@ -92,10 +90,20 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeMoreMax_Value_Not_Ok() {
+    void get_UserAgeMoreMaxValue_notOk() {
         user.setAge(Integer.MIN_VALUE + 1);
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void get_AllData_Ok() {
+        user.setLogin("Alice66");
+        user.setAge(20);
+        user.setPassword("QWERT666");
+        assertEquals("Alice66" ,user.getLogin());
+        assertEquals(20 ,user.getAge());
+        assertEquals("QWERT666" ,user.getPassword());
     }
 }
