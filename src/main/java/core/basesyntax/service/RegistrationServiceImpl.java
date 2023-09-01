@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import core.basesyntax.DataNotVaidExeption;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -20,12 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null || user.getLogin() == null) {
             throw new DataNotVaidExeption("Login and password can`t be null");
         }
-        if (Storage.people.size() > 0) {
-            if (storageDao.get(user.getLogin()) != null) {
-                throw new DataNotVaidExeption("This login already exist");
-            }
-        }
-        if (user.getAge() < 0 || user.getAge() > Integer.MAX_VALUE) {
+        if (user.getAge() < 0) {
             throw new DataNotVaidExeption("Age not correct");
         }
         if (user.getLogin().length() < LOGIN_MIN_LENGHT) {
@@ -37,6 +31,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < USER_MIN_AGE) {
             throw new DataNotVaidExeption("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + USER_MIN_AGE);
+        }
+        if(user.getLogin() != null) {
+            throw new DataNotVaidExeption("User not unique");
         }
         return storageDao.add(user);
 
