@@ -32,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DataNotVaidExeption("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + USER_MIN_AGE);
         }
-        if(user.getLogin() != null) {
+        if (user.getLogin() != null) {
             throw new DataNotVaidExeption("User not unique");
         }
         return storageDao.add(user);

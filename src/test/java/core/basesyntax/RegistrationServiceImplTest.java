@@ -25,6 +25,7 @@ public class RegistrationServiceImplTest {
         user.setAge(20);
         user.setPassword("QWERT666");
     }
+
     @Test
     void get_allData_Ok() {
         user.setLogin("Alice66");
@@ -106,4 +107,4 @@ public class RegistrationServiceImplTest {
             registrationService.register(user);
         });
     }
-  }
+}
