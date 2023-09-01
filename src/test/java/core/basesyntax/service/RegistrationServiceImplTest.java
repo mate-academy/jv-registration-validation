@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        Storage.people.clear();
+        Storage.PEOPLE.clear();
     }
 
     @Test
@@ -89,7 +89,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsUsed_NotOk() {
-        Storage.people.add(user);
+        Storage.PEOPLE.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
