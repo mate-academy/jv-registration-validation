@@ -28,16 +28,13 @@ public class RegistrationServiceImplTest {
 
     @Test
     void get_allData_Ok() {
-        user.setLogin("Alice66");
-        user.setAge(20);
-        user.setPassword("QWERT666");
         assertEquals("Alice66", user.getLogin());
         assertEquals(20, user.getAge());
         assertEquals("QWERT666", user.getPassword());
     }
 
     @Test
-    void get_userNull_notOk() {
+    void register_nullUser_notOk() {
         user = null;
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
@@ -45,7 +42,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void get_loginLessSixCharacters_notOk() {
+    void register_shortLogin_notOk() {
 
         user.setLogin("abcde");
         assertThrows(DataNotVaidExeption.class, () -> {
@@ -54,7 +51,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void get_pwdLessSixCharacters_notOk() {
+    void register_shortPassword_notOk() {
 
         user.setPassword("qwert");
         assertThrows(DataNotVaidExeption.class, () -> {
@@ -63,7 +60,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void get_userAgeNotAdult_notOk() {
+    void register_userAgeNotAdult_notOk() {
 
         user.setAge(5);
         assertThrows(DataNotVaidExeption.class, () -> {
@@ -72,7 +69,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void get_userAgeLessZero_notOk() {
+    void register_userAgeLessZero_notOk() {
         user.setAge(-1);
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
@@ -89,7 +86,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void get_userAgeMoreMaxValue_notOk() {
+    void register_userAgeMoreMaxValue_notOk() {
         user.setAge(Integer.MIN_VALUE + 1);
         assertThrows(DataNotVaidExeption.class, () -> {
             registrationService.register(user);
@@ -103,7 +100,7 @@ public class RegistrationServiceImplTest {
         user1.setAge(20);
         user1.setPassword("QWERT666");
         assertThrows(DataNotVaidExeption.class, () -> {
-            Storage.people.add(user1);
+            Storage.PEOPLE.add(user1);
             registrationService.register(user);
         });
     }
