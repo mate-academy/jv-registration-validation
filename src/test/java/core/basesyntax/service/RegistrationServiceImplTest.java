@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "validLogin";
     private static final String SHORT_LOGIN = "log";
+    private static final String EMPTY_STRING = "";
     private static final String VALID_PASSWORD = "validPassword";
     private static final String SHORT_PASSWORD = "pass";
     private static final int VALID_AGE = 22;
@@ -54,6 +55,8 @@ class RegistrationServiceImplTest {
     void register_loginIsShort_NotOk() {
         user.setLogin(SHORT_LOGIN);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setLogin(EMPTY_STRING);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -65,6 +68,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsShort_NotOk() {
         user.setPassword(SHORT_PASSWORD);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setPassword(EMPTY_STRING);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
