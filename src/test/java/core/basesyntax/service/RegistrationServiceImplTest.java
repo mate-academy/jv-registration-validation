@@ -15,8 +15,17 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "ValidLogin";
+    private static final String MIN_LENGTH_VALID = "6chars";
+    private static final String MIN_EDGE_LENGTH_VALID = "7 chars";
+    private static final String MAX_EDGE_LENGTH_INVALID = "5char";
+    private static final String IS_EMPTY = "";
+    private static final String IS_BLANK = "      ";
     private static final String VALID_PASSWORD = "ValidPassword";
     private static final int VALID_AGE = 19;
+    private static final int MIN_VALID_AGE = 18;
+    private static final int MAX_INVALID_AGE = 17;
+    private static final int AGE_IS_ZERO = 0;
+    private static final int AGE_IS_NEGATIVE = -18;
     private static RegistrationService registrationService;
     private static User user;
 
@@ -35,7 +44,7 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        Storage.people.clear();
+        Storage.PEOPLE.clear();
 
     }
 
@@ -49,8 +58,8 @@ class RegistrationServiceImplTest {
     void register_ifLoginIsPresent_NotOk() {
         User user = new User();
         user.setLogin(VALID_LOGIN);
-        user.setPassword("AnyPassword");
-        user.setAge(20);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
         StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
@@ -66,14 +75,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LoginMinValidLength_Ok() {
-        user.setLogin("6chars");
+        user.setLogin(MIN_LENGTH_VALID);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
     void register_LoginMinEdgeValidLength_Ok() {
-        user.setLogin("7 chars");
+        user.setLogin(MIN_EDGE_LENGTH_VALID);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
@@ -87,28 +96,21 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LoginIsEmpty_NotOk() {
-        user.setLogin("");
+        user.setLogin(IS_EMPTY);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Login is empty. The RegistrationException should be thrown");
     }
 
     @Test
     void register_LoginIsBlank_NotOk() {
-        user.setLogin("      ");
+        user.setLogin(IS_BLANK);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Login is blank. The RegistrationException should be thrown");
     }
 
     @Test
-    void register_LoginInvalidLength_NotOk() {
-        user.setLogin("less");
-        assertThrows(RegistrationException.class, () -> registrationService.register(user),
-                "Login has invalid length. The RegistrationException should be thrown");
-    }
-
-    @Test
-    void register_LoginMinEdgeInvalidLength_NotOk() {
-        user.setLogin("five5");
+    void register_LoginMaxEdgeInvalidLength_NotOk() {
+        user.setLogin(MAX_EDGE_LENGTH_INVALID);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Login has invalid length. The RegistrationException should be thrown");
     }
@@ -121,14 +123,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordMinValidLength_Ok() {
-        user.setPassword("Valid6");
+        user.setPassword(MIN_LENGTH_VALID);
         User actual = registrationService.register(user);
         assertEquals(user.getPassword(), actual.getPassword());
     }
 
     @Test
     void register_PasswordMinEdgeValidLength_Ok() {
-        user.setPassword("7 chars");
+        user.setPassword(MIN_EDGE_LENGTH_VALID);
         User actual = registrationService.register(user);
         assertEquals(user.getPassword(), actual.getPassword());
     }
@@ -142,28 +144,21 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordIsEmpty_NotOk() {
-        user.setPassword("");
+        user.setPassword(IS_EMPTY);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Password is empty. The RegistrationException should be thrown");
     }
 
     @Test
     void register_PasswordIsBlank_NotOk() {
-        user.setPassword("      ");
+        user.setPassword(IS_BLANK);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Password is blank. The RegistrationException should be thrown");
     }
 
     @Test
-    void register_PasswordInvalidLength_NotOk() {
-        user.setPassword("less");
-        assertThrows(RegistrationException.class, () -> registrationService.register(user),
-                "Password has invalid length. The RegistrationException should be thrown");
-    }
-
-    @Test
-    void register_PasswordMinEdgeInvalidLength_NotOk() {
-        user.setPassword("five5");
+    void register_PasswordMaxEdgeInvalidLength_NotOk() {
+        user.setPassword(MAX_EDGE_LENGTH_INVALID);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Password has invalid length. The RegistrationException should be thrown");
     }
@@ -176,35 +171,28 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeMinEdgeValid_Ok() {
-        user.setAge(18);
+        user.setAge(MIN_VALID_AGE);
         User actual = registrationService.register(user);
         assertEquals(user.getAge(), actual.getAge());
     }
 
     @Test
-    void register_AgeInvalid_NotOk() {
-        user.setAge(10);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user),
-                "Age is invalid.The RegistrationException should be thrown");
-    }
-
-    @Test
-    void register_AgeMinEdgeInvalid_NotOk() {
-        user.setAge(17);
+    void register_AgeMaxEdgeInvalid_NotOk() {
+        user.setAge(MAX_INVALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Age is invalid.The RegistrationException should be thrown");
     }
 
     @Test
     void register_AgeIsZero_NotOk() {
-        user.setAge(0);
+        user.setAge(AGE_IS_ZERO);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Age is invalid.The RegistrationException should be thrown");
     }
 
     @Test
     void register_AgeIsNegative_NotOk() {
-        user.setAge(-18);
+        user.setAge(AGE_IS_NEGATIVE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Age is invalid.The RegistrationException should be thrown");
     }
