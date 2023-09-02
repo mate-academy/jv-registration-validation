@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,9 +22,13 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private final User user = new User();
 
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
@@ -35,7 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsValid_Ok() throws RegistrationException {
+    void register_userIsValid_Ok() {
         User actual = registrationService.register(user);
         assertEquals(actual, user);
     }
@@ -73,10 +78,6 @@ class RegistrationServiceImplTest {
     void register_ageIsUnderEighteen_NotOk() {
         user.setAge(YOUNGER_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_ageIsNegative_NotOk() {
         user.setAge(NEGATIVE_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
