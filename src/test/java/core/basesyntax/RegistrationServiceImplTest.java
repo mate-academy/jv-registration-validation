@@ -10,15 +10,15 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
-    private StorageDao storageDao;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
         Storage.PEOPLE_LIST.clear();
@@ -131,9 +131,18 @@ public class RegistrationServiceImplTest {
     @Test
     void register_PasswordMin_Ok() {
         User user = new User();
-        user.setLogin("userLogin");
+        user.setLogin("userLogin102");
         user.setPassword("passwo");
         user.setAge(23);
+        assertTrue(registrationService.register(user) != null);
+    }
+
+    @Test
+    void register_AgeMin_Ok() {
+        User user = new User();
+        user.setLogin("user12347");
+        user.setPassword("userPassword101");
+        user.setAge(18);
         assertTrue(registrationService.register(user) != null);
     }
 
@@ -142,7 +151,7 @@ public class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("user12345");
         user.setPassword("userPassword101");
-        user.setAge(18);
+        user.setAge(19);
         assertTrue(registrationService.register(user) != null);
     }
 
