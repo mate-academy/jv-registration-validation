@@ -6,6 +6,8 @@ import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_VALID_LENGTH = 6;
+    private static final int MIN_VALID_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -13,55 +15,43 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
-        addOriginUser(user);
-        return user;
+        return saveUser(user);
     }
 
-    private static void checkLogin(User user) {
-        String exceptionMessage = "User login length should be at least 6 characters.";
+    private void checkLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null.");
         }
-        if (user.getLogin().isEmpty()) {
-            throw new RegistrationException(exceptionMessage);
-        }
-        if (user.getLogin().isBlank()) {
-            throw new RegistrationException(exceptionMessage);
-        }
-        if (user.getLogin().length() < 6) {
-            throw new RegistrationException(exceptionMessage);
+        if (user.getLogin().isBlank() || user.getLogin().length() < 6) {
+            throw new RegistrationException(
+                    "User login should have at least 6 non-whitespace characters");
         }
 
     }
 
-    private static void checkPassword(User user) {
-        String exceptionMessage = "User password length should be at least 6 characters.";
+    private void checkPassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null.");
         }
-        if (user.getPassword().isEmpty()) {
-            throw new RegistrationException(exceptionMessage);
-        }
-        if (user.getPassword().isBlank()) {
-            throw new RegistrationException(exceptionMessage);
-        }
-        if (user.getPassword().length() < 6) {
-            throw new RegistrationException(exceptionMessage);
+        if (user.getPassword().isBlank() || user.getPassword().length() < MIN_VALID_LENGTH) {
+            throw new RegistrationException(
+                    "User password should have at least 6 non-whitespace characters");
         }
     }
 
-    private static void checkAge(User user) {
-        if (user.getAge() < 18) {
+    private void checkAge(User user) {
+        if (user.getAge() < MIN_VALID_AGE) {
             throw new RegistrationException("User age should be 18 or more");
         }
     }
 
-    private void addOriginUser(User user) {
+    private User saveUser(User user) {
         if (storageDao.get(user.getLogin()) == null) {
             storageDao.add(user);
         } else {
-            throw new RegistrationException("User with login \"" + user.getLogin()
-                    + "\" already exists in the storage");
+            throw new RegistrationException(String.format(
+                    "User with login %s already exists in the storage", user.getLogin()));
         }
+        return user;
     }
 }
