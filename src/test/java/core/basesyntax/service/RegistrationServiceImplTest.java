@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -18,7 +19,6 @@ class RegistrationServiceImplTest {
         user.setLogin("GhostVoice");
         user.setPassword("123456");
         user.setAge(19);
-        Storage.PEOPLE.add(user);
     }
 
     @AfterEach
@@ -27,14 +27,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_NotOk() {
-        assertThrows(InvalidInputException.class, () -> registator.register(null));
+    void register_ValidUser_Ok() {
+        User actual = registator.register(user);
+        assertEquals(actual, user);
     }
 
     @Test
     void register_NullAge_NotOk() {
         user.setAge(null);
         assertThrows(InvalidInputException.class, () -> registator.register(user));
+    }
+
+    @Test
+    void register_NullUser_NotOk() {
+        assertThrows(InvalidInputException.class, () -> registator.register(null));
     }
 
     @Test
@@ -70,9 +76,10 @@ class RegistrationServiceImplTest {
     @Test
     void register_LoginAlreadyExists_NotOk() {
         User existingUser = new User();
-        user.setLogin("GhostVoice");
-        user.setPassword("123456");
-        user.setAge(19);
-        assertThrows(InvalidInputException.class, () -> registator.register(user));
+        existingUser.setLogin("GhostVoice");
+        existingUser.setPassword("123456");
+        existingUser.setAge(19);
+        Storage.PEOPLE.add(user);
+        assertThrows(InvalidInputException.class, () -> registator.register(existingUser));
     }
 }

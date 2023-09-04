@@ -9,20 +9,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int REQUIRED_AGE = 18;
     private static final int MINIMUM_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final User user = new User();
 
     @Override
     public User register(User user) {
         if (user == null) {
             throw new InvalidInputException("No data provided");
         }
-        loginValidation();
-        passwordValidation();
-        ageValidation();
+        loginValidation(user);
+        passwordValidation(user);
+        ageValidation(user);
         return storageDao.add(user);
     }
 
-    private void loginValidation() {
+    private void loginValidation(User user) {
         if (user.getLogin() == null) {
             throw new InvalidInputException("Please, fill all the required fields");
         }
@@ -34,7 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void passwordValidation() {
+    private void passwordValidation(User user) {
         if (user.getPassword() == null) {
             throw new InvalidInputException("Please, fill all the required fields");
         }
@@ -43,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void ageValidation() {
+    private void ageValidation(User user) {
         if (user.getAge() == null) {
             throw new InvalidInputException("Please, fill every required field");
         }
