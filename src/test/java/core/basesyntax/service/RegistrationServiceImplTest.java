@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,13 +19,8 @@ class RegistrationServiceImplTest {
     private static final String SHORT_LOGIN = "short";
     private static final Integer DEFAULT_AGE = 25;
     private static final int UNCORRECT_AGE = 4;
-    private static RegistrationServiceImpl registrationService;
+    private static RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private final User user = new User();
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-    }
 
     @BeforeEach
     void setUp() {
@@ -49,72 +43,63 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userIsNull_NotOk() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
+    }
+
+    @Test
     void register_loginIsNull_NotOk() {
         user.setLogin(null);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
-    void register_passwordIsNull_NotOk() {
-        user.setPassword(null);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
+    void register_shortLogin_NotOk() {
+        user.setLogin(SHORT_LOGIN);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
-    }
-
-    @Test
-    void register_ageIsNull_NotOk() {
-        user.setAge(null);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
-        assertFalse(Storage.PEOPLE.contains(user));
-    }
-
-    @Test
-    void register_userIsNull_NotOk() {
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(null));
     }
 
     @Test
     void register_existingLogin_NotOk() {
         user.setLogin(SOME_LOGIN);
         assertEquals(user, registrationService.register(user));
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_shortLogin_NotOk() {
-        user.setLogin(SHORT_LOGIN);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
+    void register_passwordIsNull_NotOk() {
+        user.setPassword(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_shortPassword_NotOk() {
         user.setPassword(SHORT_LOGIN);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertFalse(Storage.PEOPLE.contains(user));
+    }
+
+    @Test
+    void register_ageIsNull_NotOk() {
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_notAdultAge_NotOk() {
         user.setAge(UNCORRECT_AGE);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_negativeAge_NotOk() {
         user.setAge(-UNCORRECT_AGE);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 }
