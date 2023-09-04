@@ -21,8 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         } catch (ValidationException e) {
             throw new RuntimeException(e);
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private User isLoginInStorage(User user) throws ValidationException {
