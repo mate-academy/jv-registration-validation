@@ -1,102 +1,117 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String DEFAULT_PASSWORD = "123456";
     private static final String DEFAULT_LOGIN = "123456";
+    private static final String USER1_LOGIN = "user1Login";
+    private static final String USER2_LOGIN = "user2Login";
+    private static final String SHORT_LOGIN = "short";
     private static final Integer DEFAULT_AGE = 25;
-    private static final List<User> USERS = new ArrayList<>();
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static final int UNCORRECT_AGE = 4;
+    private static RegistrationServiceImpl registrationService;
+    private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
+        user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+    }
 
     @Test
     void register_validUser_Ok() {
-        USERS.add(new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE));
-        registrationService.register(new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test
     void register_twoValidUser_Ok() {
-        User user1 = new User("user1Login", DEFAULT_PASSWORD, DEFAULT_AGE);
-        USERS.add(user1);
-        registrationService.register(user1);
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
-        User user2 = new User("user2Login", DEFAULT_PASSWORD, DEFAULT_AGE);
-        USERS.add(user2);
-        registrationService.register(user2);
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+        User user1 = new User(USER1_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        assertEquals(user1, registrationService.register(user1));
+        User user2 = new User(USER2_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        assertEquals(user2, registrationService.register(user2));
     }
 
     @Test
-    void register_edgeLogin_NotOk() {
+    void register_loginIsNull_NotOk() {
+        user.setLogin(null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(new User(null, DEFAULT_PASSWORD, DEFAULT_AGE)));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+                registrationService.register(user));
+        assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
-    void register_edgePassword_NotOk() {
+    void register_passwordIsNull_NotOk() {
+        user.setPassword(null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(new User(DEFAULT_LOGIN, null, 18)));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+                registrationService.register(user));
+        assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
-    void register_edgeAge_NotOk() {
+    void register_ageIsNull_NotOk() {
+        user.setAge(null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, null)));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+                registrationService.register(user));
+        assertFalse(Storage.PEOPLE.contains(user));
+    }
+
+    @Test
+    void register_userIsNull_NotOk() {
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(null));
     }
 
     @Test
     void register_existingLogin_NotOk() {
-        User user = new User("some login", DEFAULT_PASSWORD, DEFAULT_AGE);
-        USERS.add(user);
-        registrationService.register(user);
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+        user.setLogin("some login");
+        assertEquals(user, registrationService.register(user));
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
     }
 
     @Test
     void register_shortLogin_NotOk() {
-        User user = new User("short", DEFAULT_PASSWORD, DEFAULT_AGE);
+        user.setLogin(SHORT_LOGIN);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+        assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_shortPassword_NotOk() {
-        User user = new User(DEFAULT_LOGIN, "short", DEFAULT_AGE);
+        user.setPassword(SHORT_LOGIN);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+        assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_notAdultAge_NotOk() {
-        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, 4);
+        user.setAge(UNCORRECT_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+        assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_negativeAge_NotOk() {
-        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, -4);
+        user.setAge(-UNCORRECT_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertEquals(USERS.size(), Storage.PEOPLE.size());
+        assertFalse(Storage.PEOPLE.contains(user));
     }
 }
