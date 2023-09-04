@@ -14,13 +14,14 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String DEFAULT_PASSWORD = "123456";
     private static final String DEFAULT_LOGIN = "123456";
+    private static final String SOME_LOGIN = "some login";
     private static final String USER1_LOGIN = "user1Login";
     private static final String USER2_LOGIN = "user2Login";
     private static final String SHORT_LOGIN = "short";
     private static final Integer DEFAULT_AGE = 25;
     private static final int UNCORRECT_AGE = 4;
     private static RegistrationServiceImpl registrationService;
-    private User user;
+    private final User user = new User();
 
     @BeforeAll
     static void beforeAll() {
@@ -29,7 +30,9 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(DEFAULT_PASSWORD);
+        user.setAge(DEFAULT_AGE);
     }
 
     @Test
@@ -77,7 +80,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingLogin_NotOk() {
-        user.setLogin("some login");
+        user.setLogin(SOME_LOGIN);
         assertEquals(user, registrationService.register(user));
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
