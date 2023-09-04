@@ -20,6 +20,7 @@ class RegistrationServiceImplTest {
     private static final int YOUNGER_AGE = 17;
     private static final int NEGATIVE_AGE = -20;
     private static final String NULL_VALUE = null;
+    private static final Integer NULL_AGE_VALUE = null;
     private static RegistrationService registrationService;
     private final User user = new User();
 
@@ -89,7 +90,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageIsNull_NotOk() {
-        user.setAge(null);
+        user.setAge(NULL_AGE_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
