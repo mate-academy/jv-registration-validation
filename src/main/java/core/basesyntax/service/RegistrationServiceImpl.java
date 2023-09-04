@@ -22,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private void checkPassword(String password){
+    private void checkPassword(String password) {
         if (password == null) {
             throw new RegistrationException("Password can't be null!");
         }
@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkLogin(String login){
+    private void checkLogin(String login) {
         if (login == null) {
             throw new RegistrationException("Login can't be null!");
         }
@@ -40,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkAge(Integer age){
+    private void checkAge(Integer age) {
         if (age == null) {
             throw new RegistrationException("Age can't be null!");
         }
