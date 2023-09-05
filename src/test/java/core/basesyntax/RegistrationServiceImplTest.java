@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private RegistrationService registrationService;
-    //private Storage storage;
 
     @BeforeEach
     void setUp() {
