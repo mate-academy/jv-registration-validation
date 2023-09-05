@@ -22,11 +22,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null.");
         }
-        if (user.getLogin().isBlank() || user.getLogin().length() < 6) {
+        if (user.getLogin().isBlank() || user.getLogin().length() < MIN_VALID_LENGTH) {
             throw new RegistrationException(
-                    "User login should have at least 6 non-whitespace characters");
+                    "User password should have at least " + MIN_VALID_LENGTH
+                            + "non-whitespace characters");
         }
-
     }
 
     private void checkPassword(User user) {
@@ -35,13 +35,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword().isBlank() || user.getPassword().length() < MIN_VALID_LENGTH) {
             throw new RegistrationException(
-                    "User password should have at least 6 non-whitespace characters");
+                    "User password should have at least " + MIN_VALID_LENGTH
+                            + "non-whitespace characters");
         }
     }
 
     private void checkAge(User user) {
         if (user.getAge() < MIN_VALID_AGE) {
-            throw new RegistrationException("User age should be 18 or more");
+            throw new RegistrationException("User age should be " + MIN_VALID_AGE + "or more");
         }
     }
 
