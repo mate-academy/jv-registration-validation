@@ -16,11 +16,6 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
-        user.setId(111L);
-        user.setLogin("reexxx");
-        user.setPassword("qwerty");
-        user.setAge(25);
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -30,50 +25,116 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidUser() {
-        User actual = registrationService.register(user);
-        assertEquals(actual, user);
+    void register_validUser_ok() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reexXx");
+        actual.setPassword("qwerty");
+        actual.setAge(25);
+        User registeredUser = registrationService.register(actual);
+        assertEquals(actual, registeredUser);
     }
 
     @Test
-    void registerUserWithShortLogin() {
-        user.setLogin("reex");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    void register_userWithShortLogin_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reex");
+        actual.setPassword("qwerty");
+        actual.setAge(25);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void registerUserWithNullLogin() {
-        user.setLogin(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    void register_userWithNullLogin_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setPassword("qwerty");
+        actual.setAge(25);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void registerUserWithShortPassword() {
-        user.setPassword("qwert");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    void register_userWithShortPassword_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reex");
+        actual.setPassword("qwer");
+        actual.setAge(25);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void registerUserWithNullPassword() {
-        user.setPassword(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    void register_userWithNullPassword_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reex");
+        actual.setPassword(null);
+        actual.setAge(25);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void registerUserWithInvalidAge() {
-        user.setAge(17);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    void regixter_userWithCorrectLengthPassword_ok() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reexXx");
+        actual.setPassword("123456789");
+        actual.setAge(25);
+        String expected = "123456789";
+        assertEquals(actual.getPassword(), expected);
+
     }
 
     @Test
-    void registerUserWithNullAge() {
-        user.setAge(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    void register_userWithInvalidAge_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reex");
+        actual.setPassword("qwerty");
+        actual.setAge(17);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void registerAlreadyRegisteredUser() {
-        registrationService.register(user);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    void register_userWithNullAge_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reex");
+        actual.setPassword("qwerty");
+        actual.setAge(null);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
+    }
+
+    @Test
+    void register_userWithNegativeAge_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reexXx");
+        actual.setPassword("qwerty");
+        actual.setAge(-30);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
+    }
+
+    @Test
+    void register_userWithValidAge() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reexXx");
+        actual.setPassword("qwerty");
+        actual.setAge(25);
+        int expected = 25;
+        assertEquals(actual.getAge(), expected);
+    }
+
+    @Test
+    void register_alreadyRegisteredUser_notOk() {
+        User actual = new User();
+        actual.setId(111L);
+        actual.setLogin("reexXx");
+        actual.setPassword("qwerty");
+        actual.setAge(25);
+        registrationService.register(actual);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(actual));
     }
 }

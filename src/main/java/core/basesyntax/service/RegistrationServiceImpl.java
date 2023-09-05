@@ -12,32 +12,45 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        alreadyRegisteredValidator(user);
-        loginAndPasswordsValidator(user);
-        ageValidator(user);
+        checkUserRegistration(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void alreadyRegisteredValidator(User user) {
+    private void checkUserRegistration(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("User with current login is already registered");
         }
     }
 
-    private void loginAndPasswordsValidator(User user) {
-        if (user.getLogin() == null || user.getLogin().length() < MIN_VALID_LENGTH) {
-            throw new InvalidDataException("Incorrect login. Length should be at least "
-                    + MIN_VALID_LENGTH);
+    private void validateLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new InvalidDataException("Login must be filled");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_VALID_LENGTH) {
-            throw new InvalidDataException("Incorrect password. Length should be at least "
-                    + MIN_VALID_LENGTH);
+        if (user.getLogin().length() < MIN_VALID_LENGTH) {
+            throw new InvalidDataException(
+                    String.format("Incorrect login. It should be at least %d symbols in you login",
+                            MIN_VALID_LENGTH));
         }
     }
 
-    private void ageValidator(User user) {
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new InvalidDataException("Password must be filled");
+        }
+        if (user.getPassword().length() < MIN_VALID_LENGTH) {
+            throw new InvalidDataException(
+                    String.format("Incorrect password. It should be at least %d symbols in you password",
+                            MIN_VALID_LENGTH));
+        }
+    }
+
+    private void validateAge(User user) {
         if (user.getAge() == null || user.getAge() < MINIMAL_AGE) {
-            throw new InvalidDataException("Your age should been at least " + MINIMAL_AGE);
+            throw new InvalidDataException(
+                    String.format("Your should be at least %d years old", MINIMAL_AGE));
         }
     }
 }
