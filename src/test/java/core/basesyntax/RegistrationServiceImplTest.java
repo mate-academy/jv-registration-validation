@@ -83,7 +83,8 @@ public class RegistrationServiceImplTest {
         invalidUserByAge.setLogin(SECOND_VALID_LOGIN);
         invalidUserByAge.setPassword(VALID_PASSWORD);
         invalidUserByAge.setId(id++);
-        assertThrows(ValidationException.class,() -> registrationService.register(invalidUserByAge));
+        assertThrows(ValidationException.class,() -> registrationService
+                .register(invalidUserByAge));
     }
 
     @Test
