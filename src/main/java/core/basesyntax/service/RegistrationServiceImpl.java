@@ -12,6 +12,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws UserInvalidDataException {
+        nullChecking(user);
+        userMeetsCriteriaCheck(user);
+        return storageDao.add(user);
+    }
+
+    private void nullChecking(User user) throws UserInvalidDataException {
         if (Objects.isNull(user)) {
             throw new UserInvalidDataException("User data can't be null");
         }
@@ -24,6 +30,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new UserInvalidDataException("User password can't be null");
         }
+    }
+
+    private void userMeetsCriteriaCheck(User user) throws UserInvalidDataException {
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserInvalidDataException("User with this login already exist "
                     + user.getLogin());
@@ -40,6 +49,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserInvalidDataException("User age must be at least 18, but was: "
                     + user.getAge());
         }
-        return storageDao.add(user);
     }
 }
