@@ -13,44 +13,42 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         checkUserDataNull(user);
-        checkLengthOfData(user);
-        checkIsUserAdult(user);
-        isLoginInStorage(user);
+        verifyCorrectCredentials(user);
+        verifyAdultUser(user);
+        verifyLoginNotUsed(user);
         return storageDao.add(user);
     }
 
-    private User isLoginInStorage(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new ValidationException("User with this login name already exist");
-        }
-        return user;
-    }
-
-    private User checkIsUserAdult(User user) {
-        if (user.getAge() < MINIMAL_AGE) {
-            throw new ValidationException("Age must equals or more than "
-                    + MINIMAL_AGE);
-        }
-        return user;
-    }
-
-    private User checkLengthOfData(User user) {
-        if (user.getLogin().length() < MINIMAL_LENGTH) {
-            throw new ValidationException("Login length must be more than " + MINIMAL_LENGTH);
-        }
-        if (user.getPassword().length() < MINIMAL_LENGTH) {
-            throw new ValidationException("Password length must be more than " + MINIMAL_LENGTH);
-        }
-        return user;
-    }
-
-    private User checkUserDataNull(User user) {
+    private void checkUserDataNull(User user) {
         if (user.getLogin() == null) {
             throw new ValidationException("No login found");
         }
         if (user.getPassword() == null) {
             throw new ValidationException("No password found");
         }
-        return user;
+    }
+
+    private void verifyCorrectCredentials(User user) {
+        if (user.getLogin().length() < MINIMAL_LENGTH) {
+            throw new ValidationException(String.format("Login length must "
+                    + "be more than %d",MINIMAL_LENGTH));
+        }
+        if (user.getPassword().length() < MINIMAL_LENGTH) {
+            throw new ValidationException(String.format("Password length must "
+                    + "be more than %d",MINIMAL_LENGTH));
+        }
+    }
+
+    private void verifyLoginNotUsed(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new ValidationException("User with this login name already exist");
+        }
+    }
+
+    private void verifyAdultUser(User user) {
+        if (user.getAge() < MINIMAL_AGE) {
+            throw new ValidationException(String.format("Age must be equal to or "
+                    + "greater than %d", MINIMAL_AGE));
+        }
     }
 }
