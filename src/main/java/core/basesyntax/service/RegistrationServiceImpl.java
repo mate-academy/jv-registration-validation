@@ -42,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword().length() < MIN_VALID_LENGTH) {
             throw new InvalidDataException(
-                    String.format("Incorrect password. It should be at least %d symbols in you password",
+                    String.format("It should be at least %d symbols in you password",
                             MIN_VALID_LENGTH));
         }
     }
