@@ -15,42 +15,45 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidInputException("No data provided");
         }
-        loginValidation(user);
-        passwordValidation(user);
-        ageValidation(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void loginValidation(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
-            throw new InvalidInputException("Please, fill all the required fields");
+            throw new InvalidInputException("Login is required to fill");
         }
         if (user.getLogin().length() < MINIMUM_LENGTH) {
-            throw new InvalidInputException("Your login should be at least"
-                    + MINIMUM_LENGTH + "characters long");
+            throw new InvalidInputException(
+                    String.format(
+                            "Your login should be at least %d characters long", MINIMUM_LENGTH));
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidInputException("User already exists");
         }
     }
 
-    private void passwordValidation(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
-            throw new InvalidInputException("Please, fill all the required fields");
+            throw new InvalidInputException("Password is required to fill");
         }
         if (user.getPassword().length() < MINIMUM_LENGTH) {
-            throw new InvalidInputException("Your password should be at least"
-                    + MINIMUM_LENGTH + "characters long");
+            throw new InvalidInputException(
+                    String.format(
+                            "Your password should be at least %d characters long", MINIMUM_LENGTH));
         }
     }
 
-    private void ageValidation(User user) {
+    private void validateAge(User user) {
         if (user.getAge() == null) {
-            throw new InvalidInputException("Please, fill every required field");
+            throw new InvalidInputException("Age is required to fill");
         }
         if (user.getAge() < REQUIRED_AGE) {
-            throw new InvalidInputException("You should be at least"
-                    + REQUIRED_AGE + "years old to register");
+            throw new InvalidInputException(
+                    String.format(
+                            "You should be at least %d years old to login", REQUIRED_AGE));
         }
     }
 }
