@@ -26,7 +26,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputException("Please, fill all the required fields");
         }
         if (user.getLogin().length() < MINIMUM_LENGTH) {
-            throw new InvalidInputException("Your login should be at least 6 characters long");
+            throw new InvalidInputException("Your login should be at least"
+                    + MINIMUM_LENGTH + "characters long");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidInputException("User already exists");
@@ -38,7 +39,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputException("Please, fill all the required fields");
         }
         if (user.getPassword().length() < MINIMUM_LENGTH) {
-            throw new InvalidInputException("Your password should be at least 6 characters long");
+            throw new InvalidInputException("Your password should be at least"
+                    + MINIMUM_LENGTH + "characters long");
         }
     }
 
@@ -47,7 +49,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidInputException("Please, fill every required field");
         }
         if (user.getAge() < REQUIRED_AGE) {
-            throw new InvalidInputException("You should be at least 18 years old to register");
+            throw new InvalidInputException("You should be at least"
+                    + REQUIRED_AGE + "years old to register");
         }
     }
 }
