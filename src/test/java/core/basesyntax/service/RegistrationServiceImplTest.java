@@ -7,38 +7,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String DEFAULT_PASSWORD = "123456";
-    private static final String DEFAULT_LOGIN = "123456";
-    private static final String SOME_LOGIN = "some login";
-    private static final String USER1_LOGIN = "user1Login";
-    private static final String USER2_LOGIN = "user2Login";
-    private static final String SHORT_LOGIN = "short";
-    private static final Integer DEFAULT_AGE = 25;
-    private static final int UNCORRECT_AGE = 4;
-    private static RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private final User user = new User();
-
-    @BeforeEach
-    void setUp() {
-        user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(DEFAULT_PASSWORD);
-        user.setAge(DEFAULT_AGE);
-    }
+    private final String defaultPassword = "123456";
+    private final String defaultLogin = "123456";
+    private final Integer defaultAge = 25;
+    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
 
     @Test
     void register_validUser_Ok() {
+        User user = new User("validUser", defaultPassword, defaultAge);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
     void register_twoValidUser_Ok() {
-        User user1 = new User(USER1_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User user1 = new User("user1login", defaultPassword, defaultAge);
         assertEquals(user1, registrationService.register(user1));
-        User user2 = new User(USER2_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User user2 = new User("user2login", defaultPassword, defaultAge);
         assertEquals(user2, registrationService.register(user2));
     }
 
@@ -49,56 +36,56 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsNull_NotOk() {
-        user.setLogin(null);
+        User user = new User(null, defaultPassword, defaultAge);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_shortLogin_NotOk() {
-        user.setLogin(SHORT_LOGIN);
+        User user = new User("short", defaultLogin, defaultAge);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_existingLogin_NotOk() {
-        user.setLogin(SOME_LOGIN);
+        User user = new User("existingLogin", defaultPassword, defaultAge);
         assertEquals(user, registrationService.register(user));
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordIsNull_NotOk() {
-        user.setPassword(null);
+        User user = new User(defaultLogin, null, defaultAge);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_shortPassword_NotOk() {
-        user.setPassword(SHORT_LOGIN);
+        User user = new User(defaultLogin, "short", defaultAge);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_ageIsNull_NotOk() {
-        user.setAge(null);
+        User user = new User(defaultLogin, defaultPassword, null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_notAdultAge_NotOk() {
-        user.setAge(UNCORRECT_AGE);
+        User user = new User(defaultLogin, defaultPassword, 4);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_negativeAge_NotOk() {
-        user.setAge(-UNCORRECT_AGE);
+        User user = new User(defaultLogin, defaultPassword, -4);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
