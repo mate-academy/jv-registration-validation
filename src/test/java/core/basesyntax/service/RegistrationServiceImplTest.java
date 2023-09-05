@@ -7,8 +7,6 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidInputException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -20,19 +18,6 @@ class RegistrationServiceImplTest {
     private static final int YOUNG_AGE = 12;
 
     private RegistrationService registrator = new RegistrationServiceImpl();
-    private User user = new User();
-
-    @BeforeAll
-    static void beforeAll() {
-
-    }
-
-    @BeforeEach
-    void setUpDefaultUser() {
-        user.setLogin(CORRECT_LOGIN);
-        user.setPassword(CORRECT_PASSWORD);
-        user.setAge(CORRECT_AGE);
-    }
 
     @AfterEach
     void tearDown() {
@@ -41,14 +26,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ValidUser_Ok() {
-        User actual = registrator.register(user);
-        assertEquals(actual, user);
+        User userToRegister = new User();
+        userToRegister.setLogin(CORRECT_LOGIN);
+        userToRegister.setPassword(CORRECT_PASSWORD);
+        userToRegister.setAge(CORRECT_AGE);
+        User registeredUser = registrator.register(userToRegister);
+        assertEquals(userToRegister, registeredUser);
     }
 
     @Test
     void register_NullAge_NotOk() {
-        user.setAge(null);
-        assertThrows(InvalidInputException.class, () -> registrator.register(user));
+        User userToRegister = new User();
+        userToRegister.setLogin(CORRECT_LOGIN);
+        userToRegister.setPassword(CORRECT_PASSWORD);
+        assertThrows(InvalidInputException.class, () -> registrator.register(userToRegister));
     }
 
     @Test
@@ -58,37 +49,54 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NullLogin_NotOk() {
-        user.setLogin(null);
-        assertThrows(InvalidInputException.class, () -> registrator.register(user));
+        User userToRegister = new User();
+        userToRegister.setPassword(CORRECT_PASSWORD);
+        userToRegister.setAge(CORRECT_AGE);
+        assertThrows(InvalidInputException.class, () -> registrator.register(userToRegister));
     }
 
     @Test
     void register_NullPassword_NotOk() {
-        user.setPassword(null);
-        assertThrows(InvalidInputException.class, () -> registrator.register(user));
+        User userToRegister = new User();
+        userToRegister.setLogin(CORRECT_LOGIN);
+        userToRegister.setAge(CORRECT_AGE);
+        assertThrows(InvalidInputException.class, () -> registrator.register(userToRegister));
     }
 
     @Test
     void register_ShortLogin_NotOk() {
-        user.setLogin(SHORT_LOGIN);
-        assertThrows(InvalidInputException.class, () -> registrator.register(user));
+        User userToRegister = new User();
+        userToRegister.setLogin(SHORT_LOGIN);
+        userToRegister.setPassword(CORRECT_PASSWORD);
+        userToRegister.setAge(CORRECT_AGE);
+        assertThrows(InvalidInputException.class, () -> registrator.register(userToRegister));
     }
 
     @Test
     void register_ShortPassword_NotOk() {
-        user.setPassword(SHORT_PASSWORD);
-        assertThrows(InvalidInputException.class, () -> registrator.register(user));
+        User userToRegister = new User();
+        userToRegister.setLogin(SHORT_LOGIN);
+        userToRegister.setPassword(SHORT_PASSWORD);
+        userToRegister.setAge(CORRECT_AGE);
+        assertThrows(InvalidInputException.class, () -> registrator.register(userToRegister));
     }
 
     @Test
     void register_YoungAge_NotOk() {
-        user.setAge(YOUNG_AGE);
-        assertThrows(InvalidInputException.class, () -> registrator.register(user));
+        User userToRegister = new User();
+        userToRegister.setLogin(SHORT_LOGIN);
+        userToRegister.setPassword(SHORT_PASSWORD);
+        userToRegister.setAge(YOUNG_AGE);
+        assertThrows(InvalidInputException.class, () -> registrator.register(userToRegister));
     }
 
     @Test
     void register_LoginAlreadyExists_NotOk() {
-        Storage.PEOPLE.add(user);
-        assertThrows(InvalidInputException.class, () -> registrator.register(user));
+        User userToRegister = new User();
+        userToRegister.setLogin(CORRECT_LOGIN);
+        userToRegister.setPassword(CORRECT_PASSWORD);
+        userToRegister.setAge(CORRECT_AGE);
+        Storage.PEOPLE.add(userToRegister);
+        assertThrows(InvalidInputException.class, () -> registrator.register(userToRegister));
     }
 }
