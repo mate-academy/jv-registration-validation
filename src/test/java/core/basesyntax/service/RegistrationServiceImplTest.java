@@ -43,25 +43,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nllUser_throwsException() {
+    void register_nullUser_throwsException() {
         user = null;
         assertThrows(NullPointerException.class, () -> regService.register(user));
     }
 
     @Test
-    void register_nllLogin_throwsException() {
+    void register_nullLogin_throwsException() {
         user.setLogin(null);
         assertThrows(NullPointerException.class, () -> regService.register(user));
     }
 
     @Test
-    void register_nllAge_throwsException() {
+    void register_nullAge_throwsException() {
         user.setAge(null);
         assertThrows(NullPointerException.class, () -> regService.register(user));
     }
 
     @Test
-    void register_nllPassword_throwsException() {
+    void register_nullPassword_throwsException() {
         user.setPassword(null);
         assertThrows(NullPointerException.class, () -> regService.register(user));
     }
