@@ -1,13 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private static final String NULL_STRING = null;
@@ -24,7 +25,6 @@ class RegistrationServiceImplTest {
     private static final int INCORRECT_AGE = 17;
     private static RegistrationService registrationService;
 
-
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        Storage.people.clear();
+        Storage.PEOPLE.clear();
     }
 
     @Test
@@ -91,15 +91,15 @@ class RegistrationServiceImplTest {
         User user = new User(CORRECT_LOGIN, CORRECT_PASSWORD, CORRECT_AGE);
         User actual = registrationService.register(user);
         assertEquals(actual.getId(), 1L);
-        assertEquals(Storage.people.size(), 1);
+        assertEquals(Storage.PEOPLE.size(), 1);
     }
 
     @Test
     void register_existingUser_notOk() {
         User existerUser = new User(CORRECT_LOGIN, CORRECT_PASSWORD, CORRECT_AGE);
-        Storage.people.add(existerUser);
+        Storage.PEOPLE.add(existerUser);
         User newUser = new User(CORRECT_LOGIN, CORRECT_PASSWORD, CORRECT_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
-        assertEquals(Storage.people.size(), 1);
+        assertEquals(Storage.PEOPLE.size(), 1);
     }
 }
