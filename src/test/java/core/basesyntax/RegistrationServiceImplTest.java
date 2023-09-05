@@ -34,7 +34,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void userRegistration_Ok() {
+    void register_validUser_Ok() {
         User validUser = new User();
         validUser.setId(id);
         validUser.setPassword(validPassword);
@@ -44,7 +44,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void sizeStorageWithTwoCorrectUsers_Ok() {
+    void register_twoValidUsers_Ok() {
         User validUser = new User();
         validUser.setId(id);
         validUser.setPassword(validPassword);
@@ -61,23 +61,12 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void getUserByID_Ok() {
-        User validUser = new User();
-        validUser.setId(id);
-        validUser.setPassword(validPassword);
-        validUser.setLogin(firstValidLogin);
-        validUser.setAge(validAge);
-        registrationService.register(validUser);
-        Assertions.assertEquals(validUser,Storage.PEOPLE.get(0));
-    }
-
-    @Test
-    void checkUserIsNull_NotOk() {
+    void register_userIsNull_NotOk() {
         assertThrows(RuntimeException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void checkIsUserLoginLength_notOk() {
+    void register_shortLogin_notOk() {
         User invalidUserByLoginLength = new User();
         invalidUserByLoginLength.setAge(19);
         invalidUserByLoginLength.setLogin(invalidLogin);
