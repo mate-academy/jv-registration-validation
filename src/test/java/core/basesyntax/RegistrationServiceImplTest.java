@@ -9,6 +9,7 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -63,6 +64,12 @@ public class RegistrationServiceImplTest {
         invalidUserByLoginLength.setId(id++);
         assertThrows(ValidationException.class,() -> registrationService
                 .register(invalidUserByLoginLength));
+    }
+
+    @Test
+    void getUserByID_Ok() {
+        registrationService.register(validUser);
+        Assertions.assertEquals(validUser,Storage.PEOPLE.get(0));
     }
 
     @Test
