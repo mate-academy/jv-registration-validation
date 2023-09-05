@@ -27,9 +27,27 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_validUser_ok() {
+        User userToRegistrate = new User("goodLogin", "goodPassword", 20);
+        User registeredUser = registrationService.register(userToRegistrate);
+        assertEquals(1, Storage.PEOPLE.size(), "User should be added to storage");
+        assertEquals(userToRegistrate, registeredUser);
+    }
+
+    @Test
     void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
         assertEquals(0, Storage.PEOPLE.size());
+    }
+
+    @Test
+    void register_existingUsersLogin_notOk() {
+        User user = new User("goodLogin", "goodPassword", 20);
+        Storage.PEOPLE.add(user);
+        User userToRegistrate = new User("goodLogin", "123456", 21);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(userToRegistrate));
+        assertEquals(1, Storage.PEOPLE.size(), "User shouldn't be added to storage");
     }
 
     @Test
@@ -80,23 +98,5 @@ public class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user2));
         assertThrows(RegistrationException.class, () -> registrationService.register(user3));
         assertEquals(0, Storage.PEOPLE.size());
-    }
-
-    @Test
-    void register_existingUsersLogin_notOk() {
-        User user = new User("goodLogin", "goodPassword", 20);
-        Storage.PEOPLE.add(user);
-        User userToRegistrate = new User("goodLogin", "123456", 21);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(userToRegistrate));
-        assertEquals(1, Storage.PEOPLE.size(), "User shouldn't be added to storage");
-    }
-
-    @Test
-    void register_validUser_ok() {
-        User userToRegistrate = new User("goodLogin", "goodPassword", 20);
-        User registeredUser = registrationService.register(userToRegistrate);
-        assertEquals(1, Storage.PEOPLE.size(), "User should be added to storage");
-        assertEquals(userToRegistrate, registeredUser);
     }
 }
