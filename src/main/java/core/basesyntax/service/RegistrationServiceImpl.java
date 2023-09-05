@@ -41,10 +41,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                     "password expected longer than: %d, but was: %d"
                             .formatted(MIN_LENGTH, password.length()));
         }
-        if (!password.trim().equals(password)) {
-            throw new RegistrationException(
-                    "password should be without whitespaces arround");
-        }
     }
 
     private void validateLogin(String login) {
@@ -55,9 +51,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException(
                     "login expected longer than: %d, but was: %d"
                             .formatted(MIN_LENGTH, login.length()));
-        }
-        if (!login.trim().equals(login)) {
-            throw new RegistrationException("login should be without whitespaces arround");
         }
         if (storageDao.get(login) != null) {
             throw new RegistrationException(

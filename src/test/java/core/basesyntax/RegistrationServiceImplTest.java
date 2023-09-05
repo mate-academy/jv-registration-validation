@@ -43,10 +43,8 @@ public class RegistrationServiceImplTest {
     void register_invalidLoginLength_notOk() {
         User user1 = new User("bad", "goodPassword", 20);
         User user2 = new User("", "goodPassword", 20);
-        User user3 = new User("    NotCorrectLogin     ", "goodPassword", 20);
         assertThrows(RegistrationException.class, () -> registrationService.register(user1));
         assertThrows(RegistrationException.class, () -> registrationService.register(user2));
-        assertThrows(RegistrationException.class, () -> registrationService.register(user3));
         assertEquals(0, Storage.PEOPLE.size());
     }
 
@@ -61,10 +59,8 @@ public class RegistrationServiceImplTest {
     void register_invalidPasswordLength_notOk() {
         User user1 = new User("goodLogin", "passw", 20);
         User user2 = new User("goodLogin", "", 20);
-        User user3 = new User("goodLogin", "    NotCorrectPassword     ", 20);
         assertThrows(RegistrationException.class, () -> registrationService.register(user1));
         assertThrows(RegistrationException.class, () -> registrationService.register(user2));
-        assertThrows(RegistrationException.class, () -> registrationService.register(user3));
         assertEquals(0, Storage.PEOPLE.size());
     }
 
