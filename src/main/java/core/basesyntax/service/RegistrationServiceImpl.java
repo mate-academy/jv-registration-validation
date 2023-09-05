@@ -6,6 +6,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MINIMUM_AGE = 18;
+    private static final int MINIMUM_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -26,8 +28,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new RegistrationException("Password can't be null!");
         }
-        if (password.length() < 6) {
-            throw new RegistrationException("Password must be at least 6 characters long!");
+        if (password.length() < MINIMUM_LENGTH) {
+            throw new RegistrationException("Password must be at least "
+                    + MINIMUM_LENGTH
+                    + " characters long!");
         }
     }
 
@@ -35,8 +39,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new RegistrationException("Login can't be null!");
         }
-        if (login.length() < 6) {
-            throw new RegistrationException("Login must be at least 6 characters long!");
+        if (login.length() < MINIMUM_LENGTH) {
+            throw new RegistrationException("Login must be at least "
+                    + MINIMUM_LENGTH
+                    + "characters long!");
         }
     }
 
@@ -44,8 +50,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new RegistrationException("Age can't be null!");
         }
-        if (age < 18) {
-            throw new RegistrationException("User must be at least 18 years old!");
+        if (age < MINIMUM_AGE) {
+            throw new RegistrationException("User must be at least "
+                    + MINIMUM_AGE
+                    + " years old!");
         }
     }
 }
