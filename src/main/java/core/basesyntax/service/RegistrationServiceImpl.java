@@ -13,27 +13,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        try {
-            checkUserDataNull(user);
-            checkLengthOfData(user);
-            checkIsUserAdult(user);
-            isLoginInStorage(user);
-        } catch (ValidationException e) {
-            throw new RuntimeException(e);
-        }
+        checkUserDataNull(user);
+        checkLengthOfData(user);
+        checkIsUserAdult(user);
+        isLoginInStorage(user);
         return storageDao.add(user);
     }
 
-    private User isLoginInStorage(User user) throws ValidationException {
-        for (User userInStorage:Storage.PEOPLE) {
-            if (userInStorage.getLogin().equals(user.getLogin())) {
-                throw new ValidationException("User with this login name already exist");
-            }
+    private User isLoginInStorage(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new ValidationException("User with this login name already exist");
         }
         return user;
     }
 
-    private User checkIsUserAdult(User user) throws ValidationException {
+    private User checkIsUserAdult(User user) {
         if (user.getAge() < MINIMAL_AGE) {
             throw new ValidationException("Age must equals or more than "
                     + MINIMAL_AGE);
@@ -41,17 +35,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    private User checkLengthOfData(User user) throws ValidationException {
+    private User checkLengthOfData(User user) {
         if (user.getLogin().length() < MINIMAL_LENGTH) {
-            throw new ValidationException("Login length must be more than 6");
+            throw new ValidationException("Login length must be more than " + MINIMAL_LENGTH);
         }
         if (user.getPassword().length() < MINIMAL_LENGTH) {
-            throw new ValidationException("Password length must be more than 6");
+            throw new ValidationException("Password length must be more than " + MINIMAL_LENGTH);
         }
         return user;
     }
 
-    private User checkUserDataNull(User user) throws ValidationException {
+    private User checkUserDataNull(User user) {
         if (user.getLogin() == null) {
             throw new ValidationException("No login found");
         }
