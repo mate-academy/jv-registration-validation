@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-
 import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -17,7 +16,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         Objects.requireNonNull(user);
 
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegisterException("User with " + user.getLogin() + " as a login already exist");
+            throw new RegisterException("User with " + user.getLogin()
+                    + " as a login already exist");
         }
 
         if (user.getLogin().length() < VALID_LOGIN_LENGTH) {
@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                             + user.getPassword().length());
         }
 
-        if(user.getAge().compareTo(VALID_AGE) < 0) {
+        if (user.getAge().compareTo(VALID_AGE) < 0) {
             throw new RegisterException(
                     "The age must have at least " + VALID_AGE
                             + " years old, but yours is : "

@@ -1,16 +1,19 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "ValidLogin";
-    public static final int VALID_AGE = 20;
-    public static final String VALID_PASSWORD = "12345678";
-
+    private static final String VALID_PASSWORD = "12345678";
+    private static final int VALID_AGE = 20;
 
     private static RegistrationServiceImpl regService;
     private User user;
@@ -30,7 +33,7 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        Storage.people.clear();
+        Storage.PEOPLE.clear();
     }
 
     @Test
