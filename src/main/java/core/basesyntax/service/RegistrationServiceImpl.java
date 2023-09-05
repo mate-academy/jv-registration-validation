@@ -12,19 +12,19 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        alreadyRegisteredValidation(user);
-        loginAndPasswordsValidation(user);
-        ageValidation(user);
+        alreadyRegisteredValidator(user);
+        loginAndPasswordsValidator(user);
+        ageValidator(user);
         return storageDao.add(user);
     }
 
-    private void alreadyRegisteredValidation(User user) {
+    private void alreadyRegisteredValidator(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("User with current login is already registered");
         }
     }
 
-    private void loginAndPasswordsValidation(User user) {
+    private void loginAndPasswordsValidator(User user) {
         if (user.getLogin() == null || user.getLogin().length() < MIN_VALID_LENGTH) {
             throw new InvalidDataException("Incorrect login. Length should be at least "
                     + MIN_VALID_LENGTH);
@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void ageValidation(User user) {
+    private void ageValidator(User user) {
         if (user.getAge() == null || user.getAge() < MINIMAL_AGE) {
             throw new InvalidDataException("Your age should been at least " + MINIMAL_AGE);
         }

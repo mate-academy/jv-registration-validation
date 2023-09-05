@@ -30,49 +30,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidUser_Ok() {
+    void registerValidUser() {
         User actual = registrationService.register(user);
         assertEquals(actual, user);
     }
 
     @Test
-    void register_UserWithShortLogin_NotOk() {
+    void registerUserWithShortLogin() {
         user.setLogin("reex");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UserWithNullLogin_NotOk() {
+    void registerUserWithNullLogin() {
         user.setLogin(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UserWithShortPassword_NotOk() {
+    void registerUserWithShortPassword() {
         user.setPassword("qwert");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UserWithNullPassword_NotOk() {
+    void registerUserWithNullPassword() {
         user.setPassword(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UserWithInvalidAge_NotOk() {
+    void registerUserWithInvalidAge() {
         user.setAge(17);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UserWithNullAge_NotOk() {
+    void registerUserWithNullAge() {
         user.setAge(null);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_AlreadyRegisteredUser_NotOk() {
+    void registerAlreadyRegisteredUser() {
         registrationService.register(user);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
