@@ -26,10 +26,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void loginAndPasswordsValidation(User user) {
         if (user.getLogin() == null || user.getLogin().length() < MIN_VALID_LENGTH) {
-            throw new InvalidDataException("Incorrect login. Length should be at least " + MIN_VALID_LENGTH);
+            throw new InvalidDataException("Incorrect login. Length should be at least "
+                    + MIN_VALID_LENGTH);
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_VALID_LENGTH) {
-            throw new InvalidDataException("Incorrect password. Length should be at least " + MIN_VALID_LENGTH);
+            throw new InvalidDataException("Incorrect password. Length should be at least "
+                    + MIN_VALID_LENGTH);
         }
     }
 

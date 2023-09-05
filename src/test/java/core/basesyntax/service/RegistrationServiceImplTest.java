@@ -11,8 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    RegistrationService registrationService;
-    User user;
+    private RegistrationService registrationService;
+    private User user;
 
     @BeforeEach
     void setUp() {
