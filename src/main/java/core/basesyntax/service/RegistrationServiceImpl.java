@@ -6,8 +6,8 @@ import core.basesyntax.exception.ValidationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static int MIN_LENGTH = 6;
-    private static int MIN_AGE_REQUIRED = 18;
+    private static final int MIN_LENGTH = 6;
+    private static final int MIN_AGE_REQUIRED = 18;
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
