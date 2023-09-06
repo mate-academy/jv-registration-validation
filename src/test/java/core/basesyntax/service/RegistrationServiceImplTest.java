@@ -13,7 +13,7 @@ class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
-    void register_loginIsnull_NotOk() {
+    void register_loginIsNull_NotOk() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("validPassword");
@@ -22,7 +22,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void chec_login_length_0_notOk() {
+    void register_loginLlengthZero_notOk() {
         User user = new User();
         user.setLogin("");
         user.setPassword("validPassword");
@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginlengthLessThanRequired_notOk() {
+    void register_loginLengthLessThanRequired_notOk() {
         User user = new User();
         user.setLogin("euryt");
         user.setPassword("validPassword");
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void chec_login_exist_notOk() {
+    void register_loginExist_notOk() {
         User user = new User();
         user.setLogin("kolner");
         user.setPassword("kolnerevgen");
@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void chec_login_length_6_Ok() {
+    void register_loginLengthIsMinPossible_Ok() {
         User user = new User();
         user.setLogin("euryth");
         user.setPassword("validPassword");
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void chec_login_length_more_than_6_Ok() {
+    void register_loginLengthMmoreThanMinPossible_Ok() {
         User user = new User();
         user.setLogin("fdhgsfdshfdhfdf");
         user.setPassword("validPassword");
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_password_null_NotOk() {
+    void register_passwordIsNull_NotOk() {
         User user = new User();
         user.setLogin("sdgfsdgfgsd");
         user.setPassword(null);
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_password_small_Length_NotOk() {
+    void register_passwordSmallLength_NotOk() {
         User user = new User();
         user.setLogin("sdfsdfwgfv");
         user.setPassword("kkkkk");
@@ -88,7 +88,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_password_Length_6_Ok() {
+    void register_passwordLengthIsMinPossible_Ok() {
         User user = new User();
         user.setLogin("sdfsdfwgfv");
         user.setPassword("kkkkkk");
@@ -98,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_password_Length_more_than_6_Ok() {
+    void register_passwordLengthMoreThanMinPossible_Ok() {
         User user = new User();
         user.setLogin("sdfsdfwgfv");
         user.setPassword("kkkkkkdfgbadagdsda");
@@ -108,7 +108,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_age_less_than_18_notOk() {
+    void register_ageIsNull_NotOk() {
+        User user = new User();
+        user.setLogin("sdgfsdgfgsd");
+        user.setPassword("gfdgdfggd");
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_ageLessThanRequired_notOk() {
         User user = new User();
         user.setLogin("sdfsdfwgfv");
         user.setPassword("kkkkkkdfgbadagdsda");
@@ -117,7 +126,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_age_18_Ok() {
+    void register_ageIsMinPossible_Ok() {
         User user = new User();
         user.setLogin("sdfsdfwgfv");
         user.setPassword("kkkkkkdfgbadagdsda");
@@ -127,7 +136,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_age_more_than_18_Ok() {
+    void register_ageMoreThanMinPossible_Ok() {
         User user = new User();
         user.setLogin("sdfsdfwgfv");
         user.setPassword("kkkkkkdfgbadagdsda");

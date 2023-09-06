@@ -12,35 +12,38 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkLogin(user);
-        checkPassword(user);
-        checkAge(user);
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
         return storageDao.add(user);
     }
 
-    private void checkLogin(User user) {
-        if (user.getLogin() == null) {
+    private void checkLogin(String login) {
+        if (login == null) {
             throw new RegistrationException("Login can`t be null");
         }
-        if (user.getLogin().isBlank() || user.getLogin().length() < MIN_LENGTH) {
+        if (login.isBlank() || login.length() < MIN_LENGTH) {
             throw new RegistrationException("Login must have " + MIN_LENGTH + "or more symbols");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (storageDao.get(login) != null) {
             throw new RegistrationException("Login is almost exit");
         }
     }
 
-    public void checkPassword(User user) {
-        if (user.getPassword() == null) {
+    private void checkPassword(String password) {
+        if (password == null) {
             throw new RegistrationException("Password can`t be null");
         }
-        if (user.getPassword().isBlank() || user.getPassword().length() < MIN_LENGTH) {
+        if (password.isBlank() || password.length() < MIN_LENGTH) {
             throw new RegistrationException("Password must have " + MIN_LENGTH + "or more symbols");
         }
     }
 
-    public void checkAge(User user) {
-        if (user.getAge() < MIN_AGE) {
+    private void checkAge(Integer age) {
+        if (age == null) {
+            throw new RegistrationException("Age can`t be null");
+        }
+        if (age < MIN_AGE) {
             throw new RegistrationException("Age can`t be less than " + MIN_AGE);
         }
     }
