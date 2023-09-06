@@ -9,7 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+class RegistrationServiceTest {
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(NullPointerException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         user.setAge(18);
         user.setPassword("123456790");
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setAge(null);
         user.setPassword("123456790");
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setAge(18);
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceException.class, () -> registrationService.register(user));
     }
 
     @Test

@@ -13,8 +13,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException();
+            throw new RegistrationServiceException("The user value can't be null");
         }
+
         checkLoginValid(user);
         checkPasswordValid(user);
         checkAgeAllowed(user);
@@ -31,6 +32,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkLoginValid(User user) {
+        if(user.getLogin() == null) {
+            throw new RegistrationServiceException("The login can't be null");
+        }
+
         int loginLength = user.getLogin().trim().length();
         if (loginLength < VALID_LOGIN_LENGTH) {
             throw new RegistrationServiceException(
@@ -41,6 +46,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkPasswordValid(User user) {
+        if(user.getPassword() == null) {
+            throw new RegistrationServiceException("The password can't be null");
+        }
+
         int passwordLength = user.getPassword().trim().length();
         if (passwordLength < VALID_PASSWORD_LENGTH) {
             throw new RegistrationServiceException(
@@ -51,7 +60,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkAgeAllowed(User user) {
-        if (user.getAge().compareTo(VALID_AGE) < 0) {
+        if(user.getAge() == null) {
+            throw new RegistrationServiceException("The age value can't be null");
+        }
+
+        if (user.getAge() < VALID_AGE) {
             throw new RegistrationServiceException(
                     "The age must have at least " + VALID_AGE
                             + " years old, but yours is : "
