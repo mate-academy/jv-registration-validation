@@ -33,55 +33,55 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullUser() {
+    void register_NullUser_NotOk() {
         newUser = null;
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registerExistingUser() {
+    void register_ExistingUser_NotOk() {
         Storage.PEOPLE.add(newUser);
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_nullLogin_notOk() {
+    void register_nullLogin_NotOk() {
         newUser.setLogin(null);
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_shortLogin_notOk() {
+    void register_shortLogin_NotOk() {
         newUser.setLogin("Musk2");
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_nullPassword_notOk() {
+    void register_nullPassword_NotOk() {
         newUser.setPassword(null);
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_shortPassword_NotOk() {
         newUser.setPassword("qw12");
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registerNullAge_notOk() {
+    void registerNullAge_NotOk() {
         newUser.setAge(null);
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registerNegativeAge_notOk() {
+    void registerNegativeAge_NotOk() {
         newUser.setAge(-23);
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registerSmallAge_notOk() {
+    void registerSmallAge_NotOk() {
         newUser.setAge(17);
         assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
     }
