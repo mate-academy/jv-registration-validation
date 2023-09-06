@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
     public static final int VALID_LOGIN_LENGTH = 6;
@@ -13,11 +12,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        Objects.requireNonNull(user);
-        checkUserAlreadyExist(user);
+        if (user == null) {
+            throw new NullPointerException();
+        }
         checkLoginValid(user);
         checkPasswordValid(user);
         checkAgeAllowed(user);
+        checkUserAlreadyExist(user);
+
         return storageDao.add(user);
     }
 
@@ -29,20 +31,22 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkLoginValid(User user) {
-        if (user.getLogin().length() < VALID_LOGIN_LENGTH) {
+        int loginLength = user.getLogin().trim().length();
+        if (loginLength < VALID_LOGIN_LENGTH) {
             throw new RegistrationServiceException(
                     "The login must have at least " + VALID_LOGIN_LENGTH
                             + " symbols, but you have: "
-                            + user.getLogin().length());
+                            + loginLength);
         }
     }
 
     public void checkPasswordValid(User user) {
-        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
+        int passwordLength = user.getPassword().trim().length();
+        if (passwordLength < VALID_PASSWORD_LENGTH) {
             throw new RegistrationServiceException(
                     "The password must have at least " + VALID_PASSWORD_LENGTH
                             + " symbols, but you have: "
-                            + user.getPassword().length());
+                            + passwordLength);
         }
     }
 
