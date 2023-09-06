@@ -9,7 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceTest {
+class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll

@@ -32,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkLoginValid(User user) {
-        if(user.getLogin() == null) {
+        if (user.getLogin() == null) {
             throw new RegistrationServiceException("The login can't be null");
         }
 
@@ -46,7 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkPasswordValid(User user) {
-        if(user.getPassword() == null) {
+        if (user.getPassword() == null) {
             throw new RegistrationServiceException("The password can't be null");
         }
 
@@ -60,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkAgeAllowed(User user) {
-        if(user.getAge() == null) {
+        if (user.getAge() == null) {
             throw new RegistrationServiceException("The age value can't be null");
         }
 
