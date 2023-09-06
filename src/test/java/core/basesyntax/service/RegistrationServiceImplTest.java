@@ -3,14 +3,27 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.RegistrationException;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
     private static final int VALID_AGE = 18;
     private static final String VALID_PASSWORD = "password";
     private static final String VALID_LOGIN = "admin admin";
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+
+    private static RegistrationService registrationService;
+
+    @BeforeEach
+    void init(){
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @AfterEach
+    void clear(){
+        Storage.PEOPLE.clear();
+    }
+
 
     @Test
     void register_nullUser_notOk() {
@@ -50,15 +63,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidAge_notOk() {
-        User userYoungerThen18 = new User();
-        userYoungerThen18.setPassword(VALID_PASSWORD);
-        userYoungerThen18.setAge(17);
-        userYoungerThen18.setLogin(VALID_LOGIN);
+        User user = new User();
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(17);
+        user.setLogin(VALID_LOGIN);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(userYoungerThen18));
-        userYoungerThen18.setAge(-100);
+                () -> registrationService.register(user));
+        user.setAge(-100);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(userYoungerThen18));
+                () -> registrationService.register(user));
     }
 
     @Test
