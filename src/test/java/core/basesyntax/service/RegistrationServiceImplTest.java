@@ -27,18 +27,18 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserNotValid_notOk() {
-        user = new User("daff", "gadaz",11);
+        user = new User("daff", "gadaz", 11);
         assertThrows(CustomException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_NullLogin_TrowsException() {
+    void register_NullLogin_NotOk() {
         user = new User(null, "validity", 21);
         assertThrows(CustomException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_NullPassword_ThrowsException() {
+    void register_NullPassword_NotOk() {
         user = new User("Arsenal", null, 21);
         assertThrows(CustomException.class, () -> registrationService.register(user));
     }

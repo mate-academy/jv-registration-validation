@@ -20,22 +20,30 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private static void checkLoginValidation(User user) {
-        if (user.getLogin() == null || user.getLogin().length() < VALID_LOGIN) {
+        if (user.getLogin() == null) {
+            throw new CustomException("Error! Login can't be null");
+        }
+        if (user.getLogin().length() < VALID_LOGIN) {
             throw new CustomException("Error! Login must have at least length " + VALID_LOGIN);
         }
     }
 
     private void checkPasswordValidation(User user) {
-        if (user.getPassword() == null || user.getPassword().length() < VALID_PASSWORD) {
-            throw new CustomException("Error! Password must have at least length "
-                    + VALID_PASSWORD);
+        if (user.getPassword() == null) {
+            throw new CustomException("Error! Password can't be null");
+        }
+        if (user.getPassword().length() < VALID_PASSWORD) {
+            throw new CustomException("Error! Login must have at least length " + VALID_PASSWORD);
         }
 
     }
 
     private static void checkAgeValidation(User user) {
-        if (user.getAge() == null || user.getAge() < VALID_AGE) {
-            throw new CustomException("Error! You must have at least age " + VALID_AGE);
+        if (user.getAge() == null) {
+            throw new CustomException("Error! Your age can't be null");
+        }
+        if (user.getAge() < VALID_AGE) {
+            throw new CustomException("Error! Login must have at least length " + VALID_AGE);
         }
     }
 }
