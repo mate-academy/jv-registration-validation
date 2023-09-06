@@ -20,11 +20,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User with given login \""
                     + login + "\" already exists");
         }
-        String password = user.getPassword();
-        int age = user.getAge();
         validateLogin(login);
-        validatePassword(password);
-        validateAge(age);
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
 
         return storageDao.add(user);
     }
