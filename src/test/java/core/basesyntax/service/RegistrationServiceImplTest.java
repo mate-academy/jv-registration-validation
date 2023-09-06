@@ -30,7 +30,7 @@ class RegistrationServiceImplTest {
         newUser.setId(111L);
         newUser.setLogin("reexXx");
         newUser.setPassword("qwerty");
-        newUser.setAge(25);
+        newUser.setAge(18);
         User registeredUser = registrationService.register(newUser);
         assertEquals(newUser, registeredUser);
     }
@@ -75,15 +75,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void regixter_userWithCorrectLengthPassword_ok() {
+    void register_userWithCorrectLengthPassword_ok() {
         User newUser = new User();
         newUser.setId(111L);
         newUser.setLogin("reexXx");
         newUser.setPassword("123456789");
         newUser.setAge(25);
-        String expected = "123456789";
-        assertEquals(newUser.getPassword(), expected);
-
+        User registeredUser = registrationService.register(newUser);
+        assertEquals(newUser, registeredUser);
     }
 
     @Test
@@ -114,18 +113,6 @@ class RegistrationServiceImplTest {
         newUser.setPassword("qwerty");
         newUser.setAge(-30);
         assertThrows(InvalidDataException.class, () -> registrationService.register(newUser));
-    }
-
-    @Test
-    void register_userWithValidAge_ok() {
-        User user = new User();
-        user.setId(111L);
-        user.setLogin("reexXx");
-        user.setPassword("qwerty");
-        user.setAge(25);
-        registrationService.register(user);
-        int expected = 25;
-        assertEquals(Storage.PEOPLE.get(0).getAge(), expected);
     }
 
     @Test
