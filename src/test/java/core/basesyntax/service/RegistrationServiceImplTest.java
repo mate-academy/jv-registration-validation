@@ -5,25 +5,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int VALID_AGE = 18;
     private static final String VALID_PASSWORD = "password";
     private static final String VALID_LOGIN = "admin admin";
-
     private static RegistrationService registrationService;
 
     @BeforeEach
-    void init(){
+    void init() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @AfterEach
-    void clear(){
+    void clear() {
         Storage.PEOPLE.clear();
     }
-
 
     @Test
     void register_nullUser_notOk() {
