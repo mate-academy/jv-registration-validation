@@ -82,7 +82,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_incorrectAge_throwException() {
+    public void register_lowAge_throwException() {
         User user = new User();
         user.setLogin("username");
         user.setPassword("password123");
@@ -126,6 +126,22 @@ public class RegistrationServiceTest {
                 () -> REG_SERVICE.register(user));
 
         String expectedMessage = "Password can't be null";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void register_nullAge_throwException() {
+        User user = new User();
+        user.setLogin("May go away from tests?");
+        user.setPassword("password123");
+        user.setAge(null);
+
+        Exception exception = assertThrows(InvalidUserException.class,
+                () -> REG_SERVICE.register(user));
+
+        String expectedMessage = "Age can't be null";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
