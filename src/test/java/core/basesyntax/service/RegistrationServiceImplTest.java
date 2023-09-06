@@ -3,8 +3,10 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -34,6 +36,16 @@ class RegistrationServiceImplTest {
         user.setLogin("euryt");
         user.setPassword("validPassword");
         user.setAge(23);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void chec_login_exist_notOk() {
+        User user = new User();
+        user.setLogin("kolner");
+        user.setPassword("kolnerevgen");
+        user.setAge(30);
+        Storage.PEOPLE.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -122,5 +134,10 @@ class RegistrationServiceImplTest {
         user.setAge(25);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.PEOPLE.clear();
     }
 }

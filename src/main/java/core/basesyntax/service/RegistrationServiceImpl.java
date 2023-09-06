@@ -25,6 +25,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().isBlank() || user.getLogin().length() < MIN_LENGTH) {
             throw new RegistrationException("Login must have " + MIN_LENGTH + "or more symbols");
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("Login is almost exit");
+        }
     }
 
     public void checkPassword(User user) {
