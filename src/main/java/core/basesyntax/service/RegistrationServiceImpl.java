@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    public void checkLogin(User user) {
+    private void checkLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can`t be null");
         }

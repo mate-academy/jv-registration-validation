@@ -13,7 +13,7 @@ class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
-    void check_login_is_null_NotOk() {
+    void register_loginIsnull_NotOk() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("validPassword");
@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void chec_login_length_5_notOk() {
+    void register_loginlengthLessThanRequired_notOk() {
         User user = new User();
         user.setLogin("euryt");
         user.setPassword("validPassword");
