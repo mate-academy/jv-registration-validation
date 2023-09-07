@@ -30,11 +30,11 @@ class RegistrationServiceImplTest {
         user3.setPassword("Wrestl1ng");
         user3.setAge(69);
 
-        Storage.people.clear();
+        Storage.PEOPLE.clear();
 
-        Storage.people.add(user1);
-        Storage.people.add(user2);
-        Storage.people.add(user3);
+        Storage.PEOPLE.add(user1);
+        Storage.PEOPLE.add(user2);
+        Storage.PEOPLE.add(user3);
     }
 
     @Test

@@ -5,10 +5,10 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private final StorageDao storageDao = new StorageDaoImpl();
     private final static int AGE_LOWER_LIMIT = 18;
     private final static int LOGIN_MIN_LENGTH = 6;
     private final static int PASSWORD_MIN_LENGTH = 6;
-    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -21,11 +21,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getLogin() == null || user.getLogin().length() < LOGIN_MIN_LENGTH) {
-            throw new RegistrationException("User login NULL or under login length limit of " + LOGIN_MIN_LENGTH + "!");
+            throw new RegistrationException("User login NULL or under login length limit of "
+                    + LOGIN_MIN_LENGTH + "!");
         }
 
         if (user.getPassword() == null || user.getPassword().length() < LOGIN_MIN_LENGTH) {
-            throw new RegistrationException("User password NULL or under password length limit of " + PASSWORD_MIN_LENGTH + "!");
+            throw new RegistrationException("User password NULL or under password length limit of "
+                    + PASSWORD_MIN_LENGTH + "!");
         }
 
         if (storageDao.get(user.getLogin()) != null) {
