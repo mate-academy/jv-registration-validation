@@ -32,7 +32,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User '" + user.getLogin() + "' already exists!");
         }
 
-
         return storageDao.add(user);
     }
 }
