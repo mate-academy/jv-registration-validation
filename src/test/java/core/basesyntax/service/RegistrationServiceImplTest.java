@@ -9,12 +9,11 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 public class RegistrationServiceImplTest {
     private static final String PASSWORD_TEST = "123123";
     private static final String LOGIN_TEST = "MyTestLogin";
-    private static final int AGE_TEST = 34;
+    private static final int AGE_TEST = 18;
     private static RegistrationService service;
 
     @BeforeAll
@@ -31,23 +30,13 @@ public class RegistrationServiceImplTest {
     @Test
     void register_LoginNull_NotOk() {
         User user = new User(null, PASSWORD_TEST, AGE_TEST);
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(user);
-            }
-        });
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_PasswordNull_NotOk() {
         User user = new User(LOGIN_TEST, null, AGE_TEST);
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(user);
-            }
-        });
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
@@ -55,76 +44,42 @@ public class RegistrationServiceImplTest {
         User user = new User(LOGIN_TEST, PASSWORD_TEST, AGE_TEST);
 
         Storage.PEOPLE.add(user);
-        assertThrows(RegistrationException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws Throwable {
-                        service.register(new User(LOGIN_TEST, PASSWORD_TEST, AGE_TEST));
-                    }
-                });
+        User newUser = new User(LOGIN_TEST, PASSWORD_TEST, AGE_TEST);
+        assertThrows(RegistrationException.class, () -> service.register(newUser));
     }
 
     @Test
-    void register_LoginLengthLessThan6_notOk() {
+    void register_LoginLengthLessThanMinLimit_notOk() {
         User userLoginCharZero = new User("", PASSWORD_TEST, AGE_TEST);
         User userLoginCharThree = new User("Ooo", PASSWORD_TEST, AGE_TEST);
         User userLogonCharFive = new User("Thhhh", PASSWORD_TEST, AGE_TEST);
 
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(userLoginCharZero);
-            }
-        });
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(userLoginCharThree);
-            }
-        });
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(userLogonCharFive);
-            }
-        });
+        assertThrows(RegistrationException.class, () -> service.register(userLoginCharZero));
+        assertThrows(RegistrationException.class, () -> service.register(userLoginCharThree));
+        assertThrows(RegistrationException.class, () -> service.register(userLogonCharFive));
     }
 
     @Test
-    void register_PasswordLengthLessThan6_notOk() {
+    void register_PasswordLengthLessThanMinLimit_notOk() {
         User userPasswordCharZero = new User(LOGIN_TEST, "", AGE_TEST);
         User userPasswordCharThree = new User(LOGIN_TEST, "ooo", AGE_TEST);
         User userPasswordCharFive = new User(LOGIN_TEST, "hhhhh", AGE_TEST);
 
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(userPasswordCharZero);
-            }
-        });
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(userPasswordCharThree);
-            }
-        });
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(userPasswordCharFive);
-            }
-        });
+        assertThrows(RegistrationException.class, () -> service.register(userPasswordCharZero));
+        assertThrows(RegistrationException.class, () -> service.register(userPasswordCharThree));
+        assertThrows(RegistrationException.class, () -> service.register(userPasswordCharFive));
     }
 
     @Test
-    void register_AgeLessThan18_notOk() {
+    void register_AgeLessThanMinAge_notOk() {
         User userAgeLess18 = new User(LOGIN_TEST,PASSWORD_TEST, 16);
-        assertThrows(RegistrationException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                service.register(userAgeLess18);
-            }
-        });
+        assertThrows(RegistrationException.class, () -> service.register(userAgeLess18));
+    }
+
+    @Test
+    void register_AgeNull_notOk() {
+        User userAgeNull = new User(LOGIN_TEST,PASSWORD_TEST, null);
+        assertThrows(RegistrationException.class, () -> service.register(userAgeNull));
     }
 
     @AfterEach

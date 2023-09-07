@@ -12,24 +12,40 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
+
+        return storageDao.add(user);
+    }
+
+    private void checkLogin(String userLogin) {
+        if (userLogin == null) {
             throw new RegistrationException("Login can't be null");
         }
-        if (user.getPassword() == null) {
+        if (storageDao.get(userLogin) != null) {
+            throw new RegistrationException("User" + userLogin + " already exist");
+        }
+        if (userLogin.length() < MIN_LENGTH) {
+            throw new RegistrationException("Login length must be greater than " + MIN_LENGTH);
+        }
+    }
+
+    private void checkPassword(String userPassword) {
+        if (userPassword == null) {
             throw new RegistrationException("Password can`t be null");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User" + user.getLogin() + " already exist");
+        if (userPassword.length() < MIN_LENGTH) {
+            throw new RegistrationException("Password length must be greater than " + MIN_LENGTH);
         }
-        if (user.getLogin().length() < MIN_LENGTH) {
-            throw new RegistrationException("Login length must be greater than 6");
+    }
+
+    private void checkAge(Integer userAge) {
+        if (userAge == null) {
+            throw new RegistrationException("Age must be not null");
         }
-        if (user.getPassword().length() < MIN_LENGTH) {
-            throw new RegistrationException("Password length must be greater than 6");
+        if (userAge < MIN_AGE) {
+            throw new RegistrationException("Age must be greater than " + MIN_AGE);
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Age must be greater than 18");
-        }
-        return storageDao.add(user);
     }
 }
