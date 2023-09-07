@@ -15,9 +15,6 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User get(String login) {
-        if (login == null) {
-            throw new NullPointerException("Login can't be null");
-        }
         for (User user : Storage.PEOPLE) {
             if (user.getLogin().equals(login)) {
                 return user;

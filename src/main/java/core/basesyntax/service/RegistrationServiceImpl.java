@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import java.util.regex.Pattern;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int DATA_CORRECT_LENGTH = 6;
@@ -12,50 +13,49 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        throwNullException(user, "User");
-        checkLogin(user.getLogin());
-        checkPassword(user.getPassword());
-        checkAge(user.getAge());
+        if (user == null) {
+            throw new FailedRegistrationException(getExceptionMessage(null, "User"));
+        }
+        checkLogin(user);
+        checkPassword(user);
+        checkAge(user);
         storageDao.add(user);
         return user;
     }
 
-    private void checkAge(int age) {
-        if (age < MINIMUM_AGE) {
+    private void checkAge(User user) {
+        if (user.getAge() < MINIMUM_AGE) {
             throw new FailedRegistrationException("Dear user, you're too young. "
-                    + "Please, come back in " + (MINIMUM_AGE - age));
+                    + "Please, come back in " + (MINIMUM_AGE - user.getAge()));
         }
-        if (age > MAXIMUM_AGE) {
+        if (user.getAge() > MAXIMUM_AGE) {
             throw new FailedRegistrationException("Dear user, we can't believe,"
                     + " that you are so old.");
         }
     }
 
-    private void checkPassword(String password) {
-        throwNullException(password, "Password");
-        if (password.length() < DATA_CORRECT_LENGTH) {
-            throw new FailedRegistrationException(getExceptionMessage(password, "Password"));
+    private void checkPassword(User user) {
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z0-9]{6,20}$";
+        Pattern pattern = Pattern.compile(regex);
+        if (user.getPassword() == null || !pattern.matcher(user.getPassword()).matches()) {
+            throw new FailedRegistrationException("Password must have length [6;20],"
+                    + " have at least 1 digits and letters in different cases"
+                           + " and it can't has invalid symbols");
         }
     }
 
-    private void checkLogin(String login) {
-        throwNullException(login, "Login");
-        if (login.length() < DATA_CORRECT_LENGTH) {
-            throw new FailedRegistrationException(getExceptionMessage(login, "Login"));
-        } else if (storageDao.get(login) != null) {
-            throw new FailedRegistrationException("The user with login \'"
-                    + login + "\' already exist.");
+    private void checkLogin(User user) {
+        String regex = "^(?=.*[a-zA-Z])[a-zA-Z0-9]{6,13}$";
+        Pattern pattern = Pattern.compile(regex);
+        if (user.getLogin() == null || !pattern.matcher(user.getLogin()).matches()) {
+            throw new FailedRegistrationException("Login must have length [6;13], have letters"
+                            + " and it can't has invalid symbols");
         }
     }
 
     private String getExceptionMessage(String inputData, String type) {
-        return type + " is too short, actual size = "
+        return inputData == null ? type + " can't be null."
+                : type + " is too short, actual size = "
                 + inputData.length() + ", it should be at least " + DATA_CORRECT_LENGTH;
-    }
-
-    private void throwNullException(Object object, String type) {
-        if (object == null) {
-            throw new NullPointerException(type + " can't be null.");
-        }
     }
 }
