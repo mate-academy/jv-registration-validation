@@ -6,7 +6,6 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.UserValidationException;
 import core.basesyntax.model.User;
 
-
 public class RegistrationServiceImpl implements RegistrationService {
     private final int MIN_AGE = 18;
     private final int MIN_LOGIN_SIZE = 6;
@@ -16,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
 
-        if (user ==  null) {
+        if (user == null) {
             throw new UserValidationException("User can not be null");
         }
         if (user.getLogin() == null) {
@@ -28,15 +27,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new UserValidationException("Age can not be null");
         }
-        if (user.getLogin().length() <  MIN_LOGIN_SIZE) {
+        if (user.getLogin().length() < MIN_LOGIN_SIZE) {
             throw new UserValidationException("this login size"
                     + user.getLogin().length() + " must be greater than " + MIN_LOGIN_SIZE);
         }
-        if (user.getPassword().length() <  MIN_PASSW_SIZE) {
+        if (user.getPassword().length() < MIN_PASSW_SIZE) {
             throw new UserValidationException("this password size"
                     + user.getPassword().length() + " must be greater than " + MIN_PASSW_SIZE);
         }
-        if (user.getAge() <  MIN_AGE) {
+        if (user.getAge() < MIN_AGE) {
             throw new UserValidationException("Your age must be greater than " + MIN_AGE);
         }
 
