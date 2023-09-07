@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.WrongValidationException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,11 +12,9 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
-    private User newUser;
 
     @BeforeEach
     void setUp() {
-        newUser = new User("ElonMusk99", "eLONmUSK((", 24);
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -26,63 +24,65 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_Ok() {
+    void register_validUser_ok() {
+        User newUser = new User("ElonMusk99", "eLONmUSK((", 18);
         User registratedUser = registrationService.register(newUser);
         assertEquals(1, Storage.PEOPLE.size());
         assertEquals(newUser, registratedUser);
     }
 
     @Test
-    void register_NullUser_NotOk() {
-        newUser = null;
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_nullUser_notOk() {
+        User newUser = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_ExistingUser_NotOk() {
+    void register_existingUser_notOk() {
+        User newUser = new User("ElonMusk99", "eLONmUSK((", 24);
         Storage.PEOPLE.add(newUser);
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_nullLogin_NotOk() {
-        newUser.setLogin(null);
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_nullLogin_notOk() {
+        User newUser = new User(null, "eLONmUSK((", 24);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_shortLogin_NotOk() {
-        newUser.setLogin("Musk2");
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_shortLogin_notOk() {
+        User newUser = new User("Musk2", "eLONmUSK((", 24);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_nullPassword_NotOk() {
-        newUser.setPassword(null);
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_nullPassword_notOk() {
+        User newUser = new User("ElonMusk99", null, 24);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void register_shortPassword_NotOk() {
-        newUser.setPassword("qw12");
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_shortPassword_notOk() {
+        User newUser = new User("ElonMusk99", "qw12", 24);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registerNullAge_NotOk() {
-        newUser.setAge(null);
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_nullAge_notOk() {
+        User newUser = new User("ElonMusk99", "eLONmUSK((", null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registerNegativeAge_NotOk() {
-        newUser.setAge(-23);
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_negativeAge_notOk() {
+        User newUser = new User("ElonMusk99", "eLONmUSK((", -23);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registerSmallAge_NotOk() {
-        newUser.setAge(17);
-        assertThrows(WrongValidationException.class, () -> registrationService.register(newUser));
+    void register_smallAge_notOk() {
+        User newUser = new User("ElonMusk99", "eLONmUSK((", 17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 }

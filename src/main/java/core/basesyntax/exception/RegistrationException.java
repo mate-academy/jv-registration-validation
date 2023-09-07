@@ -1,7 +1,7 @@
 package core.basesyntax.exception;
 
-public class WrongValidationException extends RuntimeException {
-    public WrongValidationException(String message) {
+public class RegistrationException extends RuntimeException {
+    public RegistrationException(String message) {
         super(message);
     }
 }
