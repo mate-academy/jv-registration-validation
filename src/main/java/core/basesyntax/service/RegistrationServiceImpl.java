@@ -12,6 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("The user doesn't exist");
+        }
         checkLogin(user.getLogin());
         checkPassword(user.getPassword());
         checkAge(user.getAge());
@@ -26,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login must have " + MIN_LENGTH + "or more symbols");
         }
         if (storageDao.get(login) != null) {
-            throw new RegistrationException("Login is almost exit");
+            throw new RegistrationException("User already exists");
         }
     }
 

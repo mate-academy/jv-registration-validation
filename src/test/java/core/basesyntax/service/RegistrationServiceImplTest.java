@@ -7,10 +7,21 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private RegistrationService registrationService;
+
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
+    }
+
+    @Test
+    void register_userIsNull_NotOk() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
+    }
 
     @Test
     void register_loginIsNull_NotOk() {
@@ -60,7 +71,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLengthMmoreThanMinPossible_Ok() {
+    void register_loginLengthMoreThanMinPossible_Ok() {
         User user = new User();
         user.setLogin("fdhgsfdshfdhfdf");
         user.setPassword("validPassword");
