@@ -2,8 +2,8 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exceptions.UserInvalidDataException;
 import core.basesyntax.model.User;
-import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH = 6;
@@ -12,13 +12,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws UserInvalidDataException {
-        nullChecking(user);
-        userMeetsCriteriaCheck(user);
+        validateUserNonNullFields(user);
+        verifyLogin(user);
+        verifyAge(user);
+        verifyPassword(user);
         return storageDao.add(user);
     }
 
-    private void nullChecking(User user) throws UserInvalidDataException {
-        if (Objects.isNull(user)) {
+    private void validateUserNonNullFields(User user) throws UserInvalidDataException {
+        if (user == null) {
             throw new UserInvalidDataException("User data can't be null");
         }
         if (user.getLogin() == null) {
@@ -32,22 +34,29 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void userMeetsCriteriaCheck(User user) throws UserInvalidDataException {
+    private void verifyLogin(User user) throws UserInvalidDataException {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new UserInvalidDataException("User with this login already exist "
-                    + user.getLogin());
+            throw new UserInvalidDataException(String.format("User with this login already "
+                    + "exists: %s", user.getLogin()));
         }
-        if (user.getPassword().length() < MIN_LENGTH) {
-            throw new UserInvalidDataException("User password length must be at least 6 symbols"
-                    + ", but length was:  " + user.getPassword().length());
-        }
+
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new UserInvalidDataException("User login length must be at least 6 symbols,"
-                    + " but length was:  " + user.getLogin().length());
+            throw new UserInvalidDataException(String.format("User login length must be at least "
+                    + "6 symbols, but length was: %d", user.getLogin().length()));
         }
+    }
+
+    private void verifyPassword(User user) throws UserInvalidDataException {
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new UserInvalidDataException(String.format("User password length must be at "
+                    + "least 6 symbols, but length was: %d", user.getPassword().length()));
+        }
+    }
+
+    private void verifyAge(User user) throws UserInvalidDataException {
         if (user.getAge() < MIN_AGE) {
-            throw new UserInvalidDataException("User age must be at least 18, but was: "
-                    + user.getAge());
+            throw new UserInvalidDataException(String.format("User age must be at least 18"
+                    + ", but was: %d", user.getAge()));
         }
     }
 }
