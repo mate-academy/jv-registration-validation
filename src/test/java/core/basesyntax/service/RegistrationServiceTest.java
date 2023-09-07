@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+class RegistrationServiceTest {
     private RegistrationService registrationService;
 
     @BeforeEach
@@ -26,7 +26,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
-
     }
 
     @Test
@@ -73,9 +72,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsNull_notOk() {
         User user = new User("taylor12", null, 24);
-        for (User member : Storage.PEOPLE) {
-            System.out.println(member.getLogin());
-        }
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 

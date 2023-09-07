@@ -26,11 +26,13 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can't be null.");
         }
         if (login.length() < MIN_LENGTH) {
-            throw new RegistrationException("Your login should contain "
-                    + MIN_LENGTH + " or more symbols.");
+            throw new RegistrationException(String
+                    .format("Your login should contain %s MIN_LENGTH or more symbols.",
+                            MIN_LENGTH));
         }
         if (storageDao.get(login) != null) {
-            throw new RegistrationException("Your login: " + login + " already exists.");
+            throw new RegistrationException(String.format("User with login %s already exists.",
+                    login));
         }
     }
 
@@ -39,8 +41,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Your password can't be null.");
         }
         if (password.length() < MIN_LENGTH) {
-            throw new RegistrationException("Your password should contain at least "
-                    + MIN_LENGTH + " symbols.");
+            throw new RegistrationException(String
+                    .format("Your password should contain %s MIN_LENGTH or more symbols.",
+                            MIN_LENGTH));
         }
     }
 
@@ -49,7 +52,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Your age can't be null");
         }
         if (age < MIN_AGE) {
-            throw new RegistrationException("You age should be at least " + MIN_AGE + " y.o.");
+            throw new RegistrationException(String.format("You age should be at least %d y.o.",
+                    MIN_AGE));
         }
     }
 }
