@@ -17,7 +17,6 @@ class RegistrationServiceImplTest {
     private static final String UNACCEPTABLE_LOGIN = "bobby";
     private static final Integer UNACCEPTABLE_AGE = 5;
     private static final String UNACCEPTABLE_PASSWORD = "morn";
-    private final User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
     private RegistrationService registrationService;
 
     @BeforeEach
@@ -89,6 +88,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserValidated_Ok() {
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         User actual = registrationService.register(user);
         assertEquals(actual, user);
     }

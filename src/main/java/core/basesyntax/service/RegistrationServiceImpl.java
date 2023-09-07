@@ -7,14 +7,14 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH = 6;
-    private static final int MIN_AGE_REQUIRED = 18;
+    private static final int MIN_AGE = 18;
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) throws ValidationException {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new ValidationException("User is already registered" + user.getLogin());
+            throw new ValidationException("User is already registered: " + user.getLogin());
         }
 
         checkLogin(user.getLogin());
@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("Login can't be null!");
         }
         if (login.length() < MIN_LENGTH) {
-            throw new ValidationException("Login must be at least 6 characters long" + login);
+            throw new ValidationException("Login must be at least 6 characters long: " + login);
         }
     }
 
@@ -36,18 +36,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new ValidationException("Age can't be null!");
         }
-        if (age < MIN_AGE_REQUIRED) {
-            throw new ValidationException("You must be more than 18y.o.!" + age);
+        if (age <= MIN_AGE) {
+            throw new ValidationException("You must be more than 17y.o.!: " + age);
         }
 
     }
 
     private void checkPassword(String password) {
         if (password == null) {
-            throw new ValidationException("Password can't be null" + password);
+            throw new ValidationException("Password can't be null: " + password);
         }
         if (password.length() < MIN_LENGTH) {
-            throw new ValidationException("Password must be at least 6 characters long" + password);
+            throw new ValidationException("Password must be at least 6 characters long: "
+                    + password);
         }
     }
 }
