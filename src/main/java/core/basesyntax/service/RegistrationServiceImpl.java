@@ -3,9 +3,7 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import core.basesyntax.service.exception.InvalidInputDataException;
-import core.basesyntax.service.exception.UserAlreadyExistsException;
-import core.basesyntax.service.exception.UserIsNullException;
+import core.basesyntax.service.exception.RegisterException;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_VALID_LENGTH = 6;
@@ -15,58 +13,48 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new UserIsNullException("Null-user can't be registered.");
+            throw new RegisterException("Null-user can't be registered.");
         }
-        if (!userExists(user.getLogin())
-                && loginIsValid(user.getLogin())
-                && passwordIsValid(user.getPassword())
-                && ageIsValid(user.getAge())) {
-            storageDao.add(user);
-            return user;
-        }
-        return null;
+        userExists(user.getLogin());
+        loginIsValid(user.getLogin());
+        passwordIsValid(user.getPassword());
+        ageIsValid(user.getAge());
+        return storageDao.add(user);
     }
 
-    public boolean userExists(String login) {
-        if (login == null) {
-            return false;
-        }
+    private void userExists(String login) {
         if (storageDao.get(login) != null) {
-            throw new UserAlreadyExistsException("User with login ["
+            throw new RegisterException("User with login ["
                     + login + "] already exists");
         }
-        return false;
     }
 
-    public boolean loginIsValid(String login) {
+    private void loginIsValid(String login) {
         if (login == null) {
-            throw new InvalidInputDataException("Login can't be null.");
+            throw new RegisterException("Login can't be null.");
         }
         if (login.length() < MIN_VALID_LENGTH) {
-            throw new InvalidInputDataException("Login must have more then "
+            throw new RegisterException("Login must have more then "
                     + MIN_VALID_LENGTH + " characters.");
         }
-        return true;
     }
 
-    public boolean passwordIsValid(String password) {
+    private void passwordIsValid(String password) {
         if (password == null) {
-            throw new InvalidInputDataException("Password can't be null.");
+            throw new RegisterException("Password can't be null.");
         }
         if (password.length() < MIN_VALID_LENGTH) {
-            throw new InvalidInputDataException("Password must have more then "
+            throw new RegisterException("Password must have more then "
                     + MIN_VALID_LENGTH + " characters.");
         }
-        return true;
     }
 
-    public boolean ageIsValid(Integer age) {
+    private void ageIsValid(Integer age) {
         if (age == null) {
-            throw new InvalidInputDataException("Age can't be null.");
+            throw new RegisterException("Age can't be null.");
         }
         if (age < MIN_VALID_AGE) {
-            throw new InvalidInputDataException("Age must be more " + MIN_VALID_AGE);
+            throw new RegisterException("Age must be more " + MIN_VALID_AGE);
         }
-        return true;
     }
 }
