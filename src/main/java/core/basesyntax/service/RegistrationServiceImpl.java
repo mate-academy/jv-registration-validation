@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.registrationexception.RegistrationException;
 
@@ -21,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkIfUserExist(User user) {
-        if (Storage.PEOPLE.contains(user)) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User has already existed with login "
                     + user.getLogin());
         }
@@ -32,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can't be null");
         }
         if (user.getLogin().length() < MINIMAL_LENGTH_OF_CREDENTIAL_VALUE) {
-            throw new RegistrationException("Error! Login must have at least length "
+            throw new RegistrationException("Login must have at least length "
                     + MINIMAL_LENGTH_OF_CREDENTIAL_VALUE);
         }
     }
@@ -42,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be null");
         }
         if (user.getPassword().length() < MINIMAL_LENGTH_OF_CREDENTIAL_VALUE) {
-            throw new RegistrationException("Error! Login must have at least length "
+            throw new RegistrationException("Login must have at least length "
                     + MINIMAL_LENGTH_OF_CREDENTIAL_VALUE);
         }
 
@@ -53,7 +52,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Your age can't be null");
         }
         if (user.getAge() < VALID_AGE) {
-            throw new RegistrationException("Error! Login must have at least length " + VALID_AGE);
+            throw new RegistrationException("Login must have at least length " + VALID_AGE);
         }
     }
 }
