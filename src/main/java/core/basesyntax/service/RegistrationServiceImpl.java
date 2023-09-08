@@ -15,21 +15,21 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegisterException("Null-user can't be registered.");
         }
-        userExists(user.getLogin());
-        loginIsValid(user.getLogin());
-        passwordIsValid(user.getPassword());
-        ageIsValid(user.getAge());
+        checkIfUserExists(user.getLogin());
+        checkIfLoginValid(user.getLogin());
+        checkIfPasswordValid(user.getPassword());
+        checkIfAgeValid(user.getAge());
         return storageDao.add(user);
     }
 
-    private void userExists(String login) {
+    private void checkIfUserExists(String login) {
         if (storageDao.get(login) != null) {
             throw new RegisterException("User with login ["
                     + login + "] already exists");
         }
     }
 
-    private void loginIsValid(String login) {
+    private void checkIfLoginValid(String login) {
         if (login == null) {
             throw new RegisterException("Login can't be null.");
         }
@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void passwordIsValid(String password) {
+    private void checkIfPasswordValid(String password) {
         if (password == null) {
             throw new RegisterException("Password can't be null.");
         }
@@ -49,7 +49,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void ageIsValid(Integer age) {
+    private void checkIfAgeValid(Integer age) {
         if (age == null) {
             throw new RegisterException("Age can't be null.");
         }

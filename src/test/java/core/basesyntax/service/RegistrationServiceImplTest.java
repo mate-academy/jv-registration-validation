@@ -8,20 +8,15 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.exception.RegisterException;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private StorageDaoImpl storageDao;
+    private static StorageDaoImpl storageDao;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-    }
-
-    @BeforeEach
-    void setUp() {
         storageDao = new StorageDaoImpl();
     }
 
@@ -31,7 +26,7 @@ class RegistrationServiceImplTest {
         user.setLogin("ExistsLogin");
         user.setPassword("ValidPassword");
         user.setAge(25);
-        registrationService.register(user);
+        storageDao.add(user);
         assertThrows(RegisterException.class, () -> registrationService.register(user));
     }
 
