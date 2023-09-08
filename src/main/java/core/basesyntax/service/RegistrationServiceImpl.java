@@ -7,9 +7,9 @@ import core.basesyntax.exception.UserValidationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final int MIN_AGE = 18;
-    private final int MIN_LOGIN_SIZE = 6;
-    private final int MIN_PASSW_SIZE = 6;
+    private static final int MIN_AGE = 18;
+    private static final int MIN_LOGIN_SIZE = 6;
+    private static final int MIN_PASSW_SIZE = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserValidationException("Your age must be greater than " + MIN_AGE);
         }
 
-        if (Storage.people.contains(user)) {
+        if (Storage.PEOPLE.contains(user)) {
             throw new UserValidationException("this login "
                     + user.getLogin() + " already exists");
         }

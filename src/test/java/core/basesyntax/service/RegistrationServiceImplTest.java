@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.UserValidationException;
@@ -13,7 +14,7 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "Javelin";
     private static final String VALID_PASSWORD = "Java12";
     private static final int VALID_AGE = 18;
-    private static final String INVALID_LOGIN = "Java";
+    private static final String INVALID_LOGIN = "Jav12";
     private static final String INVALID_LOGIN_NULL = null;
     private static final String INVALID_LOGIN_EMPTY = "";
     private static final String INVALID_PASSWORD = "Java1";
@@ -95,7 +96,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_suchLoginAlreadyExists_NotOk() {
-        Storage.people.add(user);
+        Storage.PEOPLE.add(user);
         assertThrows(UserValidationException.class, () -> registrationService.register(user));
     }
 
