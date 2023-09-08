@@ -42,21 +42,22 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         if (user.getLogin().length() < MIN_LENGTH) {
             throw new UserInvalidDataException(String.format("User login length must be at least "
-                    + "6 symbols, but length was: %d", user.getLogin().length()));
+                    + "%d symbols, but length was: %d",MIN_LENGTH, user.getLogin().length()));
         }
     }
 
     private void verifyPassword(User user) throws UserInvalidDataException {
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new UserInvalidDataException(String.format("User password length must be at "
-                    + "least 6 symbols, but length was: %d", user.getPassword().length()));
+                    + "least %d symbols, but length was: %d",
+                    MIN_LENGTH, user.getPassword().length()));
         }
     }
 
     private void verifyAge(User user) throws UserInvalidDataException {
         if (user.getAge() < MIN_AGE) {
-            throw new UserInvalidDataException(String.format("User age must be at least 18"
-                    + ", but was: %d", user.getAge()));
+            throw new UserInvalidDataException(String.format("User age must be at least %d"
+                    + ", but was: %d",MIN_AGE, user.getAge()));
         }
     }
 }
