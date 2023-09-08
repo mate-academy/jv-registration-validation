@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -8,14 +7,17 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int DATA_CORRECT_LENGTH = 6;
     private static final int MINIMUM_AGE = 18;
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private StorageDaoImpl storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new FailedRegistrationException("User can't be null");
+        }
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
-        storageDao.add(user);
+        Storage.PEOPLE.add(user);
         return user;
     }
 
@@ -32,11 +34,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkLogin(User user) {
         checkData(user.getLogin(), "Login");
-        for (User member : Storage.PEOPLE) {
-            if (member.getLogin().equals(user.getLogin())) {
-                throw new FailedRegistrationException("The user with login "
-                        + user.getLogin() + " already exists.");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new FailedRegistrationException("The user with login "
+                    + user.getLogin() + " already exists.");
         }
     }
 
