@@ -63,6 +63,12 @@ class RegistrationServiceTest {
     }
 
     @Test
+    void register_loginIsBlankLine_notOk() {
+        User user = new User("", "hgy57ea", 33);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_validUser_ok() {
         User expected = new User("kateryna", "katya789", 19);
         User actual = registrationService.register(expected);
@@ -80,6 +86,12 @@ class RegistrationServiceTest {
         User expected = new User("taylor12", "taylor", 24);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_passwordIsEmptyLine_notOk() {
+        User user = new User("mariyka56", "", 18);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test

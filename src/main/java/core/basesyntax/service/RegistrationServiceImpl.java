@@ -15,45 +15,50 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("The user doesn't exist");
         }
-        validateLogin(user.getLogin());
-        validatePassword(user.getPassword());
-        validateAge(user.getAge());
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void validateLogin(String login) {
-        if (login == null) {
+    private void validateLogin(User user) {
+        if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null.");
         }
-        if (login.length() < MIN_LENGTH) {
-            throw new RegistrationException(String
-                    .format("Your login should contain %s MIN_LENGTH or more symbols.",
-                            MIN_LENGTH));
+        if (user.getLogin().equals("")) {
+            throw new RegistrationException("Your login can't be an empty line.");
         }
-        if (storageDao.get(login) != null) {
-            throw new RegistrationException(String.format("User with login %s already exists.",
-                    login));
+        if (user.getLogin().length() < MIN_LENGTH) {
+            throw new RegistrationException("Your login should contain %s or more symbols."
+                    .formatted(MIN_LENGTH));
+
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with login %s already exists."
+                    .formatted(user.getLogin()));
         }
     }
 
-    private void validatePassword(String password) {
-        if (password == null) {
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
             throw new RegistrationException("Your password can't be null.");
         }
-        if (password.length() < MIN_LENGTH) {
-            throw new RegistrationException(String
-                    .format("Your password should contain %s MIN_LENGTH or more symbols.",
-                            MIN_LENGTH));
+        if (user.getPassword().equals("")) {
+            throw new RegistrationException("Your password can't be an empty line.");
+        }
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new RegistrationException("Your password should contain %s or more symbols."
+                    .formatted(MIN_LENGTH));
         }
     }
 
-    private void validateAge(Integer age) {
-        if (age == null) {
+    private void validateAge(User user) {
+        if (user.getAge() == null) {
             throw new RegistrationException("Your age can't be null");
         }
-        if (age < MIN_AGE) {
-            throw new RegistrationException(String.format("You age should be at least %d y.o.",
-                    MIN_AGE));
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("You age should be at least %d y.o."
+                    .formatted(MIN_AGE));
         }
     }
 }
