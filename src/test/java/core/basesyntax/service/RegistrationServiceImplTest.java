@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.exception.RegisterException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -20,10 +22,15 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
     }
 
+    @AfterEach
+    void afterEach() {
+        Storage.PEOPLE.clear();
+    }
+
     @Test
-    void register_userAlreadyExists_notOk() {
+     void register_userAlreadyExists_notOk() {
         User user = new User();
-        user.setLogin("ExistsLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("ValidPassword");
         user.setAge(25);
         storageDao.add(user);
@@ -31,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginIsValid_nullLogin_notOk() {
+    void register_nullLogin_notOk() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("ValidPassword");
@@ -40,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginIsValid_emptyStringLogin_notOk() {
+    void register_emptyStringLogin_notOk() {
         User user = new User();
         user.setLogin("");
         user.setPassword("ValidPassword");
@@ -49,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginIsValid_lessThenSixCharactersLogin_notOk() {
+    void register_loginLessThenMinLength_notOk() {
         User user = new User();
         user.setLogin("Login");
         user.setPassword("ValidPassword");
@@ -58,102 +65,108 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginIsValid_sixCharactersLogin_ok() {
-        User user = new User();
-        user.setLogin("Login6");
-        user.setPassword("ValidPassword");
-        user.setAge(25);
-        assertEquals(user.getLogin(),registrationService.register(user).getLogin());
-    }
-
-    @Test
-    void loginIsValid_moreThenSixCharactersLogin_ok() {
+    void register_minLengthLogin_ok() {
         User user = new User();
         user.setLogin("UniqueLogin");
         user.setPassword("ValidPassword");
         user.setAge(25);
-        assertEquals(user.getLogin(),registrationService.register(user).getLogin());
+        User actualUser = registrationService.register(user);
+        assertEquals(user.getLogin(), actualUser.getLogin());
     }
 
     @Test
-    void passwordIsValid_nullPassword_notOk() {
+    void register_moreThenMinLengthLogin_ok() {
         User user = new User();
-        user.setLogin("NullPassLogin");
+        user.setLogin("UniqueLogin");
+        user.setPassword("ValidPassword");
+        user.setAge(25);
+        User actualUser = registrationService.register(user);
+        assertEquals(user.getLogin(), actualUser.getLogin());
+    }
+
+    @Test
+    void pregister_nullPassword_notOk() {
+        User user = new User();
+        user.setLogin("UniqueLogin");
         user.setPassword(null);
         user.setAge(25);
         assertThrows(RegisterException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void passwordIsValid_emptyStringPassword_notOk() {
+    void register_emptyStringPassword_notOk() {
         User user = new User();
-        user.setLogin("EmptyPassLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("");
         user.setAge(25);
         assertThrows(RegisterException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void passwordIsValid_lessThenSixCharactersPassword_notOk() {
+    void register_lessThenMinLengthPassword_notOk() {
         User user = new User();
-        user.setLogin("ShortPassLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("Pass");
         user.setAge(25);
         assertThrows(RegisterException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void passwordIsValid_sixCharactersPassword_ok() {
+    void register_minLengthPassword_ok() {
         User user = new User();
-        user.setLogin("SixPassLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("ValPas");
         user.setAge(25);
-        assertEquals(user.getPassword(),registrationService.register(user).getPassword());
+        User actualUser = registrationService.register(user);
+        assertEquals(user.getPassword(), actualUser.getPassword());
     }
 
     @Test
-    void passwordIsValid_moreThenSixCharactersPassword_ok() {
+    void register_moreThenMinLengthPassword_ok() {
         User user = new User();
-        user.setLogin("LongPassLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("NewPassword");
         user.setAge(25);
-        assertEquals(user.getPassword(),registrationService.register(user).getPassword());
+        User actualUser = registrationService.register(user);
+        assertEquals(user.getPassword(), actualUser.getPassword());
     }
 
     @Test
-    void ageIsValid_nullAge_notOk() {
+    void register_nullAge_notOk() {
         User user = new User();
-        user.setLogin("NullAgeLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("NewPassword");
         user.setAge(null);
         assertThrows(RegisterException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void ageIsValid_lessThenEighteenAge_notOk() {
+    void register_lessThenMinAge_notOk() {
         User user = new User();
-        user.setLogin("YoungAgeLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("NewPassword");
         user.setAge(17);
         assertThrows(RegisterException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void ageIsValid_equalsEighteenAge_ok() {
+    void register_equalsMinAge_ok() {
         User user = new User();
-        user.setLogin("Age18Login");
+        user.setLogin("UniqueLogin");
         user.setPassword("NewPassword");
         user.setAge(18);
-        assertEquals(user.getAge(),registrationService.register(user).getAge());
+        User actualUser = registrationService.register(user);
+        assertEquals(user.getAge(), actualUser.getAge());
     }
 
     @Test
-    void ageIsValid_moreThenEighteenAge_ok() {
+    void register_moreThenMinAge_ok() {
         User user = new User();
-        user.setLogin("Age18PlusLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("NewPassword");
         user.setAge(30);
-        assertEquals(user.getAge(),registrationService.register(user).getAge());
+        User actualUser = registrationService.register(user);
+        assertEquals(user.getAge(), actualUser.getAge());
     }
 
     @Test
@@ -165,26 +178,26 @@ class RegistrationServiceImplTest {
     @Test
     void register_addSuccessfulUser_ok() {
         User user = new User();
-        user.setLogin("SuccessLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("ValidPassword");
         user.setAge(25);
         User registeredUser = registrationService.register(user);
-        User actual = storageDao.get("SuccessLogin");
+        User actualUser = storageDao.get("UniqueLogin");
         assertNotNull(registeredUser);
-        assertEquals(user, actual);
+        assertEquals(user, actualUser);
     }
 
     @Test
     void register_addAndGetUserDetails_ok() {
         User user = new User();
-        user.setLogin("AddGetLogin");
+        user.setLogin("UniqueLogin");
         user.setPassword("ValidPassword");
         user.setAge(25);
         registrationService.register(user);
-        User actual = storageDao.get("AddGetLogin");
-        assertEquals("AddGetLogin", actual.getLogin());
-        assertEquals("ValidPassword", actual.getPassword());
-        assertEquals(25, actual.getAge());
-        assertEquals(user, actual);
+        User actualUser = storageDao.get("UniqueLogin");
+        assertEquals("UniqueLogin", actualUser.getLogin());
+        assertEquals("ValidPassword", actualUser.getPassword());
+        assertEquals(25, actualUser.getAge());
+        assertEquals(user, actualUser);
     }
 }
