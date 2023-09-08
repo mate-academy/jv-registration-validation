@@ -45,42 +45,42 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NullAge_NotOK() {
-        User user = new User("Arsenal", "Ar789al", 0);
+        User user = new User("Arsenal", "Ar789al", null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void user_NotEnoughLoginLength_NotOk() {
+    void register_NotEnoughLoginLength_NotOk() {
         User user = new User("arsen", "Ar789al", 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void user_OverLoginLength_Ok() {
+    void register_OverLoginLength_Ok() {
         User user = new User("Arsenal2132", "Ar789al", 18);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void user_NotEnoughPasswordLength_NotOk() {
+    void register_NotEnoughPasswordLength_NotOk() {
         User user = new User("Arsenal", "null", 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void user_NegativeAge_NotOk() {
+    void register_NegativeAge_NotOk() {
         User user = new User("Arsenal", "Ar789al789", -18);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void user_LessAge_NotOk() {
+    void register_LessAge_NotOk() {
         User user = new User("Arsenal", "Ar789al", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void user_OverAge_Ok() {
+    void register_OverAge_Ok() {
         User user = new User("Arsenal", "Ar789al", 25);
         assertEquals(user, registrationService.register(user));
     }

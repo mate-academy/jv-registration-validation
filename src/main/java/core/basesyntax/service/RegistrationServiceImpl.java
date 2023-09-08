@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be null");
         }
         if (user.getPassword().length() < MINIMAL_LENGTH_OF_CREDENTIAL_VALUE) {
-            throw new RegistrationException("Login must have at least length "
+            throw new RegistrationException("Password must have at least length "
                     + MINIMAL_LENGTH_OF_CREDENTIAL_VALUE);
         }
 
@@ -52,7 +52,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Your age can't be null");
         }
         if (user.getAge() < VALID_AGE) {
-            throw new RegistrationException("Login must have at least length " + VALID_AGE);
+            throw new RegistrationException("Age must have at least length " + VALID_AGE);
         }
     }
 }
