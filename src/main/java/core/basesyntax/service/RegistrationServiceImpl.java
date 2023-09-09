@@ -19,7 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateUser(User user) {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserException("User with login '" + user.getLogin() + "' already exists.");
+            throw new InvalidUserException("User with login '"
+                    + user.getLogin() + "' already exists.");
         }
 
         if (user.getLogin() == null) {
@@ -28,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         if (user.getLogin().length() < 6) {
             throw new InvalidUserException("Invalid login '" + user.getLogin()
-                    +"'. Login must be at least '"
+                    + "'. Login must be at least '"
                     + MIN_LOGIN_LENGTH + "' characters long.");
         }
 
