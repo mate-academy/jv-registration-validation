@@ -9,13 +9,13 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public User add(User user) {
         user.setId(++index);
-        Storage.People.add(user);
+        Storage.PEOPLE.add(user);
         return user;
     }
 
     @Override
     public User get(String login) {
-        for (User user : Storage.People) {
+        for (User user : Storage.PEOPLE) {
             if (user.getLogin().equals(login)) {
                 return user;
             }
