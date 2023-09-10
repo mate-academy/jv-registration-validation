@@ -1,27 +1,27 @@
 package core.basesyntax.service;
 
-import core.basesyntax.Exception.RegistrationException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class RegistrationServiceImplTest {
-    RegistrationService registration = new RegistrationServiceImpl();
-    StorageDao storage = new StorageDaoImpl();
-    private final static String VALID_LOGIN1 = "A23456";
-    private final static String VALID_LOGIN2 = "B23456";
-    private final static String VALID_PASSWORD = "P23456";
-    private final static String VALID_SOME_LARGE_VALUE = "V2345678";
-    private final static int VALID_AGE = 19;
-    private final static String INVALID_LOGIN1 = "A234";
-    private final static String INVALID_LOGIN2 = "A2345";
-    private final static String INVALID_PASSWORD1 = "P234";
-    private final static String INVALID_PASSWORD2 = "P2345";
-    private final static int INVALID_AGE1 = 17;
-    private final static int INVALID_AGE2 = -1;
+    private static final RegistrationService registration = new RegistrationServiceImpl();
+    private static final StorageDao storage = new StorageDaoImpl();
+    private static final String VALID_LOGIN1 = "A23456";
+    private static final String VALID_LOGIN2 = "B23456";
+    private static final String VALID_PASSWORD = "P23456";
+    private static final String VALID_SOME_LARGE_VALUE = "V2345678";
+    private static final int VALID_AGE = 19;
+    private static final String INVALID_LOGIN1 = "A234";
+    private static final String INVALID_LOGIN2 = "A2345";
+    private static final String INVALID_PASSWORD1 = "P234";
+    private static final String INVALID_PASSWORD2 = "P2345";
+    private static final int INVALID_AGE1 = 17;
+    private static final int INVALID_AGE2 = -1;
 
     @Test
     void register_loginNull_notOk() {
@@ -45,7 +45,8 @@ class RegistrationServiceImplTest {
         try {
             registration.register(user);
         } catch (RegistrationException e) {
-            fail("Test failed - user's login with min length must be registered but " + e.getMessage());
+            fail("Test failed - user's login with min length must be registered but "
+                    + e.getMessage());
         }
     }
 
@@ -55,9 +56,9 @@ class RegistrationServiceImplTest {
         try {
             registration.register(user);
         } catch (RegistrationException e) {
-            fail("Test failed - user's login length = " + VALID_SOME_LARGE_VALUE.length() +
-                    " and password length = " + VALID_PASSWORD.length() +
-                    " but " + e.getMessage());
+            fail("Test failed - user's login length = " + VALID_SOME_LARGE_VALUE.length()
+                    + " and password length = " + VALID_PASSWORD.length()
+                    + " but " + e.getMessage());
         }
 
     }
@@ -82,9 +83,9 @@ class RegistrationServiceImplTest {
         try {
             registration.register(user);
         } catch (RegistrationException e) {
-            fail("Test failed - user's login length = " + VALID_LOGIN2.length() +
-                    " and password length = " + VALID_PASSWORD.length() +
-                    " but " + e.getMessage());
+            fail("Test failed - user's login length = " + VALID_LOGIN2.length()
+                    + " and password length = " + VALID_PASSWORD.length()
+                    + " but " + e.getMessage());
         }
     }
 
@@ -105,7 +106,6 @@ class RegistrationServiceImplTest {
         User user = new User(VALID_LOGIN1, VALID_PASSWORD, INVALID_AGE1);
         assertThrows(RegistrationException.class, () -> registration.register(user));
     }
-
 
     @Test
     void register_userInStorage_notOk() {

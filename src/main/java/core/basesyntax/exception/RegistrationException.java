@@ -1,4 +1,4 @@
-package core.basesyntax.Exception;
+package core.basesyntax.exception;
 
 public class RegistrationException extends Exception {
     public RegistrationException(String message) {
