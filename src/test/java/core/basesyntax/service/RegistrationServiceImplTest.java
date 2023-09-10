@@ -1,16 +1,14 @@
 package core.basesyntax.service;
 
-import core.basesyntax.exception.RegistrationException;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import core.basesyntax.exception.RegistrationException;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationService registration = new RegistrationServiceImpl();
-    private static final StorageDao storage = new StorageDaoImpl();
     private static final String VALID_LOGIN1 = "A23456";
     private static final String VALID_LOGIN2 = "B23456";
     private static final String VALID_PASSWORD = "P23456";
@@ -22,6 +20,8 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD2 = "P2345";
     private static final int INVALID_AGE1 = 17;
     private static final int INVALID_AGE2 = -1;
+    private final RegistrationService registration = new RegistrationServiceImpl();
+    private final StorageDao storage = new StorageDaoImpl();
 
     @Test
     void register_loginNull_notOk() {
