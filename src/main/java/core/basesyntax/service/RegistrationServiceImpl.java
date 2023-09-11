@@ -18,26 +18,26 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUser(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserException("User with login '"
-                    + user.getLogin() + "' already exists.");
-        }
-
         if (user.getLogin() == null) {
             throw new InvalidUserException("Login is required");
         }
 
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new InvalidUserException("Invalid login '" + user.getLogin()
                     + "'. Login must be at least '"
                     + MIN_LOGIN_LENGTH + "' characters long.");
+        }
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidUserException("User with login '"
+                    + user.getLogin() + "' already exists.");
         }
 
         if (user.getPassword() == null) {
             throw new InvalidUserException("Password is required");
         }
 
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new InvalidUserException("Invalid password '" + user.getPassword()
                     + "'. Password must be at least '"
                     + MIN_PASSWORD_LENGTH + "' characters long.");
@@ -47,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserException("Age is required");
         }
 
-        if (user.getAge() < 18 || user.getAge() > 2147483647) {
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidUserException("Invalid age '" + user.getAge()
                     + "'. User must be at least '" + MIN_AGE + "' years old.");
         }
