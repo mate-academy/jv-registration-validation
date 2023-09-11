@@ -10,17 +10,17 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final String VALID_LOGIN1 = "A23456";
-    private static final String VALID_LOGIN2 = "B23456";
+    private static final String VALID_LOGIN_FIRST = "A23456";
+    private static final String VALID_LOGIN_SECOND = "B23456";
     private static final String VALID_PASSWORD = "P23456";
     private static final String VALID_SOME_LARGE_VALUE = "V2345678";
     private static final int VALID_AGE = 19;
-    private static final String INVALID_LOGIN1 = "A234";
-    private static final String INVALID_LOGIN2 = "A2345";
-    private static final String INVALID_PASSWORD1 = "P234";
-    private static final String INVALID_PASSWORD2 = "P2345";
-    private static final int INVALID_AGE1 = 17;
-    private static final int INVALID_AGE2 = -1;
+    private static final String INVALID_LOGIN_FIRST = "A234";
+    private static final String INVALID_LOGIN_SECOND = "A2345";
+    private static final String INVALID_PASSWORD_FIRST = "P234";
+    private static final String INVALID_PASSWORD_SECOND = "P2345";
+    private static final int INVALID_AGE_FIRST = 17;
+    private static final int INVALID_AGE_SECOND = -1;
     private final RegistrationService registration = new RegistrationServiceImpl();
     private final StorageDao storage = new StorageDaoImpl();
 
@@ -34,15 +34,15 @@ class RegistrationServiceImplTest {
     void register_loginLengthMin_notOk() {
         User user = new User("", VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registration.register(user));
-        user.setLogin(INVALID_LOGIN1);
+        user.setLogin(INVALID_LOGIN_FIRST);
         assertThrows(RegistrationException.class, () -> registration.register(user));
-        user.setLogin(INVALID_LOGIN2);
+        user.setLogin(INVALID_LOGIN_SECOND);
         assertThrows(RegistrationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_loginLengthEqualMin_Ok() {
-        User user = new User(VALID_LOGIN1, VALID_SOME_LARGE_VALUE, VALID_AGE);
+        User user = new User(VALID_LOGIN_FIRST, VALID_SOME_LARGE_VALUE, VALID_AGE);
         try {
             registration.register(user);
         } catch (RegistrationException e) {
@@ -66,25 +66,25 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordNull_notOk() {
-        User user = new User(VALID_LOGIN1, null, VALID_AGE);
+        User user = new User(VALID_LOGIN_FIRST, null, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_passwordLengthMin_notOk() {
-        User user1 = new User(VALID_LOGIN1, INVALID_PASSWORD1, VALID_AGE);
+        User user1 = new User(VALID_LOGIN_FIRST, INVALID_PASSWORD_FIRST, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registration.register(user1));
-        User user2 = new User(VALID_SOME_LARGE_VALUE, INVALID_PASSWORD2, VALID_AGE);
+        User user2 = new User(VALID_SOME_LARGE_VALUE, INVALID_PASSWORD_SECOND, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registration.register(user2));
     }
 
     @Test
     void register_loginPasswordLengthEqualMin_Ok() {
-        User user = new User(VALID_LOGIN2, VALID_PASSWORD, VALID_AGE);
+        User user = new User(VALID_LOGIN_SECOND, VALID_PASSWORD, VALID_AGE);
         try {
             registration.register(user);
         } catch (RegistrationException e) {
-            fail("Test failed - user's login length = " + VALID_LOGIN2.length()
+            fail("Test failed - user's login length = " + VALID_LOGIN_SECOND.length()
                     + " and password length = " + VALID_PASSWORD.length()
                     + " but " + e.getMessage());
         }
@@ -92,25 +92,25 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageNull_notOk() {
-        User user = new User(VALID_LOGIN1, VALID_PASSWORD, 0);
+        User user = new User(VALID_LOGIN_FIRST, VALID_PASSWORD, 0);
         assertThrows(RegistrationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_ageNegative_notOk() {
-        User user = new User(VALID_LOGIN1, VALID_PASSWORD, INVALID_AGE2);
+        User user = new User(VALID_LOGIN_FIRST, VALID_PASSWORD, INVALID_AGE_SECOND);
         assertThrows(RegistrationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_ageLess_notOk() {
-        User user = new User(VALID_LOGIN1, VALID_PASSWORD, INVALID_AGE1);
+        User user = new User(VALID_LOGIN_FIRST, VALID_PASSWORD, INVALID_AGE_FIRST);
         assertThrows(RegistrationException.class, () -> registration.register(user));
     }
 
     @Test
     void register_userInStorage_notOk() {
-        User user = new User(VALID_LOGIN2, VALID_PASSWORD, VALID_AGE);
+        User user = new User(VALID_LOGIN_SECOND, VALID_PASSWORD, VALID_AGE);
         storage.add(user);
         assertThrows(RegistrationException.class, () -> registration.register(user));
     }

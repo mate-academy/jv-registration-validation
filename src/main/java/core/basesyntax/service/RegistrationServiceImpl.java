@@ -18,11 +18,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkAgeUser(user.getAge());
         if (storage.get(user.getLogin()) != null) {
             throw new RegistrationException("The user with login "
-                    + storage.get(user.getLogin()).getLogin()
+                    + user.getLogin()
                     + " already exists in storage!");
         }
-        storage.add(user);
-        return storage.get(user.getLogin());
+        return storage.add(user);
     }
 
     private void checkLoginUser(String login) throws RegistrationException {
