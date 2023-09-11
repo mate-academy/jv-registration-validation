@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.AuthenticationException;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -14,11 +16,11 @@ class RegistrationServiceImplTest {
     @Test
     void userContent_ok() {
         User user1 = new User();
-        user1.setLogin("User11");
+        user1.setLogin("User111");
         user1.setPassword("password");
         user1.setAge(18);
         User user2 = new User();
-        user2.setLogin("User22");
+        user2.setLogin("User222");
         user2.setPassword("password");
         user2.setAge(18);
         User actual = registrationService.register(user1);
@@ -29,7 +31,23 @@ class RegistrationServiceImplTest {
         expectation = user2;
         assertEquals(expectation, actual, "expectation " + expectation
                 + "but received by the " + actual);
+        StorageDaoImpl storage = new StorageDaoImpl();
+        actual = storage.get(user1.getLogin());
+        Assertions.assertNotNull(actual, "User is not in storage");
+        actual = storage.get(user2.getLogin());
+        Assertions.assertNotNull(actual, "User is not in storage");
+    }
 
+    @Test
+    void addExistingUser_notOk() {
+        User user1 = new User();
+        user1.setLogin("User11");
+        user1.setPassword("password");
+        user1.setAge(18);
+        registrationService.register(user1);
+        assertThrows(AuthenticationException.class, () -> {
+            registrationService.register(user1);
+        });
     }
 
     @Test
@@ -127,9 +145,9 @@ class RegistrationServiceImplTest {
         user1.setLogin(null);
         user1.setPassword("111111");
         user1.setAge(17);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(AuthenticationException.class, () -> {
             registrationService.register(user1);
-        });
+        }, "Login == null");
     }
 
     @Test
@@ -138,9 +156,9 @@ class RegistrationServiceImplTest {
         user1.setLogin("UserSup");
         user1.setPassword(null);
         user1.setAge(17);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(AuthenticationException.class, () -> {
             registrationService.register(user1);
-        });
+        }, "Password == null");
     }
 
     @Test
@@ -149,27 +167,16 @@ class RegistrationServiceImplTest {
         user1.setLogin("UserSup");
         user1.setPassword("123456");
         user1.setAge(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(AuthenticationException.class, () -> {
             registrationService.register(user1);
-        });
+        }, "Age == null");
     }
 
     @Test
     void nullUser_notOk() {
         User user1 = null;
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(user1);
-        });
-    }
-
-    @Test
-    void maxValueIntAge_notOk() {
-        User user1 = new User();
-        user1.setLogin("UserSup");
-        user1.setPassword("123456");
-        user1.setAge(Integer.MAX_VALUE + 1);
         assertThrows(AuthenticationException.class, () -> {
             registrationService.register(user1);
-        });
+        }, "User == null");
     }
 }

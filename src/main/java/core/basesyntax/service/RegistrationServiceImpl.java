@@ -23,28 +23,30 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new AuthenticationException("A user with this login already exists");
         }
         if (user.getLogin().length() < MIN_NUMBER_OF_CHARACTERS) {
-            throw new AuthenticationException("Login less than 6 characters");
+            throw new AuthenticationException("Login less than "
+                    + MIN_NUMBER_OF_CHARACTERS + " characters");
         }
         if (user.getPassword().length() < MIN_NUMBER_OF_CHARACTERS) {
-            throw new AuthenticationException("Password less than 6 characters");
+            throw new AuthenticationException("Password less than "
+                    + MIN_NUMBER_OF_CHARACTERS + " characters");
         }
         if (user.getAge() < MINIMUM_AGE) {
-            throw new AuthenticationException("Age less than 18 years");
+            throw new AuthenticationException("Age less than " + MINIMUM_AGE + " years");
         }
     }
 
     private void checkNullPointerException(User user) {
         if (user == null) {
-            throw new NullPointerException("User == null");
+            throw new AuthenticationException("User == null");
         }
         if (user.getAge() == null) {
-            throw new NullPointerException("Age == null");
+            throw new AuthenticationException("Age == null");
         }
         if (user.getLogin() == null) {
-            throw new NullPointerException("Login == null");
+            throw new AuthenticationException("Login == null");
         }
         if (user.getPassword() == null) {
-            throw new NullPointerException("Password == null");
+            throw new AuthenticationException("Password == null");
         }
     }
 }
