@@ -1,10 +1,11 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final String TYPE_LOGIN = "Login";
+    private static final String TYPE_PASSWORD = "Password";
     private static final int DATA_CORRECT_LENGTH = 6;
     private static final int MINIMUM_AGE = 18;
     private StorageDaoImpl storageDao = new StorageDaoImpl();
@@ -17,8 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user);
         checkPassword(user);
         checkAge(user);
-        Storage.PEOPLE.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkAge(User user) {
@@ -29,11 +29,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkPassword(User user) {
-        checkData(user.getPassword(), "Password");
+        checkData(user.getPassword(), TYPE_PASSWORD);
     }
 
     private void checkLogin(User user) {
-        checkData(user.getLogin(), "Login");
+        checkData(user.getLogin(), TYPE_LOGIN);
         if (storageDao.get(user.getLogin()) != null) {
             throw new FailedRegistrationException("The user with login "
                     + user.getLogin() + " already exists.");

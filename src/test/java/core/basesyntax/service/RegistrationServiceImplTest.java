@@ -6,10 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private RegistrationService registrationService;
+
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @AfterEach
     void tearDown() {
@@ -17,7 +23,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_isCorrectAge_notOkay() {
+    void register_ageIsLessThenMinAge_notOk() {
         User user = new User("cat1234", "1234569", 13);
         assertThrows(FailedRegistrationException.class, () -> registrationService.register(user));
     }
