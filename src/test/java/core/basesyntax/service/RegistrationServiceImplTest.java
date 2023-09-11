@@ -36,6 +36,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_ok() {
+        User expectectedUser = new User();
+        expectectedUser.setLogin("MyName");
+        expectectedUser.setPassword("MyPassword");
+        expectectedUser.setAge(18);
+
+        User actualUser = registrationService.register(expectedUser);
+
+        assertEquals(expectedUser, actualUser);
+        assertNotNull(actualUser.getId());
+
+        assertEquals(1, Storage.PEOPLE.size());
+        assertEquals(expectedUser, Storage.PEOPLE.get(0));
+    }
+
+    @Test
     void register_nullUser_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(null);
@@ -96,13 +112,5 @@ class RegistrationServiceImplTest {
         User actualUser = registrationService.register(expectedUser);
         assertEquals(expectedUser, actualUser);
         assertNotNull(actualUser.getId());
-    }
-
-    @Test
-    void register_userIsPersoent_notOk() {
-        registrationService.register(expectedUser);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(expectedUser);
-        });
     }
 }
