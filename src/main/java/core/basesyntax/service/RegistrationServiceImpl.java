@@ -16,42 +16,46 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new NotValidDataException("User can't be null");
         }
-        checkValidAge(user.getAge());
-        checkValidLogin(user.getLogin());
-        checkValidPassword(user.getPassword());
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new NotValidDataException("User with this login already exists");
-        }
+        checkValidAge(user);
+        checkValidLogin(user);
+        checkValidPassword(user);
+        checkLoginUnused(user);
         return storageDao.add(user);
     }
 
-    private void checkValidLogin(String login) {
-        if (login == null) {
+    private void checkValidLogin(User user) {
+        if (user.getLogin() == null) {
             throw new NotValidDataException("Login can't be null");
         }
-        if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new NotValidDataException("Login length must be at least"
-                    + MIN_LOGIN_LENGTH);
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new NotValidDataException("Login length must be at least "
+                    + String.format("%d", MIN_LOGIN_LENGTH));
         }
     }
 
-    private void checkValidAge(Integer age) {
-        if (age == null) {
+    private void checkValidAge(User user) {
+        if (user.getAge() == null) {
             throw new NotValidDataException("Age can't be null");
         }
-        if (age < MIN_AGE) {
-            throw new NotValidDataException("Age must be at least"
-                    + MIN_AGE);
+        if (user.getAge() < MIN_AGE) {
+            throw new NotValidDataException("Age must be at least "
+                    + String.format("%d", MIN_AGE));
         }
     }
 
-    private void checkValidPassword(String password) {
-        if (password == null) {
+    private void checkValidPassword(User user) {
+        if (user.getPassword() == null) {
             throw new NotValidDataException("Password can't be null");
         }
-        if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new NotValidDataException("Password length must be at least"
-                    + MIN_PASSWORD_LENGTH);
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new NotValidDataException("Password length must be at least "
+                    + String.format("%d", MIN_PASSWORD_LENGTH));
+        }
+    }
+
+    private void checkLoginUnused(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new NotValidDataException("User with this login already exists");
         }
     }
 }
