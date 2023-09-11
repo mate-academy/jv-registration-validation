@@ -1,5 +1,12 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -9,8 +16,6 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Feel free to remove this class and create your own.
@@ -27,9 +32,9 @@ public class RegistratonTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.add(new User("user123", "password123", 25));
-        Storage.people.add(new User("user123", "password123", 25));
-        Storage.people.add(new User("user456", "password456", 30));
+        Storage.PEOPLE.add(new User("user123", "password123", 25));
+        Storage.PEOPLE.add(new User("user123", "password123", 25));
+        Storage.PEOPLE.add(new User("user456", "password456", 30));
     }
 
     @Test
@@ -64,19 +69,20 @@ public class RegistratonTest {
     void addUserToDB_ok() {
         User user = new User("newUser", "newPassword", 25);
         storageDao.add(user);
-        assertTrue(Storage.people.contains(user));
+        assertTrue(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void getUserByLogin_ok() {
         User user = new User("user123", "password123", 25);
+
         storageDao.add(user);
         assertEquals(storageDao.get("user123"), user);
     }
 
     @Test
-    public void testIdSetterGetter_ok() {
-       User user = new User("user123", "password123", 25);
+    void testIdSetterGetter_ok() {
+        User user = new User("user123", "password123", 25);
 
         assertNull(user.getId());
         user.setId(1L);
@@ -94,7 +100,6 @@ public class RegistratonTest {
         user.setLogin("newUser");
         user.setPassword("newPassword");
         user.setAge(30);
-
         assertEquals("newUser", user.getLogin());
         assertEquals("newPassword", user.getPassword());
         assertEquals(Integer.valueOf(30), user.getAge());
@@ -112,6 +117,4 @@ public class RegistratonTest {
         assertNotEquals(user1, user3);
         assertNotEquals(user1.hashCode(), user3.hashCode());
     }
-
-
 }
