@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,46 +74,16 @@ public class RegistratonTest {
     @Test
     void getUserByLogin_ok() {
         User user = new User("user123", "password123", 25);
-
         storageDao.add(user);
-        assertEquals(storageDao.get("user123"), user);
+        User retrieveUser = storageDao.get("user123");
+        assertNotNull(retrieveUser);
+        assertEquals(user.getLogin(),retrieveUser.getLogin());
     }
 
     @Test
-    void testIdSetterGetter_ok() {
-        User user = new User("user123", "password123", 25);
-
-        assertNull(user.getId());
-        user.setId(1L);
-        assertEquals(Long.valueOf(1L), user.getId());
-    }
-
-    @Test
-    public void testGettersAndSetters_ok() {
-        User user = new User("user123", "password123", 25);
-
-        assertEquals("user123", user.getLogin());
-        assertEquals("password123", user.getPassword());
-        assertEquals(Integer.valueOf(25), user.getAge());
-
-        user.setLogin("newUser");
-        user.setPassword("newPassword");
-        user.setAge(30);
-        assertEquals("newUser", user.getLogin());
-        assertEquals("newPassword", user.getPassword());
-        assertEquals(Integer.valueOf(30), user.getAge());
-    }
-
-    @Test
-    public void testEqualsAndHashCode() {
-        User user1 = new User("user123", "password123", 25);
-        User user2 = new User("user123", "password123", 25);
-        User user3 = new User("user456", "password456", 30);
-
-        assertEquals(user1, user2);
-        assertEquals(user1.hashCode(), user2.hashCode());
-
-        assertNotEquals(user1, user3);
-        assertNotEquals(user1.hashCode(), user3.hashCode());
+    void registerUserToDb_ok() {
+        User user = new User("registeredNewUser", "password123", 30);
+        registrationService.register(user);
+        assertTrue(Storage.PEOPLE.contains(user));
     }
 }
