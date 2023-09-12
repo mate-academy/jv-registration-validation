@@ -33,12 +33,11 @@ public class RegistratonTest {
     @BeforeEach
     void setUp() {
         Storage.PEOPLE.add(new User("user123", "password123", 25));
-        Storage.PEOPLE.add(new User("user123", "password123", 25));
         Storage.PEOPLE.add(new User("user456", "password456", 30));
     }
 
     @Test
-    void loginIsExist_notOk() {
+    void register_LoginNotNull_notOk() {
         String login = "user123";
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User(login, "password", 20)));
@@ -46,7 +45,7 @@ public class RegistratonTest {
     }
 
     @Test
-    void loginLengthIsShort_notOk() {
+    void register_ShortLogin_notOk() {
         String login = "Login";
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User(login, "password", 20)));
@@ -54,13 +53,14 @@ public class RegistratonTest {
     }
 
     @Test
-    void passwordLengthIsShort_notOk() {
+    void register_ShortPassword_notOk() {
+        String password = "1234";
         assertThrows(RegistrationException.class, () -> registrationService
-                .register(new User("user678", "1234", 20)));
+                .register(new User("user678", password, 20)));
     }
 
     @Test
-    void largeAge_notOk() {
+    void register_LargeAge_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User("user123", "password123", 15)));
     }
