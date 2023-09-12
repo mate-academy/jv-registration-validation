@@ -6,8 +6,8 @@ import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final int MINIMAL_AGE = 18;
-    public static final int MINIMAL_LENGTH = 6;
+    private static final int MINIMAL_AGE = 18;
+    private static final int MINIMAL_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -29,29 +29,32 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateLogin(String login) {
         if (login == null) {
-            throw new RegistrationException("Your login is null");
+            throw new RegistrationException("Login can`t be null");
         }
         int loginLength = login.length();
         if (loginLength < MINIMAL_LENGTH) {
-            throw new RegistrationException("Login has to have at lest 6 characters, but was "
+            throw new RegistrationException("Login has to have at lest"
+                    + MINIMAL_LENGTH + " characters, but was "
                     + loginLength);
         }
     }
 
     private void validatePassword(String password) {
         if (password == null) {
-            throw new RegistrationException("Your login is null");
+            throw new RegistrationException("Password can`t be null");
         }
         int passwordLength = password.length();
         if (passwordLength < MINIMAL_LENGTH) {
-            throw new RegistrationException("Password has to have at lest 6 characters, but was "
+            throw new RegistrationException("Password has to have at lest"
+                    + MINIMAL_LENGTH + " characters, but was "
                     + passwordLength);
         }
     }
 
     private void validateAge(int age) {
         if (age < MINIMAL_AGE) {
-            throw new RegistrationException("Minimal age allowed - 18, but was " + age);
+            throw new RegistrationException("Minimal age allowed - "
+                    + MINIMAL_AGE + ", but was " + age);
         }
     }
 }
