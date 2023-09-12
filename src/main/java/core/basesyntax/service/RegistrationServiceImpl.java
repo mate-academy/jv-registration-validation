@@ -15,17 +15,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("This user doesn't exist: ");
         }
-        validationOfLogin(user);
-        validationOfPassword(user);
-        validationOfAge(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void validationOfLogin(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null: ");
         }
-        if (user.getLogin().equals("")) {
+        if (user.getLogin().isBlank()) {
             throw new RegistrationException("Login can't be empty line: ");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validationOfPassword(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null: ");
         }
@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validationOfAge(User user) {
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new RegistrationException("Age can not be null: ");
         }

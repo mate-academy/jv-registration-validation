@@ -9,18 +9,14 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/**
- * Feel free to remove this class and create your own.
- */
 public class HelloWorldTest {
+    private static RegistrationService registrationService;
 
-    private RegistrationService registrationService;
-
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -48,7 +44,7 @@ public class HelloWorldTest {
 
     @Test
     void test_loginMinLength_NotOk() {
-        User user = new User("wer", "qwerty1234", 21);
+        User user = new User("werqq", "qwerty1234", 21);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -57,6 +53,14 @@ public class HelloWorldTest {
         User expected = new User("qwertywerwer", "qwerty1234", 21);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void test_loginAlreadyExist_NotOk() {
+        User user = new User("qwerty12", "qwerty1234", 21);
+        Storage.PEOPLE.add(user);
+        User user1 = new User("qwerty12", "asdfghjk", 22);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user1));
     }
 
     @Test
@@ -80,14 +84,20 @@ public class HelloWorldTest {
 
     @Test
     void test_passwordMinLength_NotOk() {
-        User user = new User("qwertywerwer", "qwe", 21);
+        User user = new User("qwertywerwer", "qwety", 21);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void test_AgeLessThenMinAge_NotOk() {
-        User user = new User("qwertywerwer", "qweqwer", 16);
+        User user = new User("qwertywerwer", "qweqwer", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
-}
 
+    @Test
+    void test_AgeMoreThenMinAge_Ok() {
+        User expected = new User("qwertywerwer", "qweqwer", 18);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
+    }
+}
