@@ -1,4 +1,4 @@
-package core.basesyntax.unchekedException;
+package core.basesyntax.exceptions;
 
 public class IncorrectInputDataException extends Exception {
 

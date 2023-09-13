@@ -1,8 +1,8 @@
 package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
+import core.basesyntax.exceptions.IncorrectInputDataException;
 import core.basesyntax.model.User;
-import core.basesyntax.unchekedException.IncorrectInputDataException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addWrongAge_Ok() {
-        Assertions.assertThrows(IncorrectInputDataException.class, () -> registrationService.register(wrongAgeUser));
+        Assertions.assertThrows(IncorrectInputDataException.class,
+                () -> registrationService.register(wrongAgeUser));
     }
 
     @Test
@@ -69,14 +70,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_NotOk() {
         wrongLoginUser.setLogin(null);
-        Assertions.assertThrows(IncorrectInputDataException.class, () -> registrationService.register(wrongLoginUser));
+        Assertions.assertThrows(IncorrectInputDataException.class,
+                () -> registrationService.register(wrongLoginUser));
     }
 
     @Test
     void register_nullPass_NotOk() {
         wrongPassUser.setPassword(null);
-        Assertions.assertThrows(IncorrectInputDataException.class, () -> registrationService.register(wrongPassUser));
+        Assertions.assertThrows(IncorrectInputDataException.class,
+                () -> registrationService.register(wrongPassUser));
     }
-
-
 }
