@@ -18,31 +18,34 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(User user) {
-        if (user.getLogin() == null) {
+        String login = user.getLogin();
+        if (login == null) {
             throw new InvalidDataException("Login can't be null");
         }
-        if (user.getLogin().length() < MIN_LENGTH || user.getLogin().isBlank()) {
+        if (login.length() < MIN_LENGTH || login.isBlank()) {
             throw new InvalidDataException("Login must be at least 6 characters long");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+        if (storageDao.get(login) != null) {
             throw new InvalidDataException("User with this login already exists");
         }
     }
 
     private void validatePassword(User user) {
-        if (user.getPassword() == null) {
+        String password = user.getPassword();
+        if (password == null) {
             throw new InvalidDataException("Password can't be null");
         }
-        if (user.getPassword().length() < MIN_LENGTH || user.getPassword().isBlank()) {
+        if (password.length() < MIN_LENGTH || password.isBlank()) {
             throw new InvalidDataException("Password must be at least 6 characters long");
         }
     }
 
     private void validateAge(User user) {
-        if (user.getAge() == null) {
+        Integer age = user.getAge();
+        if (age == null) {
             throw new InvalidDataException("Age can't be null");
         }
-        if (user.getAge() < MIN_AGE) {
+        if (age < MIN_AGE) {
             throw new InvalidDataException("Not valid age: "
                     + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
