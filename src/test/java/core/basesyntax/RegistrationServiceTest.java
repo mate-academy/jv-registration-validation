@@ -73,10 +73,38 @@ public class RegistrationServiceTest {
     }
 
     @Test
+    public void register_blankLogin_throwException() {
+        User user = new User();
+        user.setLogin("               ");
+        user.setPassword("password123");
+        user.setAge(20);
+
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
+
+        String expectedMessage = "Login must be at least 6 characters long";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
     public void register_shortPassword_throwException() {
         User user = new User();
         user.setLogin("username");
         user.setPassword("short");
+        user.setAge(20);
+
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
+
+        String expectedMessage = "Password must be at least 6 characters long";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void register_blankPassword_throwException() {
+        User user = new User();
+        user.setLogin("username");
+        user.setPassword("                 ");
         user.setAge(20);
 
         Exception exception = assertThrows(InvalidDataException.class,
