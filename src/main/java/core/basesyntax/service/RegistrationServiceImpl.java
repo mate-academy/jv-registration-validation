@@ -11,40 +11,41 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkNull(user);
+
+        validateUserParametersNotNull(user);
         checkParameters(user);
         checkExistingUser(user);
 
         return storageDao.add(user);
     }
 
-    private void checkNull(User user) {
+    private void validateUserParametersNotNull(User user) {
         if (user.getLogin() == null) {
-            throw new InvalidUserException("Login can't be null");
+            throw new InvalidDataException("Login can't be null");
         }
         if (user.getPassword() == null) {
-            throw new InvalidUserException("Password can't be null");
+            throw new InvalidDataException("Password can't be null");
         }
         if (user.getAge() == null) {
-            throw new InvalidUserException("Age can't be null");
+            throw new InvalidDataException("Age can't be null");
         }
     }
 
     private void checkParameters(User user) {
         if (user.getAge() < MIN_AGE) {
-            throw new InvalidUserException("Not valid age: "
+            throw new InvalidDataException("Not valid age: "
                     + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
 
         if (user.getLogin().length() < MIN_LENGTH || user.getPassword().length() < MIN_LENGTH) {
-            throw new InvalidUserException("Login and password must be at least 6 characters long");
+            throw new InvalidDataException("Login and password must be at least 6 characters long");
         }
     }
 
     private void checkExistingUser(User user) {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserException("User with this login already exists");
+            throw new InvalidDataException("User with this login already exists");
         }
     }
 }

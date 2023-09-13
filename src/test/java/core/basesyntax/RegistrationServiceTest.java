@@ -6,13 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.model.User;
-import core.basesyntax.service.InvalidUserException;
+import core.basesyntax.service.InvalidDataException;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static final RegistrationServiceImpl REG_SERVICE = new RegistrationServiceImpl();
     private static final int MIN_AGE = 18;
+    private RegistrationServiceImpl registrationService;
+
+    @BeforeEach
+    void setup() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @Test
     public void register_validUser_successfulRegistration() {
@@ -21,7 +27,7 @@ public class RegistrationServiceTest {
         user.setPassword("password123");
         user.setAge(20);
 
-        User registeredUser = REG_SERVICE.register(user);
+        User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
         assertEquals(user.getLogin(), registeredUser.getLogin());
     }
@@ -38,9 +44,9 @@ public class RegistrationServiceTest {
         user2.setPassword("anotherpassword");
         user2.setAge(25);
 
-        Exception exception = assertThrows(InvalidUserException.class, () -> {
-            REG_SERVICE.register(user1);
-            REG_SERVICE.register(user2);
+        Exception exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user1);
+            registrationService.register(user2);
         });
 
         String expectedMessage = "User with this login already exists";
@@ -56,8 +62,8 @@ public class RegistrationServiceTest {
         user.setPassword("password123");
         user.setAge(20);
 
-        Exception exception = assertThrows(InvalidUserException.class,
-                () -> REG_SERVICE.register(user));
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
 
         String expectedMessage = "Login and password must be at least 6 characters long";
         String actualMessage = exception.getMessage();
@@ -72,8 +78,8 @@ public class RegistrationServiceTest {
         user.setPassword("short");
         user.setAge(20);
 
-        Exception exception = assertThrows(InvalidUserException.class,
-                () -> REG_SERVICE.register(user));
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
 
         String expectedMessage = "Login and password must be at least 6 characters long";
         String actualMessage = exception.getMessage();
@@ -88,8 +94,8 @@ public class RegistrationServiceTest {
         user.setPassword("password123");
         user.setAge(17);
 
-        Exception exception = assertThrows(InvalidUserException.class,
-                () -> REG_SERVICE.register(user));
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
 
         String expectedMessage = "Not valid age: "
                 + user.getAge()
@@ -106,8 +112,8 @@ public class RegistrationServiceTest {
         user.setPassword("password123");
         user.setAge(18);
 
-        Exception exception = assertThrows(InvalidUserException.class,
-                () -> REG_SERVICE.register(user));
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
 
         String expectedMessage = "Login can't be null";
         String actualMessage = exception.getMessage();
@@ -122,8 +128,8 @@ public class RegistrationServiceTest {
         user.setPassword(null);
         user.setAge(18);
 
-        Exception exception = assertThrows(InvalidUserException.class,
-                () -> REG_SERVICE.register(user));
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
 
         String expectedMessage = "Password can't be null";
         String actualMessage = exception.getMessage();
@@ -138,8 +144,8 @@ public class RegistrationServiceTest {
         user.setPassword("password123");
         user.setAge(null);
 
-        Exception exception = assertThrows(InvalidUserException.class,
-                () -> REG_SERVICE.register(user));
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
 
         String expectedMessage = "Age can't be null";
         String actualMessage = exception.getMessage();
