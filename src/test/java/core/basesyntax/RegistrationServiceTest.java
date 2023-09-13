@@ -3,21 +3,26 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.InvalidDataException;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static final int MIN_AGE = 18;
     private RegistrationServiceImpl registrationService;
 
     @BeforeEach
-    void setup() {
+    void setUp() {
         registrationService = new RegistrationServiceImpl();
+    }
+
+    @AfterEach
+    void cleanUp() {
+        Storage.PEOPLE.clear();
     }
 
     @Test
@@ -39,20 +44,18 @@ public class RegistrationServiceTest {
         user1.setPassword("password123");
         user1.setAge(20);
 
+        registrationService.register(user1);
+
         User user2 = new User();
         user2.setLogin("username");
         user2.setPassword("anotherpassword");
         user2.setAge(25);
 
-        Exception exception = assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(user1);
-            registrationService.register(user2);
-        });
+        Exception exception = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user2));
 
         String expectedMessage = "User with this login already exists";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -65,10 +68,8 @@ public class RegistrationServiceTest {
         Exception exception = assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
 
-        String expectedMessage = "Login and password must be at least 6 characters long";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        String expectedMessage = "Login must be at least 6 characters long";
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -81,10 +82,8 @@ public class RegistrationServiceTest {
         Exception exception = assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
 
-        String expectedMessage = "Login and password must be at least 6 characters long";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        String expectedMessage = "Password must be at least 6 characters long";
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -97,12 +96,8 @@ public class RegistrationServiceTest {
         Exception exception = assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
 
-        String expectedMessage = "Not valid age: "
-                + user.getAge()
-                + ". Min allowed age is " + MIN_AGE;
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        String expectedMessage = "Not valid age: 17. Min allowed age is 18";
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -116,9 +111,7 @@ public class RegistrationServiceTest {
                 () -> registrationService.register(user));
 
         String expectedMessage = "Login can't be null";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -132,9 +125,7 @@ public class RegistrationServiceTest {
                 () -> registrationService.register(user));
 
         String expectedMessage = "Password can't be null";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -148,8 +139,6 @@ public class RegistrationServiceTest {
                 () -> registrationService.register(user));
 
         String expectedMessage = "Age can't be null";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 }

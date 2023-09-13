@@ -11,41 +11,41 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-
-        validateUserParametersNotNull(user);
-        checkParameters(user);
-        checkExistingUser(user);
-
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void validateUserParametersNotNull(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login can't be null");
         }
-        if (user.getPassword() == null) {
-            throw new InvalidDataException("Password can't be null");
+        if (user.getLogin().length() < MIN_LENGTH || user.getLogin().equals("")) {
+            throw new InvalidDataException("Login must be at least 6 characters long");
         }
-        if (user.getAge() == null) {
-            throw new InvalidDataException("Age can't be null");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidDataException("User with this login already exists");
         }
     }
 
-    private void checkParameters(User user) {
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new InvalidDataException("Password can't be null");
+        }
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new InvalidDataException("Password must be at least 6 characters long");
+        }
+    }
+
+    private void validateAge(User user) {
+        if (user.getAge() == null) {
+            throw new InvalidDataException("Age can't be null");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException("Not valid age: "
                     + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
-        }
-
-        if (user.getLogin().length() < MIN_LENGTH || user.getPassword().length() < MIN_LENGTH) {
-            throw new InvalidDataException("Login and password must be at least 6 characters long");
-        }
-    }
-
-    private void checkExistingUser(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidDataException("User with this login already exists");
         }
     }
 }
