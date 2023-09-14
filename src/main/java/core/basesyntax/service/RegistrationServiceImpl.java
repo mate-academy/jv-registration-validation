@@ -15,46 +15,64 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User is null!");
         }
-        String login = user.getLogin();
-        if (storageDao.get(login) != null) {
-            throw new RegistrationException("User with given login \""
-                    + login + "\" already exists");
-        }
-        validateLogin(login);
-        validatePassword(user.getPassword());
-        validateAge(user.getAge());
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
 
         return storageDao.add(user);
     }
 
-    private void validateLogin(String login) {
+    private void validateLogin(User user) {
+        String login = user.getLogin();
         if (login == null) {
             throw new RegistrationException("Login can`t be null");
         }
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException(String
+                    .format("User with given login \"%s\" already exists", login));
+        }
         int loginLength = login.length();
         if (loginLength < MINIMAL_LENGTH) {
-            throw new RegistrationException("Login has to have at lest"
-                    + MINIMAL_LENGTH + " characters, but was "
-                    + loginLength);
+            throw new RegistrationException(String
+                    .format("Login has to have at least %d characters,"
+                            + " but was %d", MINIMAL_LENGTH, loginLength));
+        }
+        if (onlySpacesCheck(login)) {
+            throw new RegistrationException("The login should not be composed"
+                    + " entirely of whitespace characters.");
         }
     }
 
-    private void validatePassword(String password) {
+    private void validatePassword(User user) {
+        String password = user.getPassword();
         if (password == null) {
             throw new RegistrationException("Password can`t be null");
         }
         int passwordLength = password.length();
         if (passwordLength < MINIMAL_LENGTH) {
-            throw new RegistrationException("Password has to have at lest"
-                    + MINIMAL_LENGTH + " characters, but was "
-                    + passwordLength);
+            throw new RegistrationException(String
+                    .format("Password has to have at least %d characters,"
+                            + " but was %d", MINIMAL_LENGTH, passwordLength));
+        }
+        if (onlySpacesCheck(password)) {
+            throw new RegistrationException("The password should not be composed"
+                    + " entirely of whitespace characters.");
         }
     }
 
-    private void validateAge(int age) {
-        if (age < MINIMAL_AGE) {
-            throw new RegistrationException("Minimal age allowed - "
-                    + MINIMAL_AGE + ", but was " + age);
+    private void validateAge(User user) {
+        Integer age = user.getAge();
+        if (age == null) {
+            throw new RegistrationException("Age can`t be null");
         }
+        if (age < MINIMAL_AGE) {
+            throw new RegistrationException(String
+                    .format("Minimal age allowed - %d, but was %d", MINIMAL_AGE, age));
+        }
+    }
+
+    private boolean onlySpacesCheck(String input) {
+        String trimmedInput = input.trim();
+        return trimmedInput.isEmpty();
     }
 }

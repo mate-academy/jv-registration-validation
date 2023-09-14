@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
@@ -12,15 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
-    private static final int CORRECT_AGE = 50;
-    private static final int SMALLER_THAN_ALLOWED_AGE = 2;
-    private static final int NEGATIVE_AGE = -100;
-    private static final String CORRECT_LOGIN = "CorrectLogin@gmail.login";
-    private static final String CORRECT_PASSWORD = "greatPassword12345";
-    private static final String SMALL_LENGTH_CREDENTIAL_VALUE = "small";
     private static RegistrationServiceImpl registrationService;
-    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -35,12 +26,11 @@ class RegistrationServiceImplTest {
     @Test
     void register_addAndReturnCorrectUser_ok() {
         User correctUser = new User();
-        correctUser.setAge(CORRECT_AGE);
-        correctUser.setLogin(CORRECT_LOGIN);
-        correctUser.setPassword(CORRECT_PASSWORD);
+        correctUser.setAge(50);
+        correctUser.setLogin("CorrectLogin@gmail.login");
+        correctUser.setPassword("greatPassword12345");
         User returnedUser = registrationService.register(correctUser);
-        StorageDaoImpl storageDao = new StorageDaoImpl();
-        User actualAddedUser = storageDao.get(correctUser.getLogin());
+        User actualAddedUser = Storage.PEOPLE.get(0);
         assertEquals(actualAddedUser, correctUser);
         assertEquals(returnedUser, correctUser);
     }
@@ -55,26 +45,35 @@ class RegistrationServiceImplTest {
     void register_ageIsNull_notOk() {
         User user = new User();
         user.setAge(null);
-        user.setLogin(CORRECT_LOGIN);
-        user.setPassword(CORRECT_PASSWORD);
+        user.setLogin("CorrectLogin@gmail.login");
+        user.setPassword("greatPassword12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_loginIsNull_notOk() {
         User user = new User();
-        user.setAge(CORRECT_AGE);
+        user.setAge(50);
         user.setLogin(null);
-        user.setPassword(CORRECT_PASSWORD);
+        user.setPassword("greatPassword12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         User user = new User();
-        user.setAge(CORRECT_AGE);
-        user.setLogin(CORRECT_LOGIN);
+        user.setAge(50);
+        user.setLogin("CorrectLogin@gmail.login");
         user.setPassword(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordAndLoginOfWhitespaces_notOk() {
+        User user = new User();
+        user.setAge(50);
+        user.setLogin("     ");
+        user.setPassword("       ");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -87,29 +86,28 @@ class RegistrationServiceImplTest {
     @Test
     void register_existingUser_notOk() {
         User newUser = new User();
-        newUser.setAge(CORRECT_AGE);
-        newUser.setPassword(CORRECT_PASSWORD);
-        newUser.setLogin(CORRECT_LOGIN);
-        StorageDaoImpl storageDao = new StorageDaoImpl();
-        storageDao.add(newUser);
+        newUser.setAge(50);
+        newUser.setPassword("greatPassword12345");
+        newUser.setLogin("CorrectLogin@gmail.login");
+        Storage.PEOPLE.add(newUser);
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
     void register_ageIsLessThan18_notOk() {
         User youngUser = new User();
-        youngUser.setAge(SMALLER_THAN_ALLOWED_AGE);
-        youngUser.setPassword(CORRECT_PASSWORD);
-        youngUser.setLogin(CORRECT_LOGIN);
+        youngUser.setAge(2);
+        youngUser.setPassword("greatPassword12345");
+        youngUser.setLogin("CorrectLogin@gmail.login");
         assertThrows(RegistrationException.class, () -> registrationService.register(youngUser));
     }
 
     @Test
     void register_negativeAge_notOk() {
         User userWithNegativeAge = new User();
-        userWithNegativeAge.setAge(NEGATIVE_AGE);
-        userWithNegativeAge.setPassword(CORRECT_PASSWORD);
-        userWithNegativeAge.setLogin(CORRECT_LOGIN);
+        userWithNegativeAge.setAge(-100);
+        userWithNegativeAge.setPassword("greatPassword12345");
+        userWithNegativeAge.setLogin("CorrectLogin@gmail.login");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithNegativeAge));
     }
@@ -117,9 +115,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsUnderSixSymbols() {
         User userWithSmallPassword = new User();
-        userWithSmallPassword.setAge(CORRECT_AGE);
-        userWithSmallPassword.setPassword(SMALL_LENGTH_CREDENTIAL_VALUE);
-        userWithSmallPassword.setLogin(CORRECT_LOGIN);
+        userWithSmallPassword.setAge(50);
+        userWithSmallPassword.setPassword("small");
+        userWithSmallPassword.setLogin("CorrectLogin@gmail.login");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithSmallPassword));
     }
@@ -127,9 +125,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginIsUnderSixSymbols() {
         User userWithSmallLogin = new User();
-        userWithSmallLogin.setAge(CORRECT_AGE);
-        userWithSmallLogin.setPassword(CORRECT_PASSWORD);
-        userWithSmallLogin.setLogin(SMALL_LENGTH_CREDENTIAL_VALUE);
+        userWithSmallLogin.setAge(50);
+        userWithSmallLogin.setPassword("greatPassword12345");
+        userWithSmallLogin.setLogin("small");
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userWithSmallLogin));
     }
