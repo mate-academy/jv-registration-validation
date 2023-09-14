@@ -44,7 +44,7 @@ public class RegistrationServiceTest {
         user1.setPassword("password123");
         user1.setAge(20);
 
-        registrationService.register(user1);
+        Storage.PEOPLE.add(user1);
 
         User user2 = new User();
         user2.setLogin("username");

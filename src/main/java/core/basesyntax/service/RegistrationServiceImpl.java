@@ -23,7 +23,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Login can't be null");
         }
         if (login.length() < MIN_LENGTH || login.isBlank()) {
-            throw new InvalidDataException("Login must be at least 6 characters long");
+            throw new InvalidDataException("Login must be at least "
+                    + MIN_LENGTH
+                    + " characters long");
         }
         if (storageDao.get(login) != null) {
             throw new InvalidDataException("User with this login already exists");
@@ -36,7 +38,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Password can't be null");
         }
         if (password.length() < MIN_LENGTH || password.isBlank()) {
-            throw new InvalidDataException("Password must be at least 6 characters long");
+            throw new InvalidDataException("Password must be at least "
+                    + MIN_LENGTH
+                    + " characters long");
         }
     }
 
