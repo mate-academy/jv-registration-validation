@@ -26,7 +26,7 @@ public class RegistratonServiceImplTest {
     }
 
     @Test
-    void invalidLogin_NotOk() {
+    void register_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User(null, "password", 19)));
         assertThrows(RegistrationException.class, () -> registrationService
@@ -35,20 +35,14 @@ public class RegistratonServiceImplTest {
                 .register(new User("short", "password", 20)));
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User("user01", "password", 20)));
-    }
-
-    @Test
-    void invalidPassword_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User("user06", null, 19)));
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User("user678", "", 20)));
         assertThrows(RegistrationException.class, () -> registrationService
-                .register(new User("user678", "1234", 20)));
-    }
-
-    @Test
-    void invalidAge_NotOk() {
+                .register(new User("user678", "123", 20)));
+        assertThrows(RegistrationException.class, () -> registrationService
+                .register(new User("user678", "12345", 20)));
         assertThrows(RegistrationException.class, () -> registrationService
                 .register(new User("user07", "password", null)));
         assertThrows(RegistrationException.class, () -> registrationService
@@ -59,43 +53,22 @@ public class RegistratonServiceImplTest {
 
     @Test
     void register_ok() {
-        User user1 = new User("user02", "password123", 30);
-        User user2 = new User("user03", "password123", 30);
-        User user3 = new User("user04", "password123", 30);
-        registrationService.register(user1);
-        registrationService.register(user2);
-        registrationService.register(user3);
-        assertTrue(Storage.PEOPLE.contains(user1));
-        assertTrue(Storage.PEOPLE.contains(user2));
-        assertTrue(Storage.PEOPLE.contains(user3));
-    }
-
-    @Test
-    void validLogin_ok() {
         User userLoginLength6 = new User("user00", "password123", 30);
-        User userLoginLength10 = new User("user012345", "password123", 30);
+        User userLoginLength8 = new User("user0123", "password123", 30);
+        User userPasswordLength6 = new User("user12", "123456", 30);
+        User userpasswordLength8 = new User("user012345", "12345678", 30);
+        User userAge18 = new User("user33", "password", 18);
+        User userAgeGreater18 = new User("user22", "password", 80);
         registrationService.register(userLoginLength6);
-        registrationService.register(userLoginLength10);
-        assertTrue(Storage.PEOPLE.contains(userLoginLength6));
-        assertTrue(Storage.PEOPLE.contains(userLoginLength10));
-    }
-
-    @Test
-    void validPassword_ok() {
-        User userPasswordLength6 = new User("user00", "123456", 30);
-        User userpasswordLength10 = new User("user012345", "1234567890", 30);
+        registrationService.register(userLoginLength8);
         registrationService.register(userPasswordLength6);
-        registrationService.register(userpasswordLength10);
-        assertTrue(Storage.PEOPLE.contains(userPasswordLength6));
-        assertTrue(Storage.PEOPLE.contains(userpasswordLength10));
-    }
-
-    @Test
-    void validAge_ok() {
-        User userAge18 = new User("user00", "password", 18);
-        User userAgeGreater18 = new User("user012345", "password", 80);
+        registrationService.register(userpasswordLength8);
         registrationService.register(userAge18);
         registrationService.register(userAgeGreater18);
+        assertTrue(Storage.PEOPLE.contains(userLoginLength6));
+        assertTrue(Storage.PEOPLE.contains(userLoginLength8));
+        assertTrue(Storage.PEOPLE.contains(userPasswordLength6));
+        assertTrue(Storage.PEOPLE.contains(userpasswordLength8));
         assertTrue(Storage.PEOPLE.contains(userAge18));
         assertTrue(Storage.PEOPLE.contains(userAgeGreater18));
     }
