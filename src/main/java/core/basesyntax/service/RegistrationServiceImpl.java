@@ -25,25 +25,28 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationExseption("This login already exist");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationExseption("Too short login, minimum 6 characters");
+            throw new RegistrationExseption("Too short login, minimum "
+                    + MIN_LOGIN_LENGTH + "characters");
         }
     }
 
     private void checkPassword(User user) {
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationExseption("Too short password, minimum 6 characters");
+            throw new RegistrationExseption("Too short password, minimum "
+                    + MIN_PASSWORD_LENGTH + "characters");
         }
     }
 
     private void checkAge(User user) {
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationExseption("Too small age, minimum 18 years");
+            throw new RegistrationExseption("Too small age, minimum "
+                    + MIN_AGE + " years");
         }
     }
 
     private void checkNull(User user) {
         if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
-            throw new RegistrationExseption("Input data!!!");
+            throw new RegistrationExseption("No data!!!");
         }
     }
 }
