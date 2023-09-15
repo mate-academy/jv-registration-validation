@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -10,13 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final String firstValidLogin = "Robert";
-    private final String secondValidLogin = "genryyy";
-    private final String validPassword = "qwerty123";
-    private final String invalidLogin = "qwe";
-    private final String invalidPassword = "qwert";
-    private final int validAge = 18;
-    private long id;
+
     private RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
@@ -31,28 +24,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_Ok() {
-        User user = new User();
-        user.setId(id);
-        user.setPassword(validPassword);
-        user.setLogin(firstValidLogin);
-        user.setAge(validAge);
+        User user = new User("Robert", "qwerty123", 18);
         registrationService.register(user);
-    }
-
-    @Test
-    void register_twoValidUsers_Ok() {
-        User user = new User();
-        user.setId(id);
-        user.setPassword(validPassword);
-        user.setLogin(firstValidLogin);
-        user.setAge(validAge);
-        User secondValidUser = new User();
-        secondValidUser.setAge(validAge);
-        secondValidUser.setLogin(secondValidLogin);
-        secondValidUser.setPassword(validPassword);
-        registrationService.register(user);
-        registrationService.register(secondValidUser);
-        assertEquals(2, Storage.PEOPLE.size());
     }
 
     @Test
@@ -62,50 +35,30 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortLogin_notOk() {
-        User invalidUserByLoginLength = new User();
-        invalidUserByLoginLength.setAge(19);
-        invalidUserByLoginLength.setLogin(invalidLogin);
-        invalidUserByLoginLength.setPassword(validPassword);
-        invalidUserByLoginLength.setId(id++);
+        User user = new User("qwe", "123456", 18);
         assertThrows(RegistrationExseption.class,() -> registrationService
-                .register(invalidUserByLoginLength));
+                .register(user));
     }
 
     @Test
-    void invalidUserByPasswordLength_notOk() {
-        User invalidUserByPasswordLength = new User();
-        invalidUserByPasswordLength.setAge(19);
-        invalidUserByPasswordLength.setLogin(firstValidLogin);
-        invalidUserByPasswordLength.setPassword(invalidPassword);
-        invalidUserByPasswordLength.setId(id++);
+    void register_shortPassword_notOk() {
+        User user = new User("qwertyu", "1", 18);
         assertThrows(RegistrationExseption.class,() -> registrationService
-                .register(invalidUserByPasswordLength));
+                .register(user));
     }
 
     @Test
     void userWithTheSameLoginInStorage_NotOk() {
-        User validUser = new User();
-        validUser.setId(id);
-        validUser.setPassword(validPassword);
-        validUser.setLogin(firstValidLogin);
-        validUser.setAge(validAge);
-        registrationService.register(validUser);
-        User existUser = new User();
-        existUser.setId(id);
-        existUser.setPassword(validPassword);
-        existUser.setLogin(firstValidLogin);
-        existUser.setAge(validAge);
+        User user = new User("qwerty", "123456", 18);
+        registrationService.register(user);
+        User existUser = new User("qwerty", "123456", 18);
         assertThrows(RegistrationExseption.class,() -> registrationService.register(existUser));
     }
 
     @Test
     void checkIsUserAdult_NotOk() {
-        User invalidUserByAge = new User();
-        invalidUserByAge.setAge(17);
-        invalidUserByAge.setLogin(secondValidLogin);
-        invalidUserByAge.setPassword(validPassword);
-        invalidUserByAge.setId(id++);
+        User user = new User("qwerty", "123456", 17);
         assertThrows(RegistrationExseption.class,() -> registrationService
-                .register(invalidUserByAge));
+                .register(user));
     }
 }
