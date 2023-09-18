@@ -22,6 +22,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAge(User user) {
+        if (user.getAge() == null) {
+            throw new FailedRegistrationException("Age can't be null");
+        }
         if (user.getAge() < MINIMUM_AGE) {
             throw new FailedRegistrationException("Invalid age, "
                     + "it must be at least " + MINIMUM_AGE);
@@ -40,16 +43,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkData(String test, String type) {
-        if (test == null) {
+    private void checkData(String input, String type) {
+        if (input == null) {
             throw new FailedRegistrationException(type + " can't be null");
         }
-        if (test.length() < DATA_CORRECT_LENGTH) {
+        if (input.length() < DATA_CORRECT_LENGTH) {
             throw new FailedRegistrationException(type + " can't be so short."
                     + System.lineSeparator() + "Correct length at least " + DATA_CORRECT_LENGTH
-                    + ".Actual length is " + test.length());
+                    + ".Actual length is " + input.length());
         }
-        if (test.isBlank()) {
+        if (input.isBlank()) {
             throw new FailedRegistrationException(type + " can't be blank.");
         }
     }
