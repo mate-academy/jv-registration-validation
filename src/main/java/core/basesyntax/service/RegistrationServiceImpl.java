@@ -6,15 +6,14 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
+    private final StorageDao storageDao = new StorageDaoImpl();
     private String login;
-    private static final int MIN_PASSWORD = 6;
 
     @Override
     public User register(User user) {
         if (user.getLogin() == null || user.getLogin().length() < 6) {
-            throw new RegistrationException("Login can't be null, and login must be at least six chars");
+            throw new RegistrationException("Login can't be null");
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
