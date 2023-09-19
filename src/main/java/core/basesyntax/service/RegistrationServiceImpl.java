@@ -1,14 +1,34 @@
 package core.basesyntax.service;
 
+import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MIN_AGE = 18;
+    private String login;
+    private static final int MIN_PASSWORD = 6;
 
     @Override
     public User register(User user) {
-        return null;
+        if (user.getLogin() == null || user.getLogin().length() < 6) {
+            throw new RegistrationException("Login can't be null, and login must be at least six chars");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ". Min allowed age is " + MIN_AGE);
+        }
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with the same login already exists");
+        }
+
+        storageDao.add(user);
+        return user;
     }
 }
