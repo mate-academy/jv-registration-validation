@@ -1,10 +1,10 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceTest {
     private RegistrationService registrationService;
@@ -46,7 +46,8 @@ class RegistrationServiceTest {
     @Test
     void register_shortPassword_throwsException() {
         User userWithShortPassword = new User("username", "short", 25);
-        RegistrationException exception = assertThrows(RegistrationException.class, () -> registrationService.register(userWithShortPassword));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(userWithShortPassword));
     }
 
     @Test
