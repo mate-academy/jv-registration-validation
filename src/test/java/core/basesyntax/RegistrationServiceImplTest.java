@@ -12,10 +12,10 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final String defaultPassword = "228322";
-    private final String defaultLogin = "228322";
-    private final Integer defaultAge = 54;
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static final String defaultPassword = "228322";
+    private static final String defaultLogin = "228322";
+    private static final Integer defaultAge = 54;
+    private static final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
     void register_validUser_Ok() {
@@ -53,8 +53,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_existingLogin_NotOk() {
         User user = new User("existingLogin", defaultPassword, defaultAge);
-        assertEquals(user, registrationService.register(user));
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        Storage.PEOPLE.add(user);
+        User existingUser = new User("existingLogin", defaultPassword, defaultAge);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(existingUser));
     }
 
     @Test
@@ -80,14 +81,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_notAdultAge_NotOk() {
-        User user = new User(defaultLogin, defaultPassword, 4);
+        User user = new User(defaultLogin, defaultPassword, 17);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
 
     @Test
     void register_negativeAge_NotOk() {
-        User user = new User(defaultLogin, defaultPassword, -4);
+        User user = new User(defaultLogin, defaultPassword, -20);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         assertFalse(Storage.PEOPLE.contains(user));
     }
