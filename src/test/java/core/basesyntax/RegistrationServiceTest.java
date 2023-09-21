@@ -1,16 +1,12 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.*;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * Feel free to remove this class and create your own.
- */
 public class RegistrationServiceTest {
     private RegistrationService registrationService;
 
@@ -53,6 +49,7 @@ public class RegistrationServiceTest {
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_shortPassword_registrationFailed() {
         User user = new User();
@@ -61,6 +58,7 @@ public class RegistrationServiceTest {
         user.setAge(20);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_shortLogin_registrationFailed() {
         User user = new User();
@@ -69,6 +67,7 @@ public class RegistrationServiceTest {
         user.setAge(25);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
+
     @Test
     public void register_existingLogin_registrationFailed() {
         User existingUser = new User();
@@ -82,6 +81,7 @@ public class RegistrationServiceTest {
         userWithSameLogin.setAge(35);
         assertThrows(RegistrationException.class, () -> registrationService.register(userWithSameLogin));
     }
+
     @Test
     public void isAdult_WhenAgeIsNull_ReturnsFalse() {
         User user = new User();
@@ -143,13 +143,6 @@ public class RegistrationServiceTest {
         assertTrue(user1.equals(user2));
     }
 
-    /*@Test
-    public void equals_DifferentUsers_ReturnsFalse() {
-        User user1 = new User();
-        User user2 = new User();
-        assertFalse(user1.equals(user2));
-    }
-*/
     @Test
     public void equals_DifferentUsers_ReturnsFalse() {
         User user1 = new User();
@@ -164,6 +157,7 @@ public class RegistrationServiceTest {
 
         assertFalse(user1.equals(user2));
     }
+
     @Test
     public void hashCode_EqualUsers_HaveSameHashCode() {
         User user1 = new User();
