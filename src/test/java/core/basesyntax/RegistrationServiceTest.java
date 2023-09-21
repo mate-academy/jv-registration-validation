@@ -50,7 +50,8 @@ public class RegistrationServiceTest {
         registrationService.register(existingUser);
 
         User userWithSameLogin = new User("existinguser", "newpassword", 35);
-        assertThrows(RegistrationException.class, () -> registrationService.register(userWithSameLogin));
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(userWithSameLogin));
     }
 
     @Test
