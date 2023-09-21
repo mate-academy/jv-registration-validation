@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -79,7 +83,8 @@ public class RegistrationServiceTest {
         userWithSameLogin.setLogin("existinguser");
         userWithSameLogin.setPassword("newpassword");
         userWithSameLogin.setAge(35);
-        assertThrows(RegistrationException.class, () -> registrationService.register(userWithSameLogin));
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(userWithSameLogin));
     }
 
     @Test
@@ -122,18 +127,6 @@ public class RegistrationServiceTest {
         user.setLogin("username");
         user.setPassword("password123");
         assertTrue(user.hasValidLoginAndPassword());
-    }
-
-    @Test
-    public void constructor_DefaultConstructor() {
-        User user = new User();
-        assertNotNull(user);
-    }
-
-    @Test
-    public void constructor_ParameterizedConstructor() {
-        User user = new User();
-        assertNotNull(user);
     }
 
     @Test
