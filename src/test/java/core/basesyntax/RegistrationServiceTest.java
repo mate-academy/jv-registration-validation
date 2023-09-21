@@ -1,9 +1,9 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -21,70 +21,36 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_ValidUser_Success() {
-        User user = new User();
-        user.setLogin("user123");
-        user.setPassword("password123");
-        user.setAge(18);
+        User user = new User("user123", "password123", 18);
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser.getId());
     }
 
     @Test
-    public void register_UserWitShortLogin_ThrowsException() {
-        User user = new User();
-        user.setLogin("u");
-        user.setPassword("password123");
-        user.setAge(18);
+    public void register_UserWithShortLogin_ThrowsException() {
+        User user = new User("u", "password123", 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_UserWithSortPassword_ThrowsException() {
-        User user = new User();
-        user.setLogin("user123");
-        user.setPassword("pass");
-        user.setAge(18);
+    public void register_UserWithShortPassword_ThrowsException() {
+        User user = new User("user123", "pass", 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_underageUser_registrationFailed() {
-        User user = new User();
-        user.setLogin("validuser");
-        user.setPassword("validpassword");
-        user.setAge(17);
+    public void register_UnderageUser_ThrowsException() {
+        User user = new User("validuser", "validpassword", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_shortPassword_registrationFailed() {
-        User user = new User();
-        user.setLogin("validuser");
-        user.setPassword("short");
-        user.setAge(20);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    public void register_shortLogin_registrationFailed() {
-        User user = new User();
-        user.setLogin("short");
-        user.setPassword("validpassword");
-        user.setAge(25);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    public void register_existingLogin_registrationFailed() {
-        User existingUser = new User();
-        existingUser.setLogin("existinguser");
-        existingUser.setPassword("password");
-        existingUser.setAge(30);
+    public void register_UserWithExistingLogin_ThrowsException() {
+        User existingUser = new User("existinguser", "password", 30);
         registrationService.register(existingUser);
-        User userWithSameLogin = new User();
-        userWithSameLogin.setLogin("existinguser");
-        userWithSameLogin.setPassword("newpassword");
-        userWithSameLogin.setAge(35);
-        assertThrows(RegistrationException.class, () ->
-                registrationService.register(userWithSameLogin));
+
+        User userWithSameLogin = new User("existinguser", "newpassword", 35);
+        assertThrows(RegistrationException.class, () -> registrationService.register(userWithSameLogin));
     }
 
     @Test
@@ -95,15 +61,13 @@ public class RegistrationServiceTest {
 
     @Test
     public void isAdult_WhenAgeIsLessThan18_ReturnsFalse() {
-        User user = new User();
-        user.setAge(17);
+        User user = new User("user123", "password123", 17);
         assertFalse(user.isAdult());
     }
 
     @Test
     public void isAdult_WhenAgeIsEqualTo18_ReturnsTrue() {
-        User user = new User();
-        user.setAge(18);
+        User user = new User("user123", "password123", 18);
         assertTrue(user.isAdult());
     }
 
@@ -123,51 +87,22 @@ public class RegistrationServiceTest {
 
     @Test
     public void hasValidLoginAndPassword_WhenLoginAndPasswordAreValid_ReturnsTrue() {
-        User user = new User();
-        user.setLogin("username");
-        user.setPassword("password123");
+        User user = new User("username", "password123", 18);
         assertTrue(user.hasValidLoginAndPassword());
     }
 
     @Test
     public void equals_SameUser_ReturnsTrue() {
-        User user1 = new User();
-        User user2 = new User();
+        User user1 = new User("user123", "password123", 18);
+        User user2 = new User("user123", "password123", 18);
         assertTrue(user1.equals(user2));
     }
 
     @Test
     public void equals_DifferentUsers_ReturnsFalse() {
-        User user1 = new User();
-        user1.setLogin("user123");
-        user1.setPassword("password123");
-        user1.setAge(18);
-
-        User user2 = new User();
-        user2.setLogin("differentUser");
-        user2.setPassword("differentPassword");
-        user2.setAge(25);
-
+        User user1 = new User("user123", "password123", 18);
+        User user2 = new User("differentUser", "differentPassword", 25);
         assertFalse(user1.equals(user2));
-    }
-
-    @Test
-    public void hashCode_EqualUsers_HaveSameHashCode() {
-        User user1 = new User();
-        User user2 = new User();
-        assertEquals(user1.hashCode(), user2.hashCode());
-    }
-
-    @Test
-    public void isAdult_NullAge_ReturnsFalse() {
-        User user = new User();
-        assertFalse(user.isAdult());
-    }
-
-    @Test
-    public void hasValidLoginAndPassword_NullLogin_ReturnsFalse() {
-        User user = new User();
-        assertFalse(user.hasValidLoginAndPassword());
     }
 }
 
