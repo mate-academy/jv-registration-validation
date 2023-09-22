@@ -35,61 +35,51 @@ class RegistrationServiceImplTest {
     @Test
     @DisplayName("user equals null not Ok")
     void register_nullUser_notOk() {
-        assertThrows(InvalidDataException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(null));
     }
 
     @Test
     @DisplayName("user already exist not Ok")
-    void register_alreadyExistUser_notOk() {
+    void register_alreadyExistLogin_notOk() {
         Storage.people.add(user);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("login with null value not Ok")
     void register_nullUserLogin_notOk() {
         user.setLogin(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("login with length 0 not Ok")
-    void register_0LengthUserLogin_notOk() {
+    void register_emptyUserLogin_notOk() {
         user.setLogin("");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    @DisplayName("login with length " + 3 + " not Ok")
-    void register_3LengthUserLogin_notOk() {
-        user.setLogin(STRING_123);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("login with length shorter "
             + RegistrationServiceImpl.MIN_LOGIN_LENGTH + " not Ok")
-    void register_shorterThanMinLengthLogin_notOk() {
+    void register_shortLogin_notOk() {
+        user.setLogin(STRING_123);
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
         user.setLogin(STRING_12345);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    @DisplayName("login with length equals "
+    @DisplayName("login with length equals or greater "
             + RegistrationServiceImpl.MIN_LOGIN_LENGTH + " Ok")
-    void register_equalsMinLengthLogin_Ok() {
+    void register_longLogin_Ok() {
         user.setLogin(CORRECT_LOGIN);
-        final User actual = registrationService.register(user);
+        User actual = registrationService.register(user);
         assertEquals(RegistrationServiceImpl.MIN_LOGIN_LENGTH, actual.getLogin().length(),
                 "login length must be equals " + RegistrationServiceImpl.MIN_PASSWORD_LENGTH);
-    }
-
-    @Test
-    @DisplayName("login with length greater "
-            + RegistrationServiceImpl.MIN_LOGIN_LENGTH + " Ok")
-    void register_longerThanMinLengthLogin_Ok() {
         user.setLogin(STRING_12345678);
-        final User actual = registrationService.register(user);
+        Storage.people.clear();
+        actual = registrationService.register(user);
         assertTrue(actual.getLogin().length() > RegistrationServiceImpl.MIN_LOGIN_LENGTH,
                 "login length must be > " + RegistrationServiceImpl.MIN_LOGIN_LENGTH);
     }
@@ -98,47 +88,37 @@ class RegistrationServiceImplTest {
     @DisplayName("password with null value not Ok")
     void register_nullUserPassword_notOk() {
         user.setPassword(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("password with length 0 not Ok")
-    void register_0LengthUserPassword_notOk() {
+    void register_emptyUserPassword_notOk() {
         user.setPassword("");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    @DisplayName("password with length " + 3 + " not Ok")
-    void register_3LengthUserPassword_notOk() {
-        user.setPassword(STRING_123);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("password with length shorter "
             + RegistrationServiceImpl.MIN_PASSWORD_LENGTH + " not Ok")
-    void register_shorterThanMinLengthPassword_notOk() {
+    void register_shortPassword_notOk() {
+        user.setPassword(STRING_123);
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
         user.setPassword(STRING_12345);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    @DisplayName("password with length equals "
+    @DisplayName("password with length equals or greater "
             + RegistrationServiceImpl.MIN_PASSWORD_LENGTH + " Ok")
-    void register_equalsMinLengthPassword_Ok() {
+    void register_longPassword_Ok() {
         user.setPassword(CORRECT_PASSWORD);
-        final User actual = registrationService.register(user);
+        User actual = registrationService.register(user);
         assertEquals(RegistrationServiceImpl.MIN_PASSWORD_LENGTH, actual.getPassword().length(),
                 "password length must be equals " + RegistrationServiceImpl.MIN_PASSWORD_LENGTH);
-    }
-
-    @Test
-    @DisplayName("password with length greater "
-            + RegistrationServiceImpl.MIN_PASSWORD_LENGTH + " Ok")
-    void register_longerThanMinLengthPassword_Ok() {
         user.setPassword(STRING_12345678);
-        final User actual = registrationService.register(user);
+        Storage.people.clear();
+        actual = registrationService.register(user);
         assertTrue(actual.getPassword().length() > RegistrationServiceImpl.MIN_PASSWORD_LENGTH,
                 "password length must be > " + RegistrationServiceImpl.MIN_PASSWORD_LENGTH);
     }
@@ -147,21 +127,21 @@ class RegistrationServiceImplTest {
     @DisplayName("age with null value not Ok")
     void register_nullUserAge_notOk() {
         user.setAge(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("age less " + RegistrationServiceImpl.MIN_AGE + " not Ok")
     void register_lessThanMinimalAge_notOk() {
         user.setAge(RegistrationServiceImpl.MIN_AGE - 1);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("age with negative value not Ok")
     void register_negativeAge_notOk() {
         user.setAge(-1);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationDataException.class, () -> registrationService.register(user));
     }
 
     @Test
