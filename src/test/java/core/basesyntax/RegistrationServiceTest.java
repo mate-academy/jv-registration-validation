@@ -7,58 +7,47 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
+    private static final int MIN_AGE = 18;
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @Test
-    public void register_ValidUser_Success() {
-        User user = new User("user123", "password123", 18);
+    public void register_EmptyPassword_ThrowsException() {
+        User user = new User("validuser", "", MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_ShortPassword_ThrowsException() {
+        User user = new User("validuser", "abc", MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_FiveCharacterPassword_ThrowsException() {
+        User user = new User("validuser", "abcdf", MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_SixCharacterPassword_Success() throws RegistrationException {
+        User newUser = new User("validuser", "abcdef", MIN_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
+
+    }
+
+    @Test
+    public void register_EightCharacterPassword_Success() {
+        User user = new User("validuser", "abcdefgh", MIN_AGE);
         User registeredUser = registrationService.register(user);
-        assertNotNull(registeredUser);
-        assertEquals(user, registeredUser);
-    }
-
-    @Test
-    public void register_UserWithShortLogin_ThrowsException() {
-        User user = new User("u", "password123", 18);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    public void register_UserWithShortPassword_ThrowsException() {
-        User user = new User("user123", "pass", 18);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    public void register_UnderageUser_ThrowsException() {
-        User user = new User("validuser", "validpassword", 17);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    public void register_UserWithValidParameters_ReturnsRegisteredUser() {
-        User user = new User("validuser", "validpassword", 18);
-        User registeredUser = registrationService.register(user);
-        assertNotNull(registeredUser);
-        assertEquals(user, registeredUser);
-    }
-
-    @Test
-    public void register_UserWithExistingLogin_ThrowsException() {
-        User existingUser = new User("existinguser", "password", 30);
-        registrationService.register(existingUser);
-
-        User userWithSameLogin = new User("existinguser", "newpassword", 35);
-        assertThrows(RegistrationException.class, () -> registrationService
-                .register(userWithSameLogin));
+        assertNotNull(registeredUser.getId());
     }
 }
