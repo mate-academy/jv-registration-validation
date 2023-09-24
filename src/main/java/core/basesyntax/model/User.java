@@ -17,14 +17,6 @@ public class User {
         this.age = age;
     }
 
-    public boolean isAdult() {
-        return age != null && age >= 18;
-    }
-
-    public boolean hasValidLoginAndPassword() {
-        return login != null && login.length() >= 6 && password != null && password.length() >= 6;
-    }
-
     public Long getId() {
         return id;
     }
