@@ -1,9 +1,9 @@
-package core.basesyntax.test.service;
+package core.basesyntax.service;
 
-import core.basesyntax.test.dao.StorageDao;
-import core.basesyntax.test.dao.StorageDaoImpl;
-import core.basesyntax.test.exceptions.RegistrationException;
-import core.basesyntax.test.model.User;
+import core.basesyntax.exceptions.RegistrationException;
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH = 6;

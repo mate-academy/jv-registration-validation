@@ -1,13 +1,13 @@
-package core.basesyntax.test;
+package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.test.db.Storage;
-import core.basesyntax.test.exceptions.RegistrationException;
-import core.basesyntax.test.model.User;
-import core.basesyntax.test.service.RegistrationService;
-import core.basesyntax.test.service.RegistrationServiceImpl;
+import core.basesyntax.exceptions.RegistrationException;
+import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
+import core.basesyntax.service.RegistrationServiceImpl;
+import core.basesyntax.db.Storage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

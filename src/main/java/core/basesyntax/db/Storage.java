@@ -1,6 +1,7 @@
-package core.basesyntax.test.db;
+package core.basesyntax.db;
 
-import core.basesyntax.test.model.User;
+import core.basesyntax.model.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
