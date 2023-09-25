@@ -1,7 +1,7 @@
-package core.basesyntax.dao;
+package core.basesyntax.test.dao;
 
-import core.basesyntax.db.Storage;
-import core.basesyntax.model.User;
+import core.basesyntax.test.db.Storage;
+import core.basesyntax.test.model.User;
 
 public class StorageDaoImpl implements StorageDao {
     private static Long index = 0L;
@@ -9,13 +9,13 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public User add(User user) {
         user.setId(++index);
-        Storage.people.add(user);
+        Storage.PEOPLE.add(user);
         return user;
     }
 
     @Override
     public User get(String login) {
-        for (User user : Storage.people) {
+        for (User user : Storage.PEOPLE) {
             if (user.getLogin().equals(login)) {
                 return user;
             }

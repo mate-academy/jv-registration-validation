@@ -1,6 +1,6 @@
-package core.basesyntax.dao;
+package core.basesyntax.test.dao;
 
-import core.basesyntax.model.User;
+import core.basesyntax.test.model.User;
 
 public interface StorageDao {
     User add(User user);
