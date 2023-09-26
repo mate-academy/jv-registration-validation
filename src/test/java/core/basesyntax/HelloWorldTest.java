@@ -12,27 +12,17 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.InvalidUserDataException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
+    private static StorageDao storageDao;
+    private static RegistrationService registrationService;
 
-    private User user = new User();
-    private final StorageDao storageDao = new StorageDaoImpl();
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-
-    @Test
-    void nullUser() {
-        assertNotNull(user);
-    }
-
-    @Test
-    void notNullLogin() {
-        assertNull(user.getLogin());
-    }
-
-    @Test
-    void notNullPassword() {
-        assertNull(user.getPassword());
+    @BeforeAll
+    static void setUp() {
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
@@ -57,7 +47,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void smallGuy() {
+    void smallGuyNotOk() {
         User youngUser = new User();
         youngUser.setLogin("Kotyhoroshko");
         youngUser.setPassword("3,1415926535");
@@ -68,13 +58,59 @@ public class HelloWorldTest {
     }
 
     @Test
-    void shortPassword() {
+    void shortPasswordNotOk() {
         User peterParker = new User();
         peterParker.setAge(22);
         peterParker.setLogin("AmazingSpiderMan");
         peterParker.setPassword("MJ");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(peterParker);
+        });
+    }
+
+    @Test
+    void nullLoginNotOk() {
+        User bigBrother = new User();
+        bigBrother.setLogin(null);
+        bigBrother.setPassword("qwerty123456");
+        bigBrother.setAge(41);
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(bigBrother);
+        });
+    }
+
+    @Test
+    void addTwoPerson() {
+        User personOne = new User();
+        personOne.setAge(30);
+        personOne.setLogin("Kitana");
+        personOne.setPassword("qazxcxzaq");
+        User personTwo = new User();
+        personTwo.setAge(30);
+        personTwo.setLogin("Milena");
+        personTwo.setPassword("wasd1234");
+        registrationService.register(personOne);
+        registrationService.register(personTwo);
+        assertNotNull(storageDao.get("Kitana"));
+        assertNull(storageDao.get("Jade"));
+        assertNotNull(storageDao.get("Milena"));
+    }
+
+    @Test
+    void addNotOkPerson() {
+        User personOne = new User();
+        personOne.setLogin("PaulAtrid");
+        personOne.setPassword("duna");
+        personOne.setAge(18);
+        User personTwo = new User();
+        personTwo.setAge(21);
+        personTwo.setLogin("Lord");
+        personTwo.setPassword("zxcvbn10");
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(personOne);
+        });
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(personTwo);
         });
     }
 }
