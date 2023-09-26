@@ -8,6 +8,12 @@ public class User {
     private String password;
     private Integer age;
 
+    public User(String login,String password,Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     public Long getId() {
         return id;
     }
@@ -26,12 +32,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public User(String login,String password,Integer age){
-        this.login = login;
-        this.password = password;
-        this.age = age;
     }
 
     public void setPassword(String password) {
@@ -67,10 +67,19 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", age=" + age +
+        return "User{"
+                +
+                "login='"
+                + login
+                + '\''
+                +
+                ", password='"
+                + password
+                + '\''
+                +
+                ", age="
+                + age
+                +
                 '}';
     }
 }

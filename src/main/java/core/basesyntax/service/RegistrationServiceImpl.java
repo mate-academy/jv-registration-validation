@@ -5,19 +5,20 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
+
     private static final int MIN_AGE = 18;
     private static final int MIN_LOGIN_PASSWORD_LENGTH = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        UserValidation(user);
+        userValidation(user);
         User addNewUser = storageDao.add(user);
 
         return addNewUser;
     }
 
-    public void UserValidation(User user) {
+    public void userValidation(User user) {
         isUserAlreadyRegistered(user.getLogin());
         isAdult(user);
         isPasswordLargeEnough(user);
@@ -33,12 +34,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void isPasswordLargeEnough(User user) {
         String password = user.getPassword();
-        if (password == null ||password.length() <= MIN_LOGIN_PASSWORD_LENGTH) {
+        if (password == null || password.length() <= MIN_LOGIN_PASSWORD_LENGTH) {
             throw new RegistrationError("Your password to small");
         }
     }
 
-    public void isLoginLargeEnough(User user){
+    public void isLoginLargeEnough(User user) {
         String login = user.getLogin();
         if (login == null || login.length() <= MIN_LOGIN_PASSWORD_LENGTH) {
             throw new RegistrationError("Your login to small");
@@ -47,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void isUserAlreadyRegistered(String login) {
         User checkRegister = storageDao.get(login);
-        if (checkRegister!=null){
+        if (checkRegister != null) {
             throw new RegistrationError("Your login already registered");
         }
     }
