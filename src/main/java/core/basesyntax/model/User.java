@@ -65,21 +65,4 @@ public class User {
         return Objects.hash(login, password, age);
     }
 
-    @Override
-    public String toString() {
-        return "User{"
-                +
-                "login='"
-                + login
-                + '\''
-                +
-                ", password='"
-                + password
-                + '\''
-                +
-                ", age="
-                + age
-                +
-                '}';
-    }
 }
