@@ -15,7 +15,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithInsufficientAge_ThrowsRegistrationException() {
+    void checkIsNotEnoughAge_NotOK() {
         User user = new User("Loginnir", "Password", 5);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -23,7 +23,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithShortPassword_ThrowsRegistrationException() {
+    void checkIsShortPassword_NotOK() {
         User user = new User(null, "Pass", 19);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithShortLogin_ThrowsRegistrationException() {
+    void checkIsShortLogin_NotOK() {
         User user = new User("Log", "Passwordius", 35);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -39,7 +39,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithDuplicateLogin_ThrowsRegistrationException() {
+    void checkIsLoginAlreadyRegistered_NotOK() {
         User user = new User("Loginius", "Passwordius", 35);
         registrationService.register(user);
 
