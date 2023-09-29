@@ -16,7 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class HelloWorldTest {
+public class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private static RegistrationService registrationService;
 
@@ -32,7 +32,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    void addUser() {
+    void addUserOk() {
         User torin = new User();
         torin.setAge(60);
         torin.setLogin("oakShield");
