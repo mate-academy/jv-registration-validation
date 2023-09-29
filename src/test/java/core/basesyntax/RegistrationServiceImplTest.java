@@ -37,7 +37,7 @@ public class RegistrationServiceImplTest {
         torin.setAge(60);
         torin.setLogin("oakShield");
         torin.setPassword("123456");
-        storageDao.add(torin);
+        Storage.people.add(torin);
         assertNotNull(storageDao.get("oakShield"));
     }
 
