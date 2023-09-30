@@ -32,17 +32,17 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUserOk() {
+    void isThereAUserLoginInTheStorageAfterAdding() {
         User torin = new User();
         torin.setAge(60);
         torin.setLogin("oakShield");
         torin.setPassword("123456");
-        Storage.people.add(torin);
+        registrationService.register(torin);
         assertNotNull(storageDao.get("oakShield"));
     }
 
     @Test
-    void sizeAfterAdd() {
+    void theStorageSizeIncreasesAfterUserRegistration() {
         User bruce = new User();
         bruce.setAge(19);
         bruce.setLogin("Batman");
@@ -53,7 +53,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void smallGuyNotOk() {
+    void doesNotPassRegistrationIfItIsLessThan18YearsOld() {
         User youngUser = new User();
         youngUser.setLogin("Kotyhoroshko");
         youngUser.setPassword("3,1415926535");
@@ -64,7 +64,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void shortPasswordNotOk() {
+    void registrationDoesNotTakePlaceIfThePasswordHasLessThan6Letters() {
         User peterParker = new User();
         peterParker.setAge(22);
         peterParker.setLogin("AmazingSpiderMan");
@@ -75,9 +75,9 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullLoginNotOk() {
+    void registrationDoesNotTakePlaceIfTheLoginHasLessThan6Letters() {
         User bigBrother = new User();
-        bigBrother.setLogin(null);
+        bigBrother.setLogin("Don");
         bigBrother.setPassword("qwerty123456");
         bigBrother.setAge(41);
         assertThrows(InvalidUserDataException.class, () -> {
@@ -86,7 +86,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void addTwoPerson() {
+    void isThereAUsersLoginInTheStorageAfterAddingTwoPerson() {
         User personOne = new User();
         personOne.setAge(30);
         personOne.setLogin("Kitana");
@@ -96,7 +96,7 @@ public class RegistrationServiceImplTest {
         personTwo.setLogin("Milena");
         personTwo.setPassword("wasd1234");
         registrationService.register(personOne);
-        storageDao.add(personTwo);
+        registrationService.register(personTwo);
         assertNotNull(storageDao.get("Kitana"));
         assertNull(storageDao.get("Jade"));
         assertNotNull(storageDao.get("Milena"));
@@ -104,13 +104,13 @@ public class RegistrationServiceImplTest {
 
     @Test
     void sizeAfterAddTwo() {
-        addTwoPerson();
+        isThereAUsersLoginInTheStorageAfterAddingTwoPerson();
         int expectedSize = 2;
         assertEquals(Storage.people.size(), expectedSize);
     }
 
     @Test
-    void addNotOkPerson() {
+    void registrationDoesNotTakePlaceIfTheLoginHasLessThan6LettersOrAgeLessThen18() {
         User personOne = new User();
         personOne.setLogin("PaulAtrid");
         personOne.setPassword("duna");
@@ -128,7 +128,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void whithoutPasswordNotOk() {
+    void registrationDoesNotTakePlaceWithoutPassword() {
         User persTwo = new User();
         persTwo.setAge(51);
         persTwo.setLogin("Klmn10");
@@ -138,7 +138,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void whithoutLoginNotOk() {
+    void registrationDoesNotTakePlaceWithoutLogin() {
         User user = new User();
         user.setAge(78);
         user.setPassword("Klmn10");
@@ -148,7 +148,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void negativeAgeNotOk() {
+    void registrationDoesNotTakePlaceWithNegativeAge() {
         User user = new User();
         user.setLogin("Vormer");
         user.setAge(-1);
