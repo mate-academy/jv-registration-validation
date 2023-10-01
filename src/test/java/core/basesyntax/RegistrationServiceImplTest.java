@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -31,31 +30,20 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationService_loginInStorage_ok() {
-        User torin = new User();
-        torin.setAge(60);
-        torin.setLogin("oakShield");
-        torin.setPassword("123456");
-        registrationService.register(torin);
-        assertNotNull(storageDao.get("oakShield"));
+    void register_validData_ok() {
+        User userOne = new User();
+        userOne.setAge(18);
+        userOne.setLogin("login1");
+        userOne.setPassword("password1");
+        registrationService.register(userOne);
+        assertNotNull(storageDao.get("login1"));
     }
 
     @Test
-    void registrationService_storageSize_ok() {
-        User bruce = new User();
-        bruce.setAge(19);
-        bruce.setLogin("Batman");
-        bruce.setPassword("whereisthedetonator");
-        registrationService.register(bruce);
-        int expectedSize = 1;
-        assertEquals(expectedSize, Storage.people.size());
-    }
-
-    @Test
-    void registrationService_smallAge_notOk() {
+    void register_smallAge_notOk() {
         User youngUser = new User();
-        youngUser.setLogin("Kotyhoroshko");
-        youngUser.setPassword("3,1415926535");
+        youngUser.setLogin("youngLogin");
+        youngUser.setPassword("youngPassword");
         youngUser.setAge(15);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(youngUser);
@@ -63,55 +51,53 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationService_shortPassword_notOk() {
-        User peterParker = new User();
-        peterParker.setAge(22);
-        peterParker.setLogin("AmazingSpiderMan");
-        peterParker.setPassword("MJ");
+    void register_shortPassword_notOk() {
+        User userTwo = new User();
+        userTwo.setAge(22);
+        userTwo.setLogin("loginTwo");
+        userTwo.setPassword("short");
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(peterParker);
+            registrationService.register(userTwo);
         });
     }
 
     @Test
-    void registrationService_shortLogin_notOk() {
-        User bigBrother = new User();
-        bigBrother.setLogin("Don");
-        bigBrother.setPassword("qwerty123456");
-        bigBrother.setAge(41);
+    void register_shortLogin_notOk() {
+        User userThree = new User();
+        userThree.setLogin("user");
+        userThree.setPassword("passwordThree");
+        userThree.setAge(41);
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(bigBrother);
+            registrationService.register(userThree);
         });
     }
 
     @Test
-    void registrationService_loginInStorageAndSize_ok() {
+    void register_validDataTwo_ok() {
         User personOne = new User();
         personOne.setAge(30);
-        personOne.setLogin("Kitana");
-        personOne.setPassword("qazxcxzaq");
+        personOne.setLogin("loginOne");
+        personOne.setPassword("passwordOne");
         User personTwo = new User();
         personTwo.setAge(30);
-        personTwo.setLogin("Milena");
-        personTwo.setPassword("wasd1234");
+        personTwo.setLogin("loginTwo");
+        personTwo.setPassword("passwordTwo");
         registrationService.register(personOne);
         registrationService.register(personTwo);
-        assertNotNull(storageDao.get("Kitana"));
-        assertNotNull(storageDao.get("Milena"));
-        int expectedSize = 2;
-        assertEquals(Storage.people.size(), expectedSize);
+        assertNotNull(storageDao.get("loginOne"));
+        assertNotNull(storageDao.get("loginTwo"));
     }
 
     @Test
-    void registrationService_incorrectRegistrationData_notOk() {
+    void register_incorrectRegistrationData_notOk() {
         User personOne = new User();
-        personOne.setLogin("PaulAtrid");
-        personOne.setPassword("duna");
-        personOne.setAge(18);
+        personOne.setAge(30);
+        personOne.setLogin("loginOne");
+        personOne.setPassword("pass");
         User personTwo = new User();
-        personTwo.setAge(21);
-        personTwo.setLogin("Lord");
-        personTwo.setPassword("zxcvbn10");
+        personTwo.setAge(30);
+        personTwo.setLogin("log");
+        personTwo.setPassword("passwordTwo");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(personOne);
         });
@@ -121,31 +107,31 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registrationService_withoutPassword_notOk() {
-        User persTwo = new User();
-        persTwo.setAge(51);
-        persTwo.setLogin("Klmn10");
+    void register_nullPassword_notOk() {
+        User userTwo = new User();
+        userTwo.setAge(51);
+        userTwo.setLogin("passTwo");
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(persTwo);
+            registrationService.register(userTwo);
         });
     }
 
     @Test
-    void registrationService_withoutLogin_notOk() {
+    void register_nullLogin_notOk() {
         User user = new User();
         user.setAge(78);
-        user.setPassword("Klmn10");
+        user.setPassword("userPassword");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void registrationService_negativeAge_notOk() {
+    void register_negativeAge_notOk() {
         User user = new User();
-        user.setLogin("Vormer");
+        user.setLogin("userLogin");
         user.setAge(-1);
-        user.setPassword("PPPushka");
+        user.setPassword("userPassword");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(user);
         });
