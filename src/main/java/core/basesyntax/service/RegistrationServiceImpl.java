@@ -18,6 +18,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidUserDataException("Password can't be null");
         }
+        if (user.getAge() == null) {
+            throw new InvalidUserDataException("Age can't be null");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new InvalidUserDataException("Not valid age: "
                     + user.getAge() + ". Min allowed age is " + MIN_AGE);

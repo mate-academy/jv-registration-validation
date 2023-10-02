@@ -37,6 +37,18 @@ public class RegistrationServiceImplTest {
         userOne.setPassword("password1");
         registrationService.register(userOne);
         assertNotNull(storageDao.get("login1"));
+        User personOne = new User();
+        personOne.setAge(30);
+        personOne.setLogin("loginOne");
+        personOne.setPassword("passwordOne");
+        User personTwo = new User();
+        personTwo.setAge(30);
+        personTwo.setLogin("loginTwo");
+        personTwo.setPassword("passwordTwo");
+        registrationService.register(personOne);
+        registrationService.register(personTwo);
+        assertNotNull(storageDao.get("loginOne"));
+        assertNotNull(storageDao.get("loginTwo"));
     }
 
     @Test
@@ -73,36 +85,12 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validDataTwo_ok() {
+    void register_nullAge_notOk() {
         User personOne = new User();
-        personOne.setAge(30);
-        personOne.setLogin("loginOne");
-        personOne.setPassword("passwordOne");
-        User personTwo = new User();
-        personTwo.setAge(30);
-        personTwo.setLogin("loginTwo");
-        personTwo.setPassword("passwordTwo");
-        registrationService.register(personOne);
-        registrationService.register(personTwo);
-        assertNotNull(storageDao.get("loginOne"));
-        assertNotNull(storageDao.get("loginTwo"));
-    }
-
-    @Test
-    void register_incorrectRegistrationData_notOk() {
-        User personOne = new User();
-        personOne.setAge(30);
         personOne.setLogin("loginOne");
         personOne.setPassword("pass");
-        User personTwo = new User();
-        personTwo.setAge(30);
-        personTwo.setLogin("log");
-        personTwo.setPassword("passwordTwo");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(personOne);
-        });
-        assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(personTwo);
         });
     }
 
