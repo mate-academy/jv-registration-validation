@@ -4,54 +4,55 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import core.basesyntax.service.RegisterException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService service;
-    Map<String,User> myMap;
+    private static RegistrationService serviceRegistr;
+    private static Map<String,User> myMap;
 
     @BeforeAll
     static void beforeAll() {
-        service = new RegistrationServiceImpl();
+        serviceRegistr = new RegistrationServiceImpl();
+        myMap = new HashMap<>();
     }
 
     @BeforeEach
     void setUp() {
-        myMap = new HashMap<>();
-        myMap.put("petro",new User("Petro","Qwerty",22));
-        User mikolay = new User("Mikolay","Qwert",99);
-        User nikol = new User("","Qwert123",29);
-        User babaLyusya = new User("Baba Lyusya","",88);
-        User baby = new User("Babysh","SkoroBudet",0);
-        User maloletka = new User("Krasotka","S657!Gtr=07`'}",17);
+        myMap.put("login5Sym",new User("Petro","Qwerty",22));
+        myMap.put("passw5Sym", new User("Mikolay","Qwert",99));
+        myMap.put("loginBlank", new User("","Qwert123",29));
+        myMap.put("passwBlank", new User("Baba Lyusya","",88));
+        myMap.put("age0", new User("Babysh","SkoroBudet",0));
+        myMap.put("age17", new User("Krasotka","S657!Gtr=07`'}",17));
         myMap.put("loginNull", new User(null,"Qwerty",19));
-        User passNull = new User("Pechkin",null,19);
-        User vladislav = new User("Vladislav","Qwerty!!",22);
-        User vladislav2 = new User("Vladislav","Qwerty!!",22);
+        myMap.put("passNull", new User("Pechkin",null,19));
+        myMap.put("userOk", new User("Vladislav","Qwerty!!",22));
     }
 
     @Test
     void testLoginIsNull() {
-        User actual = myMap.get("loginNull");
-        assertThrows(RegisterException.class,() ->service.register(actual));
+        assertThrows(RegisterException.class,() ->
+                serviceRegistr.register(myMap.get("loginNull")));
     }
 
     @Test
     void testPasswordIs_Null() {
-
+        assertThrows(RegisterException.class,() ->
+                serviceRegistr.register(myMap.get("passNull")));
     }
 
     @Test
     void testPasswordLengthIs_Ok() {
+      //  User actual = myMap.get("userOk");
     }
 
     @Test
     void testPasswordLengthIs_NotOk() {
-
+        boolean actual = serviceRegistr.register("");
+    assertNotEquals(false,actual,"Password schould be greater als 6 Symbol");
     }
 
     @Test

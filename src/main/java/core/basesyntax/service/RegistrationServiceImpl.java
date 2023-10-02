@@ -14,9 +14,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegisterException("Login should be not null");
         }
-        if (user.getLogin().equals(storageDao.get(user.getLogin()).getLogin())) {
-            throw new RegisterException("This user exists in DB");
-        }
         if (user.getLogin().length() < LENGTH) {
             throw new RegisterException("Login length should be greater als " + LENGTH);
         }
@@ -28,6 +25,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegisterException("User Age should be greater als " + MIN_AGE);
+        }
+        if (user.getLogin().equals(storageDao.get(user.getLogin()).getLogin())) {
+            throw new RegisterException("This user exists in DB");
         }
         return storageDao.add(user);
     }
