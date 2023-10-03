@@ -1,22 +1,25 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService serviceRegistr;
     private static Map<String,User> myMap;
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void beforeAll() {
         serviceRegistr = new RegistrationServiceImpl();
         myMap = new HashMap<>();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -34,40 +37,60 @@ class RegistrationServiceImplTest {
 
     @Test
     void testLoginIsNull() {
-        assertThrows(RegisterException.class,() ->
-                serviceRegistr.register(myMap.get("loginNull")));
+        Assertions.assertThrows(RegisterException.class,() ->
+                        serviceRegistr.register(myMap.get("loginNull")),
+                "If Login is Null then should be Exception");
     }
 
     @Test
     void testPasswordIs_Null() {
-        assertThrows(RegisterException.class,() ->
-                serviceRegistr.register(myMap.get("passNull")));
-    }
-
-    @Test
-    void testPasswordLengthIs_Ok() {
-      //  User actual = myMap.get("userOk");
+        Assertions.assertThrows(RegisterException.class,() ->
+                        serviceRegistr.register(myMap.get("passNull")),
+                "If Password is Null then should be Exception");
     }
 
     @Test
     void testPasswordLengthIs_NotOk() {
-        boolean actual = serviceRegistr.register("");
-    assertNotEquals(false,actual,"Password schould be greater als 6 Symbol");
-    }
-
-    @Test
-    void testLoginLengthIs_Ok() {
-    }
-
-    @Test
-    void testLoginLengthIs_NotOk() {
-    }
-
-    @Test
-    void testAgeUserIs_Ok() {
+        Assertions.assertThrows(RegisterException.class, () ->
+                        serviceRegistr.register(myMap.get("passw5Sym")),
+                "If Password length least als 6 Symbol then should be Exception");
+        Assertions.assertThrows(RegisterException.class, () ->
+                        serviceRegistr.register(myMap.get("passwBlank")),
+                "If Password length least als 6 Symbol then should be Exception");
     }
 
     @Test
     void testAgeUserIs_NotOk() {
+        Assertions.assertThrows(RegisterException.class, () ->
+                        serviceRegistr.register(myMap.get("age0")),
+                "If Age least als 18 years old then should be Exception");
+        Assertions.assertThrows(RegisterException.class, () ->
+                        serviceRegistr.register(myMap.get("age17")),
+                "If Age least als 18 years old then should be Exception");
+    }
+
+    @Test
+    void testLoginLengthIs_NotOk() {
+        Assertions.assertThrows(RegisterException.class, () ->
+                        serviceRegistr.register(myMap.get("login5Sym")),
+                "If Login length least als 6 Symbol then should be Exception");
+        Assertions.assertThrows(RegisterException.class, () ->
+                        serviceRegistr.register(myMap.get("loginBlank")),
+                "If Login length least als 6 Symbol then should be Exception");
+    }
+
+    @Test
+    void testUserOk() {
+        User expected = serviceRegistr.register(myMap.get("userOk"));
+        Assertions.assertEquals(expected,storageDao.get(myMap.get("userOk").getLogin()),
+                "User in DB not equals");
+    }
+
+    @Test
+    void testUserClone() {
+        User actual = serviceRegistr.register(myMap.get("userOk"));
+        Assertions.assertThrows(RegisterException.class, () ->
+                        serviceRegistr.register(myMap.get("userOk")),
+                "If User already exists in DB then should be Exception");
     }
 }
