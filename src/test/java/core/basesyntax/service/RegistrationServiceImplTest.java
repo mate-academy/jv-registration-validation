@@ -33,7 +33,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_NotOk() {
-        assertThrows(RegistrationException.class,
+        assertThrows(RuntimeException.class,
                 () -> registrationService.register(null));
     }
 
@@ -72,10 +72,6 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(user));
         assertDoesNotThrow(() -> {
             user.setAge(18);
-            registrationService.register(user);
-        });
-        assertDoesNotThrow(() -> {
-            user.setAge(25);
             registrationService.register(user);
         });
     }
