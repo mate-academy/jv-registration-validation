@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -32,12 +33,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_NotOk() {
-        assertThrows(RuntimeException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(null));
     }
 
     @Test
-    void register_invalid_login_NotOk() {
+    void register_invalidLogin_NotOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
@@ -53,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalid_age_NotOk() {
+    void register_invalidAge_NotOk() {
         user.setAge(null);
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(user));
@@ -69,10 +70,18 @@ class RegistrationServiceImplTest {
         user.setAge(16);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        assertDoesNotThrow(() -> {
+            user.setAge(18);
+            registrationService.register(user);
+        });
+        assertDoesNotThrow(() -> {
+            user.setAge(25);
+            registrationService.register(user);
+        });
     }
 
     @Test
-    void register_invalid_password_NotOk() {
+    void register_invalidPassword_NotOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
@@ -88,7 +97,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_existing_user_NotOk() {
+    void register_existingUser_NotOk() {
         User existingUser = new User();
         existingUser.setLogin("existinguser");
         existingUser.setPassword("password");
