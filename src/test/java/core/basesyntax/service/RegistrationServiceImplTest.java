@@ -25,38 +25,65 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        String newUserLogin = "Login123";
-        String newUserPassword = "qwerty123";
-        int newUserAge = 23;
-        user.setAge(newUserAge);
-        user.setLogin(newUserLogin);
-        user.setPassword(newUserPassword);
+        user.setAge(23);
+        user.setLogin("Login123");
+        user.setPassword("qwerty123");
     }
 
     @Test
-    void register_null_user_NotOk() {
+    void register_nullUser_NotOk() {
         assertThrows(RuntimeException.class,
                 () -> registrationService.register(null));
     }
 
     @Test
-    void register_null_login_NotOk() {
+    void register_invalid_login_NotOk() {
         user.setLogin(null);
-        assertThrows(InvalidRegistrationDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_empty_login_NotOk() {
         user.setLogin("");
-        assertThrows(InvalidRegistrationDataException.class,
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setLogin("log");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setLogin("login");
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void register_short_login_NotOk() {
-        user.setLogin("login");
-        assertThrows(InvalidRegistrationDataException.class,
+    void register_invalid_age_NotOk() {
+        user.setAge(null);
+        assertThrows(RuntimeException.class,
+                () -> registrationService.register(user));
+        user.setAge(0);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setAge(-1);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setAge(10);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setAge(16);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_invalid_password_NotOk() {
+        user.setPassword(null);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setPassword("");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setPassword("abc");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        user.setPassword("abcdf");
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
     }
 
@@ -73,76 +100,29 @@ class RegistrationServiceImplTest {
         user.setPassword("newpassword");
         user.setAge(30);
 
-        assertThrows(InvalidRegistrationDataException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_age_null_NotOk() {
-        user.setAge(null);
-        assertThrows(RuntimeException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_under_age_limit_NotOk() {
-        user.setAge(11);
-        assertThrows(InvalidRegistrationDataException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_zero_age_NotOk() {
-        user.setAge(0);
-        assertThrows(InvalidRegistrationDataException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_negative_age_NotOk() {
-        user.setAge(-1);
-        assertThrows(InvalidRegistrationDataException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_null_password_NotOk() {
-        user.setPassword(null);
-        assertThrows(InvalidRegistrationDataException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_empty_password_NotOK() {
-        user.setPassword("");
-        assertThrows(InvalidRegistrationDataException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_empty_login_NotOK() {
-        user.setLogin("");
-        assertThrows(InvalidRegistrationDataException.class,
-                () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_short_password_NotOk() {
-        user.setPassword("123");
-        assertThrows(InvalidRegistrationDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
     void register_user_Ok() {
         User register = new User();
-        register.setLogin("Login123");
-        register.setPassword("Password");
+        register.setLogin("Login1");
+        register.setPassword("passwd");
         register.setAge(18);
         registrationService.register(register);
         assertEquals(18, storageDao.get(register.getLogin()).getAge());
-        assertEquals("Password", storageDao.get(register.getLogin()).getPassword());
-        assertEquals("Login123", storageDao.get(register.getLogin()).getLogin());
+        assertEquals("passwd", storageDao.get(register.getLogin()).getPassword());
+        assertEquals("Login1", storageDao.get(register.getLogin()).getLogin());
+
+        User register1 = new User();
+        register1.setLogin("Login123");
+        register1.setPassword("passwd12");
+        register1.setAge(20);
+        registrationService.register(register1);
+        assertEquals(20, storageDao.get(register1.getLogin()).getAge());
+        assertEquals("passwd12", storageDao.get(register1.getLogin()).getPassword());
+        assertEquals("Login123", storageDao.get(register1.getLogin()).getLogin());
     }
 
     @AfterEach
