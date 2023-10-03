@@ -63,20 +63,42 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_5lengthPassword_notOk() {
         User userTwo = new User();
         userTwo.setAge(22);
         userTwo.setLogin("loginTwo");
-        userTwo.setPassword("short");
+        userTwo.setPassword("12345");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(userTwo);
         });
     }
 
     @Test
-    void register_shortLogin_notOk() {
+    void register_3lengthPassword_notOk() {
+        User userTwo = new User();
+        userTwo.setAge(22);
+        userTwo.setLogin("loginTwo");
+        userTwo.setPassword("123");
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(userTwo);
+        });
+    }
+
+    @Test
+    void register_4lengthLogin_notOk() {
         User userThree = new User();
-        userThree.setLogin("user");
+        userThree.setLogin("name");
+        userThree.setPassword("passwordThree");
+        userThree.setAge(41);
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(userThree);
+        });
+    }
+
+    @Test
+    void register_5lengthLogin_notOk() {
+        User userThree = new User();
+        userThree.setLogin("login");
         userThree.setPassword("passwordThree");
         userThree.setAge(41);
         assertThrows(InvalidUserDataException.class, () -> {
