@@ -85,6 +85,16 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_6lengthPassword_Ok() {
+        User userTwo = new User();
+        userTwo.setAge(22);
+        userTwo.setLogin("loginTwo");
+        userTwo.setPassword("123456");
+        registrationService.register(userTwo);
+        assertNotNull(storageDao.get("loginTwo"));
+    }
+
+    @Test
     void register_4lengthLogin_notOk() {
         User userThree = new User();
         userThree.setLogin("name");
@@ -104,6 +114,16 @@ public class RegistrationServiceImplTest {
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(userThree);
         });
+    }
+
+    @Test
+    void register_6lengthLogin_Ok() {
+        User userThree = new User();
+        userThree.setLogin("login3");
+        userThree.setPassword("passwordThree");
+        userThree.setAge(41);
+        registrationService.register(userThree);
+        assertNotNull(storageDao.get("login3"));
     }
 
     @Test
