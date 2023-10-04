@@ -1,13 +1,15 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RegistrationServiceImplTest {
@@ -48,7 +50,8 @@ public class RegistrationServiceImplTest {
     void register_inputsHaveNulls_notOk() {
         User newUser = new User();
         assertThrows(InvalidInputException.class, () -> registrationService.register(newUser),
-                "Method should throw an InvalidInputException if user has nulls in the input");
+                "Method should throw an InvalidInputException "
+                        + "if user has nulls in the input");
     }
 
     @Test
@@ -58,7 +61,8 @@ public class RegistrationServiceImplTest {
         registrationService.register(firstUser);
         User secondUser = new User(firstUser);
         assertThrows(InvalidInputException.class, () -> registrationService.register(secondUser),
-                "Method should throw an InvalidInputException if user with such login already exist");
+                "Method should throw an InvalidInputException "
+                        + "if user with such login already exist");
     }
 
     @Test
@@ -112,7 +116,8 @@ public class RegistrationServiceImplTest {
             registrationService.register(secondUser);
             registrationService.register(thirdUser);
         } catch (InvalidInputException e) {
-            fail("InvalidInputException should not be thrown when password is longer or equals to 6.");
+            fail("InvalidInputException should not be thrown when "
+                    + "password is longer or equals to 6.");
         }
     }
 
