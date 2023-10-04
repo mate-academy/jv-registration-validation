@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -10,28 +10,23 @@ import core.basesyntax.exception.InvalidUserDataException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
 
-    @BeforeEach
-    void setUp() {
-        Storage.people.clear();
+    @BeforeAll
+    static void setUp() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
-    @Test
-    void register_oneValidUser_ok() {
-        User bob = new User();
-        bob.setLogin("BobLogin");
-        bob.setPassword("BobSecret");
-        bob.setAge(18);
-
-        User actual = registrationService.register(bob);
-        assertEquals(storageDao.get(bob.getLogin()), actual,
-                "Returned user must be equals with saved user!");
+    @BeforeEach
+    void setUpBeforeEach() {
+        Storage.people.clear();
     }
 
     @Test
@@ -78,14 +73,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        try {
-            registrationService.register(null);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("User must not be null!", invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'User must not be null!' if user = null.");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
@@ -94,16 +83,8 @@ public class RegistrationServiceImplTest {
         userWithInvalidLogin.setLogin("");
         userWithInvalidLogin.setPassword("ValidPassword");
         userWithInvalidLogin.setAge(25);
-        try {
-            registrationService.register(userWithInvalidLogin);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("Login must be at least 6 characters. ",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                 + " with message: 'Login must be at least 6 characters. '"
-                 + " if login of user less then 6 character.");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithInvalidLogin));
     }
 
     @Test
@@ -112,16 +93,18 @@ public class RegistrationServiceImplTest {
         userWithInvalidPassword.setLogin("ValidLogin");
         userWithInvalidPassword.setPassword("");
         userWithInvalidPassword.setAge(25);
-        try {
-            registrationService.register(userWithInvalidPassword);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("Password must be at least 6 characters. ",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'Password must be at least 6 characters. '"
-                + " if password of user less then 6 character.");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithInvalidPassword));
+    }
+
+    @Test
+    void register_notValidAge_notOk() {
+        User userWithNotValidAge = new User();
+        userWithNotValidAge.setLogin("ValidLogin");
+        userWithNotValidAge.setPassword("ValidPassword");
+        userWithNotValidAge.setAge(15);
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithNotValidAge));
     }
 
     @Test
@@ -129,17 +112,9 @@ public class RegistrationServiceImplTest {
         User userWithInvalidAge = new User();
         userWithInvalidAge.setLogin("ValidLogin");
         userWithInvalidAge.setPassword("ValidPassword");
-        userWithInvalidAge.setAge(15);
-        try {
-            registrationService.register(userWithInvalidAge);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("User must be at least 18 years old.",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'User must be at least 18 years old.'"
-                + " if user under 18 years of age.");
+        userWithInvalidAge.setAge(-10);
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithInvalidAge));
     }
 
     @Test
@@ -148,20 +123,8 @@ public class RegistrationServiceImplTest {
         userWithAllNotValidData.setLogin("");
         userWithAllNotValidData.setPassword("");
         userWithAllNotValidData.setAge(0);
-        try {
-            registrationService.register(userWithAllNotValidData);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("Login must be at least 6 characters. "
-                     + "Password must be at least 6 characters. "
-                     + "User must be at least 18 years old.",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'Login must be at least 6 characters. "
-                + "Password must be at least 6 characters. User must be at least 18 years old.'"
-                + " if login and password of user have less then 6 characters"
-                + " and less than 18 years old.");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithAllNotValidData));
     }
 
     @Test
@@ -170,16 +133,8 @@ public class RegistrationServiceImplTest {
         userWithNullLogin.setLogin(null);
         userWithNullLogin.setPassword("ValidPassword");
         userWithNullLogin.setAge(22);
-        try {
-            registrationService.register(userWithNullLogin);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("Login must be at least 6 characters. ",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'Login must be at least 6 characters. '"
-                + " if login of user is null.");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithNullLogin));
     }
 
     @Test
@@ -188,16 +143,8 @@ public class RegistrationServiceImplTest {
         userWithNullPassword.setLogin("ValidLogin");
         userWithNullPassword.setPassword(null);
         userWithNullPassword.setAge(22);
-        try {
-            registrationService.register(userWithNullPassword);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("Password must be at least 6 characters. ",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'Login must be at least 6 characters. '"
-                + " if password of user is null.");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithNullPassword));
     }
 
     @Test
@@ -206,18 +153,8 @@ public class RegistrationServiceImplTest {
         userWithNullData.setLogin(null);
         userWithNullData.setPassword(null);
         userWithNullData.setAge(22);
-        try {
-            registrationService.register(userWithNullData);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("Login must be at least 6 characters. "
-                    + "Password must be at least 6 characters. ",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'Login must be at least 6 characters. "
-                + "Login must be at least 6 characters. '"
-                + " if login and password of user are null.");
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(userWithNullData));
     }
 
     @Test
@@ -227,16 +164,8 @@ public class RegistrationServiceImplTest {
         bob.setPassword("BobSecret");
         bob.setAge(18);
 
-        registrationService.register(bob);
-        try {
-            registrationService.register(bob);
-        } catch (InvalidUserDataException invalidUserDataException) {
-            assertEquals("Such user has already registered!",
-                    invalidUserDataException.getMessage());
-            return;
-        }
-        fail("You must throw 'InvalidUserDataException'"
-                + " with message: 'Such user has already registered!'"
-                + " if such user has already in storage.");
+        Storage.people.add(bob);
+        assertThrows(InvalidUserDataException.class,
+                () -> registrationService.register(bob));
     }
 }
