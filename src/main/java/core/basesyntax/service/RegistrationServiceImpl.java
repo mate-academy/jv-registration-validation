@@ -35,6 +35,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkInputForNulls(User user) {
+        if (user == null) {
+            throw new NullPointerException("User can't be null");
+        }
+
         if (user.getLogin() == null) {
             throw new InvalidInputException("Login can't be null");
         }
