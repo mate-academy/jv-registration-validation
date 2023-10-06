@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationExceptionTest {
     private static RegistrationService registrationService;
-    private User user;
-    private int localUserId;
+    private User validUser;
+    private User anotherValidUser;
 
     @BeforeAll
     public static void beforeAll() {
@@ -21,111 +21,117 @@ class RegistrationExceptionTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-        localUserId = 0;
-        user = getUniqueValidUser();
+        validUser = new User();
+        validUser.setLogin("validUserLogin");
+        validUser.setPassword("validUserPassword");
+        validUser.setAge(21);
+        anotherValidUser = new User();
+        anotherValidUser.setLogin("anotherValidUserLogin");
+        anotherValidUser.setPassword("anotherValidUserPassword");
+        anotherValidUser.setAge(42);
     }
 
     @Test
     void register_nullUser_notOk() {
-        registrationExceptionHandler(null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(null);
+        });
     }
 
     @Test
     void register_nullUserLogin_notOk() {
-        user.setLogin(null);
-        registrationExceptionHandler(user);
+        validUser.setLogin(null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
     }
 
     @Test
-    void register_ExistedUserLogin_notOk() throws RegistrationException {
-        User[] validUsers = new User[] {user, getUniqueValidUser()};
-        for (User user : validUsers) {
-            registrationService.register(user);
-        }
-        registrationExceptionHandler(user);
+    void register_ExistedUserLogin_notOk() {
+        Storage.people.add(validUser);
+        anotherValidUser.setLogin(validUser.getLogin());
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(anotherValidUser);
+        });
     }
 
     @Test
     void register_UserLoginLength_notOk() {
         String[] notOkLogins = new String[] {"", "a", "abc", "abcde"};
         for (String login : notOkLogins) {
-            user.setLogin(login);
-            registrationExceptionHandler(user);
+            validUser.setLogin(login);
+            assertThrows(RegistrationException.class, () -> {
+                registrationService.register(validUser);
+            });
         }
     }
 
     @Test
-    void register_UserLogin_Ok() throws RegistrationException {
+    void register_UserLogin_Ok() {
         String[] okLogins = new String[] {"abcdef", "abcdefg", "abcdefgh"};
         for (String login : okLogins) {
-            user = getUniqueValidUser();
-            user.setLogin(login);
-            registrationService.register(user);
+            validUser.setLogin(login);
+            registrationService.register(validUser);
+            Storage.people.clear();
         }
     }
 
     @Test
     void register_nullUserPassword_notOk() {
-        user.setPassword(null);
-        registrationExceptionHandler(user);
+        validUser.setPassword(null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
     }
 
     @Test
     void register_UserPasswordLength_notOk() {
         String[] notOkPasswords = new String[] {"", "a", "abc", "abcde"};
         for (String password : notOkPasswords) {
-            user.setPassword(password);
-            registrationExceptionHandler(user);
+            validUser.setPassword(password);
+            assertThrows(RegistrationException.class, () -> {
+                registrationService.register(validUser);
+            });
         }
     }
 
     @Test
-    void register_UserPassword_Ok() throws RegistrationException {
+    void register_UserPassword_Ok() {
         String[] okPasswords = new String[] {"abcdef", "abcdefg", "abcdefgh"};
         for (String password : okPasswords) {
-            user = getUniqueValidUser();
-            user.setPassword(password);
-            registrationService.register(user);
+            validUser.setPassword(password);
+            registrationService.register(validUser);
+            Storage.people.clear();
         }
     }
 
     @Test
     void register_nullUserAge_notOk() {
-        user.setAge(null);
-        registrationExceptionHandler(user);
+        validUser.setAge(null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(validUser);
+        });
     }
 
     @Test
     void register_UserAgeValue_notOk() {
         int[] notOkAges = new int[] {-67, -19, -18, -17, -1, 0, 1, 17};
         for (int age : notOkAges) {
-            user.setAge(age);
-            registrationExceptionHandler(user);
+            validUser.setAge(age);
+            assertThrows(RegistrationException.class, () -> {
+                registrationService.register(validUser);
+            });
+            Storage.people.clear();
         }
     }
 
     @Test
-    void register_UserAgeValue_Ok() throws RegistrationException {
+    void register_UserAgeValue_Ok() {
         int[] okAges = new int[] {18, 19, 67, 109};
         for (int age : okAges) {
-            user = getUniqueValidUser();
-            user.setAge(age);
-            registrationService.register(user);
+            validUser.setAge(age);
+            registrationService.register(validUser);
+            Storage.people.clear();
         }
-    }
-
-    private User getUniqueValidUser() {
-        User newUser = new User();
-        newUser.setLogin("UserLogin " + localUserId);
-        newUser.setPassword("UserPassword " + localUserId);
-        newUser.setAge(18 + localUserId);
-        localUserId++;
-        return newUser;
-    }
-
-    private void registrationExceptionHandler(User user) {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
     }
 }

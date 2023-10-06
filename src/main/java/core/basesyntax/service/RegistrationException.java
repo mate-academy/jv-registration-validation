@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-public class RegistrationException extends Throwable {
+public class RegistrationException extends RuntimeException {
     public RegistrationException(String message) {
         super(message);
     }

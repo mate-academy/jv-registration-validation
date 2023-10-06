@@ -37,7 +37,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Not valid user age: " + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
-
         return storageDao.add(user);
     }
 }
