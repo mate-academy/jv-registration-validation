@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
     private User validUser = new User();
 
     @BeforeEach
@@ -32,7 +33,6 @@ class RegistrationServiceImplTest {
     void register_successfully_Ok() {
         User actual = registrationService.register(validUser);
         assertNotNull(actual);
-        StorageDao storageDao = new StorageDaoImpl();
         String actualLogin = storageDao.get(validUser.getLogin()).getLogin();
         assertEquals(validUser.getLogin(), actualLogin);
     }
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyExists_NotOk() {
         User checkingSameLogin = new User();
-        checkingSameLogin.setLogin("User777");
+        checkingSameLogin.setLogin(validUser.getLogin());
         checkingSameLogin.setAge(37);
         checkingSameLogin.setPassword("7659743");
         Storage.people.add(checkingSameLogin);
@@ -55,7 +55,7 @@ class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(validUser);
         });
-        validUser.setLogin("Use");
+        validUser.setLogin("User");
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(validUser);
         });
@@ -104,7 +104,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lowerThanAgeLimit_NotOk() {
+    void register_underAge_notOk() {
         validUser.setAge(0);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(validUser);

@@ -25,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserRegistrationException("User age can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new UserRegistrationException("Such User already exist");
+            throw new UserRegistrationException("Such user already exist");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new UserRegistrationException("User login should be 6 or more symbols");
