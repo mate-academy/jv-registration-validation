@@ -74,10 +74,6 @@ class RegistrationServiceImplTest {
         assertNotNull(userLogin);
     }
 
-    @Test
-    void userLogin() {
-    }
-
     @AfterAll
     static void afterAll() {
         System.out.println("Testing is over");
