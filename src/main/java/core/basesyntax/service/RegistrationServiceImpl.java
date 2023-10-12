@@ -6,6 +6,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_SYMBOL = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -13,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new BadDataValidationException("User is null!");
         }
-        if (user.getAge() == null || user.getAge() < 18) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new BadDataValidationException("Not valid age: " + user.getAge()
                     + ". Min age is 18!");
         }
