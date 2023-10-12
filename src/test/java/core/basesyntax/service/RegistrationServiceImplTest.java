@@ -1,12 +1,16 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int ELEMENTS = 1;
@@ -106,7 +110,6 @@ class RegistrationServiceImplTest {
             registrationService.register(correctUser);
         }, "If user password Null it should throw BadDataValidation Exception!");
     }
-
 
     @Test
     void register_userAge_notOk() {
