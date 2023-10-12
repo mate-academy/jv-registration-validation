@@ -12,7 +12,7 @@ This method should register a user (by adding it to Storage) only if the user me
 
 You should create your custom unchecked exception and throw it in case of invalid data.
 
-`Storage` and class `StorageDaoImpl` for working with the Storage has already been implemented. It has two methods:
+`Storage` and class `StorageDaoImpl` for working with Storage have already been implemented. It has two methods:
 - `User add (User user)`  - which adds a user to the storage
 - `User get (String login)` - which gets the user from the storage by login or returns null if there is no such user.
 
@@ -24,4 +24,4 @@ names and be consistent along with other developers in your team. For this task 
 user's age the test method name should be `register_nullAge_notOk`. notOk is because
 the test expects the register method to throw an exception.
 
-#### [Try to avoid these common mistakes, while solving task](https://mate-academy.github.io/jv-program-common-mistakes/java-core/junit/registration-validation)
+#### [Try to avoid these common mistakes, while solving task](./checklist.md)
