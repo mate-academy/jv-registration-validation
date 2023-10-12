@@ -30,11 +30,17 @@ class RegistrationServiceImplTest {
         usersTest.add(new User("Valentyna", "Dyachuk", 17));
         usersTest.add(new User(null, "18081996", 26));
         usersTest.add(new User("Rostyslav", null, 29));
+        usersTest.add(new User("Rosty slav", "13782864", 30));
     }
 
     @Test
     void userIsNull_notOk() {
         assertThrows(RegistrationServiceException.class, () -> service.register(usersTest.get(3)));
+    }
+
+    @Test
+    void userLoginSpaces_notOk() {
+        assertThrows(RegistrationServiceException.class, () -> service.register(usersTest.get(7)));
     }
 
     @Test

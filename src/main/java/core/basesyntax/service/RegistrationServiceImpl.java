@@ -29,6 +29,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new RegistrationServiceException("The password is too short");
         }
+        if (user.getLogin().contains(" ")) {
+            throw new RegistrationServiceException("Login can't contain spaces");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationServiceException("User must be adult");
         }
