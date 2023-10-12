@@ -1,19 +1,20 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
     private static RegistrationService service;
     private List<User> usersTest;
+
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
@@ -33,7 +34,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userIsNull_notOk() {
-         assertThrows(RegistrationServiceException.class, () -> service.register(usersTest.get(3)));
+        assertThrows(RegistrationServiceException.class, () -> service.register(usersTest.get(3)));
     }
 
     @Test
