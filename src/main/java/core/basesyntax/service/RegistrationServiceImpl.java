@@ -17,8 +17,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + " User cannot be null");
         }
         if (user.getLogin() == null) {
-            throw new InvalidRegistrationServiceException("Invalid login :"
-                    + " Login cannot be null");
+            throw new InvalidRegistrationServiceException("Invalid login : "
+                    + "Login cannot be null");
         }
         if (user.getPassword() == null) {
             throw new InvalidRegistrationServiceException("Invalid password :"
