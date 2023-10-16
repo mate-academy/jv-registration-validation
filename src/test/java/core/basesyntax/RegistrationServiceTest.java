@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class HelloWorldTest {
+public class RegistrationServiceTest {
     private static final String USER_WASNT_ADD = "User was not add";
     private static final String VALID_PASSWORD = "validPassword";
     private static final String VALID_LOGIN = "validLogin";
