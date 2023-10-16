@@ -1,16 +1,22 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
+import core.basesyntax.exceptions.InvalidAgeException;
+import core.basesyntax.exceptions.InvalidLoginException;
+import core.basesyntax.exceptions.InvalidPasswordException;
+import core.basesyntax.exceptions.InvalidUserException;
+import core.basesyntax.exceptions.LoginAlreadyExistsException;
 import core.basesyntax.model.User;
-import core.basesyntax.registration_exceptions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
+
     private static final String BOB_LOGIN = "bobMate";
     private static final String BOB_PASSWORD = "bob159363";
     private static final int BOB_AGE = 35;
@@ -31,11 +37,11 @@ class RegistrationServiceImplTest {
     private static final int INVALID_AGE_TWELVE = 12;
     private static final String NULL_ITEM = null;
     private static final Integer NULL_AGE = null;
+    private static RegistrationService registrationService;
 
     private final User bob = new User();
     private final User alice = new User();
     private final User john = new User();
-    private static RegistrationService registrationService;
 
     @BeforeAll
     static void beforeAll() {

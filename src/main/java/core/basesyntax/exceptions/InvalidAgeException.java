@@ -1,4 +1,4 @@
-package core.basesyntax.registration_exceptions;
+package core.basesyntax.exceptions;
 
 public class InvalidAgeException extends RuntimeException {
     public InvalidAgeException(String message) {

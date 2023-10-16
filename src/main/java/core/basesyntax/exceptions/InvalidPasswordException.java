@@ -1,4 +1,4 @@
-package core.basesyntax.registration_exceptions;
+package core.basesyntax.exceptions;
 
 public class InvalidPasswordException extends RuntimeException {
     public InvalidPasswordException(String message) {

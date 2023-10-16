@@ -3,8 +3,12 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
+import core.basesyntax.exceptions.InvalidAgeException;
+import core.basesyntax.exceptions.InvalidLoginException;
+import core.basesyntax.exceptions.InvalidPasswordException;
+import core.basesyntax.exceptions.InvalidUserException;
+import core.basesyntax.exceptions.LoginAlreadyExistsException;
 import core.basesyntax.model.User;
-import core.basesyntax.registration_exceptions.*;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -16,7 +20,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (Storage.people.contains(user)) {
-            throw new LoginAlreadyExistsException("User with this login already exists " + user.getLogin());
+            throw new LoginAlreadyExistsException("User with this login already exists "
+                    + user.getLogin());
         }
 
         String login = user.getLogin();
@@ -34,7 +39,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (password.length() < 6) {
-            throw new InvalidPasswordException("Unacceptable password length: " + password.length());
+            throw new InvalidPasswordException("Unacceptable password length: "
+                    + password.length());
         }
 
         Integer age = user.getAge();
