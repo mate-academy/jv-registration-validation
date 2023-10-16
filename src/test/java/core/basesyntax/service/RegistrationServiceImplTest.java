@@ -5,102 +5,117 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService service;
-    private List<User> usersTest;
+    private static RegistrationServiceImpl service;
 
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
     }
 
-    @BeforeEach
-    void setUp() {
-        usersTest = new ArrayList<>();
-        usersTest.add(new User("mylogin", "ilovecats", 20));
-        usersTest.add(new User("maria", "Kuzmych", 23));
-        usersTest.add(new User("Lyubov", "Kos", 40));
-        usersTest.add(null);
-        usersTest.add(new User("Valentyna", "Dyachuk", 17));
-        usersTest.add(new User(null, "18081996", 26));
-        usersTest.add(new User("Rostyslav", null, 29));
-        usersTest.add(new User("Rosty slav", "13782864", 30));
-        usersTest.add(new User("my_date_of_birthday", "1202cat", 34));
-        usersTest.add(new User("random_user", "12092005", 23));
-        usersTest.add(new User("bimbom", "lovecats", 56));
-    }
-
     @Test
     void userIsNull_notOk() {
         assertThrows(InvalidRegistrationServiceException.class,
-                () -> service.register(usersTest.get(3)));
+                () -> service.register(null));
     }
 
     @Test
     void userLoginSpaces_notOk() {
+        User user = new User();
+        user.setLogin("my login");
+        user.setPassword("rostyk");
+        user.setAge(20);
         assertThrows(InvalidRegistrationServiceException.class,
-                () -> service.register(usersTest.get(7)));
+                () -> service.register(user));
     }
 
     @Test
     void userLoginIsNull_notOk() {
+        User user = new User();
+        user.setLogin(null);
+        user.setPassword("rostyk111");
+        user.setAge(23);
         assertThrows(InvalidRegistrationServiceException.class,
-                () -> service.register(usersTest.get(5)));
+                () -> service.register(user));
     }
 
     @Test
     void userPasswordIsNull_notOk() {
+        User user = new User();
+        user.setLogin("Rostyslav");
+        user.setPassword(null);
+        user.setAge(24);
         assertThrows(InvalidRegistrationServiceException.class,
-                () -> service.register(usersTest.get(6)));
+                () -> service.register(user));
     }
 
     @Test
     void userLoginLessSix_notOk() {
+        User user = new User();
+        user.setLogin("fate");
+        user.setPassword("my_date_of_birthday");
+        user.setAge(30);
         assertThrows(InvalidRegistrationServiceException.class,
-                () -> service.register(usersTest.get(1)));
+                () -> service.register(user));
     }
 
     @Test
     void userPasswordLessSix_notOk() {
+        User user = new User();
+        user.setLogin("Valentyna");
+        user.setPassword("2001");
+        user.setAge(40);
         assertThrows(InvalidRegistrationServiceException.class,
-                () -> service.register(usersTest.get(2)));
+                () -> service.register(user));
     }
 
     @Test
     void userAgeLessEighteen_notOk() {
-        assertThrows(InvalidRegistrationServiceException.class,
-                () -> service.register(usersTest.get(4)));
+        User user = new User();
+        user.setLogin("Vadym2020");
+        user.setPassword("ilovecats");
+        user.setAge(29);
+        assertNotNull(service.register(user));
     }
 
     @Test
     void userValid_isOk() {
-        User user = service.register(usersTest.get(0));
-        assertNotNull(user);
+        User user = new User();
+        user.setLogin("forest12");
+        user.setPassword("myaddress");
+        user.setAge(29);
+        assertNotNull(service.register(user));
     }
 
     @Test
-    void userLengthMoreTen_isOk() {
-        User user = service.register(usersTest.get(8));
-        assertNotNull(user);
+    void userLoginLengthMoreTen_isOk() {
+        User user = new User();
+        user.setLogin("ValentynaKos");
+        user.setPassword("val123");
+        user.setAge(29);
+        assertNotNull(service.register(user));
     }
 
     @Test
     void userPassword_only_digits_isOk() {
-        User user = service.register(usersTest.get(9));
-        assertNotNull(user);
+        User user = new User();
+        user.setLogin("Misha123");
+        user.setPassword("0985553516");
+        user.setAge(40);
+        assertNotNull(service.register(user));
     }
 
     @Test
     void userAgeMoreFifty_isOk() {
-        User user = service.register(usersTest.get(10));
-        assertNotNull(user);
+        User user = new User();
+        user.setLogin("Misha2002");
+        user.setPassword("flower");
+        user.setAge(59);
+        assertNotNull(service.register(user));
     }
 
     @AfterAll
