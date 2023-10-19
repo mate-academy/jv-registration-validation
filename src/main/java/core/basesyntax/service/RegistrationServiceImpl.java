@@ -13,6 +13,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
 
+        if (user == null) {
+            throw new RegistrationException("The user is existed");
+        }
+
         if (user.getLogin() == null || user.getLogin().equals("")) {
             throw new RegistrationException("The user is existed. Enter a valid login");
         }
