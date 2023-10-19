@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterAll;
@@ -11,20 +13,22 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl service;
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void beforeAll() {
-        service = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        service = new RegistrationServiceImpl(new StorageDaoImpl());
     }
 
     @Test
-    void userIsNull_notOk() {
+    void userNull_isNotOk() {
         assertThrows(InvalidRegistrationServiceException.class,
                 () -> service.register(null));
     }
 
     @Test
-    void userLoginSpaces_notOk() {
+    void userLoginSpaces_isNotOk() {
         User user = new User();
         user.setLogin("my login");
         user.setPassword("rostyk");
@@ -34,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginIsNull_notOk() {
+    void userLoginNull_isNotOk() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("rostyk111");
@@ -44,13 +48,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordIsNull_notOk() {
+    void userPasswordNull_isNotOk() {
         User user = new User();
         user.setLogin("Rostyslav");
         user.setPassword(null);
         user.setAge(24);
         assertThrows(InvalidRegistrationServiceException.class,
                 () -> service.register(user));
+    }
+
+    @Test
+    void checkingExistUser_isOk() {
+        User user = new User();
+        user.setLogin("Rostyslav");
+        user.setPassword("123456");
+        user.setAge(29);
+        storageDao.add(user);
+        User user1 = new User();
+        user1.setLogin("Rostyslav");
+        user1.setPassword("address");
+        user1.setAge(24);
+        assertThrows(InvalidRegistrationServiceException.class,
+                () -> service.register(user1));
     }
 
     @Test
@@ -64,7 +83,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordLessSix_notOk() {
+    void userPasswordLessSix_isNotOk() {
         User user = new User();
         user.setLogin("Valentyna");
         user.setPassword("2001");
@@ -74,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeLessEighteen_notOk() {
+    void userAgeLessEighteen_isNotOk() {
         User user = new User();
         user.setLogin("Vadym2020");
         user.setPassword("ilovecats");
