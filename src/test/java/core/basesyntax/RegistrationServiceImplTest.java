@@ -1,13 +1,13 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
