@@ -19,7 +19,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         storageDao.add(user);
         return user;
     }
-
     private void userValidation(User user) {
         if (user == null) {
             throw new InvalidRegistrationServiceException("Invalid user :"
