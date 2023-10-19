@@ -1,8 +1,10 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidRegistrationException;
 import core.basesyntax.model.User;
@@ -34,57 +36,61 @@ class RegistrationServiceImplTest {
     private static final String NULL_ITEM = null;
     private static final Integer NULL_AGE = null;
     private static RegistrationService registrationService;
-
-    private final User bob = new User();
-    private final User alice = new User();
-    private final User john = new User();
+    private static StorageDao storageDao;
+    private User actual;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     void setUp() {
-        bob.setLogin(BOB_LOGIN);
-        bob.setPassword(BOB_PASSWORD);
-        bob.setAge(BOB_AGE);
-
-        alice.setLogin(ALICE_LOGIN);
-        alice.setPassword(ALICE_PASSWORD);
-        alice.setAge(ALICE_AGE);
-
-        john.setLogin(JOHN_LOGIN);
-        john.setPassword(JOHN_PASSWORD);
-        john.setAge(JOHN_AGE);
-
-        Storage.people.add(bob);
-        Storage.people.add(alice);
-        Storage.people.add(john);
+        actual = new User();
     }
 
     @Test
-    void validData_Ok() {
+    void register_validData_Ok() {
         User den = new User();
         den.setLogin(VALID_LOGIN);
         den.setPassword(VALID_PASSWORD);
         den.setAge(VALID_AGE);
 
-        User actual = registrationService.register(den);
+        User expected = registrationService.register(den);;
+        User actual = storageDao.get(den.getLogin());
 
-        assertTrue(Storage.people.contains(actual));
+        assertEquals(expected, actual);
     }
 
     @Test
-    void userIsNull_NotOk() {
-        User nullUser = null;
+    void register_userIsNull_NotOk() {
+        actual = null;
         assertThrows(InvalidRegistrationException.class, ()
-                -> registrationService.register(nullUser));
+                -> registrationService.register(actual));
     }
 
     @Test
-    void existingLogin_NotOk() {
-        User actual = new User();
+    void register_existingLogin_NotOk() {
+        User bob = new User();
+        bob.setLogin(BOB_LOGIN);
+        bob.setPassword(BOB_PASSWORD);
+        bob.setAge(BOB_AGE);
+
+        User alice = new User();
+        alice.setLogin(ALICE_LOGIN);
+        alice.setPassword(ALICE_PASSWORD);
+        alice.setAge(ALICE_AGE);
+
+        User john = new User();
+        john.setLogin(JOHN_LOGIN);
+        john.setPassword(JOHN_PASSWORD);
+        john.setAge(JOHN_AGE);
+
+        storageDao.add(bob);
+        storageDao.add(alice);
+        storageDao.add(john);
+
         actual.setLogin(ALICE_LOGIN);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -92,8 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginIsNull_NotOk() {
-        User actual = new User();
+    void register_userLoginIsNull_NotOk() {
         actual.setLogin(NULL_ITEM);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -101,8 +106,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginLengthFive_NotOk() {
-        User actual = new User();
+    void register_userLoginLengthFive_NotOk() {
         actual.setLogin(INVALID_LOGIN_LENGTH_FIVE);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -110,8 +114,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userLoginLengthTwo_NotOk() {
-        User actual = new User();
+    void register_userLoginLengthTwo_NotOk() {
         actual.setLogin(INVALID_LOGIN_LENGTH_TWO);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -119,8 +122,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordIsNull_NotOk() {
-        User actual = new User();
+    void register_userPasswordIsNull_NotOk() {
         actual.setPassword(NULL_ITEM);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -128,8 +130,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordLengthFive_NotOk() {
-        User actual = new User();
+    void register_userPasswordLengthFive_NotOk() {
         actual.setPassword(INVALID_PASSWORD_LENGTH_FIVE);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -137,8 +138,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordLengthTwo_NotOk() {
-        User actual = new User();
+    void register_userPasswordLengthTwo_NotOk() {
         actual.setPassword(INVALID_PASSWORD_LENGTH_TWO);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -146,8 +146,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeIsNull_NotOk() {
-        User actual = new User();
+    void register_userAgeIsNull_NotOk() {
         actual.setAge(NULL_AGE);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -155,8 +154,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeSix_NotOk() {
-        User actual = new User();
+    void register_userAgeSix_NotOk() {
         actual.setAge(INVALID_AGE_SIX);
 
         assertThrows(InvalidRegistrationException.class, ()
@@ -164,8 +162,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeTwelve_NotOk() {
-        User actual = new User();
+    void register_userAgeTwelve_NotOk() {
         actual.setAge(INVALID_AGE_TWELVE);
 
         assertThrows(InvalidRegistrationException.class, ()
