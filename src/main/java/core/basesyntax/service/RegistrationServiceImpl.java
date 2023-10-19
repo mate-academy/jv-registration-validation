@@ -11,6 +11,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validate(user);
+        return storageDao.add(user);
+    }
+
+    private void validate(User user) {
         if (user == null) {
             throw new BadDataValidationException("User is null!");
         }
@@ -30,6 +35,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new BadDataValidationException("User with login " + user.getLogin()
                     + " is already in the storage.");
         }
-        return storageDao.add(user);
     }
 }
