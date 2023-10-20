@@ -22,57 +22,58 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void testIfUserIsNull() {
+    void test_If_User_Is_Null() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void testRegisterUserWithNullLoginPasswordAge() {
+    void register_User_With_Null_Login_Password_Age() {
         User user = createUser(null, null, null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void testIfLoginIsNull() {
+    void test_If_Login_Is_Null() {
         User user = createUser(null, "199jjdat", 19);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void testIfPasswordIsNull() {
+    void test_If_Password_Is_Null() {
         User user = createUser("bob1234", null, 19);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void testIfAgeIsNull() {
+    void test_If_Age_Is_Null() {
         User user = createUser("bob1234", "199jjdat", null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void testIfTheLoginIsLessThen6Characters() {
+    void test_If_The_Login_Is_Less_Then_6_Characters() {
         User user = createUser("b34", "199jjdat", 19);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void testIfThePasswordIsLessThen6Characters() {
+    void test_If_The_Password_Is_Less_Then_6_Characters() {
         User user = createUser("bob1234", "199j", 19);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void testIfUserAgeIsAtLeast18YearsOld() {
+    void test_If_User_Age_Is_At_Least_18_Years_Old() {
         User user = createUser("bob1234", "199jjdat", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void tesRegisterDuplicateUser() {
+    void register_Duplicate_User() {
         User user = createUser("bob1234", "199jjdat", 19);
         registrationService.register(user);
         User user2 = createUser("bob1234", "134jj4at", 25);
         assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        core.basesyntax.db.Storage.people.add(user);
     }
 }
