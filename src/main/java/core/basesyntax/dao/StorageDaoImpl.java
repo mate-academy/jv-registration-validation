@@ -6,6 +6,10 @@ import core.basesyntax.model.User;
 public class StorageDaoImpl implements StorageDao {
     private static Long index = 0L;
 
+    public boolean isContainsUserInList(String login) {
+        return get(login) == null ? false : true;
+    }
+
     @Override
     public User add(User user) {
         user.setId(++index);
