@@ -15,7 +15,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RegistrationException {
+    public User register(User user) {
+        userCheck(user);
+        return storageDao.add(user);
+    }
+
+    public void userCheck(User user) {
         if (user == null) {
             throw new RegistrationException(USER_CANT_BE_NULL);
         }
@@ -37,10 +42,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException(YOU_ARE_NOT_OLD_ENOUGH);
         }
-
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException(USER_ALREADY_EXIST);
         }
-        return storageDao.add(user);
     }
 }
