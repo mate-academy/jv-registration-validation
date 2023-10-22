@@ -1,10 +1,9 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
@@ -27,11 +26,13 @@ public class RegistrationServiceImplTest {
         user.setLogin("0".repeat(RegistrationServiceImpl.MIN_LOGIN_LENGTH));
         user.setPassword("p".repeat(RegistrationServiceImpl.MIN_PASSWORD_LENGTH));
         user.setAge(RegistrationServiceImpl.MIN_AGE);
+        int initialStorageSize = Storage.people.size();
         User addedUser = registrationService.register(user);
         assertSame(user,
                 addedUser,
                 "Method should return the same User");
-        assertTrue(Storage.people.contains(user),
+        assertEquals(Storage.people.size(),
+                initialStorageSize + 1,
                 "Method should add the User to the Storage");
     }
 
@@ -41,10 +42,12 @@ public class RegistrationServiceImplTest {
         user.setLogin("1".repeat(RegistrationServiceImpl.MIN_LOGIN_LENGTH - 1));
         user.setPassword("p".repeat(RegistrationServiceImpl.MIN_PASSWORD_LENGTH - 1));
         user.setAge(RegistrationServiceImpl.MIN_AGE - 1);
+        int initialStorageSize = Storage.people.size();
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Method should throw an Exception");
-        assertFalse(Storage.people.contains(user),
+        assertEquals(Storage.people.size(),
+                initialStorageSize,
                 "Method should not add the User to the Storage");
     }
 
@@ -140,8 +143,11 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_nullUser_returnsNull() {
         User user = null;
+        int initialStorageSize = Storage.people.size();
         User addedUser = registrationService.register(user);
         assertNull(addedUser, "Method should return a null");
-        assertFalse(Storage.people.contains(user), "Method should not add null to the Storage");
+        assertEquals(Storage.people.size(),
+                initialStorageSize,
+                "Method should not add null to the Storage");
     }
 }
