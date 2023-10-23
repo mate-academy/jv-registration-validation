@@ -13,33 +13,33 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (isUserLoginAlreadyExist(user.getLogin())) {
+        if (user == null) {
+            return null;
+        }
+        if (isUserLoginAlreadyExist(user)) {
             throw new RegistrationException("User with this login already exist");
         }
-        if (user.getAge() == null
-                || isMinimalUserAgeNotMet(user.getAge())) {
+        if (isMinimalUserAgeNotMet(user)) {
             throw new RegistrationException("Minimal age requirement isn't met");
         }
-        if (user.getLogin() == null
-                || isStringLengthNotMet(user.getLogin(), LOGIN_LENGTH)) {
+        if (isStringLengthNotMet(user.getLogin(), LOGIN_LENGTH)) {
             throw new RegistrationException("Minimal login length requirement isn't met");
         }
-        if (user.getPassword() == null
-                || isStringLengthNotMet(user.getPassword(), PASSWORD_LENGTH)) {
+        if (isStringLengthNotMet(user.getPassword(), PASSWORD_LENGTH)) {
             throw new RegistrationException("Minimal password length requirement isn't met");
         }
         return storageDao.add(user);
     }
 
-    private boolean isUserLoginAlreadyExist(String login) {
-        return storageDao.get(login) != null;
+    private boolean isUserLoginAlreadyExist(User user) {
+        return user.getLogin() != null && storageDao.get(user.getLogin()) != null;
     }
 
-    private boolean isMinimalUserAgeNotMet(int age) {
-        return age < USER_MINIMAL_AGE;
+    private boolean isMinimalUserAgeNotMet(User user) {
+        return user.getPassword() == null || user.getAge() < USER_MINIMAL_AGE;
     }
 
     private boolean isStringLengthNotMet(String stringToValidate, int requiredLength) {
-        return stringToValidate.length() < requiredLength;
+        return stringToValidate != null && stringToValidate.length() < requiredLength;
     }
 }
