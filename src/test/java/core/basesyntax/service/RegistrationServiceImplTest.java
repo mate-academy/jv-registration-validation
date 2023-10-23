@@ -24,7 +24,7 @@ class RegistrationServiceImplTest {
     private static final int USER_EDGE_AGE = 18;
     private static RegistrationServiceImpl registrationService;
     private static StorageDaoImpl storageDao;
-    private User validUser;
+    private User defaultValidUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -34,10 +34,10 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        validUser = new User();
-        validUser.setAge(VALID_USER_AGE);
-        validUser.setLogin(VALID_LOGIN);
-        validUser.setPassword(VALID_PASSWORD);
+        defaultValidUser = new User();
+        defaultValidUser.setAge(VALID_USER_AGE);
+        defaultValidUser.setLogin(VALID_LOGIN);
+        defaultValidUser.setPassword(VALID_PASSWORD);
     }
 
     @AfterEach
@@ -47,38 +47,38 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_valid_ok() {
-        User actual = registrationService.register(validUser);
+        User actual = registrationService.register(defaultValidUser);
         assertNotNull(actual);
-        assertEquals(validUser, actual);
+        assertEquals(defaultValidUser, actual);
     }
 
     @Test
     void register_edgeAge_ok() {
-        validUser.setAge(USER_EDGE_AGE);
-        User actual = registrationService.register(validUser);
+        defaultValidUser.setAge(USER_EDGE_AGE);
+        User actual = registrationService.register(defaultValidUser);
         assertNotNull(actual);
-        assertEquals(validUser, actual);
+        assertEquals(defaultValidUser, actual);
     }
 
     @Test
     void register_edgePassword_ok() {
-        validUser.setPassword(EDGE_PASSWORD);
-        User actual = registrationService.register(validUser);
+        defaultValidUser.setPassword(EDGE_PASSWORD);
+        User actual = registrationService.register(defaultValidUser);
         assertNotNull(actual);
-        assertEquals(validUser, actual);
+        assertEquals(defaultValidUser, actual);
     }
 
     @Test
     void register_edgeLogin_ok() {
-        validUser.setLogin(EDGE_LOGIN);
-        User actual = registrationService.register(validUser);
+        defaultValidUser.setLogin(EDGE_LOGIN);
+        User actual = registrationService.register(defaultValidUser);
         assertNotNull(actual);
-        assertEquals(validUser, actual);
+        assertEquals(defaultValidUser, actual);
     }
 
     @Test
     void register_underEdgeAge_notOk() {
-        User invalidAgeUser = validUser;
+        User invalidAgeUser = defaultValidUser;
         invalidAgeUser.setAge(USER_EDGE_AGE - 1);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidAgeUser));
@@ -86,7 +86,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOk() {
-        User invalidAgeUser = validUser;
+        User invalidAgeUser = defaultValidUser;
         invalidAgeUser.setAge(-10);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidAgeUser));
@@ -94,7 +94,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidPassword_notOk() {
-        User invalidPasswordUser = validUser;
+        User invalidPasswordUser = defaultValidUser;
         invalidPasswordUser.setPassword(INVALID_PASSWORD);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidPasswordUser));
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidLogin_notOk() {
-        User invalidLoginUser = validUser;
+        User invalidLoginUser = defaultValidUser;
         invalidLoginUser.setLogin(INVALID_LOGIN);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidLoginUser));
@@ -110,7 +110,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_notOk() {
-        User nullLoginAgeUser = validUser;
+        User nullLoginAgeUser = defaultValidUser;
         nullLoginAgeUser.setAge(null);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(nullLoginAgeUser));
@@ -118,7 +118,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        User nullLoginPasswordUser = validUser;
+        User nullLoginPasswordUser = defaultValidUser;
         nullLoginPasswordUser.setLogin(null);
         nullLoginPasswordUser.setPassword(null);
         assertThrows(RegistrationException.class,
@@ -127,7 +127,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
-        User nullPasswordUser = validUser;
+        User nullPasswordUser = defaultValidUser;
         nullPasswordUser.setLogin(VALID_LOGIN);
         nullPasswordUser.setPassword(null);
         assertThrows(RegistrationException.class,
@@ -136,8 +136,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existedUser_notOk() {
-        storageDao.add(validUser);
+        storageDao.add(defaultValidUser);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(validUser));
+                () -> registrationService.register(defaultValidUser));
     }
 }
