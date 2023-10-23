@@ -3,10 +3,10 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,9 +15,16 @@ class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "password";
     private static final String INVALID_LOGIN = "invL";
     private static final String INVALID_PASSWORD = "invP";
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
-    private final User nullLoginPasswordUser = new User();
+    private static RegistrationServiceImpl registrationService;
+    private static StorageDaoImpl storageDao;
+    private static User nullLoginPasswordUser;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        nullLoginPasswordUser = new User();
+    }
 
     @BeforeEach
     void setUp() {
