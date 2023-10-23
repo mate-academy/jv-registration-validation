@@ -1,23 +1,29 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationFailException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -26,6 +32,11 @@ class RegistrationServiceImplTest {
         user.setLogin("ponomvrenko");
         user.setAge(21);
         user.setPassword("qwerty1234");
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -43,7 +54,6 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationFailException.class, () -> {
             registrationService.register(user);
         });
-        Storage.people.remove(userWithSameLogin);
     }
 
     @Test
@@ -87,6 +97,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_normalAge_ok() {
+        registrationService.register(user);
+        assertEquals(user.getAge(), storageDao.get(user.getLogin()).getAge());
+    }
+
+    @Test
+    void register_minAge_ok() {
+        user.setAge(18);
+        registrationService.register(user);
+        assertEquals(user.getAge(), storageDao.get(user.getLogin()).getAge());
+    }
+
+    @Test
     void register_emptyPassword_notOk() {
         user.setPassword("");
         assertThrows(RegistrationFailException.class, () -> {
@@ -95,9 +118,65 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_smallLoginLength_notOK() {
-        user.setLogin("small");
+    void register_passwordLengthThree_notOk() {
+        user.setPassword("123");
         assertThrows(RegistrationFailException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_passwordLengthFive_notOk() {
+        user.setPassword("12345");
+        assertThrows(RegistrationFailException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_passwordLengthSix_Ok() {
+        user.setPassword("123456");
+        assertDoesNotThrow(() -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_passwordLengthEight_Ok() {
+        user.setPassword("12345678");
+        assertDoesNotThrow(() -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginLengthThree_notOk() {
+        user.setLogin("qwe");
+        assertThrows(RegistrationFailException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginLengthFive_notOk() {
+        user.setLogin("qwert");
+        assertThrows(RegistrationFailException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginLengthSix_Ok() {
+        user.setLogin("qwerty");
+        assertDoesNotThrow(() -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginLengthEight_Ok() {
+        user.setLogin("qwerty88");
+        assertDoesNotThrow(() -> {
             registrationService.register(user);
         });
     }
