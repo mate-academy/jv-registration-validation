@@ -23,15 +23,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new InvalidDataException(EMPTY_FIELD_MESSAGE);
-        }
+
         validateUserData(user);
         storageDao.add(user);
         return user;
     }
 
     private void validateUserData(User user) {
+        if (user == null) {
+            throw new InvalidDataException(EMPTY_FIELD_MESSAGE);
+        }
         String userLogin = user.getLogin();
         String userPassword = user.getPassword();
         Integer userAge = user.getAge();
