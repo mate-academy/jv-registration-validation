@@ -34,11 +34,6 @@ class RegistrationServiceImplTest {
         user.setPassword("qwerty1234");
     }
 
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
-    }
-
     @Test
     void register_normalValidation_Ok() {
         registrationService.register(user);
@@ -186,5 +181,10 @@ class RegistrationServiceImplTest {
         User registered = registrationService.register(user);
         assertEquals(user, registered);
         Storage.people.remove(registered);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
