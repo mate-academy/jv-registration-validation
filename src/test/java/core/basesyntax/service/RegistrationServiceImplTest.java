@@ -10,20 +10,30 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
+    private static final String CORRECT_PASSWORD = "password123";
+    private static final String CORRECT_LOGIN = "testUser";
+    private static final String INCORRECT_LOGIN_PASSWORD = "short";
+    private static final int CORRECT_AGE = 20;
+    private static final int INCORRECT_AGE = 15;
+    private static RegistrationService registrationService;
+    private User expected;
 
     @BeforeEach
     public void initialisation() {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @BeforeEach
+    public void setUp() {
+        expected = new User();
+    }
+
     @Test
     public void register_ValidUser() {
-        User user = new User();
-        user.setLogin("testUser");
-        user.setPassword("password123");
-        user.setAge(20);
-        User registeredUser = registrationService.register(user);
+        expected.setLogin(CORRECT_LOGIN);
+        expected.setPassword(CORRECT_PASSWORD);
+        expected.setAge(CORRECT_AGE);
+        User registeredUser = registrationService.register(expected);
         assertNotNull(registeredUser);
     }
 
@@ -35,28 +45,28 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_ShortLogin() {
-        User user = new User();
-        user.setLogin("short");
-        user.setPassword("password123");
-        user.setAge(20);
-        assertThrows(ExceptionDuringRegistration.class, () -> registrationService.register(user));
+        expected.setLogin(INCORRECT_LOGIN_PASSWORD);
+        expected.setPassword(CORRECT_PASSWORD);
+        expected.setAge(CORRECT_AGE);
+        assertThrows(ExceptionDuringRegistration.class, ()
+                -> registrationService.register(expected));
     }
 
     @Test
     public void register_ShortPassword() {
-        User user = new User();
-        user.setLogin("testUser");
-        user.setPassword("short");
-        user.setAge(20);
-        assertThrows(ExceptionDuringRegistration.class, () -> registrationService.register(user));
+        expected.setLogin(CORRECT_LOGIN);
+        expected.setPassword(INCORRECT_LOGIN_PASSWORD);
+        expected.setAge(CORRECT_AGE);
+        assertThrows(ExceptionDuringRegistration.class, ()
+                -> registrationService.register(expected));
     }
 
     @Test
     public void register_UnderageUser() {
-        User user = new User();
-        user.setLogin("testUser");
-        user.setPassword("password123");
-        user.setAge(15);
-        assertThrows(ExceptionDuringRegistration.class, () -> registrationService.register(user));
+        expected.setLogin(CORRECT_LOGIN);
+        expected.setPassword(CORRECT_PASSWORD);
+        expected.setAge(INCORRECT_AGE);
+        assertThrows(ExceptionDuringRegistration.class, ()
+                -> registrationService.register(expected));
     }
 }
