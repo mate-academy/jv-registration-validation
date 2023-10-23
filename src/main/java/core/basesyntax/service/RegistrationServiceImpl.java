@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean isStringLengthNotMet(String stringToValidate, int requiredLength) {
         if (stringToValidate == null) {
-            throw new RegistrationException("Can't be");
+            throw new RegistrationException("Can't be null");
         }
         return stringToValidate.length() < requiredLength;
     }
