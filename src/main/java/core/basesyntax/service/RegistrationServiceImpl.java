@@ -26,12 +26,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean checkUserNotRegisteredYet(User user) {
-        for (User registeredUser : Storage.people) {
-            if (registeredUser.getLogin() != null && registeredUser.getLogin()
-                    .equals(user.getLogin())) {
+            if (Storage.people.contains(user)) {
                 throw new InvalidUserDataException("This user is already registered!");
             }
-        }
         return true;
     }
 
