@@ -1,33 +1,30 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.EmptyFieldException;
-import core.basesyntax.exception.IllegalAgeException;
-import core.basesyntax.exception.InvalidLoginException;
-import core.basesyntax.exception.InvalidPasswordException;
-import core.basesyntax.exception.LoginExistingException;
+import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
     private static final String NULL_TEST_FAILURE_MESSAGE = "Null fields "
-            + "should throw EmptyFieldException!";
+            + "should throw InvalidDataException!";
 
     private static final String LOGIN_EXISTS_FAILURE_MESSAGE = "Login already exists in storage "
-            + "should throw LoginExistingException!";
+            + "should throw InvalidDataException!";
     private static final String LOGIN_TEST_FAILURE_MESSAGE = "Login less than 6 letters "
-            + "should throw InvalidLoginException!";
+            + "should throw InvalidDataException!";
     private static final String PASSWORD_TEST_FAILURE_MESSAGE = "Password less than 6 letters "
-            + "should throw InvalidPasswordException!";
+            + "should throw InvalidDataException!";
     private static final String AGE_TEST_FAILURE_MESSAGE = "Age less than 18 "
-            + "or over 122 should throw IllegalAgeException!";
+            + "or over 122 should throw InvalidDataException!";
     private static final String USER_BOB_LOGIN_DEFAULT = "bobjordan";
     private static final String USER_ALICE_LOGIN_DEFAULT = "alicebaker";
     private static final String LOGIN_WORSE_CASE = "bob";
@@ -35,7 +32,6 @@ public class RegistrationServiceTest {
     private static final String PASSWORD_WORSE_CASE = "pass";
     private static final Integer USER_AGE_DEFAULT = 18;
     private static final Integer LESS_AGE_WORSE_CASE = 16;
-    private static final Integer OVER_AGE_WORSE_CASE = 210;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User bob;
@@ -47,10 +43,20 @@ public class RegistrationServiceTest {
         storageDao = new StorageDaoImpl();
     }
 
+    @BeforeEach
+    public void createUser() {
+        bob = new User();
+        alice = new User();
+    }
+
     @Test
-    public void registerUser_correctInputData() {
-        bob = new User(USER_BOB_LOGIN_DEFAULT, USER_PASSWORD_DEFAULT, USER_AGE_DEFAULT);
-        alice = new User(USER_ALICE_LOGIN_DEFAULT, USER_PASSWORD_DEFAULT, USER_AGE_DEFAULT);
+    public void register_correctInputData_Ok() {
+        bob.setLogin(USER_BOB_LOGIN_DEFAULT);
+        bob.setPassword(USER_PASSWORD_DEFAULT);
+        bob.setAge(USER_AGE_DEFAULT);
+        alice.setLogin(USER_ALICE_LOGIN_DEFAULT);
+        alice.setPassword(USER_PASSWORD_DEFAULT);
+        alice.setAge(USER_AGE_DEFAULT);
         registrationService.register(bob);
         registrationService.register(alice);
         User expectedFirstUser = storageDao.get(bob.getLogin());
@@ -60,106 +66,84 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void registerDuplicateUser_throwsRuntimeException() {
-        bob = new User(USER_BOB_LOGIN_DEFAULT, USER_PASSWORD_DEFAULT, USER_AGE_DEFAULT);
+    public void register_duplicatedUser_notOk() {
+        bob.setLogin(USER_BOB_LOGIN_DEFAULT);
+        bob.setPassword(USER_PASSWORD_DEFAULT);
+        bob.setAge(USER_AGE_DEFAULT);
         alice = bob;
-        try {
-            registrationService.register(bob);
-            registrationService.register(alice);
-        } catch (LoginExistingException e) {
-            return;
-        }
-        fail(LOGIN_EXISTS_FAILURE_MESSAGE);
+        registrationService.register(bob);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(alice), LOGIN_EXISTS_FAILURE_MESSAGE);
     }
 
     @Test
-    public void registerDuplicateUserLogin_throwsRuntimeException() {
-        bob = new User(USER_BOB_LOGIN_DEFAULT, USER_PASSWORD_DEFAULT, USER_AGE_DEFAULT);
-        alice = new User(USER_BOB_LOGIN_DEFAULT, PASSWORD_WORSE_CASE, OVER_AGE_WORSE_CASE);
-        try {
-            registrationService.register(bob);
-            registrationService.register(alice);
-        } catch (LoginExistingException e) {
-            return;
-        }
-        fail(LOGIN_EXISTS_FAILURE_MESSAGE);
+    public void register_duplicatedUserLogin_notOk() {
+        bob.setLogin(USER_BOB_LOGIN_DEFAULT);
+        bob.setPassword(USER_PASSWORD_DEFAULT);
+        bob.setAge(USER_AGE_DEFAULT);
+        alice.setLogin(USER_BOB_LOGIN_DEFAULT);
+        alice.setPassword(PASSWORD_WORSE_CASE);
+        alice.setAge(LESS_AGE_WORSE_CASE);
+        registrationService.register(bob);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(alice), LOGIN_EXISTS_FAILURE_MESSAGE);
     }
 
     @Test
-    public void registerInvalidUserLogin_throwsRuntimeException() {
-        bob = new User(LOGIN_WORSE_CASE, USER_PASSWORD_DEFAULT, USER_AGE_DEFAULT);
-        try {
-            registrationService.register(bob);
-        } catch (InvalidLoginException e) {
-            return;
-        }
-        fail(LOGIN_TEST_FAILURE_MESSAGE);
+    public void register_invalidUserLogin_notOk() {
+        bob.setLogin(LOGIN_WORSE_CASE);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(bob), LOGIN_TEST_FAILURE_MESSAGE);
     }
 
     @Test
-    public void registerInvalidUserPass_throwsRuntimeException() {
-        bob = new User(USER_BOB_LOGIN_DEFAULT, PASSWORD_WORSE_CASE, USER_AGE_DEFAULT);
-        try {
-            registrationService.register(bob);
-        } catch (InvalidPasswordException e) {
-            return;
-        }
-        fail(PASSWORD_TEST_FAILURE_MESSAGE);
+    public void register_invalidUserPass_notOk() {
+        bob.setLogin(USER_BOB_LOGIN_DEFAULT);
+        bob.setPassword(PASSWORD_WORSE_CASE);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(bob), PASSWORD_TEST_FAILURE_MESSAGE);
     }
 
     @Test
-    public void registerInvalidUserAge1_throwsRuntimeException() {
-        alice = new User(USER_ALICE_LOGIN_DEFAULT, USER_PASSWORD_DEFAULT, LESS_AGE_WORSE_CASE);
-        try {
-            registrationService.register(alice);
-        } catch (IllegalAgeException e) {
-            return;
-        }
-        fail(AGE_TEST_FAILURE_MESSAGE);
+    public void register_invalidUserAge_notOk() {
+        alice.setLogin(USER_ALICE_LOGIN_DEFAULT);
+        alice.setPassword(USER_PASSWORD_DEFAULT);
+        alice.setAge(LESS_AGE_WORSE_CASE);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(alice), AGE_TEST_FAILURE_MESSAGE);
     }
 
     @Test
-    public void registerInvalidUserAge2_throwsRuntimeException() {
-        bob = new User(USER_BOB_LOGIN_DEFAULT, USER_PASSWORD_DEFAULT, OVER_AGE_WORSE_CASE);
-        try {
-            registrationService.register(bob);
-        } catch (IllegalAgeException e) {
-            return;
-        }
-        fail(AGE_TEST_FAILURE_MESSAGE);
+    public void register_nullUserLogin_notOk() {
+        bob.setLogin(null);
+        bob.setPassword(USER_PASSWORD_DEFAULT);
+        bob.setAge(USER_AGE_DEFAULT);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(bob), NULL_TEST_FAILURE_MESSAGE);
     }
 
     @Test
-    public void nullUserLogin_throwsRuntimeException() {
-        bob = new User(null, USER_PASSWORD_DEFAULT, USER_AGE_DEFAULT);
-        try {
-            registrationService.register(bob);
-        } catch (EmptyFieldException e) {
-            return;
-        }
-        fail(NULL_TEST_FAILURE_MESSAGE);
+    public void register_nullUserPass_notOk() {
+        alice.setLogin(USER_ALICE_LOGIN_DEFAULT);
+        alice.setPassword(null);
+        alice.setAge(USER_AGE_DEFAULT);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(alice), NULL_TEST_FAILURE_MESSAGE);
     }
 
     @Test
-    public void nullUserPassword_throwsRuntimeException() {
-        alice = new User(USER_ALICE_LOGIN_DEFAULT, null, USER_AGE_DEFAULT);
-        try {
-            registrationService.register(alice);
-        } catch (EmptyFieldException e) {
-            return;
-        }
-        fail(NULL_TEST_FAILURE_MESSAGE);
+    public void register_nullUserAge_notOk() {
+        bob.setLogin(USER_BOB_LOGIN_DEFAULT);
+        bob.setPassword(USER_PASSWORD_DEFAULT);
+        bob.setAge(null);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(bob), NULL_TEST_FAILURE_MESSAGE);
     }
 
     @Test
-    public void nullUserAge_throwsRuntimeException() {
-        bob = new User(USER_BOB_LOGIN_DEFAULT, USER_PASSWORD_DEFAULT, null);
-        try {
-            registrationService.register(bob);
-        } catch (EmptyFieldException e) {
-            return;
-        }
-        fail(NULL_TEST_FAILURE_MESSAGE);
+    public void register_nullUser_notOk() {
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(null), NULL_TEST_FAILURE_MESSAGE);
     }
 
     @AfterEach
