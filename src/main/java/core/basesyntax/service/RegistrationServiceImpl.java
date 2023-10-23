@@ -7,6 +7,8 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -15,9 +17,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             return null;
         }
         if (checkUserAge(user)
-            && checkUserNotRegisteredYet(user)
-            && checkUserLoginLength(user)
-            && checkUserPasswordLength(user)) {
+                && checkUserNotRegisteredYet(user)
+                && checkUserLoginLength(user)
+                && checkUserPasswordLength(user)) {
             storageDao.add(user);
         }
         return user;
@@ -26,8 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private boolean checkUserNotRegisteredYet(User user) {
         for (User registeredUser : Storage.people) {
             if (registeredUser.getLogin() != null && registeredUser.getLogin()
-                    .equals(user.getLogin()))
-            {
+                    .equals(user.getLogin())) {
                 throw new InvalidUserDataException("This user is already registered!");
             }
         }
@@ -35,14 +36,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean checkUserLoginLength(User user) {
-        if (user.getLogin() != null && user.getLogin().length() >= 6) {
+        if (user.getLogin() != null && user.getLogin().length() >= MIN_LOGIN_LENGTH) {
             return true;
         }
         throw new InvalidUserDataException("Make your login length greater than 6 letters");
     }
 
     private boolean checkUserPasswordLength(User user) {
-        if (user.getPassword() != null && user.getPassword().length() >= 6) {
+        if (user.getPassword() != null && user.getPassword().length() >= MIN_PASSWORD_LENGTH) {
             return true;
         }
         throw new InvalidUserDataException("Your password is to short. 6 signs minimum");

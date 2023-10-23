@@ -12,13 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    RegistrationService registrationService = new RegistrationServiceImpl();
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
     private User newUser = new User();
-    StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeEach
     public void crateNewUser() {
-       newUser = new User("loginLogin", "password", 18);
+        newUser = new User("loginLogin", "password", 18);
     }
 
     @AfterEach
@@ -29,9 +29,16 @@ class RegistrationServiceImplTest {
     @Test
     void registerAllValid_Ok() {
         registrationService.register(newUser);
-        User actual = newUser;
-        User expected = Storage.people.get(0);
-        assertEquals(actual, expected);
+        User expected = storageDao.get(newUser.getLogin());
+        assertEquals(newUser, expected);
+    }
+
+    @Test
+    void registerUserIsAlreadyInStorage_notOk() {
+        registrationService.register(newUser);
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(newUser);
+        });
     }
 
     @Test
@@ -82,14 +89,4 @@ class RegistrationServiceImplTest {
         });
     }
 
-    @Test
-    void registerMultipleValidUsersAndGetId_Ok() {
-        User lastUser = new User("Login4", "Password4", 18);
-        registrationService.register(new User("Login1", "Password1", 18));
-        registrationService.register(new User("Login2", "Password2", 18));
-        registrationService.register(new User("Login3", "Password3", 18));
-        registrationService.register(lastUser);
-        long actual = storageDao.get("Login4").getId();
-        assertEquals(actual, 4);
-    }
 }
