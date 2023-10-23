@@ -18,15 +18,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login must contain at least 6 characters.");
+            throw new RegistrationException("Login must contain at least "
+                                            + MIN_LOGIN_LENGTH + " characters.");
         }
 
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password must contain at least 6 characters.");
+            throw new RegistrationException("Password must contain at least "
+                                            + MIN_PASSWORD_LENGTH + " characters.");
+
         }
 
         if (user.getAge() == null || user.getAge() < MIN_ACCEPTABLE_AGE) {
-            throw new RegistrationException("Not valid age! Min allowed age is 18.");
+            throw new RegistrationException("Not valid age! Min allowed age is "
+                                            + MIN_ACCEPTABLE_AGE + ".");
         }
 
         return storageDao.add(user);
