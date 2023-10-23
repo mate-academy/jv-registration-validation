@@ -11,6 +11,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String EMPTY_STRING = "";
+    private static final String VALID_LOGIN_EDGE = "login6";
+    private static final String VALID_LOGIN = "login-login-123//";
+    private static final String INVALID_LOGIN = "login";
+    private static final String VALID_PASSWORD_EDGE = "qwerty";
+    private static final String VALID_PASSWORD = "qwertyQWERTY";
+    private static final String INVALID_PASSWORD = "qwert";
+    private static final int VALID_AGE_EDGE = 18;
+    private static final int VALID_AGE = 30;
+    private static final int INVALID_AGE = 17;
+    private static final int INVALID_AGE_ZERO = 0;
+    private static final int NEGATIVE_AGE = -10;
+
     private static RegistrationService service;
     private static StorageDao storageDao;
     private static User user;
@@ -25,9 +38,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user.setId(0L);
-        user.setLogin("login6");
-        user.setPassword("qwerty");
-        user.setAge(18);
+        user.setLogin(VALID_LOGIN_EDGE);
+        user.setPassword(VALID_PASSWORD_EDGE);
+        user.setAge(VALID_AGE_EDGE);
     }
 
     @AfterEach
@@ -54,9 +67,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidLogin_notOk() {
-        user.setLogin("login");
+        user.setLogin(INVALID_LOGIN);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
-        user.setLogin("");
+        user.setLogin(EMPTY_STRING);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
         user.setLogin(null);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
@@ -64,18 +77,18 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validLogin_Ok() {
-        user.setLogin("login0");
+        user.setLogin(VALID_LOGIN_EDGE);
         service.register(user);
         Assertions.assertEquals(user.getLogin(), storageDao.get(user.getLogin()).getLogin());
-        user.setLogin("login-login-123//");
+        user.setLogin(VALID_LOGIN);
         Assertions.assertEquals(user.getLogin(), storageDao.get(user.getLogin()).getLogin());
     }
 
     @Test
     void register_invalidPassword_notOk() {
-        user.setPassword("qwert");
+        user.setPassword(INVALID_PASSWORD);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
-        user.setPassword("");
+        user.setPassword(EMPTY_STRING);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
         user.setPassword(null);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
@@ -83,20 +96,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validPassword_Ok() {
-        user.setPassword("qwertY");
+        user.setPassword(VALID_PASSWORD_EDGE);
         service.register(user);
         Assertions.assertEquals(user.getPassword(), storageDao.get(user.getLogin()).getPassword());
-        user.setPassword("qwertyQWERTY");
+        user.setPassword(VALID_PASSWORD);
         Assertions.assertEquals(user.getPassword(), storageDao.get(user.getLogin()).getPassword());
     }
 
     @Test
     void register_invalidAge_notOk() {
-        user.setAge(17);
+        user.setAge(INVALID_AGE);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
-        user.setAge(0);
+        user.setAge(INVALID_AGE_ZERO);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
-        user.setAge(-10);
+        user.setAge(NEGATIVE_AGE);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
         user.setAge(null);
         Assertions.assertThrows(InvalidDataException.class, () -> service.register(user));
@@ -104,10 +117,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validAge_Ok() {
-        user.setAge(18);
+        user.setAge(VALID_AGE_EDGE);
         service.register(user);
         Assertions.assertEquals(user.getAge(), storageDao.get(user.getLogin()).getAge());
-        user.setAge(30);
+        user.setAge(VALID_AGE);
         Assertions.assertEquals(user.getAge(), storageDao.get(user.getLogin()).getAge());
     }
 }
