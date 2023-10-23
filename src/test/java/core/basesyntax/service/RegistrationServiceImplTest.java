@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,6 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
         nullLoginPasswordUser = new User();
         invalidAgeUser = new User();
-
     }
 
     @BeforeEach
@@ -41,6 +42,11 @@ class RegistrationServiceImplTest {
         nullLoginPasswordUser.setPassword(null);
         invalidAgeUser.setLogin(VALID_LOGIN);
         invalidAgeUser.setPassword(VALID_PASSWORD);
+    }
+
+    @AfterEach
+    public void clearStorage() {
+        Storage.people.clear();
     }
 
     @Test
