@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Feel free to remove this class and create your own.
  */
-public class ServiceTest {
+public class RegistrationServiceTest {
     private static final String OK_LOGIN_TEN_LENGTH = "boroda4436";
     private static final String NOT_OK_LOGIN_ZERO_LENGTH = "";
     private static final String NOT_OK_LOGIN_THREE_LENGTH = "123";
