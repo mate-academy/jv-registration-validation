@@ -34,6 +34,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    public void registerNullUser_notOk() {
+        assertThrows(InvalidUserDataException.class, ()
+            -> registrationService.register(null));
+    }
+
+    @Test
     void registerUserIsAlreadyInStorage_notOk() {
         registrationService.register(newUser);
         assertThrows(InvalidUserDataException.class, () -> {
@@ -58,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerPasswordShorterThanSix_notOk() {
+    void registerPasswordShorterThanMinimum_notOk() {
         newUser.setPassword("passw");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
@@ -74,7 +80,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerLoginShorterThanSix_notOk() {
+    void registerLoginShorterThanMinimum_notOk() {
         newUser.setLogin("login");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);

@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            return null;
+            throw new InvalidUserDataException("User shouldn't be null!");
         }
         if (checkUserAge(user)
                 && checkUserNotRegisteredYet(user)
