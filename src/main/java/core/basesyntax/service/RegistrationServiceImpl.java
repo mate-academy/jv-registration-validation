@@ -19,21 +19,37 @@ public class RegistrationServiceImpl implements RegistrationService {
         String login = user.getLogin();
         String password = user.getPassword();
         Integer age = user.getAge();
-        if (login == null || login.length() < MIN_LOGIN_LENGTH) {
+        if (isLoginInvalid(login)) {
             throw new RegistrationException("Login should be least "
                     + MIN_LOGIN_LENGTH + "characters");
         }
-        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+        if (isPasswordInvalid(password)) {
             throw new RegistrationException("Password should be least "
                     + MIN_PASSWORD_LENGTH + "characters");
         }
-        if (age == null || age < MIN_USER_AGE) {
+        if (isAgeInvalid(age)) {
             throw new RegistrationException("Age should be least " + MIN_USER_AGE);
         }
-        if (storageDao.get(login) != null) {
+        if (isLoginExisted(login)) {
             throw new RegistrationException("Login " + login + " is already used");
         }
         storageDao.add(user);
         return storageDao.get(login);
+    }
+
+    private boolean isLoginInvalid(String login) {
+        return login == null || login.length() < MIN_LOGIN_LENGTH;
+    }
+
+    private boolean isPasswordInvalid(String password) {
+        return password == null || password.length() < MIN_PASSWORD_LENGTH;
+    }
+
+    private boolean isAgeInvalid(Integer age) {
+        return age == null || age < MIN_USER_AGE;
+    }
+
+    private boolean isLoginExisted(String login) {
+        return storageDao.get(login) != null;
     }
 }
