@@ -11,9 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH = 6;
     private static final String USER_NULL = "The user can't be Null";
     private static final String USER_EXISTS = "User exists";
-    private static final String AGE_UNDER_18 = "Age - over 18 years old";
+    private static final String AGE_UNDER_18 = "Age - over " + MIN_YEAR + " years old";
     private static final String INCORRECT_LOGIN_OR_PASSWORD = "Login and password must contain "
-            + "at least 6 characters";
+            + "at least " + MIN_LENGTH + " characters";
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
