@@ -14,6 +14,14 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl service;
     private static StorageDao storageDao;
+    private static final String VALID_LOGIN = "AgroFix";
+    private static final String VALID_PASSWORD = "qwerty23";
+    private static final int VALID_AGE = 21;
+    private static final String LESS_THEN_SIX_LOGIN = "Strii";
+    private static final String LESS_THEN_SIX_PASSWORD = "four";
+    private static final int LESS_THEN_EIGHTEEN_AGE = 4;
+
+
 
     @BeforeAll
     static void beforeAll() {
@@ -22,92 +30,92 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginIsNull_isNotOk() {
+    void registerLoginIsNull_isNotOk() {
         User user = new User();
         user.setLogin(null);
-        user.setPassword("qwerty23");
-        user.setAge(21);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(user));
     }
 
     @Test
-    void passwordIsNull_isNotOk() {
+    void registerPasswordIsNull_isNotOk() {
         User user = new User();
-        user.setLogin("AgroFix");
+        user.setLogin(VALID_LOGIN);
         user.setPassword(null);
-        user.setAge(42);
+        user.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(user));
     }
 
     @Test
-    void ageIsNull_isNotOk() {
+    void registerAgeIsNull_isNotOk() {
         User user = new User();
-        user.setLogin("Incognito");
-        user.setPassword("89898989");
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
         user.setAge(null);
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(user));
     }
 
     @Test
-    void userIsNull_isNotOk() {
+    void registerUserIsNull_isNotOk() {
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(null));
     }
 
     @Test
-    void validateExistUser_isOk() {
+    void registerExistUser_isOk() {
         User user = new User();
-        user.setLogin("MyTestLogin");
-        user.setPassword("qwerty2023");
-        user.setAge(23);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
         storageDao.add(user);
         User user1 = new User();
-        user1.setLogin("MyTestLogin");
-        user1.setPassword("qwerty2023");
+        user1.setLogin(VALID_LOGIN);
+        user1.setPassword(VALID_PASSWORD);
         user1.setAge(23);
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(user1));
     }
 
     @Test
-    void loginLessSix_notOk() {
+    void registerLoginLessSix_notOk() {
         User user = new User();
-        user.setLogin("Strii");
-        user.setPassword("random21");
-        user.setAge(30);
+        user.setLogin(LESS_THEN_SIX_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(user));
     }
 
     @Test
-    void passwordLessSix_isNotOk() {
+    void registerPasswordLessSix_isNotOk() {
         User user = new User();
-        user.setLogin("MyTest");
-        user.setPassword("four");
-        user.setAge(22);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(LESS_THEN_SIX_PASSWORD);
+        user.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(user));
     }
 
     @Test
-    void ageLessEighteen_isNotOk() {
+    void registerAgeLessEighteen_isNotOk() {
         User user = new User();
-        user.setLogin("MyNewTestLogin");
-        user.setPassword("password");
-        user.setAge(-12);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(LESS_THEN_EIGHTEEN_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> service.register(user));
     }
 
     @Test
-    void userValid_isOk() {
+    void registerUserValid_isOk() {
         User user = new User();
-        user.setLogin("Mates_jv");
-        user.setPassword("23.10.2023");
-        user.setAge(33);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
         assertNotNull(service.register(user));
     }
 
