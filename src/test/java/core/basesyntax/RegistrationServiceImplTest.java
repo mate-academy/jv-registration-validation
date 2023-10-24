@@ -1,15 +1,18 @@
 package core.basesyntax;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidDataException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RegistrationServiceImplTest {
@@ -33,6 +36,11 @@ public class RegistrationServiceImplTest {
         users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
+    }
+
+    @AfterEach
+    void clearStorage() {
+        Storage.people.clear();
     }
 
     @Test
@@ -77,8 +85,43 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_existingUser_notOk() {
+        Storage.people.add(users.get(INDEX_OF_SECOND_USER));
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(users.get(INDEX_OF_SECOND_USER));
         });
     }
+
+    @Test
+    public void register_emptyLogin_notOk() {
+        users.get(INDEX_OF_SECOND_USER).setLogin("");
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(users.get(INDEX_OF_SECOND_USER));
+        });
+    }
+
+    @Test
+    public void register_tooShortLogin_notOk() {
+        users.get(INDEX_OF_SECOND_USER).setLogin("log");
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(users.get(INDEX_OF_SECOND_USER));
+        });
+        users.get(INDEX_OF_SECOND_USER).setLogin("short");
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(users.get(INDEX_OF_SECOND_USER));
+        });
+    }
+
+    @Test
+    public void register_sufficientLoginLength_ok() {
+        users.get(INDEX_OF_SECOND_USER).setLogin("abcdef");
+        assertDoesNotThrow(() -> {
+            registrationService.register(users.get(INDEX_OF_SECOND_USER));
+        });
+        users.get(INDEX_OF_SECOND_USER).setLogin("qwertyuiop");
+        assertDoesNotThrow(() -> {
+            registrationService.register(users.get(INDEX_OF_SECOND_USER));
+        });
+    }
+
+
 }
