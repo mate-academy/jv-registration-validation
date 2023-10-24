@@ -13,36 +13,53 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RegistrationException("User can't be null");
-        }
-        if (isUserLoginAlreadyExist(user)) {
-            throw new RegistrationException("User with this login already exist");
-        }
-        if (isMinimalUserAgeNotMet(user)) {
-            throw new RegistrationException("Minimal age requirement isn't met");
-        }
-        if (isStringLengthNotMet(user.getLogin(), MINIMAL_LOGIN_LENGTH)) {
-            throw new RegistrationException("Minimal login length requirement isn't met");
-        }
-        if (isStringLengthNotMet(user.getPassword(), MINIMAL_PASSWORD_LENGTH)) {
-            throw new RegistrationException("Minimal password length requirement isn't met");
-        }
+        validate(user);
         return storageDao.add(user);
     }
 
-    private boolean isUserLoginAlreadyExist(User user) {
-        return storageDao.get(user.getLogin()) != null;
+    private void validate(User user) throws RegistrationException {
+        isUserNotNull(user);
+        isUserLoginAlreadyExist(user.getLogin());
+        validateUserAge(user.getAge());
+        validateUserLogin(user.getLogin());
+        validateUserPassword(user.getPassword());
     }
 
-    private boolean isMinimalUserAgeNotMet(User user) {
-        return user.getAge() == null || user.getAge() < USER_MINIMAL_AGE;
+    private void isUserLoginAlreadyExist(String login) {
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("User with this login already exist");
+        }
     }
 
-    private boolean isStringLengthNotMet(String stringToValidate, int requiredLength) {
+    private void validateUserAge(int age) {
+        if (age < USER_MINIMAL_AGE) {
+            throw new RegistrationException("Minimal age requirement isn't met");
+        }
+    }
+
+    private void validateUserPassword(String userPassword) {
+        validateInputStringNotNull(userPassword);
+        if (userPassword.length() < MINIMAL_PASSWORD_LENGTH) {
+            throw new RegistrationException("User password is too short");
+        }
+    }
+
+    private void validateUserLogin(String userLogin) {
+        validateInputStringNotNull(userLogin);
+        if (userLogin.length() < MINIMAL_LOGIN_LENGTH) {
+            throw new RegistrationException("User login is too short");
+        }
+    }
+
+    private void validateInputStringNotNull(String stringToValidate) {
         if (stringToValidate == null) {
             throw new RegistrationException("Can't be null");
         }
-        return stringToValidate.length() < requiredLength;
+    }
+
+    private void isUserNotNull(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
     }
 }
