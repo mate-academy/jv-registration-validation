@@ -121,7 +121,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIs17_notOk() {
+    void register_lowerThanRequiredAge_notOk() {
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
