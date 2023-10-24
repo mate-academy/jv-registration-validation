@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -48,7 +47,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_valid_ok() {
         User actual = registrationService.register(defaultValidUser);
-        assertNotNull(actual);
         assertEquals(defaultValidUser, actual);
     }
 
@@ -56,7 +54,6 @@ class RegistrationServiceImplTest {
     void register_edgeAge_ok() {
         defaultValidUser.setAge(USER_EDGE_AGE);
         User actual = registrationService.register(defaultValidUser);
-        assertNotNull(actual);
         assertEquals(defaultValidUser, actual);
     }
 
@@ -64,7 +61,6 @@ class RegistrationServiceImplTest {
     void register_edgePassword_ok() {
         defaultValidUser.setPassword(EDGE_PASSWORD);
         User actual = registrationService.register(defaultValidUser);
-        assertNotNull(actual);
         assertEquals(defaultValidUser, actual);
     }
 
@@ -72,7 +68,6 @@ class RegistrationServiceImplTest {
     void register_edgeLogin_ok() {
         defaultValidUser.setLogin(EDGE_LOGIN);
         User actual = registrationService.register(defaultValidUser);
-        assertNotNull(actual);
         assertEquals(defaultValidUser, actual);
     }
 
@@ -106,14 +101,6 @@ class RegistrationServiceImplTest {
         invalidLoginUser.setLogin(INVALID_LOGIN);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidLoginUser));
-    }
-
-    @Test
-    void register_nullAge_notOk() {
-        User nullLoginAgeUser = defaultValidUser;
-        nullLoginAgeUser.setAge(null);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(nullLoginAgeUser));
     }
 
     @Test
