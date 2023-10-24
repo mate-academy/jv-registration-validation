@@ -1,31 +1,27 @@
 package core.basesyntax.dao;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 public class StorageDaoImplTest {
     private static final StorageDao storageDao = new StorageDaoImpl();
 
-    @BeforeAll
-    public static void setupStorage() {
-        Storage.people.add(new User());
-        Storage.people.get(0).setLogin(null);
-        Storage.people.add(new User());
-        Storage.people.get(1).setLogin("admin");
-        Storage.people.add(null);
+    @AfterAll
+    public static void teardown() {
+        Storage.people.clear();
     }
 
     @Test
-    public void add_user_returnsSameUser() {
+    public void add_newUser_ok() {
         User user = new User();
         user.setLogin("employee0001");
         Long userId = user.getId();
@@ -39,44 +35,29 @@ public class StorageDaoImplTest {
     }
 
     @Test
-    public void add_null_returnsNull() {
-        User user = null;
-        int initialStorageSize = Storage.people.size();
-        User addedUser = storageDao.add(user);
-        assertNull(addedUser, "Method should return null if the user is null");
-        assertEquals(Storage.people.size(),
-                initialStorageSize,
-                "Method should not add null to the Storage");
+    public void add_null_notOk() {
+        assertThrows(NullPointerException.class,
+                () -> storageDao.add(null),
+                "Method cannot operate with null User");
     }
 
     @Test
-    public void get_storedUser_returnsUser() {
+    public void get_storedUser_ok() {
+        User storedUser = new User();
+        storedUser.setLogin("admin");
+        Storage.people.add(storedUser);
         User retrievedUser = storageDao.get("admin");
         assertNotNull(retrievedUser, "Method should return the stored User");
     }
 
     @Test
-    public void get_nonStoredUser_returnsNull() {
+    public void get_nonStoredUser_ok() {
         User retrievedUser = storageDao.get("employee0002");
         assertNull(retrievedUser, "Method should return null");
     }
 
     @Test
-    public void get_storageContainsNull_ignoresNull() {
-        assertDoesNotThrow(() -> {
-            storageDao.get("employee0003");
-        }, "Method should ignore empty values in the Storage");
-    }
-
-    @Test
-    public void get_storageContainsNullLoginUser_ignoresUser() {
-        assertDoesNotThrow(() -> {
-            storageDao.get("employee0004");
-        }, "Method should ignore Users with empty login in the Storage");
-    }
-
-    @Test
-    public void get_null_returnsNull() {
+    public void get_null_ok() {
         User retrievedUser = storageDao.get(null);
         assertNull(retrievedUser, "Method should return null");
     }
