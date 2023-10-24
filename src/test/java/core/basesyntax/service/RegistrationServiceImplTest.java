@@ -8,13 +8,21 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private User newUser = new User();
-    private final StorageDao storageDao = new StorageDaoImpl();
+
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
+    private User newUser;
+
+    @BeforeAll
+    static void setup() {
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     public void crateNewUser() {
@@ -27,28 +35,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerAllValid_Ok() {
+    void register_AllValid_Ok() {
         registrationService.register(newUser);
         User expected = storageDao.get(newUser.getLogin());
         assertEquals(newUser, expected);
     }
 
     @Test
-    public void registerNullUser_notOk() {
+    public void register_NullUser_notOk() {
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(null));
     }
 
     @Test
-    void registerUserIsAlreadyInStorage_notOk() {
-        registrationService.register(newUser);
+    void register_UserIsAlreadyInStorage_notOk() {
+        storageDao.add(newUser);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
         });
     }
 
     @Test
-    void registerAgeLowerThanMinAge_notOk() {
+    void register_AgeLowerThanMinAge_notOk() {
         newUser.setAge(12);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
@@ -56,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerAgeNull_notOk() {
+    void register_AgeNull_notOk() {
         newUser.setAge(null);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
@@ -64,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerPasswordShorterThanMinimum_notOk() {
+    void register_PasswordShorterThanMinimum_notOk() {
         newUser.setPassword("passw");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
