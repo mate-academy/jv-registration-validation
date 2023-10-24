@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -85,9 +84,10 @@ public class HelloWorldTest {
     }
 
     @Test
-    void userInStorage_Ok() {
-        boolean expected = storageDao.get(validUser.getLogin()) != null;
-        assertFalse(expected);
+    void register_ExistsUser_NotOk() {
+        storageDao.add(validUser);
+        User sameUser = validUser;
+        assertThrows(RegistrationException.class, () -> registrationService.register(sameUser));
     }
 
 }
