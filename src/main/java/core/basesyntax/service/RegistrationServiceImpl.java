@@ -7,16 +7,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int PASSWORD_MIN_LENGTH = 6;
     private static final int LOGIN_MIN_LENGTH = 6;
     private static final int MIN_AGE = 18;
+    private static final String USER_CANNOT_BE_NULL =
+            "User cannot be null";
+    private static final String LOGIN_CANNOT_BE_NULL =
+            "Login can't be null";
+    private static final String PASSWORD_CANNOT_BE_NULL =
+            "Password can't be null";
+    private static final String AGE_CANNOT_BE_NULL =
+            "Age can't be null";
+    private static final String USER_ALREADY_REGISTERED =
+            "The user is already registered. Login: ";
+    private static final String LOGIN_LENGTH_ERROR =
+            "Login can't be less than " + LOGIN_MIN_LENGTH + " characters";
+    private static final String PASSWORD_LENGTH_ERROR =
+            "Password can't be less than " + PASSWORD_MIN_LENGTH + " characters";
+    private static final String AGE_ERROR =
+            "Age can't be less than " + MIN_AGE;
     private final StorageDao storageDao;
-
-    private static final String USER_CANNOT_BE_NULL = "User cannot be null";
-    private static final String LOGIN_CANNOT_BE_NULL = "Login can't be null";
-    private static final String PASSWORD_CANNOT_BE_NULL = "Password can't be null";
-    private static final String AGE_CANNOT_BE_NULL = "Age can't be null";
-    private static final String USER_ALREADY_REGISTERED = "The user is already registered. Login: ";
-    private static final String LOGIN_LENGTH_ERROR = "Login can't be less than " + LOGIN_MIN_LENGTH + " characters";
-    private static final String PASSWORD_LENGTH_ERROR = "Password can't be less than " + PASSWORD_MIN_LENGTH + " characters";
-    private static final String AGE_ERROR = "Age can't be less then " + MIN_AGE;
 
     public RegistrationServiceImpl(StorageDao storageDao) {
         this.storageDao = storageDao;

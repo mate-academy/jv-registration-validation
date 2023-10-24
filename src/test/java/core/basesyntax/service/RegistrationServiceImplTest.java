@@ -21,8 +21,6 @@ class RegistrationServiceImplTest {
     private static final String LESS_THEN_SIX_PASSWORD = "four";
     private static final int LESS_THEN_EIGHTEEN_AGE = 4;
 
-
-
     @BeforeAll
     static void beforeAll() {
         storageDao = new StorageDaoImpl();
