@@ -10,7 +10,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMUM_LOGIN_LENGTH = 6;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
     private static final int MINIMUM_AGE = 18;
-
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
