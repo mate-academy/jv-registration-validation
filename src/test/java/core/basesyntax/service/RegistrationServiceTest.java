@@ -29,14 +29,14 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void test_register_validUser_ok() {
+    void register_validUser_ok() {
         User actualUser = registrationService.register(validUser);
         User expectUser = validUser;
         Assertions.assertEquals(expectUser, actualUser);
     }
 
     @Test
-    void test_register_existUser_notOk() {
+    void register_existUser_notOk() {
         String login = "ValidLogin";
         User sameLoginUser = new User();
         sameLoginUser.setLogin(login);
@@ -49,14 +49,14 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void test_register_nullUser_notOk() {
+    void register_nullUser_notOk() {
         Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(null),
                 "There is shouldn't to pass null User");
     }
 
     @Test
-    void test_register_nullLogin_notOk() {
+    void register_nullLogin_notOk() {
         User nullLoginUser = validUser;
         nullLoginUser.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
@@ -65,7 +65,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void test_register_shortLogin_notOk() {
+    void register_shortLogin_notOk() {
         User shortLoginUser = validUser;
         String login = "abcde";
         shortLoginUser.setLogin(login);
@@ -77,7 +77,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void test_register_nullPassword_notOk() {
+    void register_nullPassword_notOk() {
         User nullPasswordUser = validUser;
         nullPasswordUser.setPassword(null);
         Assertions.assertThrows(RegistrationException.class,
@@ -86,7 +86,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void test_register_shortPassword_notOk() {
+    void register_shortPassword_notOk() {
         User shortPasswordUser = validUser;
         String password = "12345";
         shortPasswordUser.setPassword(password);
@@ -98,7 +98,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void test_register_nullAge_notOk() {
+    void register_nullAge_notOk() {
         User nullAgeUser = validUser;
         nullAgeUser.setAge(null);
         Assertions.assertThrows(RegistrationException.class,
@@ -107,7 +107,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void test_register_youngAge_notOk() {
+    void register_youngAge_notOk() {
         int actual = 17;
         User youngUser = validUser;
         youngUser.setAge(actual);

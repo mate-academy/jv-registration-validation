@@ -13,43 +13,51 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkValidNewUser(user);
+        storageDao.add(user);
+        return storageDao.get(user.getLogin());
+    }
+
+    private void checkValidNewUser(User newUser) {
+        checkNotNullUser(newUser);
+        String login = newUser.getLogin();
+        String password = newUser.getPassword();
+        Integer age = newUser.getAge();
+        checkValidLogin(login);
+        checkValidPassword(password);
+        checkValidAge(age);
+        checkNotReservedLogin(login);
+    }
+
+    private void checkNotNullUser(User user) {
         if (user == null) {
             throw new RegistrationException("User is null");
         }
-        String login = user.getLogin();
-        String password = user.getPassword();
-        Integer age = user.getAge();
-        if (isLoginInvalid(login)) {
+    }
+
+    private void checkValidLogin(String login) {
+        if (login == null || login.length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login should be least "
                     + MIN_LOGIN_LENGTH + "characters");
         }
-        if (isPasswordInvalid(password)) {
+    }
+
+    private void checkValidPassword(String password) {
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password should be least "
                     + MIN_PASSWORD_LENGTH + "characters");
         }
-        if (isAgeInvalid(age)) {
+    }
+
+    private void checkValidAge(Integer age) {
+        if (age == null || age < MIN_USER_AGE) {
             throw new RegistrationException("Age should be least " + MIN_USER_AGE);
         }
-        if (isLoginExisted(login)) {
+    }
+
+    private void checkNotReservedLogin(String login) {
+        if (storageDao.get(login) != null) {
             throw new RegistrationException("Login " + login + " is already used");
         }
-        storageDao.add(user);
-        return storageDao.get(login);
-    }
-
-    private boolean isLoginInvalid(String login) {
-        return login == null || login.length() < MIN_LOGIN_LENGTH;
-    }
-
-    private boolean isPasswordInvalid(String password) {
-        return password == null || password.length() < MIN_PASSWORD_LENGTH;
-    }
-
-    private boolean isAgeInvalid(Integer age) {
-        return age == null || age < MIN_USER_AGE;
-    }
-
-    private boolean isLoginExisted(String login) {
-        return storageDao.get(login) != null;
     }
 }
