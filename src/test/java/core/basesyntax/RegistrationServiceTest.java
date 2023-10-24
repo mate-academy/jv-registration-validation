@@ -197,7 +197,7 @@ public class RegistrationServiceTest {
         expected.setPassword(OK_PASSWORD_TEN_LENGTH);
         expected.setAge(OK_AGE_TWENTY_TWO);
         expected.setLogin(OK_PASSWORD_EIGHT_LENGTH);
-        registServImpl.register(expected);
+        Storage.people.add(expected);
         assertThrows(RegistrationException.class,
                 () -> registServImpl.register(expected),
                 "Registration should throw an exception when the user is already registered.");
