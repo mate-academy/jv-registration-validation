@@ -19,50 +19,43 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (checkIfUserIsNotNull(user)
-                && validateAge(user.getAge())
-                && validateLogin(user.getLogin())
-                && validatePassword(user.getPassword())
-                && checkIfLoginExists(user.getLogin())) {
-            storageDao.add(user);
-            return user;
-        }
-        return null;
+        checkIfUserIsNotNull(user);
+        validateAge(user.getAge());
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        checkIfLoginExists(user.getLogin());
+        storageDao.add(user);
+        return user;
     }
 
-    private boolean validatePassword(String password) {
+    private void validatePassword(String password) {
         if (password == null || password.length() < MIN_LENGTH) {
             throw new RegistrationException(INVALID_PASSWORD_MESSAGE);
         }
-        return true;
     }
 
-    private boolean validateLogin(String login) {
+    private void validateLogin(String login) {
         if (login == null || login.length() < MIN_LENGTH
                 || login.replace(" ", "").length() < login.length()) {
             throw new RegistrationException(INVALID_LOGIN_MESSAGE);
         }
-        return true;
     }
 
-    private boolean checkIfLoginExists(String login) {
+    private void checkIfLoginExists(String login) {
         if (storageDao.get(login) != null) {
             throw new RegistrationException(LOGIN_EXISTS_MESSAGE);
         }
-        return true;
     }
 
-    private boolean validateAge(Integer age) {
+    private void validateAge(Integer age) {
         if (age == null || age < MIN_AGE) {
             throw new RegistrationException(AGE_INVALID_MESSAGE);
         }
-        return true;
     }
 
-    private boolean checkIfUserIsNotNull(User user) {
+    private void checkIfUserIsNotNull(User user) {
         if (user == null) {
             throw new RegistrationException(USER_IS_NULL_MESSAGE);
         }
-        return true;
     }
 }

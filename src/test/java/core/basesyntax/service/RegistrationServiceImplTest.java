@@ -9,20 +9,37 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String VALID_LOGIN = "anton1";
+    private static final String INVALID_LENGTH_LOGIN = "5char";
+    private static final String VALID_PASSWORD1 = "password";
+    private static final String VALID_PASSWORD2 = "another password";
+    private static final String INVALID_LENGTH_PASSWORD = "5char";
+    private static final String LOGIN_WITH_SPACE = "an ton";
+    private static final String LOGIN_OUT_OF_SPACES = "      ";
 
+    private static final Integer VALID_AGE1 = 20;
+    private static final Integer VALID_AGE2 = 19;
+    private static final Integer INVALID_AGE = 17;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User testUser1 = new User();
     private User testUser2 = new User();
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao = new StorageDaoImpl();
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        testUser1 = new User("anton1", "password", 20);
-        testUser2 = new User("anton1", "another password", 19);
+        testUser1 = new User(VALID_LOGIN, VALID_PASSWORD1, VALID_AGE1);
+        testUser2 = new User(VALID_LOGIN, VALID_PASSWORD2, VALID_AGE2);
     }
 
     @AfterEach
@@ -38,7 +55,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_Invalid_Age_NotOk() {
-        testUser1.setAge(17);
+        testUser1.setAge(INVALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser1));
     }
 
@@ -50,19 +67,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_Invalid_Login_NotOk() {
-        testUser1.setLogin("5char");
+        testUser1.setLogin(INVALID_LENGTH_LOGIN);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser1));
     }
 
     @Test
     void register_LoginWithSpacesOnly_NotOk() {
-        testUser1.setLogin("      ");
+        testUser1.setLogin(LOGIN_OUT_OF_SPACES);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser1));
     }
 
     @Test
     void register_LoginWithOneSpace_NotOk() {
-        testUser1.setLogin("an ton");
+        testUser1.setLogin(LOGIN_WITH_SPACE);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser1));
     }
 
@@ -74,7 +91,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_Invalid_Password_NotOk() {
-        testUser1.setPassword("5char");
+        testUser1.setPassword(INVALID_LENGTH_PASSWORD);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser1));
     }
 
@@ -92,7 +109,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_User_Login_Exists_NotOk() {
-        registrationService.register(testUser1);
+        storageDao.add(testUser1);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser2));
     }
 }
