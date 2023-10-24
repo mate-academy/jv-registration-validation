@@ -13,20 +13,19 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (isValid(user)) {
-            storageDao.add(user);
-        }
+        validate(user);
+        storageDao.add(user);
         return user;
     }
 
-    private boolean isValid(User user) throws RegistrationFailException {
+    private void validate(User user) throws RegistrationFailException {
         if (user == null) {
             throw new RegistrationFailException("You didn't insert any data!");
         }
-        return isLoginValid(user.getLogin())
-                && isPasswordValid(user.getPassword())
-                && isAgeValid(user.getAge())
-                && !isLoginInStorage(user);
+        if (isLoginValid(user.getLogin()) && isPasswordValid(user.getPassword())
+                && isAgeValid(user.getAge())) {
+            checkLoginInStorage(user);
+        }
     }
 
     private boolean isLoginValid(String login) {
@@ -61,10 +60,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         return true;
     }
 
-    private boolean isLoginInStorage(User user) {
+    private void checkLoginInStorage(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationFailException("Your login is already used.");
         }
-        return false;
     }
 }

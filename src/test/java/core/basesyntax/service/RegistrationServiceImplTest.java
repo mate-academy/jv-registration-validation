@@ -16,6 +16,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String VALID_LOGIN = "ponomvrenko";
+    private static final String VALID_PASSWORD = "qwerty1234";
+    private static final int VALID_AGE = 21;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User user;
@@ -29,9 +32,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin("ponomvrenko");
-        user.setAge(21);
-        user.setPassword("qwerty1234");
+        user.setLogin(VALID_LOGIN);
+        user.setAge(VALID_AGE);
+        user.setPassword(VALID_PASSWORD);
     }
 
     @Test
@@ -46,49 +49,37 @@ class RegistrationServiceImplTest {
         User userWithSameLogin = new User();
         userWithSameLogin.setLogin("ponomvrenko");
         Storage.people.add(userWithSameLogin);
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullUser_notOk() {
         user = null;
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_belowZeroAge_notOk() {
         user.setAge(-100);
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -107,73 +98,55 @@ class RegistrationServiceImplTest {
     @Test
     void register_emptyPassword_notOk() {
         user.setPassword("");
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordLengthThree_notOk() {
         user.setPassword("123");
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordLengthFive_notOk() {
         user.setPassword("12345");
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordLengthSix_Ok() {
         user.setPassword("123456");
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
     void register_passwordLengthEight_Ok() {
         user.setPassword("12345678");
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
     void register_loginLengthThree_notOk() {
         user.setLogin("qwe");
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_loginLengthFive_notOk() {
         user.setLogin("qwert");
-        assertThrows(RegistrationFailException.class, () -> {
-            registrationService.register(user);
-        });
+        assertThrows(RegistrationFailException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_loginLengthSix_Ok() {
         user.setLogin("qwerty");
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
     void register_loginLengthEight_Ok() {
         user.setLogin("qwerty88");
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
