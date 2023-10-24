@@ -9,14 +9,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     public static final int MIN_LOGIN_LENGTH = 6;
     public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int MIN_AGE = 18;
-
     private static final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            return null;
-        }
+        validatePresence(user);
         validateLogin(user);
         validatePassword(user);
         validateAge(user);
@@ -25,13 +22,21 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
+    private void validatePresence(User user) {
+        if (user == null) {
+            throw new RegistrationException("User must be present");
+        }
+    }
+
     private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login is required");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login length must be at least "
-                    + MIN_LOGIN_LENGTH + " characters");
+            throw new RegistrationException(
+                    String.format("Login length must be at least %d characters",
+                            MIN_LOGIN_LENGTH)
+            );
         }
     }
 
@@ -40,8 +45,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password is required");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password length must be at least "
-                    + MIN_PASSWORD_LENGTH + " characters");
+            throw new RegistrationException(
+                    String.format("Password length must be at least %d characters",
+                            MIN_PASSWORD_LENGTH)
+            );
         }
     }
 
@@ -50,7 +57,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age is required");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Minimum age is " + MIN_AGE);
+            throw new RegistrationException(String.format("Minimum age is %d",
+                    MIN_AGE));
         }
     }
 
