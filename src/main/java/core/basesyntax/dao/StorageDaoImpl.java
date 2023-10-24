@@ -8,10 +8,7 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
-        if (user == null) {
-            return null;
-        }
-        user.setId(index++);
+        user.setId(++index);
         Storage.people.add(user);
         return user;
     }
@@ -19,11 +16,7 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public User get(String login) {
         for (User user : Storage.people) {
-            if (
-                    user != null
-                    && user.getLogin() != null
-                    && user.getLogin().equals(login)
-            ) {
+            if (user.getLogin().equals(login)) {
                 return user;
             }
         }
