@@ -34,7 +34,6 @@ public class RegistrationServiceImplTest {
     private static final Integer INVALID_NULL_AGE = null;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private static Storage storage;
     private static User user;
 
     @BeforeAll
@@ -50,126 +49,114 @@ public class RegistrationServiceImplTest {
 
     @AfterEach
     void close() {
-        storage.people.clear();
+        Storage.people.clear();
     }
 
     @Test
-    void register_User_Ok() {
+    void register_validCredentials_Ok() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
-        User expected = storageDao.add(user);
+        registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
-        assertEquals(expected, actual);
+        assertEquals(user, actual);
     }
 
     @Test
-    void register_User_EdgeCase_Ok() {
+    void registrationServiceWork_Ok() {
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
+    }
+
+    @Test
+    void register_validCredentialsEdgeCase_Ok() {
         user.setLogin(VALID_EDGECASE_LOGIN);
         user.setPassword(VALID_EDGECASE_PASSWORD);
         user.setAge(VALID_EDGECASE_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
-        assertEquals(expected, actual);
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
-    void register_User_Invalid_EdgeCase_Login_NotOk() {
+    void register_loginLengthLessThanRequiredEdgeCase_NotOk() {
         user.setLogin(INVALID_EDGECASE_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_EdgeCase_Password_NotOk() {
+    void register_passwordLengthLessThanRequiredEdgeCased_NotOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(INVALID_EDGECASE_PASSWORD);
         user.setAge(VALID_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_EdgeCase_Age_NotOk() {
+    void register_ageLessThanRequiredEdgeCase_NotOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(INVALID_EDGECASE_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_Login_NotOk() {
+    void register_invalidLogin_NotOk() {
         user.setLogin(INVALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_Password_NotOk() {
+    void register_invalidPassword_NotOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(INVALID_PASSWORD);
         user.setAge(VALID_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_Age_NotOk() {
+    void register_invalidAge_NotOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(INVALID_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_Negative_Age_NotOk() {
+    void register_negativeAge_NotOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(INVALID_NEGATIVE_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_Null_Login_NotOk() {
-        user.setLogin(INVALID_LOGIN);
+    void register_nullLogin_NotOk() {
+        user.setLogin(INVALID_NULL_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_Null_Password_NotOk() {
+    void register_nullPassword_NotOk() {
         user.setLogin(VALID_LOGIN);
-        user.setPassword(INVALID_PASSWORD);
+        user.setPassword(INVALID_NULL_PASSWORD);
         user.setAge(VALID_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_Invalid_Null_Age_NotOk() {
+    void register_nullAge_NotOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(INVALID_NULL_AGE);
-        User expected = storageDao.add(user);
-        User actual = storageDao.get(user.getLogin());
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }

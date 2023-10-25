@@ -5,7 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_AGE = 18;
+    private static final Integer MIN_AGE = 18;
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final String MESSAGE_EXCEPTION_USER_IS_EXISTS
@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final String MESSAGE_EXCEPTION_MIN_PASSWORD_LENGTH =
             "The minimum number of characters that make up the password should be: ";
     private static final String MESSAGE_EXCEPTION_PASSWORD_NULL = "The password can't be null.";
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -28,14 +28,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUser(User user) {
-        validateUserIsExist(user);
         validateForNull(user);
-        validateFormat(user);
+        validateLogin(user);
+        validatePassword(user);
         validateAge(user);
+        validateUserIsExist(user);
     }
 
     private void validateUserIsExist(User user) {
-        if (storageDao.get(user.getLogin()).equals(user)) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException(MESSAGE_EXCEPTION_USER_IS_EXISTS + user.getLogin());
         }
     }
@@ -52,14 +53,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validateFormat(User user) {
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException(MESSAGE_EXCEPTION_MIN_PASSWORD_LENGTH
-                    + MIN_PASSWORD_LENGTH);
-        }
+    private void validateLogin(User user) {
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException(MESSAGE_EXCEPTION_MIN_LOGIN_LENGTH
                     + MIN_LOGIN_LENGTH);
+        }
+    }
+
+    private void validatePassword(User user) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException(MESSAGE_EXCEPTION_MIN_PASSWORD_LENGTH
+                    + MIN_PASSWORD_LENGTH);
         }
     }
 
