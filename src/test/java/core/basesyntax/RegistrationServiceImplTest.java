@@ -76,7 +76,8 @@ public class RegistrationServiceImplTest {
         user.setLogin(VALID_EDGECASE_LOGIN);
         user.setPassword(VALID_EDGECASE_PASSWORD);
         user.setAge(VALID_EDGECASE_AGE);
-        User actual = registrationService.register(user);
+        registrationService.register(user);
+        User actual = storageDao.get(user.getLogin());
         assertEquals(user, actual);
     }
 
