@@ -21,32 +21,26 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationException {
-        try {
-            checkNullValues(user);
-            checkLength(user);
-            checkValidAge(user);
-            checkDB(user);
-        } catch (RegistrationException e) {
-            throw new RegistrationException();
-        }
+        checkNullValues(user);
+        checkLength(user);
+        checkAge(user);
+        checkIfUserAlreadyRegistered(user);
         return storageDao.add(user);
     }
 
-    private boolean checkLength(User user) throws RegistrationException {
+    private void checkLength(User user) throws RegistrationException {
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException(INVALID_LOGIN_LENGTH);
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException(INVALID_PASSWORD_LENGTH);
         }
-        return true;
     }
 
-    private boolean checkValidAge(User user) throws RegistrationException {
+    private void checkAge(User user) throws RegistrationException {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException(INVALID_AGE);
         }
-        return true;
     }
 
     private boolean checkNullValues(User user) throws RegistrationException {
@@ -62,10 +56,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         return true;
     }
 
-    private boolean checkDB(User user) throws RegistrationException {
-        if (user.equals(storageDao.get(user.getLogin()))) {
+    private void checkIfUserAlreadyRegistered(User user) throws RegistrationException {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException(EXISTING_USER_MESSAGE);
         }
-        return true;
     }
 }
