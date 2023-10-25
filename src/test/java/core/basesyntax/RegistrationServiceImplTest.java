@@ -12,6 +12,7 @@ import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -32,6 +33,10 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
         storage = new StorageDaoImpl();
         user = new User();
+    }
+
+    @BeforeEach
+    void setUp() {
         user.setAge(VALID_AGE);
         user.setPassword(VALID_PASSWORD);
         user.setLogin(VALID_LOGIN);
@@ -61,6 +66,12 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String whitespacePassword = "      ";
+        String invalidEdgeCasePassword = "abcde";
+        user.setPassword(whitespacePassword);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setPassword(invalidEdgeCasePassword);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -71,6 +82,12 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String whitespaceLogin = "         ";
+        String edgeInvalidEdgeCaseLogin = "asdfg";
+        user.setLogin(whitespaceLogin);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setLogin(edgeInvalidEdgeCaseLogin);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -79,13 +96,20 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        int negativeAge = -18;
+        user.setAge(negativeAge);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        int edgeCaseAge = 17;
+        user.setAge(edgeCaseAge);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        int zeroAge = 0;
+        user.setAge(zeroAge);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registerValidUser_Ok() {
         user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
         storage.add(user);
         assertEquals(user, storage.get(user.getLogin()));
     }
