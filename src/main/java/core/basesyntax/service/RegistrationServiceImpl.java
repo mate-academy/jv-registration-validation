@@ -15,10 +15,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidUserDataException("User shouldn't be null!");
         }
-        checkUserNotRegisteredYet(user);
         checkUserAge(user);
         checkUserLoginLength(user);
         checkUserPasswordLength(user);
+        checkUserNotRegisteredYet(user);
         return storageDao.add(user);
     }
 
