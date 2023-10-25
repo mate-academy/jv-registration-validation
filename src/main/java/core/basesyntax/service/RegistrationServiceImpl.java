@@ -37,10 +37,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         validateLogin(user.getLogin());
         validatePassword(user.getPassword());
         validateAge(user.getAge());
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserDataException(USER_ALREADY_REGISTERED + user.getLogin());
-        }
+        checkIfUserIsAlreadyRegistered(user.getLogin());
         return storageDao.add(user);
+    }
+
+    private void checkIfUserIsAlreadyRegistered(String login) {
+        if (storageDao.get(login) != null) {
+            throw new InvalidUserDataException(USER_ALREADY_REGISTERED + login);
+        }
     }
 
     private void validateLogin(String login) {

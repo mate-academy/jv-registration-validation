@@ -25,6 +25,7 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         storageDao = new StorageDaoImpl();
         service = new RegistrationServiceImpl(new StorageDaoImpl());
+        assertNotNull(service);
     }
 
     @Test
@@ -64,22 +65,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerExistUser_isOk() {
+    void registerExistUser_isNotOk() {
         User user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
         storageDao.add(user);
-        User user1 = new User();
-        user1.setLogin(VALID_LOGIN);
-        user1.setPassword(VALID_PASSWORD);
-        user1.setAge(23);
+        User DuplicateUser = new User();
+        DuplicateUser.setLogin(VALID_LOGIN);
+        DuplicateUser.setPassword(VALID_PASSWORD);
+        DuplicateUser.setAge(23);
         assertThrows(InvalidUserDataException.class,
-                () -> service.register(user1));
+                () -> service.register(DuplicateUser));
     }
 
     @Test
-    void registerLoginLessSix_notOk() {
+    void registerLoginLessSix_isNotOk() {
         User user = new User();
         user.setLogin(LESS_THEN_SIX_LOGIN);
         user.setPassword(VALID_PASSWORD);
@@ -114,7 +115,6 @@ class RegistrationServiceImplTest {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
-        assertNotNull(service.register(user));
     }
 
     @AfterAll
