@@ -22,4 +22,10 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
+
+    @Override
+    public boolean clearStorage() {
+        Storage.people.clear();
+        return Storage.people.size() == 0;
+    }
 }
