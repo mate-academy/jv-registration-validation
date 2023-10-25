@@ -71,12 +71,12 @@ class RegistrationServiceImplTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
         storageDao.add(user);
-        User DuplicateUser = new User();
-        DuplicateUser.setLogin(VALID_LOGIN);
-        DuplicateUser.setPassword(VALID_PASSWORD);
-        DuplicateUser.setAge(23);
+        User duplicateUser = new User();
+        duplicateUser.setLogin(VALID_LOGIN);
+        duplicateUser.setPassword(VALID_PASSWORD);
+        duplicateUser.setAge(23);
         assertThrows(InvalidUserDataException.class,
-                () -> service.register(DuplicateUser));
+                () -> service.register(duplicateUser));
     }
 
     @Test
