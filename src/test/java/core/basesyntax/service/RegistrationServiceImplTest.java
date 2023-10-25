@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User newUser;
@@ -35,14 +34,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AllValid_Ok() {
+    void register_UserWithAllValidParameters_Ok() {
         registrationService.register(newUser);
         User expected = storageDao.get(newUser.getLogin());
         assertEquals(newUser, expected);
     }
 
     @Test
-    public void register_NullUser_notOk() {
+    public void register_UserIsNull_notOk() {
         assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(null));
     }
@@ -56,15 +55,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeLowerThanMinAge_notOk() {
-        newUser.setAge(12);
+    void register_UserWhereAgeLowerThanMinAge_notOk() {
+        newUser.setAge(17);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
         });
     }
 
     @Test
-    void register_AgeNull_notOk() {
+    void register_UserWhereAgeIsZero_notOk() {
+        newUser.setAge(0);
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(newUser);
+        });
+    }
+
+    @Test
+    void register_UserWhereAgeIsNull_notOk() {
         newUser.setAge(null);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
@@ -72,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordShorterThanMinimum_notOk() {
+    void register_UserWherePasswordShorterThanMinimum_notOk() {
         newUser.setPassword("passw");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
@@ -80,7 +87,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerPasswordNull_notOk() {
+    void register_UserWherePasswordIsEmptyString_notOk() {
+        newUser.setPassword("");
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(newUser);
+        });
+    }
+
+    @Test
+    void register_UserWherePasswordIsNull_notOk() {
         newUser.setPassword(null);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
@@ -88,7 +103,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerLoginShorterThanMinimum_notOk() {
+    void register_UserWithLoginShorterThanMinimum_notOk() {
         newUser.setLogin("login");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
@@ -96,11 +111,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerLoginNull_notOk() {
-        newUser.setLogin("login");
+    void register_UserWithLoginIsEmptyString_notOk() {
+        newUser.setLogin("");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(newUser);
         });
     }
 
+    @Test
+    void register_UserWhereLoginIsNull_notOk() {
+        newUser.setLogin(null);
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(newUser);
+        });
+    }
 }
