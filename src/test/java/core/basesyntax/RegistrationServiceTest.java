@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -14,9 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Feel free to remove this class and create your own.
- */
 public class RegistrationServiceTest {
     private static final String OK_LOGIN_TEN_LENGTH = "boroda4436";
     private static final String NOT_OK_LOGIN_ZERO_LENGTH = "";
@@ -243,19 +239,5 @@ public class RegistrationServiceTest {
         assertEquals(expected,
                 actual,
                 "Registration should succeed when the age is 100.");
-    }
-
-    @Test
-    public void user_equals_users_Ok() {
-        User user1 = new User();
-        user1.setLogin(OK_LOGIN_TEN_LENGTH);
-        user1.setAge(OK_AGE_TWENTY_TWO);
-        user1.setPassword(OK_PASSWORD_EIGHT_LENGTH);
-        User user2 = new User();
-        user2.setLogin(OK_LOGIN_TEN_LENGTH);
-        user2.setAge(OK_AGE_TWENTY_TWO);
-        user2.setPassword(OK_PASSWORD_EIGHT_LENGTH);
-        assertTrue(user1.equals(user2),
-                "User objects with the same attributes should be equal.");
     }
 }

@@ -4,7 +4,6 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.Objects;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
@@ -32,11 +31,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void checkForNull(User user) {
         if (user == null) {
             throw new RegistrationException(MESSAGE_USER_NULL);
-        } else if (user.getLogin() == null) {
+        }
+        if (user.getLogin() == null) {
             throw new RegistrationException(MESSAGE_LOGIN_NULL);
-        } else if (user.getPassword() == null) {
+        }
+        if (user.getPassword() == null) {
             throw new RegistrationException(MESSAGE_PASSWORD_NULL);
-        } else if (user.getAge() == null) {
+        }
+        if (user.getAge() == null) {
             throw new RegistrationException(MESSAGE_AGE_NULL);
         }
     }
@@ -45,9 +47,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Not valid age: "
                     + user.getAge() + ". Min allowed age is " + MIN_AGE);
-        } else if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+        }
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException(MESSAGE_LOGIN_LENGTH);
-        } else if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException(MESSAGE_PASSWORD_LENGTH);
         }
     }
@@ -56,8 +60,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.equals(storageDao.get(user.getLogin()))) {
             throw new RegistrationException("Not valid user login: "
                     + user.getLogin() + "this login already exists");
-        } else if (Storage.people.contains(user)
-                && Objects.equals(storageDao.get(user.getLogin()).getId(), user.getId())) {
+        }
+        if (Storage.people.contains(user)) {
             throw new RegistrationException(MESSAGE_ALREADY_REGISTERED);
         }
     }
