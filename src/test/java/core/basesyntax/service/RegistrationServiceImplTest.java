@@ -29,7 +29,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerLoginIsNull_isNotOk() {User user = new User();
+    void registerLoginIsNull_isNotOk() {
+        User user = new User();
         user.setLogin(null);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
