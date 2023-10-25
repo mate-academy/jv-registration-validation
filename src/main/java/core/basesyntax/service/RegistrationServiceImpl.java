@@ -19,8 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkUserAge(user);
         checkUserLoginLength(user);
         checkUserPasswordLength(user);
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkUserNotRegisteredYet(User user) {
