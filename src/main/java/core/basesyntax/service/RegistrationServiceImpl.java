@@ -14,6 +14,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkNulls(user);
+        checkIfUserExists(user);
+        checkData(user);
+        Storage.people.add(user);
+        return user;
+    }
+
+    private void checkNulls(User user) {
         if (user == null) {
             throw new InvalidDataException("The user is null");
         }
@@ -29,9 +37,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new InvalidDataException("The user's age is null");
         }
+    }
+
+    private void checkIfUserExists(User user) {
         if (Storage.people.contains(user)) {
             throw new InvalidDataException("This user is already registered");
         }
+    }
+
+    private void checkData(User user) {
         if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
             throw new InvalidDataException("The login is shorter than 6 characters");
         }
@@ -41,7 +55,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MINIMUM_AGE) {
             throw new InvalidDataException("The age is less than 18");
         }
-        Storage.people.add(user);
-        return user;
     }
 }
