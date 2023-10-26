@@ -1,72 +1,83 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.cases.of.exceptions.ExceptionDuringRegistration;
 import core.basesyntax.cases.of.exceptions.NullExceptionDuringRegistration;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RegistrationServiceImplTest {
-    private static final String CORRECT_PASSWORD = "password123";
-    private static final String CORRECT_LOGIN = "testUser";
-    private static final String INCORRECT_LOGIN_PASSWORD = "short";
+class RegistrationServiceImplTest {
     private static final int CORRECT_AGE = 20;
     private static final int INCORRECT_AGE = 15;
-    private static RegistrationService registrationService;
+    private static final int MIN_AGE = 18;
+    private static final String CORRECT_PASSWORD = "password123";
+    private static final String CORRECT_LOGIN = "testUser2";
+    private static final String INCORRECT_LOGIN_PASSWORD = "short";
+    private static RegistrationServiceImpl newRegistrationMethod;
     private User expected;
 
     @BeforeEach
-    public void initialisation() {
-        registrationService = new RegistrationServiceImpl();
-    }
-
-    @BeforeEach
-    public void setUp() {
+    void setUp() {
+        newRegistrationMethod = new RegistrationServiceImpl();
         expected = new User();
+        Storage.people.clear();
     }
 
     @Test
-    public void register_ValidUser() {
+    void register_ValidUser() {
         expected.setLogin(CORRECT_LOGIN);
         expected.setPassword(CORRECT_PASSWORD);
         expected.setAge(CORRECT_AGE);
-        User registeredUser = registrationService.register(expected);
-        assertNotNull(registeredUser);
+        User registeredUser = newRegistrationMethod.register(expected);
+        Assertions.assertNotNull(registeredUser);
     }
 
     @Test
-    public void register_NullUser() {
-        assertThrows(NullExceptionDuringRegistration.class, ()
-                -> registrationService.register(null));
+    void register_NotNullUser() {
+        Assertions.assertThrows(NullExceptionDuringRegistration.class, ()
+                -> newRegistrationMethod.register(null));
     }
 
     @Test
-    public void register_ShortLogin() {
+    void register_shortLogin() {
         expected.setLogin(INCORRECT_LOGIN_PASSWORD);
         expected.setPassword(CORRECT_PASSWORD);
         expected.setAge(CORRECT_AGE);
-        assertThrows(ExceptionDuringRegistration.class, ()
-                -> registrationService.register(expected));
+        Assertions.assertThrows(ExceptionDuringRegistration.class, ()
+                -> newRegistrationMethod.register(expected));
     }
 
     @Test
-    public void register_ShortPassword() {
-        expected.setLogin(CORRECT_LOGIN);
-        expected.setPassword(INCORRECT_LOGIN_PASSWORD);
-        expected.setAge(CORRECT_AGE);
-        assertThrows(ExceptionDuringRegistration.class, ()
-                -> registrationService.register(expected));
-    }
-
-    @Test
-    public void register_UnderageUser() {
+    void register_UnderAgeUser() {
         expected.setLogin(CORRECT_LOGIN);
         expected.setPassword(CORRECT_PASSWORD);
         expected.setAge(INCORRECT_AGE);
-        assertThrows(ExceptionDuringRegistration.class, ()
-                -> registrationService.register(expected));
+        Assertions.assertThrows(ExceptionDuringRegistration.class, ()
+                -> newRegistrationMethod.register(expected));
+    }
+
+    @Test
+    void register_DuplicateUser() {
+        expected.setLogin(CORRECT_LOGIN);
+        expected.setPassword(CORRECT_PASSWORD);
+        expected.setAge(CORRECT_AGE);
+        newRegistrationMethod.register(expected);
+        User user = new User();
+        user.setLogin(CORRECT_LOGIN);
+        user.setPassword(CORRECT_PASSWORD);
+        user.setAge(CORRECT_AGE);
+        Assertions.assertThrows(ExceptionDuringRegistration.class, ()
+                -> newRegistrationMethod.register(user));
+    }
+
+    @Test
+    void register_ValidUserWithMinAge() {
+        expected.setLogin("newUser");
+        expected.setPassword(CORRECT_PASSWORD);
+        expected.setAge(MIN_AGE);
+        User registeredUser = newRegistrationMethod.register(expected);
+        Assertions.assertNotNull(registeredUser);
     }
 }
