@@ -13,20 +13,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkValidNewUser(user);
-        storageDao.add(user);
-        return storageDao.get(user.getLogin());
+        validateUser(user);
+        return storageDao.add(user);
     }
 
-    private void checkValidNewUser(User newUser) {
+    private void validateUser(User newUser) {
         checkNotNullUser(newUser);
-        String login = newUser.getLogin();
-        String password = newUser.getPassword();
-        Integer age = newUser.getAge();
-        checkValidLogin(login);
-        checkValidPassword(password);
-        checkValidAge(age);
-        checkNotReservedLogin(login);
+        checkValidLogin(newUser.getLogin());
+        checkValidPassword(newUser.getPassword());
+        checkValidAge(newUser.getAge());
+        checkNotExistUserWithLogin(newUser.getLogin());
     }
 
     private void checkNotNullUser(User user) {
@@ -55,7 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkNotReservedLogin(String login) {
+    private void checkNotExistUserWithLogin(String login) {
         if (storageDao.get(login) != null) {
             throw new RegistrationException("Login " + login + " is already used");
         }
