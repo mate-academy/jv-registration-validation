@@ -57,12 +57,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkDB(User user) {
-        if (user.equals(storageDao.get(user.getLogin()))) {
+        if (user.equals(storageDao.get(user.getLogin()))
+                || storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("Not valid user login: "
-                    + user.getLogin() + "this login already exists");
-        }
-        if (Storage.people.contains(user)) {
-            throw new RegistrationException(MESSAGE_ALREADY_REGISTERED);
+                    + user.getLogin());
         }
     }
 }
