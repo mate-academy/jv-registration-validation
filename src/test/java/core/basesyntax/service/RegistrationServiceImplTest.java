@@ -46,8 +46,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_allValidData_Ok() {
-        User expected = registrationService.register(user);
-        User actual = storageDao.get(user.getLogin());
+        User actual = registrationService.register(user);
+        User expected = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
     }
 
@@ -56,8 +56,8 @@ class RegistrationServiceImplTest {
         user.setLogin(VALID_LOGIN_EDGE_CASE);
         user.setPassword(VALID_PASSWORD_EDGE_CASE);
         user.setAge(VALID_AGE_EDGE_CASE);
-        User expected = registrationService.register(user);
-        User actual = storageDao.get(user.getLogin());
+        User actual = registrationService.register(user);
+        User expected = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
     }
 
