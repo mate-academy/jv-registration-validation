@@ -39,9 +39,14 @@ class RegistrationServiceImplTest {
         user.setAge(VALID_AGE);
     }
 
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
     void register_allValidData_Ok() {
-        User expected = storageDao.add(user);
+        User expected = registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
     }
@@ -51,7 +56,7 @@ class RegistrationServiceImplTest {
         user.setLogin(VALID_LOGIN_EDGE_CASE);
         user.setPassword(VALID_PASSWORD_EDGE_CASE);
         user.setAge(VALID_AGE_EDGE_CASE);
-        User expected = storageDao.add(user);
+        User expected = registrationService.register(user);
         User actual = storageDao.get(user.getLogin());
         assertEquals(expected, actual);
     }
@@ -63,77 +68,84 @@ class RegistrationServiceImplTest {
         user2.setPassword(VALID_PASSWORD_EDGE_CASE);
         user2.setAge(VALID_AGE);
         storageDao.add(user);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user2),
+                "User with this login already exists!");
     }
 
     @Test
     void register_nullLogin_notOK() {
         user.setLogin(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Login must contain at least 6 characters.");
     }
 
     @Test
     void register_login3Length_notOk() {
         user.setLogin("abc");
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Login must contain at least 6 characters.");
     }
 
     @Test
     void register_login5Length_notOk() {
         user.setLogin("abc12");
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Login must contain at least 6 characters.");
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         user.setPassword(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Password must contain at least 6 characters.");
     }
 
     @Test
     void register_password3Length_notOk() {
         user.setPassword("123");
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Password must contain at least 6 characters.");
     }
 
     @Test
     void register_password5Length_notOk() {
         user.setPassword("12345");
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Password must contain at least 6 characters.");
     }
 
     @Test
     void register_ageIsNull_notOk() {
         user.setAge(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Not valid age! Min allowed age is 18.");
     }
 
     @Test
     void register_ageIs7_notOk() {
         user.setAge(7);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Not valid age! Min allowed age is 18.");
     }
 
     @Test
     void register_ageIs12_notOk() {
         user.setAge(12);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Not valid age! Min allowed age is 18.");
     }
 
     @Test
     void register_lowerThanRequiredAge_notOk() {
         user.setAge(17);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Not valid age! Min allowed age is 18.");
     }
 
     @Test
     void register_ageIsNegativeNumber_notOk() {
         user.setAge(-8);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Not valid age! Min allowed age is 18.");
     }
 }
