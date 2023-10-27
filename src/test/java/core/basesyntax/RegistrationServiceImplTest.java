@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
+    private static final String INVALID_DATA = "Invalid user data."
+            + " Please check login, password, and age.";
+    private static final String EXISTS_MSG = "User with this login already exists.";
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
@@ -18,7 +21,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void testValidUserRegistration() {
+    public void register_ValidUserRegistration_NotNullAndEquals() {
         User user = new User();
         user.setLogin("testuser1");
         user.setPassword("password1231");
@@ -34,55 +37,49 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void testInvalidUserRegistrationShortLogin() {
+    public void register_InvalidUserRegistration_ExceptionThrown() {
         User user = new User();
         user.setLogin("short");
         user.setPassword("password123");
         user.setAge(20);
 
-        try {
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
-            Assertions.fail("Expected InvalidUserException");
-        } catch (InvalidUserException e) {
-            Assertions.assertEquals("Invalid user data. "
-                    + "Please check login, password, and age.", e.getMessage());
-        }
+        });
+
+        Assertions.assertEquals(INVALID_DATA, exception.getMessage());
     }
 
     @Test
-    public void testInvalidUserRegistrationShortPassword() {
+    public void register_InvalidUserPassLen_ExceptionThrown() {
         User user = new User();
         user.setLogin("testuser");
         user.setPassword("short");
         user.setAge(20);
 
-        try {
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
-            Assertions.fail("Expected InvalidUserException");
-        } catch (InvalidUserException e) {
-            Assertions.assertEquals("Invalid user data."
-                    + " Please check login, password, and age.", e.getMessage());
-        }
+        });
+
+        Assertions.assertEquals(INVALID_DATA, exception.getMessage());
     }
 
     @Test
-    public void testInvalidUserRegistrationUnderage() {
+    public void register_InvalidUserAge_ExceptionThrown() {
         User user = new User();
         user.setLogin("testuser");
         user.setPassword("password123");
         user.setAge(17);
 
-        try {
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
-            Assertions.fail("Expected InvalidUserException");
-        } catch (InvalidUserException e) {
-            Assertions.assertEquals("Invalid user data."
-                    + " Please check login, password, and age.", e.getMessage());
-        }
+        });
+
+        Assertions.assertEquals(INVALID_DATA, exception.getMessage());
     }
 
     @Test
-    public void testInvalidUserRegistrationDuplicateUser() {
+    public void register_DuplicateUser_ExceptionThrown() {
         User user = new User();
         user.setLogin("testuser");
         user.setPassword("password123");
@@ -91,11 +88,63 @@ public class RegistrationServiceImplTest {
         StorageDao storageDao = new StorageDaoImpl();
         storageDao.add(user);
 
-        try {
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
             registrationService.register(user);
-            Assertions.fail("Expected InvalidUserException");
-        } catch (InvalidUserException e) {
-            Assertions.assertEquals("User with this login already exists.", e.getMessage());
-        }
+        });
+
+        Assertions.assertEquals(EXISTS_MSG, exception.getMessage());
+    }
+
+    @Test
+    public void register_NullUser_ExceptionThrown() {
+        User user = null;
+
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
+
+        Assertions.assertEquals(INVALID_DATA, exception.getMessage());
+    }
+
+    @Test
+    public void register_NullLogin_ExceptionThrown() {
+        User user = new User();
+        user.setLogin(null);
+        user.setPassword("password123");
+        user.setAge(20);
+
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
+
+        Assertions.assertEquals(INVALID_DATA, exception.getMessage());
+    }
+
+    @Test
+    public void register_NullPassword_ExceptionThrown() {
+        User user = new User();
+        user.setLogin("testuser");
+        user.setPassword(null);
+        user.setAge(20);
+
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
+
+        Assertions.assertEquals(INVALID_DATA, exception.getMessage());
+    }
+
+    @Test
+    public void register_NullAge_ExceptionThrown() {
+        User user = new User();
+        user.setLogin("testuser");
+        user.setPassword("password123");
+        user.setAge(null);
+
+        InvalidUserException exception = Assertions.assertThrows(InvalidUserException.class, () -> {
+            registrationService.register(user);
+        });
+
+        Assertions.assertEquals(INVALID_DATA, exception.getMessage());
     }
 }
