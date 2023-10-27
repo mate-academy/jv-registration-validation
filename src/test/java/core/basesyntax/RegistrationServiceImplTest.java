@@ -32,11 +32,11 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storage = new StorageDaoImpl();
-        user = new User();
     }
 
     @BeforeEach
     void setUp() {
+        user = new User();
         user.setAge(VALID_AGE);
         user.setPassword(VALID_PASSWORD);
         user.setLogin(VALID_LOGIN);

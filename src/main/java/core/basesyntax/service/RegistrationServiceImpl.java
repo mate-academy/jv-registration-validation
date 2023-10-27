@@ -12,28 +12,45 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validateUserData(user);
-        storageDao.add(user);
-        return user;
+        checkUserIsNull(user);
+        checkUserLogin(user);
+        checkUserPassword(user);
+        checkUserAge(user);
+        checkExistingUser(user);
+        return storageDao.add(user);
     }
 
-    private void validateUserData(User user) {
+    private void checkUserIsNull(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be NULL !!!");
         }
-        if (user.getLogin() == null || user.getLogin().trim().length() < MIN_LENGTH) {
+    }
+
+    private void checkUserLogin(User user) {
+        if (user.getLogin() == null || user.getLogin().length() < MIN_LENGTH
+                || user.getLogin().isBlank()) {
             throw new RegistrationException("User's login can't be null or less than "
                     + MIN_LENGTH + " characters");
         }
-        if (user.getPassword() == null || user.getPassword().trim().length() < MIN_LENGTH) {
+    }
+
+    private void checkUserPassword(User user) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH
+                || user.getPassword().isBlank()) {
             throw new RegistrationException("User's password can't be null or less than "
                     + MIN_LENGTH + " characters");
         }
+    }
+
+    private void checkUserAge(User user) {
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationException("User age can't be NULL or less than "
                     + MIN_AGE + " years");
         }
-        if (storageDao.get(user.getLogin()).equals(user)) {
+    }
+
+    private void checkExistingUser(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with current login already exist !!!");
         }
     }
