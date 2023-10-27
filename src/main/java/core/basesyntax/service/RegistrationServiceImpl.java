@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import core.basesyntax.cases.of.exceptions.ExceptionDuringRegistration;
-import core.basesyntax.cases.of.exceptions.NullExceptionDuringRegistration;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -48,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public void checkNullAgePasswordLogin(User user) {
         if (user == null || user.getLogin() == null
                 || user.getPassword() == null || user.getAge() == null) {
-            throw new NullExceptionDuringRegistration(USER_NULL);
+            throw new ExceptionDuringRegistration(USER_NULL);
         }
     }
 }
