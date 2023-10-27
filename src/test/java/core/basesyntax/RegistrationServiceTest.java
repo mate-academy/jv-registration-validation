@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-
+    private static final String VALID_USER_NAME = "validUser";
     private static StorageDaoImpl storageDao;
     private static RegistrationServiceImpl registrationService;
     private User user;
@@ -26,15 +26,14 @@ public class RegistrationServiceTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User("validuser", "password123", 18);
+        user = new User("userOne", "password123", 18);
     }
 
     @Test
     public void register_ValidUser_Success() {
-        User expected = user;
-        User actual = registrationService.register(expected);
+        User actual = registrationService.register(user);
         assertNotNull(actual);
-        assertEquals(expected.getLogin(), actual.getLogin());
+        assertEquals(user.getLogin(), actual.getLogin());
     }
 
     @Test
@@ -56,8 +55,14 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void register_ShortPassword_ExceptionThrown() {
-        user.setPassword("123");
+    public void register_AgeNull_ExceptionThrown() {
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_PasswordLessThanSix_ExceptionThrown() {
+        user.setPassword("12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -69,10 +74,10 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_ExistingUser_ExceptionThrown() {
-        User user1 = new User("user1", "password123", 18);
+        User user1 = new User(VALID_USER_NAME, "password123", 18);
         storageDao.add(user1);
-
-        User user2 = new User("user1", "anotherPassword", 19);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        User duplicateUser = new User(VALID_USER_NAME, "anotherPassword", 19);
+        assertThrows(RegistrationException.class, () -> registrationService
+                .register(duplicateUser));
     }
 }

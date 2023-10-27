@@ -9,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_FIELD_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private static final String NULL_FIELD_MESSAGE
-            = "Login and password cannot be null";
+            = "Login/password/age cannot be null";
     private static final String SHORT_LOGIN_MESSAGE
             = "Login should be at least %d characters";
     private static final String SHORT_PASSWORD_MESSAGE
@@ -22,22 +22,42 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getPassword() == null) {
+        validateUser(user);
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        checkExistingUser(user.getLogin());
+        return storageDao.add(user);
+    }
+
+    private void validateUser(User user) {
+        if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
             throw new RegistrationException(NULL_FIELD_MESSAGE);
         }
-        if (user.getLogin().length() < MIN_FIELD_LENGTH) {
+    }
+
+    private void validateLogin(String login) {
+        if (login.length() < MIN_FIELD_LENGTH) {
             throw new RegistrationException(String.format(SHORT_LOGIN_MESSAGE, MIN_FIELD_LENGTH));
         }
-        if (user.getPassword().length() < MIN_FIELD_LENGTH) {
+    }
+
+    private void validatePassword(String password) {
+        if (password.length() < MIN_FIELD_LENGTH) {
             throw new RegistrationException(String
                     .format(SHORT_PASSWORD_MESSAGE, MIN_FIELD_LENGTH));
         }
-        if (user.getAge() < MIN_AGE) {
+    }
+
+    private void validateAge(int age) {
+        if (age < MIN_AGE) {
             throw new RegistrationException(String.format(LOW_AGE_MESSAGE, MIN_AGE));
         }
-        if (storageDao.get(user.getLogin()) != null) {
+    }
+
+    private void checkExistingUser(String login) {
+        if (storageDao.get(login) != null) {
             throw new RegistrationException(EXISTING_USER_MESSAGE);
         }
-        return storageDao.add(user);
     }
 }
