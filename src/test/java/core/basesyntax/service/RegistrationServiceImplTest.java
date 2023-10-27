@@ -9,7 +9,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,33 +27,28 @@ class RegistrationServiceImplTest {
     private static final int MINIMUM_AGE_ALLOWED = 18;
     private static final int AGE_NOT_ALLOWED = 17;
     private static final int AGE_MINUS_VALUE = -12;
-    private static RegistrationService registrationService;
-    private static StorageDao storageDao;
+    private RegistrationService registrationService;
+    private StorageDao storageDao;
     private User user;
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-    }
 
     @BeforeEach
     void setUp() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
         user = new User();
     }
 
     @Test
-    void register_userEverythingIsValid_Ok() {
+    void register_userEverythingIsValid_ok() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
-
     }
 
     @Test
-    void register_userMinimumValueValid_Ok() {
+    void register_userMinimumValueValid_ok() {
         user.setLogin(MINIMUM_VALID_LOGIN_SIZE);
         user.setPassword(MINIMUM_VALID_PASSWORD_SIZE);
         user.setAge(MINIMUM_AGE_ALLOWED);
@@ -75,14 +69,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsNull_NotOk() {
+    void register_userIsNull_notOk() {
         assertThrows(CustomRegistrationException.class,
                 () -> registrationService.register(user),
                 "Registration should be throw an exception when the user is null!");
     }
 
     @Test
-    void register_userLoginIsNull_NotOk() {
+    void register_userLoginIsNull_notOk() {
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
         user.setLogin(null);
@@ -92,7 +86,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginIsSmall_NotOk() {
+    void register_userLoginIsSmall_notOk() {
         user.setLogin(NOT_ENOUGH_LOGIN_CHARACTERS);
         user.setPassword(MINIMUM_VALID_PASSWORD_SIZE);
         user.setAge(MINIMUM_AGE_ALLOWED);
@@ -103,7 +97,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLoginIsEmpty_NotOk() {
+    void register_userLoginIsEmpty_notOk() {
         user.setLogin(LOGIN_EMPTY);
         user.setPassword(MINIMUM_VALID_PASSWORD_SIZE);
         user.setAge(MINIMUM_AGE_ALLOWED);
@@ -112,7 +106,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsNull_NotOk() {
+    void register_userAgeIsNull_notOk() {
         user.setAge(null);
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
@@ -122,7 +116,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsLittle_NotOk() {
+    void register_userAgeIsLittle_notOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(AGE_NOT_ALLOWED);
@@ -132,7 +126,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsEmpty_NotOk() {
+    void register_userAgeIsEmpty_notOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(AGE_NOT_ALLOWED);
@@ -142,7 +136,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeMinusValue_NotOk() {
+    void register_userAgeMinusValue_notOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(AGE_MINUS_VALUE);
@@ -152,7 +146,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsNull_NotOk() {
+    void register_userPasswordIsNull_notOk() {
         user.setLogin(VALID_LOGIN);
         user.setAge(VALID_AGE);
         user.setPassword(null);
@@ -162,7 +156,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsSmall_NotOk() {
+    void register_userPasswordIsSmall_notOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(PASSWORD_TOO_SMALL);
         user.setAge(MINIMUM_AGE_ALLOWED);
@@ -173,7 +167,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsEmpty_NotOk() {
+    void register_userPasswordIsEmpty_notOk() {
         user.setLogin(VALID_LOGIN);
         user.setPassword(PASSWORD_EMPTY);
         user.setAge(MINIMUM_AGE_ALLOWED);
@@ -183,17 +177,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userDuplicateLogin_NotOk() {
+    void register_userDuplicateLogin_notOk() {
         user.setLogin(VALID_LOGIN);
         user.setAge(VALID_AGE);
         user.setPassword(VALID_PASSWORD);
-        User user2 = new User();
-        user2.setLogin(VALID_LOGIN);
-        user2.setPassword(VALID_PASSWORD);
-        user2.setAge(VALID_AGE);
+        User duplicatedUser = new User();
+        duplicatedUser.setLogin(VALID_LOGIN);
+        duplicatedUser.setPassword(VALID_PASSWORD);
+        duplicatedUser.setAge(VALID_AGE);
         storageDao.add(user);
         assertThrows(CustomRegistrationException.class,
-                () -> registrationService.register(user2),
+                () -> registrationService.register(duplicatedUser),
                   "Registration should be thrown an exception when such userLogin exist!");
     }
 
