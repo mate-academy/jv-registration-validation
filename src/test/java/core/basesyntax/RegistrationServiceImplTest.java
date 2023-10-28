@@ -30,7 +30,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ValidUserRegistration_ok() {
+    public void register_ValidUserRegistration_ValidationPass() {
         User validUser = new User();
         validUser.setId(55L);
         validUser.setPassword(DEFAULT_PASS);
@@ -42,7 +42,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_InvalidUserRegistration_ok() {
+    public void register_InvalidUserRegistration_ExceptionAndNotNull() {
         user.setPassword(SHORT_PASS);
 
         Assertions.assertThrows(InvalidUserException.class, () -> {
@@ -53,7 +53,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_InvalidUserAge_ok() {
+    public void register_InvalidUserAge_ExceptionAndNotNull() {
         user.setAge(17);
 
         Assertions.assertThrows(InvalidUserException.class, () -> {
@@ -64,7 +64,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_DuplicateUser_ok() {
+    public void register_DuplicateUser_ExceptionAndNotNull() {
         storageDao.add(user);
 
         Assertions.assertThrows(InvalidUserException.class, () -> {
@@ -75,7 +75,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_NullFields_ok() {
+    public void register_NullFields_ExceptionAndNotNull() {
         user.setLogin(null);
         user.setPassword(null);
         user.setAge(null);
