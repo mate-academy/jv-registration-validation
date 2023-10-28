@@ -5,7 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.InvalidUserException;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static final String DEFAULT_PASS = "password123";
