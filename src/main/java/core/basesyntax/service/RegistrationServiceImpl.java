@@ -13,11 +13,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        return storageDao.add(user);
+    }
+
+    private void validateUser(User user) {
+        if (user == null) {
+            throw new IllegalUserDataExeption("User is null");
+        }
         validateLogin(user.getLogin());
         validatePassword(user.getPassword());
         validateAge(user.getAge());
         checkUserNotExists(user.getLogin());
-        return storageDao.add(user);
     }
 
     private void validateLogin(String login) {
