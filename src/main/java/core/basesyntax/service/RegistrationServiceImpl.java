@@ -14,43 +14,50 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validateUserData(user);
+        validateUser(user);
         return storageDao.add(user);
     }
 
-    private void validateUserData(User user) {
-        if (user == null) {
+    public void validateUser(User user) {
+        validateNotNull(user);
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        validateExistingUser(user.getLogin());
+    }
+
+    private void validateNotNull(User user) {
+        if (user == null
+                || user.getLogin() == null
+                || user.getPassword() == null
+                || user.getAge() == null
+        ) {
             throw new InvalidUserException(INVALID_DATA);
         }
+    }
 
-        if (user.getLogin() == null) {
+    private void validateLogin(String login) {
+        if (login.length() < MIN_LOGIN_LENGTH) {
             throw new InvalidUserException(INVALID_DATA);
         }
+    }
 
-        if (user.getPassword() == null) {
+    private void validatePassword(String password) {
+        if (password.length() < MIN_LOGIN_LENGTH) {
             throw new InvalidUserException(INVALID_DATA);
         }
+    }
 
-        if (user.getAge() == null) {
+    private void validateAge(int age) {
+        if (age < MIN_AGE) {
             throw new InvalidUserException(INVALID_DATA);
         }
+    }
 
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidUserException(INVALID_DATA);
-        }
-
-        if (user.getPassword().length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidUserException(INVALID_DATA);
-        }
-
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidUserException(INVALID_DATA);
-        }
-
-        User existingUser = storageDao.get(user.getLogin());
+    private void validateExistingUser(String login) {
+        User existingUser = storageDao.get(login);
         if (existingUser != null) {
             throw new InvalidUserException(EXISTS_MSG);
         }
     }
-
 }
