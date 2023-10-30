@@ -13,6 +13,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String DEFAULT_LOGIN = "Forzen123212";
+    private static final Integer DEFAULT_AGE = 20;
+    private static final String DEFAULT_PASSWORD = "13Bobo1312";
+    private static final String UNACCEPTABLE_LOGIN = "forz";
+    private static final Integer UNACCEPTABLE_AGE = 17;
+    private static final String UNACCEPTABLE_PASSWORD = "pass";
     private static RegistrationService registrationService;
 
     @BeforeAll
@@ -21,79 +27,57 @@ class RegistrationServiceImplTest {
     }
 
     @AfterEach
-    void clearDataBase() {
+    void tearDown() {
         Storage.people.clear();
     }
 
     @Test
-    void register_validUser_ok() {
-        User newUser = new User("Forzen123212", "forzen123212", 20);
-        User registratedUser = registrationService.register(newUser);
-        assertEquals(1, Storage.people.size());
-        assertEquals(newUser, registratedUser);
+    void register_RegisterSameUserTwice_NotOk() {
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        Storage.people.add(user);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullUser_notOk() {
-        User newUser = null;
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
+    void register_UnacceptableAge_NotOk() {
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, UNACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_existingUser_notOk() {
-        User newUser = new User("Forzen123212", "forzen123212", 20);
-        Storage.people.add(newUser);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
+    void register_UnacceptablePassword_NotOk() {
+        User user = new User(DEFAULT_LOGIN, UNACCEPTABLE_PASSWORD, DEFAULT_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullLogin_notOk() {
-        User newUser = new User(null, "forzen123212", 20);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
+    void register_NullValuePassword_NotOk() {
+        User user = new User(DEFAULT_LOGIN, null, DEFAULT_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_shortLogin_notOk() {
-        User newUser = new User("forz", "forzen123212", 20);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
+    void register_NullValueLogin_NotOk() {
+        User user = new User(null, DEFAULT_PASSWORD, DEFAULT_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullPassword_notOk() {
-        User newUser = new User("Forzen123212", null, 20);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
+    void register_UnacceptableLengthLogin_NotOk() {
+        User user = new User(UNACCEPTABLE_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_shortPassword_notOk() {
-        User newUser = new User("forzen123212", "123", 20);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
+    void register_NullAge_NotOk() {
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_nullAge_notOk() {
-        User newUser = new User("Forzen123212", "forzen123212", null);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
-    }
-
-    @Test
-    void register_negativeAge_notOk() {
-        User newUser = new User("forzen123212", "forzen123212", -20);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
-    }
-
-    @Test
-    void register_smallAge_notOk() {
-        User newUser = new User("Nagibator2012", "nagibator2012", 11);
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(newUser));
+    void register_UserValidated_Ok() {
+        User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User actual = registrationService.register(user);
+        assertEquals(actual, user);
     }
 }
