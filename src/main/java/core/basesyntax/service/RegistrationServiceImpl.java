@@ -12,13 +12,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User is already registered: " + user.getLogin());
-        }
-
         checkLogin(user.getLogin());
         checkPassword(user.getPassword());
         checkAge(user.getAge());
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User is already registered: " + user.getLogin());
+        }
         return storageDao.add(user);
     }
 

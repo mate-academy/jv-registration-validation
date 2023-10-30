@@ -17,8 +17,14 @@ class RegistrationServiceImplTest {
     private static final Integer DEFAULT_AGE = 20;
     private static final String DEFAULT_PASSWORD = "13Bobo1312";
     private static final String UNACCEPTABLE_LOGIN = "forz";
+    private static final String UNACCEPTABLE_LOGIN2 = "for";
+    private static final String UNACCEPTABLE_LOGIN3 = "forze";
     private static final Integer UNACCEPTABLE_AGE = 17;
+    private static final Integer UNACCEPTABLE_AGE2 = 1;
+    private static final Integer UNACCEPTABLE_AGE3 = -13;
     private static final String UNACCEPTABLE_PASSWORD = "pass";
+    private static final String UNACCEPTABLE_PASSWORD2 = "123";
+    private static final String UNACCEPTABLE_PASSWORD3 = "13444";
     private static RegistrationService registrationService;
 
     @BeforeAll
@@ -32,22 +38,30 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_RegisterSameUserTwice_NotOk() {
+    void register_registerSameUserTwice_notOk() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UnacceptableAge_NotOk() {
+    void register_unacceptableAge_notOk() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, UNACCEPTABLE_AGE);
+        User user2 = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, UNACCEPTABLE_AGE2);
+        User user3 = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, UNACCEPTABLE_AGE3);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user3));
     }
 
     @Test
-    void register_UnacceptablePassword_NotOk() {
+    void register_unacceptablePassword_notOk() {
         User user = new User(DEFAULT_LOGIN, UNACCEPTABLE_PASSWORD, DEFAULT_AGE);
+        User user2 = new User(DEFAULT_LOGIN, UNACCEPTABLE_PASSWORD2, DEFAULT_AGE);
+        User user3 = new User(DEFAULT_LOGIN, UNACCEPTABLE_PASSWORD3, DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user3));
     }
 
     @Test
@@ -57,25 +71,29 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullValueLogin_NotOk() {
+    void register_nullValueLogin_notOk() {
         User user = new User(null, DEFAULT_PASSWORD, DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UnacceptableLengthLogin_NotOk() {
-        User user = new User(UNACCEPTABLE_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    void register_unacceptableLengthLogin_notOk() {
+        User user1 = new User(UNACCEPTABLE_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User user2 = new User(UNACCEPTABLE_LOGIN2, DEFAULT_PASSWORD, DEFAULT_AGE);
+        User user3 = new User(UNACCEPTABLE_LOGIN3, DEFAULT_PASSWORD, DEFAULT_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user1));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user3));
     }
 
     @Test
-    void register_NullAge_NotOk() {
+    void register_nullAge_notOk() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_UserValidated_Ok() {
+    void register_userValidated_ok() {
         User user = new User(DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
         User actual = registrationService.register(user);
         assertEquals(actual, user);
