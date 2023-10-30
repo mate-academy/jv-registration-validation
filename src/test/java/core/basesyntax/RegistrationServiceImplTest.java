@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullValuePassword_NotOk() {
+    void register_nullValuePassword_notOk() {
         User user = new User(DEFAULT_LOGIN, null, DEFAULT_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
