@@ -21,15 +21,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Password is null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidDataException("Password is too small," +
-                    " minimal password length is " + MIN_PASSWORD_LENGTH + " characters");
+            throw new InvalidDataException("Password is too small,"
+                    + " minimal password length is " + MIN_PASSWORD_LENGTH + " characters");
         }
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login is null");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidDataException("Login is too small," +
-                    " minimal login length is " + MIN_LOGIN_LENGTH + " characters");
+            throw new InvalidDataException("Login is too small,"
+                    + " minimal login length is " + MIN_LOGIN_LENGTH + " characters");
         }
         if (user.getAge() == null) {
             throw new InvalidDataException("Age is incorrect");
