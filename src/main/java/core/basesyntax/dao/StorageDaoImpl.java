@@ -8,8 +8,11 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
-        user.setId(++index);
-        Storage.people.add(user);
+        if (user.getLogin() != null && user.getPassword() != null && user.getAge() != null
+                && user.getLogin().length() >= 6 && user.getPassword().length() >= 6) {
+            user.setId(++index);
+            Storage.people.add(user);
+        }
         return user;
     }
 
