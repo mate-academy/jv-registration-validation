@@ -12,11 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidDataException {
-        if (storageDao.get(user.getLogin()) != null) {
-            return null;
-        }
-
+    public User register(User user) {
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password is null");
         }
@@ -27,12 +23,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login is null");
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidDataException("User is already exists");
+        }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new InvalidDataException("Login is too small,"
                     + " minimal login length is " + MIN_LOGIN_LENGTH + " characters");
         }
         if (user.getAge() == null) {
-            throw new InvalidDataException("Age is incorrect");
+            throw new InvalidDataException("Age is null");
         }
         if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException("Age is too small, minimal age is " + MIN_AGE);
