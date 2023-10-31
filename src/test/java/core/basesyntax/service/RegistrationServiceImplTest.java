@@ -29,7 +29,8 @@ class RegistrationServiceImplTest {
     public void register_addUser_ok() {
         List<User> users = getListNormalUser();
         for (User user : users) {
-            registrationService.register(user);
+            User actual = registrationService.register(user);
+            assertEquals(actual, user);
         }
         assertEquals(users, Storage.people);
     }
