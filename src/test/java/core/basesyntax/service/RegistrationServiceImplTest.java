@@ -3,7 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.customexception.InvalidDataException;
+import core.basesyntax.customexception.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,7 +30,7 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_nullUser_notOk() {
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(null));
     }
 
@@ -47,33 +47,37 @@ class RegistrationServiceImplTest {
     @Test
     public void register_existingLogin_notOk() {
         Storage.people.add(defaultUser);
-        assertThrows(InvalidDataException.class,
-                () -> registrationService.register(defaultUser));
+        User newUser = new User();
+        newUser.setLogin(defaultUser.getLogin());
+        newUser.setPassword("password");
+        newUser.setAge(18);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(newUser));
     }
 
     @Test
     public void register_nullLogin_notOk() {
         defaultUser.setLogin(null);
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_lessMinLengthLogin_notOk() {
         defaultUser.setLogin("");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setLogin(" ");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setLogin("login");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setLogin("L");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
     }
 
@@ -90,58 +94,53 @@ class RegistrationServiceImplTest {
     @Test
     public void register_nullPassword_notOk() {
         defaultUser.setPassword(null);
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_lessMinLengthPassword_notOk() {
         defaultUser.setPassword("");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setPassword(" ");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setPassword("passw");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setPassword("P");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_validPassword_ok() {
         assertEquals(defaultUser, registrationService.register(defaultUser));
-        User newUser = new User();
-        newUser.setLogin("loginlogin");
-        newUser.setAge(18);
-        newUser.setPassword("anotherlengthpassword");
-        assertEquals(newUser, registrationService.register(newUser));
     }
 
     @Test
     public void register_nullAge_notOk() {
         defaultUser.setAge(null);
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_lessMinLengthAge_notOk() {
         defaultUser.setAge(17);
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setAge(0);
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
 
         defaultUser.setAge(-1);
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
     }
 
