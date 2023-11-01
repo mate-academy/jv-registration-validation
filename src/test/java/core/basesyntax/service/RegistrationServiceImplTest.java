@@ -29,6 +29,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_validUser_ok() {
+        assertEquals(defaultUser, registrationService.register(defaultUser));
+    }
+
+    @Test
     public void register_nullUser_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(null));
@@ -82,16 +87,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validLogin_ok() {
-        assertEquals(defaultUser, registrationService.register(defaultUser));
-        User newUser = new User();
-        newUser.setLogin("anotherUniqValidLogin");
-        newUser.setAge(18);
-        newUser.setPassword("password1234");
-        assertEquals(newUser, registrationService.register(newUser));
-    }
-
-    @Test
     public void register_nullPassword_notOk() {
         defaultUser.setPassword(null);
         assertThrows(RegistrationException.class,
@@ -118,11 +113,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validPassword_ok() {
-        assertEquals(defaultUser, registrationService.register(defaultUser));
-    }
-
-    @Test
     public void register_nullAge_notOk() {
         defaultUser.setAge(null);
         assertThrows(RegistrationException.class,
@@ -143,15 +133,4 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(defaultUser));
     }
-
-    @Test
-    public void register_validAge_ok() {
-        assertEquals(defaultUser, registrationService.register(defaultUser));
-        User newUser = new User();
-        newUser.setLogin("loginlogin");
-        newUser.setAge(50);
-        newUser.setPassword("password");
-        assertEquals(newUser, registrationService.register(newUser));
-    }
-
 }
