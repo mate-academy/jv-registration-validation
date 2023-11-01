@@ -6,10 +6,11 @@ import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MINIMUM_AGE = 18;
     private static final int MINIMUM_LOGIN_LENGTH = 6;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
+
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -23,16 +24,19 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login cannot be null!");
         }
         if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
-            throw new RegistrationException("Login is too short! Minimum length: " + MINIMUM_LOGIN_LENGTH);
+            throw new RegistrationException("Login is too short! Minimum length: "
+                    + MINIMUM_LOGIN_LENGTH);
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password cannot be null!");
         }
         if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password is too short! Minimum length: " + MINIMUM_PASSWORD_LENGTH);
+            throw new RegistrationException("Password is too short! Minimum length: "
+                    + MINIMUM_PASSWORD_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("Login: " + user.getLogin() + " is already taken! Choose another one");
+            throw new RegistrationException("Login: " + user.getLogin()
+                    + " is already taken! Choose another one");
         }
 
         return storageDao.add(user);

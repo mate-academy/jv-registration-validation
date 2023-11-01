@@ -1,5 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
@@ -7,12 +10,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
     private static final User DEFAULT_VALID_USER = new User();
     private static final User SECOND_VALID_USER = new User();
-    private static final User THIRD_VALID_USER = new User();
 
     private static RegistrationServiceImpl service;
 
@@ -26,15 +26,9 @@ class RegistrationServiceImplTest {
         DEFAULT_VALID_USER.setAge(20);
         DEFAULT_VALID_USER.setPassword("DefaultPassword");
         DEFAULT_VALID_USER.setLogin("DefaultLogin");
-        DEFAULT_VALID_USER.setId(null);
-        SECOND_VALID_USER.setAge(20);
+        SECOND_VALID_USER.setAge(22);
         SECOND_VALID_USER.setPassword("Password123");
         SECOND_VALID_USER.setLogin("Login123");
-        SECOND_VALID_USER.setId(null);
-        THIRD_VALID_USER.setAge(21);
-        THIRD_VALID_USER.setPassword("JackIsCool");
-        THIRD_VALID_USER.setLogin("JackIsCool");
-        THIRD_VALID_USER.setId(null);
         Storage.people.clear();
     }
 
@@ -70,9 +64,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidLogin_notOk() {
-        String firstLogin = "jack";
-        String secondLogin = "";
-        String thirdLogin = "jack1";
+        final String firstLogin = "jack";
+        final String secondLogin = "";
+        final String thirdLogin = "jack1";
 
         DEFAULT_VALID_USER.setLogin(firstLogin);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
@@ -100,9 +94,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidPassword_notOk() {
-        String firstPassword = "jack";
-        String secondPassword = "";
-        String thirdPassword = "jack1";
+        final String firstPassword = "jack";
+        final String secondPassword = "";
+        final String thirdPassword = "jack1";
 
         DEFAULT_VALID_USER.setPassword(firstPassword);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
