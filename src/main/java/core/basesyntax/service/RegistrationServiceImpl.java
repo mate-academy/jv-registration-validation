@@ -38,7 +38,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login: " + user.getLogin()
                     + " is already taken! Choose another one");
         }
-
         return storageDao.add(user);
     }
 }

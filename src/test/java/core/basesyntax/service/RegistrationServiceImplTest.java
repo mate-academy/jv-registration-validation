@@ -13,6 +13,16 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final User DEFAULT_VALID_USER = new User();
     private static final User SECOND_VALID_USER = new User();
+    private static final int NEGATIVE_AGE = -13;
+    private static final int ZERO_AGE = 0;
+    private static final int UNDERAGE_AGE = 17;
+    private static final int MINIMUM_VALID_AGE = 18;
+    private static final int VALID_AGE = 23;
+    private static final String ZERO_CHARACTERS_STRING = "";
+    private static final String FOUR_CHARACTERS_STRING = "1234";
+    private static final String FIVE_CHARACTERS_STRING = "12345";
+    private static final String SIX_CHARACTERS_STRING = "123456";
+    private static final String EIGHT_CHARACTERS_STRING = "12345678";
 
     private static RegistrationServiceImpl service;
 
@@ -23,12 +33,12 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        DEFAULT_VALID_USER.setAge(20);
-        DEFAULT_VALID_USER.setPassword("DefaultPassword");
-        DEFAULT_VALID_USER.setLogin("DefaultLogin");
-        SECOND_VALID_USER.setAge(22);
-        SECOND_VALID_USER.setPassword("Password123");
-        SECOND_VALID_USER.setLogin("Login123");
+        DEFAULT_VALID_USER.setAge(MINIMUM_VALID_AGE);
+        DEFAULT_VALID_USER.setPassword(SIX_CHARACTERS_STRING);
+        DEFAULT_VALID_USER.setLogin(EIGHT_CHARACTERS_STRING);
+        SECOND_VALID_USER.setAge(VALID_AGE);
+        SECOND_VALID_USER.setPassword(EIGHT_CHARACTERS_STRING);
+        SECOND_VALID_USER.setLogin(SIX_CHARACTERS_STRING);
         Storage.people.clear();
     }
 
@@ -40,19 +50,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidAge_notOk() {
-        DEFAULT_VALID_USER.setAge(-13);
+        DEFAULT_VALID_USER.setAge(NEGATIVE_AGE);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
-        DEFAULT_VALID_USER.setAge(0);
+        DEFAULT_VALID_USER.setAge(ZERO_AGE);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
-        DEFAULT_VALID_USER.setAge(17);
+        DEFAULT_VALID_USER.setAge(UNDERAGE_AGE);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
     }
 
     @Test
     void register_validAge_Ok() {
-        DEFAULT_VALID_USER.setAge(18);
+        DEFAULT_VALID_USER.setAge(MINIMUM_VALID_AGE);
         assertEquals(DEFAULT_VALID_USER, service.register(DEFAULT_VALID_USER));
-        SECOND_VALID_USER.setAge(23);
+        SECOND_VALID_USER.setAge(VALID_AGE);
         assertEquals(SECOND_VALID_USER, service.register(SECOND_VALID_USER));
     }
 
@@ -64,25 +74,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidLogin_notOk() {
-        final String firstLogin = "jack";
-        final String secondLogin = "";
-        final String thirdLogin = "jack1";
-
-        DEFAULT_VALID_USER.setLogin(firstLogin);
+        DEFAULT_VALID_USER.setLogin(FOUR_CHARACTERS_STRING);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
-        DEFAULT_VALID_USER.setLogin(secondLogin);
+        DEFAULT_VALID_USER.setLogin(ZERO_CHARACTERS_STRING);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
-        DEFAULT_VALID_USER.setLogin(thirdLogin);
+        DEFAULT_VALID_USER.setLogin(FIVE_CHARACTERS_STRING);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
     }
 
     @Test
     void register_validLogin_Ok() {
-        String firstLogin = "jack123";
-        String secondLogin = "Jacob1";
-        DEFAULT_VALID_USER.setLogin(firstLogin);
+        DEFAULT_VALID_USER.setLogin(EIGHT_CHARACTERS_STRING);
         assertEquals(DEFAULT_VALID_USER, service.register(DEFAULT_VALID_USER));
-        SECOND_VALID_USER.setLogin(secondLogin);
+        SECOND_VALID_USER.setLogin(SIX_CHARACTERS_STRING);
         assertEquals(SECOND_VALID_USER, service.register(SECOND_VALID_USER));
     }
 
@@ -94,25 +98,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidPassword_notOk() {
-        final String firstPassword = "jack";
-        final String secondPassword = "";
-        final String thirdPassword = "jack1";
-
-        DEFAULT_VALID_USER.setPassword(firstPassword);
+        DEFAULT_VALID_USER.setPassword(FOUR_CHARACTERS_STRING);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
-        DEFAULT_VALID_USER.setPassword(secondPassword);
+        DEFAULT_VALID_USER.setPassword(ZERO_CHARACTERS_STRING);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
-        DEFAULT_VALID_USER.setPassword(thirdPassword);
+        DEFAULT_VALID_USER.setPassword(FIVE_CHARACTERS_STRING);
         assertThrows(RegistrationException.class, () -> service.register(DEFAULT_VALID_USER));
     }
 
     @Test
     void register_validPassword_Ok() {
-        String firstPassword = "jack123";
-        String secondPassword = "Jacob1";
-        DEFAULT_VALID_USER.setPassword(firstPassword);
+        DEFAULT_VALID_USER.setPassword(EIGHT_CHARACTERS_STRING);
         assertEquals(DEFAULT_VALID_USER, service.register(DEFAULT_VALID_USER));
-        SECOND_VALID_USER.setPassword(secondPassword);
+        SECOND_VALID_USER.setPassword(SIX_CHARACTERS_STRING);
         assertEquals(SECOND_VALID_USER, service.register(SECOND_VALID_USER));
     }
 
