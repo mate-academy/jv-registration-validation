@@ -1,175 +1,169 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final User FIRST_USER = new User("Robert", "G123y45", 27);
-    private static final User SECOND_USER = new User("Albert", "G123y41", 23);
-    private static final User THIRD_USER = new User("Elisabete", "G123I44", 25);
-    private static final User SAME_LOGIN_WITH_FIRST_USER = new User("Robert", "G123y45", 27);
-    private static final User USER_WITH_LOGIN_LESS_THAN_SIX = new User("Mark", "G123y45", 27);
-    private static final User USER_WITH_PASSWORD_LESS_THAN_SIX = new User("Mark", "G17", 27);
-    private static final User USER_WITH_AGE_LESS_THAN_MIN_AGE = new User("Mark", "G17", 15);
-    private static final User USER_WITH_NEGATIVE_AGE = new User("Mark", "G17", -1);
-    private static final User USER_WITH_LOGIN_NULL = new User(null, "G123y45", 19);
-    private static final User USER_WITH_PASSWORD_NULL = new User("Georg3", null, 25);
-    private static final User USER_WITH_AGE_NULL = new User("Bernard", "G123", null);
-
+    private static final String VALID_LOGIN = "tazbog123";
+    private static final String LENGTH_FOUR_INVALID_LOGIN = "1234";
+    private static final String LENGTH_EMPTY_INVALID_LOGIN = "";
+    private static final String LENGTH_SIX_VALID_LOGIN = "123456";
+    private static final String VALID_PASSWORD = "tazbog123";
+    private static final String LENGTH_FOUR_INVALID_PASSWORD = "abcd";
+    private static final String LENGTH_EMPTY_INVALID_PASSWORD = "";
+    private static final String LENGTH_SIX_VALID_PASSWORD = "abcdef";
+    private static final Integer VALID_AGE = 25;
+    private static final Integer YOUNG_INVALID_AGE = 17;
+    private static final Integer NEGATIVE_INVALID_AGE = -59;
+    private static final Integer MIN_VALID_AGE = 18;
     private static RegistrationService registrationService;
-    private static StorageDaoImpl storageDao;
+    private static StorageDao storageDao;
+    private static User user;
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        user = new User();
     }
 
     @BeforeEach
-    public void setUp() {
-        storageDao = new StorageDaoImpl();
+    void setUp() {
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    public void addUserToList_Ok() {
-        storageDao.add(FIRST_USER);
-        storageDao.add(SECOND_USER);
-        storageDao.add(THIRD_USER);
-
-        User actualFirstUser = storageDao.get(FIRST_USER.getLogin());
-        User actualSecondUser = storageDao.get(SECOND_USER.getLogin());
-        User actualThirdUser = storageDao.get(THIRD_USER.getLogin());
-
-        assertEquals(FIRST_USER, actualFirstUser,
-                "Test failed! First user should be " + FIRST_USER);
-        assertEquals(SECOND_USER, actualSecondUser,
-                "Test failed! Second user should be " + SECOND_USER);
-        assertEquals(THIRD_USER, actualThirdUser,
-                "Test failed! Third user should be " + THIRD_USER);
+    void register_validData_Ok() {
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
-    public void testRegisterAddUserIsNull_NotOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(null);
-
-        });
+    void register_loginDuplicate_notOk() {
+        storageDao.add(user);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void testRegisterAddUserWithSameLogin_NotOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(SAME_LOGIN_WITH_FIRST_USER);
-        });
+    void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
-    public void testRegisterAddUserWithLoginOrPasswordLengthLessThanSix_NotOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(USER_WITH_LOGIN_LESS_THAN_SIX);
-            registrationService.register(USER_WITH_PASSWORD_LESS_THAN_SIX);
-        });
+    void register_userAge_notOk() {
+        user.setAge(YOUNG_INVALID_AGE);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void testRegisterAddUserWithAgeLessThanMinAge_NotOk() {
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(USER_WITH_AGE_LESS_THAN_MIN_AGE);
-        });
+    void register_userAgeNull_notOk() {
+        user.setAge(null);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void testAddUserThanOneOfTheParametersNull_NotOk() {
-        User userExpectedFirst = storageDao.add(USER_WITH_AGE_NULL);
-        User userExpectedSecond = storageDao.add(USER_WITH_LOGIN_NULL);
-        User userExpectedThird = storageDao.add(USER_WITH_PASSWORD_NULL);
-
-        User actualFirstResultNull = storageDao.get(USER_WITH_AGE_NULL.getLogin());
-        User actualSecondResultNull = storageDao.get(USER_WITH_LOGIN_NULL.getLogin());
-        User actualThirdResultNull = storageDao.get(USER_WITH_PASSWORD_NULL.getLogin());
-
-        assertNotEquals(userExpectedFirst, actualFirstResultNull,
-                "Test failed! Age cannot be null");
-        assertNotEquals(userExpectedSecond, actualSecondResultNull,
-                "Test failed! Login cannot be null");
-        assertNotEquals(userExpectedThird, actualThirdResultNull,
-                "Test failed! Password cannot be null");
+    void register_userAgeNegative_notOk() {
+        user.setAge(NEGATIVE_INVALID_AGE);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void testAddUserWithAgeLessThanMinAge_NotOk() {
-        User userExpectedFirst = storageDao.add(USER_WITH_AGE_LESS_THAN_MIN_AGE);
-        User userExpectedSecond = storageDao.add(USER_WITH_NEGATIVE_AGE);
-
-        User actualFirstResultNull = storageDao.get(USER_WITH_AGE_LESS_THAN_MIN_AGE.getLogin());
-        User actualSecondResultNull = storageDao.get(USER_WITH_NEGATIVE_AGE.getLogin());
-
-        assertNotEquals(userExpectedFirst, actualFirstResultNull,
-                "Test failed! Age cannot be less than 18");
-        assertNotEquals(userExpectedSecond, actualSecondResultNull,
-                "Test failed! Age cannot be less than 18");
+    void register_userMinAge_Ok() {
+        user.setAge(MIN_VALID_AGE);
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
-    public void testAddUserWithAgeMoreThanMinAge_Ok() {
-        storageDao.add(THIRD_USER);
-        User expected = THIRD_USER;
-        User actual = storageDao.get(THIRD_USER.getLogin());
-        assertEquals(expected, actual, "Test failed! Age cannot be less than 18");
+    void register_userValidAge_Ok() {
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
-    public void testAddUserWithPasswordLessThanSix_NotOk() {
-
-        User userExpectedFirst = storageDao.add(
-                new User("Volodymyr", "", 25));
-        User userExpectedSecond = storageDao.add(
-                new User("Volodymyr", "abc", 25));
-        User userExpectedThird = storageDao.add(
-                new User("Volodymyr", "abcdf", 25));
-
-        User userActualFirst = storageDao.get(userExpectedFirst.getLogin());
-        User userActualSecond = storageDao.get(userExpectedSecond.getLogin());
-        User userActualThird = storageDao.get(userExpectedThird.getLogin());
-
-        assertNotEquals(userExpectedFirst, userActualFirst,
-                "Test failed! Password length cannot be less than 6");
-        assertNotEquals(userExpectedSecond, userActualSecond,
-                "Test failed! Password length cannot be less than 6");
-        assertNotEquals(userExpectedThird, userActualThird,
-                "Test failed! Password length cannot be less than 6");
-
+    void register_userLoginNull_notOk() {
+        user.setLogin(null);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
-    public void testAddUserWithPasswordMoreThanSix_Ok() {
-        User userExpectedWithPasswordSixSymbols = storageDao.add(
-                new User("Volodymyr1", "abcdef", 25));
-        User userExpectedWithPasswordEightSymbols = storageDao.add(
-                new User("Volodymyr2", "abcdefgh", 25));
-        User userExpectedWithPasswordTenSymbols = storageDao.add(
-                new User("Daryna", "abcdefghij", 25));
-
-        User userActualFirst = storageDao.get(userExpectedWithPasswordSixSymbols.getLogin());
-        User userActualSecond = storageDao.get(userExpectedWithPasswordEightSymbols.getLogin());
-        User userActualThird = storageDao.get(userExpectedWithPasswordTenSymbols.getLogin());
-
-        assertEquals(userExpectedWithPasswordSixSymbols, userActualFirst,
-                "Test failed! Password length cannot be less than 6");
-        assertEquals(userExpectedWithPasswordEightSymbols, userActualSecond,
-                "Test failed! Password length cannot be less than 6");
-        assertEquals(userExpectedWithPasswordTenSymbols, userActualThird,
-                "Test failed! Password length cannot be less than 6");
-
+    void register_userLoginLengthFour_notOk() {
+        user.setLogin(LENGTH_FOUR_INVALID_LOGIN);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
+    @Test
+    void register_userEmptyLogin_notOk() {
+        user.setLogin(LENGTH_EMPTY_INVALID_LOGIN);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userLoginLengthSix_Ok() {
+        user.setLogin(LENGTH_SIX_VALID_LOGIN);
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userValidLogin_Ok() {
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userEmptyPassword_notOk() {
+        user.setPassword(LENGTH_EMPTY_INVALID_PASSWORD);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userPasswordNull_notOk() {
+        user.setPassword(null);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userPasswordLengthFour_notOk() {
+        user.setPassword(LENGTH_FOUR_INVALID_PASSWORD);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userPasswordLengthSix_Ok() {
+        user.setPassword(LENGTH_SIX_VALID_PASSWORD);
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userValidPassword_Ok() {
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
 }
