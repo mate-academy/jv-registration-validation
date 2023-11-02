@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static final RegistrationService registrationService = new RegistrationServiceImpl();
-    private static final User existingUser = new User();
+    private static final String EXISTING_USER_LOGIN = "administrator";
     private static final User user = new User();
 
     @BeforeAll
     public static void setupUsers() {
-        existingUser.setLogin("administrator");
-        Storage.people.add(existingUser);
+        Storage.people.add(new User());
+        Storage.people.get(0).setLogin(EXISTING_USER_LOGIN);
     }
 
     @AfterAll
@@ -68,7 +68,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_invalidLogin_notOk() {
-        user.setLogin("");
+        user.setLogin("l".repeat(0));
         user.setPassword("p".repeat(RegistrationServiceImpl.MIN_PASSWORD_LENGTH));
         user.setAge(RegistrationServiceImpl.MIN_AGE);
         assertThrows(RegistrationException.class,
@@ -93,7 +93,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_invalidPassword_notOk() {
         user.setLogin("l".repeat(RegistrationServiceImpl.MIN_LOGIN_LENGTH));
-        user.setPassword("");
+        user.setPassword("p".repeat(0));
         user.setAge(RegistrationServiceImpl.MIN_AGE);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
@@ -130,7 +130,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_nonUniqueLogin_notOk() {
-        user.setLogin(existingUser.getLogin());
+        user.setLogin(EXISTING_USER_LOGIN);
         user.setPassword("p".repeat(RegistrationServiceImpl.MIN_PASSWORD_LENGTH));
         user.setAge(RegistrationServiceImpl.MIN_AGE);
         assertThrows(RegistrationException.class,

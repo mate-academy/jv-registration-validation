@@ -23,7 +23,7 @@ public class StorageDaoImplTest {
     @Test
     public void add_newUser_ok() {
         User user = new User();
-        user.setLogin("employee0001");
+        user.setLogin("employee1");
         Long userId = user.getId();
         int initialStorageSize = Storage.people.size();
         User addedUser = storageDao.add(user);
@@ -44,15 +44,15 @@ public class StorageDaoImplTest {
     @Test
     public void get_storedUser_ok() {
         User storedUser = new User();
-        storedUser.setLogin("admin");
+        storedUser.setLogin("administrator");
         Storage.people.add(storedUser);
-        User retrievedUser = storageDao.get("admin");
+        User retrievedUser = storageDao.get("administrator");
         assertNotNull(retrievedUser, "Method should return the stored User");
     }
 
     @Test
     public void get_nonStoredUser_ok() {
-        User retrievedUser = storageDao.get("employee0002");
+        User retrievedUser = storageDao.get("employee2");
         assertNull(retrievedUser, "Method should return null");
     }
 
