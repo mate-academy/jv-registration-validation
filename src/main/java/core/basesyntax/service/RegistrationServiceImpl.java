@@ -38,14 +38,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new
                     RegistrationException("Login cannot be empty!");
         }
-        if (user.getAge() == 0) {
-            throw new
-                    RegistrationException("Age must be greater that 0");
-        }
-        if (user.getAge() < 0) {
-            throw new
-                    RegistrationException("Age cannot be negative number!");
-        }
         if (user.getLogin().length() < MIN_USER_LOGIN_SIZE) {
             throw new
                     RegistrationException("Login must be at least "
