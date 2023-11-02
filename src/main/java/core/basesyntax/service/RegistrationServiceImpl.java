@@ -20,46 +20,48 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RegistrationException("User cannot be null!");
-        }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password cannot be null!");
-        }
-        if (user.getPassword().isEmpty()) {
-            throw new
-                    RegistrationException("Password cannot be empty!");
-        }
-        if (user.getLogin() == null) {
-            throw new
-                    RegistrationException("Login cannot be null!");
-        }
-        if (user.getLogin().isEmpty()) {
-            throw new
-                    RegistrationException("Login cannot be empty!");
-        }
-        if (user.getLogin().length() < MIN_USER_LOGIN_SIZE) {
-            throw new
-                    RegistrationException("Login must be at least "
-                    + MIN_USER_LOGIN_SIZE + " characters long!");
-        }
-        if (user.getPassword().length() < MIN_USER_PASSWORD_SIZE) {
-            throw new
-                    RegistrationException("Password must be at least "
-                    + MIN_USER_PASSWORD_SIZE + " characters long!");
-        }
-        if (user.getAge() < MIN_USER_AGE) {
-            throw new
-                    RegistrationException("Not valid age: "
-                    + user.getAge() + ". Min allowed age is " + MIN_USER_AGE);
-        }
-        if (storageDao.get(user.getLogin()) == null) {
-            storageDao.add(user);
-        } else {
-            throw new
-                    RegistrationException("User with login "
-                    + user.getLogin() + " already exist!");
-        }
+        validateUser(user);
+        checkIfUserExists(user);
+        storageDao.add(user);
         return user;
+    }
+
+    private void validateUser(User user) {
+        validateNotNull(user, "User cannot be null!");
+        validateNotNullNotEmpty(user.getLogin(), "Login cannot be null or empty!");
+        validateNotNullNotEmpty(user.getPassword(), "Password cannot be null or empty!");
+        validateMinLength(user.getLogin(), MIN_USER_LOGIN_SIZE, "Login");
+        validateMinLength(user.getPassword(), MIN_USER_PASSWORD_SIZE, "Password");
+        validateAge(user.getAge());
+    }
+
+    private void validateNotNull(Object value, String errorMessage) {
+        if (value == null) {
+            throw new RegistrationException(errorMessage);
+        }
+    }
+
+    private void validateNotNullNotEmpty(String value, String errorMessage) {
+        if (value == null || value.isEmpty()) {
+            throw new RegistrationException(errorMessage);
+        }
+    }
+
+    private void validateMinLength(String value, int minLength, String field) {
+        if (value.length() < minLength) {
+            throw new RegistrationException(field + " must be at least " + minLength + " characters long!");
+        }
+    }
+
+    private void validateAge(int age) {
+        if (age < MIN_USER_AGE) {
+            throw new RegistrationException("Invalid age: " + age + ". Min allowed age is " + MIN_USER_AGE);
+        }
+    }
+
+    private void checkIfUserExists(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with login " + user.getLogin() + " already exists!");
+        }
     }
 }
