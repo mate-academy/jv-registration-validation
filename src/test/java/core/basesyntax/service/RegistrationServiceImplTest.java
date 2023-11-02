@@ -21,6 +21,7 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN2 = "UserAge18";
     private static final String VALID_LOGIN3 = "UserAge25";
     private static final String INVALID_LOGIN = "log";
+    private static final String INVALID_LOGIN2 = "login";
     private static final String BLANK_PASSWORD = "";
     private static final String VALID_PASSWORD = "qwerty123";
     private static final String VALID_PASSWORD2 = "password18";
@@ -70,7 +71,7 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setLogin(INVALID_LOGIN);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        user.setLogin(VALID_LOGIN);
+        user.setLogin(INVALID_LOGIN2);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 

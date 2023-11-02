@@ -49,19 +49,27 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateMinLength(String value, int minLength, String field) {
         if (value.length() < minLength) {
-            throw new RegistrationException(field + " must be at least " + minLength + " characters long!");
+            throw new RegistrationException(field
+                    + " must be at least "
+                    + minLength
+                    + " characters long!");
         }
     }
 
     private void validateAge(int age) {
         if (age < MIN_USER_AGE) {
-            throw new RegistrationException("Invalid age: " + age + ". Min allowed age is " + MIN_USER_AGE);
+            throw new RegistrationException("Invalid age: "
+                    + age
+                    + ". Min allowed age is "
+                    + MIN_USER_AGE);
         }
     }
 
     private void checkIfUserExists(User user) {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with login " + user.getLogin() + " already exists!");
+            throw new RegistrationException("User with login "
+                    + user.getLogin()
+                    + " already exists!");
         }
     }
 }
