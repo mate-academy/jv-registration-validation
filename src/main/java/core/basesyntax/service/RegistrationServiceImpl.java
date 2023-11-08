@@ -19,24 +19,20 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationUserException("Login can't be null");
         }
-        if (user.getLogin().isBlank()) {
-            throw new RegistrationUserException("Login can't be blank");
-        }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationUserException(
-                    "Login length must be at least 6 characters long. " + "Provided login has only "
-                            + user.getLogin() + " character(s) length");
+                    "Login length must be at least " + MIN_LOGIN_LENGTH + " characters long. "
+                            + "Provided login has only " + user.getLogin()
+                            + " character(s) length");
         }
         if (user.getPassword() == null) {
             throw new RegistrationUserException("Password can't be null");
         }
-        if (user.getPassword().isBlank()) {
-            throw new RegistrationUserException("Password can't be blank");
-        }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationUserException(
-                    "Password length must at least 6 characters. Provided password has only "
-                            + user.getPassword() + " character(s) length");
+                    "Password length must at least " + MIN_PASSWORD_LENGTH
+                            + " characters. Provided password has only " + user.getPassword()
+                            + " character(s) length");
         }
         if (user.getAge() == null) {
             throw new RegistrationUserException("Age can't be null");
@@ -47,8 +43,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                             + MIN_AGE);
         }
         if (!Storage.people.isEmpty() && storageDao.get(user.getLogin()).equals(user)) {
-            throw new RegistrationUserException("User with login " + "\"" + user.getLogin() + "\""
-                    + " " + "already exists");
+            throw new RegistrationUserException(
+                    "User with login " + "\"" + user.getLogin() + "\"" + " " + "already exists");
         }
         return storageDao.add(user);
     }
