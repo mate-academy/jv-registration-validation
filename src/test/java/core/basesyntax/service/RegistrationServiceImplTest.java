@@ -1,13 +1,13 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -46,7 +46,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
@@ -59,79 +60,92 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         validUser.setLogin(null);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_0_lengthLogin_notOk() {
         validUser.setLogin(LOGIN_0_LENGTH);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_3_lengthLogin_notOk() {
         validUser.setLogin(LOGIN_3_LENGTH);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_5_lengthLogin_notOk() {
         validUser.setLogin(LOGIN_5_LENGTH);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_blankLogin_notOk() {
         validUser.setLogin(LOGIN_BLANK);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_nullPassword_notOk() {
         validUser.setPassword(null);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_0_lengthPassword_notOk() {
         validUser.setPassword(PASSWORD_0_LENGTH);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_blankPassword_notOk() {
         validUser.setPassword(PASSWORD_BLANK);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_3_lengthPassword_notOk() {
         validUser.setPassword(PASSWORD_3_LENGTH);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_5_lengthPassword_notOk() {
         validUser.setPassword(PASSWORD_5_LENGTH);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_nullAge_notOk() {
         validUser.setAge(null);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_less_0_age_notOk() {
         validUser.setAge(USER_AGE_0_LESS);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
     void register_notValidAge_notOk() {
         validUser.setAge(USER_AGE_NOT_VALID);
-        assertThrows(RegistrationUserException.class, () -> registrationService.register(validUser));
+        assertThrows(RegistrationUserException.class,
+                () -> registrationService.register(validUser));
     }
 
     @Test
