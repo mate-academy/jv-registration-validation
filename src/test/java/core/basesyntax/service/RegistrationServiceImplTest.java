@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.RegistrationServiceException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,153 +45,111 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_loginIsNull_notOk() {
+    void register_loginIsNull_notOk() {
         userSecond.setLogin(null);
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_loginExists_notOk() {
+    void register_loginExists_notOk() {
         userSecond.setLogin("Andrew");
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_loginZeroChars_notOk() {
+    void register_loginIsLessThanSixChars_notOk() {
         userSecond.setLogin("");
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
-    }
-
-    @Test
-    void registration_loginFiveChars_notOk() {
         userSecond.setLogin("Ab/@1");
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_loginSixChars_ok() {
+    void register_loginIsSixCharsAndMore_ok() {
         userSecond.setLogin("Den$12");
         registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
-    }
-
-    @Test
-    void registration_loginSevenChars_ok() {
         userSecond.setLogin("Alice1!");
-        registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
-    }
-
-    @Test
-    void registration_loginTenChars_ok() {
         userSecond.setLogin("$1Bohdan@2");
-        registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
     }
 
     @Test
-    void registration_passwordIsNull_notOk() {
+    void register_passwordIsNull_notOk() {
         userSecond.setPassword(null);
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_passwordOneChar_notOk() {
+    void register_passwordIsLessThanSixChars_notOk() {
         userSecond.setPassword("b");
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
-    }
-
-    @Test
-    void registration_passwordFiveChars_notOk() {
         userSecond.setPassword("Bob32");
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_passwordSixChars_ok() {
+    void register_passwordIsSixCharsAndMore_ok() {
         userSecond.setPassword("123456");
         registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
-    }
-
-    @Test
-    void registration_passwordEightChars_ok() {
         userSecond.setPassword("12//56.(");
-        registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
-    }
-
-    @Test
-    void registration_passwordTenChars_ok() {
         userSecond.setPassword("Bob@$.3456");
-        registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
     }
 
     @Test
-    void registration_ageIsNull_notOk() {
+    void register_ageIsNull_notOk() {
         userSecond.setAge(null);
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_ageIsNegative_notOk() {
+    void register_ageIsNegative_notOk() {
         userSecond.setAge(-18);
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_ageIs7_notOk() {
+    void register_ageIsLessThan18_notOk() {
         userSecond.setAge(7);
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
-    }
-
-    @Test
-    void registration_ageIs17_notOk() {
         userSecond.setAge(17);
-        assertThrows(RegistrationServiceException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
     }
 
     @Test
-    void registration_ageIs18_ok() {
+    void register_ageIs18AndMore_ok() {
         userSecond.setAge(18);
         registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
-    }
-
-    @Test
-    void registration_ageIs35_ok() {
         userSecond.setAge(35);
-        registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
-    }
-
-    @Test
-    void registration_ageIs101_ok() {
         userSecond.setAge(101);
-        registrationService.register(userSecond);
         assertSame(userSecond, storageDao.get(userSecond.getLogin()));
     }
 }
