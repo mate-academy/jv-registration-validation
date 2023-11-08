@@ -18,6 +18,12 @@ class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private static User userFirst;
     private static User userSecond;
+    private static final String MODEL_FIRST_USER_LOGIN = "Andrew";
+    private static final String MODEL_FIRST_USER_PASSWORD = "Andrew123";
+    private static final int MODEL_FIRST_USER_AGE = 19;
+    private static final String MODEL_SECOND_USER_LOGIN = "Bohdan";
+    private static final String MODEL_SECOND_USER_PASSWORD = "Bohdan123";
+    private static final int MODEL_SECOND_USER_AGE = 23;
 
     @BeforeAll
     static void beforeAll() {
@@ -28,20 +34,28 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         userFirst = new User();
-        userFirst.setLogin("Andrew");
-        userFirst.setPassword("Andrew123");
-        userFirst.setAge(19);
+        userFirst.setLogin(MODEL_FIRST_USER_LOGIN);
+        userFirst.setPassword(MODEL_FIRST_USER_PASSWORD);
+        userFirst.setAge(MODEL_FIRST_USER_AGE);
         registrationService.register(userFirst);
 
         userSecond = new User();
-        userSecond.setLogin("Bohdan");
-        userSecond.setPassword("Bohdan123");
-        userSecond.setAge(23);
+        userSecond.setLogin(MODEL_SECOND_USER_LOGIN);
+        userSecond.setPassword(MODEL_SECOND_USER_PASSWORD);
+        userSecond.setAge(MODEL_SECOND_USER_AGE);
     }
 
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    @Test
+    void register_userIsNull_notOk() {
+        userSecond = null;
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(userSecond);
+        });
     }
 
     @Test
@@ -54,7 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginExists_notOk() {
-        userSecond.setLogin("Andrew");
+        userSecond.setLogin(MODEL_FIRST_USER_LOGIN);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userSecond);
         });
