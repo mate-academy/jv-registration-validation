@@ -1,4 +1,4 @@
-package core.basesyntax.registrationService;
+package core.basesyntax.registration.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;

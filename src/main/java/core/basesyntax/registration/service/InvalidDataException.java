@@ -1,4 +1,4 @@
-package core.basesyntax.registrationService;
+package core.basesyntax.registration.service;
 
 public class InvalidDataException extends RuntimeException {
     public InvalidDataException(String message) {

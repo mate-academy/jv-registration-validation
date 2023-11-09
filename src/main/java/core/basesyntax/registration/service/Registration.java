@@ -1,4 +1,4 @@
-package core.basesyntax.registrationService;
+package core.basesyntax.registration.service;
 
 import core.basesyntax.model.User;
 
