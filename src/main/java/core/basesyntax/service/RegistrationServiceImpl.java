@@ -5,8 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int minAge = 18;
+    private static final int maxAge = 100;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final int minAge = 18;
 
     @Override
     public User register(User user) throws RegistrationException {
@@ -29,6 +30,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < minAge) {
             throw new RegistrationException("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + minAge);
+        }
+        if (user.getAge() > maxAge) {
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ". Max allowed age is " + maxAge);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This login was already taken");
