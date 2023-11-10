@@ -5,45 +5,57 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int VALID_SIZE = 6;
-    private static final int VALID_AGE = 18;
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MIN_CHAR_FOR_LOGIN_PASSWORD = 6;
+    private static final int MIN_USER_AGE = 18;
+    private static final int MAX_USER_AGE = 120;
+    private final StorageDao storageDao;
+
+    public RegistrationServiceImpl() {
+        storageDao = new StorageDaoImpl();
+    }
 
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("User is null");
+            throw new RegistrationException("User is null");
         }
 
-        if (isNotValidLogin(user) || isNotValidPassword(user) || isAgeLeast(user)) {
-            throw new InvalidDataUserException("Data of user not valid");
+        if (isNotValidLogin(user) || isNotValidPassword(user) || isNotValidAge(user)) {
+            throw new RegistrationException("User data such as login: "
+                    + user.getLogin()
+                    + ", password: "
+                    + user.getPassword()
+                    + " or age: "
+                    + user.getAge() + " is incorrect.");
         }
 
-        if (isExistUserStorage(user)) {
-            throw new RuntimeException("User already exist");
+        if (isLoginExist(user)) {
+            throw new RegistrationException("User with login "
+                    + user.getLogin()
+                    + " already exist");
         }
 
         return storageDao.add(user);
     }
 
-    private boolean isExistUserStorage(User user) {
+    private boolean isLoginExist(User user) {
         return storageDao.get(user.getLogin()) != null;
     }
 
-    private boolean isAgeLeast(User user) {
-        return user.getAge() < VALID_AGE;
+    private boolean isNotValidAge(User user) {
+        return user.getAge() < MIN_USER_AGE || user.getAge() > MAX_USER_AGE;
     }
 
     private boolean isNotValidPassword(User user) {
         return user.getPassword() == null
                 || user.getPassword().isEmpty()
-                || user.getPassword().length() < VALID_SIZE;
+                || user.getPassword().length() < MIN_CHAR_FOR_LOGIN_PASSWORD;
     }
 
     private boolean isNotValidLogin(User user) {
         return user.getLogin() == null
                 || user.getLogin().isEmpty()
-                || user.getLogin().length() < VALID_SIZE;
+                || user.getLogin().length() < MIN_CHAR_FOR_LOGIN_PASSWORD;
     }
 
 }
