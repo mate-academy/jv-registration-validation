@@ -12,25 +12,27 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int minAge = 18;
-    private static final int maxAge = 100;
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 100;
     private final String lessThan6Chars = "oops";
     private RegistrationService registrationService;
-    private User testNullUser;
+    private User testUser1;
     private User testUser2;
     private StorageDao storageDao;
 
+    public User setUser() {
+        User resultUser = new User();
+        String over6Chars = "misterProper";
+        resultUser.setLogin(over6Chars);
+        resultUser.setPassword(over6Chars);
+        resultUser.setAge(MIN_AGE);
+        return resultUser;
+    }
+
     @BeforeEach
     public void init() {
-        testNullUser = new User();
-        String over6Chars = "misterProper";
-        testNullUser.setLogin(over6Chars);
-        testNullUser.setPassword(over6Chars);
-        testNullUser.setAge(minAge);
-        testUser2 = new User();
-        testUser2.setLogin(over6Chars);
-        testUser2.setPassword(over6Chars);
-        testUser2.setAge(minAge);
+        testUser1 = setUser();
+        testUser2 = setUser();
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
@@ -50,62 +52,62 @@ class RegistrationServiceImplTest {
     @Test
     public void register_nullLogin_notOK() {
         assertThrows(RegistrationException.class, () -> {
-            testNullUser.setLogin(null);
-            registrationService.register(testNullUser);
+            testUser1.setLogin(null);
+            registrationService.register(testUser1);
         }, "Login cannot be null");
     }
 
     @Test
     public void register_shortLogin_notOk() {
-        testNullUser.setLogin(lessThan6Chars);
+        testUser1.setLogin(lessThan6Chars);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(testNullUser);
+            registrationService.register(testUser1);
         }, "Login must be at least 6 characters");
     }
 
     @Test
     public void register_nullPassword_notOk() {
-        testNullUser.setPassword(null);
+        testUser1.setPassword(null);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(testNullUser);
+            registrationService.register(testUser1);
         }, "Password cannot be null");
     }
 
     @Test
     public void register_shortPassword_notOk() {
-        testNullUser.setPassword(lessThan6Chars);
+        testUser1.setPassword(lessThan6Chars);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(testNullUser);
+            registrationService.register(testUser1);
         }, "Password must be at least 6 characters");
     }
 
     @Test
     public void register_lessThanMinimalAge_notOk() {
-        testNullUser.setAge(9);
+        testUser1.setAge(9);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(testNullUser);
-        }, "Min allowed age is " + minAge);
+            registrationService.register(testUser1);
+        }, "Min allowed age is " + MIN_AGE);
     }
 
     @Test
     public void register_moreThanMaximumAge_notOk() {
-        testNullUser.setAge(1000);
+        testUser1.setAge(1000);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(testNullUser);
-        }, "Max allowed age is " + maxAge);
+            registrationService.register(testUser1);
+        }, "Max allowed age is " + MAX_AGE);
     }
 
     @Test
     public void register_loginIsTaken_notOk() {
-        registrationService.register(testNullUser);
+        registrationService.register(testUser1);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser2);
-        }, " This login was already taken");
+        }, " This login is already taken");
     }
 
     @Test
     public void register_successfulAdding_OK() {
-        registrationService.register(testNullUser);
-        assertEquals(testNullUser, storageDao.get(testNullUser.getLogin()));
+        registrationService.register(testUser1);
+        assertEquals(testUser1, storageDao.get(testUser1.getLogin()));
     }
 }

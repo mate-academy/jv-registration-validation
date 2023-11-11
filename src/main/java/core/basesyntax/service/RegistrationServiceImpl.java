@@ -5,39 +5,58 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int minAge = 18;
-    private static final int maxAge = 100;
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 100;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) throws RegistrationException {
-
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
-        if (user.getLogin() == null) {
+        loginValidation(user.getLogin());
+        passwordValidation(user.getPassword());
+        ageValidation(user.getAge());
+        isLoginFreeValidation(user.getLogin());
+        return storageDao.add(user);
+    }
+
+    private boolean loginValidation(String userLogin) {
+        if (userLogin == null) {
             throw new RegistrationException("Login can't be null");
         }
-        if (user.getLogin().length() < 6) {
+        if (userLogin.length() < 6) {
             throw new RegistrationException("Login must be at least 6 characters");
         }
-        if (user.getPassword() == null) {
+        return true;
+    }
+
+    private boolean passwordValidation(String userPassword) {
+        if (userPassword == null) {
             throw new RegistrationException("Password can't be null");
         }
-        if (user.getPassword().length() < 6) {
+        if (userPassword.length() < 6) {
             throw new RegistrationException("Password must be at least 6 characters");
         }
-        if (user.getAge() < minAge) {
-            throw new RegistrationException("Not valid age: " + user.getAge()
-                    + ". Min allowed age is " + minAge);
+        return true;
+    }
+
+    private boolean ageValidation(int userAge) {
+        if (userAge < MIN_AGE) {
+            throw new RegistrationException("Not valid age: " + userAge
+                    + ". Min allowed age is " + MIN_AGE);
         }
-        if (user.getAge() > maxAge) {
-            throw new RegistrationException("Not valid age: " + user.getAge()
-                    + ". Max allowed age is " + maxAge);
+        if (userAge > MAX_AGE) {
+            throw new RegistrationException("Not valid age: " + userAge
+                    + ". Max allowed age is " + MAX_AGE);
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("This login was already taken");
+        return true;
+    }
+
+    private boolean isLoginFreeValidation(String userLogin) {
+        if (storageDao.get(userLogin) != null) {
+            throw new RegistrationException("This login is already taken");
         }
-        return storageDao.add(user);
+        return true;
     }
 }
