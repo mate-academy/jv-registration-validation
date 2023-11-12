@@ -19,14 +19,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_NullUser_ThrowsException() {
+    public void register_nullUser_notOk() {
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    public void register_Successful() {
+    public void register_ok() {
         User user = new User();
         user.setLogin("newUser");
         user.setPassword("password123");
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_InvalidAge_ThrowsException() {
+    public void register_invalidAge_notOk() {
         User user = new User();
         user.setLogin("newUser");
         user.setPassword("password123");
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_InvalidPassword_ThrowsException() {
+    public void register_invalidPassword_notOk() {
         User user = new User();
         user.setLogin("newUser");
         user.setPassword("pass");
@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_InvalidLogin_ThrowsException() {
+    public void register_invalidLogin_notOk() {
         User user = new User();
         user.setLogin("usr");
         user.setPassword("password123");
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_UserExists_ThrowsException() {
+    public void register_userExists_notOk() {
         User existingUser = new User();
         existingUser.setLogin("existingUser");
         existingUser.setPassword("password123");
