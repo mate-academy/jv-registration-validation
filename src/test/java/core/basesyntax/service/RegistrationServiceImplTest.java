@@ -1,6 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
@@ -11,19 +13,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int MIM_PASSWORD_LENGTH = 6;
     private static final int AGE_18 = 18;
     private static final int AGE_17 = 17;
     private static final int AGE_60 = 60;
     private static final int NEGATIVE_AGE = -2;
-    private static final int AGE = 20;
-    private static final int MAX_AGE = 105;
-    private static final int OVER_MAX_AGE = 106;
     private static final String USER_NAME = "Docent";
+    private static final String USER_NAME_2 = "Doc";
     private static final String NEW_USER_NAME = "Daisy";
+    private static final String NEW_USER_NAME_1 = "Nina";
+    private static final String NEW_USER_NAME_2 = "Armin";
     private static final String USER_PASSWORD_OK = "123456";
     private static final String USER_PASSWORD_THREE_CHARS = "123";
     private static final String USER_PASSWORD_FIVE_CHARS = "12345";
-    private static final String USER_PASSWORD_LENGTH_OK = "1234567";
+    private static final String USER_PASSWORD_LENGTH_OK = "12345678";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static User user;
@@ -82,9 +85,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_rightLogin_ok() {
         newUser.setLogin(NEW_USER_NAME);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(newUser);
-        });
+        assertNotEquals(newUser.getLogin(), user.getLogin());
+        registrationService.register(newUser);
     }
 
     @Test
@@ -97,10 +99,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_underAge_notOk() {
-        user.setAge(OVER_MAX_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
         user.setAge(AGE_17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -113,18 +111,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_rightAge_ok() {
-        user.setAge(AGE_18);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        user.setAge(MAX_AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        user.setAge(AGE);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        user.setLogin(USER_NAME_2);
+        boolean expected = user.getAge() == AGE_18;
+        assertTrue(expected);
+        registrationService.register(user);
+
+        newUser.setLogin(NEW_USER_NAME_1);
+        newUser.setAge(AGE_60);
+        boolean expectedAge = newUser.getAge() > AGE_18;
+        assertTrue(expectedAge);
+        registrationService.register(newUser);
     }
 
     @Test
@@ -153,9 +149,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_rightPassword_ok() {
-        user.setPassword(USER_PASSWORD_OK);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        user.setLogin("NEW_USER_NAME_23");
+        boolean expected = user.getPassword().length() == MIM_PASSWORD_LENGTH;
+        assertTrue(expected);
+        registrationService.register(user);
+
+        newUser.setLogin(NEW_USER_NAME_2);
+        boolean expectedEightCharacters = newUser.getPassword().length() > MIM_PASSWORD_LENGTH;
+        assertTrue(expectedEightCharacters);
+        registrationService.register(newUser);
     }
+
 }
