@@ -6,9 +6,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final int minAge = 18;
-    private final int maxAge = 106;
-    private final int minPasswordLength = 6;
+    private static final int MIN_AGE = 18;
+    private static final int MIN_LENGTH_OF_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -22,17 +21,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new RegistrationException("Password cannot be null or empty line!!!");
         }
-        if (user.getPassword().length() < minPasswordLength) {
+        if (user.getPassword().length() < MIN_LENGTH_OF_PASSWORD) {
             throw new RegistrationException("Your password must contain at least "
-                    + minPasswordLength + " characters!");
+                    + MIN_LENGTH_OF_PASSWORD + " characters!");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("there is " + user.getLogin()
                     + " user already exist!");
         }
-        if (user.getAge() != null || user.getAge() < minAge) {
+        if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Not valid age: " + user.getAge()
-                    + ". Min allowed age is " + minAge);
+                    + ". Min allowed age is " + MIN_AGE);
         }
         return storageDao.add(user);
     }
