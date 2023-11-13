@@ -17,12 +17,13 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "testLogin";
     private static final int VALID_AGE = 37;
     private static StorageDao storageDao;
+    private static RegistrationServiceImpl registrationService;
     private User user;
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
 
     @BeforeAll
     static void beforeAll() {
         storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
