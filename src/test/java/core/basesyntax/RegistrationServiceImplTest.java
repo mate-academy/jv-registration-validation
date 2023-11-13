@@ -8,12 +8,19 @@ import core.basesyntax.exaption.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static RegistrationServiceImpl registrationService;
     private User testUser;
+
+    @BeforeAll
+    static void init() {
+        registrationService = new RegistrationServiceImpl();
+
+    }
 
     @BeforeEach
     void setUp() {
@@ -29,7 +36,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUserIsRegister_exception() {
+    void addUserIsRegister_ThrowsRegistrationException_Ok() {
         registrationService.register(testUser);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
@@ -37,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUserPasswordLessThen6_exception() {
+    void addUserPasswordLessThen6_ThrowsRegistrationException_notOk() {
         testUser.setPassword("12345");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
@@ -45,9 +52,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUserInfoIsNull_exception() {
+    void addUserInfoIsNull_ThrowsRegistrationException_notOk() {
         testUser.setPassword(null);
-        testUser.setAge(null);
         testUser.setAge(null);
         testUser.setId(null);
         assertThrows(RegistrationException.class, () -> {
@@ -56,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUserLoginLessThen6_exception() {
+    void addUserLoginLessThen6_ThrowsRegistrationException_notOk() {
         testUser.setLogin("12345");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
@@ -64,10 +70,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUserAgeLessThen18_exception() {
+    void addUserAgeLessThen18_ThrowsRegistrationException_notOk() {
         testUser.setAge(17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
+        });
+    }
+
+    @Test
+    void register_UserAlreadyExists_ThrowsRegistrationException_notOk() {
+        registrationService.register(testUser);
+
+        User duplicateUser = new User();
+        duplicateUser.setAge(25);
+        duplicateUser.setLogin("QWERTY123");
+        duplicateUser.setPassword("duplicatePassword_123");
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(duplicateUser);
         });
     }
 
