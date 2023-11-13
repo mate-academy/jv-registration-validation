@@ -10,6 +10,7 @@ public class StorageDaoImpl implements StorageDao {
     public User add(User user) {
         user.setId(++index);
         Storage.people.add(user);
+        System.out.println("user was added...");
         return user;
     }
 
