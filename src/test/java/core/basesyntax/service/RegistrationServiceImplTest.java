@@ -20,6 +20,7 @@ class RegistrationServiceImplTest {
     private static final int NEGATIVE_AGE = -2;
     private static final String USER_NAME = "Docent";
     private static final String USER_NAME_2 = "Doc";
+    private static final String USER_NAME_3 = "Nana";
     private static final String NEW_USER_NAME = "Daisy";
     private static final String NEW_USER_NAME_1 = "Nina";
     private static final String NEW_USER_NAME_2 = "Armin";
@@ -149,7 +150,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_rightPassword_ok() {
-        user.setLogin("NEW_USER_NAME_23");
+        user.setLogin(USER_NAME_3);
         boolean expected = user.getPassword().length() == MIM_PASSWORD_LENGTH;
         assertTrue(expected);
         registrationService.register(user);
