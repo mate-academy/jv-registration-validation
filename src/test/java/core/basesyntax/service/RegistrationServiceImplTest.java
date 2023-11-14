@@ -52,10 +52,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_invalidPassword_notOk() {
+    public void register_shortPassword_notOk() {
         User user = new User();
         user.setLogin("newUser");
-        user.setPassword("pass");
+        user.setPassword("passs");
         user.setAge(20);
 
         assertThrows(InvalidUserDataException.class, () -> {
@@ -64,9 +64,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_invalidLogin_notOk() {
+    public void register_shortLogin_notOk() {
         User user = new User();
-        user.setLogin("usr");
+        user.setLogin("usrss");
         user.setPassword("password123");
         user.setAge(20);
 
