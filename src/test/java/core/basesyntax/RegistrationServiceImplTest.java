@@ -1,5 +1,10 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -9,11 +14,9 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class RegistrationServiceImplTest {
-    private static final User[] UNIQUE_CORRECT_USERS = new User[]{new User("testUser1", "testPassword1",
-            20),
+    private static final User[] UNIQUE_CORRECT_USERS = new User[]{new User("testUser1",
+            "testPassword1", 20),
             new User("testUser2", "testPassword2", 27),
             new User("testUser3", "testPassword3", 40),};
 
@@ -81,8 +84,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_multipleUsersIncludingInvalid_oneUserNotAdded() {
-        User validUser1 = new User("correctUser1", "password123", 20);
-        User validUser2 = new User("correctUser2", "password456", 25);
+        final User validUser1 = new User("correctUser1", "password123", 20);
+        final User validUser2 = new User("correctUser2", "password456", 25);
 
         User registeredUser1 = registrationService.register(validUser1);
         assertNotNull(registeredUser1);
