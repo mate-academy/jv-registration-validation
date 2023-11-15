@@ -1,6 +1,6 @@
 package core.basesyntax.exeptions;
 
-public class IncorrectDataException extends Exception {
+public class IncorrectDataException extends RuntimeException {
     public IncorrectDataException(String errorMessage) {
         super(errorMessage);
     }

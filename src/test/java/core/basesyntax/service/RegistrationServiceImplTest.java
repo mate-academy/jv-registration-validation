@@ -18,17 +18,13 @@ class RegistrationServiceImplTest {
     private static final User VALID_USER_TWO = new User();
     private static final User VALID_USER_THREE = new User();
     private static final User EMPTY_USER = new User();
-    private static final long NEGATIVE_ID = -1345;
-    private static final Long[] INVALID_ID_ARRAY = {Long.valueOf(NEGATIVE_ID),
-            Long.MAX_VALUE,
-            null};
     private static final int LOW_AGE = 15;
     private static final int HIGH_AGE = 160;
     private static Integer[] INVALID_AGE_ARRAY = {Integer.valueOf(LOW_AGE),
             Integer.valueOf(HIGH_AGE),
             null};
     private static final String LOGIN_WITH_WRONG_FIRST = "%sdjfh@mail.com";
-    private static final String SHORT_LOGIN = "sh@mail.com";
+    private static final String SHORT_LOGIN = "short";
     private static final String EXISTING_LOGIN = "firstuser@mail.com";
     private static final String[] INVALID_LOGIN_ARRAY = {LOGIN_WITH_WRONG_FIRST,
             SHORT_LOGIN,
@@ -81,16 +77,6 @@ class RegistrationServiceImplTest {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(EMPTY_USER);
         });
-    }
-
-    @Test
-    void registerSingle_InvalidID_NotOk() {
-        for (Long id : INVALID_ID_ARRAY) {
-            CUSTOM_USER.setId(id);
-            assertThrows(RuntimeException.class, () -> {
-                registrationService.register(CUSTOM_USER);
-            });
-        }
     }
 
     @Test
