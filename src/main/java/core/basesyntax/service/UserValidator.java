@@ -1,46 +1,45 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exeptions.IncorrectDataException;
+import core.basesyntax.exeptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class UserValidator {
     private static final StorageDaoImpl storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
-    private static final int MAX_AGE = 150;
-    private static final int MIN_LOGIN_OR_PASSWORD_LENGTH = 7;
+    private static final int MIN_LOGIN_OR_PASSWORD_LENGTH = 6;
 
-    public void validate(User user) throws IncorrectDataException {
+    public void validate(User user) throws RegistrationException {
         if (nullAge(user)) {
-            throw new IncorrectDataException("Age is null. "
+            throw new RegistrationException("Age is null. "
                     + "Enter correct age.");
         }
         if (incorrectAge(user)) {
-            throw new IncorrectDataException("Incorrect age. "
+            throw new RegistrationException("Incorrect age. "
                     + "Enter age between 18 and 150.");
         }
         if (nullLogin(user)) {
-            throw new IncorrectDataException("Login is null. "
+            throw new RegistrationException("Login is null. "
                     + "Enter correct login.");
         }
         if (shortLogin(user)) {
-            throw new IncorrectDataException("Login is too short."
+            throw new RegistrationException("Login is too short."
                     + "Enter login longer than 6 characters.");
         }
         if (wrongStartsLogin(user)) {
-            throw new IncorrectDataException("Login starts with wrong character"
+            throw new RegistrationException("Login starts with wrong character"
                     + "Enter login which starts with [a-z|A-Z].");
         }
         if (existingLogin(user)) {
-            throw new IncorrectDataException("There is user with the same login"
+            throw new RegistrationException("There is user with the same login"
                     + "Enter login that not exist.");
         }
         if (nullPassword(user)) {
-            throw new IncorrectDataException("Password is null. "
+            throw new RegistrationException("Password is null. "
                     + "Enter correct password.");
         }
         if (shortPassword(user)) {
-            throw new IncorrectDataException("Password is too short. "
+            throw new RegistrationException("Password is too short. "
                     + "Enter password longer than 6 characters.");
         }
     }
@@ -50,8 +49,7 @@ public class UserValidator {
     }
 
     private static boolean incorrectAge(User user) {
-        return user.getAge() < MIN_AGE
-                || user.getAge() > MAX_AGE;
+        return user.getAge() < MIN_AGE;
     }
 
     private static boolean nullLogin(User user) {
