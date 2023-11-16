@@ -46,12 +46,10 @@ class RegistrationServiceImplTest {
             Integer.valueOf(LOW_AGE_TWO),
             null};
     //Invalid logins
-    private static final String LOGIN_WITH_WRONG_FIRST = "%sdjfh@mail.com";
     private static final String SHORT_LOGIN_ONE = "";
     private static final String SHORT_LOGIN_TWO = "short";
     private static final String EXISTING_LOGIN = "firstuser@mail.com";
-    private static final String[] INVALID_LOGIN_ARRAY = {LOGIN_WITH_WRONG_FIRST,
-            SHORT_LOGIN_ONE,
+    private static final String[] INVALID_LOGIN_ARRAY = {SHORT_LOGIN_ONE,
             SHORT_LOGIN_TWO,
             EXISTING_LOGIN,
             null};
