@@ -1,11 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -27,7 +28,7 @@ class RegistrationServiceImplTest {
     @Test
     void emptyLogin_notOk() {
         assertThrows(InvalidDataException.class, () -> {
-           registrationService.register(new User("", "password", 30));
+            registrationService.register(new User("", "password", 30));
         });
     }
 
