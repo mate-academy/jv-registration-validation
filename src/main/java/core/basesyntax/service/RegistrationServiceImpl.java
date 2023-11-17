@@ -13,23 +13,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException();
+            throw new RegistrationException("Invalid user date. User fields cannot be null");
         }
 
         if (user.getLogin() == null || user.getLogin().length() < MIN_LENGTH_LOGIN) {
-            throw new RegistrationException();
+            throw new RegistrationException("Login must be at least 6 characters long");
         }
 
         if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH_PASS) {
-            throw new RegistrationException();
+            throw new RegistrationException("Password must be at least 6 characters long");
         }
 
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
-            throw new RegistrationException();
+            throw new RegistrationException("User must be at least 18 years old");
         }
 
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException();
+            throw new RegistrationException("User with this login already exists");
         }
 
         return storageDao.add(user);
