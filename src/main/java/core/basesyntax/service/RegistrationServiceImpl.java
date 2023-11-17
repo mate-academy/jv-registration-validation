@@ -15,9 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        userValidator.validateAge(user);
-        userValidator.validateLogin(user);
-        userValidator.validatePassword(user);
+        userValidator.validate(user);
         storageDao.add(user);
         return user;
     }
