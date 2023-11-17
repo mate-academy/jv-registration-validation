@@ -14,7 +14,7 @@ class RegistrationServiceImplTest {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Test
-    void register_sameUserAlreadyExists_notOk() throws RestrictionException {
+    void register_loginAlreadyExists_notOk() {
         User existingUser = new User("existingUser", "existingPassword");
         storageDao.add(existingUser);
 
@@ -25,126 +25,90 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginIsNull_notOk() {
+    void register_invalidLogin_notOk() {
         User userWithNullLogin = new User((String) null);
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithNullLogin);
         });
-    }
 
-    @Test
-    void register_loginLengthIsThreeCharacters_notOk() {
         User userWithLoginOfThree = new User("usr", "password");
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithLoginOfThree);
         });
-    }
 
-    @Test
-    void register_loginLengthIsFiveCharacters_notOk() {
         User userWithLoginOfFive = new User("abcde", "password");
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithLoginOfFive);
         });
     }
 
     @Test
-    void register_loginLengthIsSixCharacters_Ok() {
+    void register_loginMoreThanSix_Ok() {
         User userWithLoginOfSix = new User("abcdef", "password");
         boolean actual = userWithLoginOfSix.getLogin().length() == 6;
         assertTrue(actual);
-    }
 
-    @Test
-    void register_loginLengthIsEightCharacters_Ok() {
         User userWithLoginOfEight = new User("abcdefgh", "password");
-        boolean actual = userWithLoginOfEight.getLogin().length() == 8;
-        assertTrue(actual);
+        boolean actual2 = userWithLoginOfEight.getLogin().length() == 8;
+        assertTrue(actual2);
     }
 
     @Test
-    void register_passwordIsNull_notOk() {
+    void register_invalidPassword_notOk() {
         User userWithNullPassword = new User((String) null);
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithNullPassword);
         });
-    }
 
-    @Test
-    void register_passwordLengthIsThreeCharacters_notOk() throws RestrictionException {
         User userWithPasswordOfThree = new User("userWithShortPassword", "123");
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithPasswordOfThree);
         });
-    }
 
-    @Test
-    void register_passwordLengthIsFiveCharacters_notOk() throws RestrictionException {
         User userWithPasswordOfFive = new User("userWithShortPassword", "12345");
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithPasswordOfFive);
         });
     }
 
     @Test
-    void register_passwordLengthIsSixCharacters_Ok() throws RestrictionException {
+    void register_passwordIsMoreThanSix_Ok() {
         User userWithPasswordOfSix = new User("userWithShortPassword", "123456");
         boolean actual = userWithPasswordOfSix.getPassword().length() == 6;
         assertTrue(actual);
-    }
 
-    @Test
-    void register_passwordLengthIsEightCharacters_Ok() throws RestrictionException {
         User userWithPasswordOfEight = new User("userWithShortPassword", "12345678");
-        boolean actual = userWithPasswordOfEight.getPassword().length() == 8;
-        assertTrue(actual);
+        boolean actual2 = userWithPasswordOfEight.getPassword().length() == 8;
+        assertTrue(actual2);
     }
 
     @Test
-    void register_ageIsNull_notOk() {
+    void register_invalidAge_notOk() {
         User userWithAgeNull = new User("UserWithAgeNull", 0);
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithAgeNull);
         });
-    }
 
-    @Test
-    void register_ageIsTwelve_notOk() {
         User userWithAgeTwelve = new User("UserWithAgeTwelve", "password", 12);
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithAgeTwelve);
         });
-    }
 
-    @Test
-    void register_ageIsSeventeen_notOk() {
         User userWithAgeSeventeen = new User("UserWithAgeSeventeen", "password", 17);
-
         assertThrows(RestrictionException.class, () -> {
             registrationService.register(userWithAgeSeventeen);
         });
     }
 
     @Test
-    void register_ageIsEighteen_Ok() {
+    void register_ageIsEighteenAndMore_Ok() {
         User userWithAgeEighteen = new User("UserWithAgeEighteen", "password", 18);
         boolean actual = userWithAgeEighteen.getAge() == 18;
         assertTrue(actual);
-    }
 
-    @Test
-    void register_ageIsNineteen_Ok() {
         User userWithAgeNineteen = new User("UserWithAgeEighteen", "password", 19);
-        boolean actual = userWithAgeNineteen.getAge() == 19;
-        assertTrue(actual);
+        boolean actual2 = userWithAgeNineteen.getAge() == 19;
+        assertTrue(actual2);
     }
 
     private void addUserToStorage(String login, String password) {

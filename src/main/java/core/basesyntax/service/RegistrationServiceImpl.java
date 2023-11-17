@@ -6,7 +6,8 @@ import core.basesyntax.exception.RestrictionException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_LENGTH = 6;
+    private static final int MIN_LENGTH_PASSWORD = 6;
+    private static final int MIN_LENGTH_LOGIN = 6;
     private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -29,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RestrictionException("Login cannot be null");
         }
 
-        if (user.getLogin().length() < MIN_LENGTH) {
+        if (user.getLogin().length() < MIN_LENGTH_LOGIN) {
             throw new RestrictionException("Login must be longer than 6 characters");
         }
 
@@ -37,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RestrictionException("Password cannot be null");
         }
 
-        if (user.getPassword().length() < MIN_LENGTH) {
+        if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new RestrictionException("Password must be longer than 6 characters");
         }
 
