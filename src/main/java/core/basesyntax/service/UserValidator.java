@@ -21,7 +21,7 @@ public class UserValidator {
         validatePassword(user.getPassword());
     }
 
-    public void validateAge(int age) {
+    private void validateAge(int age) {
         if (Integer.valueOf(age) == null) {
             throw new RegistrationException("Age is null. "
                     + "Enter correct age.");
@@ -32,7 +32,7 @@ public class UserValidator {
         }
     }
 
-    public void validateLogin(String login) {
+    private void validateLogin(String login) {
         if (login == null) {
             throw new RegistrationException("Login is null. "
                     + "Enter correct login.");
@@ -47,7 +47,7 @@ public class UserValidator {
         }
     }
 
-    public void validatePassword(String password) {
+    private void validatePassword(String password) {
         if (password == null) {
             throw new RegistrationException("Password is null. "
                     + "Enter correct password.");

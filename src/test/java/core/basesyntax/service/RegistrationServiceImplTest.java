@@ -22,33 +22,33 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidData_Ok() {
+    void registerUsersWithValidData_Ok() {
         StorageDao storageDao = new StorageDaoImpl();
-        User validUserOne = new User(ID,
+        User expectedUserOne = new User(ID,
                 "firstu",
                 "askj4%",
                 18);
-        User validUserTwo = new User(ID,
+        User expectedUserTwo = new User(ID,
                 "seconduser",
                 "ashgJDH3$",
                 32);
-        registrationService.register(validUserOne);
-        registrationService.register(validUserTwo);
-        User actualOne = storageDao.get(validUserOne.getLogin());
-        User actualTwo = storageDao.get(validUserTwo.getLogin());
-        assertEquals(validUserOne, actualOne);
-        assertEquals(validUserTwo, actualTwo);
+        registrationService.register(expectedUserOne);
+        registrationService.register(expectedUserTwo);
+        User actualUserOne = storageDao.get(expectedUserOne.getLogin());
+        User actualUserTwo = storageDao.get(expectedUserTwo.getLogin());
+        assertEquals(expectedUserOne, actualUserOne);
+        assertEquals(expectedUserTwo, actualUserTwo);
     }
 
     @Test
-    void registerSingle_EmptyUser_NotOk() {
+    void registerEmptyUser_NotOk() {
         assertThrows(RuntimeException.class, () -> {
             registrationService.register(CUSTOM_USER);
         });
     }
 
     @Test
-    void registerSingle_InvalidAge_NotOk() {
+    void registerUserWithInvalidAge_NotOk() {
         int negativeAge = -4;
         int lowAgeOne = 0;
         int lowAgeTwo = 5;
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerSingle_InvalidLogin_NotOk() {
+    void registerUserWithInvalidLogin_NotOk() {
         String shortLoginOne = "";
         String shortLoginTwo = "short";
         String existingLogin = "firstuser@mail.com";
@@ -85,7 +85,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerSingle_InvalidPassword_NotOk() {
+    void registerUserWithInvalidPassword_NotOk() {
         String shortPasswordOne = "";
         String shortPasswordTwo = "123";
         String shortPasswordThree = "12345";
