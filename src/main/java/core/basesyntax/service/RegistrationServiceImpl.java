@@ -11,7 +11,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (!isUserPassCriterias(user)) {
-            throw new InvalidDataException("Incorrect data, try again!");
+            if (user.getLogin().length() < 6) {
+                throw new InvalidDataException("Login too short. Please enter login with"
+                        + " 6+ symbols.");
+            } else if (user.getPassword().length() < 6) {
+                throw new InvalidDataException("Password too short. Please enter password "
+                        + "with 6+ symbols.");
+            } else if (user.getAge() < 18) {
+                throw new InvalidDataException("Your age is lower than acceptable. If it's mistake,"
+                        + " enter the new one, higher or equal than 18.");
+            } else if (isLoginExist(user.getLogin())) {
+                throw new InvalidDataException("This login already exist. Try the new one.");
+            }
         }
 
         storageDao.add(user);

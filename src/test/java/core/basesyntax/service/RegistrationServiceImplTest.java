@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void nullPassword_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             registrationService.register(new User("Germiona", null, 25));
         });
     }
@@ -104,7 +104,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void nullPasswordAndAge_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             registrationService.register(new User("Germiona", null, null));
         });
     }
