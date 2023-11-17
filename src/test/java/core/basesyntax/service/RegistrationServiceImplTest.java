@@ -12,11 +12,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final long ID = 123L;
-    private static final int AGE = 18;
-    private static final String LOGIN = "firstuser@mail.com";
-    private static final String PASSWORD = "askj435%";
-    private static final User EMPTY_USER = new User();
-    private static final User CUSTOM_USER = new User();
+    private static final User CUSTOM_USER = new User(null, null, null, null);
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
@@ -26,27 +22,41 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerSingle_ValidData_Ok() {
+    void register_ValidData_Ok() {
         StorageDao storageDao = new StorageDaoImpl();
-        User validUser = new User(ID, LOGIN, PASSWORD, AGE);
-        registrationService.register(validUser);
-        User actual = storageDao.get(validUser.getLogin());
-        assertEquals(validUser, actual);
+        User validUserOne = new User(ID,
+                "firstu",
+                "askj4%",
+                18);
+        User validUserTwo = new User(ID,
+                "seconduser",
+                "ashgJDH3$",
+                32);
+        registrationService.register(validUserOne);
+        registrationService.register(validUserTwo);
+        User actualOne = storageDao.get(validUserOne.getLogin());
+        User actualTwo = storageDao.get(validUserTwo.getLogin());
+        assertEquals(validUserOne, actualOne);
+        assertEquals(validUserTwo, actualTwo);
     }
 
     @Test
     void registerSingle_EmptyUser_NotOk() {
         assertThrows(RuntimeException.class, () -> {
-            registrationService.register(EMPTY_USER);
+            registrationService.register(CUSTOM_USER);
         });
     }
 
     @Test
     void registerSingle_InvalidAge_NotOk() {
+        int negativeAge = -4;
         int lowAgeOne = 0;
-        int lowAgeTwo = 15;
-        Integer[] invalidAgeArray = {Integer.valueOf(lowAgeOne),
+        int lowAgeTwo = 5;
+        int lowAgeTree = 15;
+        Integer[] invalidAgeArray = {Integer.valueOf(negativeAge),
+                Integer.valueOf(lowAgeOne),
                 Integer.valueOf(lowAgeTwo),
+                Integer.valueOf(lowAgeTree),
                 null};
         for (Integer age : invalidAgeArray) {
             CUSTOM_USER.setAge(age);
@@ -65,7 +75,7 @@ class RegistrationServiceImplTest {
                 shortLoginTwo,
                 existingLogin,
                 null};
-        CUSTOM_USER.setAge(AGE);
+        CUSTOM_USER.setAge(25);
         for (String login : invalidLoginArray) {
             CUSTOM_USER.setLogin(login);
             assertThrows(RuntimeException.class, () -> {
@@ -83,8 +93,8 @@ class RegistrationServiceImplTest {
                 shortPasswordTwo,
                 shortPasswordThree,
                 null};
-        CUSTOM_USER.setAge(AGE);
-        CUSTOM_USER.setLogin(LOGIN);
+        CUSTOM_USER.setAge(59);
+        CUSTOM_USER.setLogin("customuser");
         for (String password : invalidPasswordArray) {
             CUSTOM_USER.setPassword(password);
             assertThrows(RuntimeException.class, () -> {
