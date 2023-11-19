@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User user;
@@ -30,7 +29,7 @@ class RegistrationServiceImplTest {
     void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(NullPointerException.class, () -> {
-           registrationService.register(user);
+            registrationService.register(user);
         });
     }
 
