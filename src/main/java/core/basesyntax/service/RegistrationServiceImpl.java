@@ -10,6 +10,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new NullPointerException();
+        }
+
         if (!isUserPassCriterias(user)) {
             if (user.getLogin().length() < 6) {
                 throw new InvalidDataException("Login too short. Please enter login with"
