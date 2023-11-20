@@ -55,6 +55,16 @@ public class User {
     }
 
     @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(login, password, age);
     }
