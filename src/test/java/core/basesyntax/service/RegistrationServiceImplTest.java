@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private User validUser;
+    private User user;
 
     @BeforeAll
     static void setUp() {
@@ -22,34 +22,10 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void createValidUser() {
-        validUser = new User();
-        validUser.setLogin("existingUser");
-        validUser.setPassword("password123");
-        validUser.setAge(20);
-    }
-
-    private User createUserWithInvalidAge() {
-        User user = new User();
-        user.setLogin("newUser");
-        user.setPassword("password123");
-        user.setAge(17);
-        return user;
-    }
-
-    private User createUserWithShortPassword() {
-        User user = new User();
-        user.setLogin("newUser");
-        user.setPassword("passs");
-        user.setAge(20);
-        return user;
-    }
-
-    private User createUserWithShortLogin() {
-        User user = new User();
-        user.setLogin("usrrr");
+        user = new User();
+        user.setLogin("existingUser");
         user.setPassword("password123");
         user.setAge(20);
-        return user;
     }
 
     @Test
@@ -61,46 +37,46 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_ok() {
-        User result = registrationService.register(validUser);
+        User result = registrationService.register(user);
 
         assertNotNull(result);
-        assertEquals(validUser.getLogin(), result.getLogin());
+        assertEquals(user.getLogin(), result.getLogin());
         assertEquals(1, Storage.people.size());
     }
 
     @Test
     public void register_invalidAge_notOk() {
-        User userWithInvalidAge = createUserWithInvalidAge();
+        user.setAge(16);
 
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(userWithInvalidAge);
+            registrationService.register(user);
         });
     }
 
     @Test
     public void register_shortPassword_notOk() {
-        User userWithShortPassword = createUserWithShortPassword();
+        user.setPassword("12345");
 
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(userWithShortPassword);
+            registrationService.register(user);
         });
     }
 
     @Test
     public void register_shortLogin_notOk() {
-        User userWithShortLogin = createUserWithShortLogin();
+        user.setLogin("defgt");
 
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(userWithShortLogin);
+            registrationService.register(user);
         });
     }
 
     @Test
     public void register_userExists_notOk() {
-        Storage.people.add(validUser);
+        Storage.people.add(user);
 
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(validUser);
+            registrationService.register(user);
         });
     }
 }
