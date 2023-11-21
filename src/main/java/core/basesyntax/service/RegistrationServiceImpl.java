@@ -20,10 +20,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This login is already in use");
         }
-        if (user.getLogin().toCharArray().length < MIN_LOGIN_AND_PASSWORD_LENGTH) {
+        if (user.getLogin().length() < MIN_LOGIN_AND_PASSWORD_LENGTH) {
             throw new RegistrationException("This login is to short,  min 6 characters");
         }
-        if (user.getPassword().toCharArray().length < MIN_LOGIN_AND_PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MIN_LOGIN_AND_PASSWORD_LENGTH) {
             throw new RegistrationException("This pass is to short,  min 6 characters");
         }
         if (user.getAge() < MIN_AGE) {
