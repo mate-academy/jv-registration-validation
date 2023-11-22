@@ -7,11 +7,13 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
+    private User bob;
 
     @BeforeAll
     static void beforeAll() {
@@ -19,19 +21,24 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
     }
 
-    @Test
-    void register_validUser_Ok() {
-        User bob = new User();
+    @BeforeEach
+    void setUp() {
+        bob = new User();
         bob.setAge(20);
         bob.setLogin("bobiik");
         bob.setPassword("hhjfbchbv");
         bob.setId(52698L);
+    }
+
+    @Test
+    void register_validUser_ok() {
+
         registrationService.register(bob);
 
         User alice = new User();
         alice.setAge(18);
         alice.setLogin("aliceFox");
-        alice.setPassword("hhjf562bv");
+        alice.setPassword("hhjf56");
         alice.setId(36898L);
         registrationService.register(alice);
 
@@ -50,56 +57,50 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_notOk() {
-        User bobAgeNull = new User();
-        bobAgeNull.setAge(null);
-        bobAgeNull.setLogin("bobist");
-        bobAgeNull.setPassword("hhjfbchbv");
-        bobAgeNull.setId(52698L);
+
+        bob.setAge(null);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(bobAgeNull);
+            registrationService.register(bob);
         }, "An exception should be thrown");
     }
 
     @Test
     void register_nullLogin_notOk() {
-        User bobLoginNull = new User();
-        bobLoginNull.setAge(19);
-        bobLoginNull.setLogin(null);
-        bobLoginNull.setPassword("hhjfbchbv");
-        bobLoginNull.setId(52698L);
+
+        bob.setLogin(null);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(bobLoginNull);
+            registrationService.register(bob);
         }, "An exception should be thrown");
     }
 
     @Test
     void register_nullPassword_notOk() {
-        User bobPasswordNull = new User();
-        bobPasswordNull.setAge(19);
-        bobPasswordNull.setLogin("bobist");
-        bobPasswordNull.setPassword(null);
-        bobPasswordNull.setId(52698L);
+
+        bob.setPassword(null);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(bobPasswordNull);
+            registrationService.register(bob);
         }, "An exception should be thrown");
     }
 
     @Test
     void register_invalidAge_notOk() {
-        User bob = new User();
-        bob.setAge(10);
-        bob.setLogin("bobist");
-        bob.setPassword("hhjfbchbv");
-        bob.setId(52698L);
+
+        bob.setAge(17);
 
         User alice = new User();
-        alice.setAge(15);
+        alice.setAge(10);
         alice.setLogin("aliceFox");
         alice.setPassword("hhjf562bv");
         alice.setId(36898L);
+
+        User bobAgeNegative = new User();
+        bobAgeNegative.setAge(-8);
+        bobAgeNegative.setLogin("bobistNegative");
+        bobAgeNegative.setPassword("hhjfbchbv596");
+        bobAgeNegative.setId(52825L);
 
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(bob);
@@ -108,33 +109,17 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(alice);
         }, "An exception should be thrown");
-    }
-
-    @Test
-    void register_negativeAge_notOk() {
-        User bob = new User();
-        bob.setAge(-10);
-        bob.setLogin("bobist");
-        bob.setPassword("hhjfbchbv");
-        bob.setId(52698L);
-
-        User alice = new User();
-        alice.setAge(-3);
-        alice.setLogin("aliceFox");
-        alice.setPassword("hhjf562bv");
-        alice.setId(36898L);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(bob);
-        }, "An exception should be thrown");
-
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(alice);
+            registrationService.register(bobAgeNegative);
         }, "An exception should be thrown");
     }
 
     @Test
     void register_invalidLogin_notOk() {
+
+        bob.setLogin("bobist");
+
         User john = new User();
         john.setAge(19);
         john.setLogin("bobist");
@@ -142,24 +127,15 @@ class RegistrationServiceImplTest {
         john.setId(1259L);
         registrationService.register(john);
 
-        User bob = new User();
-        bob.setAge(19);
-        bob.setLogin("bobist");
-        bob.setPassword("hiokfbchbv");
-        bob.setId(52698L);
-
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(bob);
         }, "An exception should be thrown");
     }
 
     @Test
-    void register_lengthPassword_notOk() {
-        User bob = new User();
-        bob.setAge(19);
-        bob.setLogin("bobistik");
+    void register_shortPassword_notOk() {
+
         bob.setPassword("hhjf");
-        bob.setId(52698L);
 
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(bob);
@@ -177,16 +153,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lengthLogin_notOk() {
-        User bob = new User();
-        bob.setAge(19);
-        bob.setLogin("bob");
-        bob.setPassword("hhjfklk");
-        bob.setId(52698L);
+    void register_shortLogin_notOk() {
+
+        bob.setLogin("bobik");
 
         User john = new User();
         john.setAge(19);
-        john.setLogin("john");
+        john.setLogin("jo");
         john.setPassword("jolop5963");
         john.setId(1259L);
 

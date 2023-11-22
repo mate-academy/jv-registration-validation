@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("The age is invalid");
         }
         if (user.getAge() < MAX_AGE) {
-            throw new RegistrationException("The user must be at least 18 years old");
+            throw new RegistrationException("the minimum age of the user must be: " + MAX_AGE);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("A user with this login already exists");
@@ -27,13 +27,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("The login is invalid");
         }
         if (user.getLogin().length() < MIN_NUMBER_CHARACTERS) {
-            throw new RegistrationException("The login is short");
+            throw new RegistrationException("The minimum length of the login must be: "
+                    + MIN_NUMBER_CHARACTERS);
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("The password is invalid");
         }
         if (user.getPassword().length() < MIN_NUMBER_CHARACTERS) {
-            throw new RegistrationException("The password is short");
+            throw new RegistrationException("The minimum length of the password must be: "
+                    + MIN_NUMBER_CHARACTERS);
         }
         return storageDao.add(user);
     }
