@@ -14,9 +14,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (isValid(user) && isLoginValid(user)
-            && isPasswordValid(user)
-            && isAgeValid(user)
-            && isLoginInStorage(user)) {
+                && isPasswordValid(user)
+                && isAgeValid(user)
+                && isLoginInStorage(user)) {
             storageDao.add(user);
         }
         return user;
@@ -38,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("This login is to short,  min 6 characters");
         }
 
-        return  true;
+        return true;
     }
 
     private boolean isPasswordValid(User user) {
