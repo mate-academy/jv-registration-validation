@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -30,7 +29,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void Register_shortPassword_notOk() {
+    public void register_shortPassword_notOk() {
         User userWithShortPassword = new User();
         userWithShortPassword.setPassword("12345");
         userWithShortPassword.setId(1234321L);
@@ -46,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void Register_nullPassword_notOk() {
+    public void register_nullPassword_notOk() {
         User userWithNullPassword = new User();
         userWithNullPassword.setPassword(null);
         userWithNullPassword.setId(1234321L);
@@ -62,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void Register_nullLogin_notOK() {
+    public void register_nullLogin_notOK() {
         User userWithNullLogin = new User();
         userWithNullLogin.setPassword("123456");
         userWithNullLogin.setId(1234321L);
@@ -78,7 +77,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void Register_lackOfYears_notOK() {
+    public void register_lackOfYears_notOK() {
         User userWithALackOfYears = new User();
         userWithALackOfYears.setPassword("1234567");
         userWithALackOfYears.setId(1234321L);
@@ -94,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void Register_identicalLogin() {
+    public void register_identicalLogin() {
         User testUser = new User();
         testUser.setPassword("1234567");
         testUser.setId(1234321L);
@@ -116,7 +115,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void Register_dataOK() {
+    public void register_dataOK() {
         User userWithOkData = new User();
         userWithOkData.setPassword("1234567");
         userWithOkData.setId(1234321L);
