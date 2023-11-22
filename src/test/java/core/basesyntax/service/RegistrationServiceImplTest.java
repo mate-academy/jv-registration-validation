@@ -13,10 +13,6 @@ class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private StorageDaoImpl storageDao = new StorageDaoImpl();
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
     public void userRegister_shortLogin_notOk() {
         User userWithShortLogin = new User();
@@ -34,7 +30,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void userRegister_shortPassword_notOk() {
+    public void Register_shortPassword_notOk() {
         User userWithShortPassword = new User();
         userWithShortPassword.setPassword("12345");
         userWithShortPassword.setId(1234321L);
@@ -50,7 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void userRegister_nullPassword_notOk() {
+    public void Register_nullPassword_notOk() {
         User userWithNullPassword = new User();
         userWithNullPassword.setPassword(null);
         userWithNullPassword.setId(1234321L);
@@ -66,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void userRegister_nullLogin_notOK() {
+    public void Register_nullLogin_notOK() {
         User userWithNullLogin = new User();
         userWithNullLogin.setPassword("123456");
         userWithNullLogin.setId(1234321L);
@@ -82,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void userRegister_lackOfYears_notOK() {
+    public void Register_lackOfYears_notOK() {
         User userWithALackOfYears = new User();
         userWithALackOfYears.setPassword("1234567");
         userWithALackOfYears.setId(1234321L);
@@ -98,7 +94,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void userRegister_identicalLogin() {
+    public void Register_identicalLogin() {
         User testUser = new User();
         testUser.setPassword("1234567");
         testUser.setId(1234321L);
@@ -120,7 +116,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void userRegister_dataOK() {
+    public void Register_dataOK() {
         User userWithOkData = new User();
         userWithOkData.setPassword("1234567");
         userWithOkData.setId(1234321L);
