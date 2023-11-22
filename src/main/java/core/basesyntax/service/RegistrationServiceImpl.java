@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -10,20 +11,24 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
+    public RegistrationServiceImpl() {
+
+    }
+
     @Override
     public User register(User user) {
         if (isValid(user) && isLoginValid(user)
-                          && isPasswordValid(user)
-                          && isAgeValid(user)
-                          && isLoginInStorage(user)) {
+            && isPasswordValid(user)
+            && isAgeValid(user)
+            && isLoginInStorage(user)) {
             storageDao.add(user);
         }
-        return null;
+        return user;
     }
 
     private boolean isValid(User user) {
         if (user == null) {
-            throw new NullPointerException("You didn't insert any data!");
+            throw new RegistrationException("You didn't insert any data!");
         }
 
         return true;
@@ -31,21 +36,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean isLoginValid(User user) {
         if (user.getLogin() == null) {
-            throw new NullPointerException("You have not entered your login.");
+            throw new RegistrationException("Login can't be null");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RuntimeException("Minimal login length is " + MIN_LOGIN_LENGTH);
+            throw new RegistrationException("This login is to short,  min 6 characters");
         }
 
-        return true;
+        return  true;
     }
 
     private boolean isPasswordValid(User user) {
         if (user.getPassword() == null) {
-            throw new NullPointerException("You have not entered your password.");
+            throw new RegistrationException("Password can't be null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RuntimeException("Minimal password length is " + MIN_PASSWORD_LENGTH);
+            throw new RegistrationException("This pass is to short,  min 6 characters");
         }
 
         return true;
@@ -53,10 +58,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean isAgeValid(User user) {
         if (user.getAge() == null) {
-            throw new NullPointerException("You have not entered your age.");
+            throw new RegistrationException("Age can't be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RuntimeException("Minimal age length is " + MIN_AGE);
+            throw new RegistrationException("Min allowed age is " + MIN_AGE);
         }
 
         return true;
@@ -64,7 +69,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean isLoginInStorage(User user) {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RuntimeException("Your login is already used.");
+            throw new RegistrationException("Your login is already used.");
         }
 
         return true;
