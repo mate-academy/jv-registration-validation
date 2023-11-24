@@ -1,12 +1,13 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -18,143 +19,124 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
     }
 
+    @AfterEach
+    void afterEach() {
+        storageDao.clear();
+    }
+
     @Test
-    void nullValue_notOk() {
-        assertThrows(NullPointerException.class, () -> {
+    void lowAge_notOkay() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Germiona", "Grenger", 0));
+        });
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Germiona", "Grenger", 12));
+        });
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Germiona", "Grenger", 17));
+        });
+    }
+
+    @Test
+    void shortPassword_notOkay() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Germiona", "", 25));
+        });
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Germiona", "Bye", 25));
+        });
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Germiona", "Denis", 25));
+        });
+    }
+
+    @Test
+    void shortLogin_notOkay() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("", "Grenger", 25));
+        });
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Gven", "Grenger", 25));
+        });
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Brown", "Grenger", 25));
+        });
+    }
+
+    @Test
+    void nullUser_notOkay() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void emptyLogin_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("", "password", 30));
+    void registerUserWithExistingLogin_notOkay() {
+        registrationService.register(new User("Germiona", "Grenger", 35));
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(new User("Germiona", "Grenger", 25));
         });
     }
 
     @Test
-    void emptyPassword_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("Germiona", "", 23));
+    void nullLogin_notOkay() {
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(new User(null, "Grenger", 20));
         });
     }
 
     @Test
-    void nullAge_notOk() {
+    void nullPassword_notOkay() {
+        assertThrows(NullPointerException.class, () -> {
+            registrationService.register(new User("Germiona", null, 20));
+        });
+    }
+
+    @Test
+    void nullAge_notOkay() {
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(new User("Germiona", "Grenger", null));
         });
     }
 
     @Test
-    void emptyLoginAndPassword_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("", "", 35));
-        });
+    void registrationWithGoodLogin_isOkay() {
+        User registredUser1 = registrationService
+                .register(new User("Staisy", "Grenger", 35));
+        User registredUser2 = registrationService
+                .register(new User("UltraMegaPowerfulLogin", "Grenger", 35));
+
+        assertEquals(registredUser1, storageDao.get(registredUser1.getLogin()));
+        assertEquals(registredUser2, storageDao.get(registredUser2.getLogin()));
     }
 
     @Test
-    void emptyLoginAndAge_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("", "Grenger", null));
-        });
+    void registrationWithGoodPassword_isOkay() {
+        User registredUser1 = registrationService
+                .register(new User("Germiona", "Queen6", 35));
+        User registredUser2 = registrationService
+                .register(new User("Beverly", "UltraMegaPowerfulPassword", 35));
+
+        assertEquals(registredUser1, storageDao.get(registredUser1.getLogin()));
+        assertEquals(registredUser2, storageDao.get(registredUser2.getLogin()));
     }
 
     @Test
-    void emptyLoginAndPasswordWithNullAge_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("", "", null));
-        });
+    void registrationWithGoodAge_isOkay() {
+        User registredUser1 = registrationService
+                .register(new User("Germiona", "Grenger", 18));
+        User registredUser2 = registrationService
+                .register(new User("Beverly", "MeawMeawMeaw", 85));
+
+        assertEquals(registredUser1, storageDao.get(registredUser1.getLogin()));
+        assertEquals(registredUser2, storageDao.get(registredUser2.getLogin()));
     }
 
-    @Test
-    void emptyPasswordAndAge_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("Germiona", "", null));
-        });
-    }
-
-    @Test
-    void nullLogin_notOk() {
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(new User(null, "Grenger", 25));
-        });
-    }
-
-    @Test
-    void nullPassword_notOk() {
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(new User("Germiona", null, 25));
-        });
-    }
-
-    @Test
-    void nullLoginAndPassword_notOk() {
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(new User(null, null, 25));
-        });
-    }
-
-    @Test
-    void nullLoginAndAge_notOk() {
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(new User(null, "Grenger", null));
-        });
-    }
-
-    @Test
-    void nullPasswordAndAge_notOk() {
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(new User("Germiona", null, null));
-        });
-    }
-
-    @Test
-    void emptyUser_notOkay() {
-        assertThrows(NullPointerException.class, () -> {
-            registrationService.register(new User());
-        });
-    }
-
-    @Test
-    void registerUserWithExistedLogin() {
-        User existedUser = new User("Germiona", "Grenger", 23);
-        storageDao.add(existedUser);
-
-        User userWithExistedLogin = new User("Germiona", "Tayler", 30);
-
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(userWithExistedLogin);
-        });
-    }
-
-    @Test
-    void registerUserWithShortLogin() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("Fin", "Taylor", 25));
-        });
-    }
-
-    @Test
-    void registerUserWithShortPassword() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("Germiona", "Bin", 32));
-        });
-    }
-
-    @Test
-    void registerUserWithSmallAge() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(new User("Germiona", "Grenger", 10));
-        });
-    }
-
-    @Test
-    void checkDoExistUser() {
-        User userForRegister = new User("Germiona", "Grenger", 23);
-        registrationService.register(userForRegister);
-
-        User checkUser = storageDao.get("Germiona");
-        assertEquals(userForRegister, checkUser);
-    }
 }
