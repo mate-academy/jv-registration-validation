@@ -113,7 +113,7 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
         user.setAge(20);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
-                "Login should have at least 6 characters!d");
+                "Login should have at least 6 characters!");
         assertFalse(Storage.getPeople().contains(user));
     }
 
@@ -144,6 +144,66 @@ class RegistrationServiceImplTest {
         user.setAge(20);
         assertDoesNotThrow(() -> registrationService.register(user),
                 "Login should have at least 6 characters!");
+        assertTrue(Storage.getPeople().contains(user));
+    }
+
+    @Test
+    void testZeroAge_NotOk() {
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(0);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "You must be over 18 to register");
+        assertFalse(Storage.getPeople().contains(user));
+    }
+
+    @Test
+    void testAgeLessThanEighteen_NotOk() {
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(10);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "You must be over 18 to register");
+        assertFalse(Storage.getPeople().contains(user));
+    }
+
+    @Test
+    void testEdgeCaseAge_NotOk() {
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "You must be over 18 to register");
+        assertFalse(Storage.getPeople().contains(user));
+    }
+
+    @Test
+    void testValidAgeEdgeCase_Ok() {
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(18);
+        assertDoesNotThrow(() -> registrationService.register(user),
+                "You must be over 18 to register");
+        assertTrue(Storage.getPeople().contains(user));
+    }
+
+    @Test
+    void testValidAge_Ok() {
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(20);
+        assertDoesNotThrow(() -> registrationService.register(user),
+                "You must be over 18 to register");
+        assertTrue(Storage.getPeople().contains(user));
+    }
+
+    @Test
+    void testLongAge_Ok() {
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(80);
+        assertDoesNotThrow(() -> registrationService.register(user),
+                "You must be over 18 to register");
         assertTrue(Storage.getPeople().contains(user));
     }
 
