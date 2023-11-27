@@ -9,17 +9,22 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public User add(User user) {
         user.setId(++index);
-        Storage.people.add(user);
+        Storage.getPeople().add(user);
         return user;
     }
 
     @Override
     public User get(String login) {
-        for (User user : Storage.people) {
+        for (User user : Storage.getPeople()) {
             if (user.getLogin().equals(login)) {
                 return user;
             }
         }
         return null;
+    }
+
+    @Override
+    public void removeAll() {
+        Storage.resetPeopleStorage();
     }
 }
