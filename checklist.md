@@ -1,4 +1,4 @@
-## Common mistakes (jv-registration-validation)
+**## Common mistakes (jv-registration-validation)
 
 * Don't ignore checkstyle rules.
 * Figure out which way is better to initialize your RegistrationServiceImpl class instance: `@BeforeEach` or `@BeforeAll`, what's the difference?
@@ -58,5 +58,5 @@ assertThrows(ExpectedException.class, () -> object.methodUnderTest(inputParams);
   For this task use such convention: `<methodUnderTest>_<state>_<expectedBehavior>`. 
   For example, if we are testing the method `register` with a `null` user's age 
   the test method name should be `register_nullAge_notOk`. `notOk` is because 
-  the test expects the register method to throw an exception.
+  the test expects the register method to throw an exception.**
   
