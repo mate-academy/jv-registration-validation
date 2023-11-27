@@ -12,4 +12,6 @@ public interface RegistrationService {
     boolean isPasswordValid(String password);
 
     boolean isAdult(int age);
+
+    boolean userExists(User user);
 }

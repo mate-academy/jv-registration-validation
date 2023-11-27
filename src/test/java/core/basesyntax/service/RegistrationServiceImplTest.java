@@ -28,7 +28,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testEmptyPassword_NotOk() {
+    void register_EmptyPassword_NotOk() {
         user.setLogin("username");
         user.setPassword("");
         user.setAge(20);
@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testShortPassword_NotOk() {
+    void register_ShortPassword_NotOk() {
         user.setLogin("username");
         user.setPassword("abc");
         user.setAge(20);
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testEdgeCasePassword_NotOk() {
+    void register_EdgeCasePassword_NotOk() {
         user.setLogin("username");
         user.setPassword("abcdf");
         user.setAge(20);
@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testValidPasswordEdgeCase_Ok() {
+    void register_ValidPasswordEdgeCase_Ok() {
         user.setLogin("username");
         user.setPassword("abcdef");
         user.setAge(20);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testValidPassword_Ok() {
+    void register_ValidPassword_Ok() {
         user.setLogin("username");
         user.setPassword("abcdefgh");
         user.setAge(20);
@@ -78,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testLongPassword_Ok() {
+    void register_LongPassword_Ok() {
         user.setLogin("username");
         user.setPassword("abcdefghi");
         user.setAge(20);
@@ -88,7 +88,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testEmptyUser_NotOk() {
+    void register_EmptyUser_NotOk() {
         user.setLogin("");
         user.setPassword("password");
         user.setAge(20);
@@ -98,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testShortLogin_NotOk() {
+    void register_ShortLogin_NotOk() {
         user.setLogin("user");
         user.setPassword("password");
         user.setAge(20);
@@ -108,7 +108,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testEdgeCaseLogin_NotOk() {
+    void register_EdgeCaseLogin_NotOk() {
         user.setLogin("usern");
         user.setPassword("password");
         user.setAge(20);
@@ -118,7 +118,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testValidLoginEdgeCase_Ok() {
+    void register_ValidLoginEdgeCase_Ok() {
         user.setLogin("usernm");
         user.setPassword("password");
         user.setAge(20);
@@ -128,7 +128,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testValidLogin_Ok() {
+    void register_ValidLogin_Ok() {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(20);
@@ -138,7 +138,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testLongLogin_Ok() {
+    void register_LongLogin_Ok() {
         user.setLogin("username1234567890");
         user.setPassword("password");
         user.setAge(20);
@@ -148,7 +148,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testZeroAge_NotOk() {
+    void register_ZeroAge_NotOk() {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(0);
@@ -158,7 +158,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testAgeLessThanEighteen_NotOk() {
+    void register_AgeLessThanEighteen_NotOk() {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(10);
@@ -168,7 +168,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testEdgeCaseAge_NotOk() {
+    void register_EdgeCaseAge_NotOk() {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(17);
@@ -178,7 +178,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testValidAgeEdgeCase_Ok() {
+    void register_ValidAgeEdgeCase_Ok() {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(18);
@@ -188,7 +188,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testValidAge_Ok() {
+    void register_ValidAge_Ok() {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(20);
@@ -198,7 +198,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testLongAge_Ok() {
+    void register_tLongAge_Ok() {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(80);
@@ -208,7 +208,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAlreadyExists_NotOk() {
+    void register_AlreadyExists_NotOk() {
         User user1 = new User();
         user1.setLogin("khtos'");
         user1.setAge(18);

@@ -7,6 +7,8 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_PASSWORD_AND_LOGIN_LENGTH = 6;
+    private static final int ADULT_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -20,10 +22,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!isAdult(user.getAge())) {
             throw new RegistrationException("You must be over 18 to register");
         }
-        for (User userInStorage : Storage.getPeople()) {
-            if (user.getLogin().equals(userInStorage.getLogin())) {
-                throw new RegistrationException("User already exists!");
-            }
+        if (userExists(user)) {
+            throw new RegistrationException("User already exists!");
         }
         return storageDao.add(user);
     }
@@ -35,17 +35,26 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public boolean isLoginValid(String login) {
-        return login != null && login.length() >= 6;
+        return login != null && login.length() >= MIN_PASSWORD_AND_LOGIN_LENGTH;
     }
 
     @Override
     public boolean isPasswordValid(String password) {
-        return password != null && password.length() >= 6;
+        return password != null && password.length() >= MIN_PASSWORD_AND_LOGIN_LENGTH;
     }
 
     @Override
     public boolean isAdult(int age) {
-        return age >= 18;
+        return age >= ADULT_AGE;
     }
 
+    @Override
+    public boolean userExists(User user) {
+        for (User userInStorage : Storage.getPeople()) {
+            if (user.getLogin().equals(userInStorage.getLogin())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
