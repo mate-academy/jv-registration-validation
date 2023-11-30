@@ -17,15 +17,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        evaluateUser(user);
+        checkUser(user);
         loginExist(user.getLogin());
-        evaluateLogin(user.getLogin());
-        evaluatePassword(user.getPassword());
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
         checkAge(user.getAge());
         return storageDao.add(user);
     }
 
-    private void evaluateUser(User user) {
+    private void checkUser(User user) {
         if (user == null) {
             throw new UserParamException("user can't be null");
         }
@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void evaluateLogin(String login) {
+    private void checkLogin(String login) {
         if (login == null) {
             throw new UserLoginException("login can't be null");
         } else if (login.length() < MIN_PASSWORD_LENGTH) {
@@ -45,7 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void evaluatePassword(String password) {
+    private void checkPassword(String password) {
         if (password == null) {
             throw new PasswordException("password can't be null");
         } else if (password.length() < MIN_LOGIN_LENGTH) {
