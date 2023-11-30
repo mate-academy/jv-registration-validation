@@ -38,21 +38,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortLogin_notOk() {
-        User loginIsFiveChar = new User("abcde", "password123", 34);
-        User loginIsTwoChar = new User("ab", "password123", 34);
+        User fiveCharLogin = new User("abcde", "password123", 34);
+        User twoCharLogin = new User("ab", "password123", 34);
+        User zeroCharLogin = new User("", "password123", 34);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(loginIsFiveChar);
+            registrationService.register(fiveCharLogin);
         });
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(loginIsTwoChar);
+            registrationService.register(twoCharLogin);
         });
-    }
-
-    @Test
-    void register_zeroCharLogin_notOk() {
-        User user = new User("", "password123", 34);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(zeroCharLogin);
         });
     }
 
@@ -73,8 +69,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_youngAge_notOk() {
+    void register_lowAge_notOk() {
+        User ageSeventeenYears = new User("username", "password", 17);
         User ageTenYears = new User("username", "password", 10);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(ageSeventeenYears);
+        });
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(ageTenYears);
         });
@@ -89,17 +89,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_minimumValidAge_Ok() throws RegistrationException {
-        User user = new User("username18", "password", 18);
-        User registeredUser = registrationService.register(user);
-        assertEquals(user, registeredUser);
-    }
-
-    @Test
-    void register_overEighteenAge_Ok() throws RegistrationException {
-        User user = new User("username", "password", 45);
-        User registeredUser = registrationService.register(user);
-        assertEquals(user, registeredUser);
+    void register_ValidAge_Ok() throws RegistrationException {
+        User minValidAgeUser = new User("username18", "password", 18);
+        User overEighteenAgeUser = new User("username45", "password", 45);
+        User registeredMinValidAgeUser = registrationService.register(minValidAgeUser);
+        User registeredOverEighteenAgeUser = registrationService.register(overEighteenAgeUser);
+        assertEquals(minValidAgeUser, registeredMinValidAgeUser);
+        assertEquals(overEighteenAgeUser, registeredOverEighteenAgeUser);
     }
 
     @Test
