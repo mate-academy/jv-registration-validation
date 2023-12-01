@@ -1,26 +1,26 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
 
     @BeforeAll
     static void beforeAll() {
-        System.out.println("Before all tests");
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
-    void register_validUser_ok() {
+    void userAlreadyExists_NotOk() {
         User user = new User("Bobusun", "bob123", 18);
-        User actualUser = registrationService.register(user);
-        assertEquals(user, actualUser);
+        registrationService.register(user);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void LoginLessThan6_NotOk() {
+    void loginLessThan6_NotOk() {
         User user = new User("Bob", "bob123", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -94,8 +94,11 @@ class RegistrationServiceImplTest {
         });
     }
 
-    @AfterAll
-    static void afterAll() {
-        System.out.println("After all tests");
+    @Test
+    void ageLessThen18_NotOk() {
+        User user = new User("Bobusun", "bob123", 17);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
