@@ -2,36 +2,50 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+
     private static RegistrationService registrationService;
+
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @BeforeEach
+    void setUp() {
+        user = new User("Bobusun", "bob123", 18);
+    }
+
     @Test
-    void userAlreadyExists_NotOk() {
-        User user = new User("Bobusun", "bob123", 18);
-        registrationService.register(user);
+    void register_ok() {
+        Storage.people.add(user);
+    }
+
+    @Test
+    void register_existingUser_notOk() {
+        Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void nullValue_NotOk() {
+    void nullValue_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void nullLogin_notOk() {
         User user = new User(null, "bob123", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -39,7 +53,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void nullPassword_notOk() {
         User user = new User("Bobusun", null, 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -47,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullAge_NotOk() {
+    void nullAge_notOk() {
         User user = new User("Bobusun", "bob123", null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -55,7 +69,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void emptyLogin_NotOk() {
+    void emptyLogin_notOk() {
         User user = new User("", "bob123", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -63,7 +77,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void emptyPassword_NotOk() {
+    void emptyPassword_notOk() {
         User user = new User("Bobusun", "", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -71,7 +85,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-        void negativeAge_NotOk() {
+    void negativeAge_notOk() {
         User user = new User("Bobusun", "bob123", -1);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -79,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginLessThan6_NotOk() {
+    void loginTooShort_notOk() {
         User user = new User("Bob", "bob123", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -87,7 +101,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLessThen6_NotOk() {
+    void passwordTooShort_notOk() {
         User user = new User("Bobusun", "bob", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -95,7 +109,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageLessThen18_NotOk() {
+    void validAge_notOk() {
         User user = new User("Bobusun", "bob123", 17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
