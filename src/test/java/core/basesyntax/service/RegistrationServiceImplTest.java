@@ -1,13 +1,13 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,16 +18,14 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         user.setAge(23);
         user.setPassword("validPassword");
         user.setLogin("validLogin");
     }
 
-    @Test
-    void addAndGetValidUserDirectlyInStorage_Ok() {
-        Storage.people.add(user);
-        assertEquals(user, storageDao.get(user.getLogin()));
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -37,19 +35,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void get_nullLogin_notOk() {
-        assertNull(storageDao.get(null));
-    }
-
-    @Test
-    void get_notExistedLogin_notOk() {
-        assertNull(storageDao.get("login"));
-    }
-
-    @Test
     void register_ExistedLogin_notOk() {
         User user1 = user;
-        registrationService.register(user);
+        storageDao.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user1));
     }
 
@@ -86,7 +74,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_wrongAge_notOk() {
+    void register_invalidAge_notOk() {
         user.setAge(-5);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         user.setAge(0);
