@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final User user = new User();
     private final StorageDao storageDao = new StorageDaoImpl();
+    private User user = new User();
 
     @BeforeEach
     void setUp() {
@@ -26,6 +26,12 @@ class RegistrationServiceImplTest {
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        user = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test

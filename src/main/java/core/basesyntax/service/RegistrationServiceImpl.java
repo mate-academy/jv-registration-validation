@@ -14,6 +14,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User has no parameters");
+        }
         if (user.getAge() == null) {
             throw new RegistrationException("Age" + NULL_DATA_MESSAGE);
         }
