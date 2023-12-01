@@ -94,7 +94,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void loginTooShort_notOk() {
-        User user = new User("Bob", "bob123", 18);
+        User user = new User("Bobys", "bob123", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -102,7 +102,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void passwordTooShort_notOk() {
-        User user = new User("Bobusun", "bob", 18);
+        User user = new User("Bobusun", "bob12", 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });

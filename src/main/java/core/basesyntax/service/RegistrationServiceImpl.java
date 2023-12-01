@@ -9,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_CHARACTERS_IN_PASSWORD = 6;
 
     @Override
-    public User register(User user) {
+    public void register(User user) {
         if (user == null) {
             throw new RegistrationException("User is null");
         }
@@ -41,6 +41,5 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MIN_AGE);
         }
         Storage.people.add(user);
-        return user;
     }
 }
