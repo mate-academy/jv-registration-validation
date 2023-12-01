@@ -4,10 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("Before all tests");
+    }
 
     @Test
     void register_validUser_ok() {
@@ -85,5 +92,10 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("After all tests");
     }
 }
