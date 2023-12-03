@@ -11,41 +11,32 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidUserDataException {
-        if (userValidator(user) && foundUserInDatabase(user)) {
-            storageDao.add(user);
-        }
-        return user;
-    }
-
-    @Override
-    public boolean foundUserInDatabase(User user) {
-        if (storageDao.get(user.getLogin()) == null) {
-            return false;
-        }
-        return storageDao.get(user.getLogin()).getLogin().equals(user.getLogin());
-    }
-
-    @Override
-    public boolean userValidator(User user) throws InvalidUserDataException {
+    public User register(User user) {
         if (user == null) {
-            throw new InvalidUserDataException("User can't be null");
+            throw new InvalidUserDataException("User cannot be null");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidUserDataException("Not valid age");
+        if (user.getAge() == null) {
+            throw new InvalidUserDataException("User age cannot be null");
         }
         if (user.getLogin() == null) {
-            throw new InvalidUserDataException("Login can't be null");
+            throw new InvalidUserDataException("Login cannot be null");
         }
         if (user.getPassword() == null) {
-            throw new InvalidUserDataException("Password can't be null");
+            throw new InvalidUserDataException("Password cannot be null");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new InvalidUserDataException("User age must be 18+");
         }
         if (user.getLogin().length() < MIN_FIELD_LENGTH) {
-            throw new InvalidUserDataException("Login must contain more than six characters");
+            throw new InvalidUserDataException("Login must be longer than six characters");
         }
         if (user.getPassword().length() < MIN_FIELD_LENGTH) {
-            throw new InvalidUserDataException("Password must contain more than six characters");
+            throw new InvalidUserDataException("Password must be longer than six characters");
         }
-        return true;
+        if (storageDao.get(user.getLogin()) == null) {
+            storageDao.add(user);
+        }
+
+        return storageDao.get(user.getLogin());
     }
 }

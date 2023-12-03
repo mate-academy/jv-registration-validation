@@ -2,182 +2,245 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exeption.InvalidUserDataException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static final int VALID_AGE = 19;
-    private static final String VALID_LOGIN_1 = "misterBean";
-    private static final String VALID_LOGIN_2 = "nagibator223";
-    private static final String VALID_PASSWORD = "smallgreencar";
-    private static final String EMPTY_STRING = "";
-    private static final int INVALID_AGE = 12;
-    private static final String INVALID_LOGIN = "bean";
-    private static final String INVALID_PASSWORD = "mycar";
-    private static final int CRITICAL_AGE = -12478;
-    private static final String CRITICAL_LOGIN_OR_PASSWORD = null;
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
-    private final StorageDaoImpl storageDao = new StorageDaoImpl();
-    private final User testUser = new User();
+    private RegistrationServiceImpl registrationService;
+    private StorageDaoImpl storageDao;
 
-    private void changeUserFields(User currentUser, int age, String login, String password) {
-        currentUser.setAge(age);
-        currentUser.setLogin(login);
-        currentUser.setPassword(password);
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @Nested
-    class FoundUserInDatabaseTest {
-        private final User userInDatabase = new User();
-
+    class StorageMethodsNegativeScenarioTests {
         @Test
-        void foundUserInDatabase_UserNotFound_False() {
-            changeUserFields(userInDatabase, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            storageDao.add(userInDatabase);
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_2, VALID_PASSWORD);
-            assertFalse(registrationService.foundUserInDatabase(testUser));
+        void storageGet_StorageIsEmpty_Null() {
+            String anotherLogin = "jhonSnow";
+            User actual = storageDao.get(anotherLogin);
+            assertNull(actual);
         }
 
         @Test
-        void foundUserInDatabase_UserFound_True() {
-            changeUserFields(userInDatabase, VALID_AGE, VALID_LOGIN_2, VALID_PASSWORD);
-            storageDao.add(userInDatabase);
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertTrue(registrationService.foundUserInDatabase(testUser));
+        void storageAdd_UserNotFound_Null() {
+            String validLogin = "misterBean";
+            String validPassword = "mistafsaf";
+            int validAge = 23;
+            String anotherLogin = "jhonSnow";
+            User testUser = new User(validLogin, validPassword, validAge);
+            storageDao.add(testUser);
+            User actual = storageDao.get(anotherLogin);
+            assertNull(actual);
         }
     }
 
     @Nested
-    class RegisterTest {
-
+    class RegisterMethodPositiveScenarioTests {
         @Test
-        void register_userIsAddedToDatabase_True() throws InvalidUserDataException {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertEquals(registrationService.register(testUser), testUser);
+        void register_UserIsRegistered_True() {
+            String validLogin = "misterHolms";
+            String validPassword = "misterWatson";
+            int validAge = 23;
+            User testUser = new User(validLogin, validPassword, validAge);
+            registrationService.register(testUser);
+            User actual = storageDao.get(testUser.getLogin());
+            assertEquals(testUser, actual);
         }
 
         @Test
-        void register_userHasCriticalFields_Throws() {
-            changeUserFields(testUser, INVALID_AGE, CRITICAL_LOGIN_OR_PASSWORD,
-                    CRITICAL_LOGIN_OR_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.register(testUser));
+        void register_ValidUser_NotThrow() {
+            String validLogin = "misterBean";
+            String validPassword = "misterBean";
+            int validAge = 23;
+            User testUser = new User(validLogin,
+                    validPassword, validAge);
+
+            assertDoesNotThrow(() -> registrationService.register(testUser));
         }
 
         @Test
-        void register_userIsNotValid_Throws() {
-            changeUserFields(testUser, INVALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.register(testUser));
-            changeUserFields(testUser, VALID_AGE, INVALID_LOGIN, VALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.register(testUser));
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, INVALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.register(testUser));
+        void register_UserAgeIs18_NotThrow() {
+            String validLogin = "misterBean";
+            String validPassword = "misterBean";
+            int validAge = 18;
+            User testUser = new User(validLogin,
+                    validPassword, validAge);
+
+            assertDoesNotThrow(() -> registrationService.register(testUser));
         }
 
         @Test
-        void register_userIsValid_NotThrows() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
+        void register_UserIsTooOld_NotThrow() {
+            String validLogin = "misterBean";
+            String validPassword = "misterBean";
+            int validAge = 121;
+            User testUser = new User(validLogin, validPassword, validAge);
             assertDoesNotThrow(() -> registrationService.register(testUser));
         }
     }
 
     @Nested
-    class UserValidatorTest {
+    class RegisterMethodNegativeScenarioTests {
         @Test
-        void userValidator_userIsNull_Throws() {
+        void register_UserIsNotRegistered_Throw() {
+            String validPassword = "misterBean";
+            int validAge = 23;
+            String invalidLogin = "Bean";
+            User testUser = new User(invalidLogin, validPassword, validAge);
             assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(null));
+                    () -> registrationService.register(testUser));
         }
 
-        @Test
-        void userValidator_userIsNotNull_NotThrows() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertDoesNotThrow(() -> registrationService.userValidator(testUser));
-        }
+        @Nested
+        class UserFieldsTest {
+            @Test
+            void register_UserIsNull_Throw() {
+                assertThrows(InvalidUserDataException.class,
+                        () -> registrationService.register(null));
+            }
 
-        @Test
-        void userValidator_userHaveInvalidAge_Throws() {
-            changeUserFields(testUser, INVALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
-        }
+            @Test
+            void register_UserFieldsIsEmpty_Throw() {
+                User testUser = new User("",
+                        "", 0);
 
-        @Test
-        void userValidator_userHaveCriticalAge_Throws() {
-            changeUserFields(testUser, CRITICAL_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
-        }
+                assertThrows(InvalidUserDataException.class,
+                        () -> registrationService.register(testUser));
+            }
 
-        @Test
-        void userValidator_userHaveValidAge_NotThrows() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertDoesNotThrow(() -> registrationService.userValidator(testUser));
-        }
+            @Nested
+            class UserLoginFieldTests {
+                @Test
+                void register_UserWithShortLogin_Throw() {
+                    String validPassword = "misterBean";
+                    int validAge = 23;
+                    String invalidLogin = "Bean";
+                    User testUser = new User(invalidLogin,
+                            validPassword, validAge);
 
-        @Test
-        void userValidator_userHaveInvalidLogin_Throws() {
-            changeUserFields(testUser, VALID_AGE, INVALID_LOGIN, VALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
-        }
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
 
-        @Test
-        void userValidator_userHaveEmptyLogin_Throws() {
-            changeUserFields(testUser, VALID_AGE, EMPTY_STRING, VALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
-        }
+                @Test
+                void register_UserLoginIsNull_Throw() {
+                    String validPassword = "misterBean";
+                    int validAge = 23;
+                    User testUser = new User(null,
+                            validPassword, validAge);
 
-        @Test
-        void userValidator_userHaveValidLogin_NotThrows() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertDoesNotThrow(() -> registrationService.userValidator(testUser));
-        }
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
 
-        @Test
-        void userValidator_userHaveInvalidPassword_Throws() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, INVALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
-        }
+                @Test
+                void register_UserLoginIsEmpty_Throw() {
+                    String validPassword = "misterBean";
+                    int validAge = 23;
+                    User testUser = new User("",
+                            validPassword, validAge);
 
-        @Test
-        void userValidator_userHaveEmptyPassword_Throws() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, EMPTY_STRING);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
-        }
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
+            }
 
-        @Test
-        void userValidator_userHaveValidPassword_NotThrows() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, VALID_PASSWORD);
-            assertDoesNotThrow(() -> registrationService.userValidator(testUser));
-        }
+            @Nested
+            class UserPasswordFieldTests {
+                @Test
+                void register_UserWithShortPassword_Throw() {
+                    String validLogin = "misterBean";
+                    int validAge = 23;
+                    String invalidPassword = "Bean";
+                    User testUser = new User(validLogin,
+                            invalidPassword, validAge);
 
-        @Test
-        void userValidator_userHaveNullLogin_Throws() {
-            changeUserFields(testUser, VALID_AGE, CRITICAL_LOGIN_OR_PASSWORD, VALID_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
-        }
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
 
-        @Test
-        void userValidator_userHaveNullPassword_Throws() {
-            changeUserFields(testUser, VALID_AGE, VALID_LOGIN_1, CRITICAL_LOGIN_OR_PASSWORD);
-            assertThrows(InvalidUserDataException.class,
-                    () -> registrationService.userValidator(testUser));
+                @Test
+                void register_UserPasswordIsNull_Throw() {
+                    String validLogin = "misterBean";
+                    int validAge = 23;
+                    User testUser = new User(validLogin,
+                            null, validAge);
+
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
+
+                @Test
+                void register_UserPasswordIsEmpty_Throw() {
+                    String validLogin = "misterBean";
+                    int validAge = 23;
+                    User testUser = new User(validLogin,
+                            "", validAge);
+
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
+            }
+
+            @Nested
+            class UserAgeFieldTests {
+                @Test
+                void register_UserAgeIsZero_Throw() {
+                    String validLogin = "misterBean";
+                    String validPassword = "misterBean";
+                    int invalidAge = 0;
+                    User testUser = new User(validLogin,
+                            validPassword, invalidAge);
+
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
+
+                @Test
+                void register_UserUnderAge18_Throw() {
+                    String validLogin = "misterBean";
+                    String validPassword = "misterBean";
+                    int invalidAge = 12;
+                    User testUser = new User(validLogin,
+                            validPassword, invalidAge);
+
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
+
+                @Test
+                void register_UserAgeIsNegative_Throw() {
+                    String validLogin = "misterBean";
+                    String validPassword = "misterBean";
+                    int negativeAge = -2;
+                    User testUser = new User(validLogin,
+                            validPassword, negativeAge);
+
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
+
+                @Test
+                void register_UserAgeIsNull_Throw() {
+                    String validLogin = "misterBean";
+                    String validPassword = "misterBean";
+                    User testUser = new User(validLogin, validPassword, null);
+
+                    assertThrows(InvalidUserDataException.class,
+                            () -> registrationService.register(testUser));
+                }
+            }
         }
     }
 }
