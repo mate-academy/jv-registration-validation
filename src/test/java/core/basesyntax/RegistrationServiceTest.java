@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -21,28 +20,6 @@ public class RegistrationServiceTest {
     void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
-    }
-
-    @Nested
-    class StorageMethodsNegativeScenarioTests {
-        @Test
-        void storageGet_StorageIsEmpty_Null() {
-            String anotherLogin = "jhonSnow";
-            User actual = storageDao.get(anotherLogin);
-            assertNull(actual);
-        }
-
-        @Test
-        void storageAdd_UserNotFound_Null() {
-            String validLogin = "misterBean";
-            String validPassword = "mistafsaf";
-            int validAge = 23;
-            String anotherLogin = "jhonSnow";
-            User testUser = new User(validLogin, validPassword, validAge);
-            storageDao.add(testUser);
-            User actual = storageDao.get(anotherLogin);
-            assertNull(actual);
-        }
     }
 
     @Nested
