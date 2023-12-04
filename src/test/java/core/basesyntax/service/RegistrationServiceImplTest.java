@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private RegistrationService registrationService;
 
     @BeforeEach
@@ -131,5 +130,4 @@ class RegistrationServiceImplTest {
         assertEquals(validUserSixChar, registeredUserSixChar);
         assertEquals(validUserEightChar, registeredUserEightChar);
     }
-
 }
