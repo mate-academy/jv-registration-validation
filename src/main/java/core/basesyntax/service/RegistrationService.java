@@ -1,8 +1,7 @@
 package core.basesyntax.service;
 
-import core.basesyntax.exeption.InvalidUserDataException;
 import core.basesyntax.model.User;
 
 public interface RegistrationService {
-    User register(User user) throws InvalidUserDataException;
+    User register(User user);
 }
