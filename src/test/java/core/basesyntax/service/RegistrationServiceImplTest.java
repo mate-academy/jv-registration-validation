@@ -4,10 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.exceptions.RegistrationException;
-import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,13 +17,11 @@ class RegistrationServiceImplTest {
     private static int loginCount = 0;
     private static RegistrationService registrationService;
     private static User validUser;
-    private static List<User> storage;
     private static StorageDaoImpl storageDao;
     private String mockLogin;
 
     @BeforeAll
     static void beforeAll() {
-        storage = Storage.people;
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
@@ -57,7 +53,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addUserWithSameEmail_NotOk() {
-        storage.add(validUser);
+        registrationService.register(validUser);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(validUser);
         });
