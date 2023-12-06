@@ -1,15 +1,12 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final int MIN_LENGTH = 6;
@@ -18,16 +15,19 @@ class RegistrationServiceImplTest {
     private User user;
 
     @BeforeAll
-    static void SetUp() {
+    static void setUp() {
         registration = new RegistrationServiceImpl();
     }
+
     @BeforeEach
-    void SetUser() {
+    void setUser() {
         user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword");
         user.setAge(18);
+
     }
+
     @Test
     void registration_userLogin_ok() {
         user.setLogin("validLogin");
@@ -73,7 +73,7 @@ class RegistrationServiceImplTest {
     @Test
     void registration_nullLogin_notOk() {
         user.setLogin(null);
-        Assertions.assertThrows(NullPointerException.class, () -> {
+        Assertions.assertThrows(InvalidDataException.class, () -> {
             registration.register(user);
         });
     }
@@ -81,7 +81,7 @@ class RegistrationServiceImplTest {
     @Test
     void registration_nullAge_notOk() {
         user.setAge(null);
-        Assertions.assertThrows(NullPointerException.class,  () -> {
+        Assertions.assertThrows(InvalidDataException.class, () -> {
             registration.register(user);
         });
     }
@@ -89,7 +89,7 @@ class RegistrationServiceImplTest {
     @Test
     void registration_nullPassword_notOk() {
         user.setPassword(null);
-        Assertions.assertThrows(NullPointerException.class, () -> {
+        Assertions.assertThrows(InvalidDataException.class, () -> {
             registration.register(user);
         });
     }

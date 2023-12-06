@@ -2,37 +2,58 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
-import java.util.List;
-
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
 
-    @Override
-    public User register(User user) {
-        if (user == null) {
+    private final StorageDao storageDao = new StorageDaoImpl();
+
+    private boolean checkUserNull(User user) {
+        if (user.getPassword() == null
+                || user.getAge() == null
+                || user.getLogin() == null) {
             throw new InvalidDataException("User's data is not valid");
         }
-        /*if (equals(user.getLogin())) {
+        return true;
+    }
+
+    private boolean loginAlreadyExist(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("Login already exist");
-        }*/
-        if (user.getLogin().length() < MIN_LENGTH
-                || user.getLogin() == null) {
+        }
+        return true;
+    }
+
+    private boolean checkLogin(User user) {
+        if (user.getLogin().length() < MIN_LENGTH) {
             throw new InvalidDataException("such login is too short");
         }
-        if (user.getPassword().length() < MIN_LENGTH
-                || user.getPassword() == null) {
-            throw new InvalidDataException("User password can not be null " +
-                    "or shorter than 6");
+        return true;
+    }
+
+    private boolean checkPassword(User user) {
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new InvalidDataException("User password can not be null "
+                    + "or shorter than 6");
         }
-        if (user.getAge() < MIN_AGE
-                || user.getAge() == null) {
+        return true;
+    }
+
+    private boolean checkAge(User user) {
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidDataException("User can not be younger than 18");
         }
+        return true;
+    }
+
+    @Override
+    public User register(User user) {
+        checkUserNull(user);
+        loginAlreadyExist(user);
+        checkPassword(user);
+        checkAge(user);
         return storageDao.add(user);
     }
 }
