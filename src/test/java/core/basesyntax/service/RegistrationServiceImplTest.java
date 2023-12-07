@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int DEF_PEOPLE_AMOUNT = 3;
-    private static final String WRONG_PASS = "weDfD123";
+    private static final String WRONG_PASS = "weDfD";
     private static final String WRITE_PASS = "weDfD1fgr#4";
     private static final String WRONG_LOGIN = "David";
     private static final String WRITE_LOGIN = "DavidDanis";

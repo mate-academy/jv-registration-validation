@@ -6,9 +6,9 @@ import core.basesyntax.exception.RegisterDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-
     private static final int MIN_AGE = 18;
-    private static final int MIN_CHAR_SUM = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storage = new StorageDaoImpl();
 
     @Override
@@ -29,25 +29,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegisterDataException("user age: " + user.getAge() + " less than 18");
         }
-        int charsSum;
-        if ((charsSum = countChars(user.getLogin())) < MIN_CHAR_SUM) {
-            throw new RegisterDataException("user login have: " + charsSum
+        if ((user.getLogin()).length() < MIN_LOGIN_LENGTH) {
+            throw new RegisterDataException("user login have: " + (user.getLogin()).length()
                     + " chars that less than min required amount(6)");
         }
-        if ((charsSum = countChars(user.getPassword())) < MIN_CHAR_SUM) {
-            throw new RegisterDataException("user password have: " + charsSum
+        if ((user.getPassword()).length() < MIN_PASSWORD_LENGTH) {
+            throw new RegisterDataException("user password have: " + (user.getPassword()).length()
                     + " chars that less than min required amount(6)");
         }
         return storage.add(user);
-    }
-
-    private int countChars(String userData) {
-        int count = 0;
-        for (int i = 0; i < userData.length(); i++) {
-            if (Character.isLetter(userData.charAt(i))) {
-                count++;
-            }
-        }
-        return count;
     }
 }
