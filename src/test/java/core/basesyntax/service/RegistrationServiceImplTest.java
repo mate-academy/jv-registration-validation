@@ -14,13 +14,6 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User user;
 
-    void initDefaultUser() {
-        user = new User();
-        user.setAge(19);
-        user.setLogin("someLogin");
-        user.setPassword("somePassword");
-    }
-
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
@@ -28,7 +21,10 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        initDefaultUser();
+        user = new User();
+        user.setAge(19);
+        user.setLogin("defaultLogin");
+        user.setPassword("defaultPassword");
     }
 
     @Test
@@ -56,12 +52,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validLogin_Ok() {
-        user.setLogin("someValidLogin");
+    void register_existingLogin_notOk() {
+        String testLogin = "login123";
+        user.setLogin(testLogin);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
-        initDefaultUser();
-        user.setLogin("verryyyBiiigLogin1234$%@#");
+        setUp();
+        user.setLogin(testLogin);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_validLogin_Ok() {
+        user.setLogin("someValidLogin");
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
     }
@@ -97,12 +102,6 @@ class RegistrationServiceImplTest {
         user.setLogin("newLoginABC");
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
-        initDefaultUser();
-        user.setLogin("123login456");
-        user.setPassword("someDifficultPaSsWoRd123");
-        registrationService.register(user);
-        assertTrue(Storage.people.contains(user));
-
     }
 
     @Test

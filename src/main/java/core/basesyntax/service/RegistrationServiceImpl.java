@@ -19,10 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() < MIN_REG_DATA_LENGTH) {
             throw new RegistrationException("Login must be at least 6 characters long");
         }
-        for (int i = 0; i < Storage.people.size(); i++) {
-            if (Storage.people.get(i).getLogin().equals(user.getLogin())) {
-                throw new RegistrationException("This login is already in use");
-            }
+        if (Storage.checkLoginExist(user.getLogin())) {
+            throw new RegistrationException("This login is already in use");
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
