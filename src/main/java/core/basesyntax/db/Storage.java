@@ -7,13 +7,13 @@ import java.util.List;
 public class Storage {
     public static final List<User> people = new ArrayList<>();
 
-    public static boolean checkLoginExist(String userLogin) {
-        for (int i = 0; i < Storage.people.size(); i++) {
-            if (Storage.people.get(i).getLogin().equals(userLogin)) {
-                return true;
+    public static String getLogin(String userLogin) {
+        for (int i = 0; i < people.size(); i++) {
+            if (people.get(i).getLogin().equals(userLogin)) {
+                return people.get(i).getLogin();
             }
         }
-        return false;
+        return null;
     }
 }
 

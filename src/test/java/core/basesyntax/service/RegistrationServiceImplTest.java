@@ -69,6 +69,10 @@ class RegistrationServiceImplTest {
         user.setLogin("someValidLogin");
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
+        setUp();
+        user.setLogin("corner");
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
     }
 
     @Test
@@ -102,41 +106,11 @@ class RegistrationServiceImplTest {
         user.setLogin("newLoginABC");
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
-    }
-
-    @Test
-    void register_nullAge_notOk() {
-        user.setLogin("nullAgeUserLogin");
-        user.setAge(null);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_negativeAge_notOk() {
-        user.setLogin("negativeAgeLogin");
-        user.setAge(-5);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        user.setAge(-1);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_underEighteen_notOk() {
-        user.setLogin("under18Login");
-        user.setAge(17);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        user.setAge(2);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        setUp();
+        user.setLogin("o2testLogin");
+        user.setPassword("o2t4f6");
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
     }
 
     @Test
@@ -153,5 +127,29 @@ class RegistrationServiceImplTest {
         user.setAge(56);
         registrationService.register(user);
         assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_invalidAge_notOk() {
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(-5);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(-1);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(17);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+        user.setAge(2);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 }
