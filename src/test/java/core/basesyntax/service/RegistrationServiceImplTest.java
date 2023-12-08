@@ -93,4 +93,12 @@ class RegistrationServiceImplTest {
             registration.register(user);
         });
     }
+
+    @Test
+    void registration_nullUser_notOk() {
+        user = null;
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            registration.register(user);
+        });
+    }
 }

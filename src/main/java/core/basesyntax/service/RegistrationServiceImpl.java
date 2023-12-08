@@ -10,6 +10,23 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
+    @Override
+    public User register(User user) {
+        checkUserNull(user);
+        checkLogin(user);
+        loginAlreadyExist(user);
+        checkPassword(user);
+        checkAge(user);
+        return storageDao.add(user);
+    }
+
+    private boolean checkNull(User user) {
+        if (user == null) {
+            throw new InvalidDataException("User data is null");
+        }
+        return true;
+    }
+
     private boolean checkUserNull(User user) {
         if (user.getPassword() == null
                 || user.getAge() == null
@@ -46,14 +63,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("User can not be younger than 18");
         }
         return true;
-    }
-
-    @Override
-    public User register(User user) {
-        checkUserNull(user);
-        loginAlreadyExist(user);
-        checkPassword(user);
-        checkAge(user);
-        return storageDao.add(user);
     }
 }
