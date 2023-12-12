@@ -1,11 +1,12 @@
 package core.basesyntax.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import core.basesyntax.model.User;
-import core.basesyntax.service.InvalidUserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class StorageDaoImplTest {
     private StorageDao storageDao;
@@ -13,14 +14,16 @@ class StorageDaoImplTest {
     @BeforeEach
     void setUp() {
         storageDao = new StorageDaoImpl();
+        storageDao.clear();
     }
 
     @Test
     void shouldAddUserToStorage() {
-    User user = new User();
-    user.setLogin("correct_Login");
-    user.setPassword("correct_Password");
-    user.setAge(25);
+
+        User user = new User();
+        user.setLogin("correct_Login");
+        user.setPassword("correct_Password");
+        user.setAge(25);
 
         User addedUser = storageDao.add(user);
 
@@ -42,44 +45,8 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void shouldThrowExceptionForEmptyLogin() {
-        User user = new User();
-        user.setLogin("");
-        user.setPassword("correct_Password");
-        user.setAge(25);
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> storageDao.add(user));
-        assertEquals("Invalid login - min 6 characters", invalidUserException.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionForNullLogin() {
-        User user = new User();
-        user.setLogin(null);
-        user.setPassword("correct_Password");
-        user.setAge(25);
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> storageDao.add(user));
-        assertEquals("Invalid login - min 6 characters", invalidUserException.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionForNullAge() {
-        User user = new User();
-        user.setLogin("correct_Login");
-        user.setPassword("correct_Password");
-        user.setAge(null);
-
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> storageDao.add(user));
-        assertEquals("Invalid age - min 18 years old", invalidUserException.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionForNegativeAge() {
-        User user = new User();
-        user.setLogin("correct_Login");
-        user.setPassword("correct_Password");
-        user.setAge(-5);
-
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> storageDao.add(user));
-        assertEquals("Invalid age - min 18 years old", invalidUserException.getMessage());
+    void shouldReturnNullForNonexistentUser() {
+        User getUser = storageDao.get("nonexistent_Login");
+        assertNull(getUser);
     }
 }

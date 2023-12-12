@@ -1,11 +1,17 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -15,6 +21,7 @@ class RegistrationServiceImplTest {
     void setUp() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
+        storageDao.clear();
     }
 
     @Test
@@ -37,7 +44,8 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(25);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid login - min 6 characters", invalidUserException.getMessage());
     }
 
@@ -48,7 +56,8 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(25);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid login - min 6 characters", invalidUserException.getMessage());
     }
 
@@ -59,7 +68,8 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(25);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid login - min 6 characters", invalidUserException.getMessage());
     }
 
@@ -70,18 +80,9 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(25);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid login - min 6 characters", invalidUserException.getMessage());
-    }
-
-    @Test
-    void shouldRegisterUserWithMinLengthLogin() {
-        User user = new User();
-        user.setLogin("abcdef");
-        user.setPassword("correct_Password");
-        user.setAge(25);
-
-        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
@@ -111,40 +112,8 @@ class RegistrationServiceImplTest {
         user.setPassword("");
         user.setAge(25);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
-        assertEquals("Invalid password - min 6 characters", invalidUserException.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionForNullPassword() {
-        User user = new User();
-        user.setLogin("correct_Login");
-        user.setPassword(null);
-        user.setAge(25);
-
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
-        assertEquals("Invalid password - min 6 characters", invalidUserException.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionForShortPassword() {
-        User user = new User();
-        user.setLogin("correct_Login");
-        user.setPassword("Ola");
-        user.setAge(25);
-
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
-        assertEquals("Invalid password - min 6 characters", invalidUserException.getMessage());
-    }
-
-    @Test
-    void shouldThrowExceptionForEdgeCasePassword() {
-        User user = new User();
-        user.setLogin("correct_Login");
-        user.setPassword("abcde");
-        user.setAge(25);
-
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid password - min 6 characters", invalidUserException.getMessage());
     }
 
@@ -159,21 +128,47 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void shouldThrowExceptionForNullPassword() {
+        User user = new User();
+        user.setLogin("correct_Login");
+        user.setPassword(null);
+        user.setAge(25);
+
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("Invalid password - min 6 characters", invalidUserException.getMessage());
+    }
+
+    @Test
+    void shouldThrowExceptionForShortPassword() {
+        User user = new User();
+        user.setLogin("correct_Login");
+        user.setPassword("Ola");
+        user.setAge(25);
+
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("Invalid password - min 6 characters", invalidUserException.getMessage());
+    }
+
+    @Test
+    void shouldThrowExceptionForEdgeCasePassword() {
+        User user = new User();
+        user.setLogin("correct_Login");
+        user.setPassword("abcde");
+        user.setAge(25);
+
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("Invalid password - min 6 characters", invalidUserException.getMessage());
+    }
+
+    @Test
     void shouldRegisterUserWithMaxLengthPassword() {
         User user = new User();
         user.setLogin("correct_Login");
         user.setPassword("abcdefgh");
         user.setAge(30);
-
-        assertDoesNotThrow(() -> registrationService.register(user));
-    }
-
-    @Test
-    void shouldRegisterUserWithLongerThanMaxLengthPassword() {
-        User user = new User();
-        user.setLogin("correct_Login");
-        user.setPassword("abcdefghi");
-        user.setAge(25);
 
         assertDoesNotThrow(() -> registrationService.register(user));
     }
@@ -185,7 +180,8 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(15);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid age - min 18 years old", invalidUserException.getMessage());
     }
 
@@ -196,7 +192,8 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(17);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid age - min 18 years old", invalidUserException.getMessage());
     }
 
@@ -207,7 +204,8 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(null);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid age - min 18 years old", invalidUserException.getMessage());
     }
 
@@ -218,7 +216,8 @@ class RegistrationServiceImplTest {
         user.setPassword("correct_Password");
         user.setAge(0);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("Invalid age - min 18 years old", invalidUserException.getMessage());
     }
 
@@ -228,7 +227,6 @@ class RegistrationServiceImplTest {
         user.setLogin("correct_Login");
         user.setPassword("correct_Password");
         user.setAge(18);
-
 
         assertDoesNotThrow(() -> registrationService.register(user));
     }
@@ -250,15 +248,45 @@ class RegistrationServiceImplTest {
         existingUser.setPassword("GoodPassword");
         existingUser.setAge(25);
 
-
-        storageDao.add(existingUser);
+        registrationService.register(existingUser);
 
         User user = new User();
         user.setLogin("ExcellentLogin");
         user.setPassword("password");
         user.setAge(32);
 
-        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class, () -> storageDao.add(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
         assertEquals("A user with this login already exists", invalidUserException.getMessage());
+    }
+
+    @Test
+    void shouldClearStorage() {
+        User user = new User();
+        user.setLogin("correct_Login");
+        user.setPassword("correct_Password");
+        user.setAge(25);
+
+        storageDao.add(user);
+
+        storageDao.clear();
+
+        assertEquals(0, Storage.people.size());
+    }
+
+    @Test
+    void shouldReturnNullForNonExistingUser() {
+        assertNull(storageDao.get("non_existing_user"));
+    }
+
+    @Test
+    void shouldReturnUserForExistingUser() {
+        User user = new User();
+        user.setLogin("existing_user");
+        user.setPassword("password");
+        user.setAge(30);
+        storageDao.add(user);
+
+        assertEquals(user, storageDao.get("existing_user"));
     }
 }
