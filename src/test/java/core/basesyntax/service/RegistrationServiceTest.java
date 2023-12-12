@@ -17,7 +17,14 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void validUser_Ok() {
+    void register_nullUser_notOK() {
+        User nullUser = new User();
+        assertNotNull(RegistrationException.class, () ->
+                String.valueOf(registrationService.register(nullUser)));
+    }
+
+    @Test
+    void register_validUser_Ok() {
         User test = new User("Mishutka", "123456789", 33);
         User registrationTest = registrationService.register(test);
         assertNotNull(registrationTest);
@@ -25,7 +32,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void duplicateLogin_NotOK() {
+    void register_duplicateLogin_notOk() {
         User user1 = new User("duplicate", "winter2023", 78);
         User user2 = new User("duplicate", "winter2024", 77);
         registrationService.register(user1);
@@ -36,37 +43,37 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void negativeAge_NotOk() {
+    void register_negativeAge_notOk() {
         User user = new User("login123", "00000000", -100);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void register_nullLogin_notOk() {
         User user = new User(null, "99887766", 23);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void shortLogin_NotOk() {
+    void register_shortLogin_notOk() {
         User user = new User("one", "1513145", 16);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void shortPassword_NotOk() {
+    void register_shortPassword_notOk() {
         User user = new User("ukrainian", "abc", 46);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void register_nullPassword_notOk() {
         User user = new User("absdefgrk", null, 29);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void ageUnder18_NotOK() {
+    void register_ageUnder18_notOk() {
         User user = new User("natalia", "1234567", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
