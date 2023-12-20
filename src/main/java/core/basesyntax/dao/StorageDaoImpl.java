@@ -22,4 +22,15 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
+
+    @Override
+    public User get(Long id) {
+        for (User user : Storage.people) {
+            if (user.getId().equals(id)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
 }
