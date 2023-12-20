@@ -38,7 +38,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullValue_NotOk() {
+    void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
