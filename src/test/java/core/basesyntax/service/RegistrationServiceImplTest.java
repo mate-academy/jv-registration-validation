@@ -7,11 +7,29 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static List<User> users;
     private RegistrationService registrationService;
+
+    @BeforeAll
+    static void beforeAll() {
+        users = new ArrayList<>();
+        User userNullId = new User(null, "qwerty1", "qwerty1", 21);
+        User userNullLogin = new User(1L, null, "qwerty1", 21);
+        User userNullPassword = new User(1L, "qwerty1", null, 21);
+        User userNullAge = new User(1L, "qwerty1", "qwerty1", null);
+        users.add(userNullId);
+        users.add(userNullLogin);
+        users.add(userNullPassword);
+        users.add(userNullAge);
+
+    }
 
     @BeforeEach
     void setUp() {
@@ -28,35 +46,27 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ValidUser_Ok() {
-        User user = new User(1L, "qwerty1", "qwerty1", 21);
-        User addedUser = registrationService.register(user);
-        assertEquals(user, addedUser);
+        User userOk = new User(1L, "qwerty1", "qwerty1", 21);
+        User addedUser = registrationService.register(userOk);
+        assertEquals(userOk, addedUser);
         assertNotNull(addedUser.getId());
     }
 
     @Test
     void register_NullValues_notOk() {
-        User user = new User(null, "qwerty1", "qwerty1", 21);
-        User user1 = new User(1L, null, "qwerty1", 21);
-        User user2 = new User(1L, "qwerty1", null, 21);
+        assertEquals("User id can't be null",
+                assertThrows(RegistrationException.class,
+                        () -> registrationService.register(users.get(0))).getMessage());
+        assertEquals("User login can't be null",
+                assertThrows(RegistrationException.class,
+                        () -> registrationService.register(users.get(1))).getMessage());
+        assertEquals("User password can't be null",
+                assertThrows(RegistrationException.class,
+                        () -> registrationService.register(users.get(2))).getMessage());
+        assertEquals("User age can't be null",
+                assertThrows(RegistrationException.class,
+                        () -> registrationService.register(users.get(3))).getMessage());
 
-        RegistrationException invalidUserExceptionById = assertThrows(
-                RegistrationException.class, () -> registrationService.register(user));
-        assertEquals("User id, login, password or age can't be null",
-                invalidUserExceptionById.getMessage());
-        RegistrationException invalidUserExceptionByLogin = assertThrows(
-                RegistrationException.class, () -> registrationService.register(user1));
-        assertEquals("User id, login, password or age can't be null",
-                invalidUserExceptionByLogin.getMessage());
-        RegistrationException invalidUserExceptionByPassword = assertThrows(
-                RegistrationException.class, () -> registrationService.register(user2));
-        assertEquals("User id, login, password or age can't be null",
-                invalidUserExceptionByPassword.getMessage());
-        User user3 = new User(1L, "qwerty1", "qwerty1", null);
-        RegistrationException invalidUserExceptionByAge = assertThrows(
-                RegistrationException.class, () -> registrationService.register(user3));
-        assertEquals("User id, login, password or age can't be null",
-                invalidUserExceptionByAge.getMessage());
     }
 
     @Test

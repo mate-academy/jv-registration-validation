@@ -14,11 +14,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException("User  can't be null");
+            throw new RegistrationException("User can't be null");
         }
-        if (user.getId() == null || user.getLogin() == null || user.getPassword() == null
-                || user.getAge() == null) {
-            throw new RegistrationException("User id, login, password or age can't be null");
+        if (user.getId() == null) {
+            throw new RegistrationException("User id can't be null");
+        }
+        if (user.getLogin() == null) {
+            throw new RegistrationException("User login can't be null");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("User password can't be null");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("User age can't be null");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Invalid data, age must be greater than 18");
