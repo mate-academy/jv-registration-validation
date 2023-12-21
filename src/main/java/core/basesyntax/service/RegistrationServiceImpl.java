@@ -12,11 +12,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationServiceImplException {
+        if(user == null) {
+            throw new RegistrationServiceImplException("User can't be null");
+        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationServiceImplException("User with this login already exists");
         }
+        if(user.getLogin() == null) {
+            throw new RegistrationServiceImplException("Login can't be null");
+        }
         if (user.getLogin().length() < MIN_LOGIN_AND_PASSWORD_LEN) {
             throw new RegistrationServiceImplException("Login should consist of at least 6 characters");
+        }
+        if(user.getPassword() == null) {
+            throw new RegistrationServiceImplException("Password can't be null");
         }
         if (user.getPassword().length() < MIN_LOGIN_AND_PASSWORD_LEN) {
             throw new RegistrationServiceImplException("Password should consist of at least 6 characters");
