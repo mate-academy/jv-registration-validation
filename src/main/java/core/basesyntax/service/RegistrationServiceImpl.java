@@ -33,8 +33,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegistrationServiceImplException("Age can't be null");
         }
+        if(user.getAge() < 0) {
+            throw new RegistrationServiceImplException("Age can't be negative");
+        }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationServiceImplException("Password should consist of at least 6 characters");
+            throw new RegistrationServiceImplException("Age must be over 18");
         }
         storageDao.add(user);
         return user;
