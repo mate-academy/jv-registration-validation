@@ -11,7 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RegistrationServiceImplException {
+    public User register(User user) {
         if (user == null) {
             throw new RegistrationServiceImplException("User can't be null");
         }
