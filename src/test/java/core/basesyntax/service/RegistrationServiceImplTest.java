@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginExactlyMinLen_edgeCase_Ok() throws RegistrationServiceImplException {
+    void register_loginExactlyMinLen_edgeCase_Ok() {
         User expected = new User("Adamel", "123456", 18);
         assertEquals(expected, registrationService.register(new User("Adamel", "123456", 18)));
     }
