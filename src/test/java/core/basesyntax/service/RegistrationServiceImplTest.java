@@ -34,9 +34,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userExists_notOk() {
-        assertThrows(RegistrationServiceImplException.class,
-                () -> registrationService.register(new User(
-                        "ValidUser01", "valid_password01", 18)));
+        assertThrows(RegistrationServiceImplException.class, () -> registrationService.register(
+                new User("ValidUser01", "valid_password01", 18)));
     }
 
     @Test
@@ -64,7 +63,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginMoreThanMinLen_Ok() throws RegistrationServiceImplException {
+    void register_loginMoreThanMinLen_Ok() {
         User expected1 = new User("Adamelo3", "123456", 18);
         assertEquals(expected1, registrationService.register(new User("Adamelo3", "123456", 18)));
         User expected2 = new User("Adamelo4", "123456", 18);
@@ -98,22 +97,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordExactlyMinLen_edgeCase_Ok() throws RegistrationServiceImplException {
+    void register_passwordExactlyMinLen_edgeCase_Ok() {
         User expected = new User("Adamelo6", "123456", 18);
         assertEquals(expected, registrationService.register(new User("Adamelo6", "123456", 18)));
     }
 
     @Test
-    void register_passwordMoreThanMinLen_Ok() throws RegistrationServiceImplException {
+    void register_passwordMoreThanMinLen_Ok() {
         User expected1 = new User("Adamelo7", "1234567", 18);
-        assertEquals(expected1, registrationService.register(new User(
-                "Adamelo7", "1234567", 18)));
+        assertEquals(expected1, registrationService.register(new User("Adamelo7", "1234567", 18)));
         User expected2 = new User("Adamelo8", "12345678", 18);
-        assertEquals(expected2, registrationService.register(new User(
-                "Adamelo8", "12345678", 18)));
+        assertEquals(expected2, registrationService.register(new User("Adamelo8", "12345678", 18)));
         User expected3 = new User("Adamelo9", "123456789", 18);
-        assertEquals(expected3, registrationService.register(new User(
-                "Adamelo9", "123456789", 18)));
+        assertEquals(expected3,
+                registrationService.register(new User("Adamelo9", "123456789", 18)));
     }
 
     @Test
@@ -149,21 +146,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageOfUserExactly18_edgeCase_Ok() throws RegistrationServiceImplException {
+    void register_ageOfUserExactly18_edgeCase_Ok() {
         User expected = new User("Adamelo10", "123456", 18);
         assertEquals(expected, registrationService.register(new User("Adamelo10", "123456", 18)));
     }
 
     @Test
-    void register_ageOfUserOver18_Ok() throws RegistrationServiceImplException {
+    void register_ageOfUserOver18_Ok() {
         User expected1 = new User("Adamelo11", "123456", 81);
-        assertEquals(expected1, registrationService.register(
-                new User("Adamelo11", "123456", 81)));
+        assertEquals(expected1, registrationService.register(new User("Adamelo11", "123456", 81)));
         User expected2 = new User("Adamelo12", "123456", 95);
-        assertEquals(expected2, registrationService.register(
-                new User("Adamelo12", "123456", 95)));
+        assertEquals(expected2, registrationService.register(new User("Adamelo12", "123456", 95)));
         User expected3 = new User("Adamelo13", "123456", 107);
-        assertEquals(expected3, registrationService.register(
-                new User("Adamelo13", "123456", 107)));
+        assertEquals(expected3, registrationService.register(new User("Adamelo13", "123456", 107)));
     }
 }

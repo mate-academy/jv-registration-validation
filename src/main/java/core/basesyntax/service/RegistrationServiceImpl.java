@@ -12,12 +12,28 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        try {
+            checkUser(user);
+            checkLogin(user);
+            checkPassword(user);
+            checkAge(user);
+        } catch (RegistrationServiceImplException e) {
+            throw new RegistrationServiceImplException(e.getMessage());
+        }
+        storageDao.add(user);
+        return user;
+    }
+
+    private void checkUser(User user) throws RegistrationServiceImplException {
         if (user == null) {
             throw new RegistrationServiceImplException("User can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationServiceImplException("User with this login already exists");
         }
+    }
+
+    private void checkLogin(User user) throws RegistrationServiceImplException {
         if (user.getLogin() == null) {
             throw new RegistrationServiceImplException("Login can't be null");
         }
@@ -25,6 +41,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceImplException(
                     "Login should consist of at least 6 characters");
         }
+    }
+
+    private void checkPassword(User user) throws RegistrationServiceImplException {
         if (user.getPassword() == null) {
             throw new RegistrationServiceImplException("Password can't be null");
         }
@@ -32,6 +51,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceImplException(
                     "Password should consist of at least 6 characters");
         }
+    }
+
+    private void checkAge(User user) throws RegistrationServiceImplException {
         if (user.getAge() == null) {
             throw new RegistrationServiceImplException("Age can't be null");
         }
@@ -41,7 +63,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationServiceImplException("Age must be over 18");
         }
-        storageDao.add(user);
-        return user;
     }
 }
