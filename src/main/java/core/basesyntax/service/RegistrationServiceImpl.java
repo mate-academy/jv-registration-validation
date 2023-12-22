@@ -22,18 +22,20 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationServiceImplException("Login can't be null");
         }
         if (user.getLogin().length() < MIN_LOGIN_AND_PASSWORD_LEN) {
-            throw new RegistrationServiceImplException("Login should consist of at least 6 characters");
+            throw new RegistrationServiceImplException(
+                    "Login should consist of at least 6 characters");
         }
         if (user.getPassword() == null) {
             throw new RegistrationServiceImplException("Password can't be null");
         }
         if (user.getPassword().length() < MIN_LOGIN_AND_PASSWORD_LEN) {
-            throw new RegistrationServiceImplException("Password should consist of at least 6 characters");
+            throw new RegistrationServiceImplException(
+                    "Password should consist of at least 6 characters");
         }
         if (user.getAge() == null) {
             throw new RegistrationServiceImplException("Age can't be null");
         }
-        if(user.getAge() < 0) {
+        if (user.getAge() < 0) {
             throw new RegistrationServiceImplException("Age can't be negative");
         }
         if (user.getAge() < MIN_AGE) {
