@@ -12,14 +12,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        try {
             checkUser(user);
             checkLogin(user);
             checkPassword(user);
             checkAge(user);
-        } catch (RegistrationServiceImplException e) {
-            throw new RegistrationServiceImplException(e.getMessage());
-        }
         storageDao.add(user);
         return user;
     }
