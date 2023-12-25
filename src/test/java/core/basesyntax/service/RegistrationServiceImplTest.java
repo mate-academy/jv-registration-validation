@@ -3,7 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.exception.InvalidDataException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ class RegistrationServiceImplTest {
     }
 
     private void checkThrows(User user) {
-        assertThrows(InvalidDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
