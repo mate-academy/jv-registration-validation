@@ -32,37 +32,37 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalid_login_test() {
+    void register_invalidLogin_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidLoginUser));
     }
 
     @Test
-    void null_value_test() {
+    void register_nullValue_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(nullValueUser));
     }
 
     @Test
-    void invalid_password_test() {
+    void register_invalidPassword_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidPasswordUser));
     }
 
     @Test
-    void invalid_age_test() {
+    void register_invalidAge_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidAgeUser));
     }
 
     @Test
-    void add_user_test() {
+    void register_user_ok() {
         registrationService.register(validUser1);
         assertEquals(validUser1, Storage.people.get(0));
     }
 
     @Test
-    void add_many_users_test() {
+    void register_manyUsers_ok() {
         registrationService.register(validUser1);
         registrationService.register(validUser2);
         registrationService.register(validUser3);
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_size_test() {
+    void register_checkSize_ok() {
         registrationService.register(validUser1);
         registrationService.register(validUser2);
         registrationService.register(validUser3);
@@ -83,18 +83,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void add_duplicate_user_test() {
+    void register_duplicateUser_notOk() {
         registrationService.register(validUser1);
         assertThrows(RegistrationException.class, () -> registrationService.register(validUser1));
     }
 
     @Test
-    void add_null_test() {
+    void register_addNull_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void add_empty_user_test() {
+    void register_emptyUser_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(emptyUser));
     }
 }
