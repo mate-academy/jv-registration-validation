@@ -75,4 +75,11 @@ class RegistrationServiceImplTest {
             registrationService.register(user2);
         });
     }
+
+    @Test
+    void validUser_Ok() {
+        User user = new User("vadim1337", "123456789", 19);
+        User registered = registrationService.register(user);
+        assertEquals(user, registered);
+    }
 }
