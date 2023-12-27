@@ -118,8 +118,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_Ok() {
+    void register_validUser1_Ok() {
         User user = new User("vadim133798", "123456789", 19);
+        User registered = registrationService.register(user);
+        assertEquals(user, registered);
+    }
+
+    @Test
+    void register_validUser2_Ok() {
+        User user = new User("wetedfg", "ytrhfgvbfgh", 33);
+        User registered = registrationService.register(user);
+        assertEquals(user, registered);
+    }
+
+    @Test
+    void register_validUser3_Ok() {
+        User user = new User("23456457", "vbnvdfsf", 56);
         User registered = registrationService.register(user);
         assertEquals(user, registered);
     }
