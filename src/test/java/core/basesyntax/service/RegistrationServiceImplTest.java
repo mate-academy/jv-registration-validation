@@ -114,11 +114,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_Ok() {
-        User user1 = new User("vadim133798", "123456789", 19);
+        User user1 = new User("vadim133798", "123456789", 18);
         User registered1 = registrationService.register(user1);
         assertEquals(user1, registered1);
 
-        User user2 = new User("wetedfg2314", "ytrhfgvbfgh11", 33);
+        User user2 = new User("wetedfg2314", "ytrhfgvbfgh11", 66);
         User registered2 = registrationService.register(user2);
         assertEquals(user2, registered2);
 
