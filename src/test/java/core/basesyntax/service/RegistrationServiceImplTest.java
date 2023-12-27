@@ -44,64 +44,59 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginHasFiveChars_notOk() {
+    void register_shortLogin_notOk() {
         User user = new User("v1337", "123456789", 19);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
 
-    @Test
-    void register_loginHasThreeChars_notOk() {
-        User user = new User("v13", "123456789", 19);
+        user.setLogin("v13");
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+
+        user.setLogin("v1");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_loginHasTwoChars_notOk() {
-        User user = new User("v1", "123456789", 19);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_passwordHasFourChars_notOk() {
+    void register_shortPassword_notOk() {
         User user = new User("vadim1337", "1234", 19);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
 
-    @Test
-    void register_passwordHasFiveChars_notOk() {
-        User user = new User("vadim1337", "12345", 19);
+        user.setPassword("1qwee");
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+
+        user.setPassword("vbn");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void register_passwordHasTwoChars_notOk() {
-        User user = new User("vadim1337", "123456", 19);
+    void register_userNotOldEnough_notOk() {
+        User user = new User("vadim1337", "123456789", 15);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
 
-    @Test
-    void register_ageLessThanZero_notOk() {
-        User user = new User("vadim1337", "123456789", -1);
+        user.setAge(17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
 
-    @Test
-    void register_ageLessThanMin_notOk() {
-        User user = new User("vadim1337", "123456789", 14);
+        user.setAge(13);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+
+        user.setAge(-2);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -118,23 +113,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser1_Ok() {
-        User user = new User("vadim133798", "123456789", 19);
-        User registered = registrationService.register(user);
-        assertEquals(user, registered);
-    }
+    void register_validUser_Ok() {
+        User user1 = new User("vadim133798", "123456789", 19);
+        User registered1 = registrationService.register(user1);
+        assertEquals(user1, registered1);
 
-    @Test
-    void register_validUser2_Ok() {
-        User user = new User("wetedfg", "ytrhfgvbfgh", 33);
-        User registered = registrationService.register(user);
-        assertEquals(user, registered);
-    }
+        User user2 = new User("wetedfg2314", "ytrhfgvbfgh11", 33);
+        User registered2 = registrationService.register(user2);
+        assertEquals(user2, registered2);
 
-    @Test
-    void register_validUser3_Ok() {
-        User user = new User("23456457", "vbnvdfsf", 56);
-        User registered = registrationService.register(user);
-        assertEquals(user, registered);
+        User user3 = new User("wetedfg", "ytrhfgvbfgh", 33);
+        User registered3 = registrationService.register(user3);
+        assertEquals(user3, registered3);
     }
 }
