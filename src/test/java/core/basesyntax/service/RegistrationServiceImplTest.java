@@ -16,35 +16,35 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAllFieldsNulls_notOk() {
+    void register_nullFields_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User(null, null, null));
         });
     }
 
     @Test
-    void userLoginNull_notOk() {
+    void register_nullLogin_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User(null, "123456789", 19));
         });
     }
 
     @Test
-    void userPasswordNull_notOk() {
+    void register_nullPassword_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("vadim1337", null, 19));
         });
     }
 
     @Test
-    void userAgeNull_notOk() {
+    void register_nullAge_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("vadim1337", "123456789", null));
         });
     }
 
     @Test
-    void userLoginInvalid_notOk() {
+    void register_invalidLogin_notOk() {
         User user = new User("v1337", "123456789", 19);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userPasswordInvalid_notOk() {
+    void register_invalidPassword_notOk() {
         User user = new User("vadim1337", "1234", 19);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeInvalid_notOk() {
+    void register_invalidAge_notOk() {
         User user = new User("vadim1337", "123456789", 16);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userExistsInStorage_notOk() {
+    void register_userExistsInStorage_notOk() {
         User user1 = new User("vadim1337", "123456789", 19);
         registrationService.register(user1);
         User user2 = new User("vadim1337", "123456789", 19);
@@ -78,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void validUser_Ok() {
+    void register_validUser_Ok() {
         User user = new User("vadim133798", "123456789", 19);
         User registered = registrationService.register(user);
         assertEquals(user, registered);
