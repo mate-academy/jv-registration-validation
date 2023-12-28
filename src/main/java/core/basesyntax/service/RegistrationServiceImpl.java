@@ -18,22 +18,22 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateUser(User user) {
         if (user.getLogin() == null) {
-            throw new UnacceptableUserExeption("Login can't be null");
+            throw new IncorrectUserDataExeption("Login can't be null");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new UnacceptableUserExeption("Login must be longer than six characters");
+            throw new IncorrectUserDataExeption("Login must be longer than six characters");
         }
         if (user.getPassword() == null) {
-            throw new UnacceptableUserExeption("Password can't be null!");
+            throw new IncorrectUserDataExeption("Password can't be null!");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new UnacceptableUserExeption("Password must be longer than six characters");
+            throw new IncorrectUserDataExeption("Password must be longer than six characters");
         }
         if (user.getAge() < MIN_USER_AGE) {
-            throw new UnacceptableUserExeption("Must be 18 years or older");
+            throw new IncorrectUserDataExeption("Must be 18 years or older");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new UnacceptableUserExeption("User login already exists");
+            throw new IncorrectUserDataExeption("User login already exists");
         }
     }
 }

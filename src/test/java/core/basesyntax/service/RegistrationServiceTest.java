@@ -6,35 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
-    private static final String ACCEPTABLE_LOGIN = "SimpleLogin";
-    private static final String EMPTY_STRING = "";
-    private static final String TWO_CHARACTER_STRING = "Hi";
-    private static final String FIVE_CHARACTER_STRING = "Hello";
-    private static final int NEGATIV_AGE = -20;
-    private static final int ZERO_AGE = 0;
-    private static final int POSITIV_UNACCEPTABLE_AGE = 17;
     private RegistrationService registrationService;
-    private List<User> users = new ArrayList<>();
-    private User user1;
-    private User user2;
-    private User user3;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        user1 = new User("Undead", "password", 18);
-        user2 = new User("BlackDog", "9omwc8,ry", 30);
-        user3 = new User("RainingMan", "dcfxr 9iuert", 29);
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
     }
 
     @AfterEach
@@ -44,9 +25,12 @@ class RegistrationServiceTest {
 
     @Test
     void register_addAcceptableUser_ok() {
-        for (User user : users) {
-            Storage.people.add(user);
-        }
+        User user1 = new User("Undead", "sc9opj8kum", 18);
+        User user2 = new User("Linuxgramm", "IKnowYourName", 43);
+        User user3 = new User("Applepie", "Yellow", 23);
+        registrationService.register(user1);
+        registrationService.register(user2);
+        registrationService.register(user3);
         assertTrue(Storage.people.contains(user1));
         assertTrue(Storage.people.contains(user2));
         assertTrue(Storage.people.contains(user3));
@@ -55,16 +39,16 @@ class RegistrationServiceTest {
 
     @Test
     void register_userAgeUnacceptable_notOk() {
-        User userBadAge = new User(ACCEPTABLE_LOGIN, "password", NEGATIV_AGE);
-        assertThrows(UnacceptableUserExeption.class, () -> {
+        User userBadAge = new User("Guardian", "password", -20);
+        assertThrows(IncorrectUserDataExeption.class, () -> {
             registrationService.register(userBadAge);
         });
-        userBadAge.setAge(ZERO_AGE);
-        assertThrows(UnacceptableUserExeption.class, () -> {
+        userBadAge.setAge(0);
+        assertThrows(IncorrectUserDataExeption.class, () -> {
             registrationService.register(userBadAge);
         });
-        userBadAge.setAge(POSITIV_UNACCEPTABLE_AGE);
-        assertThrows(UnacceptableUserExeption.class, () -> {
+        userBadAge.setAge(17);
+        assertThrows(IncorrectUserDataExeption.class, () -> {
             registrationService.register(userBadAge);
         });
         assertEquals(0, Storage.people.size());
@@ -72,25 +56,51 @@ class RegistrationServiceTest {
 
     @Test
     void register_addUserWithSameLogin_notOk() {
+        User user1 = new User("Sourcefire", "Password", 20);
         Storage.people.add(user1);
-        assertThrows(UnacceptableUserExeption.class, () -> {
+        assertThrows(IncorrectUserDataExeption.class, () -> {
             registrationService.register(user1);
         });
         assertEquals(1, Storage.people.size());
     }
 
     @Test
+    void register_addUserWithUnacceptableLogin_notOk() {
+        User badLoginUser = new User(null, "password", 20);
+        assertThrows(IncorrectUserDataExeption.class, () -> {
+            registrationService.register(badLoginUser);
+        });
+        badLoginUser.setLogin("");
+        assertThrows(IncorrectUserDataExeption.class, () -> {
+            registrationService.register(badLoginUser);
+        });
+        badLoginUser.setLogin("not");
+        assertThrows(IncorrectUserDataExeption.class, () -> {
+            registrationService.register(badLoginUser);
+        });
+        badLoginUser.setLogin("Five5");
+        assertThrows(IncorrectUserDataExeption.class, () -> {
+            registrationService.register(badLoginUser);
+        });
+        assertEquals(0, Storage.people.size());
+    }
+
+    @Test
     void register_addUserWithBadPassword_notOk() {
-        User badPasswordUser = new User(ACCEPTABLE_LOGIN, EMPTY_STRING, 20);
-        assertThrows(UnacceptableUserExeption.class, () -> {
+        User badPasswordUser = new User("Sourcefire", null, 20);
+        assertThrows(IncorrectUserDataExeption.class, () -> {
             registrationService.register(badPasswordUser);
         });
-        badPasswordUser.setPassword(TWO_CHARACTER_STRING);
-        assertThrows(UnacceptableUserExeption.class, () -> {
+        badPasswordUser.setPassword("");
+        assertThrows(IncorrectUserDataExeption.class, () -> {
             registrationService.register(badPasswordUser);
         });
-        badPasswordUser.setPassword(FIVE_CHARACTER_STRING);
-        assertThrows(UnacceptableUserExeption.class, () -> {
+        badPasswordUser.setPassword("Two");
+        assertThrows(IncorrectUserDataExeption.class, () -> {
+            registrationService.register(badPasswordUser);
+        });
+        badPasswordUser.setPassword("Five5");
+        assertThrows(IncorrectUserDataExeption.class, () -> {
             registrationService.register(badPasswordUser);
         });
         assertEquals(0, Storage.people.size());
