@@ -40,15 +40,15 @@ class RegistrationServiceTest {
     @Test
     void register_userAgeUnacceptable_notOk() {
         User userBadAge = new User("Guardian", "password", -20);
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(userBadAge);
         });
         userBadAge.setAge(0);
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(userBadAge);
         });
         userBadAge.setAge(17);
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(userBadAge);
         });
         assertEquals(0, Storage.people.size());
@@ -58,7 +58,7 @@ class RegistrationServiceTest {
     void register_addUserWithSameLogin_notOk() {
         User user1 = new User("Sourcefire", "Password", 20);
         Storage.people.add(user1);
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(user1);
         });
         assertEquals(1, Storage.people.size());
@@ -67,19 +67,19 @@ class RegistrationServiceTest {
     @Test
     void register_addUserWithUnacceptableLogin_notOk() {
         User badLoginUser = new User(null, "password", 20);
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badLoginUser);
         });
         badLoginUser.setLogin("");
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badLoginUser);
         });
         badLoginUser.setLogin("not");
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badLoginUser);
         });
         badLoginUser.setLogin("Five5");
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badLoginUser);
         });
         assertEquals(0, Storage.people.size());
@@ -88,19 +88,19 @@ class RegistrationServiceTest {
     @Test
     void register_addUserWithBadPassword_notOk() {
         User badPasswordUser = new User("Sourcefire", null, 20);
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badPasswordUser);
         });
         badPasswordUser.setPassword("");
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badPasswordUser);
         });
         badPasswordUser.setPassword("Two");
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badPasswordUser);
         });
         badPasswordUser.setPassword("Five5");
-        assertThrows(IncorrectUserDataExeption.class, () -> {
+        assertThrows(IncorrectUserDataException.class, () -> {
             registrationService.register(badPasswordUser);
         });
         assertEquals(0, Storage.people.size());
