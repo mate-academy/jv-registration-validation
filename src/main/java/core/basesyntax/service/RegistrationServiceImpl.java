@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private void checkNewUserData (User user) {
+    private void checkNewUserData(User user) {
         if (user == null) {
             throw new UserRegistrationException("User can`t be null");
         }
@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkNewUserExistence (User user) {
+    private void checkNewUserExistence(User user) {
         for (User person: Storage.people) {
             if (person.equals(user)) {
                 throw new UserRegistrationException("User is already registered");

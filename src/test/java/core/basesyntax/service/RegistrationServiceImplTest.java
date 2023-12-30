@@ -1,11 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final String VALID_USER_LOGIN = "JohnSmith";
@@ -17,7 +18,7 @@ class RegistrationServiceImplTest {
     private static final RegistrationServiceImpl registrationService
             = new RegistrationServiceImpl();
 
-    public User createUser (String login, String password, Integer age) {
+    public User createUser(String login, String password, Integer age) {
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
@@ -33,7 +34,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_ValidUser_Ok() {
         int expectedStorageSize = 1;
-        registrationService.register(createUser(VALID_USER_LOGIN, VALID_USER_PASSWORD, VALID_USER_AGE));
+        registrationService
+                .register(createUser(VALID_USER_LOGIN, VALID_USER_PASSWORD, VALID_USER_AGE));
         assertEquals(expectedStorageSize, Storage.people.size());
     }
 
@@ -75,10 +77,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserAlreadyExist_NotOk() {
-        User ExistedUser = createUser(VALID_USER_LOGIN, VALID_USER_PASSWORD, VALID_USER_AGE);
-        registrationService.register(ExistedUser);
+        User existedUser = createUser(VALID_USER_LOGIN, VALID_USER_PASSWORD, VALID_USER_AGE);
+        registrationService.register(existedUser);
         assertThrows(UserRegistrationException.class, () -> registrationService
-                .register(ExistedUser));
+                .register(existedUser));
     }
 
     @Test
