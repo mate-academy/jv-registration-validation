@@ -17,9 +17,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException(exception.USER_NULL_MSG);
         }
-        if (!verifyUserLoginIsOk(user)
-                || !verifyUserPasswordIsOk(user) || !verifyUserAgeIsOk(user)) {
-            throw new RegistrationException(exception.RGSTR_INCORRECT_DATA_MSG);
+        if (!verifyUserLoginIsOk(user)) {
+            throw new RegistrationException(exception.INCORRECT_LOGIN_MSG);
+        }
+        if (!verifyUserPasswordIsOk(user)) {
+            throw new RegistrationException(exception.INCORRECT_PASSWORD_MSG);
+        }
+        if (!verifyUserAgeIsOk(user)) {
+            throw new RegistrationException(exception.INCORRECT_AGE_MSG);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException(exception.ALREADY_RGSTR_USER_MSG);
@@ -31,15 +36,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean verifyUserLoginIsOk(User user) {
-        return user.getLogin() != null && user.getLogin().length() >= MIN_LOGIN_LENGTH;
+        return user.getLogin() != null
+            && user.getLogin().length() >= MIN_LOGIN_LENGTH;
     }
 
     private boolean verifyUserPasswordIsOk(User user) {
-        return user.getPassword() != null && user.getPassword().length() >= MIN_PASSWORD_LENGTH;
+        return user.getPassword() != null
+            && user.getPassword().length() >= MIN_PASSWORD_LENGTH;
     }
 
     private boolean verifyUserAgeIsOk(User user) {
-        return user.getAge() != null && user.getAge() >= MIN_ACCEPTED_AGE;
+        return user.getAge() != null
+            && user.getAge() >= MIN_ACCEPTED_AGE;
     }
 }
 

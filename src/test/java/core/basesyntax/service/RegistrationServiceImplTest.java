@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertTrue(thrown.getMessage().equals(exception.RGSTR_INCORRECT_DATA_MSG));
+        assertTrue(thrown.getMessage().equals(exception.INCORRECT_LOGIN_MSG));
     }
 
     @Test
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
         user.setLogin("abcde");
         RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertTrue(thrown.getMessage().equals(exception.RGSTR_INCORRECT_DATA_MSG));
+        assertTrue(thrown.getMessage().equals(exception.INCORRECT_LOGIN_MSG));
     }
 
     @Test
@@ -99,7 +99,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertTrue(thrown.getMessage().equals(exception.RGSTR_INCORRECT_DATA_MSG));
+        assertTrue(thrown.getMessage().equals(exception.INCORRECT_PASSWORD_MSG));
     }
 
     @Test
@@ -107,6 +107,22 @@ class RegistrationServiceImplTest {
         user.setPassword("12345");
         RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
-        assertTrue(thrown.getMessage().equals(exception.RGSTR_INCORRECT_DATA_MSG));
+        assertTrue(thrown.getMessage().equals(exception.INCORRECT_PASSWORD_MSG));
+    }
+
+    @Test
+    void register_ageNull_notOk() {
+        user.setAge(null);
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertTrue(thrown.getMessage().equals(exception.INCORRECT_AGE_MSG));
+    }
+
+    @Test
+    void register_ageLessMinValue_notOk() {
+        user.setAge(17);
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertTrue(thrown.getMessage().equals(exception.INCORRECT_AGE_MSG));
     }
 }
