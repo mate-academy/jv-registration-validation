@@ -9,29 +9,26 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_ACCEPTED_AGE = 18;
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
-    private static RegistrationException exception = new RegistrationException();
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException(exception.USER_NULL_MSG);
+            throw new RegistrationException("User can't be null");
         }
         if (!verifyUserLoginIsOk(user)) {
-            throw new RegistrationException(exception.INCORRECT_LOGIN_MSG);
+            throw new RegistrationException("User login is incorrect");
         }
         if (!verifyUserPasswordIsOk(user)) {
-            throw new RegistrationException(exception.INCORRECT_PASSWORD_MSG);
+            throw new RegistrationException("User password is incorrect");
         }
         if (!verifyUserAgeIsOk(user)) {
-            throw new RegistrationException(exception.INCORRECT_AGE_MSG);
+            throw new RegistrationException("User age is incorrect");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException(exception.ALREADY_RGSTR_USER_MSG);
+            throw new RegistrationException("User already registered with such login");
         }
-        if (storageDao.get(user.getLogin()) == null) {
-            storageDao.add(user);
-        }
+        storageDao.add(user);
         return user;
     }
 
