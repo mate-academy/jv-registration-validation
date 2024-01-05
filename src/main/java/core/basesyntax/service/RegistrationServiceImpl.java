@@ -13,35 +13,47 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new InvalidDataException("User can't be null!");
+            throw new RegistrationException("User can't be null!");
         }
+        loginCheck(user);
+        passwordCheck(user);
+        ageCheck(user);
+        return storageDao.add(user);
+    }
+
+    private User loginCheck(User user) {
         if (user.getLogin() == null) {
-            throw new InvalidDataException("Login can't be null!");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidDataException("Password can't be null!");
-        }
-        if (user.getAge() == null) {
-            throw new InvalidDataException("Age can't be null!");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidDataException("User with such login already exist!");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidDataException("Password should be at least "
-                    + MIN_PASSWORD_LENGTH + " characters!");
+            throw new RegistrationException("Login can't be null!");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidDataException("Login should be at least "
+            throw new RegistrationException("Login should be at least "
                     + MIN_LOGIN_LENGTH + " characters!");
         }
-        if (!Character.isLetter(user.getLogin().charAt(0))) {
-            throw new InvalidDataException("Login should start with letter!");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with such login already exist!");
+        }
+        return user;
+    }
+
+    private User passwordCheck(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null!");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Password should be at least "
+                    + MIN_PASSWORD_LENGTH + " characters!");
+        }
+        return user;
+    }
+
+    private User ageCheck(User user) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age can't be null!");
         }
         if (user.getAge() < MIN_USER_AGE) {
-            throw new InvalidDataException("Not valid age: " + user.getAge()
+            throw new RegistrationException("Not valid age: " + user.getAge()
                     + "User should be at least " + MIN_USER_AGE + " y.o.");
         }
-        return storageDao.add(user);
+        return user;
     }
 }
