@@ -13,46 +13,46 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws AuthenticationException {
-        if (nullUserOrField(user)) {
-            throw new AuthenticationException();
-        }
+    public User register(User user) {
+        checkNullUserOrField(user);
         if (storageDao.get(user.getLogin()) != null) {
-            throw new AuthenticationException();
+            throw new AuthenticationException("User already exists");
         }
-        if (nonValidParameter(user)) {
-            throw new AuthenticationException();
-        }
+        checkNonValidParameter(user);
         storageDao.add(user);
         return user;
     }
 
-    private boolean nullUserOrField(User user) {
+    private void checkNullUserOrField(User user) {
         if (user == null) {
-            return true;
+            throw new AuthenticationException(
+                    "User should be initialized");
         }
         if (Objects.isNull(user.getLogin())
                 || Objects.isNull(user.getPassword())
                 || Objects.isNull(user.getAge())) {
-            return true;
+            throw new AuthenticationException(
+                    "User's fields should be initialized");
         }
-        return false;
     }
 
-    private boolean nonValidParameter(User user) {
+    private void checkNonValidParameter(User user) {
         if (user.getPassword().isEmpty() || user.getLogin().isEmpty()) {
-            return true;
+            throw new AuthenticationException(
+                    "User's login or password can't be empty");
         }
         if (user.getLogin().length() < MIN_LENGTH || user.getPassword().length() < MIN_LENGTH) {
-            return true;
+            throw new AuthenticationException(
+                    "User's login or password can't be shorter than 6 characters");
         }
         if (user.getAge() < MIN_AGE || user.getAge() >= MAX_AGE) {
-            return true;
+            throw new AuthenticationException(
+                    "User's age must be between 18 and 100 years inclusively");
         }
         if (!user.getLogin().matches("^[a-zA-Z0-9!@#$%^&*()_+-]+$")
                 || !user.getPassword().matches("^[a-zA-Z0-9!@#$%^&*()_+-]+$")) {
-            return true;
+            throw new AuthenticationException(
+                    "User's login or password must be written in English");
         }
-        return false;
     }
 }
