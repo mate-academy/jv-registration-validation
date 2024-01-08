@@ -9,6 +9,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        if (user.getLogin().length() < 6
+                || user.getPassword().length() < 6
+                || user.getAge() < 18) {
+            throw new InvalidUserDataException("Invalid user data");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidUserDataException("User with this login already exists");
+        }
+        storageDao.add(user);
+        return user;
     }
 }
