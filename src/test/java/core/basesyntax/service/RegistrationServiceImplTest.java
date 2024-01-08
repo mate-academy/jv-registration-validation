@@ -27,7 +27,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_existingUser_notOk() {
+    public void register_existingLogin_notOk() {
         User validUser = new User();
         validUser.setLogin("valid2@email.com");
         validUser.setPassword("123456");
@@ -47,7 +47,6 @@ class RegistrationServiceImplTest {
         newUser.setLogin(null);
         newUser.setPassword("123456");
         newUser.setAge(18);
-
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser),
                 "Test failed! Exception should be thrown if login is null!");
     }
@@ -75,6 +74,12 @@ class RegistrationServiceImplTest {
     @Test
     public void register_invalidLogin_notOk() {
         User newUser = new User();
+        newUser.setLogin("");
+        newUser.setPassword("123456");
+        newUser.setAge(18);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser),
+                "Test failed! Exception should be thrown if login is too short!");
+
         newUser.setLogin("short");
         newUser.setPassword("123456");
         newUser.setAge(18);
@@ -86,6 +91,12 @@ class RegistrationServiceImplTest {
     public void register_invalidPassword_notOk() {
         User newUser = new User();
         newUser.setLogin("valid4@email.com");
+        newUser.setPassword("");
+        newUser.setAge(18);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser),
+                "Test failed! Exception should be thrown if password is too short!");
+
+        newUser.setLogin("valid5@email.com");
         newUser.setPassword("short");
         newUser.setAge(18);
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser),
@@ -95,9 +106,15 @@ class RegistrationServiceImplTest {
     @Test
     public void register_invalidAge_notOk() {
         User newUser = new User();
-        newUser.setLogin("valid5@email.com");
+        newUser.setLogin("valid6@email.com");
         newUser.setPassword("123456");
         newUser.setAge(12);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser),
+                "Test failed! Exception should be thrown if age is too low!");
+
+        newUser.setLogin("valid7@email.com");
+        newUser.setPassword("123456");
+        newUser.setAge(17);
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser),
                 "Test failed! Exception should be thrown if age is too low!");
     }

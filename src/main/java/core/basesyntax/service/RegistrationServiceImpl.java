@@ -33,23 +33,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean isValidLoginLength(String login) {
-        if (login == null) {
-            return false;
-        }
-        return login.length() >= MIN_LOGIN_LENGTH;
+        return login != null && login.length() >= MIN_LOGIN_LENGTH;
     }
 
     private boolean isValidPasswordLength(String password) {
-        if (password == null) {
-            return false;
-        }
-        return password.length() >= MIN_PASSWORD_LENGTH;
+        return password != null && password.length() >= MIN_PASSWORD_LENGTH;
     }
 
     private boolean isValidAge(Integer age) {
-        if (age == null) {
-            return false;
-        }
-        return age >= MIN_AGE;
+        return age != null && age >= MIN_AGE;
     }
 }
