@@ -6,31 +6,36 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static Storage storage;
-    private static User user;
+    private static User actual;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         storage = new Storage();
-        user = new User(1234L, "login254", "1234567", 18);
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        actual = new User(1234L, "login254", "1234567", 18);
     }
 
     @Test
     void duplicateLoginIs_notOk() {
-        Storage.people.add(user);
+        Storage.people.add(actual);
         assertThrows(InvalidUserDataException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(actual);
         });
     }
 
     @Test
     void userLoginIs_NotOk() {
-        User actual = new User(1234L, "login", "1234567", 18);
+        actual.setLogin("login");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(actual);
         });
@@ -38,7 +43,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userPasswordIs_NotOk() {
-        User actual = new User(1234L, "login14778", "12345", 18);
+        actual.setPassword("12345");
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(actual);
         });
@@ -46,7 +51,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void userAgeIs_NotOk() {
-        User actual = new User(1234L, "login14778", "1232556", 17);
+        actual.setAge(17);
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(actual);
         });
@@ -54,21 +59,29 @@ class RegistrationServiceImplTest {
 
     @Test
     void userLoginIs_Ok() {
-        User actual = new User(1234L, "login2", "1234567", 18);
+        actual.setLogin("login111");
         assertEquals(registrationService.register(actual), actual);
     }
 
     @Test
     void userPasswordIs_Ok() {
-        User actual = new User(1234L, "login12", "123456", 18);
+        actual.setLogin("login222");
         assertEquals(registrationService.register(actual),
                 actual);
     }
 
     @Test
     void userAgeIs_Ok() {
-        User actual = new User(1234L, "login1", "123456", 18);
+        actual.setLogin("login333");
         assertEquals(registrationService.register(actual),
                 actual);
+    }
+
+    @Test
+    void userIsNull_Ok() {
+        User actual = null;
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(actual);
+        });
     }
 }
