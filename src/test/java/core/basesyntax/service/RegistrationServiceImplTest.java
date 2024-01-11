@@ -9,6 +9,7 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -18,11 +19,11 @@ class RegistrationServiceImplTest {
     private static final String LOGIN_LESS_THAN_MIN = "abcde";
     private static final String PASSWORD_LESS_THAN_MIN = "12345";
     private static final int AGE_LESS_THAN_MIN = 15;
-    private static RegistrationServiceImpl registrationService;
-    private User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
+    private static RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private final User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
