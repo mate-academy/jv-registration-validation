@@ -8,7 +8,6 @@ import core.basesyntax.exception.UserRegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
