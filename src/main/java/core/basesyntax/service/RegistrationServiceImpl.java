@@ -34,7 +34,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + " chars that less than min required amount(6)");
         }
         if ((user.getPassword()).length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationDataException("user password have: " + (user.getPassword()).length()
+            throw new RegistrationDataException("user password have: "
+                    + (user.getPassword()).length()
                     + " chars that less than min required amount(6)");
         }
         return storage.add(user);
