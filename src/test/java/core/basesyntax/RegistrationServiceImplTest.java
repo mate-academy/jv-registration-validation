@@ -1,9 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -12,6 +8,8 @@ import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -27,20 +25,15 @@ public class RegistrationServiceImplTest {
 
     private User createDefaultUser() {
         User user = new User();
-        user.setLogin("yaroslav");
-        user.setPassword("password123");
-        user.setAge(22);
+        user.setLogin("myUser");
+        user.setPassword("myPass");
+        user.setAge(18);
         return user;
     }
 
     @Test
     void register_validUser_successfulRegistration() {
-        User newUser = new User();
-        newUser.setLogin("new_user");
-        newUser.setPassword("new_password");
-        newUser.setAge(30);
-        assertDoesNotThrow(() -> registrationService.register(newUser));
-        assertNotNull(storageDao.get("new_user"));
+        assertEquals(defaultUser, storageDao.get(defaultUser.getLogin()));
     }
 
     @Test
@@ -65,7 +58,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_youngUser_notOk() {
+    void register_underageUser_notOk() {
         User user = createDefaultUser();
         user.setAge(17);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
@@ -79,7 +72,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_storageDaoReturnsNullForGet_notOk() {
+    void register_nonexistentUser_notOk() {
         User user = createDefaultUser();
         user.setLogin("nonexistent_user");
         assertDoesNotThrow(() -> registrationService.register(user));
