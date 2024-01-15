@@ -16,80 +16,72 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private RegistrationService registrationService;
     private StorageDao storageDao;
+    private User defaultUser;
 
     @BeforeEach
     void setUp() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
+        defaultUser = createDefaultUser();
     }
 
-    @Test
-    void register_validUser_successfulRegistration() {
+    private User createDefaultUser() {
         User user = new User();
         user.setLogin("yaroslav");
         user.setPassword("password123");
         user.setAge(22);
-        assertDoesNotThrow(() -> registrationService.register(user));
-        assertNotNull(storageDao.get("yaroslav"));
+        return user;
+    }
+
+    @Test
+    void register_validUser_successfulRegistration() {
+        User newUser = new User();
+        newUser.setLogin("new_user");
+        newUser.setPassword("new_password");
+        newUser.setAge(30);
+        assertDoesNotThrow(() -> registrationService.register(newUser));
+        assertNotNull(storageDao.get("new_user"));
     }
 
     @Test
     void register_existingLogin_notOk() {
-        User existingUser = new User();
-        existingUser.setLogin("existing_user");
-        existingUser.setPassword("password123");
-        existingUser.setAge(30);
-        storageDao.add(existingUser);
-        User userWithExistingLogin = new User();
-        userWithExistingLogin.setLogin("existing_user");
-        userWithExistingLogin.setPassword("newpassword");
-        userWithExistingLogin.setAge(22);
+        storageDao.add(defaultUser);
         assertThrows(InvalidUserDataException.class, () ->
-                registrationService.register(userWithExistingLogin));
+                registrationService.register(defaultUser));
     }
 
     @Test
     void register_shortLogin_notOk() {
-        User user = new User();
+        User user = createDefaultUser();
         user.setLogin("short");
-        user.setPassword("password123");
-        user.setAge(22);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        User user = new User();
-        user.setLogin("yaroslav");
+        User user = createDefaultUser();
         user.setPassword("short");
-        user.setAge(22);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_youngUser_notOk() {
-        User user = new User();
-        user.setLogin("yaroslav");
-        user.setPassword("password123");
+        User user = createDefaultUser();
         user.setAge(17);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
-        User user = new User();
-        user.setLogin("yaroslav");
-        user.setPassword("password123");
+        User user = createDefaultUser();
         user.setAge(null);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_storageDaoReturnsNullForGet_notOk() {
-        User user = new User();
+        User user = createDefaultUser();
         user.setLogin("nonexistent_user");
-        user.setPassword("password123");
-        user.setAge(25);
         assertDoesNotThrow(() -> registrationService.register(user));
     }
 }
