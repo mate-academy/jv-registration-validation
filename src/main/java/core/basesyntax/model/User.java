@@ -1,5 +1,7 @@
 package core.basesyntax.model;
 
+import core.basesyntax.service.InvalidDataException;
+
 import java.util.Objects;
 
 public class User {
@@ -7,6 +9,13 @@ public class User {
     private String login;
     private String password;
     private Integer age;
+
+    public User(Long id, String login, String password, Integer age) {
+        this.age = age;
+        this.id = id;
+        this.login = login;
+        this.password = password;
+    }
 
     public Long getId() {
         return id;
