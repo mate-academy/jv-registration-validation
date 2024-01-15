@@ -1,7 +1,5 @@
 package core.basesyntax.model;
 
-import core.basesyntax.service.InvalidDataException;
-
 import java.util.Objects;
 
 public class User {

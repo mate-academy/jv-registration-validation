@@ -2,14 +2,13 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int DEFAULT_LENGTH_FOR_LOGIN_AND_PASSWORD = 6;
     private static final int MINIMAL_AGE_FOR_REGISTRATION = 18;
     private static final int ZERO = 0;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -23,9 +22,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Field with login can not be empty(null), input login");
         }
         if (user.getPassword() == null) {
-            throw new InvalidDataException("Field with password can not be empty(null), input password");
+            throw new InvalidDataException("Field with password can not be empty(null)"
+                    + ", input password");
         }
-        if(user.getId() == null) {
+        if (user.getId() == null) {
             throw new InvalidDataException("ID can not be null");
         }
         if (user.getAge() == null) {
@@ -41,8 +41,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Your age should be at least 18 for registration");
         }
         if (user.getId() <= ZERO) {
-            throw new InvalidDataException("You have entered an incorrect id. " +
-                    "Id can not be less than 0");
+            throw new InvalidDataException("You have entered an incorrect id. "
+                    + "Id can not be less than 0");
         }
         return storageDao.add(user);
     }
