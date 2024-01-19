@@ -5,10 +5,10 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int VALID_AGE = 18;
     private static final int VALID_LOGIN_LENGTH = 6;
     private static final int VALID_PASSWORD_LENGTH = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -26,7 +26,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login's length must be no less " + VALID_LOGIN_LENGTH);
         }
         if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password's length must be no less " + VALID_PASSWORD_LENGTH);
+            throw new RegistrationException("Password's length must be no less "
+                    + VALID_PASSWORD_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with this login already exist");
