@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int CORRECT_AGE = 20;
+    private static final String CORRECT_LOGIN = "3537beget";
     private static final int INVALID_AGE = 12;
     private static final int NEGATIVE_NUMBER = -5;
     private final RegistrationService registrationService = new RegistrationServiceImpl();
@@ -37,6 +40,18 @@ class RegistrationServiceImplTest {
     void register_AgeNull_notOk() {
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_validAge_Ok() {
+        user.setAge(CORRECT_AGE);
+        assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
+    void register_validLogin_Ok() {
+        user.setLogin(CORRECT_LOGIN);
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test

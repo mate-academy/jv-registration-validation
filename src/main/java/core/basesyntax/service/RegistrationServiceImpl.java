@@ -12,23 +12,24 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Login does not by null");
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new RegistrationException("Login can't be null or empty");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password does not by null");
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new RegistrationException("Password can't be null or empty");
         }
         if (user.getAge() == null) {
-            throw new RegistrationException("Age does not be null");
+            throw new RegistrationException("Age can't be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Age does not be null" + MIN_AGE);
+            throw new RegistrationException("INVALID AT ALL, REWRITE THIS MESSAGE" + MIN_AGE);
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Are no enough characters" + MIN_LOGIN_LENGTH);
+            throw new RegistrationException("Login should be at least "
+                    + MIN_LOGIN_LENGTH + " characters long");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Are no enough characters" + MIN_PASSWORD_LENGTH);
+            throw new RegistrationException("REWRITE ME AS IN PREV EXAMPLE" + MIN_PASSWORD_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException(user.getLogin()
