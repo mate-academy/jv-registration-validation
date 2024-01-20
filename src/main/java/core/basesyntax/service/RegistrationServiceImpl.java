@@ -2,42 +2,50 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.RegistrationDataException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_AGE = 18;
+    private static final int MIN_AGE_VALUE = 18;
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
-    private final StorageDao storage = new StorageDaoImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new RegistrationDataException("login can't be null");
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationDataException("password can't be null");
+        if (!checkUserLoginIsCorrect(user)) {
+            throw new RegistrationException("User login is incorrect");
         }
-        if (user.getAge() == null) {
-            throw new RegistrationDataException("age can't be null");
+        if (!checkUserPasswordIsCorrect(user)) {
+            throw new RegistrationException("User password is incorrect");
         }
-        if (storage.get(user.getLogin()) != null) {
-            throw new RegistrationDataException("user with same login: " + user.getLogin()
-                    + " already exist");
+        if (!checkUserAgeIsCorrect(user)) {
+            throw new RegistrationException("User age is incorrect");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RegistrationDataException("user age: " + user.getAge() + " less than 18");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User has already registered with this user name");
         }
-        if ((user.getLogin()).length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationDataException("user login have: " + (user.getLogin()).length()
-                    + " chars that less than min required amount(6)");
-        }
-        if ((user.getPassword()).length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationDataException("user password have: "
-                    + (user.getPassword()).length()
-                    + " chars that less than min required amount(6)");
-        }
-        return storage.add(user);
+        storageDao.add(user);
+        return user;
+    }
+
+    private boolean checkUserLoginIsCorrect(User user) {
+        return user.getLogin() != null
+                && user.getLogin()
+                .length() >= MIN_LOGIN_LENGTH;
+    }
+
+    private boolean checkUserPasswordIsCorrect(User user) {
+        return user.getPassword() != null
+                && user.getPassword()
+                .length() >= MIN_PASSWORD_LENGTH;
+    }
+
+    private boolean checkUserAgeIsCorrect(User user) {
+        return user.getAge() != null
+                && user.getAge() >= MIN_AGE_VALUE;
     }
 }
