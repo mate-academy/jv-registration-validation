@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registered_twoDifferentUsers_Ok() {
+    void register_twoDifferentUsers_Ok() {
         User registeredUserFirst = registrationServiceImpl.register(user);
         assertNotNull(registeredUserFirst);
         assertEquals(user.getLogin(), registeredUserFirst.getLogin());
@@ -49,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registered_nullUser_notOk() {
+    void register_nullUser_notOk() {
         user = null;
         assertThrows(RuntimeException.class, () ->
                 registrationServiceImpl.register(user));
@@ -63,7 +63,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registered_underpassword_notOk() {
+    void registered_shortPassword_notOk() {
         user.setPassword("36271");
         assertThrows(RuntimeException.class, () ->
                 registrationServiceImpl.register(user));
