@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,11 @@ class StorageDaoImplTest {
         defaultUser.setLogin(DEFAULT_LOGIN);
         defaultUser.setPassword(DEFAULT_PASS);
         defaultUser.setAge(DEFAULT_AGE);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        Storage.people.clear();
     }
 
     @Test

@@ -3,11 +3,16 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final StorageDao storageDao = new StorageDaoImpl();
     private static final RegistrationService registrationService = new RegistrationServiceImpl();
     private static final String DEFAULT_LOGIN = "TestLogin";
     private static final String DEFAULT_PASS = "123456";
@@ -22,8 +27,13 @@ class RegistrationServiceImplTest {
         defaultUser.setAge(DEFAULT_AGE);
     }
 
+    @AfterEach
+    public void tearDown() {
+        Storage.people.clear();
+    }
+
     @Test
-    public void isNullElements_NullLogin_NotOk() {
+    public void register_NullLogin_NotOk() {
         User actual = defaultUser;
         actual.setLogin(null);
         assertThrows(InvalidDataRegistrationExeption.class,
@@ -31,7 +41,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void isNullElements_NullPass_NotOk() {
+    public void register_NullPass_NotOk() {
         User actual = defaultUser;
         actual.setPassword(null);
         assertThrows(InvalidDataRegistrationExeption.class,
@@ -39,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void isNullElements_NullAge_NotOk() {
+    public void register_NullAge_NotOk() {
         User actual = defaultUser;
         actual.setAge(null);
         assertThrows(InvalidDataRegistrationExeption.class,
@@ -52,7 +62,7 @@ class RegistrationServiceImplTest {
         actual.setLogin("BobMarly");
         actual.setPassword("123456");
         actual.setAge(25);
-        registrationService.register(actual);
+        storageDao.add(actual);
         assertThrows(InvalidDataRegistrationExeption.class,
                 () -> registrationService.register(actual));
     }

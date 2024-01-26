@@ -5,25 +5,28 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_LOGIN_CHARACTEEERS = 6;
+    private static final int MIN_PASSWORD_CHARACTERS = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final int minAge = 18;
-    private final int minLoginCharacteeers = 6;
-    private final int minPasswordCharacters = 6;
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            return null;
+        }
         isNullElements(user);
-        if (user.getLogin().length() < minLoginCharacteeers) {
-            throw new InvalidDataRegistrationExeption("The login must be at least 6 characters "
-                    + user.getLogin());
+        if (user.getLogin().length() < MIN_LOGIN_CHARACTEEERS) {
+            throw new InvalidDataRegistrationExeption("The login must be at least "
+                    + MIN_LOGIN_CHARACTEEERS + " characters " + user.getLogin());
         }
-        if (user.getPassword().length() < minPasswordCharacters) {
-            throw new InvalidDataRegistrationExeption("The password must be at least 6 characters "
-                    + user.getPassword());
+        if (user.getPassword().length() < MIN_PASSWORD_CHARACTERS) {
+            throw new InvalidDataRegistrationExeption("The password must be at least "
+                    + MIN_PASSWORD_CHARACTERS + " characters " + user.getPassword());
         }
-        if (user.getAge() < minAge) {
+        if (user.getAge() < MIN_AGE) {
             throw new InvalidDataRegistrationExeption("Invalid age: " + user.getAge()
-                    + "Min allowed age is" + minAge);
+                    + "Min allowed age is" + MIN_AGE);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataRegistrationExeption("Found user with the same login "
