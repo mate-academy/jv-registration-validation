@@ -30,6 +30,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         Storage.people.add(user);
         return user;
     }
-
-
 }
