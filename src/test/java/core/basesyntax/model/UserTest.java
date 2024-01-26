@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.Test;
 import java.util.Objects;
+import org.junit.jupiter.api.Test;
 
 class UserTest {
 
