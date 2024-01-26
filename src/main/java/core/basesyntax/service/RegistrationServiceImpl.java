@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exceptions.RegistrationException;
+import core.basesyntax.exceptions.ExpectedException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -12,39 +12,38 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RegistrationException {
+    public User register(User user) throws ExpectedException {
         if (user == null) {
-            throw new RegistrationException("Argument cannot be null!");
+            throw new ExpectedException("Argument cannot be null!");
         }
         if (user.getAge() == null) {
-            throw new RegistrationException("User's age is cannot be null!");
+            throw new ExpectedException("User's age is cannot be null!");
         }
         if (user.getPassword() == null) {
-            throw new RegistrationException("Password cannot be null");
+            throw new ExpectedException("Password cannot be null");
         }
         if (user.getPassword().trim().equals("")) {
-            throw new RegistrationException("Login cannot contain only whitespace");
+            throw new ExpectedException("Login cannot contain only whitespace");
         }
         if (user.getPassword().length() < MINIMAL_PASS_LENGTH) {
-            throw new RegistrationException("Password must be longer than " + MINIMAL_PASS_LENGTH);
+            throw new ExpectedException("Password must be longer than " + MINIMAL_PASS_LENGTH);
         }
         if (user.getLogin() == null) {
-            throw new RegistrationException("Login cannot be null");
+            throw new ExpectedException("Login cannot be null");
         }
         if (user.getLogin().trim().equals("")) {
-            throw new RegistrationException("Login cannot contain only whitespace");
+            throw new ExpectedException("Login cannot contain only whitespace");
         }
         if (user.getLogin().length() < MINIMAL_LOGIN_LENGTH) {
-            throw new RegistrationException("Login must be longer than " + MINIMAL_LOGIN_LENGTH);
+            throw new ExpectedException("Login must be longer than " + MINIMAL_LOGIN_LENGTH);
         }
         if (user.getAge() < MINIMAL_AGE) {
-            throw new RegistrationException("Age should be bigger than " + MINIMAL_AGE);
+            throw new ExpectedException("Age should be bigger than " + MINIMAL_AGE);
         }
         if (storageDao.get(user.getLogin()) == null) {
             storageDao.add(user);
             return user;
         }
-
         return null;
     }
 }
