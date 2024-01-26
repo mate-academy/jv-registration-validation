@@ -30,10 +30,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void theSameLoginInTheStorage_NotOk() {
+        user.setLogin("American");
+        user.setPassword("123456");
+        user.setAge(18);
+        registrationService.register(user);
+
+        User user1 = new User();
+        user1.setLogin("American");
+        user1.setPassword("123456");
+        user1.setAge(24);
+        assertThrows(MyException.class, () -> {
+            registrationService.register(user1);
+        });
+    }
+
+    @Test
     void loginLessThenSixCharacters_NotOk() {
         user.setLogin("Bob");
         user.setPassword("123456");
-        user.setAge(17);
+        user.setAge(18);
         assertThrows(MyException.class, () -> {
             registrationService.register(user);
         });
@@ -41,7 +57,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void passwordsLessThenSixCharacters_NotOk() {
-        user.setLogin("User12");
+        user.setLogin("Bobabu");
         user.setPassword("12345");
         user.setAge(18);
         assertThrows(MyException.class, () -> {
@@ -51,9 +67,35 @@ class RegistrationServiceImplTest {
 
     @Test
     void ageLessThenEighteen_NotOk() {
-        user.setLogin("User12");
+        user.setLogin("Bobabu");
         user.setPassword("123456");
         user.setAge(17);
+        assertThrows(MyException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void ageIsNull_NotOk() {
+        user.setLogin("User12");
+        user.setPassword("123456");
+        assertThrows(MyException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void loginIsNull_NotOk() {
+        user.setLogin("User12");
+        user.setPassword("123456");
+        assertThrows(MyException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void passwordIsNull_NotOk() {
+        user.setPassword("123456");
         assertThrows(MyException.class, () -> {
             registrationService.register(user);
         });
