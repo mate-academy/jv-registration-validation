@@ -1,14 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private static String okLoginOne;
@@ -131,7 +131,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserWithRightButEdgeParams_Ok() {
-        User user= new User("johnny", "123456", 18);
+        User user = new User("johnny", "123456", 18);
         assertEquals(registrationService.register(user), user);
         Storage.people.remove(user);
     }
