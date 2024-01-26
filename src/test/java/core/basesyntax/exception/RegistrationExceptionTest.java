@@ -15,7 +15,7 @@ class RegistrationExceptionTest {
     @Test
     void throwAndCheckExceptionWithCaption() {
         assertThrows(RegistrationException.class, () -> {
-            throw new RegistrationException("This is sample exception which we are throwing and checking");
+            throw new RegistrationException("This is sample exception which we are throwing");
         });
     }
 }
