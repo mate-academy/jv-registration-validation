@@ -8,19 +8,19 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    private final static int MIN_LEN_OF_LOGIN_AND_PASSWORD = 6;
+    private final static int MIN_AGE_OF_USERS = 18;
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getPassword() == null) {
-            throw new NullPointerException();
-        }
-        if (user.getLogin().length() < 6) {
+        // Removed throwing NullPointerExceptions, now Java throws them
+        if (user.getLogin().length() < MIN_LEN_OF_LOGIN_AND_PASSWORD) {
             throw new RegistrationException("Login must contain at least 6 symbols");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_LEN_OF_LOGIN_AND_PASSWORD) {
             throw new RegistrationException("Password must contain at least 6 symbols");
         }
-        if (user.getAge() <= 17) {
+        if (user.getAge() < MIN_AGE_OF_USERS) {
             throw new RegistrationException("User must be older than 17 years");
         }
         if (Storage.people.contains(user)) {
