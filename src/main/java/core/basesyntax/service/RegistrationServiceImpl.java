@@ -7,9 +7,9 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private final static int MIN_LEN_OF_LOGIN_AND_PASSWORD = 6;
     private final static int MIN_AGE_OF_USERS = 18;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User is already registered");
         }
 
-        Storage.people.add(user);
+        storageDao.add(user);
         return user;
     }
 }
