@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
     private static String okLoginOne;
@@ -33,20 +31,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    // Login must contain at least 6 symbols
-    void register_UserThatIsAlreadyRegistered_NotOk() {
+    void register_userThatIsAlreadyRegistered_notOk() {
         User userToRegisterTwice = new User(okLoginTwo, okPassword, okAge);
 
         assertEquals(registrationService.register(userToRegisterTwice), userToRegisterTwice);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userToRegisterTwice);
         });
-
-        Storage.people.remove(userToRegisterTwice);
     }
 
     @Test
-    void register_UserWithTooShortLogin_NotOk() {
+    void register_userWithTooShortLogin_notOk() {
         User userWithZeroSymbolsLogin = new User("", okPassword, okAge);
         User userWithFiveSymbolsLogin = new User("johny", okPassword, okAge);
         User userWithNullLogin = new User(null, okPassword, okAge);
@@ -62,14 +57,10 @@ class RegistrationServiceImplTest {
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(userWithNullLogin);
         });
-
-        Storage.people.remove(userWithZeroSymbolsLogin);
-        Storage.people.remove(userWithFiveSymbolsLogin);
-        Storage.people.remove(userWithNullLogin);
     }
 
     @Test
-    void register_UserWithTooShortPassword_NotOk() {
+    void register_userWithTooShortPassword_notOk() {
         User userWithZeroSymbolsPassword = new User(okLoginOne, "", okAge);
         User userWithFiveSymbolsPassword = new User(okLoginTwo, "qwert", okAge);
         User userWithNullPassword = new User(okLoginThree, null, okAge);
@@ -85,14 +76,10 @@ class RegistrationServiceImplTest {
         assertThrows(NullPointerException.class, () -> {
             registrationService.register(userWithNullPassword);
         });
-
-        Storage.people.remove(userWithZeroSymbolsPassword);
-        Storage.people.remove(userWithFiveSymbolsPassword);
-        Storage.people.remove(userWithNullPassword);
     }
 
     @Test
-    void register_UserWithTooYoungUser_NotOk() {
+    void register_userWithTooYoungUser_notOk() {
         User userWithZeroAge = new User(okLoginOne, okPassword, 0);
         User userWithNegativeAge = new User(okLoginTwo, okPassword, -100);
         User userWithEdgeCaseBadAge = new User(okLoginThree, okPassword, 17);
@@ -108,14 +95,10 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithEdgeCaseBadAge);
         });
-
-        Storage.people.remove(userWithZeroAge);
-        Storage.people.remove(userWithNegativeAge);
-        Storage.people.remove(userWithEdgeCaseBadAge);
     }
 
     @Test
-    void register_UserWithRightParams_Ok() {
+    void register_userWithRightParams_ok() {
         User userToRegisterOne = new User(okLoginOne, okPassword, okAge);
         User userToRegisterTwo = new User(okLoginTwo, okPassword, okAge);
         User userToRegisterThree = new User(okLoginThree, okPassword, okAge);
@@ -123,16 +106,16 @@ class RegistrationServiceImplTest {
         assertEquals(registrationService.register(userToRegisterOne), userToRegisterOne);
         assertEquals(registrationService.register(userToRegisterTwo), userToRegisterTwo);
         assertEquals(registrationService.register(userToRegisterThree), userToRegisterThree);
-
-        Storage.people.remove(userToRegisterOne);
-        Storage.people.remove(userToRegisterTwo);
-        Storage.people.remove(userToRegisterThree);
     }
 
     @Test
-    void register_UserWithRightButEdgeParams_Ok() {
+    void register_userWithRightButEdgeParams_ok() {
         User user = new User("johnny", "123456", 18);
         assertEquals(registrationService.register(user), user);
-        Storage.people.remove(user);
+    }
+
+    @AfterEach
+    void clenUp() {
+        Storage.people.clear();
     }
 }
