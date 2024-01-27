@@ -7,8 +7,8 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final static int MIN_AGE_OF_USERS = 18;
-    private final static int MIN_LEN_OF_LOGIN_AND_PASSWORD = 6;
+    private static final int MIN_AGE_OF_USERS = 18;
+    private static final  int MIN_LEN_OF_LOGIN_AND_PASSWORD = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
