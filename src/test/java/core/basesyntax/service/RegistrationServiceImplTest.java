@@ -32,12 +32,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userThatIsAlreadyRegistered_notOk() {
-        User userToRegisterTwice = new User(okLogin, okPassword, okAge);
+    void register_userWithExistedLogin_notOk() {
+        User userToRegister = new User(okLogin, okPassword, okAge);
+        User userToRegisterWithSameLogin = new User(okLogin, "newSecretPassword123", 29);
 
-        assertEquals(registrationService.register(userToRegisterTwice), userToRegisterTwice);
+        assertEquals(registrationService.register(userToRegister), userToRegister);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userToRegisterTwice);
+            registrationService.register(userToRegisterWithSameLogin);
         });
     }
 
