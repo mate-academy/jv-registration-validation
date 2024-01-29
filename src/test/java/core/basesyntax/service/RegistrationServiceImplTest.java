@@ -19,13 +19,13 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        actual = createTestUser();
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
     }
 
     @Test
     void register_passwordLength8_ok() throws RegistrationException {
-        User actual = createTestUserObject();
         actual.setPassword("12345678");
         User expected = registrationService.register(actual);
 
@@ -35,7 +35,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLength6_ok() throws RegistrationException {
-        User actual = createTestUserObject();
         actual.setPassword("123456");
         User expected = registrationService.register(actual);
 
@@ -45,7 +44,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() throws RegistrationException {
-        User actual = createTestUserObject();
         User expected = registrationService.register(actual);
 
         assertNotNull(expected);
@@ -54,42 +52,36 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortLogin_notOk() {
-        User actual = createTestUserObject();
         actual.setLogin("short");
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        User actual = createTestUserObject();
         actual.setPassword("short");
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
     void register_passwordEmpty_notOk() {
-        User actual = createTestUserObject();
         actual.setPassword("");
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
     void register_passwordLength3_notOk() {
-        User actual = createTestUserObject();
         actual.setPassword("abc");
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
     void register_passwordLength5_notOk() {
-        User actual = createTestUserObject();
         actual.setPassword("abcdf");
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
     void register_youngAge_notOk() {
-        User actual = createTestUserObject();
         actual.setAge(15);
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
@@ -99,7 +91,7 @@ class RegistrationServiceImplTest {
         storageDao.clear();
     }
 
-    private User createTestUserObject() {
+    private User createTestUser() {
         User user = new User();
         user.setLogin("user123");
         user.setPassword("user123");
