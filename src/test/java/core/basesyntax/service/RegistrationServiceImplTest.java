@@ -3,7 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.exeception.InvalidDataException;
+import core.basesyntax.exeception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -44,58 +44,58 @@ class RegistrationServiceImplTest {
         invalidPassword = new User("test_login3", "abc", 45);
         almostOkPassword = new User("test_login3", "wrong", 45);
         invalidAge = new User("test_login", "pass4test", -5);
-        tooYoungAge = new User("test_login", "pass4test", 16);
+        tooYoungAge = new User("test_login", "pass4test", 17);
         barelyOkAge = new User("test_age", "pass4age", DEFAULT_AGE);
     }
 
     @Test
     void register_nullData_notOk() {
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(nullUser),
                 "Expected: invalidDataException when User is null \n");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(userLoginNull),
                 "Expected: invalidDataException when User login is null \n");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(userPasswordNull),
                 "Expected: invalidDataException when User password is null \n");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(userAgeNull),
                 "Expected: invalidDataException when User age is null \n");
     }
 
     @Test
     void register_invalidLogin_notOk() {
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(emptyLogin),
                 "User login can't be empty");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidLogin),
                 "User login must have at least 6 characters");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(almostOkLogin),
                 "User login must have at least 6 characters");
     }
 
     @Test
     void register_invalidPassword_notOk() {
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(emptyPassword),
                 "User password can't be empty");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidPassword),
                 "User password must have at least 6 characters");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(almostOkPassword),
                 "User password must have at least 6 characters");
     }
 
     @Test
     void register_invalidAge_notOk() {
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalidAge),
                 "User must be at least" + DEFAULT_AGE + "years old");
-        assertThrows(InvalidDataException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(tooYoungAge),
                 "User must be at least" + DEFAULT_AGE + "years old");
     }
@@ -110,7 +110,8 @@ class RegistrationServiceImplTest {
         assertEquals(barelyOkPassword, tempUser, "Method register return wrong data");
         tempUser = registrationService.register(barelyOkAge);
         assertEquals(barelyOkAge, tempUser, "Method register return wrong data");
-        tempUser = registrationService.register(validUser);
-        assertEquals(null, tempUser, "User with this login is already registered!");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(validUser),
+                "User with this login is already registered!");
     }
 }
