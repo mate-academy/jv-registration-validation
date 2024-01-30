@@ -13,12 +13,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || user.equals(new User())) {
-            throw new RegistrationException("Fill in the data fields");
+        if (user == null) {
+            throw new RegistrationException("User cannot be null");
+        }
+        if (user.equals(new User())) {
+            throw new RegistrationException("Fill in data fields for empty user");
         }
 
         if (user.getLogin() == null) {
-            throw new RegistrationException(("Login missing"));
+            throw new RegistrationException(("Login cannot be null"));
         }
 
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
@@ -26,16 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MIN_LOGIN_LENGTH + " characters");
         }
 
-        if (user.getLogin().matches(".*\\s.*")) {
-            throw new RegistrationException("Password must contain no spacing");
-        }
-
         if (user.getPassword() == null) {
-            throw new RegistrationException("Password must contain no spacing");
-        }
-
-        if (user.getPassword().matches(".*\\s.*")) {
-            throw new RegistrationException("Password must contain no spacing");
+            throw new RegistrationException("Password cannot be null");
         }
 
         if (user.getPassword().length() < MIN_PASS_LENGTH) {

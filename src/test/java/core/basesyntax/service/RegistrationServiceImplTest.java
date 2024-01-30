@@ -28,12 +28,19 @@ class RegistrationServiceImplTest {
         User registeredUser0 = registrationService.register(
                 new User("boroda4436", "2Gillette_Pro_glide", 30));
         User registeredUser1 = registrationService.register(new User("Rommelua", "ulemoR", 18));
-        User registeredUser2 = registrationService.register(new User("sokima", "a!aa3sokim1", 100));
 
         assertTrue(Storage.people.contains(registeredUser0));
         assertTrue(Storage.people.contains(registeredUser1));
+
+        User registeredUser2 = registrationService.register(new User("sokima", "a!aa3sokim1", 100));
+        User registeredUser3 = registrationService.register(new User("RommelUA", "      ", 69));
+        User registeredUser4 = registrationService.register(new User(
+                "            ", "123123asdasd", 19));
+
         assertTrue(Storage.people.contains(registeredUser2));
-        assertEquals(3, Storage.people.size());
+        assertTrue(Storage.people.contains(registeredUser3));
+        assertTrue(Storage.people.contains(registeredUser4));
+        assertEquals(5, Storage.people.size());
     }
 
     @Test
@@ -84,13 +91,14 @@ class RegistrationServiceImplTest {
     @Test
     public void register_emptyLogin_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(new User("            ", "123123asdasd", 19));
-        });
-        assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("", "123123asdasd", 40));
         });
+    }
+
+    @Test
+    public void register_nullLogin_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(new User("O r Est", "123123asd", 40));
+            registrationService.register(new User(null, "asd123", 23));
         });
     }
 
@@ -114,16 +122,7 @@ class RegistrationServiceImplTest {
     @Test
     public void register_emptyPassword_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(new User("Orest40th", "             ", 23));
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(new User("RommelUA", "     ", 69));
-        });
-        assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("MENTOR_MA", "", 43));
-        });
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(new User("MentorMaa", "1df 1fghj", 40));
         });
     }
 
