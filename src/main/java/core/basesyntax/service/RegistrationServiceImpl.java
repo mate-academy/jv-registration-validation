@@ -8,7 +8,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASS_LENGTH = 6;
-    private static final int MIN_AGE_LENGTH = 18;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -43,9 +43,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MIN_PASS_LENGTH + " characters");
         }
 
-        if (user.getAge() < MIN_AGE_LENGTH) {
+        if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("You must be at least "
-                    + MIN_AGE_LENGTH + " years old to register");
+                    + MIN_AGE + " years old to register");
         }
 
         for (User storageUser : Storage.people) {
