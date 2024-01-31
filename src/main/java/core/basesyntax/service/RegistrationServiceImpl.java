@@ -16,19 +16,28 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        User existingUser = storageDao.get(user.getLogin());
+        checkIfUserExists(user);
+        validateUser(user);
+        checkLogin(user);
+        checkPassword(user);
 
+        storageDao.add(user);
+        return user;
+    }
+
+    private void checkIfUserExists(User user) {
+        User existingUser = storageDao.get(user.getLogin());
         if (existingUser != null) {
-            throw new RegistrationException("There is user with that login");
+            throw new RegistrationException("There is a user with that login");
         }
+    }
+
+    private void validateUser(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("User login cannot be null");
         }
         if (user.getAge() == null) {
             throw new RegistrationException("User age cannot be null");
-        }
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            throw new RegistrationException("User password cannot be null or empty");
         }
         if (user.getAge() == 0) {
             throw new RegistrationException("User age cannot be zero");
@@ -39,17 +48,26 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("User must be 18 years old or older");
         }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Users login must contain at least 6 characters");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Users password must contain at least 6 characters");
-        }
         if (user.getId() >= Long.MAX_VALUE) {
             throw new RegistrationException("User id is greater or equal long.MAX_VALUE");
         }
+    }
+
+    private void checkLogin(User user) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException("Users login must contain at least 6 characters");
+        }
         if (user.getLogin().length() > MAX_LOGIN_LENGTH) {
             throw new RegistrationException("User login is not within the allowed range");
+        }
+    }
+
+    private void checkPassword(User user) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new RegistrationException("User password cannot be null or empty");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Users password must contain at least 6 characters");
         }
         if (user.getPassword().length() > MAX_PASSWORD_LENGTH) {
             throw new RegistrationException("User password is not within the allowed range");
@@ -58,8 +76,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User password is too weak. "
                     + "Please choose a stronger password.");
         }
-        storageDao.add(user);
-        return user;
     }
 }
 
