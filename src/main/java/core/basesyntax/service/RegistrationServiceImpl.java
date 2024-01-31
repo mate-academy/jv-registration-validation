@@ -33,7 +33,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         User checkedUsersLoginInStorage = storageDao.get(user.getLogin());
         if (checkedUsersLoginInStorage != null) {
-            throw new RegistrationException("This login is already in use. Try to choose another login.");
+            throw new RegistrationException("This login is already in use. "
+                    + "Try to choose another login.");
         }
         return storageDao.add(user);
     }

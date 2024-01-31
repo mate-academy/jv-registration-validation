@@ -99,9 +99,15 @@ class RegistrationServiceImplTest {
     @Test
     void register_adult_ok() {
         user.setLogin("abcdef");
-        user.setAge(100);
+        user.setAge(18);
         User actual = registrationService.register(user);
-        assertEquals(100, actual.getAge());
+        assertEquals(18, actual.getAge());
+        User user1 = new User();
+        user1.setLogin("abcdefg");
+        user1.setAge(100);
+        user1.setPassword("123456");
+        User actual1 = registrationService.register(user1);
+        assertEquals(100, actual1.getAge());
     }
 
     @Test
