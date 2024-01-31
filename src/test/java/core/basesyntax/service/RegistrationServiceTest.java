@@ -2,13 +2,25 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.ExpectedException;
+import core.basesyntax.exceptions.EmptyLoginException;
+import core.basesyntax.exceptions.EmptyPasswordException;
+import core.basesyntax.exceptions.EqualUsersException;
+import core.basesyntax.exceptions.LengthLoginException;
+import core.basesyntax.exceptions.LengthPasswordException;
+import core.basesyntax.exceptions.NegativeAgeException;
+import core.basesyntax.exceptions.NullAgeException;
+import core.basesyntax.exceptions.NullLoginException;
+import core.basesyntax.exceptions.NullPasswordException;
+import core.basesyntax.exceptions.NullUserException;
+import core.basesyntax.exceptions.UnderAgeException;
+import core.basesyntax.exceptions.WhiteSpacedPasswordException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
@@ -16,8 +28,8 @@ class RegistrationServiceTest {
     private static StorageDao storageDao;
     private static User validUser;
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         validUser = new User();
@@ -28,14 +40,14 @@ class RegistrationServiceTest {
 
     @Test
     void register_nullUser_notOK() {
-        assertThrows(ExpectedException.class, () -> registrationService.register(null));
+        assertThrows(NullUserException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_passwordNull_notOk() {
         User userWithNullPassword = validUser;
         userWithNullPassword.setPassword(null);
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(NullPasswordException.class, () ->
                 registrationService.register(userWithNullPassword));
     }
 
@@ -43,7 +55,7 @@ class RegistrationServiceTest {
     void register_passwordEmpty_notOk() {
         User userWithEmptyPassword = validUser;
         userWithEmptyPassword.setPassword("");
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(EmptyPasswordException.class, () ->
                 registrationService.register(userWithEmptyPassword));
     }
 
@@ -51,7 +63,7 @@ class RegistrationServiceTest {
     void register_passwordWhiteSpaced_notOk() {
         User userWithEmptyPassword = validUser;
         userWithEmptyPassword.setPassword("                 ");
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(WhiteSpacedPasswordException.class, () ->
                 registrationService.register(userWithEmptyPassword));
     }
 
@@ -59,7 +71,7 @@ class RegistrationServiceTest {
     void register_passwordLessThanRequired_notOk() {
         User userWithEmptyPassword = validUser;
         userWithEmptyPassword.setPassword("1234");
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(LengthPasswordException.class, () ->
                 registrationService.register(userWithEmptyPassword));
     }
 
@@ -67,7 +79,7 @@ class RegistrationServiceTest {
     void register_loginNull_notOk() {
         User userWithNullLogin = validUser;
         userWithNullLogin.setLogin(null);
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(NullLoginException.class, () ->
                 registrationService.register(userWithNullLogin));
     }
 
@@ -75,7 +87,7 @@ class RegistrationServiceTest {
     void register_loginEmpty_notOk() {
         User userWithEmptyLogin = validUser;
         userWithEmptyLogin.setLogin("");
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(EmptyLoginException.class, () ->
                 registrationService.register(userWithEmptyLogin));
     }
 
@@ -83,7 +95,7 @@ class RegistrationServiceTest {
     void register_loginWhiteSpaced_notOk() {
         User userWithEmptyLogin = validUser;
         userWithEmptyLogin.setLogin("                 ");
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(EmptyLoginException.class, () ->
                 registrationService.register(userWithEmptyLogin));
     }
 
@@ -91,7 +103,7 @@ class RegistrationServiceTest {
     void register_loginLessThanRequired_notOk() {
         User userWithEmptyLogin = validUser;
         userWithEmptyLogin.setLogin("log");
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(LengthLoginException.class, () ->
                 registrationService.register(userWithEmptyLogin));
     }
 
@@ -99,7 +111,7 @@ class RegistrationServiceTest {
     void register_nullAgedUser_notOk() {
         User nullAgedUser = validUser;
         nullAgedUser.setAge(null);
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(NullAgeException.class, () ->
                 registrationService.register(nullAgedUser));
     }
 
@@ -107,7 +119,7 @@ class RegistrationServiceTest {
     void register_underAgedUser_notOK() {
         User nullAgedUser = validUser;
         nullAgedUser.setAge(17);
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(UnderAgeException.class, () ->
                 registrationService.register(nullAgedUser));
     }
 
@@ -115,14 +127,17 @@ class RegistrationServiceTest {
     void register_negativeAge_notOk() {
         User negativeAgeUser = validUser;
         negativeAgeUser.setAge(-1);
-        assertThrows(ExpectedException.class, () ->
+        assertThrows(NegativeAgeException.class, () ->
                 registrationService.register(negativeAgeUser));
     }
 
     @Test
     void register_validUser_isOk() {
-        assertThrows(ExpectedException.class, () ->
-                registrationService.register(validUser));
+        int sizeAfterAddingUser = Storage.people.size() + 1;
+        registrationService.register(validUser);
+        boolean containsValidUser = Storage.people.contains(validUser);
+        assertTrue(containsValidUser);
+        assertEquals(sizeAfterAddingUser, Storage.people.size());
     }
 
     @Test
@@ -135,12 +150,7 @@ class RegistrationServiceTest {
         equalUser.setAge(18);
         equalUser.setLogin("userForEquals");
         equalUser.setPassword("password");
-        try {
-            registrationService.register(firstUser);
-            registrationService.register(equalUser);
-            assertEquals(1, Storage.people.size());
-        } catch (ExpectedException e) {
-            throw new RuntimeException("Cannot register such a User ", e);
-        }
+        registrationService.register(firstUser);
+        assertThrows(EqualUsersException.class, () -> registrationService.register(equalUser));
     }
 }
