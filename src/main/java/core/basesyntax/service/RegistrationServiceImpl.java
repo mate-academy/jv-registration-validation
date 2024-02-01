@@ -6,7 +6,6 @@ import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final String WEAK_PASSWORD = "123456";
     private static final int MAX_PASSWORD_LENGTH = 255;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MAX_LOGIN_LENGTH = 30;
@@ -21,8 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user);
         checkPassword(user);
 
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkIfUserExists(User user) {
@@ -48,9 +46,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("User must be 18 years old or older");
         }
-        if (user.getId() >= Long.MAX_VALUE) {
-            throw new RegistrationException("User id is greater or equal long.MAX_VALUE");
-        }
     }
 
     private void checkLogin(User user) {
@@ -71,10 +66,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getPassword().length() > MAX_PASSWORD_LENGTH) {
             throw new RegistrationException("User password is not within the allowed range");
-        }
-        if (user.getPassword().equals(WEAK_PASSWORD)) {
-            throw new RegistrationException("User password is too weak. "
-                    + "Please choose a stronger password.");
         }
     }
 }

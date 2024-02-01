@@ -20,108 +20,128 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsOlder_Ok() {
-        User expected = new User(29892234L, "test_user22", "test_password1", 20);
+    void register_userIsOlder_Ok() {
+        User expected = new User("test_user22", "test_password1", 20);
         Storage.people.add(expected);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userTooYoung_NotOk() {
-        User expected = new User(1276534L, "test_user", "test_password", 17);
+    void register_userTooYoung_notOk() {
+        User expected = new User("test_user", "test_password", 17);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userLoginLength_Ok() {
-        User expected = new User(123411234L, "test_user0", "test_password2", 22);
+    void register_userLoginLength_ok() {
+        User expected = new User("test_user0", "test_password2", 22);
+        Storage.people.add(expected);
+        assertThrows(RegistrationException.class, () -> reg.register(expected));
+
+        String minUsername = "user12";
+        User minUsernameUser = new User(minUsername, "test_password15", 22);
+        assertDoesNotThrow(() -> {
+            User registeredUser = reg.register(minUsernameUser);
+            assertNotNull(registeredUser);
+            assertEquals(minUsernameUser, registeredUser);
+        });
+
+        String validUsername = "user123";
+        User validUsernameUser = new User(validUsername, "test_password16", 25);
+        assertDoesNotThrow(() -> {
+            User registeredUser = reg.register(validUsernameUser);
+            assertNotNull(registeredUser);
+            assertEquals(validUsernameUser, registeredUser);
+        });
+
+        String maxUsername = "maxusername123456789zxcvbnmasd";
+        User maxUsernameUser = new User(maxUsername, "test_password17", 28);
+        assertDoesNotThrow(() -> {
+            User registeredUser = reg.register(maxUsernameUser);
+            assertNotNull(registeredUser);
+            assertEquals(maxUsernameUser, registeredUser);
+        });
+
+        String specialCharsUsername = "user@name_456";
+        User specialCharsUsernameUser = new User(specialCharsUsername, "test_password18", 23);
+        assertDoesNotThrow(() -> {
+            User registeredUser = reg.register(specialCharsUsernameUser);
+            assertNotNull(registeredUser);
+            assertEquals(specialCharsUsernameUser, registeredUser);
+        });
+    }
+
+    @Test
+    void register_userShortLogin_notOk() {
+        User expected = new User("u", "test_password07", 25);
+        assertThrows(RegistrationException.class, () -> reg.register(expected));
+    }
+
+    @Test
+    void register_userPasswordLength_ok() {
+        User expected = new User("test_user7", "test_password3", 19);
         Storage.people.add(expected);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userShortLogin_NotOk() {
-        User expected = new User(9183744L, "u", "test_password07", 25);
+    void register_userShortPassword_notOk() {
+        User expected = new User("test_user009", "pass", 23);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userPasswordLength_Ok() {
-        User expected = new User(16544235L, "test_user7", "test_password3", 19);
+    void register_userWithExactLogin_ok() {
+        User expected = new User("test_user8", "test_password4", 35);
         Storage.people.add(expected);
-        assertThrows(RegistrationException.class, () -> reg.register(expected));
-    }
-
-    @Test
-    void userShortPassword_NotOk() {
-        User expected = new User(1234L, "test_user009", "pass", 23);
-        assertThrows(RegistrationException.class, () -> reg.register(expected));
-    }
-
-    @Test
-    void userWithExactLogin_Ok() {
-        User expected = new User(1453233L, "test_user8", "test_password4", 35);
-        Storage.people.add(expected);
-        User actual = new User(987654L, "test_user8", "test_password5", 25);
+        User actual = new User("test_user8", "test_password5", 25);
         assertThrows(RegistrationException.class, () -> reg.register(actual));
     }
 
     @Test
-    void userIdMaxValue_NotOk() {
-        User expected = new User(Long.MAX_VALUE, "test_user1", "test_password6", 33);
+    void register_userNullLogin_notOk() {
+        User expected = new User(null, "test_password7", 33);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userNullLogin_NotOk() {
-        User expected = new User(4321L, null, "test_password7", 33);
+    void register_userNullAge_notOk() {
+        User expected = new User("test_user16", "test_password8", null);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userNullAge_NotOk() {
-        User expected = new User(4321L, "test_user16", "test_password8", null);
-        assertThrows(RegistrationException.class, () -> reg.register(expected));
-    }
-
-    @Test
-    void userLoginMaxLength_NotOk() {
+    void register_userLoginMaxLength_notOk() {
         String tooLongUsername = "toolongusernameabcdefghi1234567890";
-        User expected = new User(121297L, tooLongUsername, "test_password9", 33);
+        User expected = new User(tooLongUsername, "test_password9", 33);
         RegistrationException exception = assertThrows(RegistrationException.class,
                 () -> reg.register(expected));
         assertEquals("User login is not within the allowed range", exception.getMessage());
     }
 
     @Test
-    void userNullPassword_NotOk() {
-        User expected = new User(12597L, "test_user12", null, 33);
+    void register_userNullPassword_notOk() {
+        User expected = new User("test_user12", null, 33);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userWeakPassword_NotOk() {
-        User expected = new User(129227L, "test_user11", "123456", 33);
+    void register_userZeroAge_notOk() {
+        User expected = new User("test_user90", "test_password01", 0);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userZeroAge_NotOk() {
-        User expected = new User(4321L, "test_user90", "test_password01", 0);
+    void register_userAgeBelowZero_notOk() {
+        User expected = new User("test_user09", "test_password02", -5);
         assertThrows(RegistrationException.class, () -> reg.register(expected));
     }
 
     @Test
-    void userAgeBelowZero_NotOk() {
-        User expected = new User(4321L, "test_user09", "test_password02", -5);
-        assertThrows(RegistrationException.class, () -> reg.register(expected));
-    }
-
-    @Test
-    void userMinLoginAndPassLength_Ok() {
-        String minLogin = "user12";
+    void register_userMinLoginAndPassLength_ok() {
+        String minLogin = "12user";
         String minPassword = "pass12";
-        User expected = new User(1234L, minLogin, minPassword, 25);
+        User expected = new User(minLogin, minPassword, 25);
         assertDoesNotThrow(() -> {
             User registeredUser = reg.register(expected);
             assertNotNull(registeredUser);
@@ -130,8 +150,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userRegistration_Successful() {
-        User expected = new User(1234L, "test_user", "test_password", 25);
+    void register_userRegistration_successful() {
+        User expected = new User("test_user", "test_password", 25);
 
         assertDoesNotThrow(() -> {
             User registeredUser = reg.register(expected);
