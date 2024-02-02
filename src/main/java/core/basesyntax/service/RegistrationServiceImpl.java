@@ -12,12 +12,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkForNull(user);
-        return (isValidValue(user)
-                && storageDao.get(user.getLogin()) == null) ? storageDao.add(user) : null;
+        if (isDataNotNull(user) && isValidValue(user)) {
+            if (storageDao.get(user.getLogin()) != null) {
+                throw new RegistrationException("User with such login already exists in DB");
+            }
+        }
+        return storageDao.add(user);
     }
 
-    public void checkForNull(User user) {
+    public boolean isDataNotNull(User user) {
         if (user != null) {
             if (user.getLogin() == null) {
                 throw new RegistrationException("Login can't be null!");
@@ -28,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (user.getAge() == null) {
                 throw new RegistrationException("Age can't be null!");
             }
-            return;
+            return true;
         }
         throw new RegistrationException("Object of user can't be null!");
     }

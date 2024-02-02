@@ -23,55 +23,50 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkForNull_nullUser_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.checkForNull(null); },
+    void isDataNotNull_nullUser_NotOk() {
+        Assertions.assertThrows(RegistrationException.class, () -> service.isDataNotNull(null),
                 "User can't be null! It should throw a custom exception");
     }
 
     @Test
-    void checkForNull_notNullUser_Ok() {
+    void isDataNotNull_notNullUser_Ok() {
         User newUser = new User();
         newUser.setLogin("Klyaksa");
         newUser.setPassword("Black-and-white");
         newUser.setAge(21);
-        Assertions.assertDoesNotThrow(() -> {
-            service.checkForNull(newUser); },
+        Assertions.assertDoesNotThrow(() -> service.isDataNotNull(newUser),
                 "It shouldn't throw custom exception: user exists and has all fields filled in.");
     }
 
     @Test
-    void checkForNull_nullAllFields_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.checkForNull(new User()); },
+    void isDataNotNull_nullAllFields_NotOk() {
+        Assertions.assertThrows(RegistrationException.class,
+                () -> service.isDataNotNull(new User()),
                 "User's fields can't be null! It should throw a custom exception");
     }
 
     @Test
-    void checkForNull_nullLogin_NotOk() {
+    void isDataNotNull_nullLogin_NotOk() {
         User newUser = new User();
         newUser.setPassword("password");
         newUser.setAge(20);
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.checkForNull(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isDataNotNull(newUser));
     }
 
     @Test
-    void checkForNull_nullPassword_NotOk() {
+    void isDataNotNull_nullPassword_NotOk() {
         User newUser = new User();
         newUser.setLogin("someUser23");
         newUser.setAge(23);
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.checkForNull(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isDataNotNull(newUser));
     }
 
     @Test
-    void checkForNull_nullAge_NotOk() {
+    void isDataNotNull_nullAge_NotOk() {
         User newUser = new User();
         newUser.setLogin("someUser23");
         newUser.setPassword("forUser23");
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.checkForNull(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isDataNotNull(newUser));
     }
 
     @Test
@@ -80,8 +75,7 @@ public class RegistrationServiceImplTest {
         newUser.setLogin("Klyaksa");
         newUser.setPassword("Black-and-white");
         newUser.setAge(-21);
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); },
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser),
                 "It should throw custom exception: age can't be negative");
     }
 
@@ -91,8 +85,7 @@ public class RegistrationServiceImplTest {
         newUser.setLogin("Klyaksa");
         newUser.setPassword("Black-and-white");
         newUser.setAge(150);
-        Assertions.assertDoesNotThrow(() -> {
-            service.isValidValue(newUser); },
+        Assertions.assertDoesNotThrow(() -> service.isValidValue(newUser),
                 "It shouldn't throw custom exception: age is correct.");
     }
 
@@ -102,8 +95,7 @@ public class RegistrationServiceImplTest {
         newUser.setLogin("Klyaksa");
         newUser.setPassword("Black-and-white");
         newUser.setAge(157);
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); },
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser),
                 "It should throw custom exception: age is too old");
     }
 
@@ -127,23 +119,17 @@ public class RegistrationServiceImplTest {
     void isValidValue_lengthLogin_NotOk() {
         User newUser = new User();
         newUser.setLogin("admin");
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser));
         newUser.setLogin("admi");
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser));
         newUser.setLogin("adm");
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser));
         newUser.setLogin("a");
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser));
         newUser.setLogin("");
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser));
         newUser.setLogin(" ");
-        Assertions.assertThrows(RegistrationException.class, () -> {
-            service.isValidValue(newUser); });
+        Assertions.assertThrows(RegistrationException.class, () -> service.isValidValue(newUser));
     }
 
     @Test
@@ -194,7 +180,6 @@ public class RegistrationServiceImplTest {
         newUser.setLogin("User_First");
         newUser.setPassword("some-password");
         newUser.setAge(18);
-        User actual = service.register(newUser);
-        Assertions.assertNull(actual);
+        Assertions.assertThrows(RegistrationException.class, () -> service.register(newUser));
     }
 }
