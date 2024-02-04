@@ -2,8 +2,8 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.model.User;
 import core.basesyntax.exception.AuthenticationException;
+import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
@@ -21,8 +21,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean isInvalidUser(User user) {
-        return user.getLogin().length() < 6 ||
-                user.getPassword().length() < 6 ||
-                user.getAge() < 18;
+        return user.getLogin().length() < 6
+               || user.getPassword().length() < 6
+                || user.getAge() < 18;
     }
 }
