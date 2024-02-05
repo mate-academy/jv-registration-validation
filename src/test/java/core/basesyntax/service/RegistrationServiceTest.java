@@ -13,6 +13,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
     private static RegistrationService registrationService;
     private static StorageDao storage;
 
@@ -39,7 +42,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_existedLogin_notOk() {
+    void register_existingLogin_notOk() {
         User user = new User();
         user.setAge(19);
         user.setLogin("new_user");
@@ -86,8 +89,8 @@ class RegistrationServiceTest {
         user.setPassword("123456");
         Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw RegistrationException here, age < 18");
-        assertEquals("Age must be at least 18 years", exception.getMessage());
+                "Service should throw RegistrationException here, age < " + MIN_AGE);
+        assertEquals("Age must be at least " + MIN_AGE + " years", exception.getMessage());
     }
 
     @Test
@@ -130,12 +133,13 @@ class RegistrationServiceTest {
     void register_addUserWithShortLogin_notOk() {
         User user = new User();
         user.setAge(19);
-        user.setLogin("new_");
+        user.setLogin("new_u");
         user.setPassword("123456");
         Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Service should throw RegistrationException here, login length < 18");
-        assertEquals("Login must contain at least 6 characters", exception.getMessage());
+        assertEquals("Login must contain at least "
+                + MIN_LOGIN_LENGTH + " characters", exception.getMessage());
     }
 
     @Test
@@ -147,7 +151,8 @@ class RegistrationServiceTest {
         Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Service should throw RegistrationException here, password length < 18");
-        assertEquals("Password must contain at least 6 characters", exception.getMessage());
+        assertEquals("Password must contain at least "
+                + MIN_PASSWORD_LENGTH + " characters", exception.getMessage());
     }
 
     @Test
@@ -159,7 +164,8 @@ class RegistrationServiceTest {
         Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Service should throw RegistrationException here, age < 18");
-        assertEquals("Age must be at least 18 years", exception.getMessage());
+        assertEquals("Age must be at least "
+                + MIN_AGE + " years", exception.getMessage());
     }
 
     @Test
@@ -181,7 +187,8 @@ class RegistrationServiceTest {
         Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Service should throw RegistrationException here, password length < 18");
-        assertEquals("Password must contain at least 6 characters", exception.getMessage());
+        assertEquals("Password must contain at least "
+                + MIN_PASSWORD_LENGTH + " characters", exception.getMessage());
     }
 
     @Test
@@ -193,6 +200,7 @@ class RegistrationServiceTest {
         Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Service should throw RegistrationException here, login length < 18");
-        assertEquals("Login must contain at least 6 characters", exception.getMessage());
+        assertEquals("Login must contain at least "
+                + MIN_LOGIN_LENGTH + " characters", exception.getMessage());
     }
 }
