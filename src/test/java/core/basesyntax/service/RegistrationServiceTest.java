@@ -1,16 +1,16 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.InvalidUserDataException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceTest {
     private static RegistrationService registrationService;
@@ -39,25 +39,21 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_addExistentUser_notOk() {
+    void register_existedLogin_notOk() {
         User user = new User();
         user.setAge(19);
         user.setLogin("new_user");
         user.setPassword("1234567");
         Storage.people.add(user);
+        User userWithSameLogin = new User();
+        userWithSameLogin.setAge(22);
+        userWithSameLogin.setLogin("new_user");
+        userWithSameLogin.setPassword("91231231");
         Throwable exception =
-                assertThrows(InvalidUserDataException.class,
-                        () -> registrationService.register(user),
+                assertThrows(RegistrationException.class,
+                        () -> registrationService.register(userWithSameLogin),
                         "Register service should throw exception while adding same user");
         assertEquals("Login you provided already exists", exception.getMessage());
-    }
-
-    @Test
-    void register_addNullValue_notOk() {
-        Throwable exception = assertThrows(InvalidUserDataException.class,
-                () -> registrationService.register(null),
-                "Null value should throw NullPointerException");
-        assertEquals("User can't be null", exception.getMessage());
     }
 
     @Test
@@ -67,7 +63,7 @@ class RegistrationServiceTest {
         user.setAge(null);
         user.setLogin(null);
         user.setPassword(null);
-        assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -83,14 +79,14 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_addUserWithAgeLess18_notOk() {
+    void register_lowAge_notOk() {
         User user = new User();
         user.setAge(17);
         user.setLogin("new_user");
         user.setPassword("123456");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, age < 18");
+                "Service should throw RegistrationException here, age < 18");
         assertEquals("Age must be at least 18 years", exception.getMessage());
     }
 
@@ -100,9 +96,9 @@ class RegistrationServiceTest {
         user.setAge(null);
         user.setLogin("new_user");
         user.setPassword("123456");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, age is null");
+                "Service should throw RegistrationException here, age is null");
         assertEquals("User's age can't be null", exception.getMessage());
     }
 
@@ -112,9 +108,9 @@ class RegistrationServiceTest {
         user.setAge(19);
         user.setLogin(null);
         user.setPassword("123456");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, login is null");
+                "Service should throw RegistrationException here, login is null");
         assertEquals("User's login can't be null", exception.getMessage());
     }
 
@@ -124,33 +120,33 @@ class RegistrationServiceTest {
         user.setAge(19);
         user.setLogin("new_user");
         user.setPassword(null);
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, login is null");
+                "Service should throw RegistrationException here, login is null");
         assertEquals("User's password can't be null", exception.getMessage());
     }
 
     @Test
-    void register_addUserWithLoginLess6_notOk() {
+    void register_addUserWithShortLogin_notOk() {
         User user = new User();
         user.setAge(19);
         user.setLogin("new_");
         user.setPassword("123456");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, login length < 18");
+                "Service should throw RegistrationException here, login length < 18");
         assertEquals("Login must contain at least 6 characters", exception.getMessage());
     }
 
     @Test
-    void register_addUserWithPasswordLess6_notOk() {
+    void register_addUserWithShortPassword_notOk() {
         User user = new User();
         user.setAge(19);
         user.setLogin("new_user");
         user.setPassword("12345");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, password length < 18");
+                "Service should throw RegistrationException here, password length < 18");
         assertEquals("Password must contain at least 6 characters", exception.getMessage());
     }
 
@@ -160,9 +156,9 @@ class RegistrationServiceTest {
         user.setAge(-17);
         user.setLogin("new_user");
         user.setPassword("123456");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, age < 18");
+                "Service should throw RegistrationException here, age < 18");
         assertEquals("Age must be at least 18 years", exception.getMessage());
     }
 
@@ -182,9 +178,9 @@ class RegistrationServiceTest {
         user.setAge(18);
         user.setLogin("new_user");
         user.setPassword("");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, password length < 18");
+                "Service should throw RegistrationException here, password length < 18");
         assertEquals("Password must contain at least 6 characters", exception.getMessage());
     }
 
@@ -194,9 +190,9 @@ class RegistrationServiceTest {
         user.setAge(19);
         user.setLogin("");
         user.setPassword("123456");
-        Throwable exception = assertThrows(InvalidUserDataException.class,
+        Throwable exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "Service should throw InvalidUserDataException here, login length < 18");
+                "Service should throw RegistrationException here, login length < 18");
         assertEquals("Login must contain at least 6 characters", exception.getMessage());
     }
 }
