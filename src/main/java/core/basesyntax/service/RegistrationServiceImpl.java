@@ -12,12 +12,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null || user.getLogin().length() < 6) {
-            throw new RegistrationException("Login is not correct. " +
-                    "The login should contain more than 6 symbols");
+            throw new RegistrationException("Login is not correct. "
+                    + "The login should contain more than 6 symbols");
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new RegistrationException("Password is not correct. " +
-                    "The password should contain more than 6 symbols.");
+            throw new RegistrationException("Password is not correct. "
+                    + "The password should contain more than 6 symbols.");
         }
         if (user.getAge() == null || user.getAge() < 18) {
             throw new RegistrationException("You must be over 18!");

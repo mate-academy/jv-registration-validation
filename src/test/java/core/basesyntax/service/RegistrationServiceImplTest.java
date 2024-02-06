@@ -38,69 +38,69 @@ class RegistrationServiceImplTest {
 
         assertDoesNotThrow(() -> Storage.people.add(user1));
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(user2));
+                () -> registrationService.register(user2));
     }
 
     @Test
     void register_shortLoginLength_notOk() {
         User invalidUser = new User(INVALID_LENGTH, VALID_PASSWORD, 25);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_shortPasswordLength_notOk() {
         User invalidUser = new User(VALID_LOGIN_2, INVALID_LENGTH, 25);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_littleAge_notOk() {
         User invalidUser = new User(VALID_LOGIN_2, VALID_PASSWORD, 17);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
         User invalidUser = new User(null, VALID_PASSWORD, 18);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_nullPassword_notOk() {
         User invalidUser = new User(VALID_LOGIN_2, null, 18);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_nullAge_notOk() {
         User invalidUser = new User(VALID_LOGIN_2, VALID_PASSWORD, null);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_negativeAge_notOk() {
         User invalidUser = new User(VALID_LOGIN_2, VALID_PASSWORD, -1000);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_emptyLogin_notOk() {
         User invalidUser = new User(EMPTY_STRING_TEST, VALID_PASSWORD, 20);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 
     @Test
     void register_emptyPassword_notOk() {
         User invalidUser = new User(VALID_LOGIN_2, EMPTY_STRING_TEST, 20);
         assertThrows(RegistrationException.class,
-                () -> Storage.people.add(invalidUser));
+                () -> registrationService.register(invalidUser));
     }
 }
