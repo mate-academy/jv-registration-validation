@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     void register_userNull_notOk() {
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(null);
-        });
+        }, "Test failed! Exception should be thrown if user is null!");
     }
 
     @Test
@@ -51,7 +51,7 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Age is null!");
     }
 
     @Test
@@ -59,7 +59,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Password is null!");
     }
 
     @Test
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Login is null!");
     }
 
     @Test
@@ -75,7 +75,7 @@ class RegistrationServiceImplTest {
         user.setAge(0);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Age is less 18!");
     }
 
     @Test
@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
         user.setAge(9);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Age is less 18!");
     }
 
     @Test
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
         user.setAge(17);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Age is less 18!");
     }
 
     @Test
@@ -99,7 +99,7 @@ class RegistrationServiceImplTest {
         user.setPassword(EMPTY);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Password length is less 6!");
     }
 
     @Test
@@ -107,7 +107,7 @@ class RegistrationServiceImplTest {
         user.setPassword(THREE_CHARACTERS);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Password length is less 6!");
     }
 
     @Test
@@ -115,7 +115,7 @@ class RegistrationServiceImplTest {
         user.setPassword(FIVE_CHARACTERS);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Password length is less 6!");
     }
 
     @Test
@@ -123,7 +123,7 @@ class RegistrationServiceImplTest {
         user.setLogin(EMPTY);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Login length is less 6!");
     }
 
     @Test
@@ -131,7 +131,7 @@ class RegistrationServiceImplTest {
         user.setLogin(THREE_CHARACTERS);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Login length is less 6!");
     }
 
     @Test
@@ -139,7 +139,7 @@ class RegistrationServiceImplTest {
         user.setLogin(FIVE_CHARACTERS);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Test failed! Exception should be thrown if Login length is less 6!");
     }
 
     @Test
@@ -184,7 +184,7 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
         assertThrows(ExpectedException.class, () -> {
             registrationService.register(cloneUser);
-        });
+        }, "Test failed! The storage cannot contain users with the same login");
     }
 
     @Test
