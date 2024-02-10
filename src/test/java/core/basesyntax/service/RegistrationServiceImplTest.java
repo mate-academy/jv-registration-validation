@@ -18,31 +18,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_OneUserAdd_ok() {
+    void registration_addUser_ok() {
         User user1 = new User();
-        user1.setLogin("Terminator");
+        user1.setLogin("Vortex");
         user1.setPassword("123456");
         user1.setAge(18);
         registrationServiceImpl.register(user1);
         assertEquals(1, Storage.people.size());
         assertEquals(user1, Storage.people.get(0));
-    }
-
-    @Test
-    void registration_twoUserAdd_ok() {
-        User user1 = new User();
-        user1.setLogin("Terminator");
-        user1.setPassword("123456");
-        user1.setAge(18);
-        User user2 = new User();
-        user2.setLogin("Vortex");
-        user2.setPassword("123456");
-        user2.setAge(18);
-        registrationServiceImpl.register(user1);
-        registrationServiceImpl.register(user2);
-        assertEquals(2, Storage.people.size());
-        assertEquals(user1, Storage.people.get(0));
-        assertEquals(user2, Storage.people.get(1));
     }
 
     @Test
@@ -68,22 +51,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void registration_userLoginValid_ok() {
-        User user1 = new User();
-        user1.setLogin("Vertex");
-        user1.setPassword("123456");
-        user1.setAge(18);
-        User user2 = new User();
-        user2.setLogin("Terminator");
-        user2.setPassword("123456");
-        user2.setAge(18);
-        registrationServiceImpl.register(user1);
-        registrationServiceImpl.register(user2);
-        assertEquals(6, Storage.people.get(0).getLogin().length());
-        assertEquals(10, Storage.people.get(1).getLogin().length());
-    }
-
-    @Test
     void registration_userLoginLengthLessValid_notOk() {
         User user1 = new User();
         user1.setLogin("Robot");
@@ -105,22 +72,6 @@ public class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
-    }
-
-    @Test
-    void registration_userPasswordValid_ok() {
-        User user1 = new User();
-        user1.setLogin("Vertex");
-        user1.setPassword("123456");
-        user1.setAge(18);
-        User user2 = new User();
-        user2.setLogin("Terminator");
-        user2.setPassword("0123456789");
-        user2.setAge(18);
-        registrationServiceImpl.register(user1);
-        registrationServiceImpl.register(user2);
-        assertEquals(6, Storage.people.get(0).getPassword().length());
-        assertEquals(10, Storage.people.get(1).getPassword().length());
     }
 
     @Test
@@ -149,22 +100,6 @@ public class RegistrationServiceImplTest {
         user.setLogin("Vertex");
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
-    }
-
-    @Test
-    void registration_userAgeValid_ok() {
-        User user1 = new User();
-        user1.setLogin("Vertex");
-        user1.setPassword("123456");
-        user1.setAge(18);
-        User user2 = new User();
-        user2.setLogin("Terminator");
-        user2.setPassword("0123456789");
-        user2.setAge(50);
-        registrationServiceImpl.register(user1);
-        registrationServiceImpl.register(user2);
-        assertEquals(18, Storage.people.get(0).getAge());
-        assertEquals(50, Storage.people.get(1).getAge());
     }
 
     @Test

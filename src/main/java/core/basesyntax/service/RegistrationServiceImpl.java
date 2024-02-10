@@ -8,6 +8,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_CHARACTERS = 6;
     private static final int MIN_AGE = 18;
+    private StorageDao storageDao;
 
     @Override
     public User register(User user) {
@@ -38,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User's age is at least "
                     + MIN_AGE + " years old");
         }
-        StorageDao storageDao = new StorageDaoImpl();
+        storageDao = new StorageDaoImpl();
         return storageDao.add(user);
     }
 }
