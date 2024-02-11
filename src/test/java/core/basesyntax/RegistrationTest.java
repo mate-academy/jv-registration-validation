@@ -10,9 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Feel free to remove this class and create your own.
- */
 public class RegistrationTest {
     private static RegistrationService service;
     private static final int MIN_PASSWORD_LENGTH = 6;
@@ -66,56 +63,32 @@ public class RegistrationTest {
     }
 
     @Test
-    void register_loginMinCharacters_Ok() {
-        user.setLogin("Danilo");
-        Assertions.assertTrue(service.register(user).getLogin().length() >= MIN_LOGIN_LENGTH);
-    }
-
-    @Test
-    void register_loginMoreThanMinCharacters_Ok() {
-        user.setLogin("Oleksandr1");
-        Assertions.assertTrue(service.register(user).getLogin().length() >= MIN_LOGIN_LENGTH);
-    }
-
-    @Test
     void register_passwordLessThanMinCharacters_notOk() {
-        user.setLogin("Oleksandr2");
+        user.setLogin("Oleksandr1");
         user.setPassword("12345");
         Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_passwordMinCharacters_Ok() {
-        user.setLogin("Oleksandr3");
-        user.setPassword("123456");
-        Assertions.assertTrue(service.register(user).getPassword().length() >= MIN_PASSWORD_LENGTH);
-    }
-
-    @Test
-    void register_passwordWithMoreThanMinCharacters_Ok() {
-        user.setLogin("Oleksandr4");
-        user.setPassword("12345678");
-        Assertions.assertTrue(service.register(user).getPassword().length() >= MIN_PASSWORD_LENGTH);
-    }
-
-    @Test
     void register_LessThanMinAge_notOk() {
-        user.setLogin("Oleksandr5");
+        user.setLogin("Oleksandr2");
         user.setAge(17);
         Assertions.assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_MinAge_Ok() {
-        user.setLogin("Oleksandr6");
-        user.setAge(18);
-        Assertions.assertTrue(service.register(user).getAge() >= MIN_AGE);
-    }
-
-    @Test
-    void register_MoreThanMinAge_Ok() {
-        user.setLogin("Oleksandr7");
-        user.setAge(64);
-        Assertions.assertTrue(service.register(user).getAge() >= MIN_AGE);
+    void register_normalValues_Ok() {
+        Assertions.assertTrue(service.register(new User("Danilo", "oleksandr", 21))
+                .getLogin().length() >= MIN_LOGIN_LENGTH);
+        Assertions.assertTrue(service.register(new User("Oleksandr3", "oleksandr", 21))
+                .getLogin().length() >= MIN_LOGIN_LENGTH);
+        Assertions.assertTrue(service.register(new User("Oleksandr4", "123456", 21))
+                .getPassword().length() >= MIN_PASSWORD_LENGTH);
+        Assertions.assertTrue(service.register(new User("Oleksandr5", "12345678", 21))
+                .getPassword().length() >= MIN_PASSWORD_LENGTH);
+        Assertions.assertTrue(service.register(new User("Oleksandr6", "oleksandr", 18))
+                .getAge() >= MIN_AGE);
+        Assertions.assertTrue(service.register(new User("Oleksandr7", "oleksandr", 64))
+                .getAge() >= MIN_AGE);
     }
 }
