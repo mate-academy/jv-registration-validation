@@ -18,7 +18,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterValidUsers_Ok() {
+    void registerValidUsers_Ok() {
         registrationService.register(new User("validLogin", "validPass", 18));
         registrationService.register(new User("ValidLogin@gmail.com", "Valid_pass98", 18));
         registrationService.register(new User("validlogin_98", "valid_Pass3", 65));
@@ -46,14 +46,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageLess_NotOK() {
+    void register_smallAge_NotOK() {
         User userUnderage = new User("validLogin", "validPass", 17);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userUnderage));
     }
 
     @Test
-    void loginLess_NotOK() {
+    void register_shortlogin_NotOK() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("", "validPass", 18)));
         assertThrows(RegistrationException.class,
@@ -63,7 +63,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLess_NotOK() {
+    void register_shortPassword_NotOK() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("validLogin", "", 18)));
         assertThrows(RegistrationException.class,
@@ -77,6 +77,6 @@ class RegistrationServiceImplTest {
         User user = new User("validLogin2", "validPass", 60);
         registrationService.register(user);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(new User("validLogin2", "validPass", 60)));
     }
 }
