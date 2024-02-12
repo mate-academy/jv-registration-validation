@@ -23,7 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login length must be no less than "
                     + MIN_LOGIN_LENGTH + " characters");
         }
-        if ( user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password length must be no less than "
                     + MIN_PASSWORD_LENGTH + " characters");
         }

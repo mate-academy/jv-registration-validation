@@ -18,7 +18,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void testRegisterValidUsers() {
+    void testRegisterValidUsers_Ok() {
         registrationService.register(new User("validLogin", "validPass", 18));
         registrationService.register(new User("ValidLogin@gmail.com", "Valid_pass98", 18));
         registrationService.register(new User("validlogin_98", "valid_Pass3", 65));
