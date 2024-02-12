@@ -13,20 +13,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationException {
-        if (user == null
-                || user.getLogin() == null
-                || user.getPassword() == null
-                || user.getAge() == null) {
-            throw new RegistrationException("User data cannot be null or contain empty fields");
+        if (user == null) {
+            throw new RegistrationException("User cannot be null");
         }
-        if (user.getAge() < MIN_AGE) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationException("User age must be at least " + MIN_AGE);
         }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+        if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login length must be no less than "
                     + MIN_LOGIN_LENGTH + " characters");
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        if ( user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password length must be no less than "
                     + MIN_PASSWORD_LENGTH + " characters");
         }
