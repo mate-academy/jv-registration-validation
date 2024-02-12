@@ -18,7 +18,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void justAddingFitUsers_Ok() {
+    void testRegisterValidUsers() {
         registrationService.register(new User("validLogin", "validPass", 18));
         registrationService.register(new User("ValidLogin@gmail.com", "Valid_pass98", 18));
         registrationService.register(new User("validlogin_98", "valid_Pass3", 65));
@@ -34,7 +34,6 @@ class RegistrationServiceImplTest {
     @Test
     void passwordNull_NotOK() {
         User userNullPassword = new User("validLogin", null, 25);
-
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(userNullPassword));
     }

@@ -13,17 +13,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationException {
-        if (user == null) {
-            throw new RegistrationException("User cannot be null");
-        }
-        if (user.getLogin() == null) {
-            throw new RegistrationException("The \"Login\" field cannot be empty");
-        }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("The \"Password\" field cannot be empty");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("The \"Age\" field cannot be empty");
+        if (user == null
+                || user.getLogin() == null
+                || user.getPassword() == null
+                || user.getAge() == null) {
+            throw new RegistrationException("User data cannot be null or contain empty fields");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("User age must be at least " + MIN_AGE);
