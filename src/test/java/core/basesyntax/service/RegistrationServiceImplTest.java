@@ -7,7 +7,6 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +20,9 @@ class RegistrationServiceImplTest {
     private final User shortPasswordUser = new User();
     private final User tooYoungUser = new User();
     private final User shadowUser = new User();
+    private final User nullLoginUser = new User();
+    private final User nullPasswordUser = new User();
+    private final User nullAgeUser = new User();
 
     @BeforeEach
     void setUp() {
@@ -42,7 +44,12 @@ class RegistrationServiceImplTest {
         tooYoungUser.setLogin("TooYoungUserLogin");
         tooYoungUser.setPassword("TooYoungUserPassword");
         tooYoungUser.setAge(13);
-
+        nullLoginUser.setPassword("nullLoginUserPassword");
+        nullLoginUser.setAge(24);
+        nullPasswordUser.setLogin("");
+        nullPasswordUser.setAge(25);
+        nullAgeUser.setLogin("nullAgeUserLogin");
+        nullAgeUser.setPassword("nullAgeUserPassword");
     }
 
     @Test
@@ -77,6 +84,27 @@ class RegistrationServiceImplTest {
     void register_nullUserInput_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(shadowUser);
+        });
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(shortLoginUser);
+        });
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(nullPasswordUser);
+        });
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(nullAgeUser);
         });
     }
 

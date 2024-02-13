@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
@@ -26,7 +25,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with this login is already in the storage");
         }
-        if (user.getLogin().length() >= 6 && user.getPassword().length() >= 6 && user.getAge() >= 18) {
+        if (user.getLogin().length() >= 6
+                && user.getPassword().length() >= 6
+                && user.getAge() >= 18) {
             storageDao.add(user);
             return user;
         } else {
