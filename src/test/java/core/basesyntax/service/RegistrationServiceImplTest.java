@@ -27,23 +27,18 @@ class RegistrationServiceImplTest {
         correctUser.setLogin("CorrectUserLogin");
         correctUser.setPassword("CorrectUserPassword");
         correctUser.setAge(18);
-        //----------------
         sameLogin1User.setLogin("sameLogin");
         sameLogin1User.setPassword("sameLogin1UserPassword");
         sameLogin1User.setAge(19);
-        //----------------
         sameLogin2User.setLogin("sameLogin");
         sameLogin2User.setPassword("sameLogin2UserPassword");
         sameLogin2User.setAge(20);
-        //----------------
         shortLoginUser.setLogin("ShLgn");
         shortLoginUser.setPassword("ShortLoginUserPassword");
         shortLoginUser.setAge(21);
-        //----------------
         shortPasswordUser.setLogin("ShortPasswordUserLogin");
         shortPasswordUser.setPassword("Pswrd");
         shortPasswordUser.setAge(22);
-        //----------------
         tooYoungUser.setLogin("TooYoungUserLogin");
         tooYoungUser.setPassword("TooYoungUserPassword");
         tooYoungUser.setAge(13);
@@ -98,10 +93,5 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(sameLogin2User);
         });
-    }
-
-    @AfterEach
-    void tearDown() {
-
     }
 }

@@ -14,16 +14,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User is null");
         }
-        int age = user.getAge() == null ? 0 : user.getAge();
-        String login = user.getLogin() == null ? null : user.getLogin();
-        String password = user.getPassword() == null ? null : user.getPassword();
-        for (User curUser : Storage.people) {
-            if (curUser.getLogin().equals(login)) {
-                throw new RegistrationException("User with this login is already in the storage");
-            }
+        if (user.getLogin() == null) {
+            throw new RegistrationException("User's login is null");
         }
-        if ((login == null ? 0 : login.length()) >= 6
-                && (password == null ? 0 : password.length()) >= 6 && age >= 18) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException("User's password is null");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("User's age is null");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with this login is already in the storage");
+        }
+        if (user.getLogin().length() >= 6 && user.getPassword().length() >= 6 && user.getAge() >= 18) {
             storageDao.add(user);
             return user;
         } else {
