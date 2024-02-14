@@ -7,53 +7,24 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final User correctUser = new User("CorrectUserLogin","CorrectUserPassword",18);
+    private static final User sameLogin1User = new User("sameLogin","sameLogin1UserPassword",19);
+    private static final User sameLogin2User = new User("sameLogin","sameLogin2UserPassword",20);
+    private static final User shortLoginUser = new User("ShLgn","ShortLoginUserPassword",21);
+    private static final User shortPasswordUser = new User("ShortPasswordUserLogin","Pswrd",22);
+    private static final User tooYoungUser = new User("TooYoungUserLogin","TooYoungUserPass",17);
+    private static final User nullUser = new User(null,null,null);
+    private static final User nullLoginUser = new User(null,"nullLoginUserPassword",24);
+    private static final User nullPasswordUser = new User("nullPasswordUserLogin",null,25);
+    private static final User nullAgeUser = new User("nullAgeUserLogin","nullAgeUserPassword",null);
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final User correctUser = new User();
-    private final User sameLogin1User = new User();
-    private final User sameLogin2User = new User();
-    private final User shortLoginUser = new User();
-    private final User shortPasswordUser = new User();
-    private final User tooYoungUser = new User();
-    private final User shadowUser = new User();
-    private final User nullLoginUser = new User();
-    private final User nullPasswordUser = new User();
-    private final User nullAgeUser = new User();
-
-    @BeforeEach
-    void setUp() {
-        correctUser.setLogin("CorrectUserLogin");
-        correctUser.setPassword("CorrectUserPassword");
-        correctUser.setAge(18);
-        sameLogin1User.setLogin("sameLogin");
-        sameLogin1User.setPassword("sameLogin1UserPassword");
-        sameLogin1User.setAge(19);
-        sameLogin2User.setLogin("sameLogin");
-        sameLogin2User.setPassword("sameLogin2UserPassword");
-        sameLogin2User.setAge(20);
-        shortLoginUser.setLogin("ShLgn");
-        shortLoginUser.setPassword("ShortLoginUserPassword");
-        shortLoginUser.setAge(21);
-        shortPasswordUser.setLogin("ShortPasswordUserLogin");
-        shortPasswordUser.setPassword("Pswrd");
-        shortPasswordUser.setAge(22);
-        tooYoungUser.setLogin("TooYoungUserLogin");
-        tooYoungUser.setPassword("TooYoungUserPassword");
-        tooYoungUser.setAge(13);
-        nullLoginUser.setPassword("nullLoginUserPassword");
-        nullLoginUser.setAge(24);
-        nullPasswordUser.setLogin("");
-        nullPasswordUser.setAge(25);
-        nullAgeUser.setLogin("nullAgeUserLogin");
-        nullAgeUser.setPassword("nullAgeUserPassword");
-    }
 
     @Test
-    void register_allCorrectData_Ok() {
+    void register_allCorrectData_ok() {
         User actual = registrationService.register(correctUser);
         User expected = storageDao.get(correctUser.getLogin());
         assertEquals(actual,expected);
@@ -74,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_notOk() {
+    void register_underage_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(tooYoungUser);
         });
@@ -83,14 +54,14 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUserInput_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(shadowUser);
+            registrationService.register(nullUser);
         });
     }
 
     @Test
     void register_nullLogin_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(shortLoginUser);
+            registrationService.register(nullLoginUser);
         });
     }
 
