@@ -10,72 +10,72 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final User correctUser = new User("CorrectUserLogin","CorrectUserPassword",18);
-    private static final User sameLogin1User = new User("sameLogin","sameLogin1UserPassword",19);
-    private static final User sameLogin2User = new User("sameLogin","sameLogin2UserPassword",20);
-    private static final User shortLoginUser = new User("ShLgn","ShortLoginUserPassword",21);
-    private static final User shortPasswordUser = new User("ShortPasswordUserLogin","Pswrd",22);
-    private static final User tooYoungUser = new User("TooYoungUserLogin","TooYoungUserPass",17);
-    private static final User nullUser = new User(null,null,null);
-    private static final User nullLoginUser = new User(null,"nullLoginUserPassword",24);
-    private static final User nullPasswordUser = new User("nullPasswordUserLogin",null,25);
-    private static final User nullAgeUser = new User("nullAgeUserLogin","nullAgeUserPassword",null);
+    private static final User CORRECT_USER = new User("CorrectUserLogin", "CorrectUserPass", 18);
+    private static final User SAME_LOGIN_1_USER = new User("sameLogin", "sameLogin1UserPass", 19);
+    private static final User SAME_LOGIN_USER = new User("sameLogin", "sameLogin2UserPass", 20);
+    private static final User SHORT_LOGIN_USER = new User("ShLgn", "ShortLoginUserPass", 21);
+    private static final User SHORT_PASSWORD_USER = new User("ShortPassUserLogin", "Pswrd", 22);
+    private static final User TOO_YOUNG_USER = new User("YoungUserLogin", "YoungUserPass", 17);
+    private static final User NULL_USER = new User(null, null, null);
+    private static final User NULL_LOGIN_USER = new User(null, "nullLoginUserPass", 24);
+    private static final User NULL_PASSWORD_USER = new User("nullPassUserLogin", null, 25);
+    private static final User NULL_AGE_USER = new User("nullAgeUserLogin", "nullAgeUserPass", null);
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Test
     void register_allCorrectData_ok() {
-        User actual = registrationService.register(correctUser);
-        User expected = storageDao.get(correctUser.getLogin());
+        User actual = registrationService.register(CORRECT_USER);
+        User expected = storageDao.get(CORRECT_USER.getLogin());
         assertEquals(actual,expected);
     }
 
     @Test
     void register_loginLength_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(shortLoginUser);
+            registrationService.register(SHORT_LOGIN_USER);
         });
     }
 
     @Test
     void register_passwordLength_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(shortPasswordUser);
+            registrationService.register(SHORT_PASSWORD_USER);
         });
     }
 
     @Test
     void register_underage_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(tooYoungUser);
+            registrationService.register(TOO_YOUNG_USER);
         });
     }
 
     @Test
     void register_nullUserInput_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(nullUser);
+            registrationService.register(NULL_USER);
         });
     }
 
     @Test
     void register_nullLogin_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(nullLoginUser);
+            registrationService.register(NULL_LOGIN_USER);
         });
     }
 
     @Test
     void register_nullPassword_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(nullPasswordUser);
+            registrationService.register(NULL_PASSWORD_USER);
         });
     }
 
     @Test
     void register_nullAge_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(nullAgeUser);
+            registrationService.register(NULL_AGE_USER);
         });
     }
 
@@ -88,9 +88,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addUserIsInStorage_notOk() {
-        registrationService.register(sameLogin1User);
+        registrationService.register(SAME_LOGIN_1_USER);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(sameLogin2User);
+            registrationService.register(SAME_LOGIN_USER);
         });
     }
 }

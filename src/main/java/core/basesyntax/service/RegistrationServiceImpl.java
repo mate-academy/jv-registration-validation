@@ -10,31 +10,52 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
+        checkAge(user.getAge());
+        checkExistingUser(user.getLogin());
+
+        storageDao.add(user);
+        return user;
+    }
+
+    private void validateUser(User user) {
         if (user == null) {
             throw new RegistrationException("User is null");
         }
-        if (user.getLogin() == null) {
+    }
+
+    private void checkLogin(String login) {
+        if (login == null) {
             throw new RegistrationException("User's login is null");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("User's password is null");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("User's age is null");
-        }
-        if (user.getLogin().length() < 6) {
+        if (login.length() < 6) {
             throw new RegistrationException("Login is less than 6 characters");
         }
-        if (user.getPassword().length() < 6) {
+    }
+
+    private void checkPassword(String password) {
+        if (password == null) {
+            throw new RegistrationException("User's password is null");
+        }
+        if (password.length() < 6) {
             throw new RegistrationException("Password is less than 6 characters");
         }
-        if (user.getAge() < 18) {
+    }
+
+    private void checkAge(Integer age) {
+        if (age == null) {
+            throw new RegistrationException("User's age is null");
+        }
+        if (age < 18) {
             throw new RegistrationException("Age is under 18");
         }
-        if (storageDao.get(user.getLogin()) != null) {
+    }
+
+    private void checkExistingUser(String login) {
+        if (storageDao.get(login) != null) {
             throw new RegistrationException("User with this login is already in the storage");
         }
-        storageDao.add(user);
-        return user;
     }
 }
