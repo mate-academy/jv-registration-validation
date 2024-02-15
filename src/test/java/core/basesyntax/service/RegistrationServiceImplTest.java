@@ -5,25 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
-import core.basesyntax.exception.DbContainsSuchUserException;
-import core.basesyntax.exception.UserEmptyOrNullLoginException;
-import core.basesyntax.exception.UserIsNullException;
-import core.basesyntax.exception.UserLoginLengthException;
-import core.basesyntax.exception.UserMinimumAgeException;
-import core.basesyntax.exception.UserNullAgeException;
-import core.basesyntax.exception.UserNullOrEmptyPasswordException;
-import core.basesyntax.exception.UserPasswordLengthException;
-import core.basesyntax.exception.UserTooOldAgeException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RegistrationServiceImplTest {
@@ -36,19 +22,53 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
     }
 
-    @ParameterizedTest
-    @MethodSource("userProvider")
-    void registerWith_correctUserData_ok(List<User> users) {
-        Storage.people.clear();
-        for (User user : users) {
-            User actualUser = registrationService.register(user);
-            assertEquals(user, actualUser);
-        }
+    @Test
+    void registerWith_correctUserData_ok() {
+        User user1 = new User();
+        user1.setAge(28);
+        user1.setLogin("Vasiliy");
+        user1.setPassword("0123459876");
+        User user2 = new User();
+        user2.setAge(56);
+        user2.setLogin("Svitlana");
+        user2.setPassword("qwerty123");
+        User user3 = new User();
+        user3.setAge(33);
+        user3.setLogin("Penelopa");
+        user3.setPassword("kruzlolqwer");
+        User actualUser1 = registrationService.register(user1);
+        User actualUser2 = registrationService.register(user2);
+        User actualUser3 = registrationService.register(user3);
+        assertEquals(user1, actualUser1);
+        assertEquals(user2, actualUser2);
+        assertEquals(user3, actualUser3);
+    }
+
+    @Test
+    void registerWith_limitUserData_ok() {
+        User user1 = new User();
+        user1.setAge(18);
+        user1.setLogin("Dmytro");
+        user1.setPassword("asdfgh");
+        User user2 = new User();
+        user2.setAge(120);
+        user2.setLogin("Larisa");
+        user2.setPassword("123456");
+        User user3 = new User();
+        user3.setAge(18);
+        user3.setLogin("Svyato");
+        user3.setPassword("ytrewq");
+        User actualUser1 = registrationService.register(user1);
+        User actualUser2 = registrationService.register(user2);
+        User actualUser3 = registrationService.register(user3);
+        assertEquals(user1, actualUser1);
+        assertEquals(user2, actualUser2);
+        assertEquals(user3, actualUser3);
     }
 
     @Test
     void registerWith_nullUser_notOk() {
-        assertThrows(UserIsNullException.class,() -> registrationService.register(null));
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -57,7 +77,7 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         user.setPassword("0q9w8r7t6y");
         user.setAge(25);
-        assertThrows(UserEmptyOrNullLoginException.class,() -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -66,7 +86,7 @@ class RegistrationServiceImplTest {
         user.setLogin("");
         user.setPassword("0q9w8r7t6y");
         user.setAge(36);
-        assertThrows(UserEmptyOrNullLoginException.class,() -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -75,7 +95,7 @@ class RegistrationServiceImplTest {
         user.setLogin("Max");
         user.setPassword("0q9w8r7t6y");
         user.setAge(55);
-        assertThrows(UserLoginLengthException.class,() -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -88,9 +108,9 @@ class RegistrationServiceImplTest {
         user2.setLogin("Maximilian");
         user2.setPassword("");
         user2.setAge(25);
-        assertThrows(UserNullOrEmptyPasswordException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(user1));
-        assertThrows(UserNullOrEmptyPasswordException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(user2));
     }
 
@@ -104,8 +124,8 @@ class RegistrationServiceImplTest {
         user2.setLogin("Katerina");
         user2.setPassword("0q4vb");
         user2.setAge(25);
-        assertThrows(UserPasswordLengthException.class,() -> registrationService.register(user1));
-        assertThrows(UserPasswordLengthException.class,() -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user1));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user2));
     }
 
     @Test
@@ -114,7 +134,7 @@ class RegistrationServiceImplTest {
         user.setLogin("Agafiya");
         user.setPassword("0q9w8r7t6y");
         user.setAge(125);
-        assertThrows(UserTooOldAgeException.class,() -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -123,7 +143,7 @@ class RegistrationServiceImplTest {
         user.setLogin("Ostap4ik");
         user.setPassword("0q9w8r7t6y");
         user.setAge(12);
-        assertThrows(UserMinimumAgeException.class,() -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "The user must be at least 18 years of age. Registration is not possible");
     }
 
@@ -133,7 +153,7 @@ class RegistrationServiceImplTest {
         user.setLogin("Oksana");
         user.setPassword("0q9w8r7t6y");
         user.setAge(-22);
-        assertThrows(UserMinimumAgeException.class,() -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "You can not set the user a negative age value. Registration is not possible");
     }
 
@@ -143,7 +163,7 @@ class RegistrationServiceImplTest {
         user.setLogin("Oksana");
         user.setPassword("0q9w8r7t6y");
         user.setAge(null);
-        assertThrows(UserNullAgeException.class,() -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -153,52 +173,6 @@ class RegistrationServiceImplTest {
         user.setPassword("0q9w8r7t6y");
         user.setAge(35);
         storageDao.add(user);
-        assertThrows(DbContainsSuchUserException.class,() -> registrationService.register(user));
-    }
-
-    private Stream<List<User>> userProvider() {
-        User user1 = new User();
-        user1.setAge(18);
-        user1.setLogin("Vasiliy");
-        user1.setPassword("012345");
-        User user2 = new User();
-        user2.setAge(56);
-        user2.setLogin("Svitlana");
-        user2.setPassword("qwerty");
-        User user3 = new User();
-        user3.setAge(33);
-        user3.setLogin("TarasShev");
-        user3.setPassword("asdfghDar");
-        User user4 = new User();
-        user4.setAge(41);
-        user4.setLogin("Larisa");
-        user4.setPassword("54321042");
-        User user5 = new User();
-        user5.setAge(18);
-        user5.setLogin("Svyatoslav");
-        user5.setPassword("ytrewqgfD");
-        User user6 = new User();
-        user6.setAge(57);
-        user6.setLogin("Zinaida");
-        user6.setPassword("gfdsah");
-        User user7 = new User();
-        user7.setAge(35);
-        user7.setLogin("Mykola");
-        user7.setPassword("banka_ogirkiv");
-        User user8 = new User();
-        user8.setAge(29);
-        user8.setLogin("Hanna777");
-        user8.setPassword("poiuytr");
-        User user9 = new User();
-        user9.setAge(46);
-        user9.setLogin("Vanentyn");
-        user9.setPassword("11223344");
-        User user10 = new User();
-        user10.setAge(23);
-        user10.setLogin("Anatoliy");
-        user10.setPassword("zxcvbn");
-        List<User> users = new ArrayList<>(List.of(
-                user1, user2, user3, user4, user5, user6, user7, user8, user9, user10));
-        return Stream.of(users);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
