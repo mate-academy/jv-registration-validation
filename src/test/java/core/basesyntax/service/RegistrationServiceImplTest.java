@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
@@ -31,14 +32,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLength_notOk() {
+    void register_loginTooShort_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(SHORT_LOGIN_USER);
         });
     }
 
     @Test
-    void register_passwordLength_notOk() {
+    void register_passwordTooShort_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(SHORT_PASSWORD_USER);
         });
@@ -88,7 +89,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addUserIsInStorage_notOk() {
-        registrationService.register(SAME_LOGIN_1_USER);
+        Storage.people.add(SAME_LOGIN_1_USER);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(SAME_LOGIN_USER);
         });

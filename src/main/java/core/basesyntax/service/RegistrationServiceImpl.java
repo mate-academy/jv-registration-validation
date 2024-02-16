@@ -6,7 +6,10 @@ import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static final StorageDao STORAGE_DAO = new StorageDaoImpl();
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE_VALUE = 18;
 
     @Override
     public User register(User user) {
@@ -16,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkAge(user.getAge());
         checkExistingUser(user.getLogin());
 
-        storageDao.add(user);
+        STORAGE_DAO.add(user);
         return user;
     }
 
@@ -30,8 +33,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null) {
             throw new RegistrationException("User's login is null");
         }
-        if (login.length() < 6) {
-            throw new RegistrationException("Login is less than 6 characters");
+        if (login.length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException("Login is less than "
+                    + MIN_LOGIN_LENGTH + " characters");
         }
     }
 
@@ -39,8 +43,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new RegistrationException("User's password is null");
         }
-        if (password.length() < 6) {
-            throw new RegistrationException("Password is less than 6 characters");
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Password is less than "
+                    + MIN_PASSWORD_LENGTH + " characters");
         }
     }
 
@@ -48,13 +53,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age == null) {
             throw new RegistrationException("User's age is null");
         }
-        if (age < 18) {
-            throw new RegistrationException("Age is under 18");
+        if (age < MIN_AGE_VALUE) {
+            throw new RegistrationException("Age is under " + MIN_AGE_VALUE);
         }
     }
 
     private void checkExistingUser(String login) {
-        if (storageDao.get(login) != null) {
+        if (STORAGE_DAO.get(login) != null) {
             throw new RegistrationException("User with this login is already in the storage");
         }
     }
