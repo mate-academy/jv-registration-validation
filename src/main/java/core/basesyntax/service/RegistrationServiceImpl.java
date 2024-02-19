@@ -19,23 +19,21 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getLogin().length() < MINIMUM_NUMBER_OF_CHARACTERS) {
             throw new RegistrationException("The number of characters in the login"
-                    + " must be more than 6");
+                    + " must be more than " + MINIMUM_NUMBER_OF_CHARACTERS);
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
         }
         if (user.getPassword().length() < MINIMUM_NUMBER_OF_CHARACTERS) {
             throw new RegistrationException("The number of characters in the password"
-                    + " must be more than 6");
+                    + " must be more than " + MINIMUM_NUMBER_OF_CHARACTERS);
         }
         if (user.getAge() == null) {
             throw new RegistrationException("Age can't be null");
         }
         if (user.getAge() < MINIMUM_AGE_FOR_REGISTRATION) {
-            throw new RegistrationException("Age must be more than 18");
-        }
-        if (user.getAge() < 0) {
-            throw new RegistrationException("Age must not be negative");
+            throw new RegistrationException("Age must be more than "
+                    + MINIMUM_AGE_FOR_REGISTRATION);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("Such a login already exists");

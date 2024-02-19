@@ -15,12 +15,9 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword";
-    private static final String INVALID_LOGIN_WITH_LENGTH_ZERO = "";
-    private static final String INVALID_LOGIN_WITH_LENGTH_THREE = "sun";
-    private static final String INVALID_LOGIN_WITH_LENGTH_FIVE = "abcde";
-    private static final String INVALID_PASSWORD_WITH_LENGTH_ZERO = "";
-    private static final String INVALID_PASSWORD_WITH_LENGTH_THREE = "sun";
-    private static final String INVALID_PASSWORD_WITH_LENGTH_FIVE = "abcde";
+    private static final String INVALID_CREDENTIAL_WITH_LENGTH_ZERO = "";
+    private static final String INVALID_CREDENTIAL_WITH_LENGTH_THREE = "sun";
+    private static final String INVALID_CREDENTIAL_WITH_LENGTH_FIVE = "abcde";
     private static final int VALID_AGE = 18;
     private static final int INVALID_AGE_THREE = 3;
     private static final int INVALID_AGE_ELEVEN = 11;
@@ -79,26 +76,26 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginIsTooShort_notOk() {
-        user.setLogin(INVALID_LOGIN_WITH_LENGTH_ZERO);
+        user.setLogin(INVALID_CREDENTIAL_WITH_LENGTH_ZERO);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
-        user.setLogin(INVALID_LOGIN_WITH_LENGTH_THREE);
+        user.setLogin(INVALID_CREDENTIAL_WITH_LENGTH_THREE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
-        user.setLogin(INVALID_LOGIN_WITH_LENGTH_FIVE);
+        user.setLogin(INVALID_CREDENTIAL_WITH_LENGTH_FIVE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
     }
 
     @Test
     void register_passwordTooShort_notOk() {
-        user.setPassword(INVALID_PASSWORD_WITH_LENGTH_ZERO);
+        user.setPassword(INVALID_CREDENTIAL_WITH_LENGTH_ZERO);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
-        user.setPassword(INVALID_PASSWORD_WITH_LENGTH_THREE);
+        user.setPassword(INVALID_CREDENTIAL_WITH_LENGTH_THREE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
-        user.setPassword(INVALID_PASSWORD_WITH_LENGTH_FIVE);
+        user.setPassword(INVALID_CREDENTIAL_WITH_LENGTH_FIVE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
     }
@@ -112,13 +109,6 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
         user.setAge(INVALID_AGE_SEVENTEEN);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user); });
-    }
-
-    @Test
-    void register_negativeAge_notOk() {
-        user.setAge(INVALID_NEGATIVE_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
     }
