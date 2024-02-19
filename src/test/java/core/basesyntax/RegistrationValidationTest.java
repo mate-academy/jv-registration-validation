@@ -28,7 +28,7 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    public void register_NormalUser_Ok() {
+    public void register_ValidUser_Ok() {
         User normalUser = new User();
         normalUser.setAge(28);
         normalUser.setLogin("JohnBush");
