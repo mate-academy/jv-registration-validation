@@ -1,6 +1,8 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -22,7 +24,6 @@ class RegistrationServiceImplTest {
     private static final int INVALID_AGE_THREE = 3;
     private static final int INVALID_AGE_ELEVEN = 11;
     private static final int INVALID_AGE_SEVENTEEN = 17;
-    private static final int INVALID_NEGATIVE_AGE = -27;
 
     private static StorageDao storageDao;
     private static RegistrationService registrationService;
@@ -126,7 +127,10 @@ class RegistrationServiceImplTest {
         expectedUser.setLogin(VALID_LOGIN);
         expectedUser.setPassword(VALID_PASSWORD);
         expectedUser.setAge(VALID_AGE);
+        assertNull(storageDao.get(expectedUser.getLogin()));
         User actualUser = registrationService.register(expectedUser);
+        User storedUser = storageDao.get(expectedUser.getLogin());
+        assertNotNull(storedUser);
         assertEquals(expectedUser, actualUser);
     }
 }
