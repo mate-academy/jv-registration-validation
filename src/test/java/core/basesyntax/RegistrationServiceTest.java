@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import core.basesyntax.service.PasswordLengthException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import core.basesyntax.service.UserAlreadyExistsException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +46,7 @@ class RegistrationServiceTest {
     @Test
     void userAlreadyExists_NotOk() {
         storageDao.add(registrationService.register(Andy));
-        assertThrows(Exception.class, () -> registrationService.register(Twin));
+        assertThrows(UserAlreadyExistsException.class, () -> registrationService.register(Twin));
     }
 
     @Test
@@ -54,6 +56,6 @@ class RegistrationServiceTest {
 
     @Test
     void userPasswordLength_NotOk() {
-        assertThrows(Exception.class, () -> registrationService.register(Julia));
+        assertThrows(PasswordLengthException.class, () -> registrationService.register(Julia));
     }
 }
