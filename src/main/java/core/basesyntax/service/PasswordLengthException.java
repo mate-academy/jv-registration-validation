@@ -1,14 +1,7 @@
 package core.basesyntax.service;
 
-public class PasswordLengthException extends Exception {
-    private int minLength;
-
+public class PasswordLengthException extends RuntimeException {
     public PasswordLengthException(int minLength) {
-        this.minLength = minLength;
-    }
-
-    @Override
-    public String toString() {
-        return "Password should be at least " + minLength + " characters long.";
+        super("Password should be at least " + minLength + " characters long.");
     }
 }
