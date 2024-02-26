@@ -12,18 +12,41 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkUserForNullValue(user);
+
+        if (checkUserLogin(user) && checkUserPassword(user) && checkUserAge(user)) {
+            storageDao.add(user);
+        } else {
+            throw new InvalidDataException("it is impossible to register a user "
+                    + "due to non-compliance with the registration policy");
+        }
+        return user;
+    }
+
+    public void checkUserForNullValue(User user) {
         if (user == null) {
             throw new InvalidDataException("User should be not null");
         }
-        if (storageDao.get(user.getLogin()) == null
-                && user.getLogin().length() >= MINIMUM_LENGTH_OF_LOGIN_AND_PASSWORD
-                && user.getPassword().length() >= MINIMUM_LENGTH_OF_LOGIN_AND_PASSWORD
-                && user.getAge() >= MINIMUM_USER_AGE_TO_LOGIN) {
-            storageDao.add(user);
-        } else {
-            throw new InvalidDataException("Can't add the user");
-        }
+    }
 
-        return user;
+    public boolean checkUserLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new InvalidDataException("User login should be not null");
+        }
+        return user.getLogin().length() >= MINIMUM_LENGTH_OF_LOGIN_AND_PASSWORD;
+    }
+
+    public boolean checkUserPassword(User user) {
+        if (user.getPassword() == null) {
+            throw new InvalidDataException("User password should be not null");
+        }
+        return user.getPassword().length() >= MINIMUM_LENGTH_OF_LOGIN_AND_PASSWORD;
+    }
+
+    public boolean checkUserAge(User user) {
+        if (user.getAge() == null) {
+            throw new InvalidDataException("User age should be not null");
+        }
+        return user.getAge() >= MINIMUM_USER_AGE_TO_LOGIN;
     }
 }

@@ -32,7 +32,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void userShouldBeNoNull() {
+    void userShouldBeNotNull() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(null);
         });
@@ -47,6 +47,22 @@ public class RegistrationServiceTest {
     }
 
     @Test
+    void notValidLogin_notOK() {
+        user.setLogin("Vova");
+        int actual = user.getLogin().length();
+        boolean expected = actual >= MINIMUM_LENGTH_OF_LOGIN_AND_PASSWORD;
+        assertFalse(expected);
+    }
+
+    @Test
+    void login_is_Null_notOK() {
+        user.setLogin(null);
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void validPassword_OK() {
         user.setPassword("Vova_Vovin");
         int actual = user.getPassword().length();
@@ -55,7 +71,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void notValidPassword() {
+    void notValidPassword_notOK() {
         user.setPassword("Vova1");
         int actual = user.getPassword().length();
         boolean expected = actual >= MINIMUM_LENGTH_OF_LOGIN_AND_PASSWORD;
@@ -63,11 +79,11 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void notValidLogin() {
-        user.setPassword("Vova");
-        int actual = user.getPassword().length();
-        boolean expected = actual >= MINIMUM_LENGTH_OF_LOGIN_AND_PASSWORD;
-        assertFalse(expected);
+    void password_is_Null_notOK() {
+        user.setPassword(null);
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
@@ -79,11 +95,19 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void notValidUserAge() {
+    void notValidUserAge_notOK() {
         user.setAge(17);
         int actual = user.getAge();
         boolean expected = actual >= MINIMUM_USER_AGE_TO_LOGIN;
         assertFalse(expected);
+    }
+
+    @Test
+    void age_is_Null_notOK() {
+        user.setAge(null);
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
