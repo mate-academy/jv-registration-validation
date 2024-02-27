@@ -35,19 +35,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_notExistingUser_Ok() {
+    void register_notExistingUser_ok() {
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_multiple_Users_Ok() {
+    void register_multipleUsers_ok() {
         assertEquals(user, registrationService.register(user));
         assertEquals(user2, registrationService.register(user2));
         assertEquals(2, Storage.people.size());
     }
 
     @Test
-    void register_null_user_notOk() {
+    void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null),
                 "Exception should be thrown for null value");
     }
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_login_with_fewer_chars_notOk() {
+    void register_loginWithFewerChars_notOk() {
         user.setLogin("a");
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User with less than allowed chars in Login must not be registered");
@@ -70,13 +70,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_login_with_exact_chars_Ok() {
+    void register_loginWithExactChars_ok() {
         user.setLogin("abcdef");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_with_long_login_Ok() {
+    void register_longLogin_ok() {
         user.setLogin("abcdefg");
         assertEquals(user, registrationService.register(user));
         user2.setLogin("abcdefghjkl123456");
@@ -91,7 +91,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_with_fewer_chars_notOk() {
+    void register_passwordWithFewerChars_notOk() {
         user.setPassword("1");
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User with less than allowed chars in Password must not be registered");
@@ -101,13 +101,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_with_exact_chars_Ok() {
+    void register_passwordWithExactChars_ok() {
         user.setPassword("123456");
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_with_long_password_Ok() {
+    void register_longPassword_ok() {
         user.setPassword("1234567890");
         assertEquals(user, registrationService.register(user));
         user2.setPassword("asdfgh123456qwerty567890");
@@ -115,35 +115,35 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_with_null_password_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User with Password = null must not be registered");
     }
 
     @Test
-    void register_with_null_login_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User with Login = null must not be registered");
     }
 
     @Test
-    void register_with_null_age_notOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User with age = null must not be registered");
     }
 
     @Test
-    void register_with_negative_age_notOk() {
+    void register_negativeAge_notOk() {
         user.setAge(-10);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User with negative age must not be registered");
     }
 
     @Test
-    void register_age_fewer_than_allowed_notOk() {
+    void register_ageFewerThanAllowed_notOk() {
         user.setAge(5);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "User with age less than allowed must not be registered");
@@ -153,13 +153,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_min_allowed_age_Ok() {
+    void register_minAllowedAge_ok() {
         user.setAge(18);
         assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    void register_age_more_than_min_allowed_Ok() {
+    void register_ageMoreThanMinAllowed_ok() {
         user.setAge(19);
         assertEquals(user, registrationService.register(user));
         user2.setAge(32);
