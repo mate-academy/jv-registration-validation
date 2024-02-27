@@ -75,8 +75,17 @@ class RegistrationServiceTest {
 
     @Test
     void register_UserAlreadyExists_ThrowsUserAlreadyExistsException() {
-        storageDao.add(registrationService.register(Andy));
-        assertThrows(UserAlreadyExistsException.class, () -> registrationService.register(Twin));
+        User user1 = new User();
+        user1.setLogin("NewUser");
+        user1.setAge(25);
+        user1.setPassword("123456");
+        User user2 = new User();
+        user2.setLogin("NewUser");
+        user2.setAge(45);
+        user2.setPassword("password123");
+        storageDao.add(registrationService.register(user1));
+
+        assertThrows(UserAlreadyExistsException.class, () -> registrationService.register(user2));
     }
 
     @Test
