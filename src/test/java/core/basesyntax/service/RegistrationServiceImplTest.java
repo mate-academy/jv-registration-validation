@@ -23,11 +23,12 @@ class RegistrationServiceImplTest {
     private static final String INVALID_INPUT_FIVE_LENGTH = "qwert";
     private static final int INVALID_AGE_FIVE = 5;
     private static final int INVALID_AGE_THIRTEEN = 13;
+    private static final int INVALID_AGE_SEVENTEEN = 17;
     private static final int VALID_AGE = 18;
 
     private static StorageDao storageDao;
-    private static RegistrationService registrationService;
-    private static User user;
+    private RegistrationService registrationService;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -49,34 +50,34 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullUser_notOk() {
+    void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(null); });
     }
 
     @Test
-    void nullLogin_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
     }
 
     @Test
-    void nullPassword_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
     }
 
     @Test
-    void nullAge_notOk() {
+    void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
     }
 
     @Test
-    void loginLessThanSixCharacters_notOk() {
+    void register_loginTooShort_notOk() {
         user.setLogin(INVALID_INPUT_ZERO_LENGTH);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
@@ -89,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLessThanSixCharacters_notOk() {
+    void register_passwordTooShort_notOk() {
         user.setPassword(INVALID_INPUT_ZERO_LENGTH);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
@@ -102,24 +103,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidAge_notOk() {
+    void register_invalidAge_notOk() {
         user.setAge(INVALID_AGE_FIVE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
         user.setAge(INVALID_AGE_THIRTEEN);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user); });
+        user.setAge(INVALID_AGE_SEVENTEEN);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user); });
     }
 
     @Test
-    void sameLoginExists_notOk() {
+    void register_sameLoginExists_notOk() {
         storageDao.add(user);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
-    void validUserData_ok() {
+    void register_validUserData_ok() {
         User expectedUser = new User();
         expectedUser.setLogin(VALID_LOGIN);
         expectedUser.setPassword(VALID_PASSWORD);
