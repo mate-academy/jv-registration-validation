@@ -12,6 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String VALID_LOGIN = "Max199";
+    private static final String VALID_PASSWORD = "34dS83";
+    private static final int VALID_AGE = 18;
     private static RegistrationService service;
     private User user;
 
@@ -23,6 +26,10 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+        Storage.people.add(user);
     }
 
     @Test
@@ -33,11 +40,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_sameLogin_notOk() {
-        user.setLogin("Max1999");
-        user.setPassword("123456");
-        Storage.people.add(user);
         User newUser = new User();
-        newUser.setLogin("Max1999");
+        newUser.setLogin(VALID_LOGIN);
+        newUser.setPassword("654W321q");
+        newUser.setAge(36);
         assertThrows(ValidationException.class, () ->
                 service.register(newUser));
     }
@@ -50,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessThanSixLoginLength_notOk() {
+    void register_tooShortLoginLength_notOk() {
         user.setLogin("1");
         assertThrows(ValidationException.class, () ->
                 service.register(user));
@@ -63,99 +69,54 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_equalsOrMoreThanSixLoginLength_ok() {
-        user.setLogin("Eva123");
-        user.setPassword("123456");
-        Storage.people.add(user);
-        assertTrue(Storage.people.contains(user));
-        Storage.people.clear();
-        user.setLogin("01Eva123");
-        Storage.people.add(user);
-        assertTrue(Storage.people.contains(user));
-    }
-
-    @Test
     void register_nullPassword_notOk() {
-        user.setLogin("123456ID");
         user.setPassword(null);
         assertThrows(ValidationException.class, () ->
                 service.register(user));
     }
 
     @Test
-    void register_lessThanSixPasswordLength_notOk() {
-        user.setLogin("12tr3456");
+    void register_tooShortPasswordLength_notOk() {
         user.setPassword("12");
         assertThrows(ValidationException.class, () ->
                 service.register(user));
-        Storage.people.clear();
-        user.setLogin("6372wv34");
         user.setPassword("123");
         assertThrows(ValidationException.class, () ->
                 service.register(user));
-        Storage.people.clear();
-        user.setLogin("836128de");
         user.setPassword("12345");
         assertThrows(ValidationException.class, () ->
                 service.register(user));
     }
 
     @Test
-    void register_equalsOrMoreThanSixPasswordLength_ok() {
-        user.setLogin("Make123");
-        user.setPassword("012345");
-        Storage.people.add(user);
-        assertTrue(Storage.people.contains(user));
-        Storage.people.clear();
-        user.setLogin("01Dana123");
-        user.setPassword("012345");
-        Storage.people.add(user);
-        assertTrue(Storage.people.contains(user));
-    }
-
-    @Test
     void service_nullAge_notOk() {
-        user.setLogin("12Make123");
-        user.setPassword("ds012345");
         user.setAge(null);
         assertThrows(ValidationException.class, () ->
                 service.register(user));
     }
 
     @Test
-    void service_AgeLessThanEighteenth_notOk() {
-        user.setLogin("1ab3426");
-        user.setPassword("423457");
+    void service_invalidAge_notOk() {
         user.setAge(-20);
         assertThrows(ValidationException.class, () ->
                 service.register(user));
-        Storage.people.clear();
-        user.setLogin("1272ew53");
-        user.setPassword("12345423");
         user.setAge(0);
         assertThrows(ValidationException.class, () ->
                 service.register(user));
-        Storage.people.clear();
-        user.setLogin("8wa36128");
-        user.setPassword("44434512");
         user.setAge(11);
         assertThrows(ValidationException.class, () ->
                 service.register(user));
     }
 
     @Test
-    void service_AgeEqualsOrMoreThanEighteenth_ok() {
-        user.setLogin("Olly563");
-        user.setPassword("12312345");
-        user.setAge(18);
-        Storage.people.add(user);
+    void service_validUser_ok() {
         assertTrue(Storage.people.contains(user));
-        Storage.people.clear();
-        user.setLogin("1022Gaga3");
-        user.setPassword("1284345");
-        user.setAge(45);
-        Storage.people.add(user);
-        assertTrue(Storage.people.contains(user));
+        User newUser = new User();
+        newUser.setLogin("1022Gaga3");
+        newUser.setPassword("1284dE345");
+        newUser.setAge(45);
+        Storage.people.add(newUser);
+        assertTrue(Storage.people.contains(newUser));
     }
 
     @AfterEach

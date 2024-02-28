@@ -27,16 +27,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void validLogin(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new ValidationException("The data base contains user with such login. "
-                    + "Please change your login.");
-        }
         if (user.getLogin() == null) {
             throw new ValidationException("Login can't be equaled null");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new ValidationException("Login length can't be less, than "
                     + MIN_LOGIN_LENGTH + " characters.");
+        }
+        if (storageDao.get(user.getLogin()).getLogin().equals(user.getLogin())) {
+            throw new ValidationException("The data base contains user with such login. "
+                    + "Please change your login.");
         }
     }
 
