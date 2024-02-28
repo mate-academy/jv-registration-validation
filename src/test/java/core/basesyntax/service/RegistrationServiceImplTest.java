@@ -89,7 +89,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageUnderMin_notOk() {
-        user.setAge(10);
+        int ageUnderMin = 17;
+        user.setAge(ageUnderMin);
         assertThrows(InvalidUserException.class, () -> registrationService.register(user),
                 "InvalidUserException must be thrown");
     }
