@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private User newUser;
+    private static User newUser;
 
     @BeforeEach
     void setUp() {
@@ -147,20 +147,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAgeNull_notOk() {
         newUser.setAge(null);
-        assertThrows(UserAddException.class, () ->
-                registrationService.register(newUser));
-    }
-
-    @Test
-    void checkUserId_positive_Ok() {
-        newUser.setId(5L);
-        assertTrue(newUser.getId() > 0, "User id should be positive number "
-                + "but id = " + newUser.getId());
-    }
-
-    @Test
-    void checkUserId_negative_notOk() {
-        newUser.setId(-5L);
         assertThrows(UserAddException.class, () ->
                 registrationService.register(newUser));
     }

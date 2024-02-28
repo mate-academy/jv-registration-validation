@@ -33,17 +33,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validationUserData(User user) {
-        chekId(user.getId());
         checkLoginLength(user.getLogin());
         checkPasswordLength(user.getPassword());
         checkUserAge(user.getAge());
-    }
-
-    private boolean chekId(long id) {
-        if (id <= 0) {
-            throw new UserAddException("User id should be positive number");
-        }
-        return true;
     }
 
     private boolean checkUserAge(Integer age) {
