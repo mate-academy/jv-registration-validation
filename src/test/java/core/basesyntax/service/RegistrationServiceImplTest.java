@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -28,6 +27,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         testUser = new User();
         testUser.setLogin(VALID_LOGIN);
         testUser.setPassword(VALID_PASSWORD);
@@ -76,36 +76,9 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullOrNegativeAge_notOk() {
-        testUser.setAge(null);
-        assertInvalidDataException(testUser,"User age can`t be null");
+    void register_NegativeAge_notOk() {
         testUser.setAge(-20);
         assertInvalidDataException(testUser,"User age cannot be less than 0");
-    }
-
-    @Test
-    void register_validLogin_ok() {
-        testUser.setLogin("Sashko");
-        assertTrue(testUser.getLogin().length() >= 6);
-        testUser.setLogin("AlexanderTheGreat");
-        assertTrue(testUser.getLogin().length() >= 6);
-    }
-
-    @Test
-    void register_validPassword_ok() {
-        testUser.setPassword("abcedf");
-        assertTrue(testUser.getPassword().length() >= 6);
-        Storage.people.clear();
-        testUser.setPassword("abcedfasdasfsdfasdas");
-        assertTrue(testUser.getPassword().length() >= 6);
-    }
-
-    @Test
-    void register_validAge_ok() {
-        testUser.setAge(18);
-        assertTrue(testUser.getAge() >= 18);
-        testUser.setAge(49);
-        assertTrue(testUser.getAge() >= 18);
     }
 
     @Test

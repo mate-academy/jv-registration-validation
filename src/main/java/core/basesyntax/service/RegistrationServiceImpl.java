@@ -11,32 +11,32 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        loginValidator(user);
+        passwordValidator(user.getPassword());
+        ageValidator(user.getAge());
+        return storageDao.add(user);
+    }
+
+    private void loginValidator(User user) {
         if (user.getLogin() == null) {
             throw new InvalidDataException("User login can`t be null");
         }
-        loginValidator(user.getLogin());
-        if (user.getPassword() == null) {
-            throw new InvalidDataException("User password can`t be null");
-        }
-        passwordValidator(user.getPassword());
-        if (user.getAge() == null) {
-            throw new InvalidDataException("User age can`t be null");
-        }
-        ageValidator(user.getAge());
-        userIsExist(user);
-        storageDao.add(user);
-        return user;
-    }
-
-    private void loginValidator(String login) {
-        if (login.length() < MIN_ALLOWABLE_LENGTH) {
+        if (user.getLogin().length() < MIN_ALLOWABLE_LENGTH) {
             throw new InvalidDataException("User login must be at least "
                     + MIN_ALLOWABLE_LENGTH
                     + " characters");
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidDataException("User with login "
+                    + user.getLogin()
+                    + " already exists");
+        }
     }
 
     private void passwordValidator(String password) {
+        if (password == null) {
+            throw new InvalidDataException("User password can`t be null");
+        }
         if (password.length() < MIN_ALLOWABLE_LENGTH) {
             throw new InvalidDataException("User password must be at least "
                     + MIN_ALLOWABLE_LENGTH
@@ -52,14 +52,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("User must be at least "
                     + MIN_ALLOWABLE_AGE
                     + " years old or older");
-        }
-    }
-
-    private void userIsExist(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidDataException("User with login "
-                    + user.getLogin()
-                    + " already exists");
         }
     }
 }
