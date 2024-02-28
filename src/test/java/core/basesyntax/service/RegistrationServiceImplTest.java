@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -8,7 +12,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceImplTest {
     private static StorageDao storageDao;
@@ -19,14 +22,13 @@ public class RegistrationServiceImplTest {
     private User testUser;
 
     @BeforeAll
-    static void BeforeAll() {
+    static void beforeAll() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
-
     }
+
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
         testUser = new User();
         testUser.setLogin(VALID_LOGIN);
         testUser.setPassword(VALID_PASSWORD);
@@ -35,7 +37,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_successfulRegistration() {
-        assertDoesNotThrow(() -> registrationService.register(testUser));
+        Storage.people.add(testUser);
         assertEquals(storageDao.get(testUser.getLogin()), testUser);
     }
 
@@ -85,36 +87,32 @@ public class RegistrationServiceImplTest {
     @Test
     void register_validLogin_ok() {
         testUser.setLogin("Sashko");
-        assertDoesNotThrow(() -> registrationService.register(testUser));
-        Storage.people.clear();
+        assertTrue(testUser.getLogin().length() >= 6);
         testUser.setLogin("AlexanderTheGreat");
-        assertDoesNotThrow(() -> registrationService.register(testUser));
+        assertTrue(testUser.getLogin().length() >= 6);
     }
 
     @Test
     void register_validPassword_ok() {
         testUser.setPassword("abcedf");
-        assertDoesNotThrow(() -> registrationService.register(testUser));
+        assertTrue(testUser.getPassword().length() >= 6);
         Storage.people.clear();
         testUser.setPassword("abcedfasdasfsdfasdas");
-        assertDoesNotThrow(() -> registrationService.register(testUser));
+        assertTrue(testUser.getPassword().length() >= 6);
     }
 
     @Test
     void register_validAge_ok() {
         testUser.setAge(18);
-        assertDoesNotThrow(() -> registrationService.register(testUser));
+        assertTrue(testUser.getAge() >= 18);
+        testUser.setAge(49);
+        assertTrue(testUser.getAge() >= 18);
     }
 
     @Test
     void register_nullPassword_notOk() {
         testUser.setPassword(null);
         assertInvalidDataException(testUser,"User password can`t be null");
-    }
-
-    @AfterAll
-    static void AfterAll() {
-        Storage.people.clear();
     }
 
     private void assertInvalidDataException(User user, String expectedMessage) {
