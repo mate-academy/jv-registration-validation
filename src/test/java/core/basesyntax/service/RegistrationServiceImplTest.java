@@ -13,6 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    public static final String VALID_NAME = "Markus";
+    public static final String VALID_PASSWORD = "MarkPass";
+    public static final int VALID_AGE = 22;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static User newUser;
@@ -20,9 +23,9 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         newUser = new User();
-        newUser.setLogin("Markus");
-        newUser.setPassword("MarkPass");
-        newUser.setAge(29);
+        newUser.setLogin(VALID_NAME);
+        newUser.setPassword(VALID_PASSWORD);
+        newUser.setAge(VALID_AGE);
     }
 
     @BeforeAll
@@ -126,7 +129,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_userCorrectAge_Ok() {
         newUser.setAge(18);
-        assertTrue(newUser.getAge() >= 18);
+        storageDao.add(newUser);
+        User existingUser = storageDao.get(newUser.getLogin());
+        assertTrue(existingUser.getAge() >= 18);
     }
 
     @Test
