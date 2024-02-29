@@ -1,9 +1,6 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -47,9 +44,9 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_NullUser_ReturnsNull() {
-        User user = registrationService.register(null);
-        assertNull(user);
+    void register_NullUser_ThrowsIllegalArgumentException() {
+        User user = null;
+        assertThrows(IllegalArgumentException.class, () -> registrationService.register(user));
     }
 
     @Test
