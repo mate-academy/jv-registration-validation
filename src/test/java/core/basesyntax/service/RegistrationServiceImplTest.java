@@ -12,26 +12,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static StorageDao storageDao;
-    private static RegistrationService registrationService;
     private static final String VALID_LOGIN = "ReamFOX";
     private static final String VALID_PASSWORD = "razoqewrdsfe";
     private static final int VALID_AGE = 25;
+    private StorageDao storageDao;
+    private RegistrationService registrationService;
     private User testUser;
-
-    @BeforeAll
-    static void beforeAll() {
-        storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl();
-    }
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
         testUser = new User();
         testUser.setLogin(VALID_LOGIN);
         testUser.setPassword(VALID_PASSWORD);
         testUser.setAge(VALID_AGE);
+        Storage.people.clear();
     }
 
     @Test
