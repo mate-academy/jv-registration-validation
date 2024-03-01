@@ -15,6 +15,7 @@ public class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "ReamFOX";
     private static final String VALID_PASSWORD = "razoqewrdsfe";
     private static final int VALID_AGE = 25;
+
     private StorageDao storageDao;
     private RegistrationService registrationService;
     private User testUser;
