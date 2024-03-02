@@ -23,10 +23,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private boolean checkIfUserExist(String login) {
         User foundedUser = storageDao.get(login);
         if (foundedUser != null) {
-            if (foundedUser.getLogin()
-                    .equals(login)) {
-                throw new UserAddException("User "
-                        + login + " has already been added");
+            if (foundedUser.getLogin().equals(login)) {
+                throw new UserAddException("User " + login + " has already been added");
             }
         }
         return false;
