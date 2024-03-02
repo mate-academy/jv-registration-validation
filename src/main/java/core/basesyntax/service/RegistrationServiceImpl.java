@@ -9,6 +9,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        storageDao.add(user);
+        return user;
     }
 }
