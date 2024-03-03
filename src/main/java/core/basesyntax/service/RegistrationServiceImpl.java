@@ -17,8 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_USER_AGE = 18;
+    private static final int MAX_USER_AGE = 130;
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MAX_LOGIN_LENGTH = 20;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MAX_PASSWORD_LENGTH = 20;
     private static final int DIGIT_START = 48;
     private static final int DIGIT_END = 57;
     private static final int UPPERCASE_START = 65;
@@ -27,6 +31,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int LOWERCASE_END = 122;
     private static final int CHARACTER_RANGE_START = 33;
     private static final int CHARACTER_RANGE_END = 126;
+    private static final int MAX_REPEATED_CHARACTERS = 3;
+    private static final int MAX_SEQUENTIAL_INCREASING_SYMBOLS = 3;
+    private static final int MAX_SEQUENTIAL_DECREASING_SYMBOLS = 3;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -41,10 +48,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void checkUserAge(User user) {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_USER_AGE) {
             throw new InvalidAgeException("Registration age must be over 18");
         }
-        if (user.getAge() > 130) {
+        if (user.getAge() > MAX_USER_AGE) {
             throw new InvalidAgeException("Enter your real age!");
         }
     }
@@ -107,7 +114,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void validatePasswordLength(User user) {
         int currentPasswordLength = user.getPassword().length();
-        if (currentPasswordLength < MIN_LOGIN_LENGTH || currentPasswordLength > MAX_LOGIN_LENGTH) {
+        if (currentPasswordLength < MIN_PASSWORD_LENGTH
+                || currentPasswordLength > MAX_PASSWORD_LENGTH) {
             throw new InvalidPasswordLengthException(currentPasswordLength);
         }
     }
@@ -128,11 +136,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     public void checkForSequentialPattern(User user) {
         char[] passwordCharacters = user.getPassword().toCharArray();
+        checkForRepeatedCharacters(passwordCharacters);
+        checkForSequentiallyIncreasingSymbols(passwordCharacters);
+        checkForSequentiallyDecreasingSymbols(passwordCharacters);
+    }
+
+    private void checkForRepeatedCharacters(char[] passwordCharacters) {
         List<Character> invalidCharacterSequence = new ArrayList<>();
         int repeatedCharacters = 0;
-        int sequentiallyIncreasingSymbols = 0;
-        int charactersDecreaseSequentially = 0;
-
         for (int i = 0; i < passwordCharacters.length - 1; i++) {
             int previousCharCode = passwordCharacters[i];
             int currentCharCode = passwordCharacters[i + 1];
@@ -144,12 +155,25 @@ public class RegistrationServiceImpl implements RegistrationService {
                 } else {
                     invalidCharacterSequence.add(passwordCharacters[i]);
                     repeatedCharacters++;
-                    if (repeatedCharacters == 3) {
+                    if (repeatedCharacters == MAX_REPEATED_CHARACTERS) {
                         invalidCharacterSequence.add(passwordCharacters[i + 1]);
-                        break;
+                        throw new SequentialPatternException(invalidCharacterSequence.toString());
                     }
                 }
-            } else if (currentCharCode - previousCharCode == 1) {
+            } else {
+                repeatedCharacters = 0;
+                invalidCharacterSequence.clear();
+            }
+        }
+    }
+
+    private void checkForSequentiallyIncreasingSymbols(char[] passwordCharacters) {
+        List<Character> invalidCharacterSequence = new ArrayList<>();
+        int sequentiallyIncreasingSymbols = 0;
+        for (int i = 0; i < passwordCharacters.length - 1; i++) {
+            int previousCharCode = passwordCharacters[i];
+            int currentCharCode = passwordCharacters[i + 1];
+            if (currentCharCode - previousCharCode == 1) {
                 if (sequentiallyIncreasingSymbols == 0) {
                     invalidCharacterSequence.clear();
                     invalidCharacterSequence.add(passwordCharacters[i]);
@@ -157,12 +181,25 @@ public class RegistrationServiceImpl implements RegistrationService {
                 } else {
                     invalidCharacterSequence.add(passwordCharacters[i]);
                     sequentiallyIncreasingSymbols++;
-                    if (sequentiallyIncreasingSymbols == 3) {
+                    if (sequentiallyIncreasingSymbols == MAX_SEQUENTIAL_INCREASING_SYMBOLS) {
                         invalidCharacterSequence.add(passwordCharacters[i + 1]);
-                        break;
+                        throw new SequentialPatternException(invalidCharacterSequence.toString());
                     }
                 }
-            } else if (currentCharCode - previousCharCode == -1) {
+            } else {
+                sequentiallyIncreasingSymbols = 0;
+                invalidCharacterSequence.clear();
+            }
+        }
+    }
+
+    private void checkForSequentiallyDecreasingSymbols(char[] passwordCharacters) {
+        List<Character> invalidCharacterSequence = new ArrayList<>();
+        int charactersDecreaseSequentially = 0;
+        for (int i = 0; i < passwordCharacters.length - 1; i++) {
+            int previousCharCode = passwordCharacters[i];
+            int currentCharCode = passwordCharacters[i + 1];
+            if (currentCharCode - previousCharCode == -1) {
                 if (charactersDecreaseSequentially == 0) {
                     invalidCharacterSequence.clear();
                     invalidCharacterSequence.add(passwordCharacters[i]);
@@ -170,19 +207,15 @@ public class RegistrationServiceImpl implements RegistrationService {
                 } else {
                     invalidCharacterSequence.add(passwordCharacters[i]);
                     charactersDecreaseSequentially++;
-                    if (charactersDecreaseSequentially == 3) {
+                    if (charactersDecreaseSequentially == MAX_SEQUENTIAL_DECREASING_SYMBOLS) {
                         invalidCharacterSequence.add(passwordCharacters[i + 1]);
-                        break;
+                        throw new SequentialPatternException(invalidCharacterSequence.toString());
                     }
                 }
             } else {
-                repeatedCharacters = 0;
-                sequentiallyIncreasingSymbols = 0;
                 charactersDecreaseSequentially = 0;
+                invalidCharacterSequence.clear();
             }
-        }
-        if (invalidCharacterSequence.size() == 4) {
-            throw new SequentialPatternException(invalidCharacterSequence.toString());
         }
     }
 }
