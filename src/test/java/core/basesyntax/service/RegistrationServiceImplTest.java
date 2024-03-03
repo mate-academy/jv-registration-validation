@@ -20,14 +20,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserYoungerThan18_ok() throws InvalidDataException {
+    void registerUserYoungerThan18_ok() {
         user.setAge(17);
         user.setAge(-1);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerDuplicateUsers_notOk() throws InvalidDataException {
+    void registerDuplicateUsers_notOk() {
         user.setLogin("cece@vrvrrv.com");
         user.setAge(21);
         user.setPassword("Password123");
@@ -46,22 +46,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserWithNullData_notOk() {
-        final User userWithoutLogin = new User();
-        final User userWithoutAge = new User();
-        final User userWithoutPassword = new User();
-        userWithoutLogin.setAge(21);
-        userWithoutLogin.setPassword("Password21");
-        userWithoutAge.setLogin("email@gmail.com");
-        userWithoutAge.setPassword("Password21");
-        userWithoutPassword.setLogin("email@gmail.com");
-        userWithoutPassword.setAge(21);
-        assertThrows(InvalidDataException.class,()
-                -> registrationService.register(userWithoutLogin));
-        assertThrows(InvalidDataException.class,()
-                -> registrationService.register(userWithoutAge));
-        assertThrows(InvalidDataException.class,()
-                -> registrationService.register(userWithoutPassword));
+    void registerUserWithNullLogin_notOk() {
+        user.setLogin(null);
+        assertThrows(InvalidDataException.class,() -> registrationService.register(user));
+    }
+
+    @Test
+    void registerUserWithNullAge_notOk() {
+        user.setAge(null);
+        assertThrows(InvalidDataException.class,() -> registrationService.register(user));
+    }
+
+    @Test
+    void registerUserWithNullPassword_notOk() {
+        user.setPassword(null);
+        assertThrows(InvalidDataException.class,() -> registrationService.register(user));
     }
 
     @Test
@@ -99,14 +98,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerAddingNormalUser_ok() throws InvalidDataException {
+    void registerAddingNormalUser_ok() {
         Class expected = User.class;
         Class actual = registrationService.register(user).getClass();
         assertEquals(expected, actual);
     }
 
     @Test
-    void registerUserAge18_ok() throws InvalidDataException {
+    void registerUserAge18_ok() {
         user.setAge(18);
         Class expected = User.class;
         Class actual = registrationService.register(user).getClass();
