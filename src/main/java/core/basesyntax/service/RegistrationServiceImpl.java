@@ -30,10 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkDuplicate(User user) {
-        if (storageDao.get(user.getLogin()) == null) {
-            return;
-        }
-        if (storageDao.get(user.getLogin()).equals(user)) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("User already exists");
         }
     }
