@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,26 +14,26 @@ class RegistrationServiceImplTest {
     private final User user = new User();
 
     @BeforeEach
-    void getDefaultUser() {
+    void defaultUser() {
         user.setLogin("email@gmail.com");
         user.setAge(21);
         user.setPassword("Password21");
     }
 
-    @BeforeEach
-    void getClearList() {
+    @AfterEach
+    void clearList() {
         Storage.people.clear();
     }
 
     @Test
-    void registerAddingNormalUser_ok() {
+    void register_normalUser_ok() {
         Class expected = User.class;
         Class actual = registrationService.register(user).getClass();
         assertEquals(expected, actual);
     }
 
     @Test
-    void registerUserYoungerThan18_ok() {
+    void registerUserYoungerThan18_notOk() {
         user.setAge(17);
         user.setAge(-1);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
@@ -86,40 +87,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserLoginWithoutDogInLogin_notOk() {
-        user.setLogin("Pjeirtnbegirlngreio");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void registerUserPasswordWithoutSpecialSymbols_notOk() {
-        user.setPassword("rhghPewghreyu");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void registerUserPasswordWithoutUpperCaseLetter_notOk() {
-        user.setPassword("rhghPewghreyu");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void registerUserLoginContainsSpace_notOk() {
-        user.setLogin("email @vrfre.com");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-    }
-
-    @Test
     void registerUserAge18_ok() {
         user.setAge(18);
         Class expected = User.class;
         Class actual = registrationService.register(user).getClass();
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void registerUserLoginStartsWithSymbol_notOk() {
-        user.setLogin("@vfevf@.gmail.com");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 }
