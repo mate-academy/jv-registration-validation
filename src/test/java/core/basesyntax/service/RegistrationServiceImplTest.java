@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -14,7 +15,7 @@ class RegistrationServiceImplTest {
     private final User user = new User();
 
     @BeforeEach
-    void defaultUser() {
+    void initDefaultUser() {
         user.setLogin("email@gmail.com");
         user.setAge(21);
         user.setPassword("Password21");
@@ -27,20 +28,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_normalUser_ok() {
-        Class expected = User.class;
-        Class actual = registrationService.register(user).getClass();
-        assertEquals(expected, actual);
+        User registered = registrationService.register(user);
+        assertNotNull(registered.getId());
     }
 
     @Test
-    void registerUserYoungerThan18_notOk() {
+    void register_lowAge_notOk() {
         user.setAge(17);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         user.setAge(-1);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerDuplicateUsers_notOk() {
+    void register_duplicate_notOk() {
         user.setLogin("cece@vrvrrv.com");
         user.setAge(21);
         user.setPassword("Password123");
@@ -53,31 +54,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerShortLogin_notOk() {
+    void register_loginLengthMoreThan6_ok() {
         user.setLogin("rr@.r");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithNullLogin_notOk() {
+    void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(InvalidDataException.class,() -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithNullAge_notOk() {
+    void register_NullAge_notOk() {
         user.setAge(null);
         assertThrows(InvalidDataException.class,() -> registrationService.register(user));
     }
 
     @Test
-    void registerUserWithNullPassword_notOk() {
+    void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(InvalidDataException.class,() -> registrationService.register(user));
     }
 
     @Test
-    void registerShortPassword_notOk() {
+    void register_passwordLengthMoreThan6_ok() {
         user.setPassword("Passs");
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         user.setPassword("");
@@ -87,7 +88,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUserAge18_ok() {
+    void register_ageMoreOrEquals18_ok() {
         user.setAge(18);
         Class expected = User.class;
         Class actual = registrationService.register(user).getClass();

@@ -5,7 +5,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_LENGTH = 6;
+    private static final int MIN_LENGTH_PASSWORD = 6;
+    private static final int MIN_LENGTH_LOGIN = 6;
     private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -15,12 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkLogin(user);
         checkPassword(user);
         checkDuplicate(user);
-        storageDao.add(user);
-        return user;
-    }
-
-    private void checkPassword(User user) {
-        shortPassword(user);
+        return storageDao.add(user);
     }
 
     private void checkDuplicate(User user) {
@@ -34,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login can't be null");
         }
-        if (user.getLogin().length() < MIN_LENGTH) {
+        if (user.getLogin().length() < MIN_LENGTH_LOGIN) {
             throw new InvalidDataException("Your login is too short");
         }
     }
@@ -50,11 +46,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void shortPassword(User user) {
+    private void checkPassword(User user) {
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password can't be null");
         }
-        if (user.getPassword().length() < MIN_LENGTH) {
+        if (user.getPassword().length() < MIN_LENGTH_PASSWORD) {
             throw new InvalidDataException("Your password is too short");
         }
     }
