@@ -25,22 +25,25 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void passValidator(String pass) {
         if (pass == null) {
-            throw new InvalidUserException("Password is null");
+            throw new InvalidUserException("Password is null.");
         }
         if (pass.length() < MIN_LENGTH) {
-            throw new InvalidUserException("Password is too short");
+            throw new InvalidUserException("Password is too short, use at least "
+                    + MIN_LENGTH + " characters.");
         }
     }
 
     private void ageValidator(int age) {
         if (age < 0) {
-            throw new InvalidUserException("Negative age");
+            throw new InvalidUserException("Age can't be negative!");
         }
         if (age < MIN_AGE) {
-            throw new InvalidUserException("Illegal age");
+            throw new InvalidUserException("Illegal age: " + age
+                    + ", age should be at least " + MIN_AGE);
         }
         if (age > MAX_AGE) {
-            throw new InvalidUserException("Too old");
+            throw new InvalidUserException("Illegal age: " + age
+                    + ", age should be lower " + MAX_AGE);
         }
     }
 
@@ -49,10 +52,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserException("Login is null");
         }
         if (login.length() < MIN_LENGTH) {
-            throw new InvalidUserException("Login is too short");
+            throw new InvalidUserException("Login is too short, use at least "
+                    + MIN_LENGTH + " characters.");
         }
         if (storageDao.get(login) != null) {
-            throw new InvalidUserException("Login is already taken");
+            throw new InvalidUserException("Login " + login + "is already taken");
         }
     }
 }

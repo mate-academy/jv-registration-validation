@@ -7,7 +7,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidUserException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,13 +18,9 @@ class RegistrationServiceImplTest {
     private static final String EMPTY_STRING = "";
     private static final String STRING_5_LETTERS = "short";
     private static final String STRING_3_LETTERS = "0v.";
-    private static RegistrationService registrationService;
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user;
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-    }
 
     @BeforeEach
     void setUp() {
@@ -38,7 +33,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ValidUser_Ok() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
         registrationService.register(user);
         User expectedUser = storageDao.get(user.getLogin());
         assertEquals(expectedUser, user, "User must be in storage but is not");
