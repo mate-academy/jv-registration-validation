@@ -16,14 +16,12 @@ public class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "razoqewrdsfe";
     private static final int VALID_AGE = 25;
 
-    private StorageDao storageDao;
-    private RegistrationService registrationService;
+    private final StorageDao storageDao = new StorageDaoImpl();
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
     private User testUser;
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl();
         testUser = new User();
         testUser.setLogin(VALID_LOGIN);
         testUser.setPassword(VALID_PASSWORD);
