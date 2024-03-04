@@ -49,7 +49,7 @@ class StorageTest {
     }
 
     @Test
-    void userPassvordLeastThan6_Ok() {
+    void userPasswordLeastThan6_Ok() {
         firstUser.setPassword("1234567");
         String password = firstUser.getPassword();
         assertTrue(password.length() >= 6, "user's password is at least 6 characters");
