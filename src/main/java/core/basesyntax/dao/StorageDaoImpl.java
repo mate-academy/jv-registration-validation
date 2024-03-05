@@ -7,7 +7,6 @@ import java.util.List;
 public class StorageDaoImpl implements StorageDao {
     @Override
     public void add(User user) {
-        Storage.people.add(user);
     }
 
     @Override
