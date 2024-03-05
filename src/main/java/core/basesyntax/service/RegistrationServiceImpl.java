@@ -2,9 +2,13 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.InvalidUserDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private final int minPasswordLength = 6;
+    private final int minLoginLength = 6;
+    private final int minAge = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -13,27 +17,26 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new IllegalArgumentException("User cannot be null");
         }
 
-        // Check if user already exists in the database
         for (User existingUser : storageDao.getAll()) {
             if (existingUser.getLogin().equals(user.getLogin())) {
-                throw new IllegalArgumentException("User with this login already exists");
+                throw new InvalidUserDataException("User with this login already exists");
             }
         }
 
-        // Validate user parameters
-        if (user.getLogin() == null || user.getLogin().isEmpty() || user.getLogin().length() < 6) {
-            throw new IllegalArgumentException("Login cannot be null, "
+        if (user.getLogin() == null || user.getLogin().isEmpty()
+                || user.getLogin().length() < minLoginLength) {
+            throw new InvalidUserDataException("Login cannot be null, "
                     + "empty or less than 6 characters");
         }
 
         if (user.getPassword() == null || user.getPassword().isEmpty()
-                || user.getPassword().length() < 6) {
-            throw new IllegalArgumentException("Password cannot be null, "
+                || user.getPassword().length() < minPasswordLength) {
+            throw new InvalidUserDataException("Password cannot be null, "
                     + "empty or less than 6 characters");
         }
 
-        if (user.getAge() == null || user.getAge() < 18) {
-            throw new IllegalArgumentException("User must be at "
+        if (user.getAge() == null || user.getAge() < minAge) {
+            throw new InvalidUserDataException("User must be at "
                     + "least 18 years old");
         }
 
