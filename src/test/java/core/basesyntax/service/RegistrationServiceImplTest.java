@@ -6,126 +6,178 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
+    private static User user = new User();
+    private static final String VALID_LOGIN = "validuser";
+    private static final String ANOTHER_VALID_LOGIN = "alsovaliduser";
+    private static final String INVALID_LOGIN_5CHARS = "user1";
+    private static final String EMPTY_LOGIN = "";
+    private static final String INVALID_LOGIN_NULL = null;
+    private static final String VALID_PASSWORD = "validpassword";
+    private static final String ANOTHER_VALID_PASSWORD = "anotherpassword";
+    private static final String INVALID_PASSWORD_5CHARS = "passw";
+    private static final String EMPTY_PASSWORD = "";
+    private static final String INVALID_PASSWORD_NULL = null;
+    private static final int VALID_AGE = 20;
+    private static final int ANOTHER_VALID_AGE = 23;
+    private static final int INVALID_AGE_EDGE = 17;
+    private static final long VALID_ID = 176545647L;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+        user.setId(VALID_ID);
     }
 
     @Test
-    void registerValidUser() {
-        User validUser = new User();
-        validUser.setLogin("validuser");
-        validUser.setPassword("validpassword");
-        validUser.setAge(20);
-        validUser.setId(1234567L);
-        assertNotNull(registrationService.register(validUser));
+    void registerValidUser() throws RegistrationException {
+        assertNotNull(registrationService.register(user));
     }
 
     @Test
     void registerDublicateUser_notOk() {
-        User user = new User();
-        user.setLogin("user01");
-        user.setPassword("password1");
-        user.setAge(20);
-        registrationService.register(user);
+        Storage.people.add(user);
         User dublicatedUser = new User();
-        dublicatedUser.setLogin("user01");
-        dublicatedUser.setPassword("password");
-        dublicatedUser.setAge(20);
-        dublicatedUser.setId(1234567L);
-        assertThrows(RuntimeException.class, () -> registrationService.register(dublicatedUser));
+        dublicatedUser.setLogin(VALID_LOGIN);
+        dublicatedUser.setPassword(ANOTHER_VALID_PASSWORD);
+        dublicatedUser.setAge(VALID_AGE);
+        dublicatedUser.setId(VALID_ID);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(dublicatedUser));
     }
 
     @Test
-    void shortLogin_notOk() {
-        User shortLoginUser = new User();
-        shortLoginUser.setLogin("user");
-        shortLoginUser.setPassword("password");
-        shortLoginUser.setAge(20);
-        shortLoginUser.setId(1234567L);
-        assertThrows(RuntimeException.class, () -> registrationService.register(shortLoginUser));
+    void login5Chars_notOk() {
+        user.setLogin(INVALID_LOGIN_5CHARS);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void shortPassword_notOk() {
-        User shortLoginUser = new User();
-        shortLoginUser.setLogin("userok");
-        shortLoginUser.setPassword("pass");
-        shortLoginUser.setAge(20);
-        shortLoginUser.setId(1234567L);
-        assertThrows(RuntimeException.class, () -> registrationService.register(shortLoginUser));
+    void emptyLogin_notOk() {
+        user.setLogin(EMPTY_LOGIN);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void edgePassword_notOk() {
+        user.setPassword(INVALID_PASSWORD_5CHARS);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void youngAge_notOk() {
-        User youngUser = new User();
-        youngUser.setLogin("userok");
-        youngUser.setPassword("password");
-        youngUser.setAge(17);
-        youngUser.setId(1234567L);
-        assertThrows(RuntimeException.class, () -> registrationService.register(youngUser));
+        user.setAge(INVALID_AGE_EDGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void loginIsNull_notOk() {
-        User nullUser = new User();
-        nullUser.setLogin(null);
-        nullUser.setPassword("password");
-        nullUser.setAge(20);
-        nullUser.setId(1234567L);
-        assertThrows(RuntimeException.class, () -> registrationService.register(nullUser));
+        user.setLogin(INVALID_LOGIN_NULL);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void passwordIsNull_notOk() {
-        User shortLoginUser = new User();
-        shortLoginUser.setLogin("userok");
-        shortLoginUser.setPassword(null);
-        shortLoginUser.setAge(20);
-        shortLoginUser.setId(1234567L);
-        assertThrows(RuntimeException.class, () -> registrationService.register(shortLoginUser));
+        user.setPassword(INVALID_PASSWORD_NULL);
+        assertThrows(RuntimeException.class, () -> registrationService.register(user));
     }
 
     @Test
     void getNullFromStorage_notOk() {
-        assertThrows(NullPointerException.class, () -> storageDao.get(null));
+        assertThrows(RuntimeException.class, () -> storageDao.get(null));
+    }
+
+    @Test
+    void getUserFromStorage_ok() {
+        Storage.people.add(user);
+        assertNotNull(storageDao.get(user.getLogin()));
     }
 
     @Test
     void userEquals_ok() {
-        User expected = new User();
-        expected.setLogin("userok");
-        expected.setPassword("password");
-        expected.setAge(20);
-        expected.setId(1234567L);
-        User actual = new User();
-        actual.setLogin("userok");
-        actual.setPassword("password");
-        actual.setAge(20);
-        actual.setId(1234567L);
+        User expected = user;
+        User actual = user;
         assertEquals(expected, actual);
     }
 
     @Test
-    void userNotEquals_ok() {
-        User expected = new User();
-        expected.setLogin("userok");
-        expected.setPassword("password");
-        expected.setAge(20);
-        expected.setId(1234567L);
+    void userNotEqualsIfLoginDifferent_ok() {
         User actual = new User();
-        actual.setLogin("anotheruser");
-        actual.setPassword("anotherpassword");
-        actual.setAge(20);
-        actual.setId(1234567L);
+        actual.setLogin(ANOTHER_VALID_LOGIN);
+        actual.setPassword(VALID_PASSWORD);
+        actual.setAge(VALID_AGE);
+        actual.setId(VALID_ID);
+        User expected = user;
         assertNotEquals(expected, actual);
+    }
+
+    @Test
+    void userNotEqualsIfPasswordDifferent_ok() {
+        User actual = new User();
+        actual.setLogin(VALID_LOGIN);
+        actual.setPassword(ANOTHER_VALID_PASSWORD);
+        actual.setAge(VALID_AGE);
+        actual.setId(VALID_ID);
+        User expected = user;
+        assertNotEquals(expected, actual);
+    }
+
+    @Test
+    void userNotEqualsIfAgeDifferent_ok() {
+        User actual = new User();
+        actual.setLogin(VALID_LOGIN);
+        actual.setPassword(VALID_PASSWORD);
+        actual.setAge(ANOTHER_VALID_AGE);
+        actual.setId(VALID_ID);
+        User expected = user;
+        assertNotEquals(expected, actual);
+    }
+
+    @Test
+    void userNotEqualsIfUserNull_ok() {
+        User expected = user;
+        User actual = null;
+        assertNotEquals(expected, actual);
+    }
+
+    @Test
+    void hashCodeEquals_ok() {
+        User expected = user;
+        User actual = user;
+        assertEquals(expected.hashCode(), actual.hashCode());
+    }
+
+    @Test
+    void hashCodeNotEquals_ok() {
+        User actual = new User();
+        actual.setLogin(VALID_LOGIN);
+        actual.setPassword(VALID_PASSWORD);
+        actual.setAge(ANOTHER_VALID_AGE);
+        actual.setId(VALID_ID);
+        User expected = user;
+        assertNotEquals(expected.hashCode(), actual.hashCode());
+    }
+
+    @AfterEach
+    void tearDown() {
+        storageDao.clear();
     }
 }
