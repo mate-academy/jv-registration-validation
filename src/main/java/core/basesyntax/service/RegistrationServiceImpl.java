@@ -23,14 +23,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
         }
 
-        if (user.getLogin() == null || user.getLogin().isEmpty()
-                || user.getLogin().length() < minLoginLength) {
+        if (user.getLogin() == null || user.getLogin().length() < minLoginLength) {
             throw new InvalidUserDataException("Login cannot be null, "
                     + "empty or less than 6 characters");
         }
 
-        if (user.getPassword() == null || user.getPassword().isEmpty()
-                || user.getPassword().length() < minPasswordLength) {
+        if (user.getPassword() == null || user.getPassword().length() < minPasswordLength) {
             throw new InvalidUserDataException("Password cannot be null, "
                     + "empty or less than 6 characters");
         }
