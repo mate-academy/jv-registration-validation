@@ -1,10 +1,9 @@
 package core.basesyntax.dao;
 
 import core.basesyntax.model.User;
-import java.util.List;
 
 public interface StorageDao {
-    void add(User user);
+    User add(User user);
 
-    List<User> getAll();
+    User get(String login);
 }

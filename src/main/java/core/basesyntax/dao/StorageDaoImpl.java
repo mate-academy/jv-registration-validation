@@ -2,15 +2,24 @@ package core.basesyntax.dao;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.List;
 
 public class StorageDaoImpl implements StorageDao {
+    private static Long index;
+
     @Override
-    public void add(User user) {
+    public User add(User user) {
+        user.setId(++index);
+        Storage.people.add(user);
+        return user;
     }
 
     @Override
-    public List<User> getAll() {
-        return Storage.people;
+    public User get(String login) {
+        for (User user : Storage.people) {
+            if (user.getLogin().equals(login)) {
+                return user;
+            }
+        }
+        return null;
     }
 }
