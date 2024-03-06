@@ -16,7 +16,7 @@ class RegistrationServiceImplTest {
     private static final Integer VALID_AGE = 20;
     private static final String EXCEPTION_MUST_BE_THROWN = "InvalidUserException must be thrown";
     private static final String STRING_5_LETTERS = "short";
-    public static final String ILLEGAL_AGE = "Illegal age: ";
+    private static final String ILLEGAL_AGE = "Illegal age: ";
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user;
