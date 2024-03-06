@@ -11,10 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int DEFAULT_AGE = 18;
-    private static final long DEFAULT_ID = 123456789L;
     private static final String DEFAULT_LOGIN = "user_login";
     private static final String DEFAULT_PASSWORD = "user_password";
+    private static final long DEFAULT_ID = 123456789L;
+    private static final int DEFAULT_AGE = 23;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 122;
 
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
@@ -71,7 +75,8 @@ class RegistrationServiceImplTest {
         InvalidDataException invalidDataException = assertThrows(InvalidDataException.class, 
                 () -> registrationService.register(user));
         assertEquals(invalidDataException.getMessage(),
-                "Login must be at least 6 characters, but was 5!");
+                "Login must be at least " + MIN_LOGIN_LENGTH
+                + " characters, but was " + user.getLogin().length() + "!");
     }
 
     @Test
@@ -89,7 +94,8 @@ class RegistrationServiceImplTest {
         InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
         assertEquals(invalidDataException.getMessage(),
-                "The password must be at least 6 characters, but was 5!");
+                "The password must be at least " + MIN_PASSWORD_LENGTH
+                + " characters, but was " + user.getPassword().length() + "!");
     }
 
     @Test
@@ -97,8 +103,9 @@ class RegistrationServiceImplTest {
         user.setAge(17);
         InvalidDataException invalidDataException = assertThrows(InvalidDataException.class, 
                 () -> registrationService.register(user));
-        assertEquals(invalidDataException.getMessage(), 
-                "User age must be at least 18 years, but was 17!");
+        assertEquals(invalidDataException.getMessage(),
+                "User age must be at least " + MIN_AGE
+                + " years, but was " + user.getAge() + "!");
     }
 
     @Test
@@ -117,6 +124,7 @@ class RegistrationServiceImplTest {
         InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
         assertEquals(invalidDataException.getMessage(),
-                "User age should be smaller than 122 years, but was 374!");
+                "User age should be smaller than " + MAX_AGE
+                + " years, but was " + user.getAge() + "!");
     }
 }
