@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidUser() throws RegistrationException {
+    void registerValidUser() {
         assertNotNull(registrationService.register(user));
     }
 
