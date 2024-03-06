@@ -9,49 +9,49 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws CustomException {
+    public User register(User user) throws InvalidDataException {
         verify(user);
         storageDao.add(user);
         return user;
     }
 
-    public void checkUsersInfo(User user) throws CustomException {
+    public void checkUsersInfo(User user) throws InvalidDataException {
         checkAge(user);
         checkLogin(user);
         checkPassword(user);
     }
 
-    public void checkAge(User user) throws CustomException {
+    public void checkAge(User user) throws InvalidDataException {
         if (user.getAge() == null) {
-            throw new CustomException("Age can't be null.");
+            throw new InvalidDataException("Age can't be null.");
         }
         if (user.getAge() < 18) {
-            throw new CustomException("Age must be at least 18 y.o.");
+            throw new InvalidDataException("Age must be at least 18 y.o.");
         }
 
     }
 
-    private void checkLogin(User user) throws CustomException {
+    private void checkLogin(User user) throws InvalidDataException {
         if (user.getLogin() == null) {
-            throw new CustomException("Login can't be null.");
+            throw new InvalidDataException("Login can't be null.");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new CustomException("Short login length. "
+            throw new InvalidDataException("Short login length. "
                     + "It must be at least 6 characters length!");
         }
     }
 
-    private void checkPassword(User user) throws CustomException {
+    private void checkPassword(User user) throws InvalidDataException {
         if (user.getPassword() == null) {
-            throw new CustomException("Password can't be null");
+            throw new InvalidDataException("Password can't be null");
         }
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new CustomException("Short password length. "
+            throw new InvalidDataException("Short password length. "
                     + "It must be at least 6 characters length!");
         }
     }
 
-    private void verify(User user) throws CustomException {
+    private void verify(User user) throws InvalidDataException {
         if (user != null) {
             checkUsersInfo(user);
         }
