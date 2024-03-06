@@ -90,12 +90,20 @@ class RegistrationServiceImplTest {
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         user.setAge(3);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    }
 
+    @Test
+    void register_negativeUserAge_notOk() {
         user.setAge(-11);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         user.setAge(-2378);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        user.setAge(-1);
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+    }
 
+    @Test
+    void register_tooBigUserAge_notOk() {
         user.setAge(374);
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
         user.setAge(123);
