@@ -83,6 +83,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void emptyPassword_notOk() {
+        user.setPassword(EMPTY_PASSWORD);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void youngAge_notOk() {
         user.setAge(INVALID_AGE_EDGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
