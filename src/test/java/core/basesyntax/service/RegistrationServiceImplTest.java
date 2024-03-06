@@ -15,9 +15,8 @@ class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD = "valid pass";
     private static final Integer VALID_AGE = 20;
     private static final String EXCEPTION_MUST_BE_THROWN = "InvalidUserException must be thrown";
-    private static final String EMPTY_STRING = "";
     private static final String STRING_5_LETTERS = "short";
-    private static final String STRING_3_LETTERS = "0v.";
+    public static final String ILLEGAL_AGE = "Illegal age: ";
     private final RegistrationService registrationService = new RegistrationServiceImpl();
     private final StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user;
@@ -58,88 +57,75 @@ class RegistrationServiceImplTest {
     void register_loginIsTaken_notOk() {
         registrationService.register(user);
         assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login " + user.getLogin() + "is already taken",
+                invalidUserException.getMessage());
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login is null", invalidUserException.getMessage());
     }
 
     @Test
     void register_shortLogin_notOk() {
         user.setLogin(STRING_5_LETTERS);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
-        user.setLogin(EMPTY_STRING);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
-        user.setLogin(STRING_3_LETTERS);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login is too short, use at least 6 characters.",
+                invalidUserException.getMessage());
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password is null.",
+                invalidUserException.getMessage());
     }
 
     @Test
     void register_shortPassword_notOk() {
         user.setPassword(STRING_5_LETTERS);
-        assertThrows(InvalidUserException.class,
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
-        user.setPassword(EMPTY_STRING);
-        assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
-        user.setPassword(STRING_3_LETTERS);
-        assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
+        assertEquals("Password is too short, use at least 6 characters.",
+                invalidUserException.getMessage());
     }
 
     @Test
     void register_negativeAge_notOk() {
         int negativeAge = -1;
         user.setAge(negativeAge);
-        assertThrows(InvalidUserException.class,
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
-        negativeAge = -25;
-        user.setAge(negativeAge);
-        assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
-        negativeAge = -15;
-        user.setAge(negativeAge);
-        assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
+        assertEquals(ILLEGAL_AGE + negativeAge + ", age can't be negative!",
+                invalidUserException.getMessage());
     }
 
     @Test
     void register_ageOverMax_notOk() {
         int ageOverMax = 121;
         user.setAge(ageOverMax);
-        assertThrows(InvalidUserException.class,
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
-        ageOverMax = 125;
-        user.setAge(ageOverMax);
-        assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
-        ageOverMax = 150;
-        user.setAge(ageOverMax);
-        assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
+        assertEquals(ILLEGAL_AGE + ageOverMax + ", age should be lower 120",
+                invalidUserException.getMessage());
     }
 
     @Test
     void register_ageUnderMin_notOk() {
         int ageUnderMin = 0;
         user.setAge(ageUnderMin);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user),
-                EXCEPTION_MUST_BE_THROWN);
-        ageUnderMin = 17;
-        user.setAge(ageUnderMin);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user),
-                EXCEPTION_MUST_BE_THROWN);
-        ageUnderMin = 5;
-        user.setAge(ageUnderMin);
-        assertThrows(InvalidUserException.class, () -> registrationService.register(user),
-                EXCEPTION_MUST_BE_THROWN);
+        InvalidUserException invalidUserException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user), EXCEPTION_MUST_BE_THROWN);
+        assertEquals(ILLEGAL_AGE + ageUnderMin + ", age should be at least 18",
+                invalidUserException.getMessage());
     }
 }

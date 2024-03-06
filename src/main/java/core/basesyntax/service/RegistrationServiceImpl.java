@@ -18,12 +18,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void userValidator(User user) {
-        passValidator(user.getPassword());
-        ageValidator(user.getAge());
-        loginValidator(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        validateLogin(user.getLogin());
     }
 
-    private void passValidator(String pass) {
+    private void validatePassword(String pass) {
         if (pass == null) {
             throw new InvalidUserException("Password is null.");
         }
@@ -33,9 +33,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void ageValidator(int age) {
+    private void validateAge(int age) {
         if (age < 0) {
-            throw new InvalidUserException("Age can't be negative!");
+            throw new InvalidUserException("Illegal age: " + age
+                    + ", age can't be negative!");
         }
         if (age < MIN_AGE) {
             throw new InvalidUserException("Illegal age: " + age
@@ -47,7 +48,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void loginValidator(String login) {
+    private void validateLogin(String login) {
         if (login == null) {
             throw new InvalidUserException("Login is null");
         }
