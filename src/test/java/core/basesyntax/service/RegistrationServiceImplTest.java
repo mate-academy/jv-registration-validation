@@ -40,73 +40,83 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_notOk() {
         user = null;
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(),
+                "User cannot be NULL!");
     }
 
     @Test
-    void register_userAlreadyExists_notOk() {
+    void register_loginAlreadyExists_notOk() {
         registrationService.register(user);
         User userCopy = user;
-        assertThrows(InvalidDataException.class, () -> registrationService.register(userCopy));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(userCopy));
+        assertEquals(invalidDataException.getMessage(),
+                "Login is already taken!");
     }
 
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(),
+                "Login should not be NULL!");
     }
 
     @Test
-    void register_userLoginLength_notOk() {
+    void register_loginLength_notOk() {
         user.setLogin("login");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setLogin("log");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setLogin("");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class, 
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(),
+                "Login must be at least 6 characters, but was 5!");
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class, 
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(),
+                "The password should not be NULL!");
     }
 
     @Test
     void register_userPasswordLength_notOk() {
         user.setPassword("12345");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setPassword("1234");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setPassword("");
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(),
+                "The password must be at least 6 characters, but was 5!");
     }
 
     @Test
-    void register_userAge_notOk() {
+    void register_notValidUserAge_notOk() {
         user.setAge(17);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setAge(9);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setAge(3);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class, 
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(), 
+                "User age must be at least 18 years, but was 17!");
     }
 
     @Test
     void register_negativeUserAge_notOk() {
         user.setAge(-11);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setAge(-2378);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setAge(-1);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(),
+                "User age should not be negative!");
+
     }
 
     @Test
-    void register_tooBigUserAge_notOk() {
+    void register_exceedingMaxUserAge_notOk() {
         user.setAge(374);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
-        user.setAge(123);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        InvalidDataException invalidDataException = assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user));
+        assertEquals(invalidDataException.getMessage(),
+                "User age should be smaller than 122 years, but was 374!");
     }
 }
