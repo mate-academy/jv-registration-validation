@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
@@ -23,14 +24,12 @@ class RegistrationServiceImplTest {
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
 
-    private RegistrationService registrationService;
-    private StorageDaoImpl storageDao;
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
     private User user;
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
         user = new User();
         user.setAge(DEFAULT_AGE);
         user.setId(DEFAULT_ID);
