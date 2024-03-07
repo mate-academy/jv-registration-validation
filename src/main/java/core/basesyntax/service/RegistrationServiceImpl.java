@@ -29,7 +29,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateLogin(String login) {
         if (login == null) {
             throw new ValidationException("Login can't be null");
-        } else if (login.length() < MIN_LENGTH) {
+        }
+
+        if (login.length() < MIN_LENGTH) {
             throw new ValidationException("Minimum allowed login length is " + MIN_LENGTH);
         }
     }
@@ -37,7 +39,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validatePassword(String password) {
         if (password == null) {
             throw new ValidationException("Password can't be null");
-        } else if (password.length() < MIN_LENGTH) {
+        }
+
+        if (password.length() < MIN_LENGTH) {
             throw new ValidationException("Minimum allowed password length is " + MIN_LENGTH);
         }
     }
@@ -45,7 +49,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateAge(Integer age) {
         if (age == null) {
             throw new ValidationException("Age can't be null");
-        } else if (age < MIN_AGE) {
+        }
+
+        if (age < MIN_AGE) {
             throw new ValidationException("Minimum allowed age is " + MIN_AGE);
         }
     }
