@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkUserAge(user.getAge());
         checkUserLoginLength(user.getLogin().length());
         checkUserPasswordLength(user.getPassword().length());
-        checkUserNotRegisterdYet(user);
+        checkUserNotRegisteredYet(user);
         return user;
     }
 
@@ -44,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkUserNotRegisterdYet(User user) {
+    private void checkUserNotRegisteredYet(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationFailureException("Such user is already registered");
         }
