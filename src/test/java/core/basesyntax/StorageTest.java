@@ -1,8 +1,11 @@
-package core.basesyntax.db;
+package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -26,18 +29,15 @@ class StorageTest {
     }
 
     @Test
-    void userWithSuchLogin() {
+    void shouldNotFindUserWithGivenLogin() {
         User user1 = new User();
         user1.setLogin("User1234");
 
-        boolean userExists = false;
-        for (User user : people) {
-            if (user1.getLogin().equals(user.getLogin())) {
-                userExists = true;
-                break;
-            }
-        }
+        StorageDao storageDao = new StorageDaoImpl();
+        // Assuming you have a StorageDaoImpl class that implements StorageDao
+        User foundUser = storageDao.get(user1.getLogin());
 
+        boolean userExists = foundUser != null;
         assertFalse(userExists, "User with such login already exists");
     }
 
@@ -79,8 +79,7 @@ class StorageTest {
     @Test
     void ageIsNotEmpty() {
         firstUser.setAge(null);
-        String age = firstUser.getLogin();
-        assertFalse(age.isEmpty(), "user's age should not be empty");
+        Integer age = firstUser.getAge();
+        assertNotNull(age, "user's age should not be null");
     }
-
 }
