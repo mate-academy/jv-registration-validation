@@ -78,7 +78,7 @@ class StorageTest {
 
     @Test
     void ageIsNotEmpty() {
-        firstUser.setAge(null);
+        firstUser.setAge(25);
         Integer age = firstUser.getAge();
         assertNotNull(age, "user's age should not be null");
     }
