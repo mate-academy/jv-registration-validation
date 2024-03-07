@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUserExistsInData_Ok() {
-        registrationService.register(user);
+        Storage.people.add(user);
         String expected = "User already exist in database!";
         assertEquals(expected, assertThrowsException(user).getMessage());
     }
