@@ -13,34 +13,34 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         checkUserNotNull(user);
-        checkUserAge(user.getAge());
-        checkUserLoginLength(user.getLogin().length());
-        checkUserPasswordLength(user.getPassword().length());
+        checkUserAge(user);
+        checkUserLoginLength(user);
+        checkUserPasswordLength(user);
         checkUserNotRegisteredYet(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private void checkUserNotNull(User user) {
         if (user == null) {
-            throw    new RegistrationFailureException("User registration failed due to the invalid data");
+            throw new RegistrationFailureException("User registration failed due to user is null");
         }
     }
 
-    private void checkUserAge(int age) {
-        if (age < MIN_LEGAL_AGE ) {
-            throw new RegistrationFailureException("User's age is less than 18");
+    private void checkUserAge(User user) {
+        if (user.getAge() == null || user.getAge() < MIN_LEGAL_AGE ) {
+            throw new RegistrationFailureException("User's age is less than" + MIN_LEGAL_AGE + " or not specified");
         }
     }
 
-    private void checkUserPasswordLength(int passwordLength) {
-        if (passwordLength < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new RegistrationFailureException("User's password should be at least 6 characters long");
+    private void checkUserPasswordLength(User user) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_LOGIN_PASSWORD_LENGTH) {
+            throw new RegistrationFailureException("Password is shorter than " + MIN_LOGIN_PASSWORD_LENGTH + " or not specified");
         }
     }
 
-    private void checkUserLoginLength(int loginLength) {
-        if (loginLength < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new RegistrationFailureException("User's login should be at least 6 characters long");
+    private void checkUserLoginLength(User user) {
+        if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_PASSWORD_LENGTH) {
+            throw new RegistrationFailureException("Login is shorter than " + MIN_LOGIN_PASSWORD_LENGTH + " or not specified");
         }
     }
 
