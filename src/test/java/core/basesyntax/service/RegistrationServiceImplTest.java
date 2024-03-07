@@ -29,7 +29,7 @@ class RegistrationServiceImplTest {
     private static final int AGE_NOT_OK = 17;
     private static final int AGE_ZERO = 0;
     private static final String EMPTY_STRING = "pass";
-    private static RegistrationServiceImpl registrationService;
+    private static RegistrationService registrationService;
     private User user;
 
     @BeforeAll
