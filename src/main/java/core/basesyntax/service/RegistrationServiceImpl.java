@@ -27,20 +27,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkUserAge(User user) {
-        if (user.getAge() == null || user.getAge() < MIN_LEGAL_AGE ) {
-            throw new RegistrationFailureException("User's age is less than" + MIN_LEGAL_AGE + " or not specified");
+        if (user.getAge() == null || user.getAge() < MIN_LEGAL_AGE) {
+            throw new RegistrationFailureException("User's age is less than"
+                    + MIN_LEGAL_AGE + " or not specified");
         }
     }
 
     private void checkUserPasswordLength(User user) {
         if (user.getPassword() == null || user.getPassword().length() < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new RegistrationFailureException("Password is shorter than " + MIN_LOGIN_PASSWORD_LENGTH + " or not specified");
+            throw new RegistrationFailureException("Password is shorter than "
+                    + MIN_LOGIN_PASSWORD_LENGTH + " or not specified");
         }
     }
 
     private void checkUserLoginLength(User user) {
         if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_PASSWORD_LENGTH) {
-            throw new RegistrationFailureException("Login is shorter than " + MIN_LOGIN_PASSWORD_LENGTH + " or not specified");
+            throw new RegistrationFailureException("Login is shorter than "
+                    + MIN_LOGIN_PASSWORD_LENGTH + " or not specified");
         }
     }
 
