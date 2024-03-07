@@ -9,19 +9,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidDataException {
+    public User register(User user) {
         verify(user);
         storageDao.add(user);
         return user;
     }
 
-    public void checkUsersInfo(User user) throws InvalidDataException {
+    public void checkUsersInfo(User user) {
         checkAge(user);
         checkLogin(user);
         checkPassword(user);
     }
 
-    public void checkAge(User user) throws InvalidDataException {
+    public void checkAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidDataException("Age can't be null.");
         }
@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     }
 
-    private void checkLogin(User user) throws InvalidDataException {
+    private void checkLogin(User user) {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login can't be null.");
         }
@@ -41,7 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkPassword(User user) throws InvalidDataException {
+    private void checkPassword(User user) {
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password can't be null");
         }
@@ -51,9 +51,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void verify(User user) throws InvalidDataException {
-        if (user != null) {
+    private void verify(User user) {
+        if (user != null && storageDao.get(user.getLogin()) != user) {
             checkUsersInfo(user);
+        } else {
+            throw new InvalidDataException("User exists.");
         }
     }
 }
