@@ -14,6 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int MIN_VALID_AGE = 18;
+    private static final String VALID_LOGIN = "someLogin";
+    private static final String VALID_PASSWORD = "somePassword";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private static User user;
@@ -27,9 +30,9 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     public void initializeValidUser() {
-        user.setAge(18);
-        user.setLogin("someLogin");
-        user.setPassword("somePassword");
+        user.setAge(MIN_VALID_AGE);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
     }
 
     @AfterEach
@@ -52,14 +55,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAgeLessThanMinValue_NotOk() {
-        user.setAge(17);
+        user.setAge(MIN_VALID_AGE - 1);
         assertThrows(RegistrationFailureException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_userAgeNegative_NotOK() {
-        user.setAge(-3214);
+        user.setAge(-MIN_VALID_AGE);
         assertThrows(RegistrationFailureException.class, () ->
                 registrationService.register(user));
     }
