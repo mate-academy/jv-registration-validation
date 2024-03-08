@@ -29,7 +29,7 @@ class StorageTest {
     }
 
     @Test
-    void shouldNotFindUserWithGivenLogin() {
+    void get_nonExistingUser_notFound() {
         User user1 = new User();
         user1.setLogin("User1234");
 
@@ -42,42 +42,42 @@ class StorageTest {
     }
 
     @Test
-    void userLoginLeastThan6_Ok() {
+    void setLogin_lengthAtLeast6_Ok() {
         firstUser.setLogin("123456");
         String login = firstUser.getLogin();
         assertTrue(login.length() >= 6, "user's login is at least 6 characters");
     }
 
     @Test
-    void userPasswordLeastThan6_Ok() {
+    void setPassword_lengthAtLeast6_Ok() {
         firstUser.setPassword("1234567");
         String password = firstUser.getPassword();
         assertTrue(password.length() >= 6, "user's password is at least 6 characters");
     }
 
     @Test
-    void userAgeLeastThan10_Ok() {
+    void setAge_atLeast18_Ok() {
         firstUser.setAge(19);
         int age = firstUser.getAge();
         assertTrue(age >= 18, "user's age is at least 18 years old");
     }
 
     @Test
-    void passwordIsNotEmpty() {
+    void setPassword_notEmpty_Ok() {
         firstUser.setPassword("123456");
         String password = firstUser.getPassword();
         assertFalse(password.isEmpty(), "user's password should not be empty");
     }
 
     @Test
-    void loginIsNotEmpty() {
+    void setLogin_notEmpty_Ok() {
         firstUser.setLogin("testLogin");
         String login = firstUser.getLogin();
         assertFalse(login.isEmpty(), "user's login should not be empty");
     }
 
     @Test
-    void ageIsNotEmpty() {
+    void setAge_notNull_Ok() {
         firstUser.setAge(25);
         Integer age = firstUser.getAge();
         assertNotNull(age, "user's age should not be null");
