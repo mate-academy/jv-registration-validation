@@ -1,7 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,7 +24,7 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
     }
-    
+
     @Test
     void register_nullUser_notOk() {
         assertThrows(InvalidUserException.class, () -> registrationService.register(null));
