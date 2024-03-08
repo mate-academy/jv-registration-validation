@@ -1,19 +1,15 @@
 package core.basesyntax.service;
 
-import static core.basesyntax.service.RegistrationServiceImpl.AGE;
-import static core.basesyntax.service.RegistrationServiceImpl.EXIST_MESSAGE;
-import static core.basesyntax.service.RegistrationServiceImpl.LESS_MESSAGE;
-import static core.basesyntax.service.RegistrationServiceImpl.LOGIN;
-import static core.basesyntax.service.RegistrationServiceImpl.LOGIN_PASSWORD_MIN_LENGTH;
-import static core.basesyntax.service.RegistrationServiceImpl.MIN_AGE;
-import static core.basesyntax.service.RegistrationServiceImpl.NULL_MESSAGE;
-import static core.basesyntax.service.RegistrationServiceImpl.PASSWORD;
-import static core.basesyntax.service.RegistrationServiceImpl.RegistrationException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
+import core.basesyntax.exceptions.InvalidAgeException;
+import core.basesyntax.exceptions.InvalidLoginException;
+import core.basesyntax.exceptions.InvalidPasswordException;
+import core.basesyntax.exceptions.NullUserException;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,7 +24,7 @@ class RegistrationServiceImplTest {
     private static final int AGE_OK = 18;
     private static final int AGE_NOT_OK = 17;
     private static final int AGE_ZERO = 0;
-    private static final String EMPTY_STRING = "pass";
+    private static final String EMPTY_STRING = "";
     private static RegistrationService registrationService;
     private User user;
 
@@ -48,90 +44,75 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerProperUserOk() {
-        User registerdUser = registrationService.register(user);
-        assertTrue(Storage.people.contains(registerdUser));
+    void register_ProperUser_Ok() {
+        User registeredUser = registrationService.register(user);
+        assertTrue(Storage.people.contains(registeredUser));
     }
 
     @Test
-    void registerNullUserNotOk() {
-        assertException(null, "User can`t be null!");
-    }
-
-    @Test
-    void registerSameLoginNotOk() {
+    void register_SameLogin_NotOk() {
         Storage.people.add(user);
-        assertException(user, EXIST_MESSAGE);
+        assertException(user, "A user with this login already exists!");
     }
 
     @Test
-    void registerLoginNullNotOk() {
+    void register_LoginNull_NotOk() {
         user.setLogin(null);
-        assertException(user, String.format(NULL_MESSAGE, LOGIN));
+        assertException(user, "Login can't be null or empty!");
     }
 
     @Test
-    void registerPasswordNullNotOk() {
+    void register_PasswordNull_NotOk() {
         user.setPassword(null);
-        assertException(user, String.format(NULL_MESSAGE, PASSWORD));
+        assertException(user, "Password can't be null or empty!");
     }
 
     @Test
-    void registerAgeNullNotOk() {
+    void register_AgeNull_NotOk() {
         user.setAge(null);
-        assertException(user, String.format(NULL_MESSAGE, AGE));
+        assertException(user, "Age can't be null!");
     }
 
     @Test
-    void registerLoginShortNotOk() {
+    void register_LoginShort_NotOk() {
         user.setLogin(LOGIN_NOT_OK);
         assertException(
                 user,
-                String.format(
-                        LESS_MESSAGE,
-                        LOGIN,
-                        LOGIN_PASSWORD_MIN_LENGTH,
-                        user.getLogin().length()));
+                "Login less than minimum length: 6 actual length: " + user.getLogin().length());
         user.setLogin(EMPTY_STRING);
         assertException(
                 user,
-                String.format(
-                        LESS_MESSAGE,
-                        LOGIN,
-                        LOGIN_PASSWORD_MIN_LENGTH,
-                        user.getLogin().length()));
+                "Login can't be null or empty!");
     }
 
     @Test
-    void registerPasswordShortNotOk() {
+    void register_PasswordShort_NotOk() {
         user.setPassword(PASSWORD_NOT_OK);
         assertException(
                 user,
-                String.format(
-                        LESS_MESSAGE,
-                        PASSWORD,
-                        LOGIN_PASSWORD_MIN_LENGTH,
-                        user.getPassword().length()));
+                "Password less than minimum length: 6 actual length: "
+                        + user.getPassword().length());
         user.setPassword(EMPTY_STRING);
         assertException(
                 user,
-                String.format(
-                        LESS_MESSAGE,
-                        PASSWORD,
-                        LOGIN_PASSWORD_MIN_LENGTH,
-                        user.getPassword().length()));
+                "Password can't be null or empty!");
     }
 
     @Test
-    void registerAgeLessNotOk() {
+    void register_AgeLess_NotOk() {
         user.setAge(AGE_NOT_OK);
         assertException(
                 user,
-                String.format(LESS_MESSAGE, AGE, MIN_AGE, user.getAge()));
+                "Age less than minimum: 18");
         user.setAge(AGE_ZERO);
         assertException(
                 user,
-                String.format(LESS_MESSAGE, AGE, MIN_AGE, user.getAge()));
+                "Age less than minimum: 18");
+    }
+
+    @Test
+    void register_NullUser_NotOk() {
+        assertException(null, "User cannot be null");
     }
 
     private void assertException(User user, String expected) {
@@ -140,5 +121,14 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(user));
         String actual = exception.getMessage();
         assertEquals(expected, actual);
+        if (expected.contains("User")) {
+            assertTrue(exception instanceof NullUserException);
+        } else if (expected.contains("Login")) {
+            assertTrue(exception instanceof InvalidLoginException);
+        } else if (expected.contains("Password")) {
+            assertTrue(exception instanceof InvalidPasswordException);
+        } else if (expected.contains("Age")) {
+            assertTrue(exception instanceof InvalidAgeException);
+        }
     }
 }

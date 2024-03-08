@@ -2,74 +2,62 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exceptions.InvalidAgeException;
+import core.basesyntax.exceptions.InvalidLoginException;
+import core.basesyntax.exceptions.InvalidPasswordException;
+import core.basesyntax.exceptions.NullUserException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final String NULL_MESSAGE = "%s can`t be null";
-    public static final String LESS_MESSAGE = "%s less than minimum: expected %d but was %d!";
-    public static final String EXIST_MESSAGE = "A user with this email already exists!";
-    public static final String LOGIN = "Login";
-    public static final String PASSWORD = "Password";
-    public static final String AGE = "Age";
-    public static final int LOGIN_PASSWORD_MIN_LENGTH = 6;
-    public static final int MIN_AGE = 18;
+    private static final int LOGIN_PASSWORD_MIN_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new RegistrationException("User can`t be null!");
-        }
-        validateLogin(user);
-        validatePassword(user);
-        validateAge(user);
+        validateUser(user);
         storageDao.add(user);
         return user;
     }
 
-    private void validateLogin(User user) {
-        String login = user.getLogin();
-        if (login == null) {
-            throw new RegistrationException(String.format(NULL_MESSAGE, LOGIN));
+    private void validateUser(User user) {
+        if (user == null) {
+            throw new NullUserException("User cannot be null");
+        }
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+    }
+
+    private void validateLogin(String login) {
+        if (login == null || login.isEmpty()) {
+            throw new InvalidLoginException("Login can't be null or empty!");
         }
         if (login.length() < LOGIN_PASSWORD_MIN_LENGTH) {
-            throw new RegistrationException(String.format(
-                    LESS_MESSAGE,
-                    LOGIN,
-                    LOGIN_PASSWORD_MIN_LENGTH,
-                    user.getLogin().length()));
+            throw new InvalidLoginException("Login less than minimum length: "
+                    + LOGIN_PASSWORD_MIN_LENGTH + " actual length: " + login.length());
         }
         if (storageDao.get(login) != null) {
-            throw new RegistrationException(EXIST_MESSAGE);
+            throw new InvalidLoginException("A user with this login already exists!");
         }
     }
 
-    private void validatePassword(User user) {
-        if (user.getPassword() == null) {
-            throw new RegistrationException(String.format(NULL_MESSAGE, PASSWORD));
+    private void validatePassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new InvalidPasswordException("Password can't be null or empty!");
         }
-        if (user.getPassword().length() < LOGIN_PASSWORD_MIN_LENGTH) {
-            throw new RegistrationException(String.format(
-                    LESS_MESSAGE,
-                    PASSWORD,
-                    LOGIN_PASSWORD_MIN_LENGTH,
-                    user.getPassword().length()));
+        if (password.length() < LOGIN_PASSWORD_MIN_LENGTH) {
+            throw new InvalidPasswordException("Password less than minimum length: "
+                    + LOGIN_PASSWORD_MIN_LENGTH + " actual length: " + password.length());
         }
     }
 
-    private void validateAge(User user) {
-        if (user.getAge() == null) {
-            throw new RegistrationException(String.format(NULL_MESSAGE, AGE));
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new InvalidAgeException("Age can't be null!");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException(
-                    String.format(LESS_MESSAGE, AGE, MIN_AGE, user.getAge()));
-        }
-    }
-
-    public static class RegistrationException extends RuntimeException {
-        public RegistrationException(String message) {
-            super(message);
+        if (age < MIN_AGE) {
+            throw new InvalidAgeException("Age less than minimum: " + MIN_AGE);
         }
     }
 }
