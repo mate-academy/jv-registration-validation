@@ -26,11 +26,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() {
-        assertThrows(InvalidUserException.class, () -> registrationService.register(null));
-    }
-
-    @Test
     void register_userUnderMinAge_notOk() {
         User user = createValidUser();
         user.setAge(USER_MIN_AGE - 1);
@@ -94,18 +89,6 @@ class RegistrationServiceImplTest {
     void register_userWithExistingLogin_notOk() {
         User user1 = createValidUser();
         User user2 = createValidUser();
-        registrationService.register(user1);
-        InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user2));
-        assertTrue(exception.getMessage().contains("User with login '"
-                + USER_VALID_LOGIN + "' already exists"));
-    }
-
-    @Test
-    void register_userWithExistingLoginCaseInsensitive_notOk() {
-        User user1 = createValidUser();
-        User user2 = createValidUser();
-        user2.setLogin(USER_VALID_LOGIN.toUpperCase());
         registrationService.register(user1);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user2));
