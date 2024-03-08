@@ -10,12 +10,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
+    private static final String THREE_LETTERS = "abc";
+    private static final String FIVE_LETTERS = "abcde";
+    private static final int INVALID_AGE = 17;
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
         user = new User();
         user.setLogin("ValidLogin");
         user.setPassword("ValidPassword");
@@ -48,9 +50,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginLengthLessThan6_notOk() {
-        user.setLogin("abc");
+        user.setLogin(THREE_LETTERS);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        user.setLogin("abcde");
+        user.setLogin(FIVE_LETTERS);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -62,9 +64,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLengthLessThan6_notOk() {
-        user.setPassword("abc");
+        user.setPassword(THREE_LETTERS);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        user.setPassword("abcde");
+        user.setPassword(FIVE_LETTERS);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -76,7 +78,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageLessThanMinAge_NotOk() {
-        user.setAge(17);
+        user.setAge(INVALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }

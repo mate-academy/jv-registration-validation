@@ -12,9 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkAge(user);
         checkLogin(user);
         checkPassword(user);
+        checkAge(user);
         checkDuplicate(user);
         return storageDao.add(user);
     }
@@ -46,10 +46,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age can't be null");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException(
-                    "Not valid age: " + user.getAge()
-                    + ". Min allowed age is " + MIN_AGE
-            );
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ". Min allowed age is " + MIN_AGE);
         }
     }
 
@@ -58,11 +56,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException(
-                    "Not valid password length,"
+            throw new RegistrationException("Not valid password length,"
                     + " allowed min password length is "
-                    + MIN_PASSWORD_LENGTH
-            );
+                    + MIN_PASSWORD_LENGTH);
         }
     }
 }
