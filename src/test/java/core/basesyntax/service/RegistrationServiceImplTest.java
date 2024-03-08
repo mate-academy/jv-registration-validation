@@ -7,7 +7,6 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,17 +23,11 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD_LENGTH = "pass";
     private static final String INVALID_EMPTY_PASSWORD = "";
     private static final int INVALID_USER_AGE = 16;
-    private static RegistrationService registrationService;
-    private static StorageDao storageDao;
 
     private User user;
     private RegistrationException registrationException;
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
-    }
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeEach
     void setUp() {
