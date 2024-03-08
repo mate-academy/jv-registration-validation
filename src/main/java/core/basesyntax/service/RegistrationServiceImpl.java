@@ -11,26 +11,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidDataException {
+    public User register(User user) {
         verify(user);
         storageDao.add(user);
         return user;
     }
 
-    public void checkUsersInfo(User user) {
-        checkAge(user);
-        checkLogin(user);
-        checkPassword(user);
-    }
-
-    public void checkAge(User user) {
+    private void checkAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidDataException("Age can't be null.");
         }
         if (user.getAge() < AGE_ATLEAST) {
             throw new InvalidDataException("Age must be at least 18 y.o.");
         }
-
     }
 
     private void checkLogin(User user) {
@@ -55,7 +48,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void verify(User user) {
         if (user != null && storageDao.get(user.getLogin()) != user) {
-            checkUsersInfo(user);
+            checkAge(user);
+            checkLogin(user);
+            checkPassword(user);
         } else {
             throw new InvalidDataException("User exists.");
         }

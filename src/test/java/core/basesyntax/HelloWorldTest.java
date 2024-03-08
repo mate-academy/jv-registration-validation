@@ -96,5 +96,3 @@ public class HelloWorldTest {
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 }
-
-
