@@ -27,14 +27,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can't be null.");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Min length of login should be 6 characters.");
+            throw new RegistrationException("Min length of login should be 6 characters."
+                    + user.getLogin().length());
         }
 
         if (!Character.isLetter(user.getLogin().charAt(0))) {
             throw new RegistrationException("Login can't start with number");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with email: "
+            throw new RegistrationException("User with login: "
                     + user.getLogin()
                     + " does already exist.");
         }

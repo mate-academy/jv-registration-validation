@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
@@ -19,10 +20,12 @@ class RegistrationServiceImplTest {
 
     private RegistrationService registrationService;
     private User user;
-    
+    private StorageDaoImpl storageDao;
+
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
         user = new User();
         user.setAge(VALID_AGE);
         user.setLogin(VALID_DEFAULT_LOGIN);
@@ -37,7 +40,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        registrationService.register(user);
+        Assertions.assertNotNull(storageDao.add(user));
+    }
+
+    @Test
+    void register_userDoesAlreadyExist_notOk() {
+        storageDao.add(user);
+        Assertions.assertThrows(RegistrationException.class,
+                 () -> registrationService.register(user));
     }
 
     @Test
