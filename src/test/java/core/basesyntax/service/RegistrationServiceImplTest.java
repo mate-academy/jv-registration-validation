@@ -3,8 +3,11 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -126,5 +129,10 @@ public class RegistrationServiceImplTest {
         user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_ZERO_AGE);
         boolean result = registrationService.checkAge(user);
         assertFalse(result);
+    }
+
+    @AfterAll
+    static void noWitnesses() {
+        Storage.people.clear();
     }
 }
