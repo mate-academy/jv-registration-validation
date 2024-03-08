@@ -16,9 +16,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User cannot be null.");
         }
-        checkUserAge(user);
+
         checkUserLogin(user);
         checkUserPassword(user);
+        checkUserAge(user);
         return storageDao.add(user);
     }
 
@@ -27,7 +28,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login can't be null.");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Min length of login should be 6 characters."
+            throw new RegistrationException("Min length of login should be"
+                    + MIN_LOGIN_LENGTH + " characters."
                     + user.getLogin().length());
         }
 
@@ -47,7 +49,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Min length of password should be 6 characters.");
+            throw new RegistrationException("Min length of password should be"
+                    + MIN_PASSWORD_LENGTH + " characters.");
         }
     }
 
@@ -56,7 +59,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("You have to enter your age.");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Sorry. Age must be at least 18 years old.");
+            throw new RegistrationException("Sorry. Age must be at least"
+                    + MIN_AGE + " years old.");
         }
     }
 }

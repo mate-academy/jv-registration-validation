@@ -1,6 +1,8 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
@@ -18,14 +20,12 @@ class RegistrationServiceImplTest {
     private static final String INVALID_EMPTY_PASSWORD = "";
     private static final int INVALID_USER_AGE = 16;
 
-    private RegistrationService registrationService;
-    private User user;
-    private StorageDaoImpl storageDao;
+    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private User user = new User();
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
         user = new User();
         user.setAge(VALID_AGE);
         user.setLogin(VALID_DEFAULT_LOGIN);
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        Assertions.assertNotNull(storageDao.add(user));
+        Assertions.assertTrue(Storage.people.contains(user));
     }
 
     @Test
@@ -88,11 +88,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordIsEmpty_notOk() {
         user.setPassword(INVALID_EMPTY_PASSWORD);
-        if (user.getLogin().isEmpty()) {
-            Assertions.assertThrows(RegistrationException.class,
-                    () -> registrationService.register(user));
-        }
-
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
