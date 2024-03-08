@@ -5,11 +5,16 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private static final String VALID_DEFAULT_LOGIN = "user@gmail.com";
     private static final String VALID_DEFAULT_PASSWORD = "user1234";
     private static final int VALID_AGE = 25;
@@ -19,10 +24,17 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD_LENGTH = "pass";
     private static final String INVALID_EMPTY_PASSWORD = "";
     private static final int INVALID_USER_AGE = 16;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
 
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private User user = new User();
-    private StorageDao storageDao = new StorageDaoImpl();
+    private User user;
+    private RegistrationException registrationException;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @BeforeEach
     void setUp() {
@@ -32,19 +44,29 @@ class RegistrationServiceImplTest {
         user.setPassword(VALID_DEFAULT_PASSWORD);
     }
 
-    @Test
-    void register_nullValueForUser_notOk() {
-        Assertions.assertThrows(RegistrationException.class, 
-                () -> registrationService.register(null));
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void register_validUser_ok() {
+    void register_nullValueForUser_notOk() {
+        registrationException = Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(null));
+        String expectedMessage = "User cannot be null.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
+
+    }
+
+    @Test
+    void register_registerValidUser_ok() {
+        registrationService.register(user);
         Assertions.assertTrue(Storage.people.contains(user));
     }
 
     @Test
-    void register_userDoesAlreadyExist_notOk() {
+    void register_userAlreadyExist_notOk() {
         storageDao.add(user);
         Assertions.assertThrows(RegistrationException.class,
                  () -> registrationService.register(user));
@@ -53,63 +75,96 @@ class RegistrationServiceImplTest {
     @Test
     void register_invalidLoginLength_notOk() {
         user.setLogin(INVALID_LOGIN_LENGTH);
-        Assertions.assertThrows(RegistrationException.class, 
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Min length of login should be "
+                + MIN_LOGIN_LENGTH + " characters.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
+
     }
 
     @Test
     void register_userLoginIsEmpty_notOk() {
         user.setLogin(INVALID_EMPTY_LOGIN);
-        Assertions.assertThrows(RegistrationException.class, 
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Min length of login should be "
+                + MIN_LOGIN_LENGTH + " characters.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void register_userLoginStartWithNumber_notOk() {
         user.setLogin(INVALID_LOGIN_START_WITH_NUMBERS);
-        Assertions.assertThrows(RegistrationException.class, 
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Login can't start with number.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void register_userLoginIsNull_notOk() {
         user.setLogin(null);
-        Assertions.assertThrows(RegistrationException.class, 
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Login can't be null.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
+
     }
 
     @Test
     void register_invalidPasswordLength_notOk() {
         user.setPassword(INVALID_PASSWORD_LENGTH);
-        Assertions.assertThrows(RegistrationException.class, 
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Min length of password should be "
+                + MIN_PASSWORD_LENGTH + " characters.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
+
     }
 
     @Test
     void register_passwordIsEmpty_notOk() {
         user.setPassword(INVALID_EMPTY_PASSWORD);
-        Assertions.assertThrows(RegistrationException.class,
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Min length of password should be 6 characters.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         user.setPassword(null);
-        Assertions.assertThrows(RegistrationException.class,
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Password can't be null.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void register_invalidAge_notOk() {
         user.setAge(INVALID_USER_AGE);
-        Assertions.assertThrows(RegistrationException.class,
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "Sorry. Age must be at least " + MIN_AGE + " years old.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void register_ageIsNull_notOk() {
         user.setAge(null);
-        Assertions.assertThrows(RegistrationException.class,
+        registrationException = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
+        String expectedMessage = "You have to enter your age.";
+        String actualMessage = registrationException.getMessage();
+        Assertions.assertEquals(expectedMessage, actualMessage);
     }
 }
