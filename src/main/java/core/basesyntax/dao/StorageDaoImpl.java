@@ -1,5 +1,6 @@
 package core.basesyntax.dao;
 
+import core.basesyntax.InvalidDataException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
@@ -8,6 +9,13 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
+        try {
+            if (Storage.people.contains(user)) {
+                throw new InvalidDataException("Ooops, your login already exist");
+            }
+        } catch (InvalidDataException e) {
+            throw new RuntimeException("Ooops, your login already exist");
+        }
         user.setId(++index);
         Storage.people.add(user);
         return user;
