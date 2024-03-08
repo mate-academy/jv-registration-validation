@@ -9,15 +9,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int LOGIN_LENGTH = 6;
     private static final int PASSWORD_LENGTH = 6;
     private static final int USER_MIN_AGE = 18;
-    private static final String PASSWORD_HAVE_NO_DIGITS = "Password must contain digit";
-    private static final String PASSWORD_HAVE_NO_LOWERCASE = "Password must "
-            + "contain lower-case letter";
-    private static final String PASSWORD_HAVE_NO_SPECIAL_SYMBOL = "Password must "
-            + "contain special symbol";
-    private static final String PASSWORD_HAVE_NO_UPPERCASE = "Password must "
-            + "contain upper-case letter";
-    private static final String PASSWORD_TOO_SHORT = "Password must be not shorter than "
-            + PASSWORD_LENGTH;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -53,28 +44,21 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password == null) {
             throw new UserPasswordValidationException("No login accepted");
         }
-        StringBuilder errorMessage = new StringBuilder();
         if (password.length() < PASSWORD_LENGTH) {
-            errorMessage.append(PASSWORD_TOO_SHORT);
-            errorMessage.append(System.lineSeparator());
+            throw new UserPasswordValidationException("Password must be not shorter than "
+                    + PASSWORD_LENGTH);
         }
         if (!Pattern.compile("[0-9]").matcher(password).find()) {
-            errorMessage.append(PASSWORD_HAVE_NO_DIGITS);
-            errorMessage.append(System.lineSeparator());
+            throw new UserPasswordValidationException("Password must contain digit");
         }
         if (!Pattern.compile("[A-Z]").matcher(password).find()) {
-            errorMessage.append(PASSWORD_HAVE_NO_UPPERCASE);
-            errorMessage.append(System.lineSeparator());
+            throw new UserPasswordValidationException("Password must contain upper-case letter");
         }
         if (!Pattern.compile("[a-z]").matcher(password).find()) {
-            errorMessage.append(PASSWORD_HAVE_NO_LOWERCASE);
-            errorMessage.append(System.lineSeparator());
+            throw new UserPasswordValidationException("Password must contain lower-case letter");
         }
         if (!Pattern.compile("[!@#$%^&*()_+={}|<>?]").matcher(password).find()) {
-            errorMessage.append(PASSWORD_HAVE_NO_SPECIAL_SYMBOL);
-        }
-        if (!errorMessage.isEmpty()) {
-            throw new UserPasswordValidationException(errorMessage.toString());
+            throw new UserPasswordValidationException("Password must contain special symbol");
         }
     }
 }
