@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
-        assertEquals("Login shorter than 6 symbols.user", exception.getMessage());
+        assertEquals("Login shorter than 6 symbols - user", exception.getMessage());
     }
 
     @Test
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
         user.setPassword("pass");
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
-        assertEquals("Password shorter than 6 symbols.pass", exception.getMessage());
+        assertEquals("Password shorter than 6 symbols - pass", exception.getMessage());
     }
 
     @Test
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
-        assertEquals("Age is incorrect17", exception.getMessage());
+        assertEquals("Age is incorrect - 17", exception.getMessage());
     }
 
     @Test
@@ -83,6 +83,6 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
-        assertEquals("We already have such user.existingUser", exception.getMessage());
+        assertEquals("We already have such user - existingUser", exception.getMessage());
     }
 }
