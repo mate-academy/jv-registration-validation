@@ -11,7 +11,6 @@ import core.basesyntax.exceptions.InvalidPasswordException;
 import core.basesyntax.exceptions.NullUserException;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
