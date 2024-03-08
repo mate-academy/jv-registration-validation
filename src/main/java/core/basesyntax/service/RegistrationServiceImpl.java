@@ -6,6 +6,7 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -31,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean validateAge(Integer age) {
-        if (age < 18) {
+        if (age < MIN_AGE) {
             throw new RegistrationException("You should be at least 18 y.o");
         }
         return true;
