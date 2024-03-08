@@ -44,17 +44,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     private boolean validateUserInfo(User user) {
         if (user.getLogin().length() < MINIMUM_LENGTH) {
             throw new InvalidInputDataException(
-                    "Your login length should be at least"+ MINIMUM_LENGTH +", now: \" "
+                    "Your login length should be at least" + MINIMUM_LENGTH + ", now: \" "
                             + user.getLogin().length());
         }
         if (user.getPassword().length() < MINIMUM_LENGTH) {
             throw new InvalidInputDataException(
-                    "Your password length should be at least "+ MINIMUM_LENGTH +", now: "
+                    "Your password length should be at least " + MINIMUM_LENGTH + ", now: "
                             + user.getPassword().length());
         }
         if (user.getAge() < MINIMUM_AGE) {
             throw new InvalidInputDataException(
-                    "You must be at least"+ MINIMUM_AGE + "years old");
+                    "You must be at least" + MINIMUM_AGE + "years old");
         }
         return true;
     }
