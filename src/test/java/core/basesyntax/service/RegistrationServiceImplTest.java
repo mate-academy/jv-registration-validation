@@ -1,10 +1,11 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.InvalidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     public User getDefaultValidUser() {
@@ -75,9 +76,7 @@ class RegistrationServiceImplTest {
     @Test
     void inputDataIsNull() {
         RegistrationService registrationService = new RegistrationServiceImpl();
-        User user = new User();
-        user.setPassword(null);
-        user.setAge(null);
+        User user = getDefaultValidUser();
         user.setId(null);
         user.setLogin(null);
         assertThrows(InvalidDataException.class, () -> {
