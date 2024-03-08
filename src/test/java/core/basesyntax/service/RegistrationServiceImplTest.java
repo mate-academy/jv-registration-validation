@@ -20,7 +20,7 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD_NO_DIGITS = "Password!";
     private static final String INVALID_PASSWORD_NO_SPECIAL_SYMBOL = "Password1";
     private static final String INVALID_PASSWORD_SHORT = "Pas1!";
-    private static final int VALID_AGE = 25;
+    private static final int VALID_AGE = 18;
     private static final int NON_VALID_AGE = 17;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;

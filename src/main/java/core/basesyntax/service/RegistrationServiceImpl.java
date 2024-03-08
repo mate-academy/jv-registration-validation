@@ -24,7 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateUserAge(Integer age) {
         if (age < USER_MIN_AGE) {
-            throw new UserValidationException("To register user must be 18 or older");
+            throw new UserValidationException("To register user must be "
+                    + USER_MIN_AGE + " or older");
         }
     }
 
