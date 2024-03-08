@@ -35,12 +35,8 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(LOGIN_OK, PASSWORD_OK, AGE_OK);
-    }
-
-    @AfterEach
-    void tearDown() {
         Storage.people.clear();
+        user = new User(LOGIN_OK, PASSWORD_OK, AGE_OK);
     }
 
     @Test
