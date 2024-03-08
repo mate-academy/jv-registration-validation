@@ -18,9 +18,9 @@ public class RegistrationServiceImplTest {
     private static final String INVALID_SHORT_LOGIN = "testL";
     private static final String INVALID_SHORT_PASSWORD = "MiP@3";
     private static final int INVALID_AGE = 17;
-    private static final String INVALID_EDGE_LOGIN = "";
-    private static final String INVALID_EDGE_PASSWORD = "";
-    private static final int INVALID_EDGE_AGE = 0;
+    private static final String INVALID_EMPTY_LOGIN = "";
+    private static final String INVALID_EMPTY_PASSWORD = "";
+    private static final int INVALID_ZERO_AGE = 0;
 
     private RegistrationServiceImpl registrationService;
     private User user;
@@ -103,6 +103,27 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_underAge_notOK() {
         user = new User(VALID_EDGE_LOGIN, VALID_PASSWORD, INVALID_AGE);
+        boolean result = registrationService.checkAge(user);
+        assertFalse(result);
+    }
+
+    @Test
+    public void register_emptyPass_notOK() {
+        user = new User(VALID_LOGIN, INVALID_EMPTY_PASSWORD, VALID_AGE);
+        boolean result = registrationService.checkPassword(user);
+        assertFalse(result);
+    }
+
+    @Test
+    public void register_emptyLogin_notOK() {
+        user = new User(INVALID_EMPTY_LOGIN, VALID_PASSWORD, VALID_AGE);
+        boolean result = registrationService.checkLogin(user);
+        assertFalse(result);
+    }
+
+    @Test
+    public void register_zeroAge_notOK() {
+        user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_ZERO_AGE);
         boolean result = registrationService.checkAge(user);
         assertFalse(result);
     }
