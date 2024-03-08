@@ -13,9 +13,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "my_valid_login";
     private static final String VALID_PASSWORD = "valid#$PASS@!1234";
-    private static final int VALID_AGE = 18;
-
-    private static final String NULL_STRING = null;
+    private static final int VALID_AGE_MINIMUM = 18;
     private static final int AGE_ZERO = 0;
 
     private static RegistrationServiceImpl registrationService;
@@ -33,7 +31,7 @@ class RegistrationServiceImplTest {
         user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
+        user.setAge(VALID_AGE_MINIMUM);
     }
 
     @Test
@@ -55,13 +53,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LoginIsNull_notOk() {
-        user.setLogin(NULL_STRING);
+        user.setLogin(null);
         assertException(user);
     }
 
     @Test
     void register_PasswordIsNull_notOk() {
-        user.setPassword(NULL_STRING);
+        user.setPassword(null);
         assertException(user);
     }
 

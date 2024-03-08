@@ -6,8 +6,8 @@ import core.basesyntax.exception.InvalidInputDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int REQUIRED_LENGTH = 6;
-    private static final int REQUIRED_AGE = 18;
+    private static final int MINIMUM_LENGTH = 6;
+    private static final int MINIMUM_AGE = 18;
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -42,19 +42,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean validateUserInfo(User user) {
-        if (user.getLogin().length() < REQUIRED_LENGTH) {
+        if (user.getLogin().length() < MINIMUM_LENGTH) {
             throw new InvalidInputDataException(
-                    "Your login length should be at least 6, now: "
+                    "Your login length should be at least"+ MINIMUM_LENGTH +", now: \" "
                             + user.getLogin().length());
         }
-        if (user.getPassword().length() < REQUIRED_LENGTH) {
+        if (user.getPassword().length() < MINIMUM_LENGTH) {
             throw new InvalidInputDataException(
-                    "Your password length should be at least 6, now: "
+                    "Your password length should be at least "+ MINIMUM_LENGTH +", now: "
                             + user.getPassword().length());
         }
-        if (user.getAge() < REQUIRED_AGE) {
+        if (user.getAge() < MINIMUM_AGE) {
             throw new InvalidInputDataException(
-                    "You must be at least 18 years old");
+                    "You must be at least"+ MINIMUM_AGE + "years old");
         }
         return true;
     }
