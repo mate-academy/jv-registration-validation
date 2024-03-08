@@ -41,12 +41,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         return age != null && age >= MIN_AGE;
     }
 
-    private boolean checkLogin(User user) {
+    protected boolean checkLogin(User user) {
         String login = user.getLogin();
         return login != null && login.length() >= MIN_LOGIN_LENGTH;
     }
 
-    private boolean userExists(User user) {
+    protected boolean userExists(User user) {
         return storageDao.get(user.getLogin()) != null;
     }
 }
