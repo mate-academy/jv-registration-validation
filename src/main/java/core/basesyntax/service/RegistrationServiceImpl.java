@@ -11,6 +11,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
         }
@@ -18,13 +21,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be null");
         }
         if (user.getLogin().equals(storageDao.get(user.getLogin()))) {
-            throw new RegistrationException("User with such login already exists!");
+            throw new RegistrationException("User with such login already exists: "
+                    + storageDao.get(user.getLogin()));
         }
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new RegistrationException("Login can't be less than 6 characters");
+            throw new RegistrationException("Login can't be less than "
+                    + MIN_LENGTH + " characters");
         }
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new RegistrationException("Password can't be less than 6 characters");
+            throw new RegistrationException("Password can't be less than "
+                    + MIN_LENGTH + " characters");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Not valid age: " + user.getAge()

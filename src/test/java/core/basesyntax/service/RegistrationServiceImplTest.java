@@ -1,8 +1,10 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
+    private static StorageDaoImpl storageDao;
     private static User newUser;
     private static User actual;
     private static final int MIN_AGE = 18;
@@ -22,6 +25,7 @@ class RegistrationServiceImplTest {
     static void setUp() {
         newUser = new User();
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -37,7 +41,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullLoginNot_Ok() {
+    void noSuchUsersLoginInStorage_Ok() {
+        newUser.setLogin("abfhlfjsn");
+        actual = storageDao.get(newUser.getLogin());
+        assertNotEquals(newUser, actual);
+    }
+
+    @Test
+    void nullUser_NotOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(null);
+        });
+    }
+
+    @Test
+    void nullLogin_NotOk() {
         newUser.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(newUser);
