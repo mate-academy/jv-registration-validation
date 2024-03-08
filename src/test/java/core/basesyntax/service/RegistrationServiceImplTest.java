@@ -6,9 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.ValidationException;
+import core.basesyntax.exception.UserValidationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,13 +23,8 @@ class RegistrationServiceImplTest {
     private static final int MIN_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private static final int NEGATIVE_AGE = -5;
-    private static RegistrationService registrationService;
+    private static final RegistrationService registrationService = new RegistrationServiceImpl();
     private static User user;
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-    }
 
     @BeforeEach
     void setUp() {
@@ -145,8 +139,8 @@ class RegistrationServiceImplTest {
         assertEquals(expected, assertThrowsException(user).getMessage());
     }
 
-    private ValidationException assertThrowsException(User invalidUser) {
-        return assertThrows(ValidationException.class, () ->
+    private UserValidationException assertThrowsException(User invalidUser) {
+        return assertThrows(UserValidationException.class, () ->
                 registrationService.register(invalidUser));
     }
 }
