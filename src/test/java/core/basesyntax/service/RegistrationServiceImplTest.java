@@ -8,7 +8,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationFailureException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,33 +16,40 @@ class RegistrationServiceImplTest {
     private static final int MIN_VALID_AGE = 18;
     private static final String VALID_LOGIN = "someLogin";
     private static final String VALID_PASSWORD = "somePassword";
+    private static final String NULL_USER_MESSAGE
+            = "User registration failed due to user is null";
+    private static final String INVALID_AGE_MESSAGE
+            = "User registration failed due to user is null";
+    private static final String INVALID_LOGIN_PASSWORD_LENGTH_MESSAGE
+            = "User registration failed due to user is null";
+    private static final String USER_EXISTS_MESSAGE
+            = "User registration failed due to user is null";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private static User user;
+    private User user = new User();
 
     @BeforeAll
     static void setup() {
-        user = new User();
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     public void initializeValidUser() {
+        Storage.people.clear();
         user.setAge(MIN_VALID_AGE);
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
-    }
-
-    @AfterEach
-    public void clearStorage() {
-        Storage.people.clear();
     }
 
     @Test
     void register_userIsNull_NotOk() {
         assertThrows(RegistrationFailureException.class, () ->
                 registrationService.register(null));
+        String actual = assertThrows(RegistrationFailureException.class, () ->
+                registrationService.register(null)).getMessage();
+        assertEquals(NULL_USER_MESSAGE, actual);
+
     }
 
     @Test
@@ -51,6 +57,9 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         assertThrows(RegistrationFailureException.class, () ->
                 registrationService.register(user));
+        String actual = assertThrows(RegistrationFailureException.class, () ->
+                registrationService.register(null)).getMessage();
+        assertEquals(INVALID_AGE_MESSAGE, actual);
     }
 
     @Test
@@ -72,6 +81,9 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         assertThrows(RegistrationFailureException.class, () ->
                 registrationService.register(user));
+        String actual = assertThrows(RegistrationFailureException.class, () ->
+                registrationService.register(null)).getMessage();
+        assertEquals(INVALID_LOGIN_PASSWORD_LENGTH_MESSAGE, actual);
     }
 
     @Test
@@ -86,6 +98,9 @@ class RegistrationServiceImplTest {
         user.setLogin("login");
         assertThrows(RegistrationFailureException.class, () ->
                 registrationService.register(user));
+        String actual = assertThrows(RegistrationFailureException.class, () ->
+                registrationService.register(null)).getMessage();
+        assertEquals(INVALID_LOGIN_PASSWORD_LENGTH_MESSAGE, actual);
     }
 
     @Test
@@ -121,5 +136,8 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
         assertThrows(RegistrationFailureException.class, () ->
                 registrationService.register(user));
+        String actual = assertThrows(RegistrationFailureException.class, () ->
+                registrationService.register(null)).getMessage();
+        assertEquals(USER_EXISTS_MESSAGE, actual);
     }
 }
