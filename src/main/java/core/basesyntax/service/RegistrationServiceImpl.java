@@ -20,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
         }
-        if (user.getLogin().equals(storageDao.get(user.getLogin()))) {
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with such login already exists: "
                     + storageDao.get(user.getLogin()));
         }

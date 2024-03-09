@@ -1,20 +1,16 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDaoImpl storageDao;
     private static User newUser;
     private static User actual;
     private static final int MIN_AGE = 18;
@@ -25,7 +21,6 @@ class RegistrationServiceImplTest {
     static void setUp() {
         newUser = new User();
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -41,10 +36,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void noSuchUsersLoginInStorage_Ok() {
-        newUser.setLogin("abfhlfjsn");
-        actual = storageDao.get(newUser.getLogin());
-        assertNotEquals(newUser, actual);
+    void registerUserWithSameLogin_NotOk() {
+        Storage.people.add(newUser);
+        User user = new User();
+        user.setLogin(CORRECT_LOGIN);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
