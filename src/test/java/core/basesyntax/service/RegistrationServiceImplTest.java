@@ -1,14 +1,14 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import core.basesyntax.db.Storage;
+import core.basesyntax.exeptions.UserRegistrationException;
 import core.basesyntax.model.User;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "test_login_created_at " + LocalDateTime.now();
@@ -36,14 +36,14 @@ public class RegistrationServiceImplTest {
     public void register_nullLogin_notOK() {
         user = new User(null, VALID_PASSWORD, VALID_EDGE_AGE);
         boolean result = registrationService.checkLogin(user);
-        assertFalse(result);
+        assertFalse(result,"Login cannot be null");
     }
 
     @Test
     public void register_nullPass_notOK() {
         user = new User(VALID_LOGIN, null, VALID_AGE);
         boolean result = registrationService.checkPassword(user);
-        assertFalse(result);
+        assertFalse(result,"Password cannot be null");
     }
 
     @Test
@@ -51,6 +51,32 @@ public class RegistrationServiceImplTest {
         user = new User(VALID_LOGIN, VALID_PASSWORD, null);
         boolean result = registrationService.checkAge(user);
         assertFalse(result);
+    }
+
+    @Test
+    public void register_LoginExeption_notOk() {
+        user = new User(null, VALID_PASSWORD, INVALID_ZERO_AGE);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void register_NullPassExeption_notOk() {
+        user = new User(VALID_LOGIN, null, INVALID_ZERO_AGE);
+        try {
+            registrationService.register(user);
+        } catch (UserRegistrationException e) {
+            return;
+        }
+    }
+
+    @Test
+    public void register_InvalidAgeExeption_notOk() {
+        user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_ZERO_AGE);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
