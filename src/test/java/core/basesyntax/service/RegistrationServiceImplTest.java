@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.UserRegistrationException;
@@ -71,6 +72,7 @@ public class RegistrationServiceImplTest {
         } catch (UserRegistrationException e) {
             return;
         }
+        fail("Password cannot be null, exception should see you");
     }
 
     @Test
