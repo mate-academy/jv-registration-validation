@@ -13,49 +13,46 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkForNullOrIncorrectInput(user);
+        checkUserNotNull(user);
+        checkUserNotRegisteredYet(user);
+        checkUserAge(user);
+        checkUserLoginLength(user);
+        checkUserPasswordLength(user);
+        return storageDao.add(user);
+    }
+
+    private void checkUserNotNull(User user) {
+        if (user == null) {
+            throw new InvalidInputDataException("User can't be null!");
+        }
+    }
+
+    private void checkUserAge(User user) {
+        if (user.getAge() == null || user.getAge() < MINIMUM_AGE) {
+            throw new InvalidInputDataException("User's age is less than "
+                    + MINIMUM_AGE + " or not specified");
+        }
+    }
+
+    private void checkUserLoginLength(User user) {
+        if (user.getLogin() == null || user.getLogin().length() < MINIMUM_LENGTH) {
+            throw new InvalidInputDataException("Your login is shorter than "
+                    + MINIMUM_LENGTH + "or not specified");
+        }
+    }
+
+    private void checkUserPasswordLength(User user) {
+        if (user.getPassword() == null || user.getPassword().length() < MINIMUM_LENGTH) {
+            throw new InvalidInputDataException("Your password is shorter than "
+                            + MINIMUM_LENGTH + " or not specified");
+        }
+    }
+
+    private void checkUserNotRegisteredYet(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidInputDataException(
                     "User with this login - " + user.getLogin()
                             + " - already registered. Try to log in");
         }
-        if (validateUserInfo(user)) {
-            storageDao.add(user);
-        }
-
-        return user;
-    }
-
-    private void checkForNullOrIncorrectInput(User user) {
-        if (user == null) {
-            throw new InvalidInputDataException("User can't be null!");
-        }
-        if (user.getLogin() == null) {
-            throw new InvalidInputDataException("Your login can't be null!");
-        }
-        if (user.getAge() <= 0) {
-            throw new InvalidInputDataException("Your age can't be less or equals zero!");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidInputDataException("Password can't be null!");
-        }
-    }
-
-    private boolean validateUserInfo(User user) {
-        if (user.getLogin().length() < MINIMUM_LENGTH) {
-            throw new InvalidInputDataException(
-                    "Your login length should be at least" + MINIMUM_LENGTH + ", now: \" "
-                            + user.getLogin().length());
-        }
-        if (user.getPassword().length() < MINIMUM_LENGTH) {
-            throw new InvalidInputDataException(
-                    "Your password length should be at least " + MINIMUM_LENGTH + ", now: "
-                            + user.getPassword().length());
-        }
-        if (user.getAge() < MINIMUM_AGE) {
-            throw new InvalidInputDataException(
-                    "You must be at least" + MINIMUM_AGE + "years old");
-        }
-        return true;
     }
 }

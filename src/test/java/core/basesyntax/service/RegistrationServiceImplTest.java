@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,11 +14,12 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "my_valid_login";
     private static final String VALID_PASSWORD = "valid#$PASS@!1234";
+    private static final int MINIMUM_LENGTH = 6;
     private static final int VALID_AGE_MINIMUM = 18;
-    private static final int AGE_ZERO = 0;
+    private static final int AGE_ZERO_INVALID = 0;
 
     private static RegistrationServiceImpl registrationService;
-    private static User user;
+    private User user;
 
     @BeforeAll
     static void beforeAll() {
@@ -36,77 +38,92 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserRegistered_Ok() {
-        registrationService.register(user);
+        assertEquals(user, registrationService.register(user));
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_UserIsNull_notOk() {
-        assertException(null);
+        String expected = "User can't be null!";
+        assertEquals(expected, assertException(null).getMessage());
     }
 
     @Test
     void register_UserAlreadyExists_notOk() {
+        String expected = "User with this login - "
+                + user.getLogin()
+                + " - already registered. Try to log in";
         Storage.people.add(user);
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
     }
 
     @Test
     void register_LoginIsNull_notOk() {
+        String expected = "Your login is shorter than "
+                + MINIMUM_LENGTH + "or not specified";
         user.setLogin(null);
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
     }
 
     @Test
     void register_PasswordIsNull_notOk() {
+        String expected = "Your password is shorter than "
+                + MINIMUM_LENGTH + " or not specified";
         user.setPassword(null);
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
     }
 
     @Test
     void register_AgeIsIncorrect_notOk() {
-        user.setAge(AGE_ZERO);
-        assertException(user);
+        String expected = "User's age is less than "
+                + VALID_AGE_MINIMUM + " or not specified";
+
+        user.setAge(AGE_ZERO_INVALID);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setAge(-14);
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setAge(-1);
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setAge(7);
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setAge(17);
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
     }
 
     @Test
     void register_LoginIsIncorrect_notOk() {
+        String expected = "Your login is shorter than "
+                + MINIMUM_LENGTH + "or not specified";
         user.setLogin("");
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setLogin("smth");
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setLogin("login");
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
     }
 
     @Test
     void register_PasswordIsIncorrect_notOk() {
+        String expected = "Your password is shorter than "
+                + MINIMUM_LENGTH + " or not specified";
         user.setPassword("");
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setPassword("123");
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
 
         user.setPassword("1Psa@");
-        assertException(user);
+        assertEquals(expected, assertException(user).getMessage());
     }
 
-    public void assertException(User user) {
-        assertThrows(InvalidInputDataException.class,
+    private InvalidInputDataException assertException(User user) {
+        return assertThrows(InvalidInputDataException.class,
                 () -> registrationService.register(user));
     }
 }
