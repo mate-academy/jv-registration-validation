@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.UserRegistrationException;
 import core.basesyntax.model.User;
@@ -7,8 +11,6 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "test_login_created_at " + LocalDateTime.now();

@@ -1,15 +1,15 @@
 package core.basesyntax.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.model.User;
-
-import java.time.LocalDateTime;
-
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class StorageDaoImplTest {
     private static final String VALID_LOGIN = "test_login_created_at " + LocalDateTime.now();
@@ -38,7 +38,7 @@ class StorageDaoImplTest {
     public void search_UserIndexBigerThanZero_OK() {
         User user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         User addedUser = storageDao.add(user);
-        boolean actual= addedUser.getId() > 0;
+        boolean actual = addedUser.getId() > 0;
         assertTrue(actual, "User id cannot be lower than 0");
     }
 
@@ -47,6 +47,7 @@ class StorageDaoImplTest {
         User user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         storageDao.add(user);
         String login = storageDao.get(VALID_LOGIN).getLogin();
-        assertEquals(user.getLogin(), login, "Login of saved user must be same as login used for registration");
+        assertEquals(user.getLogin(), login, "Login of saved user must "
+                + "be same as login used for registration");
     }
 }
