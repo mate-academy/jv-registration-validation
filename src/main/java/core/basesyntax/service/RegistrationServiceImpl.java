@@ -23,7 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean validateLogin(String login) {
         if (login == null || login.length() < MIN_LENGTH) {
-            throw new RegistrationException("Login should be at least 6 characters");
+            throw new RegistrationException("Login should be at least " + MIN_LENGTH);
         }
         if (storageDao.get(login) != null) {
             throw new RegistrationException("This login has already taken by another user");
@@ -33,14 +33,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean validateAge(Integer age) {
         if (age < MIN_AGE) {
-            throw new RegistrationException("You should be at least 18 y.o");
+            throw new RegistrationException("You should be at least " + MIN_AGE);
         }
         return true;
     }
 
     private boolean validatePassword(String password) {
         if (password == null || password.length() < MIN_LENGTH) {
-            throw new RegistrationException("Password should be at least 6 characters");
+            throw new RegistrationException("Password should be at least " + MIN_LENGTH);
         }
         return true;
     }
