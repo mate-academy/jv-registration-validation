@@ -53,7 +53,7 @@ public class RegistrationServiceImplTest {
     public void register_nullAge_notOK() {
         user = new User(VALID_LOGIN, VALID_PASSWORD, null);
         boolean result = registrationService.checkAge(user);
-        assertFalse(result);
+        assertFalse(result,"Age field cannot be null");
     }
 
     @Test
@@ -87,21 +87,21 @@ public class RegistrationServiceImplTest {
     public void register_EdgeLogin_OK() {
         user = new User(VALID_EDGE_LOGIN, VALID_PASSWORD, VALID_AGE);
         boolean result = registrationService.checkLogin(user);
-        assertTrue(result);
+        assertTrue(result, "Login lenght 6 should be acceptable");
     }
 
     @Test
     public void register_EdgePass_OK() {
         user = new User(VALID_PASSWORD, VALID_EDGE_PASSWORD, VALID_AGE);
         boolean result = registrationService.checkPassword(user);
-        assertTrue(result);
+        assertTrue(result, "Password lenght 6 should be acceptable");
     }
 
     @Test
     public void register_EdgeAge_OK() {
         user = new User(VALID_PASSWORD, VALID_PASSWORD, VALID_EDGE_AGE);
         boolean result = registrationService.checkAge(user);
-        assertTrue(result);
+        assertTrue(result,"Age 18 should be acceptable");
     }
 
     @Test
