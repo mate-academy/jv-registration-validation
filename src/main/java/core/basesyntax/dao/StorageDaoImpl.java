@@ -8,13 +8,13 @@ public class StorageDaoImpl implements StorageDao {
     private static Long index = 0L;
 
     @Override
-    public User add(User user) {
+    public User add(User user) throws InvalidDataException {
         try {
             if (Storage.people.contains(user)) {
                 throw new InvalidDataException("Ooops, your login already exist");
             }
         } catch (InvalidDataException e) {
-            throw new RuntimeException("Ooops, your login already exist");
+            throw new InvalidDataException("Ooops, your login already exist");
         }
         user.setId(++index);
         Storage.people.add(user);

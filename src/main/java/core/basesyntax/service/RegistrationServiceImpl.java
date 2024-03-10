@@ -23,6 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword().length() >= MINIMUM_CHARACTERS
                 && user.getLogin().length() >= MINIMUM_CHARACTERS
                 && user.getAge() >= MINIMUM_AGE) {
+            storageDao.add(user);
             return user;
         } else {
             throw new InvalidDataException("Oops, your input data is not valid");
