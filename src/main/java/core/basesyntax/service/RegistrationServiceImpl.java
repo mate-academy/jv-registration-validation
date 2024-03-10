@@ -1,14 +1,14 @@
 package core.basesyntax.service;
 
-import core.basesyntax.Exceptions.RegistrationFailureException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exceptions.RegistrationFailureException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final static int MIN_AGE = 18;
-    private final static int MIN_DATA_LENGTH = 6;
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MIN_DATA_LENGTH = 6;
+    private static final int MIN_AGE = 18;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -57,8 +57,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void ageValidation(User user) {//maybe can use Integer from user
+    private void ageValidation(User user) { //maybe can use Integer from user
         Integer age = user.getAge();
+
         if (age < MIN_AGE) {
             throw new RegistrationFailureException("Not valid age: "
                     + age + ". Min allowed age is " + MIN_AGE);
