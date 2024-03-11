@@ -28,11 +28,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                             + " chars!"
             );
         } else {
-            checkEmailDuplicate(user);
+            checkLoginDuplicate(user);
         }
     }
 
-    private void checkEmailDuplicate(User user) {
+    private void checkLoginDuplicate(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationServiceException(
                     "User with login: "

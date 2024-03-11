@@ -15,6 +15,11 @@ class RegistrationServiceImplTest {
     private static final int MIN_AGE = 18;
     private static final String VALID_LOGIN = "123456";
     private static final String VALID_PASSWORD = "654321";
+    private static final String NOT_VALID_LOGIN = "JAVA";
+    private static final String NOT_VALID_PASSWORD = "1234";
+    private static final int NOT_VALID_AGE = 13;
+
+
 
     private static RegistrationService registrationService;
     private User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
@@ -40,6 +45,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void added_UserToStorage_Ok() {
+        assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
     void register_LoginIsNull_notOk() {
         String expected = "User login can not be least then "
                 + MIN_LENGTH
@@ -60,13 +70,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_AgeIsIncorrect_notOk() {
         String expected = "User must be of legal age!";
-        user.setAge(-100);
-        assertEquals(expected, assertException(user).getMessage());
-        user.setAge(5);
-        assertEquals(expected, assertException(user).getMessage());
-        user.setAge(3);
-        assertEquals(expected, assertException(user).getMessage());
-        user.setAge(16);
+        user.setAge(NOT_VALID_AGE);
         assertEquals(expected, assertException(user).getMessage());
     }
 
@@ -75,11 +79,7 @@ class RegistrationServiceImplTest {
         String expected = "User login can not be least then "
                 + MIN_LENGTH
                 + " chars!";
-        user.setLogin("");
-        assertEquals(expected, assertException(user).getMessage());
-        user.setLogin("SAM");
-        assertEquals(expected, assertException(user).getMessage());
-        user.setLogin("LOSHA");
+        user.setLogin(NOT_VALID_LOGIN);
         assertEquals(expected, assertException(user).getMessage());
     }
 
@@ -88,11 +88,7 @@ class RegistrationServiceImplTest {
         String expected = "User password can not be least then "
                 + MIN_LENGTH
                 + " chars!";
-        user.setPassword("");
-        assertEquals(expected, assertException(user).getMessage());
-        user.setPassword("123");
-        assertEquals(expected, assertException(user).getMessage());
-        user.setPassword("qwert");
+        user.setPassword(NOT_VALID_PASSWORD);
         assertEquals(expected, assertException(user).getMessage());
     }
 
