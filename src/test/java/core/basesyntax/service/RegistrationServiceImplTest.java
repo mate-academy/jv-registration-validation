@@ -31,8 +31,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @DisplayName("Method register(User user) "
-            + "throws UserRegistrationException if user parameter is null")
+    @DisplayName("register_throws_UserRegistrationException_"
+            + "if_user_is_null")
     void register_nullUser_notOk() {
         expectedMessage = "User can`t be null";
         UserRegistrationException expectedException = assertThrows(
@@ -46,8 +46,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @DisplayName("Method register(User user) "
-            + "throws UserRegistrationException if user login is null")
+    @DisplayName("register_throws_UserRegistrationException_"
+            + "if_user_login_is_null")
     void register_nullUserLogin_notOk() {
         expectedMessage = "User login can`t be null";
         UserRegistrationException expectedException = assertThrows(
@@ -61,8 +61,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @DisplayName("Method register(User user) "
-            + "throws UserRegistrationException if user password is null")
+    @DisplayName("register_throws_UserRegistrationException_"
+            + "if_user_password_is_null")
     void register_nullUserPassword_notOk() {
         newUser.setLogin("valid login");
         expectedMessage = "User password can`t be null";
@@ -77,8 +77,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @DisplayName("Method register(User user) "
-            + "throws UserRegistrationException if user login length less then 6 characters")
+    @DisplayName("register_throws_UserRegistrationException_"
+            + "if_user_login_length_less_then_six_characters")
     void register_UserLoginLengthLessThenSixCharacters_notOk() {
         newUser.setLogin("test");
         newUser.setPassword("valid password");
@@ -94,8 +94,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @DisplayName("Method register(User user) "
-            + "throws UserRegistrationException if user password length less then 6 characters")
+    @DisplayName("register_throws_UserRegistrationException_"
+            + "if_user_password_length_less_then_six_characters")
     void register_UserPasswordLengthLessThenSixCharacters_notOk() {
         newUser.setLogin("valid login");
         newUser.setPassword("test");
@@ -111,8 +111,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @DisplayName("Method register(User user) "
-            + "throws UserRegistrationException if user age less then 18")
+    @DisplayName("register_throws_UserRegistrationException_"
+            + "if_user_age_less_then_eighteen")
     void register_UserAgeLessThenEighteen_notOk() {
         newUser.setLogin("valid login");
         newUser.setPassword("valid password");
@@ -129,8 +129,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    @DisplayName("Method register(User user) "
-            + "throws UserRegistrationException if user with such login already exists")
+    @DisplayName("register_throws_UserRegistrationException_"
+            + "if_user_already_exists")
     void register_UserAlreadyExists_notOk() {
         User oldUser = new User(1L, "valid login", "valid password", 18);
         storageDao.add(oldUser);
@@ -147,6 +147,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    @DisplayName("register_returns_new_registered_user")
     void register_registerNewUser_ok() {
         User expectedUser = new User(1L, "test login", "test password", 18);
         User actualUser = new User(1L, "test login", "test password", 18);
