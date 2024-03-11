@@ -6,8 +6,8 @@ import core.basesyntax.model.User;
 import core.basesyntax.userinvalidexeption.UserInvalidExeption;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MINIMAL_LENGTH = 6;
     public static final int MINIMAL_AGE = 18;
+    private static final int MINIMAL_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
