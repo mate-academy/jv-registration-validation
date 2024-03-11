@@ -12,13 +12,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int INVALID_AGE = 4;
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
-    private static final String INVALID_LOGIN = "Login length should be at least "
+    private static final String INVALID_AGE_MESSAGE = "You should be at least " + MIN_AGE;
+    private static final String INVALID_LOGIN = "short";
+    private static final String INVALID_LOGIN_MESSAGE = "Login length should be at least "
             + MIN_LENGTH + " symbols";
-    private static final String INVALID_PASSWORD = "Password length should be at least "
+    private static final String INVALID_PASSWORD = "short";
+    private static final String INVALID_PASSWORD_MESSAGE = "Password length should be at least "
             + MIN_LENGTH + " symbols";
-    private static final String INVALID_AGE = "You should be at least " + MIN_AGE;
+    private static final String VALID_LOGIN = "123456";
+    private static final String VALID_PASSWORD = "123456";
     private RegistrationService registrationService = new RegistrationServiceImpl();
     private StorageDao storageDao = new StorageDaoImpl();
     private User testUser;
@@ -35,25 +40,25 @@ class RegistrationServiceImplTest {
         RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(INVALID_LOGIN, exception.getMessage());
+        assertEquals(INVALID_LOGIN_MESSAGE, exception.getMessage());
     }
 
     @Test
     void register_shortLogin_notOk() {
-        testUser.setLogin("short");
+        testUser.setLogin(INVALID_LOGIN);
         RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(INVALID_LOGIN, exception.getMessage());
+        assertEquals(INVALID_LOGIN_MESSAGE, exception.getMessage());
     }
 
     @Test
     void register_shortPassword_notOk() {
-        testUser.setPassword("short");
+        testUser.setPassword(INVALID_PASSWORD);
         RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(INVALID_PASSWORD, exception.getMessage());
+        assertEquals(INVALID_PASSWORD_MESSAGE, exception.getMessage());
     }
 
     @Test
@@ -79,40 +84,40 @@ class RegistrationServiceImplTest {
         RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(INVALID_PASSWORD, exception.getMessage());
+        assertEquals(INVALID_PASSWORD_MESSAGE, exception.getMessage());
     }
 
     @Test
     void register_lowAge_notOk() {
-        testUser.setAge(4);
+        testUser.setAge(INVALID_AGE);
         RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
         });
-        assertEquals(INVALID_AGE, exception.getMessage());
+        assertEquals(INVALID_AGE_MESSAGE, exception.getMessage());
     }
 
     @Test
     void register_edgeAge_Ok() {
-        testUser.setAge(18);
+        testUser.setAge(MIN_AGE);
         registrationService.register(testUser);
         User actual = storageDao.get(testUser.getLogin());
-        assertEquals(actual, testUser);
+        assertEquals(testUser, actual);
     }
 
     @Test
     void register_edgeLogin_Ok() {
-        testUser.setLogin("123456");
+        testUser.setLogin(VALID_LOGIN);
         registrationService.register(testUser);
         User actual = storageDao.get(testUser.getLogin());
-        assertEquals(actual, testUser);
+        assertEquals(testUser, actual);
     }
 
     @Test
     void register_edgePassword_Ok() {
-        testUser.setPassword("123456");
+        testUser.setPassword(VALID_PASSWORD);
         registrationService.register(testUser);
         User actual = storageDao.get(testUser.getLogin());
-        assertEquals(actual, testUser);
+        assertEquals(testUser, actual);
     }
 
     @Test
