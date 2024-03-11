@@ -9,44 +9,49 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
+
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (!checkLogin(user)) {
-            throw new UserRegistrationException("Invalid login");
-        }
-        if (!checkPassword(user)) {
-            throw new UserRegistrationException("Invalid password");
-        }
-        if (!checkAge(user)) {
-            throw new UserRegistrationException("Invalid age");
-        }
-        if (userExists(user)) {
-            throw new UserRegistrationException("User already exists");
+        boolean checkRegistrationAllowance = checkLogin(user.getLogin())
+                && checkPassword(user.getPassword())
+                && checkAge(user.getAge())
+                && !userExists(user);
+        if (!checkRegistrationAllowance) {
+            throw new UserRegistrationException("Registration failed ");
         }
         return storageDao.add(user);
     }
 
-    protected boolean checkPassword(User user) {
-        String password = user.getPassword();
+    private boolean checkPassword(String password) {
         if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
-            return false;
+            throw new UserRegistrationException("Invalid password , password shoudnt be less than "
+                    + MIN_PASSWORD_LENGTH + " characters");
         }
         return true;
     }
 
-    protected boolean checkAge(User user) {
-        Integer age = user.getAge();
-        return age != null && age >= MIN_AGE;
+    private boolean checkAge(Integer age) {
+        if (age == null || age < MIN_AGE) {
+            throw new UserRegistrationException("Invalid age, age shoudnt be less than "
+            + MIN_AGE);
+        }
+        return true;
     }
 
-    protected boolean checkLogin(User user) {
-        String login = user.getLogin();
-        return login != null && login.length() >= MIN_LOGIN_LENGTH;
+    private boolean checkLogin(String login) {
+        if (login == null || login.length() < MIN_LOGIN_LENGTH) {
+            throw new UserRegistrationException("Invalid login , login shoudnt be less than "
+            + MIN_LOGIN_LENGTH + " characters");
+        }
+        return true;
     }
 
-    protected boolean userExists(User user) {
-        return storageDao.get(user.getLogin()) != null;
+    private boolean userExists(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserRegistrationException("User already exists, please choose other one");
+        }
+        return false;
     }
 }

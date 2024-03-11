@@ -1,15 +1,14 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.UserRegistrationException;
 import core.basesyntax.model.User;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,141 +26,151 @@ public class RegistrationServiceImplTest {
     private static final String INVALID_EMPTY_PASSWORD = "";
     private static final int INVALID_ZERO_AGE = 0;
 
-    private RegistrationServiceImpl registrationService;
+    private RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
 
     @BeforeEach
     public void setUp() {
-        registrationService = new RegistrationServiceImpl();
+        user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+    }
+
+    @AfterEach
+    void noWitnesses() {
+        Storage.people.clear();
     }
 
     @Test
     public void register_nullLogin_notOK() {
-        user = new User(null, VALID_PASSWORD, VALID_EDGE_AGE);
-        boolean result = registrationService.checkLogin(user);
-        assertFalse(result,"Login cannot be null");
+        user.setLogin(null);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        },"Login field cannot be null");
     }
 
     @Test
     public void register_nullPass_notOK() {
-        user = new User(VALID_LOGIN, null, VALID_AGE);
-        boolean result = registrationService.checkPassword(user);
-        assertFalse(result,"Password cannot be null");
+        user.setPassword(null);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        },"Password field cannot be null");
     }
 
     @Test
     public void register_nullAge_notOK() {
-        user = new User(VALID_LOGIN, VALID_PASSWORD, null);
-        boolean result = registrationService.checkAge(user);
-        assertFalse(result,"Age field cannot be null");
-    }
-
-    @Test
-    public void register_LoginExeption_notOk() {
-        user = new User(null, VALID_PASSWORD, INVALID_ZERO_AGE);
+        user.setAge(null);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
-        });
+        },"Age field cannot be null");
     }
 
     @Test
-    public void register_NullPassExeption_notOk() {
-        user = new User(VALID_LOGIN, null, INVALID_ZERO_AGE);
+    public void register_NullLoginExeption_notOk() {
+        user.setLogin(null);
         try {
             registrationService.register(user);
         } catch (UserRegistrationException e) {
             return;
         }
-        fail("Password cannot be null, exception should see you");
+        fail("Password cannot be null, exception about login check failed should see you");
     }
 
     @Test
-    public void register_InvalidAgeExeption_notOk() {
+    public void register_NullPassExeption_notOk() {
+        user.setPassword(null);
+        try {
+            registrationService.register(user);
+        } catch (UserRegistrationException e) {
+            return;
+        }
+        fail("Password cannot be null, exception about password check failed should see you");
+    }
+
+    @Test
+    public void register_ZeroAge_notOk() {
         user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_ZERO_AGE);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
-        });
+        }, "Age cannot be zero");
     }
 
     @Test
     public void register_EdgeLogin_OK() {
-        user = new User(VALID_EDGE_LOGIN, VALID_PASSWORD, VALID_AGE);
-        boolean result = registrationService.checkLogin(user);
-        assertTrue(result, "Login lenght 6 should be acceptable");
+        user.setLogin(VALID_EDGE_LOGIN);
+        assertDoesNotThrow(() -> registrationService.register(user),
+                "Login lenght 6 should be acceptable");
     }
 
     @Test
     public void register_EdgePass_OK() {
-        user = new User(VALID_PASSWORD, VALID_EDGE_PASSWORD, VALID_AGE);
-        boolean result = registrationService.checkPassword(user);
-        assertTrue(result, "Password lenght 6 should be acceptable");
+        user.setPassword(VALID_EDGE_PASSWORD);
+        assertDoesNotThrow(() -> registrationService.register(user),
+                "Password lenght 6 should be acceptable");
     }
 
     @Test
     public void register_EdgeAge_OK() {
-        user = new User(VALID_PASSWORD, VALID_PASSWORD, VALID_EDGE_AGE);
-        boolean result = registrationService.checkAge(user);
-        assertTrue(result,"Age 18 should be acceptable");
+        user.setAge(VALID_EDGE_AGE);
+        assertDoesNotThrow(() -> registrationService.register(user),
+                "Age 18 should be acceptable");
     }
 
     @Test
     public void register_AllEdgeData_OK() {
-        user = new User(VALID_EDGE_LOGIN, VALID_EDGE_PASSWORD, VALID_EDGE_AGE);
-        boolean result = registrationService.checkLogin(user);
-        assertTrue(result);
+        user.setLogin(VALID_EDGE_LOGIN);
+        user.setPassword(VALID_EDGE_PASSWORD);
+        user.setAge(VALID_EDGE_AGE);
+        assertDoesNotThrow(() -> registrationService.register(user),"User with "
+                + "minimal lenght login"
+                + "minimal lenght password"
+                + "Age = 18 should be acceptable");
     }
 
     @Test
     public void registet_UserNotExist_OK() {
-        user = new User("nonExistingUser", "password", 20);
-        boolean result = registrationService.userExists(user);
-        assertFalse(result);
+        User user2 = new User(VALID_LOGIN, VALID_PASSWORD,VALID_AGE);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+            registrationService.register(user2);
+        },"User already exit");;
     }
 
     @Test
     public void register_shortPass_notOK() {
-        user = new User(VALID_LOGIN, INVALID_SHORT_PASSWORD, VALID_AGE);
-        boolean result = registrationService.checkPassword(user);
-        assertFalse(result);
+        user.setPassword(INVALID_SHORT_PASSWORD);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        },"Password field cannot be less than 6 characters");
     }
 
     @Test
     public void register_shortLogin_notOK() {
-        user = new User(INVALID_SHORT_LOGIN, VALID_PASSWORD, VALID_AGE);
-        boolean result = registrationService.checkLogin(user);
-        assertFalse(result);
+        user.setLogin(INVALID_SHORT_LOGIN);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        },"Login field cannot be less than 6 characters");
     }
 
     @Test
     public void register_underAge_notOK() {
-        user = new User(VALID_EDGE_LOGIN, VALID_PASSWORD, INVALID_AGE);
-        boolean result = registrationService.checkAge(user);
-        assertFalse(result);
+        user.setAge(INVALID_AGE);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        },"Age cannot be lover than 18");
     }
 
     @Test
     public void register_emptyPass_notOK() {
-        user = new User(VALID_LOGIN, INVALID_EMPTY_PASSWORD, VALID_AGE);
-        boolean result = registrationService.checkPassword(user);
-        assertFalse(result);
+        user.setPassword("");
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        },"Password field cannot be empty");
     }
 
     @Test
     public void register_emptyLogin_notOK() {
-        user = new User(INVALID_EMPTY_LOGIN, VALID_PASSWORD, VALID_AGE);
-        boolean result = registrationService.checkLogin(user);
-        assertFalse(result);
-    }
-
-    @Test
-    public void register_zeroAge_notOK() {
-        user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_ZERO_AGE);
-        boolean result = registrationService.checkAge(user);
-        assertFalse(result);
-    }
-
-    @AfterAll
-    static void noWitnesses() {
-        Storage.people.clear();
+        user.setLogin("");
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user);
+        },"Login field cannot be empty");;
     }
 }
