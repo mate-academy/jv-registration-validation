@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserWithShortPassword_Noy_Ok() {
+    void register_UserWithShortPassword_Not_Ok() {
         User userWithShortPassword = new User();
         userWithShortPassword.setLogin("valid_user");
         userWithShortPassword.setPassword("short");
@@ -86,7 +86,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UnderageUser_Noy_Ok() {
+    void register_UnderageUser_Not_Ok() {
         User underageUser = new User();
         underageUser.setLogin("young_user");
         underageUser.setPassword("validPassword");

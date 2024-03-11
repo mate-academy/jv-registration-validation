@@ -7,6 +7,7 @@ import core.basesyntax.userinvalidexeption.UserInvalidExeption;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MINIMAL_LENGTH = 6;
+    public static final int MINIMAL_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -43,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUserAge(int age) {
-        if (age <= 18) {
+        if (age <= MINIMAL_AGE) {
             throw new UserInvalidExeption("Only adults allowed!!!");
         }
     }
