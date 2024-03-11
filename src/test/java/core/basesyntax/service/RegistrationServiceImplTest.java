@@ -19,8 +19,6 @@ class RegistrationServiceImplTest {
     private static final String NOT_VALID_PASSWORD = "1234";
     private static final int NOT_VALID_AGE = 13;
 
-
-
     private static RegistrationService registrationService;
     private User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
 
