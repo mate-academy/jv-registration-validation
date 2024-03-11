@@ -1,12 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidUserException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,23 +18,27 @@ class RegistrationServiceImplTest {
     private static final int USER_VALID_AGE = 20;
     private static final String USER_VALID_LOGIN = "username";
     private static final String USER_VALID_PASSWORD = "password";
-    private RegistrationService registrationService;
-    private StorageDao storageDao;
+    private StorageDao storageDao = new StorageDaoImpl();
+    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private User testUser;
 
     @BeforeEach
     void beforeEach() {
-        storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl(storageDao);
+        testUser = createValidUser();
+    }
+
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
     }
 
     @Test
     void register_userUnderMinAge_notOk() {
-        User user = createValidUser();
-        user.setAge(USER_MIN_AGE - 1);
+        testUser.setAge(USER_MIN_AGE - 1);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user));
-        assertTrue(exception.getMessage().contains("Users under "
-                + USER_MIN_AGE + " are not allowed!"));
+                () -> registrationService.register(testUser));
+        assertEquals(exception.getMessage(), "Users under "
+                + USER_MIN_AGE + " are not allowed!");
     }
 
     @Test
@@ -41,8 +47,8 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user));
-        assertTrue(exception.getMessage().contains("Users under "
-                + USER_MIN_AGE + " are not allowed!"));
+        assertEquals(exception.getMessage(), "Users under "
+                + USER_MIN_AGE + " are not allowed!");
     }
 
     @Test
@@ -51,8 +57,8 @@ class RegistrationServiceImplTest {
         user.setLogin("short");
         InvalidUserException exception = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user));
-        assertTrue(exception.getMessage().contains("Login must be at least "
-                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters"));
+        assertEquals(exception.getMessage(), "Login must be at least "
+                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
     }
 
     @Test
@@ -61,8 +67,8 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user));
-        assertTrue(exception.getMessage().contains("Login must be at least "
-                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters"));
+        assertEquals(exception.getMessage(), "Login must be at least "
+                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
     }
 
     @Test
@@ -71,8 +77,8 @@ class RegistrationServiceImplTest {
         user.setPassword("pass");
         InvalidUserException exception = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user));
-        assertTrue(exception.getMessage().contains("Password must be at least "
-                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters"));
+        assertEquals(exception.getMessage(), "Password must be at least "
+                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
     }
 
     @Test
@@ -81,8 +87,8 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user));
-        assertTrue(exception.getMessage().contains("Password must be at least "
-                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters"));
+        assertEquals(exception.getMessage(), "Password must be at least "
+                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
     }
 
     @Test
@@ -92,15 +98,22 @@ class RegistrationServiceImplTest {
         registrationService.register(user1);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
                 () -> registrationService.register(user2));
-        assertTrue(exception.getMessage().contains("User with login '"
-                + USER_VALID_LOGIN + "' already exists"));
+        assertEquals(exception.getMessage(), "User with login '"
+                + USER_VALID_LOGIN + "' already exists");
+    }
+
+    @Test
+    void register_validUser_isOK() {
+        registrationService.register(testUser);
+        User actual = storageDao.get(testUser.getLogin());
+        assertEquals(testUser, actual);
     }
 
     private User createValidUser() {
-        User user = new User();
-        user.setAge(USER_VALID_AGE);
-        user.setLogin(USER_VALID_LOGIN);
-        user.setPassword(USER_VALID_PASSWORD);
-        return user;
+        testUser = new User();
+        testUser.setAge(USER_VALID_AGE);
+        testUser.setLogin(USER_VALID_LOGIN);
+        testUser.setPassword(USER_VALID_PASSWORD);
+        return testUser;
     }
 }
