@@ -43,61 +43,52 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userWithNullAge_notOk() {
-        User user = createValidUser();
-        user.setAge(null);
+        testUser.setAge(null);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user));
-        assertEquals(exception.getMessage(), "Users under "
-                + USER_MIN_AGE + " are not allowed!");
+                () -> registrationService.register(testUser));
+        assertEquals(exception.getMessage(), "User's age can't be 'null'!");
     }
 
     @Test
     void register_userWithShortLogin_notOk() {
-        User user = createValidUser();
-        user.setLogin("short");
+        testUser.setLogin("short");
         InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(testUser));
         assertEquals(exception.getMessage(), "Login must be at least "
                 + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
     }
 
     @Test
     void register_userWithNullLogin_notOk() {
-        User user = createValidUser();
-        user.setLogin(null);
+        testUser.setLogin(null);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user));
-        assertEquals(exception.getMessage(), "Login must be at least "
-                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
+                () -> registrationService.register(testUser));
+        assertEquals(exception.getMessage(), "User's login can't be 'null'!");
     }
 
     @Test
     void register_userWithShortPassword_notOk() {
-        User user = createValidUser();
-        user.setPassword("pass");
+        testUser.setPassword("pass");
         InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(testUser));
         assertEquals(exception.getMessage(), "Password must be at least "
                 + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
     }
 
     @Test
     void register_userWithNullPassword_notOk() {
-        User user = createValidUser();
-        user.setPassword(null);
+        testUser.setPassword(null);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user));
-        assertEquals(exception.getMessage(), "Password must be at least "
-                + USER_LOGIN_PASSWORD_MIN_LENGTH + " characters");
+                () -> registrationService.register(testUser));
+        assertEquals(exception.getMessage(), "User's password can't be 'null'!");
     }
 
     @Test
     void register_userWithExistingLogin_notOk() {
         User user1 = createValidUser();
-        User user2 = createValidUser();
-        registrationService.register(user1);
+        storageDao.add(user1);
         InvalidUserException exception = assertThrows(InvalidUserException.class,
-                () -> registrationService.register(user2));
+                () -> registrationService.register(testUser));
         assertEquals(exception.getMessage(), "User with login '"
                 + USER_VALID_LOGIN + "' already exists");
     }

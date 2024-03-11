@@ -18,10 +18,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUserInput(User user) {
-        validateUserExist(user);
         validateUserLogin(user.getLogin());
         validateUserPassword(user.getPassword());
         validateUserAge(user.getAge());
+        validateUserExist(user);
     }
 
     private void validateUserExist(User user) {
@@ -32,21 +32,30 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUserAge(Integer age) {
-        if (age == null || age < USER_MIN_AGE) {
+        if (age == null) {
+            throw new InvalidUserException("User's age can't be 'null'!");
+        }
+        if (age < USER_MIN_AGE) {
             throw new InvalidUserException("Users under "
                     + USER_MIN_AGE + " are not allowed!");
         }
     }
 
     private void validateUserLogin(String login) {
-        if (login == null || login.length() < USER_LOGIN_MIN_LENGTH) {
+        if (login == null) {
+            throw new InvalidUserException("User's login can't be 'null'!");
+        }
+        if (login.length() < USER_LOGIN_MIN_LENGTH) {
             throw new InvalidUserException("Login must be at least "
                     + USER_LOGIN_MIN_LENGTH + " characters");
         }
     }
 
     private void validateUserPassword(String password) {
-        if (password == null || password.length() < USER_PASSWORD_MIN_LENGTH) {
+        if (password == null) {
+            throw new InvalidUserException("User's password can't be 'null'!");
+        }
+        if (password.length() < USER_PASSWORD_MIN_LENGTH) {
             throw new InvalidUserException("Password must be at least "
                     + USER_PASSWORD_MIN_LENGTH + " characters");
         }
