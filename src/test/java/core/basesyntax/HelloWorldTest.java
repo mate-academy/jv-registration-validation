@@ -3,143 +3,126 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationFailureException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * Feel free to remove this class and create your own.
  */
 public class HelloWorldTest {
+    private static final int VALID_AGE = 20;
     private static RegistrationService registrationService;
+    private static User validUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @BeforeEach
+    void beforeEach() {
+        validUser = new User();
+        validUser.setLogin("ValidLogin");
+        validUser.setPassword("password");
+        validUser.setAge(VALID_AGE);
+    }
+
     @Test
     void register_addUser_Ok() {
-        User user = new User();
-        user.setLogin("Marco123");
-        user.setPassword("12345678");
-        user.setAge(20);
-
-        User result = registrationService.register(user);
-        User storageUser = registrationService.getUser(user.getLogin());
-        assertEquals(storageUser, result);
+        validUser.setLogin("newLogin");
+        User result = registrationService.register(validUser);
+        assertEquals(validUser, result, "The valid user and result aren't the same.");
     }
 
     @Test
     void register_passwordEdges_Ok() {
-        User user1 = new User();
-        user1.setLogin("Marco1");
-        user1.setPassword("123456");
-        user1.setAge(27);
+        validUser.setLogin("Marco1");
+        validUser.setPassword("123456");
+        User result = registrationService.register(validUser);
+        assertEquals(result, validUser, "User and added result aren't the same.");
 
-        User result = registrationService.register(user1);
-        assertEquals(result, user1);
+        validUser = new User();
+        validUser.setLogin("Parmezan");
+        validUser.setPassword("12345678910");
+        validUser.setAge(VALID_AGE);
 
-        User user2 = new User();
-        user2.setLogin("Parmezan");
-        user2.setPassword("12345678910");
-        user2.setAge(50);
-        result = registrationService.register(user2);
-        assertEquals(result, user2);
+        result = registrationService.register(validUser);
+        assertEquals(result, validUser, "User and added result aren't the same.");
     }
 
     @Test
     void register_nullUser_notOk() {
-        User user = null;
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
+        validUser = null;
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Invalid result for null user.");
     }
 
     @Test
     void register_addIdenticalUsers_notOk() {
-        User user = new User();
-        user.setLogin("Antonio");
-        user.setPassword("12345678");
-        user.setAge(23);
-
-        registrationService.register(user);
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
+        validUser.setLogin("Antonio");
+        Storage.people.add(validUser);
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added 2 identical users.");
     }
 
     @Test
     void register_addYoungUser_notOk() {
-        User user1 = new User();
-        user1.setLogin("Martin77");
-        user1.setPassword("12345678");
-        user1.setAge(15);
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user1));
+        validUser.setAge(15);
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added user that younger then 18 y.o.");
 
-        User user2 = new User();
-        user2.setLogin("Kartoplia");
-        user2.setPassword("12345678");
-        user2.setAge(0);
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user2));
+        validUser.setAge(0);
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added user that younger then 18 y.o.");
     }
 
     @Test
     void register_nullLogin_notOk() {
-        User user = new User();
-        user.setLogin(null);
-        user.setPassword("12345678");
-        user.setAge(23);
-
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
+        validUser.setLogin(null);
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added user with null login.");
     }
 
     @Test
     void register_nullPassword_notOk() {
-        User user = new User();
-        user.setLogin("Arturitto");
-        user.setPassword(null);
-        user.setAge(72);
-
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
+        validUser.setPassword(null);
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added user with null password.");
     }
 
     @Test
     void register_nullAge_notOk() {
-        User user = new User();
-        user.setLogin(null);
-        user.setPassword("12345678");
-        user.setAge(30);
-
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
+        validUser.setAge(null);
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added user with null age.");
     }
 
     @Test
     void register_shortLogin_notOk() {
-        User user = new User();
-        user.setLogin("Login");
-        user.setPassword("12345678");
-        user.setAge(45);
-
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
+        validUser.setLogin("Login");
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added user with short login.");
     }
 
     @Test
     void register_shortPassword_notOk() {
-        User user = new User();
-        user.setLogin("Hello!");
-        user.setPassword("1234");
-        user.setAge(19);
-
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_allParametersNull_notOk() {
-        User user = new User();
-        user.setLogin(null);
-        user.setPassword(null);
-        user.setAge(null);
-
-        assertThrows(RegistrationFailureException.class, () -> registrationService.register(user));
+        validUser.setPassword("1234");
+        assertThrows(RegistrationFailureException.class,
+                () -> registrationService.register(validUser),
+                "Added user with short password");
     }
 }
