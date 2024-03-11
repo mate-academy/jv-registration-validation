@@ -8,6 +8,8 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
+    private static final String INVALID_LOGIN = "Login length should be at least "
+            + MIN_LENGTH + " symbols";
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -23,7 +25,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean validateLogin(String login) {
         if (login == null || login.length() < MIN_LENGTH) {
-            throw new RegistrationException("Login should be at least " + MIN_LENGTH);
+            throw new RegistrationException(INVALID_LOGIN);
         }
         if (storageDao.get(login) != null) {
             throw new RegistrationException("This login has already taken by another user");
@@ -40,7 +42,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private boolean validatePassword(String password) {
         if (password == null || password.length() < MIN_LENGTH) {
-            throw new RegistrationException("Password should be at least " + MIN_LENGTH);
+            throw new RegistrationException("Password length should be at least "
+                    + MIN_LENGTH + " symbols");
         }
         return true;
     }
