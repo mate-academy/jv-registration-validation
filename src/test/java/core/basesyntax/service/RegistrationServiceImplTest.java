@@ -33,7 +33,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserIsValid() {
+    void register_UserIsValid_ok() {
         User actualUser = registrationService.register(user);
         User expectedUser = storageDao.get(user.getLogin());
         assertEquals(expectedUser, actualUser);
@@ -106,8 +106,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ExistUser_notOk() {
-        User bob = new User();
-        bob.setLogin(EXIST_LOGIN);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(bob));
+        Storage.people.add(user);
+        assertThrows(InvalidDataException.class,
+                () -> registrationService.register(user),
+                "Added the same user");
     }
+
 }
