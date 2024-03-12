@@ -1,17 +1,14 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import core.basesyntax.service.PasswordLengthException;
+import core.basesyntax.service.RegistrationExceprtion;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import core.basesyntax.service.UserAlreadyExistsException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -36,7 +33,7 @@ class RegistrationServiceTest {
         Julia.setAge(19);
         Julia.setPassword("12345");
         Eva.setLogin("Eva");
-        Eva.setAge(5);
+        Eva.setAge(17);
         Eva.setPassword("eva23456");
     }
 
@@ -64,12 +61,7 @@ class RegistrationServiceTest {
         user.setAge(25);
         user.setPassword("password123");
 
-        registrationService.register(user);
-        storageDao.add(user);
-        User userFromDatabase = storageDao.get("NewUser");
-
-        assertNotNull(userFromDatabase);
-        assertEquals(user, userFromDatabase);
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test
@@ -78,13 +70,23 @@ class RegistrationServiceTest {
         user1.setLogin("NewUser");
         user1.setAge(25);
         user1.setPassword("123456");
+
         User user2 = new User();
         user2.setLogin("NewUser");
         user2.setAge(45);
         user2.setPassword("password123");
-        storageDao.add(registrationService.register(user1));
+        registrationService.register(user1);
+        assertThrows(RegistrationExceprtion.class, () -> registrationService.register(user2));
+    }
 
-        assertThrows(UserAlreadyExistsException.class, () -> registrationService.register(user2));
+    @Test
+    void register_MinimumAgeUser_ThrowsIllegalArgumentException() {
+        User user = new User();
+        user.setLogin("NewUser");
+        user.setAge(18);
+        user.setPassword("123456");
+
+        assertThrows(IllegalArgumentException.class, () -> registrationService.register(Eva));
     }
 
     @Test
@@ -94,20 +96,23 @@ class RegistrationServiceTest {
 
     @Test
     void register_NullPassword_ThrowsPasswordLengthException() {
-        Andy.setPassword("");
+        Andy.setPassword(null);
 
-        assertThrows(PasswordLengthException.class, () -> registrationService.register(Andy));
+        assertThrows(RegistrationExceprtion.class, () -> registrationService.register(Andy));
     }
 
     @Test
     void register_UserPasswordLengthBelowMinimum_ThrowsPasswordLengthException() {
-        assertThrows(PasswordLengthException.class, () -> registrationService.register(Julia));
+        assertThrows(RegistrationExceprtion.class, () -> registrationService.register(Julia));
     }
 
-    @Test
-    void register_MinimumAgeUser_ThrowsIllegalArgumentException() {
-        Eva.setAge(6);
+   @Test
+    void register_MinimumUserPasswordLength_Ok() {
+        User user = new User();
+        user.setLogin("UserMinPasswrd");
+        user.setAge(24);
+        user.setPassword("123456");
 
-        assertThrows(IllegalArgumentException.class, () -> registrationService.register(Eva));
+        assertEquals(user, registrationService.register(user));
     }
 }
