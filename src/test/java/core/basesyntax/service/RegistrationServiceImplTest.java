@@ -3,10 +3,11 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationServiceException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,18 +20,16 @@ class RegistrationServiceImplTest {
     private static final String NOT_VALID_PASSWORD = "1234";
     private static final int NOT_VALID_AGE = 13;
 
-    private static RegistrationService registrationService;
-    private User user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-    }
+    private RegistrationService registrationService;
+    private StorageDao storageDao;
+    private User user;
 
     @BeforeEach
     void setUp() {
         Storage.people.clear();
         user = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @Test
@@ -43,31 +42,36 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void added_UserToStorage_Ok() {
-        assertEquals(user, registrationService.register(user));
+    void register_nonExistingUser_Ok() {
+        User actualUser = registrationService.register(user);
+        User expectedUser = storageDao.get(user.getLogin());
+        assertEquals(expectedUser, actualUser);
     }
 
     @Test
     void register_LoginIsNull_notOk() {
-        String expected = "User login can not be least then "
-                + MIN_LENGTH
-                + " chars!";
+        String expected = "Login can not be null!";
         user.setLogin(null);
         assertEquals(expected, assertException(user).getMessage());
     }
 
     @Test
     void register_PasswordIsNull_notOk() {
-        String expected = "User password can not be least then "
-                + MIN_LENGTH
-                + " chars!";
+        String expected = "Password can not be null!";
         user.setPassword(null);
         assertEquals(expected, assertException(user).getMessage());
     }
 
     @Test
+    void register_AgeIsNull_Ok() {
+        String expected = "Age can not be null!";
+        user.setAge(null);
+        assertEquals(expected, assertException(user).getMessage());
+    }
+
+    @Test
     void register_AgeIsIncorrect_notOk() {
-        String expected = "User must be of legal age!";
+        String expected = "User must be over " + MIN_AGE + " years old";
         user.setAge(NOT_VALID_AGE);
         assertEquals(expected, assertException(user).getMessage());
     }

@@ -13,22 +13,29 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkValidLogin(user);
+        checkLoginNotNull(user);
+        checkLoginMinLength(user);
+        checkPasswordNotNull(user);
         checkPassword(user);
+        checkAgeNotNull(user);
         checkAge(user);
         return storageDao.add(user);
     }
 
-    private void checkValidLogin(User user) {
-        if (user.getLogin() == null
-                || user.getLogin().length() < MIN_LENGTH) {
+    private void checkLoginMinLength(User user) {
+        if (user.getLogin().length() < MIN_LENGTH) {
             throw new RegistrationServiceException(
                     "User login can not be least then "
                             + MIN_LENGTH
                             + " chars!"
             );
-        } else {
-            checkLoginDuplicate(user);
+        }
+        checkLoginDuplicate(user);
+    }
+
+    private void checkLoginNotNull(User user) {
+        if (user.getLogin() == null) {
+            throw new RegistrationServiceException("Login can not be null!");
         }
     }
 
@@ -42,9 +49,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
+    private void checkPasswordNotNull(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationServiceException("Password can not be null!");
+        }
+    }
+
     private void checkPassword(User user) {
-        if (user.getPassword() == null
-                || user.getPassword().length() < MIN_LENGTH) {
+        if (user.getPassword().length() < MIN_LENGTH) {
             throw new RegistrationServiceException(
                     "User password can not be least then "
                             + MIN_LENGTH
@@ -53,9 +65,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
+    private void checkAgeNotNull(User user) {
+        if (user.getAge() == null) {
+            throw new RegistrationServiceException("Age can not be null!");
+        }
+    }
+
     private void checkAge(User user) {
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
-            throw new RegistrationServiceException("User must be of legal age!");
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationServiceException("User must be over " + MIN_AGE + " years old");
         }
     }
 }
