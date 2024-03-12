@@ -6,10 +6,12 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
+        userNullCheck(user);
         loginNullCheck(user);
         passwordNullCheck(user);
         ageCheck(user);
@@ -19,8 +21,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
+    private void userNullCheck(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
+    }
+
     private void passwordLengthCheck(User user) {
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password length ned to be 6 or more symbols");
         }
     }
@@ -32,7 +40,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void loginLengthCheck(User user) {
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Login length ned to be 6 or more symbols");
         }
     }
