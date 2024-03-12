@@ -161,7 +161,6 @@ class RegistrationServiceImplTest {
     void register_registerNewUser_ok() {
         User expectedUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         expectedUser.setId(1L);
-        int expectedSize = Storage.people.size() + 1;
         assertNull(
                 validUser.getId(),
                 "User id must be null before registration complete"
@@ -171,8 +170,8 @@ class RegistrationServiceImplTest {
                 registrationService.register(validUser)
         );
         assertEquals(
-                expectedSize,
-                Storage.people.size()
+                expectedUser,
+                storageDao.get(VALID_LOGIN)
         );
     }
 }
