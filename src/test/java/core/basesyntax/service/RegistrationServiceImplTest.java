@@ -7,12 +7,17 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.UserRegistrationException;
 import core.basesyntax.model.User;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final String VALID_LOGIN = "test_login_created_at " + LocalDateTime.now();
+    private static final String VALID_LOGIN = "test_login_created_at " + LocalDateTime
+            .now()
+            .format(DateTimeFormatter
+            .ofPattern("yyyy-MM-dd-HH"));
     private static final String VALID_PASSWORD = "Mine!$VAl1DP@ZSW0Rd!)(*&^%$#@";
     private static final int VALID_AGE = 20;
     private static final String VALID_EDGE_LOGIN = "testLo";
@@ -119,15 +124,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registet_UserNotExist_OK() {
-        User user2 = new User(VALID_LOGIN, VALID_PASSWORD,VALID_AGE);
-        assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(user);
-            registrationService.register(user2);
-        },"User with different login should be added");;
-    }
-
-    @Test
     public void register_shortPassword_notOK() {
         user.setPassword(INVALID_SHORT_PASSWORD);
         assertThrows(UserRegistrationException.class, () -> {
@@ -169,9 +165,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_userAlreadyExist_notOK() {
-        user.setLogin("login1");
         Storage.people.add(user);
-        User user2 = new User("login1", VALID_PASSWORD,VALID_AGE);
+        User user2 = new User(VALID_LOGIN, VALID_PASSWORD,VALID_AGE);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user2);
         },"User already exist");

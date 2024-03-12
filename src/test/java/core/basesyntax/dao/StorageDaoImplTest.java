@@ -6,11 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.model.User;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
-    private static final String VALID_LOGIN = "test_login_created_at " + LocalDateTime.now();
+    private static final String VALID_LOGIN = "test_login_created_at " + LocalDateTime
+            .now()
+            .format(DateTimeFormatter
+            .ofPattern("yyyy-MM-dd-HH"));
     private static final String VALID_PASSWORD = "Mine!$VAl1DP@ZSW0Rd!)(*&^%$#@";
     private static final int VALID_AGE = 20;
 
@@ -40,8 +45,8 @@ class StorageDaoImplTest {
     @Test
     public void search_UserLoginSavedCorrectly_Ok() {
         storageDao.add(user);
-        String login = storageDao.get(VALID_LOGIN).getLogin();
-        assertEquals(user.getLogin(), login, "Login of saved user must "
+        User retrivedUser = storageDao.get(VALID_LOGIN);
+        assertEquals(user, retrivedUser, "Login of saved user must "
                 + "be same as login used for registration");
     }
 }
