@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.UserRegistrationException;
@@ -48,7 +47,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_nullPass_notOK() {
+    public void register_nullPassword_notOK() {
         user.setPassword(null);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
@@ -66,28 +65,22 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_NullLoginExeption_notOk() {
         user.setLogin(null);
-        try {
+        assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
-        } catch (UserRegistrationException e) {
-            return;
-        }
-        fail("Password cannot be null, exception about login check failed should see you");
+        }, "Login cannot be null, exception about login check failed should see you");
     }
 
     @Test
-    public void register_NullPassExeption_notOk() {
+    public void register_NullPasswordExeption_notOk() {
         user.setPassword(null);
-        try {
+        assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
-        } catch (UserRegistrationException e) {
-            return;
-        }
-        fail("Password cannot be null, exception about password check failed should see you");
+        }, "Password cannot be null, exception about password check failed should see you");
     }
 
     @Test
     public void register_ZeroAge_notOk() {
-        user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_ZERO_AGE);
+        user.setAge(INVALID_ZERO_AGE);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
         }, "Age cannot be zero");
@@ -101,7 +94,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_EdgePass_OK() {
+    public void register_EdgePassword_OK() {
         user.setPassword(VALID_EDGE_PASSWORD);
         assertDoesNotThrow(() -> registrationService.register(user),
                 "Password lenght 6 should be acceptable");
@@ -131,11 +124,11 @@ public class RegistrationServiceImplTest {
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
             registrationService.register(user2);
-        },"User already exit");;
+        },"User with different login should be added");;
     }
 
     @Test
-    public void register_shortPass_notOK() {
+    public void register_shortPassword_notOK() {
         user.setPassword(INVALID_SHORT_PASSWORD);
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
@@ -159,7 +152,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_emptyPass_notOK() {
+    public void register_emptyPassword_notOK() {
         user.setPassword("");
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
@@ -171,6 +164,23 @@ public class RegistrationServiceImplTest {
         user.setLogin("");
         assertThrows(UserRegistrationException.class, () -> {
             registrationService.register(user);
-        },"Login field cannot be empty");;
+        },"Login field cannot be empty");
+    }
+
+    @Test
+    public void register_userAlreadyExist_notOK() {
+        user.setLogin("login1");
+        Storage.people.add(user);
+        User user2 = new User("login1", VALID_PASSWORD,VALID_AGE);
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(user2);
+        },"User already exist");
+    }
+
+    @Test
+    public void register_userNull_notOK() {
+        assertThrows(UserRegistrationException.class, () -> {
+            registrationService.register(null);
+        },"User cannot be null");
     }
 }
