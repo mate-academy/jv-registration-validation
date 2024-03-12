@@ -18,20 +18,24 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUser(User user) {
-        if (isLoginInvalid(user) || isPasswordInvalid(user) || isAgeInvalid(user)) {
-            throw new ValidationException("Validation error");
+        if (user.getLogin() == null) {
+            throw new ValidationException("Invalid login: cannot be null or empty.");
         }
-    }
 
-    private boolean isLoginInvalid(User user) {
-        return user.getLogin() == null || user.getLogin().length() < VALID_LOGIN_LENGTH;
-    }
+        if (user.getPassword() == null) {
+            throw new ValidationException("Invalid password: cannot be null or empty.");
+        }
 
-    private boolean isPasswordInvalid(User user) {
-        return user.getPassword() == null || user.getPassword().length() < VALID_PASSWORD_LENGTH;
-    }
+        if (user.getLogin().length() < VALID_LOGIN_LENGTH) {
+            throw new ValidationException("Invalid login: must be at least 6 characters long.");
+        }
 
-    private boolean isAgeInvalid(User user) {
-        return user.getAge() < VALID_AGE;
+        if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
+            throw new ValidationException("Invalid password: must be at least 6 characters long.");
+        }
+
+        if (user.getAge() < VALID_AGE) {
+            throw new ValidationException("Invalid age: must be at least 18 years old.");
+        }
     }
 }
