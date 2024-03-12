@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import core.basesyntax.model.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

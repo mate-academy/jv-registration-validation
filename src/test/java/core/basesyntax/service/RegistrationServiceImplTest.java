@@ -8,7 +8,6 @@ import core.basesyntax.exeptions.UserRegistrationException;
 import core.basesyntax.model.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
