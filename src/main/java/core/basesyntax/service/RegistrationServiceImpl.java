@@ -26,13 +26,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         checkUserIsNotExists(user);
     }
 
-    private static void checkUserIsNotNull(User user) {
+    private void checkUserIsNotNull(User user) {
         if (user == null) {
             throw new UserRegistrationException("User can`t be null");
         }
     }
 
-    private static void checkUserLogin(User user) {
+    private void checkUserLogin(User user) {
         if (user.getLogin() == null) {
             throw new UserRegistrationException("User login can`t be null");
         }
@@ -45,7 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void checkUserPassword(User user) {
+    private void checkUserPassword(User user) {
         if (Objects.isNull(user.getPassword())) {
             throw new UserRegistrationException("User password can`t be null");
         }
@@ -58,7 +58,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private static void checkUserAge(User user) {
+    private void checkUserAge(User user) {
         if (Objects.isNull(user.getAge())) {
             throw new UserRegistrationException("User age can`t be null");
         }
