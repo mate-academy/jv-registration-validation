@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int MINIMUM_AGE = 18;
+    private static final int MIN_AGE = 18;
     private static final int MIN_LENGTH = 6;
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "unuwjf8j2";
@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
             registrationService.register(user);
         });
         assertEquals("Sorry, for registration you must be at least "
-                + MINIMUM_AGE + " years", exception.getMessage());
+                + MIN_AGE + " years", exception.getMessage());
     }
 
     @Test

@@ -26,9 +26,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Your login is not exist");
         }
-        if (user.getLogin().length() >= MIN_LENGTH) {
-            return;
-        }
         if (user.getLogin().length() < MIN_LENGTH) {
             throw new InvalidDataException("Your login is too short, must be at least "
                     + MIN_LENGTH + " symbols");
@@ -39,9 +36,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidDataException("Your password is not exist");
         }
-        if (user.getPassword().length() >= MIN_LENGTH) {
-            return;
-        }
         if (user.getPassword().length() < MIN_LENGTH) {
             throw new InvalidDataException("Your password is too short, must be at least "
                     + MIN_LENGTH + " symbols");
@@ -51,9 +45,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidDataException("Oops, age is not exist");
-        }
-        if (user.getAge() >= MINIMUM_AGE) {
-            return;
         }
         if (user.getAge() < MINIMUM_AGE) {
             throw new InvalidDataException("Sorry, for registration you must be at least "
