@@ -19,48 +19,48 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUser(User user) {
-        isLoginExists(user);
-        isLoginNull(user);
-        isPasswordNull(user);
-        isPasswordInvalid(user);
-        isLoginInvalid(user);
-        isAgeInvalid(user);
+        checkLoginExists(user);
+        checkLoginNull(user);
+        checkPasswordNull(user);
+        checkPasswordInvalid(user);
+        checkLoginInvalid(user);
+        chackAgeInvalid(user);
     }
 
-    private void isLoginInvalid(User user) {
+    private void checkLoginInvalid(User user) {
         if (user.getLogin().length() < VALID_LOGIN_LENGTH) {
             throw new ValidationException("Invalid login: must be at least "
                     + VALID_LOGIN_LENGTH + " characters long.");
         }
     }
 
-    private void isPasswordInvalid(User user) {
+    private void checkPasswordInvalid(User user) {
         if (user.getPassword().length() < VALID_PASSWORD_LENGTH) {
             throw new ValidationException("Invalid password: must be at least "
                     + VALID_PASSWORD_LENGTH + " characters long.");
         }
     }
 
-    private void isPasswordNull(User user) {
+    private void checkPasswordNull(User user) {
         if (user.getPassword() == null) {
             throw new ValidationException("Invalid password: cannot be null or empty.");
         }
     }
 
-    private void isLoginNull(User user) {
+    private void checkLoginNull(User user) {
         if (user.getLogin() == null) {
             throw new ValidationException("Invalid login: cannot be null or empty.");
         }
     }
 
-    private void isAgeInvalid(User user) {
+    private void chackAgeInvalid(User user) {
         if (user.getAge() < VALID_AGE) {
             throw new ValidationException("Invalid age: must be at least "
                     + VALID_AGE + " years old.");
         }
     }
 
-    public void isLoginExists(User user) {
+    public void checkLoginExists(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new ValidationException("Invalid login: this login is already exists");
         }

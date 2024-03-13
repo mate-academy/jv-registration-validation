@@ -8,7 +8,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,10 +29,6 @@ class RegistrationServiceImplTest {
         user.setAge(VALID_AGE);
         user.setPassword(VALID_PASSWORD);
         user.setLogin(VALID_LOGIN);
-    }
-
-    @AfterEach
-    void tearDown() {
         Storage.people.clear();
     }
 
