@@ -20,7 +20,8 @@ class RegistrationServiceImplTest {
 
     private RegistrationService registrationService;
     private User validUser;
-    private User NullUser;
+    private User nullUser;
+
     private User getDefaultValidUser() {
         User user = new User();
         user.setLogin(VALID_LOGIN);

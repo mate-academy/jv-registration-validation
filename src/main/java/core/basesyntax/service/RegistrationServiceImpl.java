@@ -23,7 +23,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(User user) {
-        if (user.getLogin() != null && user.getLogin().length() >= MINIMUM_CHARACTERS ) {
+        if (user.getLogin() != null && user.getLogin().length() >= MINIMUM_CHARACTERS) {
             return;
         }
         if (user.getLogin() == null) {
@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validatePassword(User user) {
-        if (user.getPassword() != null && user.getPassword().length() >= MINIMUM_CHARACTERS ) {
+        if (user.getPassword() != null && user.getPassword().length() >= MINIMUM_CHARACTERS) {
             return;
         }
         if (user.getPassword() == null) {
@@ -54,7 +54,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Oops, age is not exist");
         }
         if (user.getAge() < MINIMUM_AGE) {
-            throw new InvalidDataException("Sorry, for registration you must be at least " + MINIMUM_AGE + " years");
+            throw new InvalidDataException("Sorry, for registration you must be at least "
+                    + MINIMUM_AGE + " years");
         }
     }
 
