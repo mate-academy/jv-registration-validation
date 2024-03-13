@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int MINIMUM_AGE = 18;
+    private static final int MIN_LENGTH = 6;
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "unuwjf8j2";
     private static final long VALID_ID = 38628L;
@@ -19,8 +22,7 @@ class RegistrationServiceImplTest {
     private static final int INVALID_AGE = 16;
 
     private RegistrationService registrationService;
-    private User validUser;
-    private User nullUser;
+    private User user;
 
     private User getDefaultValidUser() {
         User user = new User();
@@ -33,77 +35,88 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        validUser = getDefaultValidUser();
+        user = getDefaultValidUser();
         registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
 
     @Test
     void register_validUser_Ok() {
-        registrationService.register(validUser);
-        assertTrue(Storage.people.contains(validUser));
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
     }
 
     @Test
     void register_UserNull_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(nullUser);
+        Throwable exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(null);
         });
+        assertEquals("Ooops, user is not exist", exception.getMessage());
     }
 
     @Test
     void register_AgeNull_notOk() {
-        validUser.setAge(null);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(validUser);
+        user.setAge(null);
+        Throwable exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
         });
+        assertEquals("Oops, age is not exist", exception.getMessage());
     }
 
     @Test
     void register_AgeInvalid_notOk() {
-        validUser.setAge(INVALID_AGE);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(validUser);
+        user.setAge(INVALID_AGE);
+        Throwable exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
         });
+        assertEquals("Sorry, for registration you must be at least "
+                + MINIMUM_AGE + " years", exception.getMessage());
     }
 
     @Test
     void register_PasswordNull_notOk() {
-        validUser.setPassword(null);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(validUser);
+        user.setPassword(null);
+        Throwable exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
         });
+        assertEquals("Your password is not exist", exception.getMessage());
     }
 
     @Test
     void register_PasswordShort_notOk() {
-        validUser.setPassword(INVALID_PASSWORD);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(validUser);
+        user.setPassword(INVALID_PASSWORD);
+        Throwable exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
         });
+        assertEquals("Your password is too short, must be at least "
+                + MIN_LENGTH + " symbols", exception.getMessage());
     }
 
     @Test
     void register_LoginShort_notOk() {
-        validUser.setLogin(INVALID_LOGIN);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(validUser);
+        user.setLogin(INVALID_LOGIN);
+        Throwable exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
         });
+        assertEquals("Your login is too short, must be at least "
+                + MIN_LENGTH + " symbols", exception.getMessage());
     }
 
     @Test
     void register_LoginNull_notOk() {
-        validUser.setLogin(null);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(validUser);
+        user.setLogin(null);
+        Throwable exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
         });
+        assertEquals("Your login is not exist", exception.getMessage());
     }
 
     @Test
     void register_ValidUserIsAlreadyExist_notOk() {
-        Storage.people.add(validUser);
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(validUser);
+        Storage.people.add(user);
+        Throwable ecxeption = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
         });
+        assertEquals("Ooops, user with same login is already exist", ecxeption.getMessage());
     }
 }

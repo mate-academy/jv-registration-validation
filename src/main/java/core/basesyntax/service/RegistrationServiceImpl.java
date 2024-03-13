@@ -7,51 +7,53 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MINIMUM_CHARACTERS = 6;
+    private static final int MIN_LENGTH = 6;
     private static final int MINIMUM_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) throws InvalidDataException {
-        isUserNotNull(user);
+        userNotNullValidate(user);
         validateLogin(user);
         validateAge(user);
         validatePassword(user);
-        isUserExist(user);
+        userExistValidate(user);
         storageDao.add(user);
         return user;
     }
 
     private void validateLogin(User user) {
-        if (user.getLogin() != null && user.getLogin().length() >= MINIMUM_CHARACTERS) {
-            return;
-        }
         if (user.getLogin() == null) {
             throw new InvalidDataException("Your login is not exist");
         }
-        if (user.getLogin().length() < MINIMUM_CHARACTERS) {
-            throw new InvalidDataException("Your login is too short");
+        if (user.getLogin().length() >= MIN_LENGTH) {
+            return;
+        }
+        if (user.getLogin().length() < MIN_LENGTH) {
+            throw new InvalidDataException("Your login is too short, must be at least "
+                    + MIN_LENGTH + " symbols");
         }
     }
 
     private void validatePassword(User user) {
-        if (user.getPassword() != null && user.getPassword().length() >= MINIMUM_CHARACTERS) {
-            return;
-        }
         if (user.getPassword() == null) {
             throw new InvalidDataException("Your password is not exist");
         }
-        if (user.getPassword().length() < MINIMUM_CHARACTERS) {
-            throw new InvalidDataException("Your password is too short");
+        if (user.getPassword().length() >= MIN_LENGTH) {
+            return;
+        }
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new InvalidDataException("Your password is too short, must be at least "
+                    + MIN_LENGTH + " symbols");
         }
     }
 
     private void validateAge(User user) {
-        if (user.getAge() != null && user.getAge() >= MINIMUM_AGE) {
-            return;
-        }
         if (user.getAge() == null) {
             throw new InvalidDataException("Oops, age is not exist");
+        }
+        if (user.getAge() >= MINIMUM_AGE) {
+            return;
         }
         if (user.getAge() < MINIMUM_AGE) {
             throw new InvalidDataException("Sorry, for registration you must be at least "
@@ -59,13 +61,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isUserExist(User user) {
+    private void userExistValidate(User user) {
         if (Storage.people.contains(user)) {
             throw new InvalidDataException("Ooops, user with same login is already exist");
         }
     }
 
-    private void isUserNotNull(User user) {
+    private void userNotNullValidate(User user) {
         if (user == null) {
             throw new InvalidDataException("Ooops, user is not exist");
         }
