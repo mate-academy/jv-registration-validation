@@ -1,9 +1,9 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationExceprtion;
@@ -19,7 +19,6 @@ class RegistrationServiceTest {
     private static User Julia = new User();
     private static User Twin = new User();
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeAll
     public static void setUp() {
@@ -106,7 +105,7 @@ class RegistrationServiceTest {
         assertThrows(RegistrationExceprtion.class, () -> registrationService.register(Julia));
     }
 
-   @Test
+    @Test
     void register_MinimumUserPasswordLength_Ok() {
         User user = new User();
         user.setLogin("UserMinPasswrd");
