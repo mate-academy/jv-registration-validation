@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_UserNull_notOk() {
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(NullUser);
+            registrationService.register(nullUser);
         });
     }
 
