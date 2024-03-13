@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -16,22 +15,19 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final int INVALID_AGE = 16;
     private static final int VALID_AGE = 18;
-    private static final long VALID_ID = 1234567890L;
     private static final String INVALID_PASSWORD = "qwer";
     private static final String VALID_PASSWORD = "qwerty";
     private static final String VALID_LOGIN = "nameEx";
     private static final String INVALID_LOGIN = "name";
 
     private User user;
-    private StorageDao storage;
+    private StorageDao storage = new StorageDaoImpl();
     private RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
     void setUp() {
         user = new User();
-        storage = new StorageDaoImpl();
         user.setAge(VALID_AGE);
-        user.setId(VALID_ID);
         user.setPassword(VALID_PASSWORD);
         user.setLogin(VALID_LOGIN);
     }
@@ -97,8 +93,14 @@ class RegistrationServiceImplTest {
     @Test
     public void register_sameLogin_notOk() {
         storage.add(user);
-        registrationService.register(user);
-        assertTrue(Storage.people.contains(user),
-                "User with the same login should not exist");
+        User newUser = new User();
+        newUser.setLogin(VALID_LOGIN);
+        newUser.setPassword("password");
+        newUser.setAge(VALID_AGE);
+
+        ValidationException exception = assertThrows(ValidationException.class,
+                () -> registrationService.register(newUser));
+        assertEquals("Invalid login: this login is already exists",
+                exception.getMessage(), "Incorrect validation error message");
     }
 }
