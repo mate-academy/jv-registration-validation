@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -11,53 +13,78 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceTest {
     private RegistrationServiceImpl registrationService;
     private StorageDaoImpl storageDao;
+    private User user;
 
     @BeforeEach
     public void setUp() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        user = new User("testuser", "password123", 20);
+        storageDao.add(user);
+    }
+
+    @Test
+    public void validate_AgeMoreThan18_Ok() {
+        User userOK = new User("11111111", "222222", 25);
+        assertDoesNotThrow(() -> registrationService.validate(userOK));
     }
 
     @Test
     public void validate_AgeLessThan18_NotOk() {
-        final User user = new User("bestlogin", "secretpassword", 15);
-        final User user1 = new User("bestlogin", "secretpassword", -1);
-        final User user2 = new User("bestlogin", "secretpassword", 0);
-        final User user3 = new User("bestlogin", "secretpassword", 17);
+        user.setAge(0);
         assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user1));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user2));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user3));
+        user.setAge(-100);
+        assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
+        user.setAge(17);
+        assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
+    }
+
+    @Test
+    public void validate_LoginMoreThan6_Ok() {
+        User userOK = new User("11111111", "222222", 25);
+        assertDoesNotThrow(() -> registrationService.validate(userOK));
     }
 
     @Test
     public void validate_LoginLessThan6_NotOk() {
-        final User user = new User("", "secretpassword", 15);
-        final User user1 = new User("abc", "secretpassword", -1);
-        final User user2 = new User("1234", "secretpassword", 0);
-        final User user3 = new User("login", "secretpassword", 17);
+        user.setLogin("abs");
         assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user1));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user2));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user3));
+        user.setLogin("");
+        assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
+        user.setLogin("12345");
+        assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
+    }
+
+    @Test
+    public void validate_PasswordMoreThan6_Ok() {
+        User userOK = new User("11111111", "222222", 25);
+        assertDoesNotThrow(() -> registrationService.validate(userOK));
     }
 
     @Test
     public void validate_PasswordLessThan6_NotOk() {
-        final User user = new User("mylogin", " ", 15);
-        final User user1 = new User("mylogin", "lolke", -1);
-        final User user2 = new User("mylogin", "", 0);
-        final User user3 = new User("mylogin", "abc", 17);
+        user.setPassword("abs");
         assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user1));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user2));
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user3));
+        user.setPassword("");
+        assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
+        user.setPassword("12345");
+        assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
     }
 
     @Test
     public void validate_UserWithSuchLoginAlreadyExists_NotOk() {
-        storageDao = new StorageDaoImpl();
-        storageDao.add(new User("coollogin", "secretpassword", 25));
-        final User user = new User("coollogin", "banana123", 20);
-        assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
+        User newUser = new User("testuser","newpassword", 19);
+        assertThrows(InvalidDataException.class, () -> registrationService.validate(newUser));
+    }
+
+    @Test
+    public void register_NullUser_NotOk() {
+        assertThrows(InvalidDataException.class, () -> registrationService.register(null));
+    }
+
+    @Test
+    public void register_NotNullUser_Ok() {
+        User registeredUser = registrationService.register(new User("logggg", "passsssw", 22));
+        assertNotNull(registeredUser);
     }
 }
