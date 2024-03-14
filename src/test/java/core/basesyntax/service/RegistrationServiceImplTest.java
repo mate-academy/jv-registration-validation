@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import core.basesyntax.InvalidDataException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,7 @@ class RegistrationServiceImplTest {
     private static final String INVALID_PASSWORD = "unu";
     private static final int INVALID_AGE = 16;
 
-    private RegistrationService registrationService;
+    private RegistrationService registrationService = new RegistrationServiceImpl();
     private User user;
 
     private User getDefaultValidUser() {
@@ -36,7 +37,6 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = getDefaultValidUser();
-        registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
 
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
         Throwable exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
-        assertEquals("Oops, age is not exist", exception.getMessage());
+        assertEquals("Oops, age is null", exception.getMessage());
     }
 
     @Test
@@ -79,7 +79,7 @@ class RegistrationServiceImplTest {
         Throwable exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
-        assertEquals("Your password is not exist", exception.getMessage());
+        assertEquals("Your password is null", exception.getMessage());
     }
 
     @Test
@@ -108,7 +108,7 @@ class RegistrationServiceImplTest {
         Throwable exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
-        assertEquals("Your login is not exist", exception.getMessage());
+        assertEquals("Your login is null", exception.getMessage());
     }
 
     @Test
