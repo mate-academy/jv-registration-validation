@@ -1,34 +1,41 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import java.util.Optional;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao;
+    private static final int MIN_LENGTH_LOGIN = 6;
+    private static final int MIN_LENGTH_PASSWORD = 6;
+    private static final int MIN_AGE = 18;
 
-    public RegistrationServiceImpl(StorageDao storageDao) {
-        this.storageDao = storageDao;
-    }
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RegistrationException {
-        if (user == null || user.getLogin() == null || user.getPassword()
-                == null || user.getAge() == null) {
-            throw new IllegalArgumentException("User or its properties cannot be null");
+    public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can not be null");
         }
 
-        if (user.getLogin().length() < 6 || user.getPassword().length() < 6) {
-            throw new RegistrationException("Login and password must contain "
-                    + "at least 6 characters");
+        if (user.getLogin() == null || user.getLogin().length() < MIN_LENGTH_LOGIN) {
+            throw new RegistrationException("Login must contain at least "
+                    + MIN_LENGTH_LOGIN + " characters");
         }
 
-        if (user.getAge() < 18) {
-            throw new RegistrationException("User must be at least 18 years old");
+        if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH_PASSWORD) {
+            throw new RegistrationException("Password must contain at least "
+                    + MIN_LENGTH_PASSWORD + " characters");
         }
 
-        User existingUser = storageDao.get(user.getLogin());
-        if (existingUser != null) {
-            throw new RegistrationException("User with this login already exists");
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+            throw new RegistrationException("User must be at least " + MIN_AGE + " years old");
+        }
+
+        Optional<User> existingUser = storageDao.get(user.getLogin());
+        if (existingUser.isPresent()) {
+            throw new RegistrationException("Can't register user '" + user.getLogin()
+                    + "'. User already exists");
         }
 
         return storageDao.add(user);
