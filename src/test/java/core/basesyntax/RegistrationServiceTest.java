@@ -24,13 +24,13 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void validate_AgeMoreThan18_Ok() {
-        User userOK = new User("11111111", "222222", 25);
+    public void validate_ValidData_Ok() {
+        User userOK = new User("validuser", "validpassword", 25);
         assertDoesNotThrow(() -> registrationService.validate(userOK));
     }
 
     @Test
-    public void validate_AgeLessThan18_NotOk() {
+    public void validate_AgeLimit_NotOk() {
         user.setAge(0);
         assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
         user.setAge(-100);
@@ -40,13 +40,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void validate_LoginMoreThan6_Ok() {
-        User userOK = new User("11111111", "222222", 25);
-        assertDoesNotThrow(() -> registrationService.validate(userOK));
-    }
-
-    @Test
-    public void validate_LoginLessThan6_NotOk() {
+    public void validate_LoginLength_NotOk() {
         user.setLogin("abs");
         assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
         user.setLogin("");
@@ -56,13 +50,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    public void validate_PasswordMoreThan6_Ok() {
-        User userOK = new User("11111111", "222222", 25);
-        assertDoesNotThrow(() -> registrationService.validate(userOK));
-    }
-
-    @Test
-    public void validate_PasswordLessThan6_NotOk() {
+    public void validate_PasswordLength_NotOk() {
         user.setPassword("abs");
         assertThrows(InvalidDataException.class, () -> registrationService.validate(user));
         user.setPassword("");
