@@ -4,7 +4,8 @@
 * Figure out which way is better to initialize your RegistrationServiceImpl class instance: `@BeforeEach` or `@BeforeAll`, what's the difference?
 * Make sure you name your methods according to [convention](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names).
 * Add tests for all possible User's parameters (null login/password/age, user under 18/18/over 18 years old, negative age, and so on...).
-* Make sure to **not** add something that is not described in the task requirements, or tied to something that may change over time like max user age. It is likely that average and maximum human lifespan will grow over time, so let's keep it in mind.
+* Make sure to **not** add something that is not described in the task requirements, or tied to something that
+* may change over time like max user age. It is likely that average and maximum human lifespan will grow over time, so let's keep it in mind.
 * In your tests very important to check **all possible edge cases**. For example, we have min password length 6 characters. 
 In this case would be good to test: empty password (0-length - not-ok), 'abc' (3-length - not-ok), 'abcdf' (5-length - **not-ok edge case**), 
 'abcdef' (6-length - **ok edge case**), 'abcdefgh' (8-length - ok). Few not-ok checks you can have in one not-ok test method. Same for ok-test.
