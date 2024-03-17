@@ -1,78 +1,86 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
+import core.basesyntax.exception.InvalidAgeException;
+import core.basesyntax.exception.LoginValidateException;
+import core.basesyntax.exception.PasswordValidateException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final int DEFAULT_AGE = 27;
-    private static final String DEFAULT_LOGIN = "curvabobr";
-    private static final String DEFAULT_PASSWORD = "Defaultpassword17";
-    private static final int MINIMAL_AGE = 18;
-    private static final int MINIMAL_PASSWORD_LENGTH = 6;
-    private static final int MINIMAL_LOGIN_LENGTH = 4;
-    private static final int FIRST_LOGIN_CHARACTER = 0;
+    private static final String VALID_LOGIN = "user_login";
+    private static final String VALID_PASSWORD = "user_password";
+    private static final int VALID_AGE = 18;
+    private static final String INVALID_LOGIN = "log";
+    private static final String INVALID_PASSWORD = "1234";
+    private static final String INVALID_LOGIN_WITH_NO_FIRST_LETTER = "1invalidLogin";
+    private static final int INVALID_AGE = 17;
 
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
     private User user;
 
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin(DEFAULT_LOGIN);
-        user.setAge(DEFAULT_AGE);
-        user.setPassword(DEFAULT_PASSWORD);
+        user.setAge(VALID_AGE);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    void registration_user_ok() {
-        registrationService.register(user);
-        User actual = storageDao.get(user.getLogin());
-        assertEquals(actual, user);
+    void register_nullUser_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void minimal_password_length_ok() {
-        int actual = user.getPassword().length();
-        assertTrue(actual > MINIMAL_PASSWORD_LENGTH,
-                "minimal password length should be " + MINIMAL_PASSWORD_LENGTH);
+    void register_invalidAge_throwsInvalidAgeException() {
+        User user = new User();
+        user.setLogin(VALID_LOGIN);
+        user.setAge(INVALID_AGE);
+        user.setPassword(VALID_PASSWORD);
+        assertThrows(InvalidAgeException.class,
+                () -> registrationService.register(user),"age should be 18 or above");
     }
 
     @Test
-    void minimal_age_ok() {
-        int actual = user.getAge();
-        assertTrue(actual > MINIMAL_AGE, "age should be greater than " + MINIMAL_AGE);
+    void register_shortPassword_throwsPasswordValidateException() {
+        User user = new User();
+        user.setLogin(VALID_LOGIN);
+        user.setAge(VALID_AGE);
+        user.setPassword(INVALID_PASSWORD);
+        assertThrows(PasswordValidateException.class,
+                () -> registrationService.register(user),
+                "password length should be minimum 6 symbols");
     }
 
     @Test
-    void minimal_login_Length_ok() {
-        int actual = user.getLogin().length();
-        assertTrue(actual > MINIMAL_LOGIN_LENGTH, "login length should be longer than "
-                + MINIMAL_AGE);
+    void register_shortLogin_throwsLoginValidateException() {
+        User user = new User();
+        user.setLogin(INVALID_LOGIN);
+        user.setAge(VALID_AGE);
+        user.setPassword(VALID_PASSWORD);
+        assertThrows(LoginValidateException.class,
+                () -> registrationService.register(user),"login should be longer then 4 symbol");
     }
 
     @Test
-    void login_started_with_letter_ok() {
-        char actual = user.getLogin().charAt(FIRST_LOGIN_CHARACTER);
-        assertTrue(Character.isLetter(actual), "your login should start with any letter");
-    }
-
-    @Test
-    void login_is_not_null_ok() {
-        String actual = user.getLogin();
-        assertNotNull(actual);
-    }
-
-    @Test
-    void password_is_not_null_ok() {
-        String actual = user.getPassword();
-        assertNotNull(actual);
+    void register_loginWithNonLetterFirstCharacter_throwsLoginValidateException() {
+        User user = new User();
+        user.setLogin(INVALID_LOGIN_WITH_NO_FIRST_LETTER);
+        user.setAge(VALID_AGE);
+        user.setPassword(VALID_PASSWORD);
+        assertThrows(LoginValidateException.class,
+                () -> registrationService.register(user),"login should start from letter");
     }
 }

@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.AgeValidationException;
+import core.basesyntax.exception.InvalidAgeException;
 import core.basesyntax.exception.LoginValidateException;
 import core.basesyntax.exception.PasswordValidateException;
 import core.basesyntax.model.User;
@@ -18,7 +18,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         checkExistUserInDataBase(user.getLogin());
         ageValidation(user.getAge());
-        passwordValidation(user.getPassword());
+        validatePassword(user.getPassword());
         return storageDao.add(user);
     }
 
@@ -38,7 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void passwordValidation(String password) {
+    private void validatePassword(String password) {
         if (password == null || password.length() <= MINIMAL_PASSWORD_LENGTH) {
             throw new PasswordValidateException("password must be longer than six characters");
         }
@@ -46,7 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void ageValidation(int age) {
         if (age < MINIMAL_AGE) {
-            throw new AgeValidationException(
+            throw new InvalidAgeException(
                     "User age must be at least " + MINIMAL_AGE);
         }
     }
