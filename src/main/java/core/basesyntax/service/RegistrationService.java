@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import core.basesyntax.exeptionForService.RegistrationException;
+import core.basesyntax.exeptionforservice.RegistrationException;
 import core.basesyntax.model.User;
 
 public interface RegistrationService {
