@@ -11,7 +11,11 @@ In this case would be good to test: empty password (0-length - not-ok), 'abc' (3
 'abcdef' (6-length - **ok edge case**), 'abcdefgh' (8-length - ok). Few not-ok checks you can have in one not-ok test method. Same for ok-test.
 Testing only 'abc' (3-length - not-ok) and 'abcdefgh' (8-length - ok) is not enough because we do not check how the program behave with edge cases.
 * Make sure that after successful registration user was added to storage and `register` method returned correct user.
-* Use low-level methods like `Storage.people.add()` directly instead of `RegistrationService.register()` method to add users for testing. Because we can not use the same method which is under a test to insert some mock test data into our storage since we can not guarantee its correctness yet.
+* 
+* Use low-level methods like `Storage.people.add()` directly instead of `RegistrationService.register()`
+method to add users for testing. Because we can not use the same method which is under a test to insert 
+some mock test data into our storage since we can not guarantee its correctness yet.
+* 
 * Don't create one big if with all conditions. Better to split one big if into several small ones.
 
   - Bad example:
