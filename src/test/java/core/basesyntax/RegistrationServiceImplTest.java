@@ -84,6 +84,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_ShortLogin_notOk() {
+        user1.setLogin("ee45k");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user1));
+        assertTrue(Storage.people.isEmpty());
+    }
+
+    @Test
     public void register_nullPassword_notOk() {
         user1.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user1));
@@ -105,7 +112,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_under18Age_notOk() {
+    public void register_edgeCase_notOk() {
+        user1.setAge(17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user1));
+        assertTrue(Storage.people.isEmpty());
+    }
+
+    @Test
+    public void register_underage_notOk() {
         user1.setAge(15);
         assertThrows(RegistrationException.class, () -> registrationService.register(user1));
         assertTrue(Storage.people.isEmpty());
