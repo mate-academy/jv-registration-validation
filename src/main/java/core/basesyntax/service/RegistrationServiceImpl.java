@@ -5,6 +5,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.InvalidAgeException;
 import core.basesyntax.exception.InvalidLoginException;
 import core.basesyntax.exception.InvalidPasswordException;
+import core.basesyntax.exception.InvalidUserException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -15,10 +16,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkNullUser(user);
         checkExistUserInDataBase(user.getLogin());
         validatePassword(user.getPassword());
         validateAge(user.getAge());
         return storageDao.add(user);
+    }
+
+    private void checkNullUser(User user) {
+        if (user == null) {
+            throw new InvalidUserException("User cannot be null");
+        }
     }
 
     private void checkExistUserInDataBase(String login) {

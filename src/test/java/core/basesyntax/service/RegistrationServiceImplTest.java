@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,8 +8,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidAgeException;
 import core.basesyntax.exception.InvalidLoginException;
 import core.basesyntax.exception.InvalidPasswordException;
+import core.basesyntax.exception.InvalidUserException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +30,7 @@ public class RegistrationServiceImplTest {
         user = new User(VALID_LOGIN, VALID_PASSWORD, MINIMAL_AGE);
     }
 
-    @AfterEach
+    @BeforeEach
     void tearDown() {
         Storage.people.clear();
     }
@@ -39,9 +38,16 @@ public class RegistrationServiceImplTest {
     @Test
     void register_validUser_successfullyRegistered() {
         User registeredUser = registrationService.register(user);
-        assertNotNull(registeredUser);
         assertEquals(user, registeredUser);
         assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_nullUser_throwsIllegalArgumentException() {
+        user = null;
+        InvalidUserException actualException = assertThrows(InvalidUserException.class,
+                () -> registrationService.register(user));
+        assertEquals("User cannot be null",actualException.getMessage());
     }
 
     @Test
@@ -49,8 +55,7 @@ public class RegistrationServiceImplTest {
         registrationService.register(user);
         User newUserWithExistingLogin = new User(VALID_LOGIN, VALID_PASSWORD, MINIMAL_AGE);
         InvalidLoginException actualException = assertThrows(InvalidLoginException.class,
-                () -> registrationService.register(newUserWithExistingLogin),
-                "consumer with " + user.getLogin() + "login is already existing");
+                () -> registrationService.register(newUserWithExistingLogin));
         assertEquals("consumer with " + user.getLogin()
                 + "login is already existing", actualException.getMessage());
     }
@@ -59,8 +64,7 @@ public class RegistrationServiceImplTest {
     void register_invalidAge_throwsInvalidAgeException() {
         user.setAge(INVALID_AGE);
         InvalidAgeException actualException = assertThrows(InvalidAgeException.class,
-                () -> registrationService.register(user),
-                "age should be " + MINIMAL_AGE);
+                () -> registrationService.register(user));
         assertEquals("age should be " + MINIMAL_AGE,actualException.getMessage());
     }
 
@@ -68,7 +72,7 @@ public class RegistrationServiceImplTest {
     void register_nullPassword_trowsPasswordValidateException() {
         user.setPassword(null);
         InvalidPasswordException exception = assertThrows(InvalidPasswordException.class,
-                () -> registrationService.register(user), "password can`t be null");
+                () -> registrationService.register(user));
         assertEquals("password can`t be null", exception.getMessage());
     }
 
@@ -76,8 +80,7 @@ public class RegistrationServiceImplTest {
     void register_shortPassword_throwsPasswordValidateException() {
         user.setPassword(INVALID_PASSWORD);
         InvalidPasswordException expectedExeption = assertThrows(InvalidPasswordException.class,
-                () -> registrationService.register(user),
-                "password length should be minimum " + MINIMUM_PASSWORD_LENGTH + " symbols");
+                () -> registrationService.register(user));
         assertEquals("password must be longer than " + MINIMUM_PASSWORD_LENGTH
                 + " characters", expectedExeption.getMessage());
     }
@@ -86,7 +89,7 @@ public class RegistrationServiceImplTest {
     void register_nullLogin_trowsLoginValidateException() {
         user.setLogin(null);
         InvalidLoginException actualException = assertThrows(InvalidLoginException.class,
-                () -> registrationService.register(user), "Login can`t be Null");
+                () -> registrationService.register(user));
         assertEquals("Login can`t be Null", actualException.getMessage());
     }
 
@@ -94,9 +97,7 @@ public class RegistrationServiceImplTest {
     void register_shortLogin_throwsLoginValidateException() {
         user.setLogin(INVALID_LOGIN);
         InvalidLoginException actualException = assertThrows(InvalidLoginException.class,
-                () -> registrationService.register(user),
-                "your login must be more than "
-                        + MINIMUM_LOGIN_LENGTH + " characters");
+                () -> registrationService.register(user));
         assertEquals("your login must be more than "
                 + MINIMUM_LOGIN_LENGTH + " characters", actualException.getMessage());
     }
