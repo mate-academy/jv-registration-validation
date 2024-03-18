@@ -6,9 +6,9 @@ import core.basesyntax.exeptionforservice.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
-    private static final int MINIMUM_CHARACTERS_IN_STRING = 6;
     private static final int MIN_AGE = 18;
+    private static final int MINIMUM_CHARACTERS_IN_STRING = 6;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) throws RegistrationException {
