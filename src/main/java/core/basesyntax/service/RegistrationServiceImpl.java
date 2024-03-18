@@ -17,6 +17,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateUser(User user) {
+        if (user == null) {
+            throw new UserInvalidExeption("User cant be null!");
+        }
         validateUserLogin(user.getLogin());
         validateUserPassword(user.getPassword());
         validateUserAge(user.getAge());

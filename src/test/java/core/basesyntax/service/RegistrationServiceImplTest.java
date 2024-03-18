@@ -126,4 +126,15 @@ class RegistrationServiceImplTest {
                 registrationService.register(validUser));
         assertEquals("Please enter password!", userInvalidExeption.getMessage());
     }
+
+    @Test
+    void register_NullUser_Not_Ok() {
+        validUser = null;
+
+        assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("User cant be null!", userInvalidExeption.getMessage());
+    }
 }
