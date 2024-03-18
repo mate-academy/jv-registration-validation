@@ -2,8 +2,8 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exeption.UserInvalidExeption;
 import core.basesyntax.model.User;
-import core.basesyntax.userinvalidexeption.UserInvalidExeption;
 
 public class RegistrationServiceImpl implements RegistrationService {
     public static final int MINIMAL_AGE = 18;
@@ -27,10 +27,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserInvalidExeption("Please enter the login!");
         }
         if (login.length() < MINIMAL_LENGTH) {
-            throw new UserInvalidExeption("Login " + login + " must be at least 6 characters!");
+            throw new UserInvalidExeption("Login " + login + " must be at least "
+                    + MINIMAL_LENGTH + " characters!");
         }
         if (storageDao.get(login) != null) {
-            throw new UserInvalidExeption("Login " + login + " already taking!");
+            throw new UserInvalidExeption("Login " + login + " already taken!");
         }
     }
 
@@ -39,13 +40,17 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserInvalidExeption("Please enter password!");
         }
         if (password.length() < MINIMAL_LENGTH) {
-            throw new UserInvalidExeption("Password must be at least 6 characters");
+            throw new UserInvalidExeption("Password must be at least "
+                    + MINIMAL_LENGTH + " characters!");
         }
     }
 
     private void validateUserAge(int age) {
-        if (age <= MINIMAL_AGE) {
-            throw new UserInvalidExeption("Only adults allowed!!!");
+        if (age == 0) {
+            throw new UserInvalidExeption("Age cant be 0");
+        }
+        if (age < MINIMAL_AGE) {
+            throw new UserInvalidExeption("Age need to be " + MINIMAL_AGE + " or over!");
         }
     }
 }

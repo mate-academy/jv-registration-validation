@@ -1,4 +1,4 @@
-package core.basesyntax.userinvalidexeption;
+package core.basesyntax.exeption;
 
 public class UserInvalidExeption extends RuntimeException {
     public UserInvalidExeption(String message) {

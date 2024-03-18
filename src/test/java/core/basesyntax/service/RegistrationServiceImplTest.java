@@ -1,98 +1,129 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exeption.UserInvalidExeption;
 import core.basesyntax.model.User;
-import core.basesyntax.userinvalidexeption.UserInvalidExeption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    public static final String VALID_LOGIN = "John_Doe";
+    public static final String VALID_USERPASSWORD = "strongPassword";
+    public static final String SHORT_LOGIN = "Joe";
+    public static final String SHORT_PASSWORD = "abcde";
+    public static final int VALID_USERAGE = 25;
+    private RegistrationServiceImpl registrationService;
+    private StorageDaoImpl storageDao;
+    private User validUser;
 
     @BeforeEach
     void setUp() {
-        StorageDao storageDao = new StorageDaoImpl();
+        validUser = new User();
+        validUser.setAge(VALID_USERAGE);
+        validUser.setLogin(VALID_LOGIN);
+        validUser.setPassword(VALID_USERPASSWORD);
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @Test
     void register_ValidUser_Ok() {
-        User validUser = new User();
-        validUser.setLogin("john_doe");
-        validUser.setPassword("strongPassword");
-        validUser.setAge(25);
+        registrationService.register(validUser);
+        assertEquals(validUser, storageDao.get(validUser.getLogin()));
+    }
 
-        User registeredUser = registrationService.register(validUser);
+    @Test
+    void register_UserWithNullLogin_Not_Ok() {
+        validUser.setLogin(null);
 
-        assertNotNull(registeredUser.getId());
-        assertEquals(validUser.getLogin(), registeredUser.getLogin());
-        assertEquals(validUser.getPassword(), registeredUser.getPassword());
-        assertEquals(validUser.getAge(), registeredUser.getAge());
+        assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("Please enter the login!", userInvalidExeption.getMessage());
     }
 
     @Test
     void register_UserWithShortLogin_Not_Ok() {
-        User userWithShortLogin = new User();
-        userWithShortLogin.setLogin("short");
-        userWithShortLogin.setPassword("validPassword");
-        userWithShortLogin.setAge(30);
+        validUser.setLogin(SHORT_LOGIN);
 
         assertThrows(UserInvalidExeption.class, () ->
-                registrationService.register(userWithShortLogin));
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("Login " + validUser.getLogin() + " must be at least 6 characters!",
+                userInvalidExeption.getMessage());
     }
 
     @Test
     void register_UserWithExistingLogin_Not_ok() {
-        User existingUser = new User();
-        existingUser.setLogin("existing_user");
-        existingUser.setPassword("validPassword");
-        existingUser.setAge(28);
-
-        registrationService.register(existingUser);
-
         User userWithExistingLogin = new User();
-        userWithExistingLogin.setLogin("existing_user");
-        userWithExistingLogin.setPassword("anotherValidPassword");
-        userWithExistingLogin.setAge(32);
+        userWithExistingLogin.setAge(38);
+        userWithExistingLogin.setPassword(VALID_USERPASSWORD);
+        userWithExistingLogin.setLogin(VALID_LOGIN);
 
         assertThrows(UserInvalidExeption.class, () ->
                 registrationService.register(userWithExistingLogin));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(userWithExistingLogin));
+        assertEquals("Login " + userWithExistingLogin.getLogin() + " already taken!",
+                userInvalidExeption.getMessage());
+    }
+
+    @Test
+    void register_UnderAgeUser_Not_Ok() {
+        validUser.setAge(17);
+
+        assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("Age need to be 18 or over!", userInvalidExeption.getMessage());
+    }
+
+    @Test
+    void register_NullAgeUser_Not_Ok() {
+        validUser.setAge(0);
+
+        assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("Age cant be 0", userInvalidExeption.getMessage());
     }
 
     @Test
     void register_UserWithShortPassword_Not_Ok() {
-        User userWithShortPassword = new User();
-        userWithShortPassword.setLogin("valid_user");
-        userWithShortPassword.setPassword("short");
-        userWithShortPassword.setAge(22);
-
+        validUser.setPassword(SHORT_PASSWORD);
         assertThrows(UserInvalidExeption.class, () ->
-                registrationService.register(userWithShortPassword));
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("Password must be at least 6 characters!", userInvalidExeption.getMessage());
     }
 
     @Test
     void register_UserWithEmptyPassword_Not_Ok() {
-        User userWithEmptyPassword = new User();
-        userWithEmptyPassword.setLogin("valid_user");
-        userWithEmptyPassword.setPassword("");
-        userWithEmptyPassword.setAge(26);
+        validUser.setPassword("");
 
         assertThrows(UserInvalidExeption.class, () ->
-                registrationService.register(userWithEmptyPassword));
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("Please enter password!", userInvalidExeption.getMessage());
     }
 
     @Test
-    void register_UnderageUser_Not_Ok() {
-        User underageUser = new User();
-        underageUser.setLogin("young_user");
-        underageUser.setPassword("validPassword");
-        underageUser.setAge(17);
+    void register_UserWithNullPassword_Not_Ok() {
+        validUser.setPassword(null);
 
         assertThrows(UserInvalidExeption.class, () ->
-                registrationService.register(underageUser));
+                registrationService.register(validUser));
+        UserInvalidExeption userInvalidExeption = assertThrows(UserInvalidExeption.class, () ->
+                registrationService.register(validUser));
+        assertEquals("Please enter password!", userInvalidExeption.getMessage());
     }
 }
