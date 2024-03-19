@@ -1,12 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl service;
@@ -48,36 +50,37 @@ class RegistrationServiceImplTest {
     @Test
     void register_UserExist_notOk() {
         assertDoesNotThrow(() -> service.register(first_valid_user));
-        assertThrows(RegistrationException.class, () -> service.register(user_same_login_first), "No exception");
+        assertThrows(RegistrationException.class,
+                () -> service.register(user_same_login_first), "No exception");
     }
 
     @Test
     void register_invalidPassword_notOk() {
-        assertThrows(RegistrationException.class, ()-> service.register(invalid_password_user)
-                , "No exception");
+        assertThrows(RegistrationException.class, () -> service.register(invalid_password_user),
+                "No exception");
     }
 
     @Test
     void register_invalidLogin_notOk() {
-        assertThrows(RegistrationException.class, ()-> service.register(invalid_login_user)
-                , "No exception");
+        assertThrows(RegistrationException.class, () -> service.register(invalid_login_user),
+                "No exception");
     }
 
     @Test
     void register_invalidAge_notOk() {
-        assertThrows(RegistrationException.class, ()-> service.register(invalid_age_user)
-                , "No exception");
+        assertThrows(RegistrationException.class, () -> service.register(invalid_age_user),
+                "No exception");
     }
 
     @Test
     void register_nullUserLogin_notOk() {
-        assertThrows(RegistrationException.class, ()-> service.register(null_login_user)
-                , "No exception");
+        assertThrows(RegistrationException.class, () -> service.register(null_login_user),
+                "No exception");
     }
 
     @Test
     void register_nullUserPassword() {
-        assertThrows(RegistrationException.class, ()-> service.register(null_password_user)
-                , "No exception");
+        assertThrows(RegistrationException.class, () -> service.register(null_password_user),
+                "No exception");
     }
 }
