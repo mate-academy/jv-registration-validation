@@ -11,6 +11,11 @@ public class User {
     public Long getId() {
         return id;
     }
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
 
     public void setId(Long id) {
         this.id = id;
