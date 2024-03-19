@@ -7,44 +7,37 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MINIMUM_CHARACTERS_IN_STRING = 6;
+    private static final int MINIMUM_PASSWORD_LENGTH = 6;
+    private static final int MINIMUM_LOGIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RegistrationException {
+    public User register(User user) {
         if (user.getLogin() == null) {
-            throw new RegistrationException("Login can't be null");
+            throw new RegistrationException("Login null input.Try again!");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password can't be null");
-        }
-        if (user.getAge() < MIN_AGE || user.getAge() == null) {
-            throw new RegistrationException("Not valid age: "
-                    + user.getAge() + ". Min allowed age is " + MIN_AGE);
-        }
-        if (countCaracterInPasswordAndLogin(user.getLogin())
-                && countCaracterInPasswordAndLogin(user.getPassword())
-                && MIN_AGE <= user.getAge()) {
-            storageDao.add(user);
-            return user;
-        } else {
-            throw new RegistrationException("Invalid data. Try again!");
-        }
-    }
 
-    public boolean countCaracterInPasswordAndLogin(String data) throws RegistrationException {
-        if (data == null) {
-            throw new RegistrationException("Null in input");
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password null input. Try again!");
         }
-        int countLetter = 0;
-        if (data.length() < MINIMUM_CHARACTERS_IN_STRING) {
-            throw new RegistrationException("Yours data isn't valid. Try again.");
+
+        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
+            throw new RegistrationException("Invalid login format "
+                    + user.getLogin() + ". Min length login : " + MINIMUM_LOGIN_LENGTH);
         }
-        for (char letters : data.toLowerCase().toCharArray()) {
-            if (letters >= 'a' && letters <= 'z') {
-                countLetter++;
-            }
+
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new RegistrationException("Invalid login format "
+                    + user.getLogin() + ". Min length password: " + MINIMUM_PASSWORD_LENGTH);
         }
-        return countLetter >= MINIMUM_CHARACTERS_IN_STRING;
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("Invalid login format "
+                    + user.getLogin() + ". Age was less than should be " + MIN_AGE);
+        }
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User already exists");
+        }
+        return storageDao.add(user);
     }
 }
