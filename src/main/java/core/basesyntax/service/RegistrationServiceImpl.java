@@ -12,27 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Login cannot be null");
-        }
-
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password cannot be null");
-        }
-
-        if (!isValidLogin(user)) {
-            throw new RegistrationException("Invalid login format "
-            + user.getLogin() + ". Min number of characters: " + MINIMAL_LOGIN_LENGTH);
-        }
-
-        if (!isValidPassword(user)) {
-            throw new RegistrationException("Invalid login format "
-                    + user.getLogin() + ". Min number of characters: " + MINIMAL_PASSWORD_LENGTH);
-        }
-        if (!isValidAge(user)) {
-            throw new RegistrationException("Invalid login format "
-                    + user.getLogin() + ". Min allowed age is " + MINIMAL_AGE);
-        }
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
 
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User already exists");
@@ -41,16 +23,32 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private boolean isValidLogin(User user) {
-        return user.getLogin().length() >= MINIMAL_LOGIN_LENGTH;
+    private void validateLogin(String login) {
+        if (login == null) {
+            throw new RegistrationException("Login cannot be null");
+        }
+        if (login.length() < MINIMAL_LOGIN_LENGTH) {
+            throw new RegistrationException("Invalid login format "
+                    + login + ". Min number of characters: " + MINIMAL_LOGIN_LENGTH);
+        }
+
     }
 
-    private boolean isValidPassword(User user) {
-        return user.getPassword().length() >= MINIMAL_PASSWORD_LENGTH;
+    private void validatePassword(String password) {
+        if (password == null) {
+            throw new RegistrationException("Password cannot be null");
+        }
+        if (password.length() < MINIMAL_PASSWORD_LENGTH) {
+            throw new RegistrationException("Invalid login format "
+                    + password + ". Min number of characters: " + MINIMAL_PASSWORD_LENGTH);
+        }
     }
 
-    private boolean isValidAge(User user) {
-        return user.getAge() >= MINIMAL_AGE;
+    private void validateAge(int age) {
+        if (age < MINIMAL_AGE) {
+            throw new RegistrationException("Invalid login format "
+                    + age + ". Min allowed age is " + MINIMAL_AGE);
+        }
     }
 
 }
