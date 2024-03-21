@@ -46,7 +46,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void checkSameUsers() {
+    public void addingUsersWithSameData() {
         registrationService.register(correct_user);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(same_correct_user),
@@ -54,11 +54,11 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void checkAddDifferentUsers() {
+    public void addingUsersWithDifferentData() {
         registrationService.register(correct_user);
         registrationService.register(correct_user2);
         int sizeStorage = Storage.people.size();
-        assertEquals(2,sizeStorage);
+        assertEquals(2, sizeStorage);
     }
 
     @Test
@@ -83,14 +83,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void checkInvalidLogin() {
+    public void checkIncorrectLogin() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalid_login),
                 "Login was correct");
     }
 
     @Test
-    public void checkInvalidAge() {
+    public void checkIncorrectAge() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(invalid_age),
                 "Age was correct");

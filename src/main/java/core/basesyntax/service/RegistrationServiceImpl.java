@@ -13,6 +13,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        userVarification(user);
+        return storageDao.add(user);
+    }
+
+    private void userVarification (User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login null input.Try again!");
         }
@@ -38,6 +43,5 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User already exists");
         }
-        return storageDao.add(user);
     }
 }
