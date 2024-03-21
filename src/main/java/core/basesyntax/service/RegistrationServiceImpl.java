@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private void userVarification (User user) {
+    private void userVarification(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login null input.Try again!");
         }
