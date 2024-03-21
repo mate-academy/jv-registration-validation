@@ -11,93 +11,74 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (checkUserIsNull(user)) {
-            throw new RegisterException("Cannot register user, user is null");
-        }
-        String message = checkSomeDataIsNull(user);
-        if (message != null) {
-            throw new RegisterException(message);
-        }
-        if (checkIfLoginOccupied(user)) {
-            throw new RegisterException("Cannot register user, login is occupied");
-        }
-        if (!checkLoginLengthIsValid(user)) {
-            throw new RegisterException("Cannot register user, login is shorter than 6 characters");
-        }
-        if (!checkPasswordLengthIsValid(user)) {
-            throw new RegisterException("Cannot register user, "
-                    + "password is shorter than 6 characters");
-        }
-        if (!checkUserAgeIsValid(user)) {
-            throw new RegisterException("Cannot register user with age "
-                    + user.getAge()
-                    + ", minimal allowed age is "
-                    + VALID_AGE);
-        }
+        isUserIsNull(user);
+        isSomeDataNull(user);
+        isUserExist(user);
+        isLoginValid(user);
+        isPasswordValid(user);
+        isUserAgeValid(user);
         storageDao.add(user);
         return user;
     }
 
-    private String checkSomeDataIsNull(User user) {
+    private void isSomeDataNull(User user) {
         StringBuilder message = new StringBuilder();
         message.append("Cannot register user, ");
         int count = 0;
-        if (checkUserIdIsNull(user)) {
+        if (user.getId() == null) {
             message.append("Id ");
             count++;
         }
-        if (checkUserLoginIsNull(user)) {
+        if (user.getLogin() == null) {
             message.append("Login ");
             count++;
         }
-        if (checkUserPasswordIsNull(user)) {
+        if (user.getPassword() == null) {
             message.append("Password ");
             count++;
         }
-        if (checkUserAgeIsNull(user)) {
+        if (user.getAge() == null) {
             message.append("Age ");
             count++;
         }
         if (count > 0) {
             message.append("can't be null");
-            return message.toString();
+            throw new RegistrationException(message.toString());
         }
-        return null;
     }
 
-    private boolean checkUserIsNull(User user) {
-        return user == null;
+    private void isUserIsNull(User user) {
+        if (user == null) {
+            throw new RegistrationException("Cannot register user, user is null");
+        }
     }
 
-    private boolean checkUserIdIsNull(User user) {
-        return user.getId() == null;
+    private void isUserAgeValid(User user) {
+        if (user.getAge() < VALID_AGE) {
+            throw new RegistrationException("Cannot register user with age "
+                    + user.getAge()
+                    + ", minimal allowed age is "
+                    + VALID_AGE);
+        }
     }
 
-    private boolean checkUserLoginIsNull(User user) {
-        return user.getLogin() == null;
+    private void isPasswordValid(User user) {
+        if (user.getPassword().length() < VALID_PASSWORD_LOGIN_LENGTH) {
+            throw new RegistrationException("Cannot register user, "
+                    + "password is shorter than 6 characters");
+        }
     }
 
-    private boolean checkUserPasswordIsNull(User user) {
-        return user.getPassword() == null;
+    private void isLoginValid(User user) {
+        if (user.getLogin().length() < VALID_PASSWORD_LOGIN_LENGTH) {
+            throw new RegistrationException("Cannot register user, "
+                    + "login is shorter than 6 characters");
+        }
     }
 
-    private boolean checkUserAgeIsNull(User user) {
-        return user.getAge() == null;
-    }
-
-    private boolean checkUserAgeIsValid(User user) {
-        return user.getAge() >= VALID_AGE;
-    }
-
-    private boolean checkPasswordLengthIsValid(User user) {
-        return user.getPassword().length() >= VALID_PASSWORD_LOGIN_LENGTH;
-    }
-
-    private boolean checkLoginLengthIsValid(User user) {
-        return user.getLogin().length() >= VALID_PASSWORD_LOGIN_LENGTH;
-    }
-
-    private boolean checkIfLoginOccupied(User user) {
-        return storageDao.get(user.getLogin()) != null;
+    private void isUserExist(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("Cannot register user, login is occupied");
+        }
     }
 }
