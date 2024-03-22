@@ -5,8 +5,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exeptionforservice.RegistrationException;
 import core.basesyntax.model.User;
 
-import javax.swing.*;
-
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
@@ -36,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isValidPassword (String password) {
+    private void isValidPassword(String password) {
         if (password == null) {
             throw new RegistrationException("Password null input. Try again!");
         }
