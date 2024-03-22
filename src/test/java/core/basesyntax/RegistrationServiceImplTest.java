@@ -76,7 +76,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void checkIncorrectidPassword() {
+    public void checkIncorrectPassword() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(incorrect_password),
                 "Password was correct");

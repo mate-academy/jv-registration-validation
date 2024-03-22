@@ -5,8 +5,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exeptionforservice.RegistrationException;
 import core.basesyntax.model.User;
 
-import javax.swing.*;
-
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MINIMUM_PASSWORD_LENGTH = 6;
@@ -16,10 +14,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         isUserNull(user);
-        isValidAge(user.getAge());
-        isValidPassword(user.getPassword());
-        isValidLogin(user.getLogin());
-        isUserInStorage(user);
+        validatedAge(user.getAge());
+        validatePassword(user.getPassword());
+        validateLogin(user.getLogin());
+        checkUserInStorage(user);
         return storageDao.add(user);
     }
 
@@ -29,14 +27,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isValidAge(int age) {
+    private void validatedAge(int age) {
         if (age < MIN_AGE) {
             throw new RegistrationException("Invalid login format "
                     + age + ". Age was less than should be " + MIN_AGE);
         }
     }
 
-    private void isValidPassword (String password) {
+    private void validatePassword(String password) {
         if (password == null) {
             throw new RegistrationException("Password null input. Try again!");
         }
@@ -47,7 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     }
 
-    private void isValidLogin(String login) {
+    private void validateLogin(String login) {
         if (login == null) {
             throw new RegistrationException("Login null input.Try again!");
         }
@@ -57,7 +55,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void isUserInStorage(User user) {
+    private void checkUserInStorage(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This user already exists");
         }
