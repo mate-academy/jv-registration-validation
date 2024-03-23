@@ -7,92 +7,101 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exeptionforservice.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Feel free to remove this class and create your own.
- */
-
 public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private static User correct_user;
-    private static User correct_user2;
-    private static User null_password;
-    private static User null_login;
-    private static User incorrect_password;
-    private static User incorrect_login;
-    private static User incorrect_age;
-    private static User same_correct_user;
-
-    @BeforeAll
-    public static void setUp() {
-        correct_user = new User("boblogin23", "bobpassword", 18);
-        correct_user2 = new User("alicelogin", "alicepassword", 20);
-        null_password = new User("boblogin", null, 25);
-        null_login = new User(null, "password355",40);
-        incorrect_password = new User("login24","2324", 45);
-        incorrect_login = new User("ksf", "validpassword", 30);
-        incorrect_age = new User("boblogin", "bobpassword", 13);
-        same_correct_user = new User(correct_user.getLogin(),
-                correct_user.getPassword(), correct_user.getAge());
-    }
+    private static User actual;
 
     @BeforeEach
     public void setUser() {
+        actual = new User();
         registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
 
     @Test
-    public void addingUsersWithSameData() {
-        registrationService.register(correct_user);
+    public void checkAdedSameUsers() {
+        actual.setLogin("boblogin45");
+        actual.setPassword("password24");
+        actual.setAge(25);
+        User sameUser = new User(actual.getLogin(), actual.getPassword(), actual.getAge());
+        registrationService.register(actual);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(same_correct_user),
+                () -> registrationService.register(sameUser), "This users are different");
+    }
+
+    @Test
+    public void addingUsersWithSameData() {
+        actual.setLogin("boblogin45");
+        actual.setPassword("password24");
+        actual.setAge(25);
+        registrationService.register(actual);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(actual),
                 "This user doesn't exists!");
     }
 
     @Test
     public void addingUsersWithDifferentData() {
-        registrationService.register(correct_user);
-        registrationService.register(correct_user2);
+        actual.setLogin("login245");
+        actual.setPassword("password24");
+        actual.setAge(23);
+        registrationService.register(actual);
+        User secondAdedUser = new User("boblog24", "bobpasword", 20);
+        registrationService.register(secondAdedUser);
         int sizeStorage = Storage.people.size();
         assertEquals(2, sizeStorage);
     }
 
     @Test
     public void checkNullInPassword() {
+        actual.setLogin("login234");
+        actual.setPassword(null);
+        actual.setAge(20);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(null_password),
+                () -> registrationService.register(actual),
                 "Password was correct");
     }
 
     @Test
     public void checkNullInLogin() {
+        actual.setLogin(null);
+        actual.setPassword("password32");
+        actual.setAge(20);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(null_login),
+                () -> registrationService.register(actual),
                 "Login was correct");
     }
 
     @Test
     public void checkIncorrectPassword() {
+        actual.setLogin("loginbob");
+        actual.setPassword("3242");
+        actual.setAge(20);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(incorrect_password),
+                () -> registrationService.register(actual),
                 "Password was correct");
     }
 
     @Test
     public void checkIncorrectLogin() {
+        actual.setLogin("fken");
+        actual.setPassword("password32");
+        actual.setAge(20);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(incorrect_login),
+                () -> registrationService.register(actual),
                 "Login was correct");
     }
 
     @Test
     public void checkIncorrectAge() {
+        actual.setLogin("boblogin");
+        actual.setPassword("password32");
+        actual.setAge(10);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(incorrect_age),
+                () -> registrationService.register(actual),
                 "Age was correct");
     }
 }
