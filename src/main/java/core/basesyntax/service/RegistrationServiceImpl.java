@@ -9,11 +9,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_USER_ACCEPTABLE_AGE = 18;
-    private static final int MIN_USER_VALID_AGE = 0;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RegistrationException {
+    public User register(User user) {
         if (user == null) {
             throw new RegistrationException("The value of User can not be equal to null");
         }
@@ -26,17 +25,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegistrationException("The value of User age can not be equal to null");
         }
-        if (user.getLogin().isEmpty() || user.getLogin().length() < MIN_LOGIN_LENGTH) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException(
                     "The user login's length has to be at least 6 characters"
             );
         }
-        if (user.getPassword().isEmpty() || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException(
                     "The user password's length has to be at least 6 characters"
             );
         }
-        if (user.getAge() < MIN_USER_VALID_AGE) {
+        if (user.getAge() < 0) {
             throw new RegistrationException("The user's age can not be negative");
         }
         if (user.getAge() < MIN_USER_ACCEPTABLE_AGE) {

@@ -17,22 +17,20 @@ class RegistrationServiceImplTest {
     private static final int MIN_USER_ACCEPTABLE_AGE = 18;
     private static final String validUserLogin = "some_valid_login";
     private static RegistrationServiceImpl registrationService;
-    private static User testUser;
-    private static User defaultUser;
+    private User testUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        defaultUser = new User();
-        defaultUser.setId(24356876L);
-        defaultUser.setLogin(validUserLogin);
-        defaultUser.setPassword("some_valid_password");
-        defaultUser.setAge(30);
     }
 
     @BeforeEach
-    void setUp() throws CloneNotSupportedException {
-        testUser = defaultUser.clone();
+    void setUp() {
+        testUser = new User();
+        testUser.setId(24356876L);
+        testUser.setLogin(validUserLogin);
+        testUser.setPassword("some_valid_password");
+        testUser.setAge(30);
     }
 
     @AfterEach
@@ -83,6 +81,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortUserLogin_NotOk() {
+        testUser.setLogin("log");
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(testUser);
+        });
         testUser.setLogin("login");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
@@ -99,6 +101,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortUserPassword_NotOk() {
+        testUser.setPassword("pss");
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(testUser);
+        });
         testUser.setPassword("short");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
@@ -126,8 +132,12 @@ class RegistrationServiceImplTest {
         String repeatingLogin = "same_login_user";
         testUser.setLogin(repeatingLogin);
         Storage.people.add(testUser);
-        User sameLoginUser = defaultUser.clone();
+        User sameLoginUser = new User();
+        sameLoginUser.setId(243568765L);
         sameLoginUser.setLogin(repeatingLogin);
+        sameLoginUser.setPassword("some_valid_password");
+        sameLoginUser.setAge(31);
+
         Storage.people.add(testUser);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
@@ -182,8 +192,11 @@ class RegistrationServiceImplTest {
         assertTrue(Storage.people.isEmpty());
         registrationService.register(testUser);
         assertTrue(Storage.people.size() == 1);
-        User anotherUser = defaultUser.clone();
+        User anotherUser = new User();
+        anotherUser.setId(343L);
         anotherUser.setLogin("some_another_user");
+        anotherUser.setPassword("some_password");
+        anotherUser.setAge(28);
         registrationService.register(anotherUser);
         assertTrue(Storage.people.size() == 2);
     }
