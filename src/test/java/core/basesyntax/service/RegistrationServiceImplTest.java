@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static StorageDaoImpl storageDao;
-    private final String validLogin = "retkinf";
+    private final String validLogin = "retkin";
     private final String validPassword = "qwerty";
     private final int validAge = 18;
     private User validUser;
@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        validUser.setLogin("");
+        validUser.setLogin(null);
         assertThrows(RegistationException.class, () -> {
             registrationService.register(validUser);
         });
@@ -49,7 +49,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
-        validUser.setPassword("");
+        validUser.setPassword(null);
         assertThrows(RegistationException.class, () -> {
             registrationService.register(validUser);
         });

@@ -7,7 +7,8 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MIN_PASSWORD_AND_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -22,15 +23,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistationException("Not valid age:" + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
-        if (user.getPassword().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistationException("Not valid password. Min "
                     + "allowed password length is "
-                    + MIN_PASSWORD_AND_LOGIN_LENGTH);
+                    + MIN_PASSWORD_LENGTH);
         }
-        if (user.getLogin().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistationException("Not valid login. Min "
                     + "allowed login length is "
-                    + MIN_PASSWORD_AND_LOGIN_LENGTH);
+                    + MIN_LOGIN_LENGTH);
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistationException("Not valid login. User with this login is exist");
