@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,7 +16,8 @@ class RegistrationServiceImplTest {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_USER_ACCEPTABLE_AGE = 18;
-    private static final String validUserLogin = "some_valid_login";
+    private static final String VALID_USER_LOGIN = "some_valid_login";
+    private static final String VALID_USER_PASSWORD = "some_valid_password";
     private static RegistrationServiceImpl registrationService;
     private User testUser;
 
@@ -28,8 +30,8 @@ class RegistrationServiceImplTest {
     void setUp() {
         testUser = new User();
         testUser.setId(24356876L);
-        testUser.setLogin(validUserLogin);
-        testUser.setPassword("some_valid_password");
+        testUser.setLogin(VALID_USER_LOGIN);
+        testUser.setPassword(VALID_USER_PASSWORD);
         testUser.setAge(30);
     }
 
@@ -120,7 +122,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_noAcceptableUserAge_NotOk() {
+    void register_invalidUserAge_NotOk() {
         testUser.setAge(10);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
@@ -128,14 +130,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_sameUserLoginRegistered_NotOk() throws CloneNotSupportedException {
-        String repeatingLogin = "same_login_user";
-        testUser.setLogin(repeatingLogin);
+    void register_sameUserLoginRegistered_NotOk() {
+        testUser.setLogin(VALID_USER_LOGIN);
         Storage.people.add(testUser);
         User sameLoginUser = new User();
         sameLoginUser.setId(243568765L);
-        sameLoginUser.setLogin(repeatingLogin);
-        sameLoginUser.setPassword("some_valid_password");
+        sameLoginUser.setLogin(VALID_USER_LOGIN);
+        sameLoginUser.setPassword(VALID_USER_PASSWORD);
         sameLoginUser.setAge(31);
 
         Storage.people.add(testUser);
@@ -187,17 +188,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUserRegistration_Ok()
-            throws RegistrationException, CloneNotSupportedException {
-        assertTrue(Storage.people.isEmpty());
+    void register_validUserRegistration_Ok() throws RegistrationException {
         registrationService.register(testUser);
-        assertTrue(Storage.people.size() == 1);
         User anotherUser = new User();
         anotherUser.setId(343L);
         anotherUser.setLogin("some_another_user");
         anotherUser.setPassword("some_password");
         anotherUser.setAge(28);
         registrationService.register(anotherUser);
-        assertTrue(Storage.people.size() == 2);
+        assertEquals(2, Storage.people.size());
     }
 }

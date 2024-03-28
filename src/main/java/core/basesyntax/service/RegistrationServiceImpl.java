@@ -13,6 +13,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateNullValues(user);
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        storageDao.add(user);
+        return user;
+    }
+
+    private void validateNullValues(User user) {
         if (user == null) {
             throw new RegistrationException("The value of User can not be equal to null");
         }
@@ -25,27 +34,34 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegistrationException("The value of User age can not be equal to null");
         }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+    }
+
+    private void validateLogin(String login) {
+        if (login.length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException(
                     "The user login's length has to be at least 6 characters"
             );
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        User isUserWithTheSameLogin = storageDao.get(login);
+        if (isUserWithTheSameLogin != null) {
+            throw new RegistrationException("The user with the pointed login already exists");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException(
                     "The user password's length has to be at least 6 characters"
             );
         }
-        if (user.getAge() < 0) {
+    }
+
+    private void validateAge(int age) {
+        if (age < 0) {
             throw new RegistrationException("The user's age can not be negative");
         }
-        if (user.getAge() < MIN_USER_ACCEPTABLE_AGE) {
+        if (age < MIN_USER_ACCEPTABLE_AGE) {
             throw new RegistrationException("Impossible to register user younger then 18 years");
         }
-        User isUserWithTheSameLogin = storageDao.get(user.getLogin());
-        if (isUserWithTheSameLogin != null) {
-            throw new RegistrationException("The user with the pointed login already exists");
-        }
-        storageDao.add(user);
-        return user;
     }
 }
