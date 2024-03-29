@@ -4,61 +4,56 @@ import core.basesyntax.service.InvalidUserDataException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
 
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
+    private User validUser;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
+        validUser = new User();
+        validUser.setLogin("testuser");
+        validUser.setPassword("strongpassword");
+        validUser.setAge(20);
     }
 
     @Test
     void register_ValidUser_SuccessfulRegistration() throws InvalidUserDataException {
-        User user = new User();
-        user.setLogin("testuser");
-        user.setPassword("strongpassword");
-        user.setAge(20);
-
-        User registeredUser = registrationService.register(user);
+        User registeredUser = registrationService.register(validUser);
         Assertions.assertNotNull(registeredUser);
-        Assertions.assertEquals(user.getLogin(), registeredUser.getLogin());
+        Assertions.assertEquals(validUser.getLogin(), registeredUser.getLogin());
     }
 
     @Test
     void register_UserWithShortLogin_ThrowsException() {
-        User user = new User();
-        user.setLogin("short");
-        user.setPassword("strongpassword");
-        user.setAge(25);
-
+        validUser.setAge(25);
         Assertions.assertThrows(InvalidUserDataException.class, () -> registrationService
-                .register(user));
+                .register(validUser));
     }
 
     @Test
     void register_UserWithShortPassword_ThrowsException() {
-        User user = new User();
-        user.setLogin("testuser");
-        user.setPassword("short");
-        user.setAge(30);
+        validUser.setPassword("short");
+        validUser.setAge(30);
 
         Assertions.assertThrows(InvalidUserDataException.class, () -> registrationService
-                .register(user));
+                .register(validUser));
     }
 
     @Test
     void register_UserWithUnderage_ThrowsException() {
-        User user = new User();
-        user.setLogin("testuser");
-        user.setPassword("strongpassword");
-        user.setAge(16);
-
+        validUser.setAge(16);
         Assertions.assertThrows(InvalidUserDataException.class, () -> registrationService
-                .register(user));
+                .register(validUser));
     }
 
     @Test

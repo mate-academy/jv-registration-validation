@@ -9,6 +9,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws InvalidUserDataException {
+        if (user == null || user.getLogin() == null || user.getPassword() == null) {
+            throw new InvalidUserDataException("User, login, and password cannot be null");
+        }
+
         User existingUser = storageDao.get(user.getLogin());
         if (existingUser != null) {
             throw new InvalidUserDataException("A user with this login already exists");
