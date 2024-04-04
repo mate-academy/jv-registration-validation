@@ -29,7 +29,6 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         testUser = new User();
-        testUser.setId(24356876L);
         testUser.setLogin(VALID_USER_LOGIN);
         testUser.setPassword(VALID_USER_PASSWORD);
         testUser.setAge(30);
@@ -37,9 +36,7 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        if (!Storage.people.isEmpty()) {
-            Storage.people.clear();
-        }
+        Storage.people.clear();
     }
 
     @Test
@@ -134,7 +131,6 @@ class RegistrationServiceImplTest {
         testUser.setLogin(VALID_USER_LOGIN);
         Storage.people.add(testUser);
         User sameLoginUser = new User();
-        sameLoginUser.setId(243568765L);
         sameLoginUser.setLogin(VALID_USER_LOGIN);
         sameLoginUser.setPassword(VALID_USER_PASSWORD);
         sameLoginUser.setAge(31);

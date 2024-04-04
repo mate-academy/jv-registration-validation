@@ -57,9 +57,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateAge(int age) {
-        if (age < 0) {
-            throw new RegistrationException("The user's age can not be negative");
-        }
         if (age < MIN_USER_ACCEPTABLE_AGE) {
             throw new RegistrationException("Impossible to register user younger then 18 years");
         }
