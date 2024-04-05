@@ -9,6 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        checkUserNull(user);
         checkUserLogin(user);
         checkUserPassword(user);
         checkUserAge(user);
@@ -20,11 +21,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new UserException("Login is null");
         }
+
+        String login = user.getLogin();
         if (storageDao.get(user.getLogin()) != null) {
-            throw new UserException("Login " + user.getLogin() + " is already taken.");
+            throw new UserException("Login " + login + " is already taken.");
         }
         if (user.getLogin().length() < 6) {
-            throw new UserException("Login " + user.getLogin() + " less then 6");
+            throw new UserException("Login " + login + " less then 6");
         }
     }
 
@@ -43,6 +46,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() < 18) {
             throw new UserException("User age " + user.getAge() + " less then 18");
+        }
+    }
+
+    private void checkUserNull(User user) {
+        if (user == null) {
+            throw new UserException("User is null");
         }
     }
 }

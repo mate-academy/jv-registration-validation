@@ -9,18 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService;
+    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private User standartUser;
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
         standartUser = new User("PAMPERS", "12345678", 20);
-    }
-
-    @Test
-    void register_User_Ok() {
-        registrationService.register(standartUser);
     }
 
     @Test
@@ -30,6 +24,14 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
         assertThrows(UserException.class, () -> {
             registrationService.register(sameUser);
+        });
+    }
+
+    @Test
+    void register_NullUser_NotOk() {
+        User user = null;
+        assertThrows(UserException.class, () -> {
+            registrationService.register(user);
         });
     }
 
