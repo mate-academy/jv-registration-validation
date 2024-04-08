@@ -15,7 +15,7 @@ class RegistrationServiceImplTest {
     void userAdd_correctUser_Ok() {
         User user = new User(123L, "correctLogin", "correctPassword", 20);
         User actual = registrationService.register(user);
-        assertEquals(User.class, actual.getClass());
+        assertEquals(user, actual);
     }
 
     @Test
@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     void loginLength_6Length_Ok() {
         User user = new User(123L, "123456", "correctPassword", 20);
         User actual = registrationService.register(user);
-        assertEquals(User.class, actual.getClass());
+        assertEquals(user, actual);
     }
 
     @Test
@@ -66,7 +66,7 @@ class RegistrationServiceImplTest {
     void passwordLength_6Length_Ok() {
         User user = new User(123L, "correctLogin", "123456", 20);
         User actual = registrationService.register(user);
-        assertEquals(User.class, actual.getClass());
+        assertEquals(user, actual);
     }
 
     @Test
@@ -105,19 +105,25 @@ class RegistrationServiceImplTest {
     void userAge_18_Ok() {
         User user = new User(123L, "correctLogin", "correctPassword", 18);
         User actual = registrationService.register(user);
-        assertEquals(User.class, actual.getClass());
+        assertEquals(user, actual);
     }
 
     @Test
     void userAge_22_Ok() {
         User user = new User(123L, "correctLogin", "correctPassword", 22);
         User actual = registrationService.register(user);
-        assertEquals(User.class, actual.getClass());
+        assertEquals(user, actual);
     }
 
     @Test
     void negativeAge_minus10_notOk() {
         User user = new User(123L, "correctLogin", "correctPassword", -10);
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void spaceInLogin_spaceLogin_notOk() {
+        User user = new User(123L, "space Login", "correctPassword", 20);
         assertThrows(ValidationException.class, () -> registrationService.register(user));
     }
 }

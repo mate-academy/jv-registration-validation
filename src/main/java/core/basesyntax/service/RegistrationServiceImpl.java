@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -15,41 +14,43 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws ValidationException {
         if (user == null) {
-            throw new ValidationException("Can't pass Null");
+            throw new ValidationException(ErrorMessage.ERROR_NULL_USER);
         }
 
         if (user.getId() == null) {
-            throw new ValidationException("ID is required");
+            throw new ValidationException(ErrorMessage.ERROR_ID_REQUIRED);
         }
 
         if (user.getLogin() == null) {
-            throw new ValidationException("Login is required");
+            throw new ValidationException(ErrorMessage.ERROR_LOGIN_REQUIRED);
         }
 
         if (user.getPassword() == null) {
-            throw new ValidationException("Password is required");
+            throw new ValidationException(ErrorMessage.ERROR_PASSWORD_REQUIRED);
         }
 
         if (user.getAge() == null) {
-            throw new ValidationException("Age is required");
+            throw new ValidationException(ErrorMessage.ERROR_AGE_REQUIRED);
         }
 
-        if (Storage.people.contains(user)) {
-            throw new ValidationException("This user already exists");
+        if (storageDao.get(user.getLogin()) == user) {
+            throw new ValidationException(ErrorMessage.ERROR_USER_EXISTS);
         }
 
         if (user.getLogin().length() < LOGIN_MIN_LENGTH) {
-            throw new ValidationException("Login must be at least " + LOGIN_MIN_LENGTH
-                    + " characters long");
+            throw new ValidationException(ErrorMessage.ERROR_SHORT_LOGIN);
         }
 
         if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
-            throw new ValidationException("Password must be at least " + PASSWORD_MIN_LENGTH
-                    + " characters long");
+            throw new ValidationException(ErrorMessage.ERROR_SHORT_PASSWORD);
         }
 
         if (user.getAge() < USER_MIN_AGE) {
-            throw new ValidationException("User must be at least " + USER_MIN_AGE + " years old");
+            throw new ValidationException(ErrorMessage.ERROR_UNDERAGE_USER);
+        }
+
+        if (user.getLogin().contains(" ")) {
+            throw new ValidationException(ErrorMessage.ERROR_SPACE_IN_LOGIN);
         }
 
         storageDao.add(user);
