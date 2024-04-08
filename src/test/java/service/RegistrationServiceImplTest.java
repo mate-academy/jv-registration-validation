@@ -1,29 +1,45 @@
 package service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.service.UserException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private StorageDao storageDao = new StorageDaoImpl();
     private User standartUser;
 
     @BeforeEach
-    void setUp() {
+    void beforeEach() {
         standartUser = new User("PAMPERS", "12345678", 20);
+    }
+
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
+    }
+
+    @Test
+    void register_User_isOK() {
+        registrationService.register(standartUser);
+        User actual = storageDao.get(standartUser.getLogin());
+        assertEquals(standartUser, actual);
     }
 
     @Test
     void register_SameUser_NotOk() {
-        User user = new User("loginn", "password", 18);
-        User sameUser = new User("loginn", "password", 18);
-        registrationService.register(user);
+        registrationService.register(standartUser);
         assertThrows(UserException.class, () -> {
-            registrationService.register(sameUser);
+            registrationService.register(standartUser);
         });
     }
 
