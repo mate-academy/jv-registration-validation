@@ -1,9 +1,9 @@
 package core.basesyntax.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
     private User user;
@@ -59,4 +59,3 @@ class UserTest {
         assertEquals(user1.hashCode(), user2.hashCode());
     }
 }
-

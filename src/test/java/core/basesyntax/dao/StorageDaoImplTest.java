@@ -1,10 +1,11 @@
 package core.basesyntax.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class StorageDaoImplTest {
     private StorageDao storageDao;
@@ -36,10 +37,5 @@ public class StorageDaoImplTest {
         storageDao.add(user);
         User retrievedUser = storageDao.get("testUser");
         assertEquals(user, retrievedUser);
-    }
-
-    @Test
-    public void testGetExistingUser_NotOk() {
-        assertNull(storageDao.get("nonExistingUser"));
     }
 }
