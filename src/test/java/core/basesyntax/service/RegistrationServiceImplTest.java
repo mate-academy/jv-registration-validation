@@ -43,36 +43,38 @@ class RegistrationServiceImplTest {
     @Test
     void register_shortLoginUser_notOk() {
         User user = new User("12345", "12345678", 30);
-        User user2 = new User("1234", "12345678", 30);
+        User user2 = new User("123", "12345678", 30);
+        User user3 = new User("", "12345678", 30);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user3));
     }
 
     @Test
     void register_shortPasswordUser_notOk() {
         User user = new User("GoodLogin", "12345", 30);
-        User user2 = new User("GoodLogin", "1234", 30);
+        User user2 = new User("GoodLogin", "123", 30);
+        User user3 = new User("GoodLogin", "", 30);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertThrows(RegistrationException.class, () -> registrationService.register(user2));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user3));
     }
 
     @Test
     void register_inappropriateAgeUser_notOk() {
-        User user = new User("GoodLogin", "123456", -1);
-        User user2 = new User("GoodLogin", "123456", 0);
+        User user = new User("GoodLogin", "1234567", -1);
+        User user2 = new User("GoodLogin", "12345678", 0);
         User user3 = new User("GoodLogin", "123456", 5);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         assertThrows(RegistrationException.class, () -> registrationService.register(user2));
         assertThrows(RegistrationException.class, () -> registrationService.register(user3));
         User user4 = new User("GoodLogin", "123456", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user4));
-        User user5 = new User("GoodLogin", "123456", 101);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user5));
     }
 
     @Test
     void register_goodUserExample_Ok() {
-        User user1 = new User("Good12", "123456", 18);
+        User user1 = new User("Good123", "123456", 18);
         User user2 = new User("123456", "123456", 19);
         User user3 = new User("GoodLogin", "123456", 100);
         User actualUser1 = registrationService.register(user1);
