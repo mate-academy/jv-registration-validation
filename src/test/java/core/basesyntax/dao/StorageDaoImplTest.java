@@ -1,16 +1,19 @@
 package core.basesyntax.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 class StorageDaoImplTest {
     private static StorageDao storageDao;
-    private final String ACTUAL_LOGIN = "userLogin";
+    private static final String CORRECT_LOGIN = "login555";
+    private static final String CORRECT_PASSWORD = "password";
+    private static final int CORRECT_AGE = 20;
     private User user;
 
     @BeforeAll
@@ -21,22 +24,26 @@ class StorageDaoImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
-        user.setLogin("userLogin");
-        user.setPassword("strongPassword");
-        user.setAge(20);
+        user.setLogin(CORRECT_LOGIN);
+        user.setPassword(CORRECT_PASSWORD);
+        user.setAge(CORRECT_AGE);
     }
 
     @Test
     void testAddUser_Ok() {
         User addedUser = storageDao.add(user);
-        assertNotNull(addedUser.getId());
-        assertEquals(user, addedUser);
+        assertEquals(2, addedUser.getId());
     }
 
     @Test
     void testGetUserByLogin_Ok() {
         storageDao.add(user);
-        User addedUser = storageDao.get(ACTUAL_LOGIN);
+        User addedUser = storageDao.get(CORRECT_LOGIN);
         assertEquals(user, addedUser);
+    }
+
+    @AfterEach
+    void removeObject() {
+        Storage.people.remove(user);
     }
 }
