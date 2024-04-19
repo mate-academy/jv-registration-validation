@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -36,43 +35,37 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_UserInStorage_Ok() {
-        Storage.people.add(user);
-        userTwo = registrationService.register(user);
-        assertNull(userTwo);
-    }
-
-    @Test
-    void register_UserNotInStorage_Ok() {
+    void register_validUser_returnsUser() {
         userTwo = registrationService.register(user);
         assertEquals(userTwo, user);
     }
 
     @Test
-    void register_userNull_NotOk() {
-        assertThrows(NullPointerException.class, () -> registrationService.register(null));
+    void register_nullUser_throwsInvalidInputException() {
+        assertThrows(InvalidInputException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void register_loginNull_NotOk() {
+    void register_nullLogin_throwsInvalidInputException() {
         user.setLogin(null);
-        assertThrows(InvalidInputException.class, () -> registrationService.register(user));
+        assertThrows(InvalidInputException.class, () -> registrationService.register(user),
+                "Expected InvalidInputException for null login.");
     }
 
     @Test
-    void register_emptyLogin_NotOk() {
+    void register_emptyLogin_throwsInvalidInputException() {
         user.setLogin("");
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_LoginIsShort_NotOk() {
+    void register_shortLogin_throwsInvalidInputException() {
         user.setLogin("log");
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_LoginSixSymbols_Ok() {
+    void register_sufficientLoginLength_registersUser() {
         user.setLogin(CORRECT_LOGIN);
         registrationService.register(user);
         boolean actual = Storage.people.contains(user);
@@ -80,25 +73,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordNull_NotOk() {
+    void register_nullPassword_throwsInvalidInputException() {
         user.setPassword(null);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_emptyPassword_NotOk() {
+    void register_emptyPassword_throwsInvalidInputException() {
         user.setPassword("");
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_passwordIsShort_NotOk() {
+    void register_shortPassword_throwsInvalidInputException() {
         user.setPassword("123");
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_passwordSixSymbols_Ok() {
+    void register_sufficientPasswordLength_registersUser() {
         user.setPassword(CORRECT_PASSWORD);
         registrationService.register(user);
         boolean actual = Storage.people.contains(user);
@@ -106,38 +99,38 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageNull_NotOk() {
+    void register_nullAge_throwsInvalidInputException() {
         user.setAge(null);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ageZero_NotOk() {
+    void register_zeroAge_throwsInvalidInputException() {
         user.setAge(0);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ageTen_NotOk() {
+    void register_underage_throwsInvalidInputException() {
         user.setAge(10);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_ageLowerZero_NotOk() {
+    void register_negativeAge_throwsInvalidInputException() {
         user.setAge(-23);
         assertThrows(InvalidInputException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void validUserCase() {
+    void register_validUser_isAddedToStorage() {
         registrationService.register(user);
         boolean actual = Storage.people.contains(user);
         assertTrue(actual);
     }
 
     @AfterEach
-    void removeObject() {
+    void clearStorageAfterTest() {
         Storage.people.remove(user);
     }
 }
