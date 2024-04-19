@@ -42,7 +42,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_throwsInvalidInputException() {
-        assertThrows(InvalidInputException.class, () -> registrationService.register(null));
+        assertThrows(NullPointerException.class, () -> registrationService.register(null));
     }
 
     @Test

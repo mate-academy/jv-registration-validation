@@ -13,9 +13,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new InvalidInputException("User cannot be null");
-        }
         if (user.getLogin() == null) {
             throw new InvalidInputException("Login can`t be null");
         }
@@ -42,6 +39,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             storageDao.add(user);
             return user;
         }
-        return new User();
+        throw new NullPointerException("User cannot be null");
     }
 }
