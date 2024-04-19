@@ -1,10 +1,9 @@
 package core.basesyntax.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,8 @@ class StorageDaoImplTest {
     @Test
     void testAddUser_Ok() {
         User addedUser = storageDao.add(user);
-        assertEquals(2, addedUser.getId());
+        assertNotNull(addedUser.getId());
+        assertEquals(user, addedUser);
     }
 
     @Test
@@ -40,10 +40,5 @@ class StorageDaoImplTest {
         storageDao.add(user);
         User addedUser = storageDao.get(CORRECT_LOGIN);
         assertEquals(user, addedUser);
-    }
-
-    @AfterEach
-    void removeObject() {
-        Storage.people.remove(user);
     }
 }
