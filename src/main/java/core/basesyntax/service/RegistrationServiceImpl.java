@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.InvalidInputException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -13,32 +13,45 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new InvalidInputException("Login can`t be null");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidInputException("Password can`t be null");
-        }
-        if (user.getAge() == null) {
-            throw new InvalidInputException("Age can`t be null");
-        }
-        if (user.getLogin().length() < LOGIN_LENGTH) {
-            throw new InvalidInputException("Login: " + user.getLogin()
-                    + " is invalid. Login must have at least " + LOGIN_LENGTH + "symbol");
-        }
-        if (user.getPassword().length() < PASSWORD_LENGTH) {
-            throw new InvalidInputException("Password: " + user.getPassword()
-                    + " is invalid. Password must have at least " + PASSWORD_LENGTH + "symbol");
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidInputException("Age: " + user.getAge()
-                    + " is invalid. User age must have at least " + MIN_AGE);
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with this login already exists.");
         }
 
-        if (storageDao.get(user.getLogin()) == null) {
-            storageDao.add(user);
-            return user;
+        storageDao.add(user);
+        return user;
+    }
+
+    private void validateLogin(String login) {
+        if (login == null || login.isEmpty()) {
+            throw new RegistrationException("Login cannot be null or empty");
         }
-        throw new NullPointerException("User cannot be null");
+        if (login.length() < LOGIN_LENGTH) {
+            throw new RegistrationException("Login must have at least "
+                    + LOGIN_LENGTH + " characters");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new RegistrationException("Password cannot be null or empty");
+        }
+        if (password.length() < PASSWORD_LENGTH) {
+            throw new RegistrationException("Password must have at least "
+                    + PASSWORD_LENGTH + " characters");
+        }
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new RegistrationException("Age cannot be null");
+        }
+        if (age < MIN_AGE) {
+            throw new RegistrationException("User must be at least "
+                    + MIN_AGE + " years old");
+        }
     }
 }
