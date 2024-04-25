@@ -17,40 +17,50 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserRegistrationException("User can`t be null");
         }
 
-        if (user.getLogin() == null) {
-            throw new UserRegistrationException("User`s login can`t be null");
-        }
-
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new UserRegistrationException("User`s login length must contains at least"
-                    + MIN_LOGIN_LENGTH
-                    + "characters");
-        }
-
-        if (user.getPassword() == null) {
-            throw new UserRegistrationException("User`s password can`t be null");
-        }
-
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new UserRegistrationException("User`s password length must contains at least "
-                    + MIN_PASSWORD_LENGTH
-                    + " characters");
-        }
-
-        if (user.getAge() == null) {
-            throw new UserRegistrationException("User`s age can`t be null");
-        }
-
-        if (user.getAge() < MIN_USER_AGE) {
-            throw new UserRegistrationException("User`s age must be at least "
-                    + MIN_USER_AGE
-                    + " years old");
-        }
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
 
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserRegistrationException("User with this login already exist");
         }
 
         return storageDao.add(user);
+    }
+
+    private void validateLogin(String login) {
+        if (login == null) {
+            throw new UserRegistrationException("User`s login can`t be null");
+        }
+
+        if (login.length() < MIN_LOGIN_LENGTH) {
+            throw new UserRegistrationException("User`s login length must contains at least"
+                    + MIN_LOGIN_LENGTH
+                    + "characters");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password == null) {
+            throw new UserRegistrationException("User`s password can`t be null");
+        }
+
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new UserRegistrationException("User`s password length must contains at least "
+                    + MIN_PASSWORD_LENGTH
+                    + " characters");
+        }
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new UserRegistrationException("User`s age can`t be null");
+        }
+
+        if (age < MIN_USER_AGE) {
+            throw new UserRegistrationException("User`s age must be at least "
+                    + MIN_USER_AGE
+                    + " years old");
+        }
     }
 }

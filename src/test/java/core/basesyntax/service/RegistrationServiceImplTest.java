@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private User userWithCorrectFields;
 
     @BeforeAll
     static void beforeAll() {
@@ -24,11 +22,6 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         Storage.people.clear();
-
-        userWithCorrectFields = new User();
-        userWithCorrectFields.setLogin("thisLoginIsFit");
-        userWithCorrectFields.setPassword("thisPasswordIsFit");
-        userWithCorrectFields.setAge(21);
     }
 
     @Test
@@ -41,198 +34,227 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        userWithCorrectFields.setLogin(null);
+        User user = new User();
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(21);
+        user.setLogin(null);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for null login");
     }
 
     @Test
-    void register_loginLessThanSixCharacters_notOk() {
-        userWithCorrectFields.setLogin("");
+    void register_loginIsEmpty_notOk() {
+        User user = new User();
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(21);
+        user.setLogin("");
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for empty login");
+    }
 
-        userWithCorrectFields.setLogin("123");
+    @Test
+    void register_loginIsLessThanMinLength_notOk() {
+        User user = new User();
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(21);
+        user.setLogin("12345");
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for login"
-                        + userWithCorrectFields.getLogin());
-
-        userWithCorrectFields.setLogin("12345");
-        assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "It must be thrown UserRegistrationException for login"
-                        + userWithCorrectFields.getLogin());
+                        + user.getLogin());
     }
 
     @Test
     void register_loginMinLength_Ok() {
-        userWithCorrectFields.setLogin("login6");
-        assertDoesNotThrow(() -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "User " + userWithCorrectFields
-                        + " have to register success, but was thrown exception");
+        User expected = new User();
+        expected.setLogin("login6");
+        expected.setPassword("thisPasswordIsFit");
+        expected.setAge(21);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_loginIsFit_Ok() {
-        userWithCorrectFields.setLogin("login@1454sd");
-        assertDoesNotThrow(() -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "User " + userWithCorrectFields
-                        + " have to register success, but was thrown exception");
+        User expected = new User();
+        expected.setPassword("thisPasswordIsFit");
+        expected.setAge(21);
+        expected.setLogin("login@1454sd");
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_nullPassword_notOk() {
-        userWithCorrectFields.setPassword(null);
+        User user = new User();
+        user.setLogin("thisLoginIsFit");
+        user.setPassword(null);
+        user.setAge(21);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for null password");
     }
 
     @Test
-    void register_passwordLessThanSix_notOk() {
-        userWithCorrectFields.setPassword("");
+    void register_passwordIsEmpty_notOk() {
+        User user = new User();
+        user.setLogin("thisLoginIsFit");
+        user.setPassword("");
+        user.setAge(21);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for empty password");
+    }
 
-        userWithCorrectFields.setPassword("123");
+    @Test
+    void register_passwordLessThanSix_notOk() {
+        User user = new User();
+        user.setLogin("thisLoginIsFit");
+        user.setPassword("123");
+        user.setAge(21);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for password"
-                        + userWithCorrectFields.getPassword());
-
-        userWithCorrectFields.setPassword("13245");
-        assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "It must be thrown UserRegistrationException for password"
-                        + userWithCorrectFields.getPassword());
+                        + user.getPassword());
     }
 
     @Test
     void register_passwordMinLength_ok() {
-        userWithCorrectFields.setPassword("123456");
-        assertDoesNotThrow(() -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "User " + userWithCorrectFields
-                        + " have to register success, but was thrown exception");
+        User expected = new User();
+        expected.setLogin("thisLoginIsFit");
+        expected.setPassword("123456");
+        expected.setAge(21);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_passwordIsFit_ok() {
-        userWithCorrectFields.setPassword("12345678910");
-        assertDoesNotThrow(() -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "User " + userWithCorrectFields
-                        + " have to register success, but was thrown exception");
+        User expected = new User();
+        expected.setLogin("thisLoginIsFit");
+        expected.setPassword("12345678910");
+        expected.setAge(21);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_nullAge_notOk() {
-        userWithCorrectFields.setAge(null);
+        User user = new User();
+        user.setLogin("thisLoginIsFit");
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(null);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for null age");
     }
 
     @Test
-    void register_userAgeLessThanMinAge_notOk() {
-        userWithCorrectFields.setAge(-25);
+    void register_userAgeIsLessThanZero_notOk() {
+        User user = new User();
+        user.setLogin("thisLoginIsFit");
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(-25);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for negative age");
+    }
 
-        userWithCorrectFields.setAge(0);
+    @Test
+    void register_userAgeLessThanMinAge_notOk() {
+        User user = new User();
+        user.setLogin("thisLoginIsFit");
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(17);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException for age"
-                        + userWithCorrectFields.getAge());
-
-        userWithCorrectFields.setAge(17);
-        assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "It must be thrown UserRegistrationException for age"
-                        + userWithCorrectFields.getAge());
+                        + user.getAge());
     }
 
     @Test
     void register_minAge_ok() {
-        userWithCorrectFields.setAge(18);
-        assertDoesNotThrow(() -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "User " + userWithCorrectFields
-                        + " have to register success, but was thrown exception");
+        User expected = new User();
+        expected.setLogin("thisLoginIsFit");
+        expected.setPassword("thisPasswordIsFit");
+        expected.setAge(18);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_maxValueAge_ok() {
-        userWithCorrectFields.setAge(Integer.MAX_VALUE);
-        assertDoesNotThrow(() -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "User " + userWithCorrectFields
-                        + " have to register success, but was thrown exception");
+        User expected = new User();
+        expected.setLogin("thisLoginIsFit");
+        expected.setPassword("thisPasswordIsFit");
+        expected.setAge(Integer.MAX_VALUE);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_ageIsFit_ok() {
-        userWithCorrectFields.setAge(50);
-        assertDoesNotThrow(() -> {
-            registrationService.register(userWithCorrectFields);
-        },
-                "User " + userWithCorrectFields
-                        + " have to register success, but was thrown exception");
+        User expected = new User();
+        expected.setLogin("thisLoginIsFit");
+        expected.setPassword("thisPasswordIsFit");
+        expected.setAge(50);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_userLoginAlreadyExist_notOk() {
-        Storage.people.add(userWithCorrectFields);
+        User user = new User();
+        user.setLogin("thisLoginIsFit");
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(50);
+        Storage.people.add(user);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         },
                 "It must be thrown UserRegistrationException user that already exist");
     }
 
     @Test
     void register_returnsTheSameUser_ok() {
-        User expected = userWithCorrectFields;
+        User expected = new User();
+        expected.setLogin("thisLoginIsFit");
+        expected.setPassword("thisPasswordIsFit");
+        expected.setAge(50);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
     }
 
     @Test
     void register_userActuallyWasAddedToStorage_ok() {
-        User user = registrationService.register(userWithCorrectFields);
-        assertTrue(Storage.people.contains(user));
+        User expected = new User();
+        expected.setLogin("thisLoginIsFit");
+        expected.setPassword("thisPasswordIsFit");
+        expected.setAge(50);
+        User actual = registrationService.register(expected);
+        assertTrue(Storage.people.contains(actual));
     }
 
     @Test
     void register_nonFitUserWasNotAddedToStorage_notOk() {
-        userWithCorrectFields.setLogin(null);
+        User user = new User();
+        user.setLogin(null);
+        user.setPassword("thisPasswordIsFit");
+        user.setAge(50);
         assertThrows(UserRegistrationException.class, () -> {
-            registrationService.register(userWithCorrectFields);
+            registrationService.register(user);
         });
-        assertFalse(Storage.people.contains(userWithCorrectFields));
+        assertFalse(Storage.people.contains(user));
     }
 }
