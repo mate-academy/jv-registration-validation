@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidDataException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,19 +55,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_6CharsLogin_ok() {
+    void register_acceptableNumberOfCharsLogin_ok() {
         user.setLogin("6chars");
         assertEquals(registrationService.register(user), user);
     }
 
     @Test
-    void register_moreThan6CharsLogin_ok() {
+    void register_moreThanAcceptableNumberOfCharsLogin_ok() {
         user.setLogin("someMoreChars");
         assertEquals(registrationService.register(user), user);
     }
 
     @Test
-    void register_passwors_notOk() {
+    void register_passwords_notOk() {
         user.setPassword("");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
@@ -88,13 +87,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_6CharsPassword_ok() {
+    void register_AcceptableNumberOfCharsPassword_ok() {
         user.setPassword("6chars");
         assertEquals(registrationService.register(user), user);
     }
 
     @Test
-    void register_moreThan6CharsPassword_ok() {
+    void register_moreThanAcceptableNumberOfCharsPassword_ok() {
         user.setPassword("someMoreChars");
         assertEquals(registrationService.register(user), user);
     }
@@ -116,13 +115,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_18Age_ok() {
+    void register_acceptableAge_ok() {
         user.setAge(18);
         assertEquals(registrationService.register(user), user);
     }
 
     @Test
-    void register_greaterThan18Age_ok() {
+    void register_greaterThanAcceptableAge_ok() {
         user.setAge(28);
         assertEquals(registrationService.register(user), user);
     }
@@ -136,7 +135,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_Exists_notOk() {
+    void register_exists_notOk() {
         User sameUser = user;
         Storage.people.add(user);
         assertThrows(InvalidDataException.class, () -> {
@@ -147,10 +146,5 @@ class RegistrationServiceImplTest {
     @AfterEach
     void tearDown() {
         Storage.people.clear();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        registrationService = new RegistrationServiceImpl();
     }
 }
