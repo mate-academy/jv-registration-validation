@@ -35,19 +35,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_login_notOk() {
+    void register_emptyLogin_notOk() {
         user.setLogin("");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_lessThanAcceptableLoginLength_notOk() {
         user.setLogin("s");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_edgeLoginLength_notOk() {
         user.setLogin("5char");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_nullLoginan_notOk() {
         user.setLogin(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
@@ -67,19 +79,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwords_notOk() {
+    void register_emptyPass_notOk() {
         user.setPassword("");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_lessThanAcceptablePassLength_notOk() {
         user.setPassword("s");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_edgePassLength_notOk() {
         user.setPassword("5char");
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_nullPass_notOk() {
         user.setPassword(null);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
@@ -99,16 +123,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_notOk() {
-        user.setAge(10);
+    void register_edgeAge_notOk() {
+        user.setAge(17);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_minusAgeValue_notOk() {
         user.setAge(-19);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
-        user.setAge(17);
+    }
+
+    @Test
+    void register_lowerAge_notOk() {
+        user.setAge(10);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
