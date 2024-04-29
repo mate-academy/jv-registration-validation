@@ -9,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int LOGIN_PASS_LENGTH = 6;
     private static final int ACCEPTABLE_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
-    //
+
     @Override
     public User register(User user) {
         if (user == null) {
