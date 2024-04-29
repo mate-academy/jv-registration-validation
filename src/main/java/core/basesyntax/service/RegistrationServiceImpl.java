@@ -19,26 +19,26 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
         }
+        if (user.getLogin().length() < DEFAULT_LOGIN_LENGTH) {
+            throw new RegistrationException("Login must be longer then "
+                    + DEFAULT_LOGIN_LENGTH + " characters");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with this login exists");
+        }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("Age can't be null");
-        }
-        if (user.getLogin().length() < DEFAULT_LOGIN_LENGTH) {
-            throw new RegistrationException("Login must be longer then " + DEFAULT_LOGIN_LENGTH
-                    + " characters");
-        }
-        if (user.getAge() < MINIMAL_AGE) {
-            throw new RegistrationException("Your age must be over " + MINIMAL_AGE
-                    + " years old");
         }
         if (user.getPassword().length() < DEFAULT_PASSWORD_LENGTH) {
             throw new RegistrationException("You password must be longer then "
                     + DEFAULT_PASSWORD_LENGTH + " characters");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login exists");
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age can't be null");
+        }
+        if (user.getAge() < MINIMAL_AGE) {
+            throw new RegistrationException("Your age must be over "
+                    + MINIMAL_AGE + " years old");
         }
         return storageDao.add(user);
     }
