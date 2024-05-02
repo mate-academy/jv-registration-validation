@@ -1,5 +1,9 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -10,7 +14,6 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -73,7 +76,6 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_userAgeNegative_notOk() {
-        // Given
         User user = new User();
         user.setLogin("userLogin");
         user.setPassword("validPassword");
