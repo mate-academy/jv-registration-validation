@@ -14,13 +14,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         verificationOfUserNull(user);
         verificationOfSameLogin(user);
-        verificationOfLogin(user);
-        verificationOfPassword(user);
-        verificationOfAge(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
         return storageDao.add(user);
     }
 
-    private void verificationOfAge(User user) {
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new RegistrationException("User's age cannot be null");
         }
@@ -29,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void verificationOfLogin(User user) {
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("User's login cannot be null");
         }
@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void verificationOfPassword(User user) {
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("User's password cannot be null");
         }
