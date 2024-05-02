@@ -57,7 +57,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAge_notOk() {
+    void register_userUnderAge_notOk() {
         User user = new User();
         user.setLogin("userLogin");
         user.setPassword("validPassword");

@@ -12,8 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        verificationOfUserNull(user);
-        verificationOfSameLogin(user);
+        validateOfUserNull(user);
         validateLogin(user);
         validatePassword(user);
         validateAge(user);
@@ -33,6 +32,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("User's login cannot be null");
         }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User already exists");
+        }
         if (user.getLogin().length() < MIN_NUMBER_SYMBOLS) {
             throw new RegistrationException("User login must be at least  "
                     + MIN_NUMBER_SYMBOLS + " characters");
@@ -49,13 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void verificationOfSameLogin(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User already exists");
-        }
-    }
-
-    private void verificationOfUserNull(User user) {
+    private void validateOfUserNull(User user) {
         if (user == null) {
             throw new RegistrationException("User cannot be null");
         }
