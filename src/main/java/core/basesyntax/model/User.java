@@ -11,13 +11,6 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String login, String password, Integer age) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.age = age;
-    }
-
     public Long getId() {
         return id;
     }
