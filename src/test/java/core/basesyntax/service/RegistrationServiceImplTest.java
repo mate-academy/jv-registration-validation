@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidInputDataException;
 import core.basesyntax.model.User;
@@ -16,12 +14,10 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService;
     private User validUser;
-    private StorageDao storageDao;
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl(storageDao);
+        registrationService = new RegistrationServiceImpl();
         validUser = new User();
         validUser.setLogin("validLogin");
         validUser.setPassword("strongPass123");
@@ -34,7 +30,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_returnsUser() {
+    void register_validUser_Ok() {
         User registeredUser = registrationService.register(validUser);
         assertNotNull(registeredUser);
         assertEquals(validUser.getLogin(), registeredUser.getLogin());
