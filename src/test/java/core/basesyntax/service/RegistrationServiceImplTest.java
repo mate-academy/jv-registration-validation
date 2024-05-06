@@ -21,7 +21,7 @@ class RegistrationServiceImplTest {
         validUser = new User();
         validUser.setLogin("validLogin");
         validUser.setPassword("strongPass123");
-        validUser.setAge(25);
+        validUser.setAge(18);
     }
 
     @AfterEach
