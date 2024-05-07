@@ -89,11 +89,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_MinValidAge_Ok() {
-        user.setLogin("UserLogin");
-        user.setPassword("UserPassword");
-        user.setAge(18);
-        registrationService.register(user);
-        int actual = Storage.people.size();
-        assertEquals(1, actual);
+        User expected = new User();
+        expected.setLogin("UserLogin");
+        expected.setPassword("UserPassword");
+        expected.setAge(25);
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 }
