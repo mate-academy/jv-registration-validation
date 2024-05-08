@@ -11,12 +11,10 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private User user;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        user = new User();
     }
 
     @AfterEach
@@ -26,6 +24,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortLogin_notOK() {
+        User user = new User();
         user.setLogin("abed");
         user.setPassword("UserPassword");
         user.setAge(20);
@@ -35,6 +34,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPassword_notOK() {
+        User user = new User();
         user.setLogin("UserLogin");
         user.setPassword("0123");
         user.setAge(19);
@@ -44,6 +44,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_notOk() {
+        User user = new User();
         user.setLogin("UserLogin");
         user.setPassword("UserPassword");
         user.setAge(null);
@@ -53,6 +54,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_negativeAge_notOK() {
+        User user = new User();
         user.setLogin("UserLogin");
         user.setPassword("UserPassword");
         user.setAge(-65);
@@ -62,6 +64,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_under_MinAge_notOk() {
+        User user = new User();
         user.setLogin("UserLogin");
         user.setPassword("UserPassword");
         user.setAge(16);
@@ -71,6 +74,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
+        User user = new User();
         user.setLogin(null);
         user.setPassword("UserPassword");
         user.setAge(27);
@@ -80,6 +84,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
+        User user = new User();
         user.setLogin("UserLogin");
         user.setPassword(null);
         user.setAge(20);
@@ -92,7 +97,7 @@ class RegistrationServiceImplTest {
         User expected = new User();
         expected.setLogin("UserLogin");
         expected.setPassword("UserPassword");
-        expected.setAge(25);
+        expected.setAge(18);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
     }
