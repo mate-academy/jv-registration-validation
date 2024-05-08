@@ -22,7 +22,8 @@ class RegistrationServiceImplTest {
         user1.setPassword("password");
         user1.setAge(18);
 
-        assertThrows(RegisterException.class, () -> registration.register(user1), "Login cant be null");
+        assertThrows(RegisterException.class, () -> registration.register(user1),
+                "Login cant be null");
     }
 
     @Test
@@ -31,7 +32,8 @@ class RegistrationServiceImplTest {
         user1.setLogin("login123");
         user1.setAge(18);
 
-        assertThrows(RegisterException.class, () -> registration.register(user1), "Password cant be null");
+        assertThrows(RegisterException.class, () -> registration.register(user1),
+                "Password cant be null");
     }
 
     @Test
@@ -46,8 +48,10 @@ class RegistrationServiceImplTest {
         user2.setPassword("nwepassword");
         user2.setAge(0);
 
-        assertThrows(RegisterException.class, () -> registration.register(user1), "Age cant be below 0");
-        assertThrows(RegisterException.class, () -> registration.register(user2), "Age cant be 0");
+        assertThrows(RegisterException.class, () -> registration.register(user1),
+                "Age cant be below 0");
+        assertThrows(RegisterException.class, () -> registration.register(user2),
+                "Age cant be 0");
     }
 
     @Test
@@ -63,7 +67,8 @@ class RegistrationServiceImplTest {
         user2.setLogin("login123");
         user2.setPassword("password2");
         user2.setAge(20);
-        assertThrows(RegisterException.class, () -> registration.register(user2), "In storage we cant have 2 equals logins");
+        assertThrows(RegisterException.class, () -> registration.register(user2),
+                "In storage we cant have 2 equals logins");
     }
 
     @Test
@@ -73,7 +78,8 @@ class RegistrationServiceImplTest {
         user1.setPassword("password1");
         user1.setAge(18);
 
-        assertThrows(RegisterException.class, () -> registration.register(user1), "minimum length for login is 6");
+        assertThrows(RegisterException.class, () -> registration.register(user1),
+                "minimum length for login is 6");
     }
 
     @Test
@@ -83,7 +89,8 @@ class RegistrationServiceImplTest {
         user1.setPassword("12345");
         user1.setAge(18);
 
-        assertThrows(RegisterException.class, () -> registration.register(user1), "minimum length for password is 6");
+        assertThrows(RegisterException.class, () -> registration.register(user1),
+                "minimum length for password is 6");
     }
 
     @Test
@@ -93,6 +100,7 @@ class RegistrationServiceImplTest {
         user1.setPassword("password1");
         user1.setAge(17);
 
-        assertThrows(RegisterException.class, () -> registration.register(user1), "U have to accept only persons with 18 y.o.");
+        assertThrows(RegisterException.class, () -> registration.register(user1),
+                "U have to accept only persons with 18 y.o.");
     }
 }
