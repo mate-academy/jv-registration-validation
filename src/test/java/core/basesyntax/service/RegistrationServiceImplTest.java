@@ -1,12 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     public static final int OK_YEARS_OLD = 18;
@@ -104,8 +104,6 @@ class RegistrationServiceImplTest {
         assertThrows(RegisterException.class, () -> registration.register(user3),
                 "minimum length for login is 6");
     }
-
-
 
     @Test
     void register_TooShortPassword_NotOk() {
