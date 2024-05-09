@@ -22,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegisterException("This isn't password");
         }
         if (age < ACCEPT_THIS_AGE) {
-            throw new RegisterException("Ur age is too low");
+            throw new RegisterException("Your age is too low");
         }
         if (password.length() < MINIMUM_LENGTH) {
             throw new RegisterException("Password is too short");
