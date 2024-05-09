@@ -1,5 +1,5 @@
 package core.basesyntax.service.interfaces;
 
 public interface LoginValidator {
-    void isValid(String login);
+    boolean isValid(String login);
 }
