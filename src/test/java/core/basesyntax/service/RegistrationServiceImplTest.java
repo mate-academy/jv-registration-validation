@@ -23,6 +23,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullUser_notOk() {
+        User user = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "User cannot be null");
+    }
+
+    @Test
     void register_shortLogin_notOK() {
         User user = new User();
         user.setLogin("abed");
@@ -100,5 +107,16 @@ class RegistrationServiceImplTest {
         expected.setAge(18);
         User actual = registrationService.register(expected);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_userAlreadyExists_NotOk() {
+        User user = new User();
+        user.setLogin("UserLogin");
+        user.setPassword("UserPassword");
+        user.setAge(20);
+        Storage.people.add(user);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+                "Registration has failed. User already exists");
     }
 }
