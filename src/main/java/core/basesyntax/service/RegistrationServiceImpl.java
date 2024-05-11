@@ -15,14 +15,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         checkUserNull(user);
-        checkUserCopy(user);
-        checkUserData_NotNull(user);
-        checkLength(user);
+        checkUniqueLogin(user);
+        checkUserData(user);
+        checkLoginAndPasswordLength(user);
         checkAge(user);
         return storageDao.add(user);
     }
 
-    private void checkUserCopy(User user) {
+    private void checkUniqueLogin(User user) {
         User storedUser = storageDao.get(user.getLogin());
         if (storedUser != null) {
             throw new InvalidDataException("This login is occupied. "
@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkUserData_NotNull(User user) {
+    private void checkUserData(User user) {
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login must be not null");
         }
@@ -49,7 +49,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkLength(User user) {
+    private void checkLoginAndPasswordLength(User user) {
         if (user.getLogin().length() < MIN_PASS_AND_LOGIN_RANGE) {
             throw new InvalidDataException("User`s login should be more than 6 characters");
         }

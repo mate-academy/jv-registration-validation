@@ -1,111 +1,133 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final List<User> correctData = new ArrayList<>();
-    private static final List<User> notValidData = new ArrayList<>();
-    private static final int ONE_USER = 1;
-    private static final int FIRST_USER = 0;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private User testUser;
-
-    @BeforeAll
-    public static void setUp() {
-        storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl(storageDao);
-        initializeCorrectDataUsers();
-        setNotValidData();
-    }
 
     @BeforeEach
     void beforeEach() {
-        testUser = new User();
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl(storageDao);
     }
 
     @Test
-    void registerOneUser_OK() {
-        registrationService.register(correctData.get(FIRST_USER));
-        assertEquals(ONE_USER, Storage.people.size(),
+    void registerOneUser_Ok() {
+        User oneUser = new User();
+        oneUser.setLogin("oneuserlog");
+        oneUser.setPassword("oneuserpass");
+        oneUser.setAge(25);
+        registrationService.register(oneUser);
+        assertEquals(1, Storage.people.size(),
                 "Storage should contains one user");
-        assertEquals(correctData.get(FIRST_USER),
-                storageDao.get(correctData.get(FIRST_USER).getLogin()));
+        assertEquals(oneUser, storageDao.get(oneUser.getLogin()),
+                "User with valid data should be registered successfully");
     }
 
     @Test
-    void registerUser_OK() {
-        for (User correctDatum : correctData) {
-            registrationService.register(correctDatum);
-        }
-        assertEquals(correctData.size(), Storage.people.size(),
-                "Storage should contains " + correctData.size() + " user`s");
+    void registerMultipleUsers_differentDataLength_ok() {
+        User first = new User();
+        first.setLogin("firstL");
+        first.setPassword("firstp");
+        first.setAge(18);
+        User second = new User();
+        second.setLogin("secondlo");
+        second.setPassword("secondpa");
+        second.setAge(19);
+        User third = new User();
+        third.setLogin("thirdlogin");
+        third.setPassword("thirdpass");
+        third.setAge(25);
+        User fourth = new User();
+        fourth.setLogin("oneuserlog");
+        fourth.setPassword("oneuserpass");
+        fourth.setAge(50);
+        registrationService.register(first);
+        registrationService.register(second);
+        registrationService.register(third);
+        registrationService.register(fourth);
+        assertEquals(4, Storage.people.size(), "Storage should contain 4 users");
     }
 
     @Test
-    void passwordIsNull_notOK() {
-        testUser.setLogin("qw3wlfoaad");
-        testUser.setPassword(null);
-        testUser.setAge(25);
+    void register_nullPassword_notOK() {
+        User nullPassUser = new User();
+        nullPassUser.setLogin("qw3wlfoaad");
+        nullPassUser.setPassword(null);
+        nullPassUser.setAge(25);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(testUser);
+            registrationService.register(nullPassUser);
         });
     }
 
     @Test
-    void loginIsNull_NotOk() {
-        testUser.setLogin(null);
-        testUser.setPassword("12334566332");
-        testUser.setAge(23);
+    void register_nullLogin_notOk() {
+        User nullLog = new User();
+        nullLog.setLogin(null);
+        nullLog.setPassword("12334566332");
+        nullLog.setAge(23);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(testUser);
+            registrationService.register(nullLog);
         });
     }
 
     @Test
-    void passwordAndLoginIsNull_notOK() {
-        testUser.setLogin(null);
-        testUser.setPassword(null);
-        testUser.setAge(25);
+    void register_nullPasswordAndLogin_notOk() {
+        User nullPasLog = new User();
+        nullPasLog.setLogin(null);
+        nullPasLog.setPassword(null);
+        nullPasLog.setAge(25);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(testUser);
+            registrationService.register(nullPasLog);
         });
     }
 
     @Test
-    void registerNullAge_notOk() {
-        testUser.setLogin("qw3qweq");
-        testUser.setPassword("12334566");
-        testUser.setAge(null);
+    void register_nullAge_notOk() {
+        User nullAge = new User();
+        nullAge.setLogin("qw3qweq");
+        nullAge.setPassword("12334566");
+        nullAge.setAge(null);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(testUser);
+            registrationService.register(nullAge);
         });
     }
 
     @Test
-    void notValidData_NotOK() {
+    void register_NotValidData_NotOk() {
+        User first = new User();
+        first.setLogin("qw");
+        first.setPassword("12");
+        first.setAge(25);
+        User second = new User();
+        second.setLogin("qwer");
+        second.setPassword("1234");
+        second.setAge(24);
+        User third = new User();
+        third.setLogin("qwert");
+        third.setPassword("12345");
+        third.setAge(51);
         assertThrows(InvalidDataException.class, () -> {
-            for (User notValidDatum : notValidData) {
-                registrationService.register(notValidDatum);
-            }
+            registrationService.register(first);
+            registrationService.register(second);
+            registrationService.register(third);
         });
     }
 
     @Test
-    void passwordValidLoginNotValid_notOK() {
+    void register_notValidLogin_validPassword_notOk() {
+        User testUser = new User();
         testUser.setLogin("qw3");
         testUser.setPassword("12334566");
         testUser.setAge(25);
@@ -115,7 +137,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordNotValidLoginValid_notOK() {
+    void register_notValidPassword_validLogin_notOk() {
+        User testUser = new User();
         testUser.setLogin("ValidLogin");
         testUser.setPassword("123");
         testUser.setAge(21);
@@ -125,12 +148,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userAgeMoreThanEighteen() {
-        for (int i = 0; i < correctData.size(); i++) {
-            registrationService.register(correctData.get(i));
-            int expectedSize = Storage.people.size();
-            assertEquals(expectedSize, i + 1, "Storage should contains " + i + 1 + " users");
-        }
+    void register_validAge_Ok() {
+        User first = new User();
+        first.setLogin("CorrectLogin");
+        first.setPassword("corRectPasss");
+        first.setAge(18);
+        registrationService.register(first);
+        assertTrue(storageDao.get(first.getLogin()).getAge() >= 18,
+                "User`s age should be 18 or more");
+        User second = new User();
+        second.setLogin("user2login");
+        second.setPassword("secondpass");
+        second.setAge(19);
+        registrationService.register(second);
+        assertEquals(2, Storage.people.size());
+    }
+
+    @Test
+    void register_notValidAge_notOk() {
+        User testUser = new User();
         testUser.setLogin("1qweqweww");
         testUser.setPassword("123213123");
         testUser.setAge(17);
@@ -140,75 +176,36 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userNull_NotOK() {
+    void register_nullUser_notOk() {
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void sameUserLoginInTheStorage_NotOK() {
-        for (User user : correctData) {
-            assertDoesNotThrow(() -> registrationService.register(user));
-        }
+    void register_userWithSameLogin_notOk() {
+        User first = new User();
+        first.setLogin("firstL");
+        first.setPassword("firstp");
+        first.setAge(18);
+        User second = new User();
+        second.setLogin("secondlo");
+        second.setPassword("secondpa");
+        second.setAge(19);
+        User third = new User();
+        third.setLogin("thirdlogin");
+        third.setPassword("thirdpass");
+        third.setAge(25);
+        Storage.people.add(first);
+        Storage.people.add(second);
+        Storage.people.add(third);
         assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(correctData.get(FIRST_USER));
+            registrationService.register(second);
         });
     }
 
     @AfterEach
     void tearDown() {
         Storage.people.clear();
-    }
-
-    private static void initializeCorrectDataUsers() {
-        User bob = new User();
-        bob.setLogin("login1");
-        bob.setPassword("123456");
-        bob.setAge(50);
-        correctData.add(bob);
-        User alice = new User();
-        alice.setLogin("login123");
-        alice.setPassword("1234567");
-        alice.setAge(34);
-        correctData.add(alice);
-        User john = new User();
-        john.setLogin("login12345");
-        john.setPassword("1234567890");
-        john.setAge(22);
-        correctData.add(john);
-        User jack = new User();
-        jack.setLogin("login123456");
-        jack.setPassword("12345678");
-        jack.setAge(18);
-        correctData.add(jack);
-        User mike = new User();
-        mike.setLogin("login12345678");
-        mike.setPassword("1234567899");
-        mike.setAge(29);
-        correctData.add(mike);
-    }
-
-    private static void setNotValidData() {
-        User first = new User();
-        first.setLogin("asdf");
-        first.setPassword("1312");
-        first.setAge(12);
-        notValidData.add(first);
-        User second = new User();
-        second.setLogin("df");
-        second.setPassword("13");
-        second.setAge(8);
-        notValidData.add(second);
-        User third = new User();
-        third.setLogin("dfqwe");
-        third.setPassword("13234");
-        third.setAge(17);
-        notValidData.add(third);
-        User fourth = new User();
-        fourth.setLogin("q");
-        fourth.setPassword("1");
-        fourth.setAge(1);
-        notValidData.add(fourth);
     }
 }
