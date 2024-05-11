@@ -1,4 +1,4 @@
-package core.basesyntax.service.interfaces;
+package core.basesyntax.service;
 
 import core.basesyntax.model.User;
 

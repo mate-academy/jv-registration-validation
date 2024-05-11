@@ -5,16 +5,10 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.exception.RegistrationExceptionMessage;
 import core.basesyntax.model.User;
-import core.basesyntax.service.interfaces.AgeValidator;
-import core.basesyntax.service.interfaces.LoginValidator;
-import core.basesyntax.service.interfaces.PasswordValidator;
-import core.basesyntax.service.interfaces.RegistrationService;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final LoginValidator loginValidator = new LoginValidatorImpl();
-    private final PasswordValidator passwordValidator = new PasswordValidatorImpl();
-    private final AgeValidator ageValidator = new AgeValidatorImpl();
+    private final ValidationService validationService = new ValidationService();
 
     @Override
     public User register(User user) {
@@ -33,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(String login) {
-        if (!loginValidator.isValid(login)) {
+        if (!validationService.isValidLogin(login)) {
             throw new RegistrationException(RegistrationExceptionMessage.WRONG_LOGIN_MESSAGE);
         }
     }
@@ -46,13 +40,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validatePassword(String password) {
-        if (!passwordValidator.isValid(password)) {
+        if (!validationService.isValidPassword(password)) {
             throw new RegistrationException(RegistrationExceptionMessage.WRONG_PASSWORD_MESSAGE);
         }
     }
 
     private void validateAge(Integer age) {
-        if (!ageValidator.isValid(age)) {
+        if (!validationService.isValidAge(age)) {
             throw new RegistrationException(RegistrationExceptionMessage.WRONG_AGE_MESSAGE);
         }
     }

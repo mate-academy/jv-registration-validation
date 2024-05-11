@@ -8,9 +8,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.exception.RegistrationExceptionMessage;
 import core.basesyntax.model.User;
-import core.basesyntax.service.interfaces.RegistrationService;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,17 +24,12 @@ class RegistrationServiceImplTest {
             "Test failed to compare actual user data with expected user data.";
     private static final String TEST_FAILED_EXPECTED_USER_ID_FALSE =
             "Test failed to check user.id, expected that user.id will be greater than 0.";
-
-    private static RegistrationService registrationService;
+    private RegistrationService registrationService;
     private User testUser;
-
-    @BeforeAll
-    static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
-    }
 
     @BeforeEach
     void setUp() {
+        registrationService = new RegistrationServiceImpl();
         testUser = new User();
         testUser.setLogin(VALID_USER_LOGIN);
         testUser.setPassword(VALID_USER_PASSWORD);
