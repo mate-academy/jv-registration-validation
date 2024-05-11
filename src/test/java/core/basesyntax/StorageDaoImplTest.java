@@ -14,30 +14,12 @@ import org.junit.jupiter.api.Test;
 
 public class StorageDaoImplTest {
     private static StorageDao storageDao;
-    private static User user1;
-    private static User user2;
-    private static User user3;
-    private static User user4;
+    private static User user;
 
     @BeforeAll
     public static void setUp() {
         storageDao = new StorageDaoImpl();
-        user1 = new User();
-        user2 = new User();
-        user3 = new User();
-        user4 = new User();
-        user1.setAge(18);
-        user2.setAge(17);
-        user3.setAge(28);
-        user4.setAge(34);
-        user1.setLogin("asdf");
-        user2.setLogin("qwerty");
-        user3.setLogin("zxcvbn");
-        user4.setLogin("mkinuuhf");
-        user1.setPassword("123456");
-        user2.setPassword("12345");
-        user3.setPassword("12234");
-        user4.setPassword("123456");
+        user = new User();
     }
 
     @BeforeEach
@@ -46,35 +28,53 @@ public class StorageDaoImplTest {
     }
 
     @Test
-    public void addUsersToStorage() {
-        storageDao.add(user1);
-        storageDao.add(user2);
-        storageDao.add(user3);
-        storageDao.add(user4);
-        assertEquals(user1, storageDao.get("asdf"));
-        assertEquals(user2, storageDao.get("qwerty"));
-        assertEquals(user3, storageDao.get("zxcvbn"));
-        assertEquals(user4, storageDao.get("mkinuuhf"));
+    public void add_usersToStorage_ok() {
+        user.setAge(18);
+        user.setLogin("asdf");
+        user.setPassword("123456");
+        storageDao.add(user);
+        assertEquals(user, storageDao.get("asdf"));
+        user.setAge(17);
+        user.setLogin("qwerty");
+        user.setPassword("12345");
+        storageDao.add(user);
+        assertEquals(user, storageDao.get("qwerty"));
+        user.setAge(28);
+        user.setLogin("zxcvbn");
+        user.setPassword("12234");
+        storageDao.add(user);
+        assertEquals(user, storageDao.get("zxcvbn"));
+        user.setAge(34);
+        user.setLogin("mkinuuhf");
+        user.setPassword("123456");
+        storageDao.add(user);
+        assertEquals(user, storageDao.get("mkinuuhf"));
         assertEquals(4, Storage.people.size());
     }
 
     @Test
-    public void addUsersToStorage_addNull() {
+    public void add_null_nullException() {
         assertThrows(NullPointerException.class, () -> storageDao.add(null));
     }
 
     @Test
-    public void addSameUserToStorage() {
-        storageDao.add(user1);
-        assertEquals(user1, storageDao.get("asdf"));
-        storageDao.add(user1);
+    public void add_sameUser_ok() {
+        user.setAge(18);
+        user.setLogin("asdf");
+        user.setPassword("123456");
+        storageDao.add(user);
+        assertEquals(user, storageDao.get("asdf"));
+        storageDao.add(user);
         assertEquals(2, Storage.people.size());
     }
 
     @Test
-    public void getWrongUser() {
-        storageDao.add(user1);
-        assertEquals(user1, storageDao.get("asdf"));
+    public void get_wrongUser_nullException() {
+        user.setAge(18);
+        user.setLogin("asdf");
+        user.setPassword("123456");
+        storageDao.add(user);
+        assertEquals(user, storageDao.get("asdf"));
         assertNull(storageDao.get("qwerty"));
     }
 }

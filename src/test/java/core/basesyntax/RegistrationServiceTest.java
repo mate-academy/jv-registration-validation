@@ -3,88 +3,92 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.CantAddUserException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private static User user1;
-    private static User user2;
-    private static User user3;
-    private static User user4;
+    private static User user;
 
     @BeforeAll
     public static void setUp() {
-        user1 = new User();
-        user2 = new User();
-        user3 = new User();
-        user4 = new User();
-        user1.setAge(18);
-        user2.setAge(17);
-        user3.setAge(28);
-        user4.setAge(34);
-        user1.setLogin("asdf");
-        user2.setLogin("qwerty");
-        user3.setLogin("zxcvbn");
-        user4.setLogin("mkinuuhf");
-        user1.setPassword("123456");
-        user2.setPassword("123456");
-        user3.setPassword("1234");
-        user4.setPassword("123456");
+        user = new User();
+    }
+
+    @BeforeEach
+    public void clearStorage() {
+        Storage.people.clear();
     }
 
     @Test
-    public void registerUsers_SameUser() {
+    public void register_sameUser_exception() {
         RegistrationServiceImpl register = new RegistrationServiceImpl();
         try {
-            register.register(user4);
-            register.register(user4);
+            user.setAge(34);
+            user.setLogin("mkinuuhf");
+            user.setPassword("123456");
+            register.register(user);
+            register.register(user);
         } catch (CantAddUserException e) {
             assertEquals("User already exists in system", e.getMessage());
         }
     }
 
     @Test
-    public void registerUsers_WrongLogin() {
+    public void register_wrongLogin_exception() {
         RegistrationServiceImpl register = new RegistrationServiceImpl();
         try {
-            register.register(user1);
+            user.setAge(18);
+            user.setLogin("asdf");
+            user.setPassword("123456");
+            register.register(user);
         } catch (CantAddUserException e) {
             assertEquals("Login too short", e.getMessage());
         }
     }
 
     @Test
-    public void registerUsers_WrongAge() {
+    public void register_wrongAge_exception() {
         RegistrationServiceImpl register = new RegistrationServiceImpl();
         try {
-            register.register(user2);
+            user.setAge(17);
+            user.setLogin("qwerty");
+            user.setPassword("123456");
+            register.register(user);
         } catch (CantAddUserException e) {
             assertEquals("User's age under 18", e.getMessage());
         }
     }
 
     @Test
-    public void registerUsers_WrongPassword() {
+    public void register_wrongPassword_exception() {
         RegistrationServiceImpl register = new RegistrationServiceImpl();
         try {
-            register.register(user3);
+            user.setAge(28);
+            user.setLogin("zxcvbn");
+            user.setPassword("12234");
+            register.register(user);
         } catch (CantAddUserException e) {
             assertEquals("Password too short", e.getMessage());
         }
     }
 
     @Test
-    public void registerUsers_registerNull() {
+    public void register_registerNull_nullException() {
         RegistrationServiceImpl register = new RegistrationServiceImpl();
         assertThrows(NullPointerException.class, () -> register.register(null));
     }
 
     @Test
-    public void registerUsers_Ok() throws CantAddUserException {
+    public void register_normalRegister_Ok() throws CantAddUserException {
+        user.setAge(34);
+        user.setLogin("mkinuuhf");
+        user.setPassword("123456");
         RegistrationServiceImpl register = new RegistrationServiceImpl();
-        assertEquals(user4, register.register(user4));
+        assertEquals(user, register.register(user));
     }
 }
