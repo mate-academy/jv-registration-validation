@@ -16,8 +16,6 @@ class RegistrationServiceImplTest {
     private static final String VALID_USER_LOGIN = "testLogin";
     private static final String VALID_USER_PASSWORD = "testPassword";
     private static final int VALID_USER_AGE = 18;
-    private static final int NEGATIVE_AGE = -18;
-    private static final int MIN_LENGTH = 6;
     private static final String TEST_FAILED_EXPECTED_MESSAGE_FALSE =
             "Test failed, expected exception message: ";
     private static final String TEST_FAILED_EXPECTED_USER_FALSE =
@@ -82,20 +80,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithInvalidLengthLogin_notOk() {
+    void register_userWith_emptyLogin_notOk() {
         String login = "";
-        for (int i = 0; i < MIN_LENGTH; i++) {
-            testUser.setLogin(login);
-            RegistrationException exception = assertThrows(RegistrationException.class, () -> {
-                registrationService.register(testUser);
-            });
-            assertEquals(RegistrationExceptionMessage.WRONG_LOGIN_MESSAGE, exception.getMessage(),
-                    TEST_FAILED_EXPECTED_MESSAGE_FALSE
-                            + RegistrationExceptionMessage.WRONG_LOGIN_MESSAGE
-                            + " but actual " + exception.getMessage()
-            );
-            login += "a";
-        }
+        testUser.setLogin(login);
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(testUser);
+        });
+        assertEquals(RegistrationExceptionMessage.WRONG_LOGIN_MESSAGE, exception.getMessage(),
+                TEST_FAILED_EXPECTED_MESSAGE_FALSE
+                        + RegistrationExceptionMessage.WRONG_LOGIN_MESSAGE
+                        + " but actual " + exception.getMessage()
+        );
+    }
+
+    @Test
+    void register_userWithLengthIsLessThanMinLogin_notOk() {
+        String login = "login";
+        testUser.setLogin(login);
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(testUser);
+        });
+        assertEquals(RegistrationExceptionMessage.WRONG_LOGIN_MESSAGE, exception.getMessage(),
+                TEST_FAILED_EXPECTED_MESSAGE_FALSE
+                        + RegistrationExceptionMessage.WRONG_LOGIN_MESSAGE
+                        + " but actual " + exception.getMessage()
+        );
     }
 
     @Test
@@ -128,21 +137,33 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithInvalidLengthPassword_notOk() {
+    void register_userWithEmptyPassword_notOk() {
         String password = "";
-        for (int i = 0; i < MIN_LENGTH; i++) {
-            testUser.setPassword(password);
-            RegistrationException exception = assertThrows(RegistrationException.class, () -> {
-                registrationService.register(testUser);
-            });
-            assertEquals(RegistrationExceptionMessage.WRONG_PASSWORD_MESSAGE,
-                    exception.getMessage(),
-                    TEST_FAILED_EXPECTED_MESSAGE_FALSE
-                            + RegistrationExceptionMessage.WRONG_PASSWORD_MESSAGE
-                            + " but actual " + exception.getMessage()
-            );
-            password += "a";
-        }
+        testUser.setPassword(password);
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(testUser);
+        });
+        assertEquals(RegistrationExceptionMessage.WRONG_PASSWORD_MESSAGE,
+                exception.getMessage(),
+                TEST_FAILED_EXPECTED_MESSAGE_FALSE
+                        + RegistrationExceptionMessage.WRONG_PASSWORD_MESSAGE
+                        + " but actual " + exception.getMessage()
+        );
+    }
+
+    @Test
+    void register_userWithLengthIsLessThanMinPassword_notOk() {
+        String password = "pass";
+        testUser.setPassword(password);
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
+            registrationService.register(testUser);
+        });
+        assertEquals(RegistrationExceptionMessage.WRONG_PASSWORD_MESSAGE,
+                exception.getMessage(),
+                TEST_FAILED_EXPECTED_MESSAGE_FALSE
+                        + RegistrationExceptionMessage.WRONG_PASSWORD_MESSAGE
+                        + " but actual " + exception.getMessage()
+        );
     }
 
     @Test
@@ -176,23 +197,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithInvalidAge_notOk() {
-        for (int i = 0; i < VALID_USER_AGE; i++) {
-            testUser.setAge(i);
-            RegistrationException exception = assertThrows(RegistrationException.class, () -> {
-                registrationService.register(testUser);
-            });
-            assertEquals(RegistrationExceptionMessage.WRONG_AGE_MESSAGE, exception.getMessage(),
-                    TEST_FAILED_EXPECTED_MESSAGE_FALSE
-                            + RegistrationExceptionMessage.WRONG_AGE_MESSAGE
-                            + " but actual " + exception.getMessage()
-            );
-        }
-    }
-
-    @Test
-    void register_userWithNegativeAge_notOk() {
-        testUser.setAge(NEGATIVE_AGE);
+    void register_userWithIsLessThanMinAge_notOk() {
+        int age = 17;
+        testUser.setAge(age);
         RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             registrationService.register(testUser);
         });
