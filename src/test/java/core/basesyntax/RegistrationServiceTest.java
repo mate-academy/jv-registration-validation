@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -34,7 +35,7 @@ public class RegistrationServiceTest {
         newUser.setAge(29);
         newUser.setLogin("mkinuuhf");
         newUser.setPassword("123456967");
-        assertThrows(RuntimeException.class, () -> registrationService.register(newUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(newUser));
     }
 
     @Test
@@ -43,7 +44,7 @@ public class RegistrationServiceTest {
         user.setAge(18);
         user.setLogin("asdf");
         user.setPassword("123456");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -52,7 +53,7 @@ public class RegistrationServiceTest {
         user.setAge(17);
         user.setLogin("qwerty");
         user.setPassword("123456");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -61,7 +62,7 @@ public class RegistrationServiceTest {
         user.setAge(28);
         user.setLogin("zxcvbn");
         user.setPassword("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -70,7 +71,7 @@ public class RegistrationServiceTest {
         user.setAge(28);
         user.setLogin("");
         user.setPassword("1234567");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -79,12 +80,12 @@ public class RegistrationServiceTest {
         user.setAge(28);
         user.setLogin("zxcvbn");
         user.setPassword("12234");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     public void register_registerNull_notOk() {
-        assertThrows(RuntimeException.class, () -> registrationService.register(null));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -93,7 +94,7 @@ public class RegistrationServiceTest {
         user.setAge(28);
         user.setLogin("zxcvbn");
         user.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -102,7 +103,7 @@ public class RegistrationServiceTest {
         user.setAge(28);
         user.setLogin(null);
         user.setPassword("1234567");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -111,11 +112,11 @@ public class RegistrationServiceTest {
         user.setAge(null);
         user.setLogin("zxcvbn");
         user.setPassword("1234567");
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_normalRegister_Ok() {
+    public void register_validUser_Ok() throws InvalidDataException {
         User user = new User();
         user.setAge(34);
         user.setLogin("mkinuuhf");
