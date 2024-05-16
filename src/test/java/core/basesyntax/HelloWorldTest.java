@@ -1,18 +1,15 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.*;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-
 import core.basesyntax.service.ValidationException;
+import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 public class HelloWorldTest {
-    RegistrationServiceImpl registrationService;
+    private RegistrationServiceImpl registrationService;
     User user = new User();
     String login = "admin" + new Random().nextInt(6, 99999);
     String password = "admin" + new Random().nextInt(6, 99999);

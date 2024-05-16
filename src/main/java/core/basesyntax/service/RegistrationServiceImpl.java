@@ -6,26 +6,25 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final int MIN_AGE = 18;
-    private final int MIN_LOGIN_LENGTH = 6;
-    private final int MIN_PASSWORD_LENGTH = 6;
+    private final int MINIMUM_AGE = 18;
+    private final int MINIMUM_LOGIN_LENGTH = 6;
+    private final int MINIMUM_PASSWORD_LENGTH = 6;
 
     @Override
     public User register(User user) {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new ValidationException("LOGIN " + user.getLogin() + "is used");
+            throw new ValidationException ("LOGIN " + user.getLogin() + "is used");
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new ValidationException("PASSWORD " + user.getPassword() + "is to short");
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new ValidationException ("PASSWORD " + user.getPassword() + "is to short");
         }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new ValidationException("Login " + user.getLogin() + "is to short");
+        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
+            throw new ValidationException ("Login " + user.getLogin() + "is to short");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new ValidationException("Age " + user.getAge() + " is too young");
+        if (user.getAge() < MINIMUM_AGE) {
+            throw new ValidationException ("Age " + user.getAge() + " is too young");
         }
         storageDao.add(user);
         return user;
-
     }
 }
