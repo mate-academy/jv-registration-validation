@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 
 public class HelloWorldTest {
     private RegistrationServiceImpl registrationService;
-    User user = new User();
-    String login = "admin" + new Random().nextInt(6, 99999);
-    String password = "admin" + new Random().nextInt(6, 99999);
-    int userAge = new Random().nextInt(18, 99);
+    private User user = new User();
+    private String login = "admin" + new Random().nextInt(6, 99999);
+    private String password = "admin" + new Random().nextInt(6, 99999);
+    private int userAge = new Random().nextInt(18, 99);
 
     @BeforeEach
     public void setUp() {
