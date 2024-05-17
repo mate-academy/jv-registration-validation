@@ -15,10 +15,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new ValidationException("LOGIN " + user.getLogin() + "is used");
         }
-        if ( user.getPassword() != null){
+        if (user.getPassword() != null) {
             if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
-            throw new ValidationException("PASSWORD " + user.getPassword() + "is to short");
-             }
+                throw new ValidationException("PASSWORD " + user.getPassword() + "is to short");
+            }
         }
 
         if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
