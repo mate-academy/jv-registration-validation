@@ -15,15 +15,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new ValidationException("LOGIN " + user.getLogin() + "is used");
         }
-        if (user.getPassword() != null) {
-            if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+
+            if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH || user.getPassword() == null) {
                 throw new ValidationException("PASSWORD " + user.getPassword() + "is to short");
             }
-        }
 
-        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
+
+        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH || user.getLogin() == null) {
             throw new ValidationException("Login " + user.getLogin() + "is to short");
         }
+
         if (user.getAge() < MINIMUM_AGE) {
             throw new ValidationException("Age " + user.getAge() + " is too young");
         }

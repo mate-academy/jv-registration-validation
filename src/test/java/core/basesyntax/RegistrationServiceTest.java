@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,52 +13,111 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
     private RegistrationServiceImpl registrationService;
-    private User user = new User();
-    private Random random = new Random();
-    private String login = "admin" + random.nextInt(6, 99999);
-    private String password = "admin" + random.nextInt(6, 99999);
-    private int userAge = random.nextInt(18, 99);
+    private User user;
+    private Random random;
+    private String login;
+    private String password;
+    private int userAge;
 
     @BeforeEach
     public void setUp() {
         registrationService = new RegistrationServiceImpl();
+        user = new User();
+        random = new Random();
+        login = "admin" + random.nextInt(6, 99999);
+        password = "admin" + random.nextInt(6, 99999);
+        userAge = random.nextInt(18, 99);
     }
 
     @Test
-    public void register_auth_ok() {
+    public void register_validUser_ok() {
         user.setLogin(login);
         user.setPassword(password);
         user.setAge(userAge);
 
-        assertEquals(registrationService.register(user), user);
-
-        User user2 = new User();
-        user2.setLogin("tre" + random.nextInt(9) + random.nextInt(9) + random.nextInt(9));
-        user2.setPassword("123456");
-        user2.setAge(18);
-        assertEquals(registrationService.register(user2), user2);
-
+        assertEquals(user, registrationService.register(user));
     }
 
     @Test
-    public void register_auth_notok() {
-        user.setLogin("five5");
-        user.setPassword("five");
+    public void register_userAlreadyExists_notOk() {
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(userAge);
+        registrationService.register(user);
+
+        User duplicateUser = new User();
+        duplicateUser.setLogin(login);
+        duplicateUser.setPassword(password);
+        duplicateUser.setAge(userAge);
+
+        assertThrows(ValidationException.class, () -> registrationService.register(duplicateUser));
+    }
+
+    @Test
+    public void register_shortLogin_notOk() {
+        user.setLogin("short");
+        user.setPassword(password);
+        user.setAge(userAge);
+
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_nullLogin_notOk() {
+        user.setLogin(null);
+        user.setPassword(password);
+        user.setAge(userAge);
+
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_shortPassword_notOk() {
+        user.setLogin(login);
+        user.setPassword("short");
+        user.setAge(userAge);
+
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_nullPassword_notOk() {
+        user.setLogin(login);
+        user.setPassword(null);
+        user.setAge(userAge);
+
+        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_underageUser_notOk() {
+        user.setLogin(login);
+        user.setPassword(password);
         user.setAge(17);
 
         assertThrows(ValidationException.class, () -> registrationService.register(user));
-
-        User user2 = new User();
-        user2.setLogin("");
-        user2.setPassword("");
-        user2.setAge(0);
-
-        assertThrows(ValidationException.class, () -> registrationService.register(user2));
-
     }
 
     @Test
-    public void register_setidafterauth_ok() {
+    public void register_negativeAge_notOk() {
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(-1);
+
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_zeroAge_notOk() {
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(0);
+
+        assertThrows(ValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_setIdAfterRegistration_ok() {
         user.setLogin(login);
         user.setPassword(password);
         user.setAge(userAge);
@@ -67,57 +125,4 @@ public class RegistrationServiceTest {
 
         assertNotNull(user.getId());
     }
-
-    @Test
-    public void register_notvalidpassword_notok() {
-        String toShortPassword = "1";
-        user.setLogin(login);
-        user.setPassword(toShortPassword);
-
-        assertThrows(ValidationException.class, () -> registrationService.register(user));
-
-        toShortPassword = null;
-        user.setPassword(toShortPassword);
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
-
-        toShortPassword = "trese";
-        user.setPassword(toShortPassword);
-        assertThrows(ValidationException.class, () -> registrationService.register(user));
-
-    }
-
-    @Test
-    public void register_notvalidage_notok() {
-        int failAge = 17;
-        user.setLogin(login);
-        user.setPassword(password);
-        user.setAge(failAge);
-
-        assertThrows(ValidationException.class, () -> registrationService.register(user));
-
-        failAge = 0;
-        user.setAge(failAge);
-        assertThrows(ValidationException.class, () -> registrationService.register(user));
-
-        failAge = -1;
-        user.setAge(failAge);
-        assertThrows(ValidationException.class, () -> registrationService.register(user));
-
-    }
-
-    @Test
-    public void accordance_twouserswithdifferentparametrs_notok() {
-        User user1 = new User();
-        user1.setLogin("user11");
-        user1.setPassword("password1");
-        user1.setAge(25);
-
-        User user2 = new User();
-        user2.setLogin("user21");
-        user2.setPassword("password1");
-        user2.setAge(25);
-
-        assertNotEquals(user1, user2);
-    }
-
 }
