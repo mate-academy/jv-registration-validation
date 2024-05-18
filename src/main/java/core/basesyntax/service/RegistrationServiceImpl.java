@@ -16,10 +16,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new ValidationException("LOGIN " + user.getLogin() + "is used");
         }
 
-            if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH || user.getPassword() == null) {
-                throw new ValidationException("PASSWORD " + user.getPassword() + "is to short");
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH
+                    || user.getPassword() == null) {
+            throw new ValidationException("PASSWORD " + user.getPassword() + "is to short");
             }
-
 
         if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH || user.getLogin() == null) {
             throw new ValidationException("Login " + user.getLogin() + "is to short");
