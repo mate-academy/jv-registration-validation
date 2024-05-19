@@ -1,8 +1,6 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -54,22 +52,25 @@ class RegistrationServiceTest {
     @Test
     public void register_loginLength_6_registrationSuccessful() {
         User user = new User("Peters", "passCodes", MIN_AGE);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
     public void register_loginLength_moreThan6_registrationSuccessful() {
         User user = new User("NancyHale", "passwords-1", MIN_AGE);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
     public void register_loginLength_7_registrationSuccessful() {
         User user = new User("NancyHa", "passwords-1", MIN_AGE);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
@@ -89,28 +90,31 @@ class RegistrationServiceTest {
     @Test
     public void register_passwordLength_6_registrationSuccessful() {
         User user = new User("AlexHale", "paSSco", MIN_AGE);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
     public void register_passwordLength_moreThan6_registrationSuccessful() {
         User user = new User("ScottHale", "pass_code", MIN_AGE);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
     public void register_passwordLength_7_registrationSuccessful() {
         User user = new User("JenniferHale", "pass_co", MIN_AGE);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
     public void register_age_lessThan18_throwsException() {
         User user = new User("TaliaHale", "password",
-                MIN_AGE - random.nextInt(BOUND_NUMBER));
+                MIN_AGE - random.nextInt(1, BOUND_NUMBER));
 
         assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
@@ -125,22 +129,27 @@ class RegistrationServiceTest {
     @Test
     public void register_age_18_registrationSuccessful() {
         User user = new User("DerekHale", "password-10", MIN_AGE);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
     public void register_age_over18_registrationSuccessful() {
-        User user = new User("GaliHale", "password-1", MIN_AGE + random.nextInt(BOUND_NUMBER));
+        User user = new User("GaliHale", "password-1",
+                MIN_AGE + random.nextInt(1, BOUND_NUMBER));
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
+
     }
 
     @Test
     public void register_age_19_registrationSuccessful() {
         User user = new User("DemiHale", "password-1", MIN_AGE + 1);
+        User actual = registrationService.register(user);
 
-        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(user, actual);
     }
 
     @Test
@@ -174,16 +183,8 @@ class RegistrationServiceTest {
     @Test
     public void register_validUser_isOk() {
         User user = new User("user123", "password", MIN_AGE + random.nextInt(BOUND_NUMBER));
-
         User registeredUser = registrationService.register(user);
 
-        assertNotNull(registeredUser,
-                "Registration failed, returned user is null");
-        assertEquals(user.getLogin(), registeredUser.getLogin(),
-                "Login mismatch after registration");
-        assertEquals(user.getPassword(), registeredUser.getPassword(),
-                "Password mismatch after registration");
-        assertEquals(user.getAge(), registeredUser.getAge(),
-                "Age mismatch after registration");
+        assertEquals(user, registeredUser, "Validation of user was failed!");
     }
 }
