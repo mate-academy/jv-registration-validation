@@ -1,23 +1,42 @@
 package core.basesyntax;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.IncorrectInputDataException;
 import core.basesyntax.model.User;
+import core.basesyntax.db.Storage;
+import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 /**
  * Feel free to remove this class and create your own.
  */
 public class RegistrationServiceImplTests {
-    private RegistrationServiceImpl service;
-    private final StorageDaoImpl storageDao = new StorageDaoImpl();
+    private RegistrationService service;
 
     @BeforeEach
     void setUp() {
         service = new RegistrationServiceImpl();
+    }
+
+    @Test
+    void register_validUser_Ok() {
+        User actual = new User();
+        actual.setAge(20);
+        actual.setId(1L);
+        actual.setLogin("12345678");
+        actual.setPassword("qwerty");
+        service.register(actual);
+        Assertions.assertEquals(actual,Storage.people.get(0));
+        Assertions.assertEquals(Storage.people.size(), 1);
+    }
+    @Test
+    void register_NullUser_notOk() {
+        User actual = null;
+        Assertions.assertThrows(IncorrectInputDataException.class, () -> service.register(actual));
     }
 
     @Test
@@ -35,26 +54,6 @@ public class RegistrationServiceImplTests {
         User actual = new User();
         actual.setAge(5);
         actual.setId(1L);
-        actual.setLogin("12345678");
-        actual.setPassword("qwerty");
-        Assertions.assertThrows(IncorrectInputDataException.class, () -> service.register(actual));
-    }
-
-    @Test
-    void register_IdNullUser_notOk() {
-        User actual = new User();
-        actual.setAge(20);
-        actual.setId(null);
-        actual.setLogin("12345678");
-        actual.setPassword("qwerty");
-        Assertions.assertThrows(IncorrectInputDataException.class, () -> service.register(actual));
-    }
-
-    @Test
-    void register_incorrectIdUser_notOk() {
-        User actual = new User();
-        actual.setAge(20);
-        actual.setId(-2L);
         actual.setLogin("12345678");
         actual.setPassword("qwerty");
         Assertions.assertThrows(IncorrectInputDataException.class, () -> service.register(actual));
@@ -126,5 +125,9 @@ public class RegistrationServiceImplTests {
         withSameLogin.setPassword("qwerty");
         Assertions.assertThrows(IncorrectInputDataException.class,
                 () -> service.register(withSameLogin));
+    }
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }

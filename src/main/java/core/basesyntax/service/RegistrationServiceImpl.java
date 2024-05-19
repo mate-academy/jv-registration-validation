@@ -7,27 +7,49 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
-    private static final int MIN_LEN_FOR_CREDS = 6;
+    private static final int MIN_LEN = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        if (user.getAge() == null || user.getLogin() == null
-                || user.getLogin().isEmpty() || user.getId() == null
-                || user.getId() < 0 || user.getPassword() == null) {
-            throw new IncorrectInputDataException("Some of the field is empty");
+        if (user == null) {
+            throw new IncorrectInputDataException("Fill the fields before registration");
         }
-        if (user.getLogin().length() < MIN_LEN_FOR_CREDS
-                || user.getPassword().length() < MIN_LEN_FOR_CREDS) {
-            throw new IncorrectInputDataException("Credentials size must be greater than 6");
-        }
-        if (user.getAge() < 18) {
-            throw new IncorrectInputDataException(" age must be at least 18");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new IncorrectInputDataException("User with this login already exists");
-        }
+        validateAge(user.getAge());
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
         storageDao.add(user);
         return user;
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null ) {
+            throw new IncorrectInputDataException("Age field is empty");
+        }
+        if (age < MIN_AGE) {
+            throw new IncorrectInputDataException("Age must be at least 18 ");
+        }
+    }
+
+    private void validateLogin(String login) {
+        if (login == null || login.isEmpty()) {
+            throw new IncorrectInputDataException("Login field is empty");
+        }
+        if ( login.length() < MIN_LEN) {
+            throw new IncorrectInputDataException("Login too short");
+        }
+        if (storageDao.get(login) != null) {
+            throw new IncorrectInputDataException("User with this login already exists");
+        }
+
+    }
+
+    private void validatePassword(String password) {
+        if (password == null ) {
+            throw new IncorrectInputDataException("Password field is empty");
+        }
+        if (password.length() < MIN_LEN) {
+            throw new IncorrectInputDataException("Password too short");
+        }
     }
 }
