@@ -7,12 +7,14 @@ public class UserValidatorImpl implements UserValidator {
     private static final String USER_CANNOT_BE_NULL = "User cannot be null";
     private static final String LOGIN_TOO_SHORT = "User's login must have at least 6 characters";
     private static final String LOGIN_CANNOT_BE_NULL = "User login cannot be null";
-    private static final String PASSWORD_TOO_SHORT = "User's password must have at least 6 characters";
+    private static final String PASSWORD_TOO_SHORT
+            = "User's password must have at least 6 characters";
     private static final String PASSWORD_CANNOT_BE_NULL = "User password cannot be null";
     private static final String AGE_TOO_LOW = "User's age must be at least 18 years old";
     private static final String AGE_CANNOT_BE_NULL = "User age cannot be null";
     private static final String SPACE = " ";
-    private static final String PASSWORD_CANNOT_CONTAIN_SPACES = "User login cannot contain spaces. Login: ";
+    private static final String PASSWORD_CANNOT_CONTAIN_SPACES
+            = "User login cannot contain spaces. Login: ";
     private static final int LOGIN_MIN_LENGTH = 6;
     private static final int PASSWORD_MIN_LENGTH = 6;
     private static final int USER_MIN_AGE = 18;
