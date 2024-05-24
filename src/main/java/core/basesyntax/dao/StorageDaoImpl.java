@@ -22,4 +22,9 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
+
+    public void clear() {
+        index = 0L;
+        Storage.people.clear();
+    }
 }
