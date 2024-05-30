@@ -1,72 +1,87 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
+    private StorageDao storageDao;
 
-    @BeforeAll
-    public static void setUp() {
-        User validUser = new User();
-        validUser.setAge(18);
-        validUser.setLogin("Cherkassy");
-        validUser.setPassword("Qwerty3");
-        Storage.people.add(validUser);
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
-    public void register_NullOnFieldsOfUser_NotOk() {
-        User emptyUser = new User();
+    public void register_NullUser_notOk() {
         Assertions.assertThrows(RegistrationException.class, ()
-                -> registrationService.register(emptyUser));
+                -> registrationService.register(null));
+    }
+
+    @Test
+    public void register_passwordIsNull_notOk() {
+        Assertions.assertThrows(RegistrationException.class, ()
+                -> registrationService.register(null));
+    }
+
+    @Test
+    public void register_loginIsNull_notOk() {
+        Assertions.assertThrows(RegistrationException.class, ()
+                -> registrationService.register(null));
     }
 
     @Test
     public void register_ValidUser_Ok() {
-        User suitableUser = new User();
-        suitableUser.setAge(52);
-        suitableUser.setLogin("Uzhgorod");
-        suitableUser.setPassword("Pass@WorD");
-        registrationService.register(suitableUser);
-        Assertions.assertEquals(suitableUser, Storage.people.get(1));
+        User expected = new User();
+        expected.setAge(52);
+        expected.setLogin("Uzhgorod");
+        expected.setPassword("Pass@WorD");
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
-    public void register_DuplicateLogin_NotOk() {
-        User duplicateLogin = new User();
-        duplicateLogin.setAge(45);
-        duplicateLogin.setLogin("Cherkassy");
-        duplicateLogin.setPassword("MT69@11");
+    public void register_loginAlreadyExists_NotOk() {
+        User user = new User();
+        user.setAge(45);
+        user.setLogin("Cherkassy");
+        user.setPassword("MT69@11");
+        Storage.people.add(user);
+        User newUser = new User();
+        newUser.setAge(30);
+        newUser.setLogin("Cherkassy");
+        newUser.setPassword("password123");
         RegistrationException exception = Assertions.assertThrows(RegistrationException.class,
-                () -> registrationService.register(duplicateLogin));
-        Assertions.assertEquals("This login is already assigned!", exception.getMessage());
+                () -> registrationService.register(newUser));
+        assertEquals("User with login Cherkassy already exists!", exception.getMessage());
     }
 
     @Test
-    public void register_AgeYoungUser_NotOk() {
+    public void register_ageIsLessThanEighteen_NotOk() {
         User youngUser = new User();
         youngUser.setAge(14);
         youngUser.setLogin("Kropyvnytskii");
         youngUser.setPassword("MYR3655");
         RegistrationException exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(youngUser));
-        Assertions.assertEquals("This user is so young!", exception.getMessage());
-    }
-
-    @Test
-    public void register_AgeOldUser_NotOk() {
-        User oldUser = new User();
-        oldUser.setAge(103);
-        oldUser.setLogin("Chernigiv");
-        oldUser.setPassword("Mlyn51");
-        RegistrationException exception = Assertions.assertThrows(RegistrationException.class,
-                () -> registrationService.register(oldUser));
-        Assertions.assertEquals("This user is old!", exception.getMessage());
+        assertEquals(String.format("You age should be at least %d y.o.", 18),
+                exception.getMessage());
     }
 
     @Test
@@ -77,7 +92,7 @@ public class RegistrationServiceImplTest {
         shortUserLogin.setPassword("PO@1235");
         RegistrationException exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(shortUserLogin));
-        Assertions.assertEquals("This login is short!", exception.getMessage());
+        assertEquals("Your Login should contain %s or more symbols!", exception.getMessage());
     }
 
     @Test
@@ -88,6 +103,6 @@ public class RegistrationServiceImplTest {
         shortUserPassword.setPassword("KI23");
         RegistrationException exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(shortUserPassword));
-        Assertions.assertEquals("This password is short!", exception.getMessage());
+        assertEquals("Your password should contain 6 or more symbols!", exception.getMessage());
     }
 }
