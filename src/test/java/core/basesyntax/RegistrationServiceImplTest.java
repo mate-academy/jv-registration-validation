@@ -29,7 +29,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_NullUser_notOk() {
+    public void register_nullUser_notOk() {
         Assertions.assertThrows(RegistrationException.class, ()
                 -> registrationService.register(null));
     }
@@ -47,7 +47,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ValidUser_Ok() {
+    public void register_validUser_Ok() {
         User expected = new User();
         expected.setAge(52);
         expected.setLogin("Uzhgorod");
@@ -85,7 +85,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ShortUserLogin_notOk() {
+    public void register_shortUserLogin_notOk() {
         User shortUserLogin = new User();
         shortUserLogin.setAge(38);
         shortUserLogin.setLogin("Kyiv");
@@ -96,7 +96,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ShortUserPassword_notOk() {
+    public void register_shortUserPassword_notOk() {
         User shortUserPassword = new User();
         shortUserPassword.setAge(45);
         shortUserPassword.setLogin("Mykolaiv");

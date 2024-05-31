@@ -14,18 +14,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        register_NullUser_notOk(user);
+        register_nullUser_notOk(user);
         register_loginAlreadyExists_notOk(user);
         register_loginIsNull_notOk(user);
         validateLogin(user.getLogin());
-        register_AgeIsNull_notOk(user);
+        register_ageIsNull_notOk(user);
         validateAge(user);
         register_passwordIsNull_notOk(user);
         validatePassword(user.getPassword());
         return storageDao.add(user);
     }
 
-    private void register_NullUser_notOk(User user) {
+    private void register_nullUser_notOk(User user) {
         if (user == null) {
             throw new RegistrationException("User cannot be null!");
         }
@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void register_AgeIsNull_notOk(User user) {
+    private void register_ageIsNull_notOk(User user) {
         if (user.getAge() == null) {
             throw new RegistrationException("Age cannot be null!");
         }
