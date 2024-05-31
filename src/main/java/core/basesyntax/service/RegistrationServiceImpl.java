@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         register_NullUser_notOk(user);
-        register_loginAlreadyExists_NotOk(user);
+        register_loginAlreadyExists_notOk(user);
         register_loginIsNull_notOk(user);
         validateLogin(user.getLogin());
         register_AgeIsNull_notOk(user);
@@ -31,7 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void register_loginAlreadyExists_NotOk(User user) {
+    private void register_loginAlreadyExists_notOk(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with login %s already exists!"
                     .formatted(user.getLogin()));

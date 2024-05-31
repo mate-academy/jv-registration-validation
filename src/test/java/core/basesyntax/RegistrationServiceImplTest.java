@@ -57,7 +57,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_loginAlreadyExists_NotOk() {
+    public void register_loginAlreadyExists_notOk() {
         User user = new User();
         user.setAge(45);
         user.setLogin("Cherkassy");
@@ -73,7 +73,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ageIsLessThanEighteen_NotOk() {
+    public void register_ageIsLessThanEighteen_notOk() {
         User youngUser = new User();
         youngUser.setAge(14);
         youngUser.setLogin("Kropyvnytskii");
@@ -85,7 +85,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ShortUserLogin_NotOk() {
+    public void register_ShortUserLogin_notOk() {
         User shortUserLogin = new User();
         shortUserLogin.setAge(38);
         shortUserLogin.setLogin("Kyiv");
@@ -96,7 +96,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ShortUserPassword_NotOk() {
+    public void register_ShortUserPassword_notOk() {
         User shortUserPassword = new User();
         shortUserPassword.setAge(45);
         shortUserPassword.setLogin("Mykolaiv");
