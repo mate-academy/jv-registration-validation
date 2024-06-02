@@ -11,18 +11,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    public static final int VALID_AGE = 18;
-    public static final int INVALID_AGE = 16;
+    private static final int VALID_AGE = 18;
+    private static final int INVALID_AGE = 17;
+    private static final int NEGATIVE_AGE = -1;
+
     private RegistrationServiceImpl registrationService;
     private User user;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        user = new User();
-        user.setAge(VALID_AGE);
-        user.setLogin("testing@gmail.com");
-        user.setPassword("123456");
+        user = new User("testing@gmail.com", "123456", VALID_AGE);
     }
 
     @AfterEach
@@ -36,19 +35,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerExistedLogin_NotOk() {
-        registrationService.register(user);
-        User invalidUser = new User();
-        invalidUser.setPassword("123456");
-        invalidUser.setAge(VALID_AGE);
-        invalidUser.setLogin("testing@gmail.com");
+    void alreadyRegisteredLogin_NotOk() {
+        Storage.people.add(user);
+        User invalidUser = new User("testing@gmail.com", "123456", VALID_AGE);
         assertThrows(InvalidRegisterDataException.class, () -> {
             registrationService.register(invalidUser);
         });
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void negativeUserAge_NotOk() {
+        user.setAge(NEGATIVE_AGE);
+        assertThrows(InvalidRegisterDataException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void nullUser_NotOk() {
+        assertThrows(InvalidRegisterDataException.class, () -> {
+            registrationService.register(null);
+        });
+    }
+
+    @Test
+    void nullUserLogin_NotOk() {
         user.setLogin(null);
         assertThrows(InvalidRegisterDataException.class, () -> {
             registrationService.register(user);
@@ -56,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void nullUserPassword_NotOk() {
         user.setPassword(null);
         assertThrows(InvalidRegisterDataException.class, () -> {
             registrationService.register(user);
@@ -64,7 +75,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullAge_NotOk() {
+    void nullUserAge_NotOk() {
         user.setAge(null);
         assertThrows(InvalidRegisterDataException.class, () -> {
             registrationService.register(user);
@@ -72,15 +83,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void smallLogin_NotOk() {
-        user.setLogin("test");
+    void shortUserLogin_NotOk() {
+        user.setLogin("regis");
         assertThrows(InvalidRegisterDataException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void smallPassword_NotOk() {
+    void shortUserPassword_NotOk() {
         user.setPassword("test");
         assertThrows(InvalidRegisterDataException.class, () -> {
             registrationService.register(user);
@@ -88,7 +99,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void smallAge_NotOk() {
+    void userUnderage_NotOk() {
         user.setAge(INVALID_AGE);
         assertThrows(InvalidRegisterDataException.class, () -> {
             registrationService.register(user);
