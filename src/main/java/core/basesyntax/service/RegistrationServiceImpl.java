@@ -14,9 +14,20 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        validatePassword(user);
+        validateLogin(user);
+        validateAge(user);
+        return storageDao.add(user);
+    }
+
+    private void validateUser(User user) {
         if (user == null) {
             throw new RegistrationException("User cannot be null!");
         }
+    }
+
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("Your password should contain 6 or more symbols!");
         }
@@ -24,6 +35,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Your password should contain %s or more symbols!"
                     .formatted(PASSWORD_MIN_LENGTH));
         }
+    }
+
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login cannot be null!");
         }
@@ -34,6 +48,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() < LOGIN_MIN_LENGTH) {
             throw new RegistrationException("Your Login should contain %s or more symbols!");
         }
+    }
+
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new RegistrationException("Age cannot be null!");
         }
@@ -41,6 +58,5 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("You age should be at least %d y.o."
                     .formatted(MIN_AGE));
         }
-        return storageDao.add(user);
     }
 }
