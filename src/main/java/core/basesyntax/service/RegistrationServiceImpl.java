@@ -6,8 +6,8 @@ import core.basesyntax.exceptions.InvalidRegisterDataException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final int MIN_LENGTH = 6;
-    public static final int MIN_AGE = 18;
+    private static final int MIN_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
