@@ -4,24 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.InvalidRegisterDataException;
+import core.basesyntax.exceptions.RegisterException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int VALID_AGE = 18;
-    private static final int INVALID_AGE = 17;
-    private static final int NEGATIVE_AGE = -1;
 
     private RegistrationServiceImpl registrationService;
-    private User user;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        user = new User("testing@gmail.com", "123456", VALID_AGE);
     }
 
     @AfterEach
@@ -30,79 +25,76 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidUser_Ok() {
-        assertEquals(registrationService.register(user), user);
+    void register_ValidUser_Ok() {
+        User validuser = new User("testing@gmail.com", "123456", 18);
+        assertEquals(registrationService.register(validuser), validuser);
     }
 
     @Test
-    void alreadyRegisteredLogin_NotOk() {
-        Storage.people.add(user);
-        User invalidUser = new User("testing@gmail.com", "123456", VALID_AGE);
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(invalidUser);
-        });
+    void register_loginAlreadyExist_NotOk() {
+        User validUser = new User("testing@gmail.com", "123456", 18);
+        Storage.people.add(validUser);
+        User existedLoginUser = new User("testing@gmail.com", "123456", 18);
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(existedLoginUser));
     }
 
     @Test
-    void negativeUserAge_NotOk() {
-        user.setAge(NEGATIVE_AGE);
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(user);
-        });
+    void register_userAgeIsNegative_NotOk() {
+        User negativeAgeUser = new User("testing@gmail.com", "123456", -1);
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(negativeAgeUser));
     }
 
     @Test
-    void nullUser_NotOk() {
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(null);
-        });
+    void register_userIsNull_NotOk() {
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(null));
     }
 
     @Test
-    void nullUserLogin_NotOk() {
-        user.setLogin(null);
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(user);
-        });
+    void register_userLoginIsNull_NotOk() {
+        User userLoginIsNull = new User(null, "123456", 18);
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(userLoginIsNull));
     }
 
     @Test
-    void nullUserPassword_NotOk() {
-        user.setPassword(null);
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(user);
-        });
+    void register_userPasswordIsNull_NotOk() {
+        User userPasswordIsNull = new User("testing@gmail.com", null, 18);
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(userPasswordIsNull));
     }
 
     @Test
-    void nullUserAge_NotOk() {
-        user.setAge(null);
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(user);
-        });
+    void register_userAgeIsNull_NotOk() {
+        User userAgeIsNull = new User("testing@gmail.com", "123456", null);
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(userAgeIsNull));
     }
 
     @Test
-    void shortUserLogin_NotOk() {
-        user.setLogin("regis");
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(user);
-        });
+    void register_shortUserLogin_NotOk() {
+        User shortUserLogin = new User("testi", "123456", 18);
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(shortUserLogin));
     }
 
     @Test
-    void shortUserPassword_NotOk() {
-        user.setPassword("test");
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(user);
-        });
+    void register_shortUserPassword_NotOk() {
+        User shortUserPassword = new User("testing@gmail.com", "12345", 18);
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(shortUserPassword));
     }
 
     @Test
-    void userUnderage_NotOk() {
-        user.setAge(INVALID_AGE);
-        assertThrows(InvalidRegisterDataException.class, () -> {
-            registrationService.register(user);
-        });
+    void register_underageUser_NotOk() {
+        User underageUser = new User(
+                "testing@gmail.com",
+                "123456",
+                17
+        );
+        assertThrows(RegisterException.class, () ->
+                registrationService.register(underageUser));
     }
 }
