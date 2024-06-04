@@ -25,13 +25,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidUser_Ok() {
+    void register_ValidUser_ok() {
         User validuser = new User("testing@gmail.com", "123456", 18);
         assertEquals(registrationService.register(validuser), validuser);
     }
 
     @Test
-    void register_loginAlreadyExist_NotOk() {
+    void register_loginAlreadyExist_notOk() {
         User validUser = new User("testing@gmail.com", "123456", 18);
         Storage.people.add(validUser);
         User existedLoginUser = new User("testing@gmail.com", "123456", 18);
@@ -40,27 +40,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userAgeIsNegative_NotOk() {
+    void register_userAgeIsNegative_notOk() {
         User negativeAgeUser = new User("testing@gmail.com", "123456", -1);
         assertThrows(RegisterException.class, () ->
                 registrationService.register(negativeAgeUser));
     }
 
     @Test
-    void register_userIsNull_NotOk() {
+    void register_userIsNull_notOk() {
         assertThrows(RegisterException.class, () ->
                 registrationService.register(null));
     }
 
     @Test
-    void register_userLoginIsNull_NotOk() {
+    void register_userLoginIsNull_notOk() {
         User userLoginIsNull = new User(null, "123456", 18);
         assertThrows(RegisterException.class, () ->
                 registrationService.register(userLoginIsNull));
     }
 
     @Test
-    void register_userPasswordIsNull_NotOk() {
+    void register_userPasswordIsNull_notOk() {
         User userPasswordIsNull = new User("testing@gmail.com", null, 18);
         assertThrows(RegisterException.class, () ->
                 registrationService.register(userPasswordIsNull));
@@ -74,21 +74,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortUserLogin_NotOk() {
+    void register_shortUserLogin_notOk() {
         User shortUserLogin = new User("testi", "123456", 18);
         assertThrows(RegisterException.class, () ->
                 registrationService.register(shortUserLogin));
     }
 
     @Test
-    void register_shortUserPassword_NotOk() {
+    void register_shortUserPassword_notOk() {
         User shortUserPassword = new User("testing@gmail.com", "12345", 18);
         assertThrows(RegisterException.class, () ->
                 registrationService.register(shortUserPassword));
     }
 
     @Test
-    void register_underageUser_NotOk() {
+    void register_underageUser_notOk() {
         User underageUser = new User(
                 "testing@gmail.com",
                 "123456",
