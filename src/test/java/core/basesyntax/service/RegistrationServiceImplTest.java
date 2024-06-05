@@ -30,7 +30,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_Ok() {
+    void register_validUser_ok() {
         User user = new User("Tapochek", "heavYMet@l88", 19);
         User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_youngAgeUser_notOk() {
+    void register_underageUser_notOk() {
         User youngUser = new User("Jambo21", "heavYMset@l88", 17);
         String actual = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(youngUser);

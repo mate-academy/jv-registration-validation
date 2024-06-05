@@ -10,6 +10,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_USER_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
+    @Override
+    public User register(User user) {
+        if (!isUserAlreadyExist(user)
+                && isLoginValid(user.getLogin())
+                && isPasswordValid(user.getPassword())
+                && userAgeCheck(user.getAge())) {
+            storageDao.add(user);
+        }
+        return user;
+    }
+
     private boolean isUserAlreadyExist(User user) {
         if (user != null && storageDao.get(user.getLogin()) != null) {
             throw new InvalidDataException("User already have an account.");
@@ -74,16 +85,5 @@ public class RegistrationServiceImpl implements RegistrationService {
     private boolean containUppercaseAndNumeric(String input) {
         String regex = ".*[A-Z0-9].*";
         return input.matches(regex);
-    }
-
-    @Override
-    public User register(User user) {
-        if (!isUserAlreadyExist(user)
-                && isLoginValid(user.getLogin())
-                && isPasswordValid(user.getPassword())
-                && userAgeCheck(user.getAge())) {
-            storageDao.add(user);
-        }
-        return user;
     }
 }
