@@ -7,6 +7,11 @@ public class StorageDaoImpl implements StorageDao {
     private static Long index = 0L;
 
     @Override
+    public void clear() {
+        Storage.people.clear();
+    }
+
+    @Override
     public User add(User user) {
         user.setId(++index);
         Storage.people.add(user);
