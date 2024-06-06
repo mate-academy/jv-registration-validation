@@ -17,7 +17,7 @@ class RegistrationServiceImplTest {
     void setUp() {
         registrationService = new RegistrationServiceImpl();
         validUser = new User();
-        validUser.setLogin("bodjer@gmail.com");
+        validUser.setLogin("bodje343r@gmail.com");
         validUser.setPassword("121212");
         validUser.setAge(27);
     }

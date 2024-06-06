@@ -29,11 +29,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException(USER_ALREADY_EXIST);
         }
-        if (!isEmailValid(user.getLogin())) {
-            throw new RegistrationException(INVALID_EMAIL);
-        }
         if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
             throw new RegistrationException(FIELDS_CANNOT_BE_EMPTY);
+        }
+        if (!isEmailValid(user.getLogin())) {
+            throw new RegistrationException(INVALID_EMAIL);
         }
         if (user.getLogin().length() < MIN_NUMBER_OF_CHARACTERS) {
             throw new RegistrationException(LOGIN_TOO_SHORT);
