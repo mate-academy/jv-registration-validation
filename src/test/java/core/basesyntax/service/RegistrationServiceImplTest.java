@@ -1,13 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    RegistrationService service;
+    private RegistrationService service;
 
     @BeforeEach
     void init() {
@@ -31,25 +32,25 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUserWithTooShortPassword_notOk() {
-        User Peter = new User("IvanGun", "1", 25);
+        User peter = new User("IvanGun", "1", 25);
         assertThrows(RuntimeException.class, () -> {
-            service.register(Peter);
+            service.register(peter);
         });
     }
 
     @Test
     void registerTooYoungUser_notOk() {
-        User youngPeter = new User("PeterPen", "123456", 16);
+        User young = new User("PeterPen", "123456", 16);
         assertThrows(RuntimeException.class, () -> {
-                    service.register(youngPeter);
+                    service.register(young);
                 });
     }
 
     @Test
     void registerUserWithTooShortLogin_notOk() {
-        User Peter = new User("I", "123456", 25);
+        User peter = new User("I", "123456", 25);
         assertThrows(RuntimeException.class, () -> {
-            service.register(Peter);
+            service.register(peter);
         });
     }
 
