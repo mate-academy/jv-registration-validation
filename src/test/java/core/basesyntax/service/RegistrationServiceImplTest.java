@@ -1,12 +1,12 @@
 package core.basesyntax.service;
 
+import core.basesyntax.model.User;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import core.basesyntax.model.User;
 
 class RegistrationServiceImplTest {
     private RegistrationService service;
