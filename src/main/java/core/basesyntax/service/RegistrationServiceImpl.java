@@ -11,12 +11,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with such login exists.");
-        }
         if (user.getLogin() == null || user.getLogin().length() < MIN_CHARS) {
             throw new RegistrationException("Login must be at least "
                     + MIN_CHARS + " characters long.");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with such login exists.");
         }
         if (user.getPassword() == null || user.getPassword().length() < MIN_CHARS) {
             throw new RegistrationException("Password must be at least "

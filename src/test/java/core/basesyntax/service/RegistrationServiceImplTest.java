@@ -42,17 +42,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginIsLessThanMinChars_notOk() {
-        List<String> invalidLogins = Arrays.asList(null, ""," ","abc", "abcde");
-        for (String invalidLogin: invalidLogins) {
+    void register_loginIsLessThanMinChars_notOk() {
+        List<String> invalidLogins = Arrays.asList(null, "", " ", "abc", "abcde");
+        for (String invalidLogin : invalidLogins) {
             user.setLogin(invalidLogin);
             assertThrows(RegistrationException.class, () -> registrationService.register(user));
         }
     }
 
     @Test
-    void register_PasswordIsLessThanMinChars_notOk() {
-        List<String> invalidPasswords = Arrays.asList(null,""," ", "123", "12345");
+    void register_passwordIsLessThanMinChars_notOk() {
+        List<String> invalidPasswords = Arrays.asList(null, "", " ", "123", "12345");
         for (String invalidPassword : invalidPasswords) {
             user.setPassword(invalidPassword);
             assertThrows(RegistrationException.class, () -> registrationService.register(user));
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeIsLessThan18_notOk() {
+    void register_ageIsLessThan18_notOk() {
         List<Integer> invalidAges = Arrays.asList(null, 0, 1, 5, 7, 9, 16, 17);
         for (Integer invalidAge : invalidAges) {
             user.setAge(invalidAge);
@@ -69,7 +69,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeNegativeNumber_notOk() {
+    void register_ageNegativeNumber_notOk() {
         List<Integer> negativeAges = Arrays.asList(-1, -5, -100, -18, -21, -9);
         for (Integer negativeAge : negativeAges) {
             user.setAge(negativeAge);
@@ -78,7 +78,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeIs18_Ok() {
+    void register_ageIs18_Ok() {
         user.setAge(18);
         assertDoesNotThrow(() -> registrationService.register(user));
     }
@@ -88,4 +88,3 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 }
-
