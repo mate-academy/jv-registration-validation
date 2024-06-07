@@ -38,17 +38,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean tooShortPassword(User user) {
-        final int PASSWORD_LENGTH_AT_LEAST_REQUIRE = 6;
-        return user.getPassword().length() < PASSWORD_LENGTH_AT_LEAST_REQUIRE;
+        final int passwordLengthAtLeastRequire = 6;
+        return user.getPassword().length() < passwordLengthAtLeastRequire;
     }
 
     private boolean tooShortLogin(User user) {
-        final int LOGIN_LENGTH_AT_LEAST_REQUIRE = 6;
-        return user.getLogin().length() < LOGIN_LENGTH_AT_LEAST_REQUIRE;
+        final int lengthAtLeastRequire = 6;
+        return user.getLogin().length() < lengthAtLeastRequire;
     }
 
     private boolean tooYongUser(User user) {
-        final int AGE_AT_LEAST_REQUIRE = 18;
-        return user.getAge() < AGE_AT_LEAST_REQUIRE;
+        final int ageAtLeastRequire = 18;
+        return user.getAge() < ageAtLeastRequire;
     }
 }
