@@ -1,22 +1,23 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
-    private User user;
-    private RegistrationServiceImpl registrationService;
     private static final String DEFAULT_LOGIN = "turtle54@gmail.com";
     private static final String DEFAULT_PASSWORD = "abcde12345";
     private static final int DEFAULT_AGE = 21;
-
+    private User user;
+    private RegistrationServiceImpl registrationService;
 
     @BeforeEach
     public void setUp() {
@@ -30,7 +31,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userLoginExistsInStorage_notOk() {
         Storage.people.add(user);
-        assertThrows(RegistrationException.class, () ->  registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
