@@ -2,10 +2,10 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import core.basesyntax.model.User;
 
 class RegistrationServiceImplTest {
     private RegistrationService service;
@@ -42,8 +42,8 @@ class RegistrationServiceImplTest {
     void registerTooYoungUser_notOk() {
         User young = new User("PeterPen", "123456", 16);
         assertThrows(RuntimeException.class, () -> {
-                    service.register(young);
-                });
+            service.register(young);
+        });
     }
 
     @Test
