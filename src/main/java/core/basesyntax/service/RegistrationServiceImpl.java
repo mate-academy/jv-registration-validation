@@ -2,53 +2,64 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.NotValidDataException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static int AGE_AT_LEAST_REQUIRE = 18;
+    private static int LENGTH_AT_LEAST_REQUIRE = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        try {
-            if (user == null) {
-                throw new NotValidDataException("null user.");
-            }
-            if (tooYongUser(user)) {
-                throw new NotValidDataException("too young user.");
-            }
-            if (tooShortLogin(user)) {
-                throw new NotValidDataException("too short user's login.");
-            }
-            if (tooShortPassword(user)) {
-                throw new NotValidDataException("too short user's password.");
-            }
-            if (existedLogin(user)) {
-                throw new NotValidDataException("This login is existed.");
-            }
-        } catch (NotValidDataException e) {
-            throw new RuntimeException(e);
-        }
+        checkNull(user);
+        checkAge(user.getAge());
+        checkLogin(user.getLogin());
+        checkPassword(user.getPassword());
         storageDao.add(user);
         return user;
     }
 
-    private boolean existedLogin(User user) {
-        return storageDao.get(user.getLogin()) != null;
+    private void checkAge(Integer age) {
+        if (age < AGE_AT_LEAST_REQUIRE) {
+            try {
+                throw new RegistrationException("Not valid login");
+            } catch (RegistrationException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    private boolean tooShortPassword(User user) {
-        final int passwordLengthAtLeastRequire = 6;
-        return user.getPassword().length() < passwordLengthAtLeastRequire;
+    private void checkPassword(String password) {
+        if (password == null
+                || password.length() < LENGTH_AT_LEAST_REQUIRE) {
+            try {
+                throw new RegistrationException("Not valid login");
+            } catch (RegistrationException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    private boolean tooShortLogin(User user) {
-        final int lengthAtLeastRequire = 6;
-        return user.getLogin().length() < lengthAtLeastRequire;
+    private void checkNull(User user) {
+        if (user == null) {
+            try {
+                throw new RegistrationException("Null User");
+            } catch (RegistrationException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    private boolean tooYongUser(User user) {
-        final int ageAtLeastRequire = 18;
-        return user.getAge() < ageAtLeastRequire;
+    private void checkLogin(String login) {
+        if (login == null
+                || storageDao.get(login) != null
+                || login.length() < LENGTH_AT_LEAST_REQUIRE) {
+            try {
+                throw new RegistrationException("Not valid login");
+            } catch (RegistrationException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
