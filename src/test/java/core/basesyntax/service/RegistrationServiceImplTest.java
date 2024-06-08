@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +19,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidUser_Ok() {
+    void register_valid_user_Ok() {
         User expected = new User("validLogin", "123456789", 25);
         User actual = service.register(expected);
         assertEquals(expected, actual);
     }
 
     @Test
-    void registerBalkValidUsers_Ok() {
+    void register_bulk_valid_users_Ok() {
         User first = new User("validLogin", "123456789", 25);
         User actual = service.register(first);
         User expected = first;
@@ -43,45 +44,45 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerNullUser_notOk() {
+    void register_null_user_notOk() {
         User user = null;
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             service.register(user);
         });
     }
 
     @Test
-    void registerUserWithTooShortPassword_notOk() {
+    void register_user_with_too_short_password_notOk() {
         User user = new User("IvanGun", "1", 25);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             service.register(user);
         });
     }
 
     @Test
-    void registerTooYoungUser_notOk() {
+    void register_too_young_user_notOk() {
         User user = new User("PeterPen", "123456", 16);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             service.register(user);
         });
     }
 
     @Test
-    void registerUserWithTooShortLogin_notOk() {
+    void register_user_with_too_short_login_notOk() {
         User user = new User("I", "123456", 25);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             service.register(user);
         });
     }
 
     @Test
-    void registerTheSameUserLogin_notOk() {
+    void register_the_same_user_login_notOk() {
         User firstUser = new User("validLogin", "123456789", 25);
         User secondUser = new User("validLogin", "987654321", 52);
         User actual = service.register(firstUser);
         User expected = firstUser;
         assertEquals(actual, expected);
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             service.register(secondUser);
         });
     }

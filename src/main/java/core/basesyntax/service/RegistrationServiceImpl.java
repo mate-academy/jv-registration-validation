@@ -22,44 +22,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(Integer age) {
         if (age < AGE_AT_LEAST_REQUIRE) {
-            try {
-                throw new RegistrationException("Not valid login");
-            } catch (RegistrationException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RegistrationException("Not valid login");
         }
     }
 
     private void checkPassword(String password) {
-        if (password == null
-                || password.length() < LENGTH_AT_LEAST_REQUIRE) {
-            try {
-                throw new RegistrationException("Not valid login");
-            } catch (RegistrationException e) {
-                throw new RuntimeException(e);
-            }
+        if (password.length() < LENGTH_AT_LEAST_REQUIRE) {
+            throw new RegistrationException("Too short password");
         }
     }
 
     private void checkNull(User user) {
         if (user == null) {
-            try {
-                throw new RegistrationException("Null User");
-            } catch (RegistrationException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RegistrationException("null user.");
         }
     }
 
     private void checkLogin(String login) {
-        if (login == null
-                || storageDao.get(login) != null
-                || login.length() < LENGTH_AT_LEAST_REQUIRE) {
-            try {
-                throw new RegistrationException("Not valid login");
-            } catch (RegistrationException e) {
-                throw new RuntimeException(e);
-            }
+        if (login == null) {
+            throw new RegistrationException("null login");
+        }
+        if (login.length() < LENGTH_AT_LEAST_REQUIRE) {
+            throw new RegistrationException("too short login");
+        }
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("this login is already existed");
         }
     }
 }
