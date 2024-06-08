@@ -12,15 +12,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final String PASSWORD_TOO_SHORT
             = "User's password must have at least 6 characters";
     private static final String AGE_TOO_LOW = "User's age must be at least 18 years old";
+    private static final String AGE_TOO_HIGH = "User's age must be below 151 years old";
     private static final String INVALID_EMAIL = "Invalid email";
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
-            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
-                    + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                    + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
-                    + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                    + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
-                    + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$");
+            "^[\\w-\\.]+@[\\w-]+\\.[\\w-]{2,4}$");
     private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 150;
     private static final int MIN_NUMBER_OF_CHARACTERS = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -43,6 +40,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException(AGE_TOO_LOW);
+        }
+        if (user.getAge() > MAX_AGE) {
+            throw new RegistrationException(AGE_TOO_HIGH);
         }
 
         return storageDao.add(user);
