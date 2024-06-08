@@ -22,13 +22,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(Integer age) {
         if (age < AGE_AT_LEAST_REQUIRE) {
-            throw new RegistrationException("Not valid login");
+            throw new RegistrationException("You are too young");
         }
     }
 
     private void checkPassword(String password) {
+        if (password == null) {
+            throw new RegistrationException("null password");
+        }
         if (password.length() < LENGTH_AT_LEAST_REQUIRE) {
-            throw new RegistrationException("Too short password");
+            throw new RegistrationException("Too short length password");
         }
     }
 

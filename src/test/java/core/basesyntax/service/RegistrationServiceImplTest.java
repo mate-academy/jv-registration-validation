@@ -19,14 +19,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_valid_user_Ok() {
+    void register_valid_user_ok() {
         User expected = new User("validLogin", "123456789", 25);
         User actual = service.register(expected);
         assertEquals(expected, actual);
     }
 
     @Test
-    void register_bulk_valid_users_Ok() {
+    void register_bulkValidUsers_ok() {
         User first = new User("validLogin", "123456789", 25);
         User actual = service.register(first);
         User expected = first;
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_with_too_short_password_notOk() {
+    void register_invalid_password_notOk() {
         User user = new User("IvanGun", "1", 25);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_too_young_user_notOk() {
+    void register_invalid_age_notOk() {
         User user = new User("PeterPen", "123456", 16);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_with_too_short_login_notOk() {
+    void register_invalid_login_notOk() {
         User user = new User("I", "123456", 25);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -76,12 +76,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_the_same_user_login_notOk() {
+    void register_twice_user_notOk() {
         User firstUser = new User("validLogin", "123456789", 25);
-        User secondUser = new User("validLogin", "987654321", 52);
         User actual = service.register(firstUser);
         User expected = firstUser;
         assertEquals(actual, expected);
+        User secondUser = new User("validLogin", "987654321", 52);
         assertThrows(RegistrationException.class, () -> {
             service.register(secondUser);
         });

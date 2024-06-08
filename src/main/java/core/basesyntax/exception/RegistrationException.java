@@ -5,4 +5,3 @@ public class RegistrationException extends RuntimeException {
         super(message);
     }
 }
-
