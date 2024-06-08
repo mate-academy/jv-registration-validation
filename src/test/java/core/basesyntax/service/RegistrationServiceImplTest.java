@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_null_user_notOk() {
+    void register_nullUser_notOk() {
         User user = null;
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalid_password_notOk() {
+    void register_password_notOk() {
         User user = new User("IvanGun", "1", 25);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -60,7 +60,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalid_age_notOk() {
+    void register_age_notOk() {
         User user = new User("PeterPen", "123456", 16);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalid_login_notOk() {
+    void register_login_notOk() {
         User user = new User("I", "123456", 25);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_twice_user_notOk() {
+    void register_twiceUser_notOk() {
         User firstUser = new User("validLogin", "123456789", 25);
         User actual = service.register(firstUser);
         User expected = firstUser;

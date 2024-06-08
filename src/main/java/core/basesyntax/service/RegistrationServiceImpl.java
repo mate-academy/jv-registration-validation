@@ -22,34 +22,34 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkAge(Integer age) {
         if (age < AGE_AT_LEAST_REQUIRE) {
-            throw new RegistrationException("You are too young");
+            throw new RegistrationException("Not allow register too young user");
         }
     }
 
     private void checkPassword(String password) {
         if (password == null) {
-            throw new RegistrationException("null password");
+            throw new RegistrationException("Password can't be null");
         }
         if (password.length() < LENGTH_AT_LEAST_REQUIRE) {
-            throw new RegistrationException("Too short length password");
+            throw new RegistrationException("Password can't be to short");
         }
     }
 
     private void checkNull(User user) {
         if (user == null) {
-            throw new RegistrationException("null user.");
+            throw new RegistrationException("User can't be null");
         }
     }
 
     private void checkLogin(String login) {
         if (login == null) {
-            throw new RegistrationException("null login");
+            throw new RegistrationException("Login can't be null");
         }
         if (login.length() < LENGTH_AT_LEAST_REQUIRE) {
-            throw new RegistrationException("too short login");
+            throw new RegistrationException("Login can't be too short");
         }
         if (storageDao.get(login) != null) {
-            throw new RegistrationException("this login is already existed");
+            throw new RegistrationException("This login is already existed");
         }
     }
 }
