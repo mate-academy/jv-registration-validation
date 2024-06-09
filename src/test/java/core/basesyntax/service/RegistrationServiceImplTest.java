@@ -75,8 +75,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginAlreadyExist_notOk() {
         User user = new User("validLogin", "123456789", 25);
-        User actual = service.register(user);
-        assertEquals(actual, user);
+        Storage.people.add(user);
         User newUser = new User("validLogin", "987654321", 52);
         assertThrows(RegistrationException.class, () -> {
             service.register(newUser);
