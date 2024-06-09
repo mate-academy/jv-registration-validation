@@ -27,20 +27,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_bulkValidUsers_ok() {
-        User first = new User("validLogin", "123456789", 25);
-        User actual = service.register(first);
-        User expected = first;
-        assertEquals(expected, actual);
+        User firstUser = new User("validLogin", "123456789", 25);
+        User actual = service.register(firstUser);
+        assertEquals(firstUser, actual);
 
-        User second = new User("validLogin2", "123456789", 35);
-        actual = service.register(second);
-        expected = second;
-        assertEquals(expected, actual);
+        User secondUser = new User("validLogin2", "123456789", 35);
+        actual = service.register(secondUser);
+        assertEquals(secondUser, actual);
 
-        User third = new User("validLogin3", "123456789", 30);
-        actual = service.register(third);
-        expected = third;
-        assertEquals(expected, actual);
+        User thirdUser = new User("validLogin3", "123456789", 30);
+        actual = service.register(thirdUser);
+        assertEquals(thirdUser, actual);
     }
 
     @Test
@@ -52,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_password_notOk() {
+    void register_shortPassword_notOk() {
         User user = new User("IvanGun", "1", 25);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -60,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_age_notOk() {
+    void register_youngAge_notOk() {
         User user = new User("PeterPen", "123456", 16);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -68,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_login_notOk() {
+    void register_shortLogin_notOk() {
         User user = new User("I", "123456", 25);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
@@ -76,14 +73,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_twiceUser_notOk() {
-        User firstUser = new User("validLogin", "123456789", 25);
-        User actual = service.register(firstUser);
-        User expected = firstUser;
-        assertEquals(actual, expected);
-        User secondUser = new User("validLogin", "987654321", 52);
+    void register_loginAlreadyExist_notOk() {
+        User user = new User("validLogin", "123456789", 25);
+        User actual = service.register(user);
+        assertEquals(actual, user);
+        User newUser = new User("validLogin", "987654321", 52);
         assertThrows(RegistrationException.class, () -> {
-            service.register(secondUser);
+            service.register(newUser);
         });
     }
 }
