@@ -28,9 +28,7 @@ class RegistrationServiceImplTest {
         User registeredUser = registrationService.register(user);
 
         assertNotNull(registeredUser);
-        assertEquals(user.getLogin(), registeredUser.getLogin());
-        assertEquals(user.getPassword(), registeredUser.getPassword());
-        assertEquals(user.getAge(), registeredUser.getAge());
+        assertEquals(user, registeredUser);
     }
 
     @Test
