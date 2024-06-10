@@ -23,7 +23,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_valid_user_ok() {
+    void register_validUser_ok() {
         User actual = service.register(firstUser);
         assertEquals(firstUser, actual);
     }
