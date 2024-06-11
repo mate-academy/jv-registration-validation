@@ -1,12 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static final RegistrationService REGISTRATION_SERVICE = new RegistrationServiceImpl();
@@ -57,11 +57,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void addUser_CheckSizeOfArrayAfterAdd_Ok() {
-        int sizeBefore = Storage.people.size();
         User user = new User();
         user.setLogin("Alice123");
         user.setPassword("qwerty1234");
         user.setAge(19);
+        int sizeBefore = Storage.people.size();
         REGISTRATION_SERVICE.register(user);
         int sizeAfter = Storage.people.size();
         assertEquals(sizeAfter, sizeBefore + 1);
