@@ -25,8 +25,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + "For example: \"qwerty\" is a good password");
         }
         if (user.getAge() < USER_MIN_AGE) {
-            throw new RegistrationException("You are almost adult but still no. " +
-                    "Come back after yours eighteen birthday.");
+            throw new RegistrationException("You are almost adult but still no. "
+                    + "Come back after yours eighteen birthday.");
         }
         return storageDao.add(user);
     }
