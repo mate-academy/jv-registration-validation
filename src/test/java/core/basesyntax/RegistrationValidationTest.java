@@ -58,41 +58,41 @@ public class RegistrationValidationTest {
     }
 
     @Test
-    void setLogin_lessThanSixCharacters_notOk() {
+    void register_loginLessThanSixCharacters_notOk() {
         testUser.setLogin("user");
         String login = testUser.getLogin();
         assertFalse(login.length() >= 6, "Login should be at least 6 characters");
     }
 
     @Test
-    void setPassword_lessThanSixCharacters_notOk() {
+    void register_passwordLessThanSixCharacters_notOk() {
         testUser.setPassword("1111");
         String password = testUser.getPassword();
         assertFalse(password.length() >= 6, "Password should be at least 6 characters");
     }
 
     @Test
-    void setAge_lessThanEighteen_notOk() {
+    void register_ageLessThanEighteen_notOk() {
         testUser.setAge(6);
         assertFalse(testUser.getAge() >= 18, "Age should be at least 18");
     }
 
     @Test
-    void setLogin_null_notOk() {
+    void register_nullLogin_notOk() {
         testUser.setLogin(null);
         String login = testUser.getLogin();
         assertNull(login, "Login should not be null");
     }
 
     @Test
-    void setPassword_null_notOk() {
+    void register_nullPassword_notOk() {
         testUser.setPassword(null);
         String password = testUser.getPassword();
         assertNull(password, "Password should not be null");
     }
 
     @Test
-    void setAge_null_notOk() {
+    void register_nullAge_notOk() {
         testUser.setAge(null);
         assertNull(testUser.getAge(), "Age should not be null");
     }
