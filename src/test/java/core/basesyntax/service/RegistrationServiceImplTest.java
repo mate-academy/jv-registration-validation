@@ -16,7 +16,7 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private StorageDao storageDao;
     private User actualUser;
-    private User actualUser2;
+    private User additionalUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -30,10 +30,10 @@ class RegistrationServiceImplTest {
         actualUser.setLogin("bober1");
         actualUser.setPassword("teeth123");
         actualUser.setAge(30);
-        actualUser2 = new User();
-        actualUser2.setLogin("uzhik1");
-        actualUser2.setPassword("1tail1");
-        actualUser2.setAge(20);
+        additionalUser = new User();
+        additionalUser.setLogin("uzhik1");
+        additionalUser.setPassword("1tail1");
+        additionalUser.setAge(20);
     }
 
     @Test
@@ -56,17 +56,17 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginLengthLessThanSix_notOk() {
         actualUser.setLogin("bober");
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
         actualUser.setLogin("");
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
         actualUser.setLogin(null);
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
     }
 
@@ -90,17 +90,17 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordLengthLessThanSix_notOk() {
         actualUser.setPassword("teeth");
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
         actualUser.setLogin("");
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
     }
 
     @Test
     void register_nullPassword_notOk() {
         actualUser.setPassword(null);
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
     }
 
@@ -124,24 +124,24 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageBelow18_notOk() {
         actualUser.setAge(16);
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
         actualUser.setAge(0);
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
     }
 
     @Test
     void register_nullAge_notOk() {
         actualUser.setAge(null);
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
     }
 
     @Test
     void register_negativeAge_notOk() {
         actualUser.setAge(-30);
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
     }
 
@@ -157,12 +157,12 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginAlreadyExists_notOk() {
         storageDao.add(actualUser);
-        assertThrows(RegistrationServiceException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
-        actualUser2.setLogin("bober1");
-        storageDao.add(actualUser2);
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(actualUser2));
+        additionalUser.setLogin("bober1");
+        storageDao.add(additionalUser);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(additionalUser));
     }
 
     @Test
@@ -172,9 +172,9 @@ class RegistrationServiceImplTest {
         assertEquals(storageDao.get(expectedUser.getLogin()), actualUser);
         assertEquals(Storage.people.size(), 1);
 
-        expectedUser = registrationService.register(actualUser2);
-        assertEquals(expectedUser, actualUser2);
-        assertEquals(storageDao.get(expectedUser.getLogin()), actualUser2);
+        expectedUser = registrationService.register(additionalUser);
+        assertEquals(expectedUser, additionalUser);
+        assertEquals(storageDao.get(expectedUser.getLogin()), additionalUser);
         assertEquals(Storage.people.size(), 2);
     }
 

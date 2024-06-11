@@ -12,24 +12,20 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null || user.getLogin().length() < MINIMAL_LENGTH) {
-            throw new RegistrationServiceException(
+            throw new RegistrationException(
                     "login must consist of at least 6 characters");
         }
         if (user.getPassword() == null || user.getPassword().length() < MINIMAL_LENGTH) {
-            throw new RegistrationServiceException(
+            throw new RegistrationException(
                     "password must consist of at least 6 characters");
         }
         if (user.getAge() == null || user.getAge() < MINIMAL_AGE) {
-            throw new RegistrationServiceException(
+            throw new RegistrationException(
                     "registration is not available for users under 18");
         }
-        if (doesLoginExists(user.getLogin())) {
-            throw new RegistrationServiceException("user with such login already exists");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("user with such login already exists");
         }
         return storageDao.add(user);
-    }
-
-    private boolean doesLoginExists(String login) {
-        return storageDao.get(login) != null;
     }
 }
