@@ -124,7 +124,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("Bob1256");
         user.setPassword(null);
-        user.setAge(Integer.MAX_VALUE + 1);
+        user.setAge(Integer.MAX_VALUE * 2);
         assertThrows(RegistrationException.class, () -> {
             REGISTRATION_SERVICE.register(user);
         });
