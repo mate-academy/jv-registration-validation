@@ -16,12 +16,10 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationValidationTest {
     private static RegistrationService registrationService;
-    private User testUser;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        testUser = new User();
     }
 
     @AfterEach
@@ -31,76 +29,94 @@ public class RegistrationValidationTest {
 
     @Test
     void register_existingUser_notOk() {
-        validUser();
-        Storage.people.add(validUser());
-        testUser.setLogin(validUser().getLogin());
-        testUser.setPassword(validUser().getPassword());
-        testUser.setAge(validUser().getAge());
+        User user = new User();
+        user.setLogin("user69");
+        user.setPassword("qwerty");
+        user.setAge(19);
+        Storage.people.add(user);
+        User newUser = new User();
+        newUser.setLogin("user69");
+        newUser.setPassword("qwerty");
+        newUser.setAge(19);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(validUser()));
+                registrationService.register(newUser));
     }
 
     @Test
     void register_validUser_Ok() {
-        validUser();
-        User actual = registrationService.register(validUser());
-        assertEquals(actual, validUser());
+        User validUser = new User();
+        validUser.setLogin("valid_login");
+        validUser.setPassword("valid_password");
+        validUser.setAge(18);
+        User actual = registrationService.register(validUser);
+        assertEquals(actual, validUser);
     }
 
     @Test
     void register_invalidUser_notOk() {
-        testUser.setLogin(validUser().getLogin());
-        testUser.setPassword("12345");
-        testUser.setAge(validUser().getAge());
-        Storage.people.add(testUser);
+        User invalidLoginUser = new User();
+        invalidLoginUser.setLogin("bob");
+        invalidLoginUser.setPassword("qwerty");
+        invalidLoginUser.setAge(33);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(testUser));
+                registrationService.register(invalidLoginUser));
+        User invalidPasswordUser = new User();
+        invalidPasswordUser.setLogin("robert");
+        invalidPasswordUser.setPassword("12345");
+        invalidPasswordUser.setAge(19);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(invalidPasswordUser));
+        User invalidAgeUser = new User();
+        invalidAgeUser.setLogin("antony");
+        invalidAgeUser.setPassword("123456");
+        invalidAgeUser.setAge(7);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(invalidAgeUser));
     }
 
     @Test
     void register_loginLessThanSixCharacters_notOk() {
-        testUser.setLogin("user");
-        String login = testUser.getLogin();
+        User user = new User();
+        user.setLogin("user");
+        String login = user.getLogin();
         assertFalse(login.length() >= 6, "Login should be at least 6 characters");
     }
 
     @Test
     void register_passwordLessThanSixCharacters_notOk() {
-        testUser.setPassword("1111");
-        String password = testUser.getPassword();
+        User user = new User();
+        user.setPassword("1111");
+        String password = user.getPassword();
         assertFalse(password.length() >= 6, "Password should be at least 6 characters");
     }
 
     @Test
     void register_ageLessThanEighteen_notOk() {
-        testUser.setAge(6);
-        assertFalse(testUser.getAge() >= 18, "Age should be at least 18");
+        User user = new User();
+        user.setAge(6);
+        assertFalse(user.getAge() >= 18, "Age should be at least 18");
     }
 
     @Test
     void register_nullLogin_notOk() {
-        testUser.setLogin(null);
-        String login = testUser.getLogin();
+        User user = new User();
+        user.setLogin(null);
+        String login = user.getLogin();
         assertNull(login, "Login should not be null");
     }
 
     @Test
     void register_nullPassword_notOk() {
-        testUser.setPassword(null);
-        String password = testUser.getPassword();
+        User user = new User();
+        user.setPassword(null);
+        String password = user.getPassword();
         assertNull(password, "Password should not be null");
     }
 
     @Test
     void register_nullAge_notOk() {
-        testUser.setAge(null);
-        assertNull(testUser.getAge(), "Age should not be null");
-    }
-
-    User validUser() {
-        testUser.setLogin("qwerty");
-        testUser.setPassword("123456");
-        testUser.setAge(18);
-        return testUser;
+        User user = new User();
+        user.setAge(null);
+        assertNull(user.getAge(), "Age should not be null");
     }
 }

@@ -13,12 +13,16 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("Sorry but someone steals your name. "
-                    + "Go to change your passport");
+        if (user == null) {
+            throw new RegistrationException("How do you can be null??"
+                    + "Go to your parents, they forget to create you!!");
         }
         if (user.getLogin() == null || user.getLogin().length() < LOGIN_MIN_LENGTH) {
             throw new RegistrationException("Your name is too short. You need to change it.");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("Sorry but someone steals your name. "
+                    + "Go to change your passport");
         }
         if (user.getPassword() == null || user.getPassword().length() < PASSWORD_MIN_LENGTH) {
             throw new RegistrationException("Password must contain at least 6 characters."
