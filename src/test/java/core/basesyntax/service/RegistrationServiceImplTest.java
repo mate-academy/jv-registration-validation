@@ -20,7 +20,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validUser_ok() {
+    void register_userWithValidCredentials_success() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword");
@@ -49,7 +49,9 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword");
         user.setAge(20);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login must be at least 6 characters long.", exception.getMessage());
     }
 
     @Test
@@ -68,7 +70,23 @@ class RegistrationServiceImplTest {
         user.setPassword("short");
         user.setAge(20);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password must be at least 6 characters long.", exception.getMessage());
+    }
+
+    @Test
+    void register_passwordWithMinimumLength_success() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("123456");
+        user.setAge(20);
+
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser);
+        assertEquals(user.getLogin(), registeredUser.getLogin());
+        assertEquals(user.getPassword(), registeredUser.getPassword());
+        assertEquals(user.getAge(), registeredUser.getAge());
     }
 
     @Test
@@ -81,7 +99,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_anderAge_notOk() {
+    void register_underAge_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword");
@@ -96,7 +114,7 @@ class RegistrationServiceImplTest {
         user1.setLogin("validLogin");
         user1.setPassword("validPassword");
         user1.setAge(20);
-        registrationService.register(user1);
+        Storage.people.add(user1);
 
         User user2 = new User();
         user2.setLogin("validLogin");

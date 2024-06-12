@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -13,21 +14,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login cannot be null.");
+        }
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login must be at least " + MIN_LOGIN_LENGTH
                     + " characters long.");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        for (User existingUser : Storage.people) {
+            if (existingUser.getLogin().equals(user.getLogin())) {
+                throw new RegistrationException("User with this login already exists.");
+            }
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password cannot be null.");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password must be at least " + MIN_PASSWORD_LENGTH
                     + " characters long.");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age cannot be null.");
+        }
+        if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Age must be at least " + MIN_AGE + ".");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already exists.");
-        }
-
         return storageDao.add(user);
     }
 }
