@@ -16,7 +16,6 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private StorageDao storageDao;
     private User actualUser;
-    private User additionalUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -30,10 +29,6 @@ class RegistrationServiceImplTest {
         actualUser.setLogin("bober1");
         actualUser.setPassword("teeth123");
         actualUser.setAge(30);
-        additionalUser = new User();
-        additionalUser.setLogin("uzhik1");
-        additionalUser.setPassword("1tail1");
-        additionalUser.setAge(20);
     }
 
     @Test
@@ -159,10 +154,11 @@ class RegistrationServiceImplTest {
         storageDao.add(actualUser);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(actualUser));
-        additionalUser.setLogin("bober1");
-        storageDao.add(additionalUser);
+        User newUser = new User();
+        newUser.setLogin("bober1");
+        storageDao.add(newUser);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(additionalUser));
+                () -> registrationService.register(newUser));
     }
 
     @Test
@@ -171,10 +167,13 @@ class RegistrationServiceImplTest {
         assertEquals(expectedUser, actualUser);
         assertEquals(storageDao.get(expectedUser.getLogin()), actualUser);
         assertEquals(Storage.people.size(), 1);
-
-        expectedUser = registrationService.register(additionalUser);
-        assertEquals(expectedUser, additionalUser);
-        assertEquals(storageDao.get(expectedUser.getLogin()), additionalUser);
+        User newUser = new User();
+        newUser.setLogin("uzhik1");
+        newUser.setPassword("1tail1");
+        newUser.setAge(25);
+        expectedUser = registrationService.register(newUser);
+        assertEquals(expectedUser, newUser);
+        assertEquals(storageDao.get(expectedUser.getLogin()), newUser);
         assertEquals(Storage.people.size(), 2);
     }
 
