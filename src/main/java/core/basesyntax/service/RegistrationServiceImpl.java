@@ -17,8 +17,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login cannot be less than " + MIN_LOGIN_LENGTH +
-                    ". Actual login " + user.getLogin() + " length: " + user.getLogin().length());
+            throw new RegistrationException("Login cannot be less than " + MIN_LOGIN_LENGTH
+                    + ". Actual login " + user.getLogin() + " length: " + user.getLogin().length());
         }
 
         if (user.getPassword() == null) {
@@ -26,8 +26,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password cannot be less than " + MIN_PASSWORD_LENGTH +
-                    ". Actual password " + user.getPassword() + " length: " + user.getPassword().length());
+            throw new RegistrationException("Password cannot be less than " + MIN_PASSWORD_LENGTH
+                    + ". Actual password " + user.getPassword()
+                    + " length: " + user.getPassword().length());
         }
 
         if (user.getAge() == null) {
@@ -35,8 +36,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Age cannot be less than " + MIN_AGE +
-                    ". Actual age " + user.getAge());
+            throw new RegistrationException("Age cannot be less than " + MIN_AGE
+                    + ". Actual age " + user.getAge());
         }
 
         if (storageDao.get(user.getLogin()) != null) {
