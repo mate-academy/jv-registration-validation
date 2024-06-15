@@ -8,7 +8,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,15 +17,15 @@ class RegistrationServiceImplTest {
     private static StorageDao storageDao;
     private User user;
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void setUp() {
+        user = new User();
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
-    @BeforeEach
-    void setUp() {
-        user = new User();
+    @AfterEach
+    void tearDown() {
         Storage.people.clear();
     }
 
@@ -100,22 +100,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUser_WithInvalidAgeHigherThanIntegerMaxValue_NotOk() {
-        user.setLogin("Steve123");
-        user.setPassword("valid123");
-        user.setAge(Integer.MAX_VALUE + 10);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
     void registerUser_WithAllValidFields_Ok() {
         user.setLogin("Steve123");
         user.setPassword("valid123");
         user.setAge(20);
-        User returnedUser = registrationService.register(user);
-        assertEquals(user, returnedUser);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get("Steve123"));
     }
 
     @Test
@@ -144,14 +134,14 @@ class RegistrationServiceImplTest {
         user.setPassword("valid123");
         user.setAge(20);
         registrationService.register(user);
-        User usertoAdd = new User();
-        usertoAdd.setLogin("Steve123");
-        usertoAdd.setPassword("valid123");
-        usertoAdd.setAge(25);
+        User userToAdd = new User();
+        userToAdd.setLogin("Steve123");
+        userToAdd.setPassword("valid123");
+        userToAdd.setAge(25);
         User getUser = storageDao.get(user.getLogin());
-        assertNotEquals(usertoAdd, getUser);
+        assertNotEquals(userToAdd, getUser);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(userToAdd);
         });
     }
 }
