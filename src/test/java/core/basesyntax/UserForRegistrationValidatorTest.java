@@ -3,10 +3,9 @@ package core.basesyntax;
 import core.basesyntax.exeptions.InvalidUserException;
 import core.basesyntax.model.User;
 import core.basesyntax.validators.UserForRegistrationValidator;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class UserForRegistrationValidatorTest {
     private static final String DEFAULT_CORRECT_PASSWORD = "SuperPassword123@";

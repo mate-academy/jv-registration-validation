@@ -5,6 +5,7 @@ import core.basesyntax.model.User;
 
 public class UserValidator {
     protected final User user;
+
     public UserValidator(User user) {
         this.user = user;
     }

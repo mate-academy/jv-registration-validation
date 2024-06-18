@@ -3,8 +3,8 @@ package core.basesyntax;
 import core.basesyntax.exeptions.InvalidUserException;
 import core.basesyntax.model.User;
 import core.basesyntax.validators.UserValidator;
-import org.junit.jupiter.api.Assertions;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class UserValidationTest {
