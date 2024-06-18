@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 public class UserForRegistrationValidatorTest {
-    private final static String DEFAULT_CORRECT_PASSWORD = "SuperPassword123@";
-    private final static String DEFAULT_LOGIN = "HelloMates";
-    private final static int DEFAULT_AGE = 18;
-    private final static long DEFAULT_ID = 100L;
+    private static final String DEFAULT_CORRECT_PASSWORD = "SuperPassword123@";
+    private static final String DEFAULT_LOGIN = "HelloMates";
+    private static final int DEFAULT_AGE = 18;
+    private static final long DEFAULT_ID = 100L;
 
     @Test
     void validateUser_checkValidPasswords_Ok() throws InvalidUserException {
@@ -67,9 +67,8 @@ public class UserForRegistrationValidatorTest {
     void validateUser_negativeAge_NotOk() {
         User user = createDefaultUser();
         user.setAge(-2);
-        Assertions.assertThrows(InvalidUserException.class, () -> {
-                new UserForRegistrationValidator(user).validateUser();
-        });
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                new UserForRegistrationValidator(user).validateUser());
     }
 
     private User createDefaultUser() {

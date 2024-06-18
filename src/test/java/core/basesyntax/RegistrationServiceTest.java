@@ -3,7 +3,10 @@ package core.basesyntax;
 import core.basesyntax.exeptions.RegisterServiceException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
     private RegistrationServiceImpl registrationService;
@@ -15,16 +18,13 @@ public class RegistrationServiceTest {
 
     @Test
     void register_invalidUser_NotOk() {
-        Assertions.assertThrows(RegisterServiceException.class, () -> {
-            registrationService.register(null);
-        });
-        Assertions.assertThrows(RegisterServiceException.class, () -> {
-            registrationService.register(new User(null, null, null, null));
-        });
+        Assertions.assertThrows(RegisterServiceException.class, () ->
+                registrationService.register(null));
+        Assertions.assertThrows(RegisterServiceException.class, () ->
+                registrationService.register(new User(null, null, null, null)));
         User invalidUser = new User(1L, "Login", "Hello!", 18);
-        Assertions.assertThrows(RegisterServiceException.class, () -> {
-            registrationService.register(invalidUser);
-        });
+        Assertions.assertThrows(RegisterServiceException.class, () ->
+                registrationService.register(invalidUser));
     }
 
     @Test
@@ -32,9 +32,8 @@ public class RegistrationServiceTest {
         User user1 = new User(1L, "SameLogin123", "HardPassword123!", 18);
         User user2 = new User(2L, "SameLogin123", "SuperPassword$54", 22);
         registrationService.register(user1);
-        Assertions.assertThrows(RegisterServiceException.class, () -> {
-           registrationService.register(user2);
-        });
+        Assertions.assertThrows(RegisterServiceException.class, () ->
+                registrationService.register(user2));
     }
 
     @Test

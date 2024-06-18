@@ -4,24 +4,22 @@ import core.basesyntax.exeptions.InvalidUserException;
 import core.basesyntax.model.User;
 import core.basesyntax.validators.UserValidator;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
 public class UserValidationTest {
-    private final String DEFAULT_LOGIN = "Login";
-    private final String DEFAULT_PASSWORD = "Password";
-    private final long DEFAULT_ID = 1L;
-    private final int DEFAULT_AGE = 18;
+    private static final String DEFAULT_LOGIN = "Login";
+    private static final String DEFAULT_PASSWORD = "Password";
+    private static final long DEFAULT_ID = 1L;
+    private static final int DEFAULT_AGE = 18;
 
     @Test
     void validateUser_nullableUser_NotOk() {
         User userWithNullProperties = new User();
-        Assertions.assertThrows(InvalidUserException.class, () -> {
-            new UserValidator(null).validateUser();
-        });
-        Assertions.assertThrows(InvalidUserException.class, () -> {
-            new UserValidator(userWithNullProperties).validateUser();
-        });
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                new UserValidator(null).validateUser());
+        Assertions.assertThrows(InvalidUserException.class, () ->
+                new UserValidator(userWithNullProperties).validateUser());
 
     }
 
@@ -34,9 +32,8 @@ public class UserValidationTest {
                 new User(1L, "mate", "strongPass", null)
         );
         for (User userWithInvalidProperties : usersWithNullableProperties) {
-            Assertions.assertThrows(InvalidUserException.class, () -> {
-                new UserValidator(userWithInvalidProperties).validateUser();
-            });
+            Assertions.assertThrows(InvalidUserException.class, () ->
+                    new UserValidator(userWithInvalidProperties).validateUser());
         }
     }
 
@@ -63,21 +60,20 @@ public class UserValidationTest {
         Assertions.assertNotEquals(user1, user2);
     }
 
-
     @Test
     void setters_settersWorksFine_Ok() {
         User user = new User(DEFAULT_ID, DEFAULT_LOGIN, DEFAULT_PASSWORD, DEFAULT_AGE);
-        long newId = 100L;
-        String newLogin = "Coca-cola";
-        String newPassword = "EngineCapute123";
-        int newAge = 44;
+        final long newId = 100L;
+        final String newLogin = "Coca-cola";
+        final String newPassword = "EngineCapute123";
+        final int newAge = 44;
         user.setId(newId);
-        Assertions.assertEquals(user.getId(), newId);
-        user.setLogin(newLogin);
-        Assertions.assertEquals(user.getLogin(), newLogin);
         user.setPassword(newPassword);
-        Assertions.assertEquals(user.getPassword(), newPassword);
+        user.setLogin(newLogin);
         user.setAge(newAge);
+        Assertions.assertEquals(user.getId(), newId);
+        Assertions.assertEquals(user.getLogin(), newLogin);
+        Assertions.assertEquals(user.getPassword(), newPassword);
         Assertions.assertEquals(user.getAge(), newAge);
     }
 }
