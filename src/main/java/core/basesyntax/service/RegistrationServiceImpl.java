@@ -9,8 +9,8 @@ import core.basesyntax.validators.UserForRegistrationValidator;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final String INVALID_USER_MESSAGE = "User is invalid: ";
-    private static final String USER_ALREADY_EXISTS_MESSAGE = "User with given login " +
-            "is already exists";
+    private static final String USER_ALREADY_EXISTS_MESSAGE = "User with given login "
+            + "is already exists";
     private final StorageDao storageDao;
 
     public RegistrationServiceImpl() {
