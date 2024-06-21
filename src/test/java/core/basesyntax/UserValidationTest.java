@@ -4,9 +4,7 @@ import core.basesyntax.exeptions.InvalidUserException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.validators.UserValidator;
-
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -103,25 +101,37 @@ public class UserValidationTest {
     @Test
     void register_userWithNullableId_NotOk() {
         Assertions.assertThrows(InvalidUserException.class, () ->
-                registrationService.register(new User(null, DEFAULT_LOGIN, DEFAULT_VALID_PASSWORD, DEFAULT_AGE)));
+                registrationService.register(new User(null,
+                        DEFAULT_LOGIN,
+                        DEFAULT_VALID_PASSWORD,
+                        DEFAULT_AGE)));
     }
 
     @Test
     void register_userWithNullableLogin_NotOk() {
         Assertions.assertThrows(InvalidUserException.class, () ->
-                registrationService.register(new User(DEFAULT_ID, null, DEFAULT_VALID_PASSWORD, DEFAULT_AGE)));
+                registrationService.register(new User(DEFAULT_ID,
+                        null,
+                        DEFAULT_VALID_PASSWORD,
+                        DEFAULT_AGE)));
     }
 
     @Test
     void register_userWithNullablePassword_NotOk() {
         Assertions.assertThrows(InvalidUserException.class, () ->
-                registrationService.register(new User(DEFAULT_ID, DEFAULT_LOGIN, null, DEFAULT_AGE)));
+                registrationService.register(new User(DEFAULT_ID,
+                        DEFAULT_LOGIN,
+                        null,
+                        DEFAULT_AGE)));
     }
 
     @Test
     void register_userWithNullableAge_NotOk() {
         Assertions.assertThrows(InvalidUserException.class, () ->
-                registrationService.register(new User(DEFAULT_ID, DEFAULT_LOGIN, DEFAULT_VALID_PASSWORD, null)));
+                registrationService.register(new User(DEFAULT_ID,
+                        DEFAULT_LOGIN,
+                        DEFAULT_VALID_PASSWORD,
+                        null)));
     }
 
     @Test
