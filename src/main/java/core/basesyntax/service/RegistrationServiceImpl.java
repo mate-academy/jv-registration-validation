@@ -3,14 +3,11 @@ package core.basesyntax.service;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exeptions.InvalidUserException;
-import core.basesyntax.exeptions.RegisterServiceException;
 import core.basesyntax.model.User;
-import core.basesyntax.validators.UserForRegistrationValidator;
+import core.basesyntax.validators.UserValidator;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final String INVALID_USER_MESSAGE = "User is invalid: ";
-    private static final String USER_ALREADY_EXISTS_MESSAGE = "User with given login "
-            + "is already exists";
+
     private final StorageDao storageDao;
 
     public RegistrationServiceImpl() {
@@ -18,16 +15,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public User register(User user) throws RegisterServiceException {
-        try {
-            new UserForRegistrationValidator(user).validateUser();
-        } catch (InvalidUserException e) {
-            throw new RegisterServiceException(INVALID_USER_MESSAGE + e.getMessage());
-        }
-        User userFromDatabase = storageDao.get(user.getLogin());
-        if (userFromDatabase != null) {
-            throw new RegisterServiceException(USER_ALREADY_EXISTS_MESSAGE);
-        }
+    public User register(User user) throws InvalidUserException {
+        new UserValidator().validateUser(user);
         storageDao.add(user);
         return user;
     }
