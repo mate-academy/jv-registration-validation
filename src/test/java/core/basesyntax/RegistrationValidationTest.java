@@ -136,5 +136,10 @@ public class RegistrationValidationTest {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
+
+    @Test
+    void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
+    }
     //endregion
 }
