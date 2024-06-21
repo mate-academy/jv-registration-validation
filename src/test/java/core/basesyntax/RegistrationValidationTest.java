@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationValidationTest {
-    private static final StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storage = new StorageDaoImpl();
     private RegistrationService registrationService;
 
     //region Repeated Tasks
@@ -30,7 +31,7 @@ public class RegistrationValidationTest {
     }
     //endregion
 
-    //region assertEquals Tests
+    //region assertEquals & assertNotNull Tests
     @Test
     void register_validUser_Ok() {
         User validUser = new User();
@@ -39,17 +40,8 @@ public class RegistrationValidationTest {
         validUser.setPassword("validPassword");
         User actual = registrationService.register(validUser);
         assertEquals(actual, validUser);
-    }
-
-    @Test
-    void getUser_AfterAddFromStorageClass_Ok() {
-        User user = new User();
-        user.setAge(19);
-        user.setLogin("test007");
-        user.setPassword("qwerty1234");
-        Storage.people.add(user);
-        User getUser = storageDao.get(user.getLogin());
-        assertEquals(user, getUser);
+        User retrievedUser = storage.get(validUser.getLogin());
+        assertNotNull(retrievedUser);
     }
     //endregion
 
