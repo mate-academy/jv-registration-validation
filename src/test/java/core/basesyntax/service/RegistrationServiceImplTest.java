@@ -23,56 +23,61 @@ class RegistrationServiceImplTest {
 
     @Test
     void userIsNull_notOk() {
-        assertThrows(CustomException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationValidationException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
-    void userLogin_notOk() {
+    void register_duplicateLogin_notOk() {
         user.setLogin("login1414");
         user.setPassword("password1414");
         user.setAge(25);
-        storageDao.add(user);
+        registrationService.register(user);
         User newUser = new User();
         newUser.setLogin("login1414");
         newUser.setPassword("password1414");
         newUser.setAge(25);
-        CustomException exception = assertThrows(CustomException.class, () -> {
-            registrationService.register(newUser);
-        });
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(newUser);
+                });
         assertEquals("User with this login already exists", exception.getMessage());
     }
 
     @Test
-    void userInvalidLogin_notOk() {
+    void register_invalidLogin_notOk() {
         user.setLogin("logi");
         user.setPassword("password2024");
         user.setAge(32);
-        CustomException exception = assertThrows(CustomException.class, () -> {
-            registrationService.register(user);
-        });
-        assertEquals("Is not valid login", exception.getMessage());
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(user);
+                });
+        assertEquals("Login must be at least 6 characters long", exception.getMessage());
     }
 
     @Test
-    void userIsPassword_notOk() {
+    void register_invalidPassword_notOk() {
         user.setLogin("validLogin");
         user.setPassword("pass");
         user.setAge(22);
-        CustomException exception = assertThrows(CustomException.class, () -> {
-            registrationService.register(user);
-        });
-        assertEquals("Is password not valid", exception.getMessage());
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(user);
+                });
+        assertEquals("Password must be at least 6 characters long", exception.getMessage());
     }
 
     @Test
-    void userAge_notOk() {
+    void register_underageUser_notOk() {
         user.setLogin("validLogin");
         user.setPassword("validPassword");
         user.setAge(17);
-        CustomException exception = assertThrows(CustomException.class, () -> {
-            registrationService.register(user);
-        });
-        assertEquals("You are under 18 years old", exception.getMessage());
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(user);
+                });
+        assertEquals("Age must be at least 18 years old", exception.getMessage());
     }
 
     @Test
