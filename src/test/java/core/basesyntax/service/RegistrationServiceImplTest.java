@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    public static final String USER_LOGIN = "login1414";
+    public static final String USER_PASSWORD = "password1414";
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User user;
@@ -27,20 +29,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsNull_notOk() {
+    void register_userIsNull_notOk() {
         assertThrows(RegistrationValidationException.class,
                 () -> registrationService.register(null));
     }
 
     @Test
     void register_duplicateLogin_notOk() {
-        user.setLogin("login1414");
-        user.setPassword("password1414");
+        user.setLogin(USER_LOGIN);
+        user.setPassword(USER_PASSWORD);
         user.setAge(25);
         storageDao.add(user);
         User newUser = new User();
-        newUser.setLogin("login1414");
-        newUser.setPassword("password1414");
+        newUser.setLogin(USER_LOGIN);
+        newUser.setPassword(USER_PASSWORD);
         newUser.setAge(25);
         RegistrationValidationException exception
                 = assertThrows(RegistrationValidationException.class, () -> {
@@ -96,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginNull_notOk() {
+    void register_LoginIsEmpty_notOk() {
         user.setLogin("");
         user.setPassword("password2012");
         user.setAge(30);
@@ -121,7 +123,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_UserLessMinLoginLength_notOk() {
         user.setLogin("valid");
-        user.setPassword("validPassword9");
+        user.setPassword("validPassword8");
         user.setAge(24);
         RegistrationValidationException exception
                 = assertThrows(RegistrationValidationException.class, () -> {
