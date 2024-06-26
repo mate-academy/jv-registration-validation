@@ -6,18 +6,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
-    private StorageDao storageDao;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
     private User user;
 
-    @BeforeEach
-     void setUp() {
+    @BeforeAll
+    static void setUpBeforeAll() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+    }
+
+    @BeforeEach
+    void setUpBeforeEach() {
         user = new User();
     }
 
@@ -32,7 +37,7 @@ class RegistrationServiceImplTest {
         user.setLogin("login1414");
         user.setPassword("password1414");
         user.setAge(25);
-        registrationService.register(user);
+        storageDao.add(user);
         User newUser = new User();
         newUser.setLogin("login1414");
         newUser.setPassword("password1414");
@@ -88,5 +93,40 @@ class RegistrationServiceImplTest {
         User registeredUser = registrationService.register(user);
         assertEquals(user, registeredUser);
         assertEquals(user, storageDao.get(user.getLogin()));
+    }
+
+    @Test
+    void register_LoginNull_notOk() {
+        user.setLogin("");
+        user.setPassword("password2012");
+        user.setAge(30);
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(user);
+                });
+        assertEquals("Login must be at least 6 characters long", exception.getMessage());
+
+    }
+
+    @Test
+    void register_UserMinLoginLength_ok() {
+        user.setLogin("valid1");
+        user.setPassword("validPassword9");
+        user.setAge(24);
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser);
+        assertEquals(user, storageDao.get(user.getLogin()));
+    }
+
+    @Test
+    void register_UserLessMinLoginLength_notOk() {
+        user.setLogin("valid");
+        user.setPassword("validPassword9");
+        user.setAge(24);
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(user);
+                });
+        assertEquals("Login must be at least 6 characters long", exception.getMessage());
     }
 }
