@@ -131,4 +131,28 @@ class RegistrationServiceImplTest {
                 });
         assertEquals("Login must be at least 6 characters long", exception.getMessage());
     }
+
+    @Test
+    void register_PasswordNull_notOk() {
+        user.setLogin("validLogin25");
+        user.setPassword(null);
+        user.setAge(47);
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(user);
+                });
+        assertEquals("User with this password does not exist", exception.getMessage());
+    }
+
+    @Test
+    void register_AgeNull_notOk() {
+        user.setLogin("validLogin2");
+        user.setPassword("password1317");
+        user.setAge(null);
+        RegistrationValidationException exception
+                = assertThrows(RegistrationValidationException.class, () -> {
+                    registrationService.register(user);
+                });
+        assertEquals("No user with this age exists", exception.getMessage());
+    }
 }

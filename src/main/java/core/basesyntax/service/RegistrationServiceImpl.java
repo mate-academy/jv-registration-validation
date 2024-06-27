@@ -34,13 +34,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validatePassword(String password) {
+        if (password == null) {
+            throw new RegistrationValidationException("User with this password does not exist");
+        }
         if (password.length() < MIN_LOGIN_AND_PASWORD_LENGTH) {
             throw new
                     RegistrationValidationException("Password must be at least 6 characters long");
         }
     }
 
-    private void validateAge(int age) {
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new RegistrationValidationException("No user with this age exists");
+        }
         if (age < MIN_USER_AGE) {
             throw new RegistrationValidationException("Age must be at least 18 years old");
         }
