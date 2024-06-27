@@ -18,10 +18,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         validateLogin(user);
         validatePassword(user);
         validateAge(user);
-        User existingUser = storageDao.get(user.getLogin());
-        if (existingUser != null) {
-            throw new RegistrationException("There is an user with the same login.");
-        }
         storageDao.add(user);
         return user;
     }
@@ -36,6 +32,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() < MIN_LENGTH) {
             throw new RegistrationException("Your login should contain %s or more symbols."
                     .formatted(MIN_LENGTH));
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("There is an user with the same login.");
         }
     }
 

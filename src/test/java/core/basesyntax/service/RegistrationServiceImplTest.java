@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final Long ID = 1L;
     private static final String LOGIN = "login";
     private static final String PASSWORD = "password";
     private static final Integer NORMAL_AGE = 19;
