@@ -1,18 +1,16 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -39,7 +37,7 @@ class RegistrationServiceImplTest {
     void loginNullValue_NotOk() {
         User user = createNewUser(null, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
-        registrationService.register(user);
+            registrationService.register(user);
         });
     }
 
@@ -96,7 +94,7 @@ class RegistrationServiceImplTest {
     void ageNullValue_NotOk() {
         User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, null);
         assertThrows(RegistrationException.class, () -> {
-           registrationService.register(user);
+            registrationService.register(user);
         });
     }
 
