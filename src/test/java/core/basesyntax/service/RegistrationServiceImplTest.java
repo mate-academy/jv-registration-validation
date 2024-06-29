@@ -9,13 +9,12 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
-    private static final String LARGE_AGE_MESSAGE = "Incorrect age!";
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword";
     private static final String SHORT_LOGIN = "short";
@@ -24,11 +23,10 @@ class RegistrationServiceImplTest {
     private static final int UNDERAGE = 16;
     private static final int NEGATIVE_AGE = -20;
     private static final int ZERO_AGE = 0;
-    private static final int OVER_AGE = 150;
     private User user;
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
@@ -120,15 +118,6 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
-
-    @Test
-    void largeAge_NotOk() {
-        User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, OVER_AGE);
-        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        assertEquals(LARGE_AGE_MESSAGE, exception.getMessage());
     }
 
     @Test
