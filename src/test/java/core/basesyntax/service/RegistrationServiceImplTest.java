@@ -29,10 +29,19 @@ class RegistrationServiceImplTest {
     void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+        Storage.people.clear();
     }
 
     @Test
-    void loginNullValue_NotOk() {
+    void register_addNewUser_Ok() {
+        User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        User actual = registrationService.register(user);
+        assertEquals(actual, user);
+        assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_loginNullValue_NotOk() {
         User user = createNewUser(null, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -40,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void existingLogin_NotOk() {
+    void register_existingLogin_NotOk() {
         User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         storageDao.add(user);
         assertThrows(RegistrationException.class, () -> {
@@ -49,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerShortLogin_NotOk() {
+    void register_ShortLogin_NotOk() {
         User user = createNewUser(SHORT_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -57,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void emptyLogin_NotOk() {
+    void register_emptyLogin_NotOk() {
         User user = createNewUser("", VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -65,7 +74,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerShortPassword_NotOk() {
+    void register_ShortPassword_NotOk() {
         User user = createNewUser(VALID_LOGIN, SHORT_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -73,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordNullValue_NotOk() {
+    void register_passwordNullValue_NotOk() {
         User user = createNewUser(VALID_LOGIN, null, VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -81,7 +90,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void emptyPassword_NotOk() {
+    void register_emptyPassword_NotOk() {
         User user = createNewUser(VALID_LOGIN, "", VALID_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -89,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageNullValue_NotOk() {
+    void register_ageNullValue_NotOk() {
         User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -97,7 +106,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void underAgeUser_NotOk() {
+    void register_underAgeUser_NotOk() {
         User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, UNDERAGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -105,7 +114,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void negativeUserAge_NotOk() {
+    void register_negativeUserAge_NotOk() {
         User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, NEGATIVE_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -113,19 +122,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void zeroAgeValue_NotOk() {
+    void register_zeroAgeValue_NotOk() {
         User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, ZERO_AGE);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
-    }
-
-    @Test
-    void addNewUser_Ok() {
-        User user = createNewUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        User actual = registrationService.register(user);
-        assertEquals(actual, user);
-        assertTrue(Storage.people.contains(user));
     }
 
     private User createNewUser(String login, String password, Integer age) {
