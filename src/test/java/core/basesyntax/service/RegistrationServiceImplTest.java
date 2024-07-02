@@ -18,7 +18,7 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword";
     private static final String SHORT_LOGIN = "short";
-    private static final String SHORT_PASSWORD = "short";
+    private static final String SHORT_PASSWORD = "small";
     private static final int VALID_AGE = 23;
     private static final int UNDERAGE = 16;
     private static final int NEGATIVE_AGE = -20;
@@ -30,6 +30,13 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         Storage.people.clear();
+    }
+
+    @Test
+    void register_nullUser_NotOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(null);
+        });
     }
 
     @Test

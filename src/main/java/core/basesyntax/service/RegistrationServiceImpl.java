@@ -13,27 +13,46 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
+        return storageDao.add(user);
+    }
+
+    private void validateUser(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can`t be null!");
+        }
+    }
+
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can`t be null!");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login is too short");
         }
+        if ((storageDao.get(user.getLogin()) != null)) {
+            throw new RegistrationException("User with current login is already registered");
+        }
+    }
+
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can`t be null!");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password is too short");
         }
+    }
+
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new RegistrationException("Age can`t be null!");
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Age must be greater than 18!");
         }
-        if ((storageDao.get(user.getLogin()) != null)) {
-            throw new RegistrationException("User with current login is already registered");
-        }
-        return storageDao.add(user);
     }
 }
