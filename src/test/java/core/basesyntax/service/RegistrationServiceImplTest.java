@@ -1,6 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
@@ -14,16 +16,23 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private StorageDao storageDao;
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void beforeAll() {
-        registrationService = new RegistrationServiceImpl();
+        Storage.people.clear();
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl(storageDao);
     }
 
     @BeforeEach
     void setUP() {
         storageDao = new StorageDaoImpl();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -54,7 +63,7 @@ class RegistrationServiceImplTest {
         user.setLogin("Micael");
         user.setPassword("yxcvb123");
         user.setAge(18);
-        registrationService.register(user);
+        Storage.people.add(user);
         User user1 = new User();
         user1.setLogin("Micael");
         user1.setPassword("yxcvb123");
@@ -76,11 +85,22 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_with_ExactMinAge_ok() {
+        User user = new User();
+        user.setLogin("Micael");
+        user.setPassword("ghjkl1234");
+        user.setAge(18);
+        assertDoesNotThrow(() -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_withLogin_null_notOk() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("ghjkl1234");
-        user.setAge(17);
+        user.setAge(18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -109,12 +129,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_passwordExactlyMinLength_ok() {
+        User user = new User();
+        user.setLogin("Michael");
+        user.setPassword("ghjk11");
+        user.setAge(18);
+        assertDoesNotThrow(() -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_userWithAllNormalFields_Ok() {
         User user = new User();
         user.setLogin("Micael");
         user.setPassword("ghjkl1234");
         user.setAge(25);
         User normalUser = registrationService.register(user);
+        User sortsedUser = storageDao.get(user.getLogin());
+        assertNotNull(normalUser);
+        assertEquals(user, sortsedUser);
         assertEquals(user, normalUser);
     }
 
@@ -124,13 +158,9 @@ class RegistrationServiceImplTest {
         user.setLogin("yxcvv555");
         user.setPassword("qwertz");
         user.setAge(19);
-        registrationService.register(user);
-        User getUser = storageDao.get(user.getLogin());
-        assertEquals(user, getUser);
-    }
-
-    @AfterEach
-    void tearDown() {
-        Storage.people.clear();
+        Storage.people.add(user);
+        User retrievedUser = storageDao.get(user.getLogin());
+        assertNotNull(retrievedUser);
+        assertEquals(user, retrievedUser);
     }
 }
