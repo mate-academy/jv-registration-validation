@@ -35,8 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserAgeException("User age less than min age: "
                                                + USER_AGE_MIN);
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 
     private boolean isUserLoginExist(String login) {
