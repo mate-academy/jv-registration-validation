@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     void register_correctUser_ok() {
         User user = new User("mykhailo777@gmail.com", "1234567", 23);
         User actualUser = registrationService.register(user);
-        User expectedUser = new User("mykhailo777@gmail.com", "1234567", 23);
+        User expectedUser = registrationService.get(user.getLogin());
         assertEquals(actualUser, expectedUser);
     }
 
@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     void register_correctUserSecondCase_ok() {
         User user = new User("ivangolybev@gmail.com", "1234567", 28);
         User actualUser = registrationService.register(user);
-        User expectedUser = new User("ivangolybev@gmail.com", "1234567", 28);
+        User expectedUser = registrationService.get(user.getLogin());
         assertEquals(actualUser, expectedUser);
     }
 
@@ -61,7 +61,7 @@ class RegistrationServiceImplTest {
     void register_correctUserThirdCase_ok() {
         User user = new User("oleksiiivanov@gmail.com", "1234567", 33);
         User actualUser = registrationService.register(user);
-        User expectedUser = new User("oleksiiivanov@gmail.com", "1234567", 33);
+        User expectedUser = registrationService.get(user.getLogin());
         assertEquals(actualUser, expectedUser);
     }
 

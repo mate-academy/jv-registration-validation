@@ -38,6 +38,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
+    @Override
+    public User get(String login) {
+        return storageDao.get(login);
+    }
+
     private boolean isUserLoginExist(String login) {
         if (storageDao.get(login) != null) {
             return true;
