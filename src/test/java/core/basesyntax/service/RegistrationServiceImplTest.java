@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.UserAgeException;
 import core.basesyntax.exception.UserLoginExistsException;
 import core.basesyntax.exception.UserLoginLengthException;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Test
     @DisplayName("User register with null login")
@@ -43,7 +46,7 @@ class RegistrationServiceImplTest {
     void register_correctUser_ok() {
         User user = new User("mykhailo777@gmail.com", "1234567", 23);
         User actualUser = registrationService.register(user);
-        User expectedUser = registrationService.get(user.getLogin());
+        User expectedUser = storageDao.get(user.getLogin());
         assertEquals(actualUser, expectedUser);
     }
 
@@ -52,7 +55,7 @@ class RegistrationServiceImplTest {
     void register_correctUserSecondCase_ok() {
         User user = new User("ivangolybev@gmail.com", "1234567", 28);
         User actualUser = registrationService.register(user);
-        User expectedUser = registrationService.get(user.getLogin());
+        User expectedUser = storageDao.get(user.getLogin());
         assertEquals(actualUser, expectedUser);
     }
 
@@ -61,7 +64,7 @@ class RegistrationServiceImplTest {
     void register_correctUserThirdCase_ok() {
         User user = new User("oleksiiivanov@gmail.com", "1234567", 33);
         User actualUser = registrationService.register(user);
-        User expectedUser = registrationService.get(user.getLogin());
+        User expectedUser = storageDao.get(user.getLogin());
         assertEquals(actualUser, expectedUser);
     }
 

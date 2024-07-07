@@ -18,15 +18,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         String userLogin = user.getLogin();
         String userPassword = user.getPassword();
-        int userAge = user.getAge();
-        if (isUserLoginExist(userLogin)) {
-            throw new UserLoginExistsException("User with this login: "
-                                                       + userLogin
-                                                       + " already exists");
-        } else if (!isUserLoginLengthOk(userLogin)) {
+        Integer userAge = user.getAge();
+        checkLoginNull(userLogin);
+        checkPasswordNull(userPassword);
+        checkAgeNull(userAge);
+        if (!isUserLoginLengthOk(userLogin)) {
             throw new UserLoginLengthException("User login length less than min length: "
                                                        + USER_LOGIN_LENGTH_MIN
                                                        + " try input another one");
+        } else if (isUserLoginExist(userLogin)) {
+            throw new UserLoginExistsException("User with this login: "
+                                                       + userLogin
+                                                       + " already exists");
         } else if (!isUserPasswordLengthOk(userPassword)) {
             throw new UserPasswordLengthException("User password length less than min length: "
                                                           + USER_PASSWORD_LENGTH_MIN
@@ -36,11 +39,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                                                + USER_AGE_MIN);
         }
         return storageDao.add(user);
-    }
-
-    @Override
-    public User get(String login) {
-        return storageDao.get(login);
     }
 
     private boolean isUserLoginExist(String login) {
@@ -69,5 +67,23 @@ public class RegistrationServiceImpl implements RegistrationService {
             return false;
         }
         return true;
+    }
+
+    private void checkLoginNull(String login) {
+        if (login == null) {
+            throw new NullPointerException("Login is null, try input another one");
+        }
+    }
+
+    private void checkPasswordNull(String password) {
+        if (password == null) {
+            throw new NullPointerException("Password is null, try input another one");
+        }
+    }
+
+    private void checkAgeNull(Integer age) {
+        if (age == null) {
+            throw new NullPointerException("Age is null, try input another one");
+        }
     }
 }
