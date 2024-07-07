@@ -31,7 +31,8 @@ public class RegistrationServiceImpl implements RegistrationService {
                                                     .formatted(USER_LOGIN_LENGTH_MIN));
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with login :%s already exists".formatted(user.getLogin()));
+            throw new RegistrationException("User with login :%s already exists"
+                                                    .formatted(user.getLogin()));
         }
     }
 
