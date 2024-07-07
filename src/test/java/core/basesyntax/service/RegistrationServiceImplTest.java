@@ -18,25 +18,25 @@ class RegistrationServiceImplTest {
     @Test
     @DisplayName("User register with null login")
     void register_nullLogin_notOk() {
-        User userWithNullLogin = new User(null, "1234567", 45);
+        User user = new User(null, "1234567", 45);
         assertThrows(RegistrationException.class,
-                     () -> registrationService.register(userWithNullLogin));
+                     () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("User register with null password")
     void register_nullPassword_notOk() {
-        User userWithNullPassword = new User("ivanivanov12@gmail.com", null, 45);
+        User user = new User("ivanivanov12@gmail.com", null, 45);
         assertThrows(RegistrationException.class,
-                     () -> registrationService.register(userWithNullPassword));
+                     () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("User register with null age")
     void register_nullAge_notOk() {
-        User userWithNullAge = new User("ivanivanov12@gmail.com", "1234567", null);
+        User user = new User("ivanivanov12@gmail.com", "1234567", null);
         assertThrows(RegistrationException.class,
-                     () -> registrationService.register(userWithNullAge));
+                     () -> registrationService.register(user));
     }
 
     @Test
@@ -44,8 +44,8 @@ class RegistrationServiceImplTest {
     void register_correctUser_ok() {
         User user = new User("mykhailo777@gmail.com", "1234567", 23);
         registrationService.register(user);
-        User expectedUser = storageDao.get(user.getLogin());
-        assertEquals(user, expectedUser);
+        User actual = storageDao.get(user.getLogin());
+        assertEquals(user, actual);
     }
 
     @Test
@@ -61,24 +61,40 @@ class RegistrationServiceImplTest {
     @Test
     @DisplayName("User password length less than minimum")
     void register_userPasswordLessThanMinimum_notOK() {
-        User userWithIncorrectPassword = new User("mykhailo12@gmail.com", "123", 82);
+        User user = new User("mykhailo12@gmail.com", "123", 82);
         assertThrows(RegistrationException.class,
-                     () -> registrationService.register(userWithIncorrectPassword));
+                     () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("User login length less than minimum")
     void register_userLoginLessThanMinimum_notOk() {
-        User userWithIncorrectLogin = new User("inc", "12345678", 21);
+        User user = new User("inc", "12345678", 21);
         assertThrows(RegistrationException.class,
-                     () -> registrationService.register(userWithIncorrectLogin));
+                     () -> registrationService.register(user));
     }
 
     @Test
     @DisplayName("User age less than minimum")
     void register_userAgeLessThanMinimum_notOk() {
-        User userWithIncorrectAge = new User("ivan16161", "12345667", 17);
+        User user = new User("ivan16161", "12345667", 17);
         assertThrows(RegistrationException.class,
-                     () -> registrationService.register(userWithIncorrectAge));
+                     () -> registrationService.register(user));
+    }
+
+    @Test
+    @DisplayName("User is null")
+    void register_userIsNull_notOk() {
+        User user = null;
+        assertThrows(RegistrationException.class,
+                     () -> registrationService.register(user));
+    }
+
+    @Test
+    @DisplayName("User age is negative")
+    void register_userAgeIsNegative_notOk() {
+        User user = new User("ivan16161", "12345667", -100);
+        assertThrows(RegistrationException.class,
+                     () -> registrationService.register(user));
     }
 }

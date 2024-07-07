@@ -13,6 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUser(user);
         validateLogin(user);
         validatePassword(user);
         validateAge(user);
@@ -56,6 +57,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < USER_AGE_MIN) {
             throw new RegistrationException("Your age must be %d or bigger"
                                                     .formatted(USER_AGE_MIN));
+        }
+    }
+
+    private void validateUser(User user) {
+        if (user == null) {
+            throw new RegistrationException("User is null, try register another one");
         }
     }
 }
