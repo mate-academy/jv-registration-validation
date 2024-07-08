@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,6 +35,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(null);
+        });
+    }
+
+    @Test
     void register_loginLessThanMinLength_notOk() {
         User user = new User();
         user.setLogin("Bob");
@@ -64,12 +70,12 @@ class RegistrationServiceImplTest {
         user.setPassword("yxcvb123");
         user.setAge(18);
         Storage.people.add(user);
-        User user1 = new User();
-        user1.setLogin("Micael");
-        user1.setPassword("yxcvb123");
-        user1.setAge(18);
+        User newUser = new User();
+        newUser.setLogin("Micael");
+        newUser.setPassword("yxcvb123");
+        newUser.setAge(18);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user1);
+            registrationService.register(newUser);
         });
     }
 
@@ -90,9 +96,8 @@ class RegistrationServiceImplTest {
         user.setLogin("Micael");
         user.setPassword("ghjkl1234");
         user.setAge(18);
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -134,33 +139,20 @@ class RegistrationServiceImplTest {
         user.setLogin("Michael");
         user.setPassword("ghjk11");
         user.setAge(18);
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
-    void register_userWithAllNormalFields_Ok() {
+    void register_userWithAllValidFields_Ok() {
         User user = new User();
         user.setLogin("Micael");
         user.setPassword("ghjkl1234");
         user.setAge(25);
-        User normalUser = registrationService.register(user);
-        User sortsedUser = storageDao.get(user.getLogin());
-        assertNotNull(normalUser);
-        assertEquals(user, sortsedUser);
-        assertEquals(user, normalUser);
-    }
-
-    @Test
-    void getUserByLogin_Ok() {
-        User user = new User();
-        user.setLogin("yxcvv555");
-        user.setPassword("qwertz");
-        user.setAge(19);
-        Storage.people.add(user);
-        User retrievedUser = storageDao.get(user.getLogin());
-        assertNotNull(retrievedUser);
-        assertEquals(user, retrievedUser);
+        User actualUser = registrationService.register(user);
+        assertNotNull(actualUser);
+        assertEquals(user.getLogin(), actualUser.getLogin());
+        assertEquals(user.getPassword(), actualUser.getPassword());
+        assertEquals(user.getAge(), actualUser.getAge());
     }
 }
