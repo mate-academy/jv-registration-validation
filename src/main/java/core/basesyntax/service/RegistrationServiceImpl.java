@@ -22,10 +22,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         validatePassword(user.getPassword());
         validateAge(user.getAge());
 
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User already exists");
-        }
-
         storageDao.add(user);
         return user;
     }
@@ -34,6 +30,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login == null || login.length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login must be at least "
                        + MIN_LOGIN_LENGTH + " characters long");
+        }
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("User already exists");
         }
     }
 
