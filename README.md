@@ -13,6 +13,7 @@ This method should register a user (by adding it to Storage) only if the user me
 You should create your custom unchecked exception and throw it in case of invalid data.
 
 `Storage` and class `StorageDaoImpl` for working with Storage have already been implemented. It has two methods:
+
 - `User add (User user)`  - which adds a user to the storage
 - `User get (String login)` - which gets the user from the storage by login or returns null if there is no such user.
 
