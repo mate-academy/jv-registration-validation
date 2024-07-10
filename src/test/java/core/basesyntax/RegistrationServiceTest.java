@@ -10,7 +10,7 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+class RegistrationServiceTest {
     private RegistrationService service;
     private final User firstUser = new User("validLogin1", "123456789", 25);
     private final User secondUser = new User("validLogin2", "abcdefghqwerty", 35);
