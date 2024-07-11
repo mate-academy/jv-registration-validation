@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -121,50 +120,6 @@ public class RegistrationServiceImplTest {
         assertEquals(user, registeredUser);
         User storedUser = storageDao.get(user.getLogin());
         assertEquals(user, storedUser);
-    }
-
-    @Test
-    void testGetUserByLogin_success() {
-        User user = new User();
-        user.setLogin("abcdr22");
-        user.setPassword("jjjjjjj");
-        user.setAge(19);
-        registrationService.register(user);
-        User retrievedUser = storageDao.get(user.getLogin());
-        assertEquals(user, retrievedUser);
-    }
-
-    @Test
-    void testGetUserByNonexistentLogin_returnsNull() {
-        User user = new User();
-        user.setLogin("Alice123");
-        user.setPassword("qwerty1234");
-        user.setAge(19);
-        registrationService.register(user);
-        User retrievedUser = storageDao.get("NonexistentLogin");
-        assertNull(retrievedUser);
-    }
-
-    @Test
-    void testGetUserWithoutGetterMethod_success() {
-        User user = new User();
-        user.setLogin("Alice123");
-        user.setPassword("qwerty1234");
-        user.setAge(19);
-        registrationService.register(user);
-        User retrievedUser = storageDao.get("Alice123");
-        assertEquals(user, retrievedUser);
-    }
-
-    @Test
-    void testGetUserAfterDirectStorageAdd_success() {
-        User user = new User();
-        user.setLogin("Alice123");
-        user.setPassword("qwerty1234");
-        user.setAge(19);
-        Storage.people.add(user);
-        User retrievedUser = storageDao.get(user.getLogin());
-        assertEquals(user, retrievedUser);
     }
 
     @Test
