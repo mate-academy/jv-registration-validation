@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,153 +13,177 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static final RegistrationServiceImpl REGISTRATION_SERVICE
-            = new RegistrationServiceImpl();
-    private static final StorageDaoImpl STORAGE_DAO = new StorageDaoImpl();
-    private StorageDaoImpl storageDao = new StorageDaoImpl();
+    private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
+
+    private RegistrationServiceImpl registrationService;
+    private StorageDaoImpl storageDao;
 
     @BeforeEach
     void setUp() {
         storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
 
     @Test
-    void addUser_NullLogin_ThrowsException() {
+    void register_nullLogin_throwsException() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("qwerty1234");
         user.setAge(17);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void exists_Login() {
-        User user = new User();
-        user.setLogin("Alice123");
-        user.setPassword("qwerty1234");
-        user.setAge(19);
-        storageDao.add(user);
-
-        User foundUser = storageDao.get("Alice123");
-        assertNotNull(foundUser);
-        assertEquals("Alice123", foundUser.getLogin());
-    }
-
-    @Test
-    void addUser_EmptyLogin_ThrowsException() {
+    void register_emptyLogin_throwsException() {
         User user = new User();
         user.setLogin("");
         user.setPassword("qwerty1234");
         user.setAge(17);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_NullPassword_ThrowsException() {
+    void register_nullPassword_throwsException() {
         User user = new User();
         user.setLogin("Bob1256");
         user.setPassword(null);
         user.setAge(25);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_EmptyPassword_ThrowsException() {
+    void register_emptyPassword_throwsException() {
         User user = new User();
         user.setLogin("Bob1256");
         user.setPassword("");
         user.setAge(25);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_LoginLessThanMinLength_ThrowsException() {
+    void register_loginLessThanMinLength_throwsException() {
         User user = new User();
         user.setLogin("Bob");
         user.setPassword("qwerty1234");
         user.setAge(25);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_PasswordLessThanMinLength_ThrowsException() {
+    void register_passwordLessThanMinLength_throwsException() {
         User user = new User();
         user.setLogin("Bob1256");
         user.setPassword("qwert");
         user.setAge(25);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_Underage_ThrowsException() {
+    void register_underageUser_throwsException() {
         User user = new User();
         user.setLogin("Alice");
         user.setPassword("qwerty1234");
         user.setAge(17);
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void addUser_WithValidDetails_Success() {
+    void register_validDetails_ok() {
         User user = new User();
         user.setPassword("qwerty123");
         user.setLogin("Alex1976");
         user.setAge(27);
-        User registeredUser = REGISTRATION_SERVICE.register(user);
+        User registeredUser = registrationService.register(user);
         assertEquals(user, registeredUser);
+        User storedUser = storageDao.get(user.getLogin());
+        assertEquals(user, storedUser);
     }
 
     @Test
-    void addUser_InvalidAge_ThrowsException() {
+    void register_invalidAge_throwsException() {
         User user = new User();
         user.setLogin("Bob1256");
         user.setPassword("password");
-        user.setAge((int) (Integer.MAX_VALUE + 1L));
-        assertThrows(RegistrationException.class, () -> REGISTRATION_SERVICE.register(user));
+        user.setAge(-1);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void testGetUserByLogin_Success() {
+    void register_exactMinAge_ok() {
+        User user = new User();
+        user.setLogin("Alice123");
+        user.setPassword("qwerty1234");
+        user.setAge(MIN_AGE);
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser);
+        User storedUser = storageDao.get(user.getLogin());
+        assertEquals(user, storedUser);
+    }
+
+    @Test
+    void testGetUserByLogin_success() {
         User user = new User();
         user.setLogin("abcdr22");
         user.setPassword("jjjjjjj");
         user.setAge(19);
-        REGISTRATION_SERVICE.register(user);
-        User retrievedUser = STORAGE_DAO.get(user.getLogin());
+        registrationService.register(user);
+        User retrievedUser = storageDao.get(user.getLogin());
         assertEquals(user, retrievedUser);
     }
 
     @Test
-    void testGetUserByNonexistentLogin_ReturnsNull() {
+    void testGetUserByNonexistentLogin_returnsNull() {
         User user = new User();
         user.setLogin("Alice123");
         user.setPassword("qwerty1234");
         user.setAge(19);
-        REGISTRATION_SERVICE.register(user);
-        User retrievedUser = STORAGE_DAO.get("NonexistentLogin");
+        registrationService.register(user);
+        User retrievedUser = storageDao.get("NonexistentLogin");
         assertNull(retrievedUser);
     }
 
     @Test
-    void testGetUserWithoutGetterMethod_Success() {
+    void testGetUserWithoutGetterMethod_success() {
         User user = new User();
         user.setLogin("Alice123");
         user.setPassword("qwerty1234");
         user.setAge(19);
-        REGISTRATION_SERVICE.register(user);
-        User retrievedUser = STORAGE_DAO.get("Alice123");
+        registrationService.register(user);
+        User retrievedUser = storageDao.get("Alice123");
         assertEquals(user, retrievedUser);
     }
 
     @Test
-    void testGetUserAfterDirectStorageAdd_Success() {
+    void testGetUserAfterDirectStorageAdd_success() {
         User user = new User();
         user.setLogin("Alice123");
         user.setPassword("qwerty1234");
         user.setAge(19);
         Storage.people.add(user);
-        User retrievedUser = STORAGE_DAO.get(user.getLogin());
+        User retrievedUser = storageDao.get(user.getLogin());
         assertEquals(user, retrievedUser);
+    }
+
+    @Test
+    void register_loginAtMinLength_ok() {
+        User user = new User();
+        user.setLogin("Bob125");
+        user.setPassword("qwerty1234");
+        user.setAge(25);
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser);
+    }
+
+    @Test
+    void register_passwordAtMinLength_ok() {
+        User user = new User();
+        user.setLogin("Bob1256");
+        user.setPassword("qwerty");
+        user.setAge(25);
+        User registeredUser = registrationService.register(user);
+        assertEquals(user, registeredUser);
     }
 }
