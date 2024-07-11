@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        checkNull(user);
+        checkUser(user);
         checkAge(user.getAge());
         checkLogin(user.getLogin());
         checkPassword(user.getPassword());
@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void checkAge(Integer age) {
-        if (age < AGE_AT_LEAST_REQUIRE) {
+        if (age == null || age < AGE_AT_LEAST_REQUIRE) {
             throw new RegistrationException("Not allow register too young user");
         }
     }
@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void checkNull(User user) {
+    private void checkUser(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }

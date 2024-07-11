@@ -29,7 +29,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_bulkValidUsers_ok() {
+    void register_validUsers_ok() {
         service.register(firstUser);
         service.register(secondUser);
         service.register(thirdUser);
@@ -63,6 +63,14 @@ class RegistrationServiceTest {
     @Test
     void register_noAge_notOk() {
         User user = new User("PeterPen", "123456", 0);
+        assertThrows(RegistrationException.class, () -> {
+            service.register(user);
+        });
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = new User("PeterPen", "123456", -20);
         assertThrows(RegistrationException.class, () -> {
             service.register(user);
         });
