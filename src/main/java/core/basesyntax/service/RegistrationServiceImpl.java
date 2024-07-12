@@ -48,7 +48,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    private void validateAge(int age) {
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new RegistrationException("Age cannot be null");
+        }
         if (age < MIN_AGE) {
             throw new RegistrationException("User cannot be under " + MIN_AGE);
         }

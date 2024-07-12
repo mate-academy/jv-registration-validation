@@ -90,7 +90,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validDetails_ok() {
+    void register_validUser_ok() {
         User user = new User();
         user.setPassword("qwerty123");
         user.setLogin("Alex1976");
@@ -140,5 +140,17 @@ public class RegistrationServiceImplTest {
         user.setAge(25);
         User registeredUser = registrationService.register(user);
         assertEquals(user, registeredUser);
+    }
+
+    @Test
+    void register_userAlreadyExists_throwsException() {
+        User user = new User();
+        user.setLogin("ExistingUser");
+        user.setPassword("password123");
+        user.setAge(25);
+
+        registrationService.register(user);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
