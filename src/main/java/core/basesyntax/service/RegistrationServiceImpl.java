@@ -1,11 +1,9 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_AGE = 18;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_LOGIN_LENGTH = 6;
@@ -16,10 +14,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         validatePassword(user.getPassword());
         validateAge(user.getAge());
 
-        if (storageDao.get(user.getLogin()) != null) {
+        if (Storage.people.stream().anyMatch(existingUser ->
+                existingUser.getLogin().equals(user.getLogin()))) {
             throw new RegistrationException("User already exists");
         }
-        return storageDao.add(user);
+
+        Storage.people.add(user);
+        return user;
     }
 
     private void validateLogin(String login) {
@@ -30,8 +31,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login cannot be empty");
         }
         if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login length cannot be less than "
-                    + MIN_LOGIN_LENGTH);
+            throw new RegistrationException("Login length cannot be less than " + MIN_LOGIN_LENGTH);
         }
     }
 

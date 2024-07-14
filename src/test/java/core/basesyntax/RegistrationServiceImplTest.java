@@ -3,7 +3,6 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
@@ -17,11 +16,9 @@ public class RegistrationServiceImplTest {
     private static final int MIN_LOGIN_LENGTH = 6;
 
     private RegistrationServiceImpl registrationService;
-    private StorageDaoImpl storageDao;
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
@@ -97,7 +94,10 @@ public class RegistrationServiceImplTest {
         user.setAge(27);
         User registeredUser = registrationService.register(user);
         assertEquals(user, registeredUser);
-        User storedUser = storageDao.get(user.getLogin());
+        User storedUser = Storage.people.stream()
+                .filter(u -> u.getLogin().equals(user.getLogin()))
+                .findFirst()
+                .orElse(null);
         assertEquals(user, storedUser);
     }
 
@@ -118,7 +118,10 @@ public class RegistrationServiceImplTest {
         user.setAge(MIN_AGE);
         User registeredUser = registrationService.register(user);
         assertEquals(user, registeredUser);
-        User storedUser = storageDao.get(user.getLogin());
+        User storedUser = Storage.people.stream()
+                .filter(u -> u.getLogin().equals(user.getLogin()))
+                .findFirst()
+                .orElse(null);
         assertEquals(user, storedUser);
     }
 
@@ -148,9 +151,7 @@ public class RegistrationServiceImplTest {
         user.setLogin("ExistingUser");
         user.setPassword("password123");
         user.setAge(25);
-
-        registrationService.register(user);
-
+        Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
