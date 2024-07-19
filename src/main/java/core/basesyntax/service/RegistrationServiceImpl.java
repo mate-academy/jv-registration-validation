@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean isLengthLoginOrPassLess(String loginOrPass, int length) {
-       return loginOrPass == null || loginOrPass.length() < length;
+        return loginOrPass == null || loginOrPass.length() < length;
     }
 
     private boolean isAgeLess(Integer age) {
