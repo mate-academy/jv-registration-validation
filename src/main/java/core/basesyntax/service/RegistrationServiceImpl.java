@@ -14,21 +14,37 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
+        if (isNullUser(user)) {
             throw new RegistrationException("User can`t be null.");
         }
-        if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
+        if (isLengthLoginOrPassLess(user.getLogin(), MIN_LOGIN_LENGTH)) {
             throw new RegistrationException("Login can`t be empty or less than 6 characters.");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+        if (isLengthLoginOrPassLess(user.getPassword(), MIN_PASSWORD_LENGTH)) {
             throw new RegistrationException("Password can`t be empty or less than 6 characters.");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+        if (isAgeLess(user.getAge())) {
             throw new RegistrationException("Age can`t be empty or less than 18 characters.");
         }
-        if (user.equals(storageDao.get(user.getLogin()))) {
+        if (isLoginExists(user)) {
             throw new RegistrationException("Login already exists.");
         }
         return storageDao.add(user);
+    }
+
+    private boolean isNullUser(User user) {
+        return user == null;
+    }
+
+    private boolean isLengthLoginOrPassLess(String loginOrPass, int length) {
+       return loginOrPass == null || loginOrPass.length() < length;
+    }
+
+    private boolean isAgeLess(Integer age) {
+        return age == null || age < MIN_AGE;
+    }
+
+    private boolean isLoginExists(User userFromDao) {
+        return storageDao.get(userFromDao.getLogin()) != null;
     }
 }
