@@ -14,37 +14,48 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (isNullUser(user)) {
-            throw new RegistrationException("User can`t be null.");
-        }
-        if (isLengthLoginOrPassLess(user.getLogin(), MIN_LOGIN_LENGTH)) {
-            throw new RegistrationException("Login can`t be empty or less than 6 characters.");
-        }
-        if (isLengthLoginOrPassLess(user.getPassword(), MIN_PASSWORD_LENGTH)) {
-            throw new RegistrationException("Password can`t be empty or less than 6 characters.");
-        }
-        if (isAgeLess(user.getAge())) {
-            throw new RegistrationException("Age can`t be empty or less than 18 characters.");
-        }
-        if (isLoginExists(user)) {
-            throw new RegistrationException("Login already exists.");
-        }
+        validateUser(user);
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        checkLoginExists(user.getLogin());
         return storageDao.add(user);
     }
 
-    private boolean isNullUser(User user) {
-        return user == null;
+    private void validateUser(User user) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null.");
+        }
     }
 
-    private boolean isLengthLoginOrPassLess(String loginOrPass, int length) {
-        return loginOrPass == null || loginOrPass.length() < length;
+    private void validateLogin(String login) {
+        if (isNullOrShort(login, MIN_LOGIN_LENGTH)) {
+            throw new RegistrationException("Login can't be empty or less than "
+                    + MIN_LOGIN_LENGTH + " characters.");
+        }
     }
 
-    private boolean isAgeLess(Integer age) {
-        return age == null || age < MIN_AGE;
+    private void validatePassword(String password) {
+        if (isNullOrShort(password, MIN_PASSWORD_LENGTH)) {
+            throw new RegistrationException("Password can't be empty or less than "
+                    + MIN_PASSWORD_LENGTH + " characters.");
+        }
     }
 
-    private boolean isLoginExists(User userFromDao) {
-        return storageDao.get(userFromDao.getLogin()) != null;
+    private void validateAge(Integer age) {
+        if (age == null || age < MIN_AGE) {
+            throw new RegistrationException("Age can't be empty or less than "
+                    + MIN_AGE + " years.");
+        }
+    }
+
+    private void checkLoginExists(String login) {
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("Login already exists.");
+        }
+    }
+
+    private boolean isNullOrShort(String value, int minLength) {
+        return value == null || value.length() < minLength;
     }
 }
