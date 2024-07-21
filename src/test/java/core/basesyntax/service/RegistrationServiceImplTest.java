@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.exception.InvalidInputDataException;
@@ -7,19 +11,14 @@ import core.basesyntax.service.exception.UserAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 public class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword123";
     private static final Integer VALID_AGE = 33;
     private static final Integer NEGATIVE_AGE = -1;
     private static final Integer AGE_LESS_THAN_18 = 17;
-    private static final String SHORT_LOGIN = "usr";
-    private static final String SHORT_PASSWORD = "pwd";
-    private static final String EXISTING_LOGIN = "existingUser";
+    private static final String SHORT_LOGIN = "short";
+    private static final String SHORT_PASSWORD = "pass5";
     private RegistrationService registrationService;
 
     @BeforeEach
@@ -28,12 +27,17 @@ public class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 
+    private User createUser(String login, String password, Integer age) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        return user;
+    }
+
     @Test
     void register_validUser_ok() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
 
         User registeredUser = registrationService.register(user);
 
@@ -50,90 +54,63 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        User user = new User();
-        user.setLogin(null);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
+        User user = createUser(null, VALID_PASSWORD, VALID_AGE);
         assertThrows(InvalidInputDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(null);
-        user.setAge(VALID_AGE);
+        User user = createUser(VALID_LOGIN, null, VALID_AGE);
         assertThrows(InvalidInputDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(null);
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, null);
         assertThrows(InvalidInputDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortLogin_notOk() {
-        User user = new User();
-        user.setLogin(SHORT_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
+        User user = createUser(SHORT_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertThrows(InvalidInputDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(SHORT_PASSWORD);
-        user.setAge(VALID_AGE);
+        User user = createUser(VALID_LOGIN, SHORT_PASSWORD, VALID_AGE);
         assertThrows(InvalidInputDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_negativeAge_notOk() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(NEGATIVE_AGE);
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, NEGATIVE_AGE);
         assertThrows(InvalidInputDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_ageLessThan18_notOk() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(AGE_LESS_THAN_18);
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, AGE_LESS_THAN_18);
         assertThrows(InvalidInputDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_existingUser_notOk() {
-        User existingUser = new User();
-        existingUser.setLogin(EXISTING_LOGIN);
-        existingUser.setPassword(VALID_PASSWORD);
-        existingUser.setAge(VALID_AGE);
+        User existingUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         Storage.people.add(existingUser);
+        int numberOfUsersBefore = Storage.people.size();
 
-        User newUser = new User();
-        newUser.setLogin(EXISTING_LOGIN);
-        newUser.setPassword(VALID_PASSWORD);
-        newUser.setAge(VALID_AGE);
+        User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
 
         assertThrows(UserAlreadyExistsException.class, () -> registrationService.register(newUser));
+        int numberOfUsersAfter = Storage.people.size();
+        assertEquals(numberOfUsersBefore, numberOfUsersAfter,
+                "User count should not increase when attempting to register an existing user");
     }
 
     @Test
     void register_validLogin_ok() {
-        User user = new User();
-        user.setLogin("newUser");
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
-
+        User user = createUser("newUser", VALID_PASSWORD, VALID_AGE);
         User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
         assertEquals(user.getLogin(), registeredUser.getLogin());
@@ -141,11 +118,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_validPassword_ok() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword("StrongPassword123");
-        user.setAge(VALID_AGE);
-
+        User user =  createUser(VALID_LOGIN, "StrongPassword123", VALID_AGE);
         User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
         assertEquals(user.getPassword(), registeredUser.getPassword());

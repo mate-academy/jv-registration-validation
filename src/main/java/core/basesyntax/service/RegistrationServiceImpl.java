@@ -8,7 +8,7 @@ import core.basesyntax.service.exception.UserAlreadyExistsException;
 
 public class RegistrationServiceImpl implements RegistrationService {
     public static final String NULL_INPUT_DATA_MESSAGE =
-            "User data cannot be null";
+            "User cannot be null";
     public static final String INVALID_LOGIN_MESSAGE =
             "User's login is at least 6 characters";
     public static final String INVALID_PASSWORD_MESSAGE =
@@ -24,7 +24,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        validateUserDataNotNull(user);
         validateUserData(user);
 
         if (storageDao.get(user.getLogin()) != null) {
@@ -33,22 +32,30 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    public void validateUserData(User user) {
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+    private void validateUserData(User user) {
+        if (user == null) {
+            throw new InvalidInputDataException(NULL_INPUT_DATA_MESSAGE);
+        }
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+    }
+
+    private void validateLogin(String login) {
+        if (login == null || login.length() < MIN_LOGIN_LENGTH) {
             throw new InvalidInputDataException(INVALID_LOGIN_MESSAGE);
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidInputDataException(INVALID_PASSWORD_MESSAGE);
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidInputDataException(INVALID_MIN_AGE_MESSAGE);
         }
     }
 
-    public void validateUserDataNotNull(User user) {
-        if (user == null || user.getLogin() == null
-                || user.getPassword() == null || user.getAge() == null) {
-            throw new InvalidInputDataException(NULL_INPUT_DATA_MESSAGE);
+    private void validatePassword(String password) {
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+            throw new InvalidInputDataException(INVALID_PASSWORD_MESSAGE);
+        }
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null || age < MIN_AGE) {
+            throw new InvalidInputDataException(INVALID_MIN_AGE_MESSAGE);
         }
     }
 }
