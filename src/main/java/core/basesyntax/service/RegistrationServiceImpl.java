@@ -7,11 +7,16 @@ import core.basesyntax.service.exception.InvalidInputDataException;
 import core.basesyntax.service.exception.UserAlreadyExistsException;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final String NULL_INPUT_DATA_MESSAGE = "User data cannot be null";
-    public static final String INVALID_LOGIN_MESSAGE = "User's login is at least 6 characters";
-    public static final String INVALID_PASSWORD_MESSAGE = "User's password is at least 6 characters";
-    public static final String INVALID_MIN_AGE_MESSAGE = "User's age is at least 18 years old";
-    public static final String USER_ALREADY_EXISTS_MESSAGE = "User with the given login already exists";
+    public static final String NULL_INPUT_DATA_MESSAGE =
+            "User data cannot be null";
+    public static final String INVALID_LOGIN_MESSAGE =
+            "User's login is at least 6 characters";
+    public static final String INVALID_PASSWORD_MESSAGE =
+            "User's password is at least 6 characters";
+    public static final String INVALID_MIN_AGE_MESSAGE =
+            "User's age is at least 18 years old";
+    public static final String USER_ALREADY_EXISTS_MESSAGE =
+            "User with the given login already exists";
     public static final int MIN_LOGIN_LENGTH = 6;
     public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int MIN_AGE = 18;
@@ -41,7 +46,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void validateUserDataNotNull(User user) {
-        if (user == null || user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
+        if (user == null || user.getLogin() == null
+                || user.getPassword() == null || user.getAge() == null) {
             throw new InvalidInputDataException(NULL_INPUT_DATA_MESSAGE);
         }
     }
