@@ -118,7 +118,7 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_validPassword_ok() {
-        User user =  createUser(VALID_LOGIN, "StrongPassword123", VALID_AGE);
+        User user = createUser(VALID_LOGIN, "StrongPassword123", VALID_AGE);
         User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
         assertEquals(user.getPassword(), registeredUser.getPassword());
