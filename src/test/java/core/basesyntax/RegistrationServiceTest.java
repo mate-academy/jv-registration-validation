@@ -1,9 +1,8 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -13,16 +12,16 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceTest {
     private static final String CORRECT_LOGIN = "Valid User Login";
     private static final String IDENTICAL_LOGIN = "Identical User Login";
+    private static final String IDENTICAL_LOGIN_NEGATIVE_AGE
+            = "Identical User Login With Negative Age";
     private static final String CORRECT_PASSWORD = "Valid User Password";
     private static final String INVALID_LENGTH_5 = "55555";
     private static final Integer CORRECT_AGE = 20;
 
-    private StorageDaoImpl storageDao;
     private RegistrationServiceImpl registrationService;
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -39,8 +38,8 @@ public class RegistrationServiceTest {
         validUser.setPassword(CORRECT_PASSWORD);
         validUser.setAge(CORRECT_AGE);
 
-        registrationService.register(validUser);
-        assertNotNull(storageDao.get(CORRECT_LOGIN));
+        User actual = registrationService.register(validUser);
+        assertEquals(validUser, actual);
     }
 
     @Test
@@ -157,5 +156,22 @@ public class RegistrationServiceTest {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(age17),
                 "Age 17. Age can`t less than 18 characters.");
+    }
+
+    @Test
+    public void register_existedLoginAndNegativeAge_notOk() {
+        User validUser = new User();
+        validUser.setLogin("Identical User Login With Negative Age");
+        validUser.setPassword("password valid user");
+        validUser.setAge(25);
+        registrationService.register(validUser);
+
+        final User identicalLoginAndNegativeAge = new User();
+        validUser.setLogin(IDENTICAL_LOGIN_NEGATIVE_AGE);
+        validUser.setPassword("password exist login");
+        validUser.setAge(-25);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(identicalLoginAndNegativeAge),
+                "Login already exists and age is negative.");
     }
 }
