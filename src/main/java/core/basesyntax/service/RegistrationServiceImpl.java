@@ -12,21 +12,37 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidDataException("User with the same login already exists");
+        checkSameLogin(user);
+        checkLogin(user);
+        checkPassword(user);
+        checkAge(user);
+        storageDao.add(user);
+        return user;
+    }
+
+    private void checkAge(User user) {
+        if (user.getAge() < MIN_AGE) {
+            throw new InvalidDataException("Age must be at least 18 years old");
         }
+    }
+
+    private void checkLogin(User user) {
         if (user.getLogin() == null
                 || user.getLogin().length() < MIN_LOG_PASSWORD_LENGTH) {
             throw new InvalidDataException("Login must be at least 6 characters");
         }
+    }
+
+    private void checkPassword(User user) {
         if (user.getPassword() == null
                 || user.getPassword().length() < MIN_LOG_PASSWORD_LENGTH) {
             throw new InvalidDataException("Password must be at least 6 characters");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new InvalidDataException("Age must be at least 18 years old");
+    }
+
+    private void checkSameLogin(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidDataException("User with the same login already exists");
         }
-        storageDao.add(user);
-        return user;
     }
 }

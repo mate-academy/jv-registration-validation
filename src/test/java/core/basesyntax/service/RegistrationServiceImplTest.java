@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String TEST_LOGIN_ONE = "testLoginOne";
+    private static final String TEST_LOGIN_TWO = "testLoginTwo";
+    private static final String TEST_PASSWORD = "testPassword";
     private RegistrationServiceImpl service = new RegistrationServiceImpl();
     private StorageDaoImpl storage;
 
@@ -23,10 +26,10 @@ class RegistrationServiceImplTest {
     @Test
     void registerExistingLogin_notOk() {
         User existingUser = new User();
-        existingUser.setLogin("TESTLOGIN");
+        existingUser.setLogin(TEST_LOGIN_ONE);
         storage.add(existingUser);
         User newUser = new User();
-        newUser.setLogin("TESTLOGIN");
+        newUser.setLogin(TEST_LOGIN_ONE);
         InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             service.register(newUser);
         });
@@ -46,7 +49,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerWithShortPassword_notOk() {
         User testuser = new User();
-        testuser.setLogin("validLogin");
+        testuser.setLogin(TEST_LOGIN_ONE);
         testuser.setPassword("abc");
         InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             service.register(testuser);
@@ -57,8 +60,8 @@ class RegistrationServiceImplTest {
     @Test
     void registerValidUser_Ok() {
         User testUser = new User();
-        testUser.setLogin("testLogin");
-        testUser.setPassword("testPassword");
+        testUser.setLogin(TEST_LOGIN_ONE);
+        testUser.setPassword(TEST_PASSWORD);
         testUser.setAge(25);
         assertDoesNotThrow(() -> service.register(testUser));
         assertEquals(testUser, storage.get(testUser.getLogin()));
@@ -67,8 +70,8 @@ class RegistrationServiceImplTest {
     @Test
     void registerLowAge_notOk() {
         User testUser = new User();
-        testUser.setLogin("validLogin");
-        testUser.setPassword("testPassword");
+        testUser.setLogin(TEST_LOGIN_TWO);
+        testUser.setPassword(TEST_PASSWORD);
         testUser.setAge(15);
         InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             service.register(testUser);
@@ -89,7 +92,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerNullPassword_notOk() {
         User testUser = new User();
-        testUser.setLogin("testlogin");
+        testUser.setLogin(TEST_LOGIN_TWO);
         testUser.setPassword(null);
         testUser.setAge(25);
         InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
@@ -107,4 +110,5 @@ class RegistrationServiceImplTest {
         assertDoesNotThrow(() -> service.register(testUser));
         assertEquals(testUser, storage.get(testUser.getLogin()));
     }
+
 }
