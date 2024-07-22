@@ -1,11 +1,10 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.model.InvalidDataException;
+import core.basesyntax.model.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,7 @@ class RegistrationServiceImplTest {
         storage.add(existingUser);
         User newUser = new User();
         newUser.setLogin(TEST_LOGIN_ONE);
-        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             service.register(newUser);
         });
         assertEquals("User with the same login already exists", exception.getMessage());
@@ -40,7 +39,7 @@ class RegistrationServiceImplTest {
     void registerWithShortLogin_notOk() {
         User testUser = new User();
         testUser.setLogin("TEST");
-        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             service.register(testUser);
         });
         assertEquals("Login must be at least 6 characters", exception.getMessage());
@@ -51,7 +50,7 @@ class RegistrationServiceImplTest {
         User testuser = new User();
         testuser.setLogin(TEST_LOGIN_ONE);
         testuser.setPassword("abc");
-        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             service.register(testuser);
         });
         assertEquals("Password must be at least 6 characters", exception.getMessage());
@@ -63,8 +62,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin(TEST_LOGIN_ONE);
         testUser.setPassword(TEST_PASSWORD);
         testUser.setAge(25);
-        assertDoesNotThrow(() -> service.register(testUser));
-        assertEquals(testUser, storage.get(testUser.getLogin()));
+        User actualUser = service.register(testUser);
+        assertEquals(testUser, actualUser);
     }
 
     @Test
@@ -73,7 +72,7 @@ class RegistrationServiceImplTest {
         testUser.setLogin(TEST_LOGIN_TWO);
         testUser.setPassword(TEST_PASSWORD);
         testUser.setAge(15);
-        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             service.register(testUser);
         });
         assertEquals("Age must be at least 18 years old", exception.getMessage());
@@ -83,7 +82,7 @@ class RegistrationServiceImplTest {
     void registerNullLogin_notOk() {
         User testUser = new User();
         testUser.setLogin(null);
-        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             service.register(testUser);
         });
         assertEquals("Login must be at least 6 characters", exception.getMessage());
@@ -95,20 +94,21 @@ class RegistrationServiceImplTest {
         testUser.setLogin(TEST_LOGIN_TWO);
         testUser.setPassword(null);
         testUser.setAge(25);
-        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
             service.register(testUser);
         });
         assertEquals("Password must be at least 6 characters", exception.getMessage());
     }
 
     @Test
-    void registerWithNumbersPasswordAndLogin_Ok() {
+    void registerWithNegativeAge_notOk() {
         User testUser = new User();
-        testUser.setLogin("123456");
-        testUser.setPassword("123456");
-        testUser.setAge(25);
-        assertDoesNotThrow(() -> service.register(testUser));
-        assertEquals(testUser, storage.get(testUser.getLogin()));
+        testUser.setLogin(TEST_LOGIN_TWO);
+        testUser.setPassword(TEST_PASSWORD);
+        testUser.setAge(-1);
+        RegistrationException exception = assertThrows(RegistrationException.class, () -> {
+            service.register(testUser);
+        });
+        assertEquals("Age must be at least 18 years old", exception.getMessage());
     }
-
 }
