@@ -15,30 +15,40 @@ public class RegistrationServiceImpl implements RegistrationService {
         validatePassword(user.getPassword());
         validateAge(user.getAge());
         checkUserExists(user.getLogin());
+        storageDao.add(user);
         return user;
     }
 
     private void checkUserExists(String login) {
         if (storageDao.get(login) != null) {
-            throw new ValidationException("User with your login has already exists.Try new login!");
+            throw new ValidationException("User with that login has already exists.Try new login!");
         }
     }
 
     private void validateLogin(String login) {
-        if (login == null || login.length() < MIN_CHARACTERS) {
-            throw new ValidationException("Login cannot be null or less than 6 characters!");
+        if (login == null) {
+            throw new ValidationException("Login cannot be null!");
+        }
+        if (login.length() < MIN_CHARACTERS) {
+            throw new ValidationException("Login cannot be less than 6 characters!");
         }
     }
 
     private void validatePassword(String password) {
-        if (password == null || password.length() < MIN_CHARACTERS) {
-            throw new ValidationException("Password cannot be null or less than 6 characters!");
+        if (password == null) {
+            throw new ValidationException("Password cannot be null!");
+        }
+        if (password.length() < MIN_CHARACTERS) {
+            throw new ValidationException("Password cannot be less than 6 characters!");
         }
     }
 
     private void validateAge(Integer age) {
-        if (age == null || age < MIN_AGE) {
-            throw new ValidationException("Age cannot be null or less than 18!");
+        if (age == null) {
+            throw new ValidationException("Age cannot be null!");
+        }
+        if (age < MIN_AGE) {
+            throw new ValidationException("Age cannot be less than 18!");
         }
     }
 }

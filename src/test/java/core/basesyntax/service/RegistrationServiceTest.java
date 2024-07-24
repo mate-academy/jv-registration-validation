@@ -40,7 +40,7 @@ class RegistrationServiceTest {
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             registrationService.register(newUser);
         });
-        assertEquals("User with your login has already exists.Try new login!",
+        assertEquals("User with that login has already exists.Try new login!",
                 exception.getMessage());
     }
 
@@ -61,7 +61,7 @@ class RegistrationServiceTest {
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             registrationService.register(userNullLogin);
         });
-        assertEquals("Login cannot be null or less than 6 characters!", exception.getMessage());
+        assertEquals("Login cannot be null!", exception.getMessage());
     }
 
     @Test
@@ -71,7 +71,7 @@ class RegistrationServiceTest {
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             registrationService.register(userShortLogin);
         });
-        assertEquals("Login cannot be null or less than 6 characters!", exception.getMessage());
+        assertEquals("Login cannot be less than 6 characters!", exception.getMessage());
     }
 
     @Test
@@ -82,7 +82,7 @@ class RegistrationServiceTest {
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             registrationService.register(userShortPassword);
         });
-        assertEquals("Password cannot be null or less than 6 characters!", exception.getMessage());
+        assertEquals("Password cannot be less than 6 characters!", exception.getMessage());
     }
 
     @Test
@@ -93,7 +93,7 @@ class RegistrationServiceTest {
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             registrationService.register(userNullPassword);
         });
-        assertEquals("Password cannot be null or less than 6 characters!", exception.getMessage());
+        assertEquals("Password cannot be null!", exception.getMessage());
     }
 
     @Test
@@ -106,7 +106,7 @@ class RegistrationServiceTest {
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             registrationService.register(userLowAge);
         });
-        assertEquals("Age cannot be null or less than 18!", exception.getMessage());
+        assertEquals("Age cannot be less than 18!", exception.getMessage());
     }
 
     @Test
@@ -118,6 +118,6 @@ class RegistrationServiceTest {
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             registrationService.register(userNullAge);
         });
-        assertEquals("Age cannot be null or less than 18!", exception.getMessage());
+        assertEquals("Age cannot be null!", exception.getMessage());
     }
 }
