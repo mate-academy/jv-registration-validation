@@ -39,8 +39,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         storageDao.add(user);
         return user;
     }
-
-    public boolean isSuccesfullyRegistered(User user) {
-        return storageDao.get(user.getLogin()) != null;
-    }
 }

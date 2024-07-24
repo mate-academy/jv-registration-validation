@@ -4,7 +4,5 @@ import core.basesyntax.model.User;
 
 public interface RegistrationService {
     User register(User user);
-
-    boolean isSuccesfullyRegistered(User user);
 }
 
