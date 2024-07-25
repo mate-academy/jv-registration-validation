@@ -1,62 +1,76 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exceptions.NotEnoughAgeForUsingStorageException;
-import core.basesyntax.exceptions.UserDoesNotExistException;
-import core.basesyntax.exceptions.WrongLoginException;
-import core.basesyntax.exceptions.WrongPasswordException;
+import core.basesyntax.db.Storage;
+import core.basesyntax.exceptions.InvalidAgeException;
+import core.basesyntax.exceptions.InvalidLoginException;
+import core.basesyntax.exceptions.InvalidPasswordException;
+import core.basesyntax.exceptions.UserAlreadyExistException;
+import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
     private static final RegistrationService registrationService = new RegistrationServiceImpl();
-    private static final StorageDao storageDao = new StorageDaoImpl();
-
     private static User validUser;
     private static User userWithInvalidLogin;
     private static User userWithInvalidPassword;
     private static User userWithInvalidAge;
-    private static User userDoesNotExist;
 
     @BeforeAll
     static void beforeAll() {
         validUser = createUser(13652827L, "qazwsxedc82738", 23, "qwdfrw34");
-        userDoesNotExist = createUser(1221L, "qazwhhff738", 23, "qwdfrw34");
         userWithInvalidLogin = createUser(0L, "bob", 18, "qwdfrw");
         userWithInvalidPassword = createUser(0L, "bobik34", 32, "wefwf");
         userWithInvalidAge = createUser(0L, "borisik", 17, "qwdqwerty");
     }
 
     @Test
-    void shouldThrowUserDoesNotExistExceptionWhenUserDoesNotExistInStorage() {
-        Exception exception = assertThrows(UserDoesNotExistException.class, () ->
-                registrationService.register(userDoesNotExist));
-        assertEquals("User was not founded", exception.getMessage());
+    void register_validUser_registration_OK() {
+        registrationService.register(validUser);
+        assertEquals(1, Storage.people.size());
+        assertEquals(validUser, Storage.people.get(0));
     }
 
     @Test
-    void shouldThrowWrongLoginExceptionWhenLoginLessSixCharacters() {
-        assertThrows(WrongLoginException.class,
+    void register_userWithExistingLogin_notOk() {
+        String newLogin = "newLogin";
+        User newUser = new User();
+        newUser.setLogin(newLogin);
+        newUser.setAge(23);
+        newUser.setPassword("1234567");
+        String existingLogin = "newLogin";
+        User newUserWithSameLogin = new User();
+        newUserWithSameLogin.setLogin(existingLogin);
+        newUserWithSameLogin.setAge(34);
+        newUserWithSameLogin.setPassword("4574527");
+        registrationService.register(newUser);
+        Assertions.assertThrows(UserAlreadyExistException.class,
+                () -> registrationService.register(newUserWithSameLogin));
+    }
+
+    @Test
+    void register_loginLengthLessThan6Chars_notOk() {
+        assertThrows(InvalidLoginException.class,
                 () -> registrationService.register(userWithInvalidLogin));
     }
 
     @Test
-    void shouldThrowWrongPasswordExceptionWhenPasswordLessSixCharacters() {
-        assertThrows(WrongPasswordException.class,
+    void register_passwordLengthLessThan6Chars_notOk() {
+        assertThrows(InvalidPasswordException.class,
                 () -> registrationService.register(userWithInvalidPassword));
     }
 
     @Test
-    void shouldThrowNotEnoughAgeForUsingStorage() {
-        NotEnoughAgeForUsingStorageException thrown = assertThrows(
-                NotEnoughAgeForUsingStorageException.class,
+    void register_ageLessThan18_notOk() {
+        InvalidAgeException thrown = assertThrows(
+                InvalidAgeException.class,
                 () -> registrationService.register(userWithInvalidAge),
                 "Expected at least 18 y.o"
         );
@@ -65,12 +79,45 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void shouldReturnValidUserWithoutNullFields() {
-        User addUser = storageDao.add(validUser);
-        User actualUser = registrationService.register(addUser);
-        assertNotNull(actualUser.getPassword());
-        assertNotNull(actualUser.getLogin());
-        assertNotNull(actualUser.getAge());
+    void register_UserNull_notOk() {
+        User newUser = null;
+        Assertions.assertThrows(ValidationException.class,
+                () -> registrationService.register(newUser));
+    }
+
+    @Test
+    void register_UserLoginIsNull_notOk() {
+        User newUser = new User();
+        newUser.setLogin(null);
+        newUser.setAge(55);
+        newUser.setPassword("1234567");
+        Assertions.assertThrows(InvalidLoginException.class,
+                () -> registrationService.register(newUser));
+    }
+
+    @Test
+    void register_UserAgeIsNull_notOk() {
+        User newUser = new User();
+        newUser.setLogin("newLogin");
+        newUser.setAge(null);
+        newUser.setPassword("1234567");
+        Assertions.assertThrows(InvalidAgeException.class,
+                () -> registrationService.register(newUser));
+    }
+
+    @Test
+    void register_UserPasswordIsNull_notOk() {
+        User newUser = new User();
+        newUser.setLogin("newLogin");
+        newUser.setAge(44);
+        newUser.setPassword(null);
+        Assertions.assertThrows(InvalidPasswordException.class,
+                () -> registrationService.register(newUser));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     private static User createUser(long id, String login, int age, String password) {
