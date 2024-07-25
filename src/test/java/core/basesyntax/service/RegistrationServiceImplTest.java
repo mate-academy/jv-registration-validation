@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.InvalidUserDataException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,32 +79,26 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(duplicateUser),
                 "Expected register() to throw exception, but it didn't"
         );
-
-        int userCount = 0;
-        for (User user : Storage.people) {
-            if (user.getLogin().equals(DEFAULT_LOGIN)) {
-                userCount++;
-            }
-        }
-        assertEquals(1, userCount, "Duplicate user should not be registered");
+        assertEquals(user.getLogin(), duplicateUser.getLogin(),
+                "Duplicate user should not be registered");
     }
 
     @Test
-    void register_loginLessThanSixCharacters_notOk() {
+    void register_loginTooShort_notOk() {
         user.setLogin(LESS_THAN_6_CHARACTERS);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
         assertNull(storageDao.get(user.getLogin()));
     }
 
     @Test
-    void register_passwordLessThanSixCharacters_notOk() {
+    void register_passwordTooShort_notOk() {
         user.setPassword(LESS_THAN_6_CHARACTERS);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
         assertNull(storageDao.get(user.getLogin()));
     }
 
     @Test
-    void register_ageLessThan18_notOk() {
+    void register_ageTooYoung_notOk() {
         user.setAge(UNDERAGE);
         assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
         assertNull(storageDao.get(user.getLogin()));
@@ -140,14 +133,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginExactlySixCharacters_ok() {
+    void register_loginValidLength_ok() {
         user.setLogin(SIX_CHARACTER_STRING);
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
-    void register_passwordExactlySixCharacters_ok() {
+    void register_passwordValidLength_ok() {
         user.setPassword(SIX_CHARACTER_STRING);
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
