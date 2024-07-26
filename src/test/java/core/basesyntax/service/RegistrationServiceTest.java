@@ -98,15 +98,22 @@ class RegistrationServiceTest {
 
     @Test
     void register_lowAge_notOk() {
-        User userLowAge = new User();
-        userLowAge.setLogin(VALID_LOGIN);
-        userLowAge.setPassword(VALID_PASSWORD);
-        userLowAge.setAge(INVALID_BORDERLINE_AGE);
-        userLowAge.setAge(INVALID_NEGATIVE_AGE);
-        ValidationException exception = assertThrows(ValidationException.class, () -> {
-            registrationService.register(userLowAge);
+        User userLowBorderlineAge = new User();
+        userLowBorderlineAge.setLogin(VALID_LOGIN);
+        userLowBorderlineAge.setPassword(VALID_PASSWORD);
+        userLowBorderlineAge.setAge(INVALID_BORDERLINE_AGE);
+        ValidationException borderlineAgeException = assertThrows(ValidationException.class, () -> {
+            registrationService.register(userLowBorderlineAge);
         });
-        assertEquals("Age cannot be less than 18!", exception.getMessage());
+        assertEquals("Age cannot be less than 18!", borderlineAgeException.getMessage());
+        User userLowNegativeAge = new User();
+        userLowNegativeAge.setLogin(VALID_LOGIN);
+        userLowNegativeAge.setPassword(VALID_PASSWORD);
+        userLowNegativeAge.setAge(INVALID_NEGATIVE_AGE);
+        ValidationException negativeAgeException = assertThrows(ValidationException.class, () -> {
+            registrationService.register(userLowNegativeAge);
+        });
+        assertEquals("Age cannot be less than 18!", negativeAgeException.getMessage());
     }
 
     @Test
