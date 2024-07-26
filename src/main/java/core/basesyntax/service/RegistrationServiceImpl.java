@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import core.basesyntax.InvalidUserDataException;
+import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.model.User;
 
@@ -16,28 +16,28 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null) {
-            throw new InvalidUserDataException("Login cannot be null.");
+            throw new RegistrationException("Login cannot be null.");
         }
         if (user.getPassword() == null) {
-            throw new InvalidUserDataException("Password cannot be null.");
+            throw new RegistrationException("Password cannot be null.");
         }
         if (user.getAge() == null) {
-            throw new InvalidUserDataException("Age cannot be null.");
+            throw new RegistrationException("Age cannot be null.");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserDataException("User with this login "
+            throw new RegistrationException("User with this login "
                     + user.getLogin() + " already exists.");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new InvalidUserDataException("Login must be at least "
+            throw new RegistrationException("Login must be at least "
                     + MIN_LENGTH + " characters long.");
         }
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new InvalidUserDataException("Password must be at least "
+            throw new RegistrationException("Password must be at least "
                     + MIN_LENGTH + " characters long.");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new InvalidUserDataException("User must be at least "
+            throw new RegistrationException("User must be at least "
                     + MIN_AGE + " years old.");
         }
         storageDao.add(user);
