@@ -59,13 +59,13 @@ class RegistrationServiceTest {
 
     @Test
     void register_ageLessThan18_notOk() {
-        RegistrationException thrown = assertThrows(
+        RegistrationException thrownAgeLessThan18 = assertThrows(
                 RegistrationException.class,
                 () -> registrationService.register(userWithInvalidAge),
                 "Expected at least 18 y.o"
         );
 
-        assertTrue(thrown.getMessage().contains("Expected at least 18 y.o"));
+        assertTrue(thrownAgeLessThan18.getMessage().contains("Expected at least 18 y.o"));
     }
 
     @Test
@@ -77,8 +77,9 @@ class RegistrationServiceTest {
 
     @Test
     void register_UserLoginIsNull_notOk() {
+        validUser.setLogin(null);
         Assertions.assertThrows(RegistrationException.class,
-                () -> registrationService.register(null));
+                () -> registrationService.register(validUser));
     }
 
     @Test
