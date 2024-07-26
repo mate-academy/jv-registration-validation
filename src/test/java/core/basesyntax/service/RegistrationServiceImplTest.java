@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -11,10 +12,10 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private User user = new User("login", "password", 18);
 
     @BeforeEach
     void setUp() {
+        User user = new User("login", "password", 18);
         user.setLogin("svitlanakozak12332@gmail.com");
         user.setPassword("987654");
         user.setAge(38);
@@ -28,44 +29,56 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        User nullUser = new User(null, null, null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(nullUser));
+                registrationService.register(null));
+    }
+
+    @Test
+    void register_validUser_ok() {
+        User user = new User("svitlanakozak12332@gmail.com", "987654", 38);
+        assertEquals(user,registrationService.register(user));
     }
 
     @Test
     void register_nullUserLogin_notOk() {
-        User nullUserLogin = new User(null, "password", 18);
+        User user = new User(null, "password", 18);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(nullUserLogin));
+                registrationService.register(user));
     }
 
     @Test
     void register_shortUserLogin_notOk() {
-        User shortUserLogin = new User("lana", "password", 18);
+        User user = new User("lana", "password", 18);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(shortUserLogin));
+                registrationService.register(user));
     }
 
     @Test
     void register_nullUserPassword_notOk() {
-        User nullUserPassword = new User("login", null, 18);
+        User user = new User("login", null, 18);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(nullUserPassword));
+                registrationService.register(user));
     }
 
     @Test
     void register_shortUserPassword_notOk() {
-        User shortUserPassword = new User("login", "456", 18);
+        User user = new User("login", "456", 18);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(shortUserPassword));
+                registrationService.register(user));
+    }
+
+    @Test
+    void negativeAge_notOk() {
+        User user = new User("login", "password", -1);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
     void register_userAgeIsLessThanAllowed_notOk() {
-        User userAgeIsLessThanAllowed = new User("login", "password", 16);
+        User user = new User("login", "password", 16);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(userAgeIsLessThanAllowed));
+                registrationService.register(user));
     }
 
     @Test
