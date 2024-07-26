@@ -15,32 +15,47 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Login cannot be null.");
+        if (user == null) {
+            throw new RegistrationException("User cannot be null.");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password cannot be null.");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("Age cannot be null.");
-        }
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with this login "
                     + user.getLogin() + " already exists.");
         }
-        if (user.getLogin().length() < MIN_LENGTH) {
+        storageDao.add(user);
+        return user;
+    }
+
+    private void validateLogin(String login) {
+        if (login == null) {
+            throw new RegistrationException("Login cannot be null.");
+        }
+        if (login.length() < MIN_LENGTH) {
             throw new RegistrationException("Login must be at least "
                     + MIN_LENGTH + " characters long.");
         }
-        if (user.getPassword().length() < MIN_LENGTH) {
+    }
+
+    private void validatePassword(String password) {
+        if (password == null) {
+            throw new RegistrationException("Password cannot be null.");
+        }
+        if (password.length() < MIN_LENGTH) {
             throw new RegistrationException("Password must be at least "
                     + MIN_LENGTH + " characters long.");
         }
-        if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("User must be at least "
-                    + MIN_AGE + " years old.");
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new RegistrationException("Age cannot be null.");
         }
-        storageDao.add(user);
-        return user;
+        if (age < MIN_AGE) {
+            throw new RegistrationException("User must be at least " + MIN_AGE + " years old.");
+        }
     }
 }

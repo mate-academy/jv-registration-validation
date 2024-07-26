@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        storageDao.clear();
+        Storage.people.clear();
     }
 
     @Test
