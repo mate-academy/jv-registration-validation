@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private void validateLogin(String login) {
-        if ((login == null) || (login.length() < MIN_LOGIN_LENGTH)) {
+        if (login == null || login.length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("login must contain more than 6 characters");
         }
     }

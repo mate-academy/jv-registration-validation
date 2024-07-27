@@ -68,7 +68,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void negativeAge_notOk() {
+    void register_negativeAge_notOk() {
         User user = new User("login", "password", -1);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
