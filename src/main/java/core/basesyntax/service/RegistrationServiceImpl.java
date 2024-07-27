@@ -12,16 +12,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getAge() == null || user.getAge() < MINIMUM_AGE) {
-            throw new RuntimeException("Wrong age");
+            throw new RegistrationException("Wrong age");
         }
         if (user.getLogin() == null || user.getLogin().length() < MINIMUM_LENGTH) {
-            throw new RuntimeException("Wrong login");
+            throw new RegistrationException("Wrong login");
         }
         if (user.getPassword() == null || user.getPassword().length() < MINIMUM_LENGTH) {
-            throw new RuntimeException("Wrong password");
+            throw new RegistrationException("Wrong password");
         }
         if (isStorageContainLogin(user.getLogin())) {
-            throw new RuntimeException("Such user exist in DB");
+            throw new RegistrationException("Such user exist in DB");
         }
         return storageDao.add(user);
     }

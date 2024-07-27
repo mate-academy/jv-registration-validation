@@ -52,25 +52,25 @@ class RegistrationServiceImplTest {
     @Test
     void age_less18_notOk() {
         actualuser.setAge(17);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
     void age_null_notOk() {
         actualuser.setAge(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
     void age_0_notOk() {
         actualuser.setAge(0);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
     void age_less0_notOk() {
         actualuser.setAge(-25);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
@@ -103,19 +103,19 @@ class RegistrationServiceImplTest {
     @Test
     void loginLength_less6_notOk() {
         actualuser.setLogin("12345");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
     void loginLength_0_notOk() {
         actualuser.setLogin("");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
     void loginLength_null_notOk() {
         actualuser.setLogin(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
@@ -130,7 +130,7 @@ class RegistrationServiceImplTest {
     @Test
     void passwordLength_less6_notOk() {
         actualuser.setPassword("12345");
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
@@ -145,7 +145,7 @@ class RegistrationServiceImplTest {
     @Test
     void passwordLength_null_notOk() {
         actualuser.setPassword(null);
-        assertThrows(RuntimeException.class, () -> registrationService.register(actualuser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @AfterEach
