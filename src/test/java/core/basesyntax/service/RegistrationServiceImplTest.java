@@ -7,7 +7,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -16,14 +16,16 @@ class RegistrationServiceImplTest {
     private static final int VALID_MIN_AGE = 18;
     private static final int INVALID_NEGATIVE_AGE = -1;
     private static final int INVALID_AGE = 16;
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private static final String ACTUAL_LOGIN = "svitlanakozak12332@gmail.com";
+    private static final String ACTUAL_PASSWORD = "987654";
+    private static final int ACTUAL_AGE = 38;
+    private static final String INVALID_LOGIN = "lana";
+    private static final String INVALID_PASSWORD = "456";
+    private static RegistrationService registrationService;
 
-    @BeforeEach
-    void setUp() {
-        User user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_MIN_AGE);
-        user.setLogin("svitlanakozak12332@gmail.com");
-        user.setPassword("987654");
-        user.setAge(38);
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
     }
 
     @AfterEach
@@ -39,7 +41,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User user = new User("svitlanakozak12332@gmail.com", "987654", 38);
+        User user = new User(ACTUAL_LOGIN, ACTUAL_PASSWORD, ACTUAL_AGE);
         assertEquals(user,registrationService.register(user));
     }
 
@@ -52,7 +54,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortUserLogin_notOk() {
-        User user = new User("lana", VALID_PASSWORD, VALID_MIN_AGE);
+        User user = new User(INVALID_LOGIN, VALID_PASSWORD, VALID_MIN_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
@@ -66,7 +68,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortUserPassword_notOk() {
-        User user = new User(VALID_LOGIN, "456", VALID_MIN_AGE);
+        User user = new User(VALID_LOGIN, INVALID_PASSWORD, VALID_MIN_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
