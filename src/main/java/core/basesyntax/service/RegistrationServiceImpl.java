@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User cannot be null.");
         }
-        validateLogin(user.getLogin(), user);
+        validateLogin(user);
         validatePassword(user.getPassword());
         validateAge(user.getAge());
 
@@ -22,11 +22,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    private void validateLogin(String login, User user) {
-        if (login == null) {
+    private void validateLogin(User user) {
+        if (user.getLogin() == null) {
             throw new RegistrationException("Login cannot be null.");
         }
-        if (login.length() < MINIMUM_LENGTH) {
+        if (user.getLogin().length() < MINIMUM_LENGTH) {
             throw new RegistrationException("Login must be at least "
                     + MINIMUM_LENGTH + " characters long.");
         }
