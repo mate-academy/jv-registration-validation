@@ -11,15 +11,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final String VALID_LOGIN = "login";
+    private static final String VALID_PASSWORD = "password";
+    private static final int VALID_MIN_AGE = 18;
+    private static final int INVALID_NEGATIVE_AGE = -1;
+    private static final int INVALID_AGE = 16;
     private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
     void setUp() {
-        User user = new User("login", "password", 18);
+        User user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_MIN_AGE);
         user.setLogin("svitlanakozak12332@gmail.com");
         user.setPassword("987654");
         user.setAge(38);
-
     }
 
     @AfterEach
@@ -41,51 +45,51 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUserLogin_notOk() {
-        User user = new User(null, "password", 18);
+        User user = new User(null, VALID_PASSWORD, VALID_MIN_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_shortUserLogin_notOk() {
-        User user = new User("lana", "password", 18);
+        User user = new User("lana", VALID_PASSWORD, VALID_MIN_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_nullUserPassword_notOk() {
-        User user = new User("login", null, 18);
+        User user = new User(VALID_LOGIN, null, VALID_MIN_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_shortUserPassword_notOk() {
-        User user = new User("login", "456", 18);
+        User user = new User(VALID_LOGIN, "456", VALID_MIN_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_negativeAge_notOk() {
-        User user = new User("login", "password", -1);
+        User user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_NEGATIVE_AGE);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
     }
 
     @Test
     void register_userAgeIsLessThanAllowed_notOk() {
-        User user = new User("login", "password", 16);
+        User user = new User(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_userExist_notOk() {
-        User newUser = new User("login", "password", 18);
+        User newUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_MIN_AGE);
         Storage.people.add(newUser);
-        User userExist = new User("login", "password", 18);
+        User userExist = new User(VALID_LOGIN, VALID_PASSWORD, VALID_MIN_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(userExist));
     }
