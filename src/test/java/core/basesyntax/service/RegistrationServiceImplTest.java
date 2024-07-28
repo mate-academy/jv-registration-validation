@@ -50,7 +50,6 @@ class RegistrationServiceImplTest {
         assertThrows(NullPointerException.class, () -> registrationService.register(null));
     }
 
-
     @Test
     void register_ageEighteen_Ok() {
         actualuser.setAge(18);
