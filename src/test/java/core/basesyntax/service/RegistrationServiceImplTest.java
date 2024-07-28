@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingUser_notOk() {
-        registrationService.register(actualuser);
+        Storage.people.add(actualuser);
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
