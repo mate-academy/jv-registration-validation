@@ -32,7 +32,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_18_Ok() {
+    void register_ageEighteen_Ok() {
         actualuser.setAge(18);
         User expectedUser = registrationService.register(actualuser);
         assertEquals(expectedUser, actualuser);
@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_more18_Ok() {
+    void register_moreEighteenAge_Ok() {
         actualuser.setAge(29);
         User expectedUser = registrationService.register(actualuser);
         assertEquals(expectedUser, actualuser);
@@ -50,31 +50,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void age_less18_notOk() {
+    void age_lessEighteenAge_notOk() {
         actualuser.setAge(17);
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void age_null_notOk() {
+    void register_nullAge_notOk() {
         actualuser.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void age_0_notOk() {
+    void register_zeroAge_notOk() {
         actualuser.setAge(0);
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void age_less0_notOk() {
+    void register_lessZeroAge_notOk() {
         actualuser.setAge(-25);
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void age_maxint_Ok() {
+    void register_maxintAge_Ok() {
         actualuser.setAge(2147483647);
         User expectedUser = registrationService.register(actualuser);
         assertEquals(expectedUser, actualuser);
@@ -83,7 +83,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginLength_6_Ok() {
+    void regitser_loginLengthSix_Ok() {
         actualuser.setLogin("123456");
         User expectedUser = registrationService.register(actualuser);
         assertEquals(expectedUser, actualuser);
@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginLength_more6_Ok() {
+    void regitser_loginLengthMoreSix_Ok() {
         actualuser.setLogin("12345678009");
         User expectedUser = registrationService.register(actualuser);
         assertEquals(expectedUser, actualuser);
@@ -101,25 +101,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void loginLength_less6_notOk() {
+    void regitser_loginLengthLessSix_notOk() {
         actualuser.setLogin("12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void loginLength_0_notOk() {
+    void regitser_loginLength0_notOk() {
         actualuser.setLogin("");
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void loginLength_null_notOk() {
+    void regitser_loginNull_notOk() {
         actualuser.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void passwordLength_more6_Ok() {
+    void register_passwordLengthMoreSix_Ok() {
         actualuser.setPassword("12345678009");
         User expectedUser = registrationService.register(actualuser);
         assertEquals(expectedUser, actualuser);
@@ -128,13 +128,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLength_less6_notOk() {
+    void regitser_passwordLengthLessSix_notOk() {
         actualuser.setPassword("12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
 
     @Test
-    void passwordLength_6_notOk() {
+    void regitser_passwordLengthSix_Ok() {
         actualuser.setPassword("123456");
         User expectedUser = registrationService.register(actualuser);
         assertEquals(expectedUser, actualuser);
@@ -143,7 +143,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordLength_null_notOk() {
+    void regitser_passwrodNull_notOk() {
         actualuser.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
     }
