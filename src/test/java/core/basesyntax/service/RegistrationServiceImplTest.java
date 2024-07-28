@@ -32,6 +32,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_validUser_Ok() {
+        User expectedUser = registrationService.register(actualuser);
+        assertEquals(expectedUser, actualuser);
+        assertEquals(storageDao.get(expectedUser.getLogin()), actualuser);
+        assertEquals(Storage.people.size(), 1);
+    }
+
+    @Test
+    void register_existingUser_notOk() {
+        registrationService.register(actualuser);
+        assertThrows(RegistrationException.class, () -> registrationService.register(actualuser));
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        assertThrows(NullPointerException.class, () -> registrationService.register(null));
+    }
+
+
+    @Test
     void register_ageEighteen_Ok() {
         actualuser.setAge(18);
         User expectedUser = registrationService.register(actualuser);
