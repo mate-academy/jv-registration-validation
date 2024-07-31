@@ -6,7 +6,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MINIMUM_LENGTH = 6;
+    private static final int MINIMUM_PASSWORD_LENGTH = 6;
+    private static final int MINIMUM_LOGIN_LENGTH = 6;
     private static final int MINIMUM_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -24,17 +25,17 @@ public class RegistrationServiceImpl implements RegistrationService {
                         + "with the same login to the storage");
             }
         }
-        if (user.getLogin().length() < MINIMUM_LENGTH) {
+        if (user.getLogin().length() < MINIMUM_LOGIN_LENGTH) {
             throw new InvalidUserDataException("Login length is " + user.getLogin().length()
                     + ", the login cannot contain less than 6 characters");
         }
-        if (user.getPassword().length() < MINIMUM_LENGTH) {
-            throw new InvalidUserDataException("Login length is " + user.getPassword().length()
-                    + ", the login cannot contain less than 6 characters");
+        if (user.getPassword().length() < MINIMUM_PASSWORD_LENGTH) {
+            throw new InvalidUserDataException("Password length is " + user.getPassword().length()
+                    + ", the password cannot contain less than 6 characters");
         }
         if (user.getAge() < MINIMUM_AGE) {
             throw new InvalidUserDataException("User's age is " + user.getAge()
-                    + "ut age cannot be less than 18");
+                    + ", age cannot be less than 18");
         }
         return storageDao.add(user);
     }

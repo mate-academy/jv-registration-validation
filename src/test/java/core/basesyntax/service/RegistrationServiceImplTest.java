@@ -28,6 +28,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_negativeAge_notOk() {
+        user.setLogin("validLogin");
+        user.setPassword("validPass");
+        user.setAge(-5); // Negative age
+        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+    }
+
+    @Test
     void register_validUser_ok() {
         user.setAge(19);
         user.setLogin("validLogin");
@@ -46,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginExist_notOk() {
+    void register_LoginExist_Ok() {
         User existingUser = new User();
         existingUser.setLogin("validLogin");
         Storage.people.add(existingUser);
@@ -57,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginExist_Ok() {
+    void register_LoginExist_notOk() {
         User existingUser = new User();
         existingUser.setLogin("differentLogin");
         Storage.people.add(existingUser);
@@ -100,6 +108,8 @@ class RegistrationServiceImplTest {
         user.setPassword("validPass");
         User registeredUser = registrationServiceImpl.register(user);
         assertEquals(user, registeredUser);
+        user.setPassword("validp");
+        assertEquals(user, registeredUser);
     }
 
     @Test
@@ -122,8 +132,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_PasswordNotNull_notOk() {
         user.setAge(20);
-        user.setLogin(null);
-        user.setPassword("pass");
+        user.setLogin("validLogin");
+        user.setPassword(null);
         assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
     }
 
