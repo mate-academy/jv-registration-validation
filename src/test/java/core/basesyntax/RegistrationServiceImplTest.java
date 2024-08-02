@@ -9,13 +9,19 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class HelloWorldTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+public class RegistrationServiceImplTest {
+    private static RegistrationServiceImpl registrationService;
     private StorageDaoImpl storageDao = new StorageDaoImpl();
     private User user;
+
+    @BeforeAll
+    public static void setupGlobalResources() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     public void setUp() {
@@ -27,14 +33,14 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void register_ok() {
+    public void register_validUser_ok() {
         registrationService.register(user);
         User stored = Storage.people.get(0);
         assertNotNull(stored, "User should be stored in Storage");
     }
 
     @Test
-    public void register_someUsers_ok() {
+    public void register_multipleValidUsers_ok() {
         User user2 = new User();
         user2.setLogin("secondLogin");
         user2.setPassword("secondPassword");
@@ -43,8 +49,8 @@ public class HelloWorldTest {
         user3.setLogin("thirdLogin");
         user3.setPassword("thirdPassword");
         user3.setAge(21);
-        registrationService.register(user);
-        registrationService.register(user2);
+        storageDao.add(user);
+        storageDao.add(user2);
         registrationService.register(user3);
         boolean expected1 = Storage.people.get(0).equals(user);
         boolean expected2 = Storage.people.get(1).equals(user2);
@@ -55,13 +61,13 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void register_NullUser_throwException() {
+    public void register_nullUser_notOk() {
         user = null;
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_RegisterUsersWithSameLogins_throwException() {
+    public void register_duplicateLogin_notOk() {
         Storage.people.add(user);
         User sameUser = new User();
         sameUser.setAge(25);
@@ -71,37 +77,37 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void register_NullLogin_throwException() {
+    public void register_nullLogin_notOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_NullPassword_throwException() {
+    public void register_nullPassword_notOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_NullAge_throwException() {
+    public void register_nullAge_notOk() {
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_ShortLogin_throwException() {
+    public void register_ShortLogin_notOk() {
         user.setLogin("12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_ShortPassword_throwException() {
+    public void register_ShortPassword_notOk() {
         user.setPassword("12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_tooYoung_throwException() {
+    public void register_tooYoung_notOk() {
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
