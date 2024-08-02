@@ -24,12 +24,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new UserValidationException("Password can't be null");
         }
-        if (storageDao.get(user.getLogin()).equals(user)) {
+        if (storageDao.get(user.getLogin()) != null
+                && storageDao.get(user.getLogin()).equals(user)) {
             throw new UserValidationException("User " + user + " already exist");
         }
-        if (user.getLogin().length() < USER_MIN_INPUT
-                || user.getPassword().length() < USER_MIN_INPUT) {
-            throw new UserValidationException("User's login or password less than 6 characters");
+        if (user.getLogin().length() < USER_MIN_INPUT) {
+            throw new UserValidationException("User's login less than 6 characters");
+        }
+        if (user.getPassword().length() < USER_MIN_INPUT) {
+            throw new UserValidationException("User's password less than 6 characters");
         }
         if (user.getAge() < USER_MIN_AGE) {
             throw new UserValidationException("User is under 18 years old");
