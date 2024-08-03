@@ -25,10 +25,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User();
-        user.setAge(18);
-        user.setLogin("123456");
-        user.setPassword("123456");
+        user = new User("123456", "123456", 18);
         Storage.people.clear();
     }
 
@@ -41,14 +38,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_multipleValidUsers_ok() {
-        User user2 = new User();
-        user2.setLogin("secondLogin");
-        user2.setPassword("secondPassword");
-        user2.setAge(31);
-        User user3 = new User();
-        user3.setLogin("thirdLogin");
-        user3.setPassword("thirdPassword");
-        user3.setAge(21);
+        User user2 = new User("secondLogin", "secondPassword", 31);
+        User user3 = new User("thirdLogin", "thirdPassword", 21);
         storageDao.add(user);
         storageDao.add(user2);
         registrationService.register(user3);
@@ -69,10 +60,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_duplicateLogin_notOk() {
         Storage.people.add(user);
-        User sameUser = new User();
-        sameUser.setAge(25);
-        sameUser.setLogin("123456");
-        sameUser.setPassword("654321");
+        User sameUser = new User("123456", "654321", 25);
         assertThrows(RegistrationException.class, () -> registrationService.register(sameUser));
     }
 
