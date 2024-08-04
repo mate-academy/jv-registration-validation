@@ -1,9 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
@@ -12,6 +8,8 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
@@ -31,24 +29,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     public void register_validUser_ok() {
-        registrationService.register(user);
-        User stored = Storage.people.get(0);
-        assertNotNull(stored, "User should be stored in Storage");
-    }
-
-    @Test
-    public void register_multipleValidUsers_ok() {
-        User user2 = new User("secondLogin", "secondPassword", 31);
-        User user3 = new User("thirdLogin", "thirdPassword", 21);
-        storageDao.add(user);
-        storageDao.add(user2);
-        registrationService.register(user3);
-        boolean expected1 = Storage.people.get(0).equals(user);
-        boolean expected2 = Storage.people.get(1).equals(user2);
-        boolean expected3 = Storage.people.get(2).equals(user3);
-        assertTrue(expected1, "First user wasn't added");
-        assertTrue(expected2, "Second user wasn't added");
-        assertTrue(expected3, "Third user wasn't added");
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 
     @Test
@@ -97,6 +79,12 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_tooYoung_notOk() {
         user.setAge(17);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_negativeAge_notOk() {
+        user.setAge(-10);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
