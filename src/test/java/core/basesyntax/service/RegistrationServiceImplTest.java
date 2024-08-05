@@ -147,7 +147,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_addCorrectUser_Ok() {
-        User actual = registrationService.register(new User(LOGIN_YURI,CORRECT_PASSWORD_SIX_LETTERS,MINIMUM_AGE));
+        User actual = registrationService.register(new User(
+                LOGIN_YURI,CORRECT_PASSWORD_SIX_LETTERS,MINIMUM_AGE));
         User expected = people.get(FIRST);
         assertEquals(actual,expected);
     }
