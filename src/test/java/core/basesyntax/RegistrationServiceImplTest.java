@@ -5,19 +5,15 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RegistrationServiceImplTest {
-    private static User user;
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+class RegistrationServiceImplTest {
+    private RegistrationService registrationService;
 
-    @BeforeAll
-    static void createValidUser() {
-        user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("validPassword");
-        user.setAge(33);
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
@@ -29,7 +25,10 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUserLogin_notOk() {
+        User user = new User();
         user.setLogin(null);
+        user.setPassword("validPassword");
+        user.setAge(20);
         Assertions.assertThrows(RegistrationDataException.class, () -> {
             registrationService.register(user);
         });
@@ -37,7 +36,10 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUserPassword_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
         user.setPassword(null);
+        user.setAge(20);
         Assertions.assertThrows(RegistrationDataException.class, () -> {
             registrationService.register(user);
         });
@@ -45,6 +47,9 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUserAge_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
         user.setAge(null);
         Assertions.assertThrows(RegistrationDataException.class, () -> {
             registrationService.register(user);
@@ -53,6 +58,9 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_underAge_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
         user.setAge(17);
         Assertions.assertThrows(RegistrationDataException.class, () -> {
             registrationService.register(user);
@@ -61,25 +69,58 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_shortLogin_notOk() {
+        User user = new User();
         user.setLogin("short");
+        user.setPassword("validPassword");
+        user.setAge(20);
         Assertions.assertThrows(RegistrationDataException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_edgeCaseLoginLength_ok() {
+        User user = new User();
+        user.setLogin("length");
+        user.setPassword("validPassword");
+        user.setAge(20);
+        Assertions.assertDoesNotThrow(() -> {
             registrationService.register(user);
         });
     }
 
     @Test
     void register_shortPassword_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
         user.setPassword("short");
+        user.setAge(20);
         Assertions.assertThrows(RegistrationDataException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
+    void register_edgeCasePasswordLength_ok() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("length");
+        user.setAge(20);
+        Assertions.assertDoesNotThrow(() -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_existingLogin_notOk() {
+        User user = new User();
+        user.setLogin("existingLogin");
+        user.setPassword("validPassword");
+        user.setAge(20);
         registrationService.register(user);
+
         User anotherUser = new User();
-        anotherUser.setLogin("validLogin");
+        anotherUser.setLogin("existingLogin");
         anotherUser.setPassword("anotherPassword");
         anotherUser.setAge(22);
         Assertions.assertThrows(RegistrationDataException.class, () -> {
@@ -89,12 +130,25 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User newUser = new User();
-        newUser.setLogin("newLogin");
-        newUser.setPassword("newPassword");
-        newUser.setAge(25);
+        User user = new User();
+        user.setLogin("newLogin");
+        user.setPassword("newPassword");
+        user.setAge(25);
         Assertions.assertDoesNotThrow(() -> {
-            registrationService.register(newUser);
+            registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_validUser_userAddedToStorage() {
+        User user = new User();
+        user.setLogin("uniqueLogin");
+        user.setPassword("uniquePassword");
+        user.setAge(25);
+        User registeredUser = registrationService.register(user);
+
+        Assertions.assertEquals(user.getLogin(), registeredUser.getLogin());
+        Assertions.assertEquals(user.getPassword(), registeredUser.getPassword());
+        Assertions.assertEquals(user.getAge(), registeredUser.getAge());
     }
 }
