@@ -1,10 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +17,13 @@ class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword";
     private static final String SHORT_INPUT = "short";
+    private static RegistrationService registrationService;
     private User user;
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+
+    @BeforeAll
+    static void createRegistrationService() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void createValidUser() {
@@ -28,11 +35,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_valid_ok() throws RegistrationException {
-        Assertions.assertEquals(user, registrationService.register(user));
+        User actual = registrationService.register(user);
+        assertEquals(actual, user);
     }
 
     @Test
     void register_existUser_notOk() {
+        //We add a user here to be able to run this test separately from all tests without errors?
+        Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
