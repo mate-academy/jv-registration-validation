@@ -12,7 +12,6 @@ class RegistrationServiceImplTest {
     private static final int VALID_AGE = 20;
     private static final int UNDER_AGE = 17;
     private static final int NEGATIVE_AGE = -1;
-
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPassword";
     private static final String SHORT_INPUT = "short";
