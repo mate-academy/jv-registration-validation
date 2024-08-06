@@ -12,7 +12,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) == null) {//
+        if (storageDao.get(user.getLogin()) == null) {
             validateLogin(user);
             validatePassword(user);
             validateAge(user);
