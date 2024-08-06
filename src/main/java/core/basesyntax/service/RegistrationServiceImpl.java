@@ -12,32 +12,44 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) == null) {
-            if (user.getPassword() == null) {
-                throw new RegistrationException("Password cannot be null");
-            }
-            if (user.getLogin() == null) {
-                throw new RegistrationException("Login cannot be null");
-            }
-            if (user.getAge() == null) {
-                throw new RegistrationException("Age cannot be null");
-            }
-            if (user.getPassword().length() < MINIMUM_LENGTH) {
-                throw new RegistrationException("Not valid password " + user.getPassword()
-                        + ".Password cannot be less than " + MINIMUM_LENGTH + " characters");
-            }
-            if (user.getLogin().length() < MINIMUM_LENGTH) {
-                throw new RegistrationException("Not valid login " + user.getLogin()
-                        + ".Login cannot be less than " + MINIMUM_LENGTH + " characters");
-            }
-            if (user.getAge() < MINIMUM_AGE) {
-                throw new RegistrationException("Not valid age: " + user.getAge()
-                        + ".Age cannot be less than " + MINIMUM_AGE);
-            }
+        if (storageDao.get(user.getLogin()) == null) {//
+            validateLogin(user);
+            validatePassword(user);
+            validateAge(user);
             storageDao.add(user);
             return user;
         } else {
             throw new RegistrationException("A user with this login already exists");
+        }
+    }
+
+    private void validateLogin(User user) {
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login cannot be null");
+        }
+        if (user.getLogin().length() < MINIMUM_LENGTH) {
+            throw new RegistrationException("Not valid login " + user.getLogin()
+                    + ".Login cannot be less than " + MINIMUM_LENGTH + " characters");
+        }
+    }
+
+    private void validatePassword(User user) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password cannot be null");
+        }
+        if (user.getPassword().length() < MINIMUM_LENGTH) {
+            throw new RegistrationException("Not valid password " + user.getPassword()
+                    + ".Password cannot be less than " + MINIMUM_LENGTH + " characters");
+        }
+    }
+
+    private void validateAge(User user) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age cannot be null");
+        }
+        if (user.getAge() < MINIMUM_AGE) {
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ".Age cannot be less than " + MINIMUM_AGE);
         }
     }
 }
