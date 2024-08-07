@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,9 +26,8 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        StorageDao storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
-        storageDao.clear();
+        Storage.people.clear(); // Clear Storage before each test
     }
 
     @Test
