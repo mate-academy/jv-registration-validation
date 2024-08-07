@@ -27,7 +27,7 @@ public class RegistrationServiceImplTest {
     @BeforeEach
     public void setUp() {
         registrationService = new RegistrationServiceImpl();
-        Storage.people.clear(); // Clear Storage before each test
+        Storage.people.clear();
     }
 
     @Test
@@ -134,7 +134,7 @@ public class RegistrationServiceImplTest {
     @Test
     public void register_existingLogin_notOk() {
         User existingUser = createUser(EXISTING_LOGIN, VALID_PASSWORD, VALID_AGE);
-        registrationService.register(existingUser); // Register user to ensure it exists
+        Storage.people.add(existingUser);
 
         User newUser = createUser(EXISTING_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
