@@ -32,11 +32,14 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("User with the same login '"
                     + user.getLogin() + "' exists");
         }
-        if (user.getPassword().length() < MIN_LOGIN_OR_PASSWORD_LENGTH) {
+        if (user.getLogin().length() < MIN_LOGIN_OR_PASSWORD_LENGTH) {
             throw new InvalidDataException("User has invalid login: " + user.getLogin());
         }
-        if (user.getLogin().length() < MIN_LOGIN_OR_PASSWORD_LENGTH) {
+        if (user.getPassword().length() < MIN_LOGIN_OR_PASSWORD_LENGTH) {
             throw new InvalidDataException("User has invalid password: " + user.getPassword());
+        }
+        if (user.getAge() == null) {
+            throw new InvalidDataException("Age can't be null");
         }
         if (user.getAge() < 0) {
             throw new InvalidDataException("Invalid age value");

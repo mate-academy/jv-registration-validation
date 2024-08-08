@@ -9,7 +9,6 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,14 +17,11 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private User user;
 
-    @BeforeAll
-    static void beforeAll() {
-        storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl(storageDao);
-    }
-
     @BeforeEach
     void setUp() {
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl(storageDao);
+
         user = new User();
         user.setId(1L);
         user.setLogin("rightLogin");
@@ -55,7 +51,11 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithExistLogin_notOk() {
         Storage.people.add(user);
-        User userWithExistLogin = user;
+        User userWithExistLogin = new User();
+        userWithExistLogin.setId(2L);
+        userWithExistLogin.setLogin("rightLogin");
+        userWithExistLogin.setPassword("password");
+        userWithExistLogin.setAge(22);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(userWithExistLogin);
         });
@@ -117,8 +117,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userWithNullAge_notOk() {
+        user.setAge(null);
+        assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_userWithYoungAge_notOk() {
-        user.setAge(15);
+        user.setAge(17);
         assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
