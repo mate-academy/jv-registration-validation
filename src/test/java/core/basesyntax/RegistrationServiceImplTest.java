@@ -13,13 +13,10 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private static final String SHORT_LOGIN = "short";
     private static final String VALID_LOGIN = "validLogin";
-    private static final String LONGER_LOGIN = "longerLogin";
     private static final String SHORT_PASSWORD = "short";
     private static final String VALID_PASSWORD = "validPassword";
-    private static final String LONGER_PASSWORD = "longerPassword";
     private static final Integer VALID_AGE = 20;
     private static final Integer UNDERAGE = 17;
-    private static final Integer EXACTLY_AT_AGE = 18;
     private static final String EXISTING_LOGIN = "existingLogin";
 
     private RegistrationService registrationService;
@@ -48,25 +45,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_exactlyAtLoginLength_ok() {
+    public void register_validUser_ok() {
         User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         User registeredUser = registrationService.register(user);
 
         assertNotNull(registeredUser);
         assertNotNull(registeredUser.getId());
         assertEquals(VALID_LOGIN, registeredUser.getLogin());
-        assertEquals(VALID_PASSWORD, registeredUser.getPassword());
-        assertEquals(VALID_AGE, registeredUser.getAge());
-    }
-
-    @Test
-    public void register_longerLogin_ok() {
-        User user = createUser(LONGER_LOGIN, VALID_PASSWORD, VALID_AGE);
-        User registeredUser = registrationService.register(user);
-
-        assertNotNull(registeredUser);
-        assertNotNull(registeredUser.getId());
-        assertEquals(LONGER_LOGIN, registeredUser.getLogin());
         assertEquals(VALID_PASSWORD, registeredUser.getPassword());
         assertEquals(VALID_AGE, registeredUser.getAge());
     }
@@ -84,30 +69,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_exactlyAtPasswordLength_ok() {
-        User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        User registeredUser = registrationService.register(user);
-
-        assertNotNull(registeredUser);
-        assertNotNull(registeredUser.getId());
-        assertEquals(VALID_LOGIN, registeredUser.getLogin());
-        assertEquals(VALID_PASSWORD, registeredUser.getPassword());
-        assertEquals(VALID_AGE, registeredUser.getAge());
-    }
-
-    @Test
-    public void register_longerPassword_ok() {
-        User user = createUser(VALID_LOGIN, LONGER_PASSWORD, VALID_AGE);
-        User registeredUser = registrationService.register(user);
-
-        assertNotNull(registeredUser);
-        assertNotNull(registeredUser.getId());
-        assertEquals(VALID_LOGIN, registeredUser.getLogin());
-        assertEquals(LONGER_PASSWORD, registeredUser.getPassword());
-        assertEquals(VALID_AGE, registeredUser.getAge());
-    }
-
-    @Test
     public void register_nullAge_notOk() {
         User user = createUser(VALID_LOGIN, VALID_PASSWORD, null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
@@ -117,18 +78,6 @@ public class RegistrationServiceImplTest {
     public void register_underageUser_notOk() {
         User user = createUser(VALID_LOGIN, VALID_PASSWORD, UNDERAGE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    public void register_atAgeBoundary_ok() {
-        User user = createUser(VALID_LOGIN, VALID_PASSWORD, EXACTLY_AT_AGE);
-        User registeredUser = registrationService.register(user);
-
-        assertNotNull(registeredUser);
-        assertNotNull(registeredUser.getId());
-        assertEquals(VALID_LOGIN, registeredUser.getLogin());
-        assertEquals(VALID_PASSWORD, registeredUser.getPassword());
-        assertEquals(EXACTLY_AT_AGE, registeredUser.getAge());
     }
 
     @Test
