@@ -12,24 +12,24 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (storageDao.get(user.getLogin()) == null) {
-            validateLogin(user);
-            validatePassword(user);
-            validateAge(user);
-            storageDao.add(user);
-            return user;
-        } else {
-            throw new RegistrationException("A user with this login already exists");
-        }
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
+        storageDao.add(user);
+        return user;
     }
 
     private void validateLogin(User user) {
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Login cannot be null");
-        }
-        if (user.getLogin().length() < MINIMUM_LENGTH) {
-            throw new RegistrationException("Not valid login " + user.getLogin()
-                    + ".Login cannot be less than " + MINIMUM_LENGTH + " characters");
+        if (storageDao.get(user.getLogin()) == null) {
+            if (user.getLogin() == null) {
+                throw new RegistrationException("Login cannot be null");
+            }
+            if (user.getLogin().length() < MINIMUM_LENGTH) {
+                throw new RegistrationException("Not valid login " + user.getLogin()
+                        + ".Login cannot be less than " + MINIMUM_LENGTH + " characters");
+            }
+        } else {
+            throw new RegistrationException("A user with this login already exists");
         }
     }
 
