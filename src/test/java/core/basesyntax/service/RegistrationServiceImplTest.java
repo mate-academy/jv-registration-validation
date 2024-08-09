@@ -35,13 +35,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullValue_NotOk() {
+    void register_nullLogin_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(null, CORRECT_PASSWORD, MINIMUM_AGE)));
+                        new User(null, CORRECT_PASSWORD, MINIMUM_AGE)),
+                "Expected RegistrationException was not thrown for null login.");
+    }
+
+    @Test
+    void register_nullPassword_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, null, MINIMUM_AGE)));
+                        new User(CORRECT_LOGIN, null, MINIMUM_AGE)),
+                "Expected RegistrationException was not thrown for null password.");
+    }
+
+    @Test
+    void register_nullAge_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, CORRECT_PASSWORD, null)));
+                        new User(CORRECT_LOGIN, CORRECT_PASSWORD, null)),
+                "Expected RegistrationException was not thrown for null age.");
     }
 
     @Test
@@ -59,27 +70,45 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_incorrectUser_NotOk() {
+    void register_incorrectAge_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, CORRECT_PASSWORD, NEGATIVE_AGE)));
+                        new User(CORRECT_LOGIN, CORRECT_PASSWORD, NEGATIVE_AGE)),
+                "Expected RegistrationException was not thrown for negative age.");
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, CORRECT_PASSWORD, ZERO_AGE)));
+                        new User(CORRECT_LOGIN, CORRECT_PASSWORD, ZERO_AGE)),
+                "Expected RegistrationException was not thrown for age equal to zero.");
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, CORRECT_PASSWORD, BELOW_MINIMUM_AGE)));
+                        new User(CORRECT_LOGIN, CORRECT_PASSWORD, BELOW_MINIMUM_AGE)),
+                "Expected RegistrationException was not thrown for age below minimum allowed.");
+    }
+
+    @Test
+    void register_incorrectLogin_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(INCORRECT_LOGIN, CORRECT_PASSWORD, MINIMUM_AGE)));
+                        new User(INCORRECT_LOGIN, CORRECT_PASSWORD, MINIMUM_AGE)),
+                "Expected RegistrationException was not thrown for for an incorrect login"
+                        + " of less than six characters.");
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(EMPTY_LINE, CORRECT_PASSWORD, MINIMUM_AGE)));
+                        new User(EMPTY_LINE, CORRECT_PASSWORD, MINIMUM_AGE)),
+                "Expected RegistrationException was not thrown for incorrect login(empty line).");
+    }
+
+    @Test
+    void register_incorrectPassword_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, INCORRECT_PASSWORD, MINIMUM_AGE)));
+                        new User(CORRECT_LOGIN, INCORRECT_PASSWORD, MINIMUM_AGE)),
+                "Expected RegistrationException was not thrown for for an incorrect password"
+                        + " of less than six characters.");
         assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, EMPTY_LINE, MINIMUM_AGE)));
+                        new User(CORRECT_LOGIN, EMPTY_LINE, MINIMUM_AGE)),
+                "Expected RegistrationException was not thrown for"
+                        + " incorrect password(empty line).");
     }
 
     @Test
     void register_userAlreadyExists_NotOk() {
-        people.add(new User(CORRECT_LOGIN, CORRECT_PASSWORD, MINIMUM_AGE));
-        assertThrows(RegistrationException.class, () -> registrationService.register(
-                new User(CORRECT_LOGIN, CORRECT_PASSWORD, MINIMUM_AGE)));
+        User newUser = new User(CORRECT_LOGIN, CORRECT_PASSWORD, MINIMUM_AGE);
+        people.add(newUser);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 }
