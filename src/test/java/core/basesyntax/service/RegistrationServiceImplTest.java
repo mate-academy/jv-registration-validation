@@ -39,13 +39,13 @@ class RegistrationServiceImplTest {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
 
-        User secondUser = new User();
-        secondUser.setId(2L);
-        secondUser.setLogin("123456");
-        secondUser.setPassword("123456");
-        secondUser.setAge(18);
-        User actual2 = registrationService.register(secondUser);
-        assertEquals(secondUser, actual2);
+        User expectedSecondUser = new User();
+        expectedSecondUser.setId(2L);
+        expectedSecondUser.setLogin("123456");
+        expectedSecondUser.setPassword("123456");
+        expectedSecondUser.setAge(18);
+        User actualSecondUser = registrationService.register(expectedSecondUser);
+        assertEquals(expectedSecondUser, actualSecondUser);
     }
 
     @Test
