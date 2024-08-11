@@ -43,7 +43,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age can't be null");
         }
         if (user.getAge() < 0) {
-            throw new RegistrationException("Invalid age value");
+            throw new RegistrationException("Age can't be negative");
         }
         if (user.getAge() < MIN_AGE_TO_REGISTER) {
             throw new RegistrationException("Not valid age: " + user.getAge()

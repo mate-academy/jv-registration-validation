@@ -22,11 +22,7 @@ class RegistrationServiceImplTest {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
 
-        user = new User();
-        user.setId(1L);
-        user.setLogin("rightLogin");
-        user.setPassword("rightPassword");
-        user.setAge(25);
+        user = new User("rightLogin", "rightPassword", 25);
     }
 
     @AfterEach
@@ -39,11 +35,7 @@ class RegistrationServiceImplTest {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
 
-        User expectedSecondUser = new User();
-        expectedSecondUser.setId(2L);
-        expectedSecondUser.setLogin("123456");
-        expectedSecondUser.setPassword("123456");
-        expectedSecondUser.setAge(18);
+        User expectedSecondUser = new User("123456", "123456", 18);
         User actualSecondUser = registrationService.register(expectedSecondUser);
         assertEquals(expectedSecondUser, actualSecondUser);
     }
@@ -51,11 +43,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userWithExistLogin_notOk() {
         Storage.people.add(user);
-        User userWithExistLogin = new User();
-        userWithExistLogin.setId(2L);
-        userWithExistLogin.setLogin("rightLogin");
-        userWithExistLogin.setPassword("password");
-        userWithExistLogin.setAge(22);
+        User userWithExistLogin = new User("rightLogin", "password", 22);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithExistLogin);
         });
@@ -125,7 +113,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userWithYoungAge_notOk() {
+    void register_underAgeUser_notOk() {
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
