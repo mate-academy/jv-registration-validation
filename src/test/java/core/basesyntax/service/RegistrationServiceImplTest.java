@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.ValidationFailedException;
@@ -63,13 +64,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortLogin_notOk() {
+    void register_minimumLength_ofLogin_notOk() {
         user.setLogin("login");
         assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_minimumLength_ofPassword_notOk() {
         user.setPassword("1234");
         assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
     }
@@ -82,7 +83,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_User_isOk() {
-        User registeredUser = registrationService.register(user);
+        registrationService.register(user);
+        User registeredUser = Storage.people.stream()
+                .filter(u -> u.getLogin().equals(user.getLogin()))
+                .findFirst()
+                .orElse(null);
+        assertTrue(Storage.people.contains(user));
         assertNotNull(registeredUser);
         assertEquals(registeredUser.getId(), user.getId());
         assertEquals(registeredUser.getLogin(), user.getLogin());
@@ -91,7 +97,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginAlreadyExist_notOk() {
+    void register_loginAlreadyExists_notOk() {
         Storage.people.add(user);
         User newUser = new User(5L, "my_login", "1234567", 19);
         assertThrows(ValidationFailedException.class, () -> registrationService.register(newUser));
