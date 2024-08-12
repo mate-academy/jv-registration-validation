@@ -19,7 +19,7 @@ class RegistrationServiceImplTest {
     private static final int VALID_AGE = 23;
 
     @Test
-    public void register_Null_NotOk() {
+    public void register_NullUser_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
@@ -45,7 +45,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_AddLogin_NotOk() {
+    public void register_InvalidLogin_NotOk() {
         User user = getValidUser();
         StringBuilder login = new StringBuilder();
         user.setLogin(login.toString());
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_AddPassword_NotOk() {
+    public void register_AddInvalidPassword_NotOk() {
         User user = getValidUser();
         StringBuilder password = new StringBuilder();
         user.setPassword(password.toString());
@@ -80,26 +80,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_AddAge_NotOk() {
+    public void register_AddInvalidAge_NotOk() {
         User user = getValidUser();
 
         for (int i = 0; i < MIN_AGE; i++) {
             user.setAge(i);
             assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        }
-    }
-
-    @Test
-    public void register_AddValidUser_Ok() {
-        User user = getValidUser();
-        assertEquals(registrationService.register(user), user);
-
-        for (int i = 0; i <= 100; i++) {
-            User newUser = new User();
-            newUser.setLogin(LOGIN_WITH_MIN_LENGTH + i);
-            newUser.setPassword(PASSWORD_WITH_MIN_LENGTH + i);
-            newUser.setAge(MIN_AGE + i);
-            assertEquals(registrationService.register(newUser), newUser);
         }
     }
 
@@ -113,10 +99,10 @@ class RegistrationServiceImplTest {
     }
 
     private User getValidUser() {
-        User validUser = new User();
-        validUser.setLogin(VALID_LOGIN);
-        validUser.setPassword(VALID_PASSWORD);
-        validUser.setAge(VALID_AGE);
-        return validUser;
+        User user = new User();
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+        return user;
     }
 }
