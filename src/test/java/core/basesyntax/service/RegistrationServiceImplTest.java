@@ -1,50 +1,51 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final RegistrationService registrationService = new RegistrationServiceImpl();
     private static final int MIN_AGE = 18;
     private static final int MIN_LOGIN_LENGTH = 5;
     private static final int MIN_PASSWORD_LENGTH = 5;
     private static final String LOGIN_WITH_MIN_LENGTH = "io0p1";
     private static final String PASSWORD_WITH_MIN_LENGTH = "12345";
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Test
-    public void registerNullNotOk () {
+    public void registerNullNotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    public void registerNullLoginNotOk () {
+    public void registerNullLoginNotOk() {
         User user = getValidUser();
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void registerNullPasswordNotOk () {
+    public void registerNullPasswordNotOk() {
         User user = getValidUser();
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void registerNullAgeNotOk () {
-        User user =  getValidUser();
+    public void registerNullAgeNotOk() {
+        User user = getValidUser();
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void registerAddLoginNotOk () {
-        User user =  getValidUser();
+    public void registerAddLoginNotOk() {
+        User user = getValidUser();
         StringBuilder login = new StringBuilder();
         user.setLogin(login.toString());
 
@@ -56,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerAlredyRegisteredUserNotOk () {
+    public void registerAlredyRegisteredUserNotOk() {
         User user = getValidUser();
         storageDao.add(user);
 
@@ -65,8 +66,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerAddPasswordNotOk () {
-        User user =  getValidUser();
+    public void registerAddPasswordNotOk() {
+        User user = getValidUser();
         StringBuilder password = new StringBuilder();
         user.setPassword(password.toString());
 
@@ -78,8 +79,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerAddAgeNotOk () {
-        User user =  getValidUser();
+    public void registerAddAgeNotOk() {
+        User user = getValidUser();
 
         for (int i = 0; i < MIN_AGE; i++) {
             user.setAge(i);
@@ -88,7 +89,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerAddOk () {
+    public void registerAddOk() {
         User user = getValidUser();
         assertEquals(registrationService.register(user), user);
 
@@ -102,7 +103,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerAddMinimumValuesOk () {
+    public void registerAddMinimumValuesOk() {
         User user = getValidUser();
         user.setLogin(LOGIN_WITH_MIN_LENGTH);
         user.setPassword(PASSWORD_WITH_MIN_LENGTH);
