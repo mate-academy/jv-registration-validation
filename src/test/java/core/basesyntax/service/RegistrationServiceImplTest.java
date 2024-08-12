@@ -20,7 +20,12 @@ class RegistrationServiceImplTest {
     private static final String SHORT_PASSWORD = "pass";
     private static final String EMPTY_STRING = "";
     private static final int VALID_AGE = 24;
+    private static final int MAX_VALID_AGE = 100;
     private static final int INVALID_AGE = 15;
+    private static final int MAX_LOGIN_LENGTH = 25;
+    private static final int MAX_PASSWORD_LENGTH = 25;
+    private static final String TOO_LONG_LOGIN = "a".repeat(MAX_LOGIN_LENGTH + 1);
+    private static final String TOO_LONG_PASSWORD = "a".repeat(MAX_PASSWORD_LENGTH + 1);
 
     private RegistrationService registrationValidator;
     private StorageDao storageDao;
@@ -73,6 +78,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_tooLongLogin_notOk() {
+        User newUser = createUser(TOO_LONG_LOGIN, VALID_PASSWORD, VALID_AGE);
+        assertNull(storageDao.get(TOO_LONG_LOGIN));
+        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertNull(storageDao.get(TOO_LONG_LOGIN));
+    }
+
+    @Test
     public void register_emptyLogin_notOk() {
         User newUser = createUser(EMPTY_STRING, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(EMPTY_STRING));
@@ -113,11 +126,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_tooLongPassword_notOk() {
+        User newUser = createUser(VALID_LOGIN, TOO_LONG_PASSWORD, VALID_AGE);
+        assertNull(storageDao.get(VALID_LOGIN));
+        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertNull(storageDao.get(VALID_LOGIN));
+    }
+
+    @Test
     public void register_validAge_ok() throws RegistrationException {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
         registrationValidator.register(newUser);
         assertEquals(newUser, storageDao.get(VALID_LOGIN));
+    }
+
+    @Test
+    public void register_ageGreaterThanMax_notOk() throws RegistrationException {
+        User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, MAX_VALID_AGE + 1);
+        assertNull(storageDao.get(VALID_LOGIN));
+        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertNull(storageDao.get(VALID_LOGIN));
     }
 
     @Test
