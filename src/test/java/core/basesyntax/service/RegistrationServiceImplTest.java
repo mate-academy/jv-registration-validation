@@ -9,7 +9,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -27,14 +28,24 @@ class RegistrationServiceImplTest {
     private static final String TOO_LONG_LOGIN = "a".repeat(MAX_LOGIN_LENGTH + 1);
     private static final String TOO_LONG_PASSWORD = "a".repeat(MAX_PASSWORD_LENGTH + 1);
 
-    private RegistrationService registrationValidator;
-    private StorageDao storageDao;
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
 
-    @BeforeEach
-    void setUp() {
-        Storage.people.clear();
-        registrationValidator = new RegistrationServiceImpl();
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+    }
+
+    @AfterEach
+    void afterEach() {
+        Storage.people.clear();
+    }
+
+    @Test
+    public void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class, ()
+                -> registrationService.register(null));
     }
 
     @Test
@@ -42,22 +53,22 @@ class RegistrationServiceImplTest {
         User existingUser = createUser(EXISTING_USER_LOGIN, VALID_PASSWORD, VALID_AGE);
         storageDao.add(existingUser);
         assertThrows(RegistrationException.class, ()
-                -> registrationValidator.register(existingUser));
+                -> registrationService.register(existingUser));
     }
 
     @Test
-    public void register_newUser_ok() throws RegistrationException {
+    public void register_validUser_ok() throws RegistrationException {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        assertNull(storageDao.get(VALID_LOGIN));
-        registrationValidator.register(newUser);
-        assertEquals(newUser, storageDao.get(VALID_LOGIN));
+        registrationService.register(newUser);
+        assertThrows(RegistrationException.class, ()
+                -> registrationService.register(newUser));
     }
 
     @Test
     public void register_validLogin_ok() throws RegistrationException {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        registrationValidator.register(newUser);
+        registrationService.register(newUser);
         assertEquals(newUser, storageDao.get(VALID_LOGIN));
     }
 
@@ -65,7 +76,7 @@ class RegistrationServiceImplTest {
     public void register_invalidLogin_notOk() {
         User newUser = createUser(SHORT_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(SHORT_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(SHORT_LOGIN));
     }
 
@@ -73,7 +84,7 @@ class RegistrationServiceImplTest {
     public void register_nullLogin_notOk() {
         User newUser = createUser(null, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(null));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(null));
     }
 
@@ -81,7 +92,7 @@ class RegistrationServiceImplTest {
     public void register_tooLongLogin_notOk() {
         User newUser = createUser(TOO_LONG_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(TOO_LONG_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(TOO_LONG_LOGIN));
     }
 
@@ -89,7 +100,7 @@ class RegistrationServiceImplTest {
     public void register_emptyLogin_notOk() {
         User newUser = createUser(EMPTY_STRING, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(EMPTY_STRING));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(EMPTY_STRING));
     }
 
@@ -97,7 +108,7 @@ class RegistrationServiceImplTest {
     public void register_validPassword_ok() throws RegistrationException {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        registrationValidator.register(newUser);
+        registrationService.register(newUser);
         assertEquals(newUser, storageDao.get(VALID_LOGIN));
     }
 
@@ -105,7 +116,7 @@ class RegistrationServiceImplTest {
     public void register_invalidPassword_notOk() {
         User newUser = createUser(VALID_LOGIN, SHORT_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(VALID_LOGIN));
     }
 
@@ -113,7 +124,7 @@ class RegistrationServiceImplTest {
     public void register_nullPassword_notOk() {
         User newUser = createUser(VALID_LOGIN, null, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(VALID_LOGIN));
     }
 
@@ -121,7 +132,7 @@ class RegistrationServiceImplTest {
     public void register_emptyPassword_notOk() {
         User newUser = createUser(VALID_LOGIN, EMPTY_STRING, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(VALID_LOGIN));
     }
 
@@ -129,7 +140,7 @@ class RegistrationServiceImplTest {
     public void register_tooLongPassword_notOk() {
         User newUser = createUser(VALID_LOGIN, TOO_LONG_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(VALID_LOGIN));
     }
 
@@ -137,7 +148,7 @@ class RegistrationServiceImplTest {
     public void register_validAge_ok() throws RegistrationException {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        registrationValidator.register(newUser);
+        registrationService.register(newUser);
         assertEquals(newUser, storageDao.get(VALID_LOGIN));
     }
 
@@ -145,7 +156,7 @@ class RegistrationServiceImplTest {
     public void register_ageGreaterThanMax_notOk() throws RegistrationException {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, MAX_VALID_AGE + 1);
         assertNull(storageDao.get(VALID_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(VALID_LOGIN));
     }
 
@@ -153,7 +164,7 @@ class RegistrationServiceImplTest {
     public void register_invalidAge_notOk() {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, INVALID_AGE);
         assertNull(storageDao.get(VALID_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(VALID_LOGIN));
     }
 
@@ -161,7 +172,7 @@ class RegistrationServiceImplTest {
     public void register_nullAge_notOk() {
         User newUser = createUser(VALID_LOGIN, VALID_PASSWORD, null);
         assertNull(storageDao.get(VALID_LOGIN));
-        assertThrows(RegistrationException.class, () -> registrationValidator.register(newUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
         assertNull(storageDao.get(VALID_LOGIN));
     }
 
