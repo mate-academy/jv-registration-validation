@@ -20,6 +20,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void userIsValid_ok() {
+        User existingUser = new User();
+        existingUser.setLogin("differentLogin");
+        Storage.people.add(existingUser);
+        user.setAge(19);
+        user.setLogin("validLogin");
+        user.setPassword("validPass");
+        User registeredUser = registrationServiceImpl.register(user);
+        assertEquals(user, registeredUser);
+    }
+
+    @Test
     void register_ageLessThan18_notOk() {
         user.setAge(16);
         user.setLogin("validLogin");
@@ -31,17 +43,16 @@ class RegistrationServiceImplTest {
     void register_negativeAge_notOk() {
         user.setLogin("validLogin");
         user.setPassword("validPass");
-        user.setAge(-5); // Negative age
+        user.setAge(-5);
         assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
-    void register_validUser_ok() {
-        user.setAge(19);
+    void register_ageEdgeCase_notOk() {
         user.setLogin("validLogin");
         user.setPassword("validPass");
-        User registeredUser = registrationServiceImpl.register(user);
-        assertEquals(user, registeredUser);
+        user.setAge(17);
+        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
@@ -54,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginExist_Ok() {
+    void register_LoginExist_notOk() {
         User existingUser = new User();
         existingUser.setLogin("validLogin");
         Storage.people.add(existingUser);
@@ -65,29 +76,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginExist_notOk() {
-        User existingUser = new User();
-        existingUser.setLogin("differentLogin");
-        Storage.people.add(existingUser);
-        user.setAge(20);
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
-        User registeredUser = registrationServiceImpl.register(user);
-        assertEquals(user, registeredUser);
-    }
-
-    @Test
     void register_LoginLength_notOk() {
         user.setAge(20);
-        user.setLogin("login");
+        user.setLogin("log");
         user.setPassword("validPass");
         assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
-    void register_LoginLength_Ok() {
+    void register_LoginLengthEdgeCase_notOk() {
         user.setAge(20);
-        user.setLogin("validLogin");
+        user.setLogin("valid");
+        user.setPassword("validPass");
+        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+    }
+
+    @Test
+    void register_LoginLengthEquals6_Ok() {
+        user.setAge(20);
+        user.setLogin("validL");
         user.setPassword("validPass");
         User registeredUser = registrationServiceImpl.register(user);
         assertEquals(user, registeredUser);
@@ -102,17 +109,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordLength_Ok() {
-        user.setAge(20);
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
-        User registeredUser = registrationServiceImpl.register(user);
-        assertEquals(user, registeredUser);
-        user.setPassword("validp");
-        assertEquals(user, registeredUser);
-    }
-
-    @Test
     void register_LoginNotNull_notOk() {
         user.setAge(20);
         user.setLogin(null);
@@ -121,28 +117,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginNotNull_Ok() {
-        user.setAge(20);
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
-        User registeredUser = registrationServiceImpl.register(user);
-        assertEquals(user, registeredUser);
-    }
-
-    @Test
     void register_PasswordNotNull_notOk() {
         user.setAge(20);
         user.setLogin("validLogin");
         user.setPassword(null);
         assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
-    }
-
-    @Test
-    void register_PasswordNotNull_Ok() {
-        user.setAge(20);
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
-        User registeredUser = registrationServiceImpl.register(user);
-        assertEquals(user, registeredUser);
     }
 }
