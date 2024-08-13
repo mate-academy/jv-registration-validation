@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.ValidationFailedException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import java.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
@@ -36,53 +36,53 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_emptyLogin_notOk() {
         user.setLogin("");
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_emptyPassword_notOk() {
         user.setPassword("");
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_minimumLength_ofLogin_notOk() {
         user.setLogin("login");
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_minimumLength_ofPassword_notOk() {
         user.setPassword("1234");
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_belowAge_notOk() {
         user.setAge(17);
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void register_User_isOk() {
+    void register_shouldAddUserToStorage_isOk() {
         registrationService.register(user);
         User registeredUser = Storage.people.stream()
                 .filter(u -> u.getLogin().equals(user.getLogin()))
@@ -98,9 +98,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginAlreadyExists_notOk() {
-        Storage.people.add(user);
         User newUser = new User(5L, "my_login", "1234567", 19);
-        assertThrows(ValidationFailedException.class, () -> registrationService.register(newUser));
+        Storage.people.add(newUser);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @AfterEach
