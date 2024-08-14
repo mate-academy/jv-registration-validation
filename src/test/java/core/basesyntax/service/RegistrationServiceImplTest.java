@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginLengthEdgeCase_notOk() {
+    void register_LoginLengthEdgeCaseEqual5_notOk() {
         user.setAge(20);
         user.setLogin("valid");
         user.setPassword("validPass");
@@ -106,6 +106,23 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("pass");
         assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+    }
+
+    @Test
+    void register_PasswordLengthEdgeCaseEqual5_notOk() {
+        user.setAge(20);
+        user.setLogin("validLogin");
+        user.setPassword("valid");
+        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+    }
+
+    @Test
+    void register_PasswordLengthEquals6_Ok() {
+        user.setAge(20);
+        user.setLogin("validLogin");
+        user.setPassword("validP");
+        User registeredUser = registrationServiceImpl.register(user);
+        assertEquals(user, registeredUser);
     }
 
     @Test
