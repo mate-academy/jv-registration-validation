@@ -9,8 +9,11 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final int CORRECT_AGE = 19;
-    private static final String CORRECT_LOGIN = "testlogin";
+    private static final int AGE_FOR_TEST = 20;
+    private static final int INCORRECT_AGE = 16;
+    private static final String INCORRECT_LOGIN = "test";
     private static final String CORRECT_PASSWORD = "testpassword";
+    private static final String INNCORRECT_PASSWORD = "qwe";
     private static final String SAME_TEST_LOGIN = "testlogin123";
     private RegistrationServiceImpl registrationService;
     private User testUser;
@@ -46,20 +49,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void correctLoginLenght() {
-        testUser.setLogin("321");
+    void loginLengthMustBeGreaterThanSixCharacters() {
+        testUser.setLogin(INCORRECT_LOGIN);
         assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void correctPassword() {
-        testUser.setPassword("321");
+    void passwordLengthMustBeGreaterThanSixCharacters() {
+        testUser.setPassword(INNCORRECT_PASSWORD);
         assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void correctAge() {
-        testUser.setAge(1);
+    void ageMustBeGreaterThanEighteen() {
+        testUser.setAge(INCORRECT_AGE);
         assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
     }
 
@@ -67,11 +70,11 @@ class RegistrationServiceImplTest {
     void registrationWithTheSameLogin_IsNotOk() {
         user1.setLogin(SAME_TEST_LOGIN);
         user1.setPassword(CORRECT_PASSWORD);
-        user1.setAge(19);
+        user1.setAge(CORRECT_AGE);
 
         user2.setLogin(SAME_TEST_LOGIN);
         user2.setPassword(CORRECT_PASSWORD);
-        user2.setAge(25);
+        user2.setAge(AGE_FOR_TEST);
 
         registrationService.register(user1);
 
