@@ -16,11 +16,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("Registration failed, User can't be null");
         }
-        checkUser(user);
-        return storageDao.add(user);
+        if (checkUser(user)) {
+            return storageDao.add(user);
+        }
+        return null;
     }
 
-    private void checkUser(User user) {
+    private boolean checkUser(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("Login: " + user.getLogin()
                     + " is taken, try new one...");
@@ -39,14 +41,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password is too short, "
                     + "it should have minimum 6 characters.");
         }
-        if ((user.getAge() == null)) {
+        if (user.getAge() == null) {
             throw new RegistrationException("Please write Your age.");
         }
-        if ((user.getAge() < REQUIRED_MIN_AGE)) {
+        if (user.getAge() < REQUIRED_MIN_AGE) {
             throw new RegistrationException("You're too young.");
         }
         if (user.getAge() < 0) {
             throw new RegistrationException("Your age can't be negative number");
         }
+        return true;
     }
 }
