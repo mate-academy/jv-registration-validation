@@ -25,14 +25,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenUserIsNull() {
+    void register_nullUser_notOk() {
         assertThrows(UserDataInvalidException.class, () -> {
             registrationService.register(null);
         }, "Expected UserDataInvalidException when user is null");
     }
 
     @Test
-    void shouldThrowException_whenLoginIsNull() {
+    void register_nullLogin_notOk() {
         User user = new User();
         user.setPassword("validPassword123");
         user.setAge(21);
@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenLoginIsEmpty() {
+    void register_emptyLogin_notOk() {
         User user = new User();
         user.setPassword("validPassword123");
         user.setAge(21);
@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenLoginIsTooShort() {
+    void register_loginTooShort_notOk() {
         User user = new User();
         user.setPassword("validPassword123");
         user.setAge(21);
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenPasswordIsNull() {
+    void register_nullPassword_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword(null);
@@ -76,7 +76,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenPasswordIsEmpty() {
+    void register_emptyPassword_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("");
@@ -87,7 +87,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenPasswordIsTooShort() {
+    void register_passwordTooShort_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("123");
@@ -98,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenAgeIsNull() {
+    void register_nullAge_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword123");
@@ -109,7 +109,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenAgeIsNegative() {
+    void register_negativeAge_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword123");
@@ -120,7 +120,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenAgeIsBelowMinimum() {
+    void register_ageBelowMinimum_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword123");
@@ -131,7 +131,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldThrowException_whenLoginAlreadyExists() {
+    void register_loginAlreadyExists_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword123");
@@ -143,7 +143,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldRegisterValidUser() {
+    void register_validUser_ok() {
         User expected = new User();
         expected.setLogin("validLogin");
         expected.setPassword("validPassword123");
@@ -153,7 +153,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldRegisterUser_whenAllFieldsAreAtEdgeCase() {
+    void register_edgeCaseUser_ok() {
         User expected = new User();
         expected.setLogin("login6");
         expected.setPassword("123456");
@@ -164,7 +164,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldAddUserToStorage_whenRegistrationIsSuccessful() {
+    void register_successfulRegistration_userAddedToStorage() {
         User expected = new User();
         expected.setLogin("validLogin");
         expected.setPassword("validPassword123");
@@ -175,7 +175,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void shouldNotAddUserToStorage_whenRegistrationFails() {
+    void register_failedRegistration_userNotAddedToStorage() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("validPassword123");
