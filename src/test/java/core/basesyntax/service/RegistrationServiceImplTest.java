@@ -13,15 +13,11 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-
-    @BeforeAll
-    static void setUpOnce() {
-        registrationService = new RegistrationServiceImpl();
-    }
-
+    
     @BeforeEach
     void clearStorage() {
         Storage.people.clear();
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
