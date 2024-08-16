@@ -28,7 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (login.length() < MIN_LOGIN_LENGTH) {
             throw new UserDataInvalidException("User`s login length should contain at least"
                     + MIN_LOGIN_LENGTH
-                    + "characters");
+                    + "characters, got login with " + login.length() + "characters");
         }
     }
 
@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age < MIN_USER_AGE) {
             throw new UserDataInvalidException("User should be at least "
                     + MIN_USER_AGE
-                    + " years old");
+                    + " years old, got " + age + "years");
         }
     }
 
@@ -44,7 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new UserDataInvalidException("User`s password length should contain at least "
                     + MIN_PASSWORD_LENGTH
-                    + " characters");
+                    + " characters, got password with " + password.length() + "characters");
         }
     }
 
