@@ -1,14 +1,17 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class RegistrationServiceTests {
+class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
 
     @BeforeAll
@@ -156,7 +159,8 @@ class RegistrationServiceTests {
         expected.setPassword("123456");
         expected.setAge(18);
         User actual = registrationService.register(expected);
-        assertEquals(expected, actual, "Expected the registered user to match the input user data for edge case");
+        assertEquals(expected, actual,
+                "Expected the registered user to match the input user data for edge case");
     }
 
     @Test
@@ -166,7 +170,8 @@ class RegistrationServiceTests {
         expected.setPassword("validPassword123");
         expected.setAge(50);
         User actual = registrationService.register(expected);
-        assertTrue(Storage.people.contains(actual), "Expected the storage to contain the registered user");
+        assertTrue(Storage.people.contains(actual),
+                "Expected the storage to contain the registered user");
     }
 
     @Test
