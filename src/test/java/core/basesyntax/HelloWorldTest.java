@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.exeption.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,51 +34,51 @@ public class HelloWorldTest {
     }
 
     @Test
-    void loginExist_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_existLogin_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(checkExistingLogin1);
             registrationService.register(checkExistingLogin2);
         });
     }
 
     @Test
-    void loginIsNull_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_nullLogin_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userLoginIsNull);
         });
     }
 
     @Test
-    void loginShorterThan6_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_shortLogin_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userLoginIsShorterThan6);
         });
     }
 
     @Test
-    void passwordIsNull_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_nullPassword_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userPasswordIsNull);
         });
     }
 
     @Test
-    void passwordShorterThan6_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_shortPassword_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userPasswordIsShorterThan6);
         });
     }
 
     @Test
-    void ageIsNull_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_nullAge_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userAgeIsNull);
         });
     }
 
     @Test
-    void ageSmallestThan18_notOk() {
-        assertThrows(RuntimeException.class, () -> {
+    void register_underageUser_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userAgeIsSmallestThan18);
         });
     }
