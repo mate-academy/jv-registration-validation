@@ -21,6 +21,7 @@ public class RegistrationServiceTest {
     private static final String DUPLICATE_VALID_USER_LOGIN = "LongLogin";
     private static final String DUPLICATE_VALID_USER_PASSWORD = "LongPassword";
     private static final long DUPLICATE_USER_ID = 321L;
+    private static final int NEGATIVE_USER_AGE = -10;
     private RegistrationServiceImpl registrationService;
 
     @BeforeEach
@@ -87,12 +88,45 @@ public class RegistrationServiceTest {
         });
     }
 
-    // User is null
+    // Some attributes of the user are null / negative
     @Test
     void register_userIsNull_notOk() {
         User nullUser = null;
         assertThrows(UserDataInvalidException.class, () -> {
             registrationService.register(nullUser);
+        });
+    }
+
+    @Test
+    void register_userLoginIsNull_notOk() {
+        User nullLoginUser = new User(USER_ID,
+                null,
+                VALID_USER_PASSWORD,
+                VALID_USER_AGE);
+        assertThrows(UserDataInvalidException.class, () -> {
+            registrationService.register(nullLoginUser);
+        });
+    }
+
+    @Test
+    void register_userPasswordIsNull_noOk() {
+        User nullPasswordUser = new User(USER_ID,
+                VALID_USER_LOGIN,
+                null,
+                VALID_USER_AGE);
+        assertThrows(UserDataInvalidException.class, () -> {
+            registrationService.register(nullPasswordUser);
+        });
+    }
+
+    @Test
+    void register_userAgeIsNegative() {
+        User negativeAgeUser = new User(USER_ID,
+                VALID_USER_LOGIN,
+                VALID_USER_PASSWORD,
+                NEGATIVE_USER_AGE);
+        assertThrows(UserDataInvalidException.class, () -> {
+            registrationService.register(negativeAgeUser);
         });
     }
 }
