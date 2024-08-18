@@ -29,8 +29,8 @@ public class HelloWorldTest {
         userPasswordIsShorterThan6 = new User("Oleksandr", "12345", 19);
         userAgeIsNull = new User("Oleksandr", "1234567", null);
         userAgeIsSmallestThan18 = new User("Oleksandr", "1234567", 17);
-        checkExistingLogin1 = new User("Oleksandr", "1234567", 18);
-        checkExistingLogin2 = new User("Oleksandr", "1234567", 18);
+        checkExistingLogin1 = new User("Oleksandr", "12345678", 18);
+        checkExistingLogin2 = new User("Oleksandr", "12345678", 18);
     }
 
     @Test
