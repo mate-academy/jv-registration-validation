@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.exeption.RegistrationException;
@@ -19,6 +20,7 @@ public class HelloWorldTest {
     private User userAgeIsSmallestThan18;
     private User checkExistingLogin1;
     private User checkExistingLogin2;
+    private User validUser;
 
     @BeforeEach
     void setUp() {
@@ -31,6 +33,7 @@ public class HelloWorldTest {
         userAgeIsSmallestThan18 = new User("Oleksandr", "1234567", 17);
         checkExistingLogin1 = new User("Oleksandr", "12345678", 18);
         checkExistingLogin2 = new User("Oleksandr", "12345678", 18);
+        validUser = new User("ValidUser", "12345678", 18);
     }
 
     @Test
@@ -80,6 +83,13 @@ public class HelloWorldTest {
     void register_underageUser_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userAgeIsSmallestThan18);
+        });
+    }
+
+    @Test
+    void register_validUser_ok() {
+        assertDoesNotThrow(() -> {
+            registrationService.register(validUser);
         });
     }
 }
