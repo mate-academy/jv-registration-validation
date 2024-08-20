@@ -12,6 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationException {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
         if (user.getLogin() == null) {
             throw new RegistrationException("Your login can't be null");
         }
