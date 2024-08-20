@@ -9,23 +9,28 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN = "validLogin";
     private static final String INVALID_LOGIN = "log";
+    private static final int MAX_LOGIN_LENGTH = 25;
+    private static final String TOO_LONG_LOGIN = "a".repeat(MAX_LOGIN_LENGTH + 1);
     private static final String EXISTING_LOGIN = "existingLogin";
     private static final String VALID_PASSWORD = "validPassword";
     private static final String INVALID_PASSWORD = "pass";
+    private static final int MAX_PASSWORD_LENGTH = 25;
+    private static final String TOO_LONG_PASSWORD = "a".repeat(MAX_PASSWORD_LENGTH + 1);
     private static final int VALID_AGE = 21;
     private static final int INVALID_AGE = 17;
+    private static final int GREATER_THAN_MAX_AGE = 101;
     private static final String EMPTY_STRING = "";
     private static RegistrationServiceImpl registrationServiceImpl;
     private static StorageDao storageDao;
 
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeEach
+    void setUp() {
         registrationServiceImpl = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
@@ -71,7 +76,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_existingUser_notOk() {
+    public void register_tooLongLogin_notOk() {
+        User user = createUser(TOO_LONG_LOGIN, VALID_PASSWORD, VALID_AGE);
+        assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(user));
+    }
+
+    @Test
+    public void register_existingLogin_notOk() {
         User user = createUser(EXISTING_LOGIN, VALID_PASSWORD, VALID_AGE);
         storageDao.add(user);
         assertThrows(RegistrationException.class,
@@ -93,6 +105,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    public void register_tooLongPassword_notOk() {
+        User user = createUser(VALID_LOGIN, TOO_LONG_PASSWORD, VALID_AGE);
+        assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(user));
+    }
+
+    @Test
     public void register_invalidPassword_notOk() {
         User user = createUser(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class,
@@ -104,6 +123,13 @@ class RegistrationServiceImplTest {
         User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         registrationServiceImpl.register(user);
         assertEquals(user, storageDao.get(VALID_LOGIN));
+    }
+
+    @Test
+    public void register_ageGraeaterThanMax_notOk() {
+        User user = createUser(VALID_LOGIN, VALID_PASSWORD, GREATER_THAN_MAX_AGE);
+        assertThrows(RegistrationException.class,
+                () -> registrationServiceImpl.register(user));
     }
 
     @Test
