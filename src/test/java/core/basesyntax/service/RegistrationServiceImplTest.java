@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
@@ -45,8 +44,10 @@ class RegistrationServiceImplTest {
         user.setLogin("short");
         user.setPassword("Good password");
         user.setAge(19);
+
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                "Login is too short");
     }
 
     @Test
@@ -56,34 +57,52 @@ class RegistrationServiceImplTest {
         user.setPassword("short");
         user.setAge(19);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                "Password is too short");
     }
 
     @Test
-    public void register_invalidAge_notOK() {
+    public void register_LowerAge_notOK() {
         User user = new User();
         user.setLogin("Good login");
         user.setPassword("Good password");
         user.setAge(17);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
+                () -> registrationService.register(user),
+                "Age is too small");
     }
 
     @Test
-    public void user_Registration_Ok() {
+    public void register_NegativeAge_notOK() {
+        User user = new User();
+        user.setLogin("Good login");
+        user.setPassword("Good password");
+        user.setAge(-1);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user),
+                "Negative age is not allowed");
+    }
+
+    @Test
+    public void register_ExactAge_OK() {
+        User user = new User();
+        user.setLogin("Good login");
+        user.setPassword("Good password");
+        user.setAge(18);
+        registrationService.register(user);
+        assertEquals(18, user.getAge());
+    }
+
+    @Test
+    public void register_validData_success() {
         User user = new User();
         user.setLogin("Good login");
         user.setPassword("Good password");
         user.setAge(19);
 
-        User result = null;
-        try {
-            result = registrationService.register(user);
-        } catch (RegistrationException e) {
-            fail("Expected no exception, but got: " + e.getMessage());
-        }
+        registrationService.register(user);
 
-        assertNotNull(result);
+        assertNotNull(user);
         assertEquals(1, Storage.people.size());
         assertEquals("Good login", Storage.people.getFirst().getLogin());
     }
