@@ -104,7 +104,7 @@ class RegistrationServiceImplTest {
 
         assertNotNull(user);
         assertEquals(1, Storage.people.size());
-        assertEquals("Good login", Storage.people.getFirst().getLogin());
+        assertEquals("Good login", Storage.people.get(0).getLogin());
     }
 }
 
