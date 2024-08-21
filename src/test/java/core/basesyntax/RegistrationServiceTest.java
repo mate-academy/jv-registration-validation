@@ -13,24 +13,26 @@ import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Feel free to remove this class and create your own.
- */
 public class RegistrationServiceTest {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
     private static final int EDGE_SHIFT = 1;
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
     private User testingUser;
+
+    @BeforeAll
+    static void startUp() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void init() {
         testingUser = new User("testingLogin", "testingPassword", 25);
-        registrationService = new RegistrationServiceImpl();
         Storage.people.addAll(List.of(
                 new User("login1", "password1", 18),
                 new User("login2", "password2", 20),
@@ -47,12 +49,12 @@ public class RegistrationServiceTest {
 
     @Test
     void register_validData_ok() {
-        User returnedUser = registrationService.register(testingUser);
+        User actualUser = registrationService.register(testingUser);
         User registeredUser = Storage.people.stream()
                 .filter(user -> user.getLogin().equals(testingUser.getLogin()))
                 .findFirst()
                 .orElse(null);
-        assertEquals(testingUser, returnedUser);
+        assertEquals(testingUser, actualUser);
         assertNotNull(registeredUser);
         assertTrue(Storage.people.contains(testingUser));
         assertEquals(testingUser, registeredUser);
@@ -61,6 +63,12 @@ public class RegistrationServiceTest {
         assertEquals(testingUser.getLogin(), registeredUser.getLogin());
         assertEquals(testingUser.getPassword(), registeredUser.getPassword());
         assertEquals(testingUser.getAge(), registeredUser.getAge());
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        testingUser = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(testingUser));
     }
 
     @Test
