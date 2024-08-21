@@ -30,13 +30,13 @@ class RegistrationServiceImplTest {
     private static StorageDao storageDao;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         registrationServiceImpl = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
-    void afterEach() {
+    public void afterEach() {
         Storage.people.clear();
     }
 
@@ -98,13 +98,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validLogin_ok() throws RegistrationException {
-        User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        registrationServiceImpl.register(user);
-        assertEquals(user, storageDao.get(VALID_LOGIN));
-    }
-
-    @Test
     public void register_tooLongPassword_notOk() {
         User user = createUser(VALID_LOGIN, TOO_LONG_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class,
@@ -116,13 +109,6 @@ class RegistrationServiceImplTest {
         User user = createUser(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
         assertThrows(RegistrationException.class,
                 () -> registrationServiceImpl.register(user));
-    }
-
-    @Test
-    public void register_validPassword_ok() throws RegistrationException {
-        User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        registrationServiceImpl.register(user);
-        assertEquals(user, storageDao.get(VALID_LOGIN));
     }
 
     @Test
@@ -140,10 +126,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_validAge_ok() throws RegistrationException {
-        User user = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        registrationServiceImpl.register(user);
-        assertEquals(user, storageDao.get(VALID_LOGIN));
+    public void register_validUser_ok() throws RegistrationException {
+        User expectedUser = createUser(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        registrationServiceImpl.register(expectedUser);
+        User actualUser = storageDao.get(VALID_LOGIN);
+        assertEquals(expectedUser, actualUser);
+        assertEquals(expectedUser.getLogin(), actualUser.getLogin());
+        assertEquals(expectedUser.getPassword(), actualUser.getPassword());
+        assertEquals(expectedUser.getAge(), actualUser.getAge());
     }
 
     private User createUser(String login, String password, Integer age) {
