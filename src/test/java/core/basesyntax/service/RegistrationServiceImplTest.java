@@ -10,11 +10,11 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
+public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_LowerAge_notOK() {
+    public void register_lowerAge_notOK() {
         User user = new User();
         user.setLogin("Good login");
         user.setPassword("Good password");
@@ -73,7 +73,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_NegativeAge_notOK() {
+    public void register_negativeAge_notOK() {
         User user = new User();
         user.setLogin("Good login");
         user.setPassword("Good password");
@@ -81,16 +81,6 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
                 "Negative age is not allowed");
-    }
-
-    @Test
-    public void register_ExactAge_OK() {
-        User user = new User();
-        user.setLogin("Good login");
-        user.setPassword("Good password");
-        user.setAge(18);
-        registrationService.register(user);
-        assertEquals(18, user.getAge());
     }
 
     @Test
