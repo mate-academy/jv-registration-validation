@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationServiceImpl;
-import core.basesyntax.service.UserDataInvalidException;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
@@ -22,14 +22,13 @@ public class RegistrationServiceTest {
     private static final String DUPLICATE_VALID_USER_PASSWORD = "LongPassword";
     private static final long DUPLICATE_USER_ID = 321L;
     private static final int NEGATIVE_USER_AGE = -10;
-    private RegistrationServiceImpl registrationService;
+    private static RegistrationServiceImpl registrationService;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
-    // All fields are valid
     @Test
     void register_userValid_Ok() {
         User validUser = new User(USER_ID,
@@ -37,18 +36,16 @@ public class RegistrationServiceTest {
                 VALID_USER_PASSWORD,
                 VALID_USER_AGE);
         User actual = registrationService.register(validUser);
-        User expected = validUser;
-        assertEquals(expected, actual);
+        assertEquals(validUser, actual);
     }
 
-    // Some of the fields are invalid
     @Test
     void register_userAgeInvalid_notOk() {
         User invalidUser = new User(USER_ID,
                 VALID_USER_LOGIN,
                 VALID_USER_PASSWORD,
                 INVALID_USER_AGE);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(invalidUser);
         });
     }
@@ -59,7 +56,7 @@ public class RegistrationServiceTest {
                 INVALID_USER_LOGIN,
                 VALID_USER_PASSWORD,
                 VALID_USER_AGE);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(invalidUser);
         });
     }
@@ -70,12 +67,11 @@ public class RegistrationServiceTest {
                 VALID_USER_LOGIN,
                 INVALID_USER_PASSWORD,
                 VALID_USER_AGE);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(invalidUser);
         });
     }
 
-    // User already exists
     @Test
     void register_userAlreadyExists_notOk() {
         User duplicateUser = new User(DUPLICATE_USER_ID,
@@ -83,16 +79,15 @@ public class RegistrationServiceTest {
                 DUPLICATE_VALID_USER_PASSWORD,
                 DUPLICATE_VALID_USER_AGE);
         registrationService.register(duplicateUser);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(duplicateUser);
         });
     }
 
-    // Some attributes of the user are null / negative
     @Test
     void register_userIsNull_notOk() {
         User nullUser = null;
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullUser);
         });
     }
@@ -103,7 +98,7 @@ public class RegistrationServiceTest {
                 null,
                 VALID_USER_PASSWORD,
                 VALID_USER_AGE);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullLoginUser);
         });
     }
@@ -114,7 +109,7 @@ public class RegistrationServiceTest {
                 VALID_USER_LOGIN,
                 null,
                 VALID_USER_AGE);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullPasswordUser);
         });
     }
@@ -125,7 +120,7 @@ public class RegistrationServiceTest {
                 VALID_USER_LOGIN,
                 VALID_USER_PASSWORD,
                 NEGATIVE_USER_AGE);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(negativeAgeUser);
         });
     }

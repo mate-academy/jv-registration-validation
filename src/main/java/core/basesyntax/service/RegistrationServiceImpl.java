@@ -12,17 +12,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (checkDataValidity(user)) {
-            return storageDao.add(user);
+        if (!checkDataValidity(user)) {
+            throw new RegistrationException("The user data is not valid");
         }
-        throw new UserDataInvalidException("The user data is not valid");
+        return storageDao.add(user);
     }
 
     private boolean checkDataValidity(User user) {
         if (user == null
                 || user.getPassword() == null
                 || user.getLogin() == null) {
-            throw new UserDataInvalidException("Some of the attributes are null");
+            throw new RegistrationException("Some of the attributes are null");
         }
 
         return user.getLogin().length() >= MIN_LOGIN_LENGTH
