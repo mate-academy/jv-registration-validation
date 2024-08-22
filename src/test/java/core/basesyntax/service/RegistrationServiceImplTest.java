@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -26,7 +25,7 @@ public class RegistrationServiceImplTest {
         user.setPassword("Good password");
         user.setAge(19);
 
-        registrationService.register(user);
+        Storage.people.add(user);
 
         User newUser = new User();
         newUser.setLogin("Good login");
@@ -90,11 +89,10 @@ public class RegistrationServiceImplTest {
         user.setPassword("Good password");
         user.setAge(19);
 
-        registrationService.register(user);
+        User actual = registrationService.register(user);
 
-        assertNotNull(user);
         assertEquals(1, Storage.people.size());
-        assertEquals("Good login", Storage.people.get(0).getLogin());
+        assertEquals(user, actual);
     }
 }
 
