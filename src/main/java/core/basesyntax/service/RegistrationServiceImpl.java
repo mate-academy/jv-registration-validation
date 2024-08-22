@@ -20,29 +20,35 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void validateLoginUniqueness(String login) {
         if (storageDao.get(login) != null) {
-            throw new UserDataInvalidException("User with such login already exists");
+            throw new RegistrationException("User with such login already exists");
         }
     }
 
     private void validateLogin(String login) {
+        checkNotNull(login, "User`s login can`t be null");
+
         if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new UserDataInvalidException("User`s login length should contain at least"
+            throw new RegistrationException("User`s login length should contain at least"
                     + MIN_LOGIN_LENGTH
                     + "characters, got login with " + login.length() + "characters");
         }
     }
 
     private void validateAge(Integer age) {
+        checkNotNull(age, "User`s age can`t be null");
+
         if (age < MIN_USER_AGE) {
-            throw new UserDataInvalidException("User should be at least "
+            throw new RegistrationException("User should be at least "
                     + MIN_USER_AGE
                     + " years old, got " + age + "years");
         }
     }
 
     private void validatePassword(String password) {
+        checkNotNull(password, "User`s password can`t be null");
+
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new UserDataInvalidException("User`s password length should contain at least "
+            throw new RegistrationException("User`s password length should contain at least "
                     + MIN_PASSWORD_LENGTH
                     + " characters, got password with " + password.length() + "characters");
         }
@@ -50,27 +56,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private void checkNotNull(Object value, String errorMessage) {
         if (value == null) {
-            throw new UserDataInvalidException(errorMessage);
+            throw new RegistrationException(errorMessage);
         }
     }
 
     private void validateUser(User user) {
         if (user == null) {
-            throw new UserDataInvalidException("User can`t be null");
+            throw new RegistrationException("User can`t be null");
         }
 
         String login = user.getLogin();
-        String password = user.getPassword();
-        Integer age = user.getAge();
 
-        checkNotNull(login, "User`s login can`t be null");
-        checkNotNull(password, "User`s password can`t be null");
-        checkNotNull(age, "User`s age can`t be null");
-
-        validateAge(age);
         validateLogin(login);
         validateLoginUniqueness(login);
-        validatePassword(password);
+        validateAge(user.getAge());
+        validatePassword(user.getPassword());
     }
 }
 

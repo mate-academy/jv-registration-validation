@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,14 +17,18 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void clearStorage() {
         Storage.people.clear();
+    }
+
+    @BeforeAll
+    static void setUpOnce() {
         registrationService = new RegistrationServiceImpl();
     }
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
-        }, "Expected UserDataInvalidException when user is null");
+        }, "Expected RegistrationException when user is null");
     }
 
     @Test
@@ -32,9 +37,9 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword123");
         user.setAge(21);
         user.setLogin(null);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when login is null");
+        }, "Expected RegistrationException when login is null");
     }
 
     @Test
@@ -43,9 +48,9 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword123");
         user.setAge(21);
         user.setLogin("");
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when login is empty");
+        }, "Expected RegistrationException when login is empty");
     }
 
     @Test
@@ -54,9 +59,9 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword123");
         user.setAge(21);
         user.setLogin("12345");
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException for login length less than required minimum");
+        }, "Expected RegistrationException for login length less than required minimum");
     }
 
     @Test
@@ -65,9 +70,9 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword(null);
         user.setAge(21);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when password is null");
+        }, "Expected RegistrationException when password is null");
     }
 
     @Test
@@ -76,9 +81,9 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("");
         user.setAge(21);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when password is empty");
+        }, "Expected RegistrationException when password is empty");
     }
 
     @Test
@@ -87,9 +92,9 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("123");
         user.setAge(21);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when password length is less than required minimum");
+        }, "Expected RegistrationException when password length is less than required minimum");
     }
 
     @Test
@@ -98,9 +103,9 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("validPassword123");
         user.setAge(null);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when age is null");
+        }, "Expected RegistrationException when age is null");
     }
 
     @Test
@@ -109,9 +114,9 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("validPassword123");
         user.setAge(-25);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when age is negative");
+        }, "Expected RegistrationException when age is negative");
     }
 
     @Test
@@ -120,9 +125,9 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("validPassword123");
         user.setAge(17);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when age is below minimum required");
+        }, "Expected RegistrationException when age is below minimum required");
     }
 
     @Test
@@ -132,9 +137,9 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword123");
         user.setAge(50);
         Storage.people.add(user);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException when login already exists in storage");
+        }, "Expected RegistrationException when login already exists in storage");
     }
 
     @Test
@@ -175,9 +180,9 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         user.setPassword("validPassword123");
         user.setAge(50);
-        assertThrows(UserDataInvalidException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "Expected UserDataInvalidException for user with null login");
+        }, "Expected RegistrationException for user with null login");
         assertFalse(Storage.people.contains(user),
                 "Expected the storage not to contain the user when registration fails");
     }

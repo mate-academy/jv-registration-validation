@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
 public class RegistrationException extends RuntimeException {
-    public UserDataInvalidException(String message) {
+    public RegistrationException(String message) {
         super(message);
     }
 }
