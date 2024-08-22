@@ -6,17 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static RegistrationService registrationService;
-
-    @BeforeEach
-    public void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        Storage.people.clear();
-    }
+    private static RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
     public void register_existingLogin_notOk() {

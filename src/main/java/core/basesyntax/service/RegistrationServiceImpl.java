@@ -1,5 +1,7 @@
 package core.basesyntax.service;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
@@ -7,6 +9,7 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_DATA_LENGTH = 6;
     private static final int MIN_VALID_AGE = 18;
+    private StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) throws RegistrationException {
@@ -33,7 +36,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                 throw new RegistrationException("User with such login already exist");
             }
         }
-        Storage.people.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
