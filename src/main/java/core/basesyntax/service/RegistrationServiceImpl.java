@@ -19,10 +19,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     private boolean checkDataValidity(User user) {
-        if (user == null
-                || user.getPassword() == null
-                || user.getLogin() == null) {
-            throw new RegistrationException("Some of the attributes are null");
+        if (user == null) {
+            throw new RegistrationException("The user is null");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("The password is invalid");
+        }
+        if (user.getLogin() == null) {
+            throw new RegistrationException("The login is invalid");
         }
 
         return user.getLogin().length() >= MIN_LOGIN_LENGTH
