@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -25,6 +26,8 @@ public class RegistrationServiceImplTest {
         newUser.setPassword("Good password");
         newUser.setAge(19);
 
+        assertNotNull(user.getLogin());
+        assertNotNull(newUser.getLogin());
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(newUser),
                 "Expected register() to throw, but it didn't");
@@ -88,4 +91,3 @@ public class RegistrationServiceImplTest {
         assertEquals(user, actual);
     }
 }
-

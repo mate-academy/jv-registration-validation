@@ -32,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age should be at least 18 years old");
         }
         for (User current : Storage.people) {
-            if (current.getLogin().equals(user.getLogin())) {
+            if (storageDao.get(current.getLogin()).getLogin().equals(user.getLogin())) {
                 throw new RegistrationException("User with such login already exist");
             }
         }
