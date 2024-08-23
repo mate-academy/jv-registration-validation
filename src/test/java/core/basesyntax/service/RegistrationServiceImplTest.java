@@ -37,15 +37,39 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_allNull_notOk() {
+    public void register_loginNull_notOk() {
         User user = new User();
         user.setLogin(null);
+        user.setPassword("Good password");
+        user.setAge(19);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user),
+                "Login field is empty");
+    }
+
+    @Test
+    public void register_passwordNull_notOk() {
+        User user = new User();
+        user.setLogin("Good login");
         user.setPassword(null);
+        user.setAge(19);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user),
+                "Password field is empty");
+    }
+
+    @Test
+    public void register_ageNull_notOk() {
+        User user = new User();
+        user.setLogin("Good login");
+        user.setPassword("Good password");
         user.setAge(null);
 
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user),
-                "All fields are empty");
+                "age field is empty");
     }
 
     @Test
