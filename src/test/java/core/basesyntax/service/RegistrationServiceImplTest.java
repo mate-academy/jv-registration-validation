@@ -1,16 +1,21 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
-    private static RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @Test
     public void register_existingLogin_notOk() {
@@ -26,11 +31,21 @@ public class RegistrationServiceImplTest {
         newUser.setPassword("Good password");
         newUser.setAge(19);
 
-        assertNotNull(user.getLogin());
-        assertNotNull(newUser.getLogin());
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(newUser),
                 "Expected register() to throw, but it didn't");
+    }
+
+    @Test
+    public void register_allNull_notOk() {
+        User user = new User();
+        user.setLogin(null);
+        user.setPassword(null);
+        user.setAge(null);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user),
+                "All fields are empty");
     }
 
     @Test

@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
@@ -13,6 +12,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationException {
+        if (user == null) {
+            return null;
+        }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login field is empty");
         }
@@ -31,10 +33,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_VALID_AGE) {
             throw new RegistrationException("Age should be at least 18 years old");
         }
-        for (User current : Storage.people) {
-            if (storageDao.get(current.getLogin()).getLogin().equals(user.getLogin())) {
-                throw new RegistrationException("User with such login already exist");
-            }
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with such login already exist");
         }
         return storageDao.add(user);
     }
