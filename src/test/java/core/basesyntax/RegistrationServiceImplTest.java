@@ -1,14 +1,16 @@
 package core.basesyntax;
 
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import java.util.Arrays;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +26,7 @@ public class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         testUser = new User("validLogin", "password123", 25);
-        Storage.people.addAll(Arrays.asList(new User("Bob123", "password123", 20),
+        Storage.people.addAll(List.of(new User("Bob123", "password123", 20),
                 new User("Alice231", "password123", 25),
                 new User("Vladimir295", "password123", 25),
                 new User("Semen294", "short", 25),
