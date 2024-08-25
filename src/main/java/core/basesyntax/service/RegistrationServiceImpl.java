@@ -33,10 +33,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password must be at least: " + MIN_PASSWORD_LENGTH);
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Your age must be > " + MIN_AGE);
+            throw new RegistrationException("User must be at least " + MIN_AGE + "years old");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User already exist!");
+            throw new RegistrationException("User with this login already exist!");
         }
         return storageDao.add(user);
     }
