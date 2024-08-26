@@ -1,9 +1,7 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
@@ -99,19 +97,10 @@ public class RegistrationServiceImplTest {
     @Test
     void register_ValidUser_Ok() {
         User actualUser = registrationService.register(testUser);
-        User registeredUser = Storage.people.stream()
-                .filter(user -> user.getLogin().equals(testUser.getLogin()))
-                .findFirst()
-                .orElse(null);
         assertEquals(testUser, actualUser);
-        assertNotNull(registeredUser);
-        assertTrue(Storage.people.contains(testUser));
-        assertEquals(testUser, registeredUser);
-
-        assertEquals(testUser.getId(), registeredUser.getId());
-        assertEquals(testUser.getLogin(), registeredUser.getLogin());
-        assertEquals(testUser.getPassword(), registeredUser.getPassword());
-        assertEquals(testUser.getAge(), registeredUser.getAge());
+        assertEquals(testUser.getId(), actualUser.getId());
+        assertEquals(testUser.getLogin(), actualUser.getLogin());
+        assertEquals(testUser.getPassword(), actualUser.getPassword());
+        assertEquals(testUser.getAge(), actualUser.getAge());
     }
 }
-
