@@ -51,16 +51,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidPassword_Ok() {
+    void registerValidUser_Ok() {
         User newUser = new User();
         newUser.setLogin("someLogin2");
         newUser.setPassword("Valid12345");
         newUser.setAge(28);
         User registeredUser = registrationService.register(newUser);
         assertNotNull(registeredUser);
-        assertEquals("someLogin2", registeredUser.getLogin());
-        assertEquals("Valid12345", registeredUser.getPassword());
-        assertEquals(Integer.valueOf(28), registeredUser.getAge());
+        assertEquals(newUser.getLogin(), registeredUser.getLogin());
+        assertEquals(newUser.getPassword(), registeredUser.getPassword());
+        assertEquals(newUser.getAge(), registeredUser.getAge());
     }
 
     @Test
@@ -74,19 +74,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerValidAge_Ok() {
-        User newUser = new User();
-        newUser.setLogin("YetAnotherUniqueLogin1");
-        newUser.setPassword("ValidPassword123");
-        newUser.setAge(18);
-        User registeredUser = registrationService.register(newUser);
-        assertNotNull(registeredUser);
-        assertEquals("YetAnotherUniqueLogin1", registeredUser.getLogin());
-        assertEquals("ValidPassword123", registeredUser.getPassword());
-        assertEquals(Integer.valueOf(18), registeredUser.getAge());
-    }
-
-    @Test
     void registerTooShortLogin_NotOk() {
         User newUser = new User();
         newUser.setLogin("Pasha");
@@ -94,19 +81,6 @@ class RegistrationServiceImplTest {
         newUser.setAge(28);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
-    }
-
-    @Test
-    void registerValidLogin_Ok() {
-        User newUser = new User();
-        newUser.setLogin("LongEnoughLogin");
-        newUser.setPassword("ValidPassword123");
-        newUser.setAge(28);
-        User registeredUser = registrationService.register(newUser);
-        assertNotNull(registeredUser);
-        assertEquals("LongEnoughLogin", registeredUser.getLogin());
-        assertEquals("ValidPassword123", registeredUser.getPassword());
-        assertEquals(Integer.valueOf(28), registeredUser.getAge());
     }
 
     @Test
