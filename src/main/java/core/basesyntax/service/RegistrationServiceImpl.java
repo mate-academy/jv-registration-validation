@@ -13,24 +13,34 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("User can't be null");
+            throw new RegistrationException("User can't be null");
+        }
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login can't be null");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("Password can't be null");
         }
 
         User existingUser = storageDao.get(user.getLogin());
         if (existingUser != null) {
-            throw new IllegalArgumentException("User with this login already exists");
+            throw new RegistrationException("User with this login already exists");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new IllegalArgumentException("Login must be at least 6 characters long");
+            throw new RegistrationException("Login must be at least 6 characters long");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new IllegalArgumentException("Password must be at least 6 characters long");
+            throw new RegistrationException("Password must be at least 6 characters long");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new IllegalArgumentException("User must be at least 18 years old");
+            throw new RegistrationException("Not valid age: " + user.getAge()
+                    + ". Min allowed age is " + MIN_AGE);
         }
         if (user.getLogin().contains(" ")) {
-            throw new IllegalArgumentException("Login can't contain any whitespaces");
+            throw new RegistrationException("Login can't contain any whitespaces");
         }
         return storageDao.add(user);
     }

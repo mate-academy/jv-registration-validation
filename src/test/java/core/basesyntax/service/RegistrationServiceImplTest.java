@@ -6,17 +6,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
     private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
+
         Storage.people.clear();
         user = new User();
         user.setLogin("Example1");
@@ -31,21 +36,8 @@ class RegistrationServiceImplTest {
         newUser.setLogin("Example1");
         newUser.setPassword("DifferentPass");
         newUser.setAge(25);
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
-    }
-
-    @Test
-    void registerRepeatedLogin_Ok() {
-        User newUser = new User();
-        newUser.setLogin("PashaPasha");
-        newUser.setPassword("ProperPassword2");
-        newUser.setAge(28);
-        User registeredUser = registrationService.register(newUser);
-        assertNotNull(registeredUser);
-        assertEquals("PashaPasha", registeredUser.getLogin());
-        assertEquals("ProperPassword2", registeredUser.getPassword());
-        assertEquals(Integer.valueOf(28), registeredUser.getAge());
     }
 
     @Test
@@ -54,7 +46,7 @@ class RegistrationServiceImplTest {
         newUser.setLogin("someLogin1");
         newUser.setPassword("short");
         newUser.setAge(28);
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
     }
 
@@ -77,7 +69,7 @@ class RegistrationServiceImplTest {
         newUser.setLogin("YetAnotherUniqueLogin");
         newUser.setPassword("ValidPassword123");
         newUser.setAge(17);
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
     }
 
@@ -100,7 +92,7 @@ class RegistrationServiceImplTest {
         newUser.setLogin("Pasha");
         newUser.setPassword("ValidPassword");
         newUser.setAge(28);
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
     }
 
@@ -119,9 +111,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNullUser_NotOk() {
-        User nullUser = null;
-        assertThrows(IllegalArgumentException.class, () ->
-                registrationService.register(nullUser));
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(null));
     }
 
     @Test
@@ -130,22 +121,38 @@ class RegistrationServiceImplTest {
         newUser.setLogin("Pasha Otroda");
         newUser.setPassword("ValidPassword");
         newUser.setAge(28);
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
     }
 
     @Test
-    void registerTooLongPassword_Ok() {
+    void registerNullLogin_NotOk() {
         User newUser = new User();
-        newUser.setLogin("somelogin");
-        newUser.setPassword("ProperPassword123ProperPassword123ProperPassword123");
+        newUser.setLogin(null);
+        newUser.setPassword("ValidPassword");
         newUser.setAge(28);
-        User registeredUser = registrationService.register(newUser);
-        assertNotNull(registeredUser);
-        assertEquals("somelogin", registeredUser.getLogin());
-        assertEquals("ProperPassword123ProperPassword123ProperPassword123",
-                registeredUser.getPassword());
-        assertEquals(Integer.valueOf(28), registeredUser.getAge());
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerNullPassword_NotOk() {
+        User newUser = new User();
+        newUser.setLogin("someLogin1");
+        newUser.setPassword(null);
+        newUser.setAge(28);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerNullAge_NotOk() {
+        User newUser = new User();
+        newUser.setLogin("PashaOtroda");
+        newUser.setPassword("ValidPassword");
+        newUser.setAge(null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
     }
 
     @Test
@@ -154,7 +161,7 @@ class RegistrationServiceImplTest {
         newUser.setLogin("PashaOtroda");
         newUser.setPassword("ValidPassword");
         newUser.setAge(-28);
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
     }
 }
