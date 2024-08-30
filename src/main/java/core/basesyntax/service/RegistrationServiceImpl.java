@@ -49,7 +49,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (password.length() < PASSWORD_MIN_LENGTH) {
             throw new RegistrationException("Password must be at least "
-                    + LOGIN_MIN_LENGTH + " characters");
+                    + PASSWORD_MIN_LENGTH + " characters");
         }
     }
 

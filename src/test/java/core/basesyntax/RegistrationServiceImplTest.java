@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -15,10 +16,9 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String DEFAULT_USER_LOGIN_ONE = "DummyUser";
-    private static final String DEFAULT_USER_LOGIN_TWO = "DummyUserTwo";
     private static final String DEFAULT_USER_PASSWORD = "DummyUserPassword";
     private static final String SHORT_LOGIN = "Login";
-    private static final String SHORT_PASSWORD = "pass";
+    private static final String SHORT_PASSWORD = "passw";
     private static final int DEFAULT_USER_AGE = 18;
     private static final int INVALID_AGE = 17;
     private static StorageDao storageDao;
@@ -33,18 +33,8 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        dummyUser = new User();
-        dummyUser.setLogin(DEFAULT_USER_LOGIN_ONE);
-        dummyUser.setPassword(DEFAULT_USER_PASSWORD);
-        dummyUser.setAge(DEFAULT_USER_AGE);
-    }
-
-    @Test
-    void register_alreadyExists_notOk() {
-        storageDao.add(dummyUser);
-        RegistrationException exception = assertThrows(RegistrationException.class,
-                () -> registrationService.register(dummyUser));
-        assertEquals("Login already exists", exception.getMessage());
+        Storage.people.clear();
+        dummyUser = new User(DEFAULT_USER_LOGIN_ONE, DEFAULT_USER_PASSWORD, DEFAULT_USER_AGE);
     }
 
     @Test
@@ -81,7 +71,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_invalidPassword_notOk() {
         dummyUser.setPassword(SHORT_PASSWORD);
-        dummyUser.setLogin(DEFAULT_USER_LOGIN_TWO);
         RegistrationException exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(dummyUser));
         assertEquals("Password must be at least 6 characters", exception.getMessage());
@@ -96,12 +85,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_alreadyExists_notOk() {
+        storageDao.add(dummyUser);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(dummyUser));
+        assertEquals("Login already exists", exception.getMessage());
+    }
+
+    @Test
     void register_validUser_Ok() {
-        User expectedUser = new User();
-        expectedUser.setLogin(DEFAULT_USER_LOGIN_ONE);
-        expectedUser.setPassword(DEFAULT_USER_PASSWORD);
-        expectedUser.setAge(DEFAULT_USER_AGE);
+        User expectedUser = new User(DEFAULT_USER_LOGIN_ONE,
+                DEFAULT_USER_PASSWORD, DEFAULT_USER_AGE);
         User actualUser = registrationService.register(expectedUser);
         assertEquals(expectedUser, actualUser);
+        assertEquals(expectedUser, storageDao.get(actualUser.getLogin()));
     }
 }
