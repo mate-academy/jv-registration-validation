@@ -9,6 +9,7 @@ import core.basesyntax.model.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,9 +20,16 @@ class RegistrationServiceImplTest {
     private static final String SHORT_LOGIN = "Login";
     private static final String SHORT_PASSWORD = "pass";
     private static final int DEFAULT_USER_AGE = 18;
-    private StorageDao storageDao = new StorageDaoImpl();
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private static final int INVALID_AGE = 17;
+    private static StorageDao storageDao;
+    private static RegistrationService registrationService;
     private User dummyUser;
+
+    @BeforeAll
+    static void beforeAll() {
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
@@ -81,7 +89,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_lowAge_notOk() {
-        dummyUser.setAge(17);
+        dummyUser.setAge(INVALID_AGE);
         RegistrationException exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(dummyUser));
         assertEquals("Age must be at least 18", exception.getMessage());
