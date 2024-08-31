@@ -30,10 +30,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User with this login already exists");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login must be at least 6 characters long");
+            throw new RegistrationException("Not valid login: " + user.getLogin()
+                    + ". Min allowed login is " + MIN_LOGIN_LENGTH);
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password must be at least 6 characters long");
+            throw new RegistrationException("Not valid password: " + user.getPassword()
+                    + ". Min allowed password is " + MIN_PASSWORD_LENGTH);
         }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Not valid age: " + user.getAge()

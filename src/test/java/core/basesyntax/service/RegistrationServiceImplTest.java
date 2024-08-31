@@ -21,37 +21,32 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-
-        Storage.people.clear();
         user = new User();
         user.setLogin("Example1");
         user.setPassword("Password1");
         user.setAge(30);
-        Storage.people.add(user);
     }
 
     @Test
-    void registerExistingLogin_NotOk() {
+    void register_existingLogin_NotOk() {
         User newUser = new User();
         newUser.setLogin("Example1");
         newUser.setPassword("DifferentPass");
         newUser.setAge(25);
+        Storage.people.add(newUser);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
     }
 
     @Test
-    void registerPasswordTooShort_NotOk() {
-        User newUser = new User();
-        newUser.setLogin("someLogin1");
-        newUser.setPassword("short");
-        newUser.setAge(28);
+    void register_passwordTooShort_NotOk() {
+        user.setPassword("short");
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 
     @Test
-    void registerValidUser_Ok() {
+    void register_validUser_Ok() {
         User newUser = new User();
         newUser.setLogin("someLogin2");
         newUser.setPassword("Valid12345");
@@ -64,78 +59,57 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerAgeTooYoung_NotOk() {
-        User newUser = new User();
-        newUser.setLogin("YetAnotherUniqueLogin");
-        newUser.setPassword("ValidPassword123");
-        newUser.setAge(17);
+    void register_ageTooYoung_NotOk() {
+        user.setAge(17);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 
     @Test
-    void registerTooShortLogin_NotOk() {
-        User newUser = new User();
-        newUser.setLogin("Pasha");
-        newUser.setPassword("ValidPassword");
-        newUser.setAge(28);
+    void register_tooShortLogin_NotOk() {
+        user.setLogin("Pasha");
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 
     @Test
-    void registerNullUser_NotOk() {
+    void register_nullUser_NotOk() {
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(null));
     }
 
     @Test
-    void registerLoginContainWhiteSpace_NotOk() {
-        User newUser = new User();
-        newUser.setLogin("Pasha Otroda");
-        newUser.setPassword("ValidPassword");
-        newUser.setAge(28);
+    void register_loginContainWhitespace_NotOk() {
+        user.setLogin("Pasha Otroda");
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 
     @Test
-    void registerNullLogin_NotOk() {
-        User newUser = new User();
-        newUser.setLogin(null);
-        newUser.setPassword("ValidPassword");
-        newUser.setAge(28);
+    void register_nullLogin_NotOk() {
+        user.setLogin(null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 
     @Test
-    void registerNullPassword_NotOk() {
-        User newUser = new User();
-        newUser.setLogin("someLogin1");
-        newUser.setPassword(null);
-        newUser.setAge(28);
+    void register_nullPassword_NotOk() {
+        user.setPassword(null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 
     @Test
-    void registerNullAge_NotOk() {
-        User newUser = new User();
-        newUser.setLogin("PashaOtroda");
-        newUser.setPassword("ValidPassword");
-        newUser.setAge(null);
+    void register_nullAge_NotOk() {
+        user.setAge(null);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 
     @Test
-    void registerNegativeAge_NotOk() {
-        User newUser = new User();
-        newUser.setLogin("PashaOtroda");
-        newUser.setPassword("ValidPassword");
-        newUser.setAge(-28);
+    void register_negativeAge_NotOk() {
+        user.setAge(-28);
         assertThrows(RegistrationException.class, () ->
-                registrationService.register(newUser));
+                registrationService.register(user));
     }
 }
