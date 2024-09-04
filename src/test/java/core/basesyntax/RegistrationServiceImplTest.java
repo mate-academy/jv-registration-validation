@@ -11,9 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
+    private static final int MINIMAL_AGE = 18;
     private StorageDaoImpl storageDao;
     private RegistrationServiceImpl registrationService;
-    private static final int MINIMAL_AGE = 18;
 
     @BeforeEach
     void setUp() {
@@ -80,11 +80,34 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void shortLogin_NotOK() {
+    void loginLength0_NotOK() {
+        User user = buildUser("", "123456", 19);
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void loginLength5_NotOK() {
         User user = buildUser("David", "123456", 19);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void loginLength6_OK() {
+        User user = buildUser("Normal", "123456", 19);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
+    }
+
+    @Test
+    void largeLogin_OK() {
+        String login = "Lorem ipsum lorem ipsum lorem ipsum lorem";
+        User user = buildUser(login, "123456", 19);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
@@ -126,7 +149,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void zeroAge_NotOK() {
+    void ageZero_NotOK() {
         User user = buildUser("SampleLogin", "123456", 0);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(user);
@@ -134,11 +157,26 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void age18_OK() {
-        User user = buildUser("SampleLogin18", "123456", 18);
+    void ageNearlyMinimal_NotOK() {
+        User user = buildUser("SampleLogin17", "123456", MINIMAL_AGE - 1);
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void ageMinimal_OK() {
+        User user = buildUser("SampleLogin18", "123456", MINIMAL_AGE);
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
         //This test is needed since 18 is edge value: age should be >= 18, not > 18.
+    }
+
+    @Test
+    void ageLarge_OK() {
+        User user = buildUser("SampleLogin100", "123456", 100);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
