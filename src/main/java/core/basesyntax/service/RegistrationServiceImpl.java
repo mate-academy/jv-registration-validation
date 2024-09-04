@@ -20,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateUser(User user) {
         if (user == null) {
             throw new RegistrationFailedException("Failed to add new user! \n"
-                    + "User must not be null");
+                    + "User object is null");
         }
         if (user.getLogin() == null) {
             throw new RegistrationFailedException("Failed to add new user! \n"
