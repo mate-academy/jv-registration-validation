@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private StorageDaoImpl storageDao;
     private RegistrationServiceImpl registrationService;
-    private static final int MINIMAL_AGE = 18;
+    private final static int MINIMAL_AGE = 18;
 
     @BeforeEach
     void setUp() {
@@ -116,9 +116,18 @@ public class RegistrationServiceImplTest {
         registrationService.register(user);
         assertEquals(user, storageDao.get(user.getLogin()));
     }
+
     @Test
     void smallAge_NotOK() {
         User user = buildUser("SampleLogin", "123456", 17);
+        assertThrows(RegistrationFailedException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void zeroAge_NotOK() {
+        User user = buildUser("SampleLogin", "123456", 0);
         assertThrows(RegistrationFailedException.class, () -> {
             registrationService.register(user);
         });
