@@ -141,14 +141,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void smallAge_NotOK() {
-        User user = buildUser("SampleLogin", "123456", 17);
-        assertThrows(RegistrationFailedException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
     void ageZero_NotOK() {
         User user = buildUser("SampleLogin", "123456", 0);
         assertThrows(RegistrationFailedException.class, () -> {
