@@ -18,7 +18,6 @@ public class HelloWorldTest {
     @BeforeEach
     public void setUp() {
         registrationService = new RegistrationServiceImpl();
-        // Clear storage before each test
         core.basesyntax.db.Storage.people.clear();
     }
 
