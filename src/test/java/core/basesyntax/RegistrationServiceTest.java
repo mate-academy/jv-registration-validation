@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class HelloWorldTest {
+public class RegistrationServiceTest {
 
     private RegistrationService registrationService;
 
@@ -47,17 +47,17 @@ public class HelloWorldTest {
         user2.setPassword("password2");
         user2.setAge(25);
 
-        InvalidUserException thrown = assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(user2);
-        });
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user2)
+        );
         assertEquals("User with this login already exists", thrown.getMessage());
     }
 
     @Test
     public void register_nullUser_throwsException() {
-        InvalidUserException thrown = assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(null);
-        });
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(null)
+        );
         assertEquals("User cannot be null", thrown.getMessage());
     }
 
@@ -68,9 +68,9 @@ public class HelloWorldTest {
         user.setPassword("validPass");
         user.setAge(20);
 
-        InvalidUserException thrown = assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(user);
-        });
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user)
+        );
         assertEquals("Login must be at least 6 characters long", thrown.getMessage());
     }
 
@@ -81,9 +81,9 @@ public class HelloWorldTest {
         user.setPassword("short");
         user.setAge(20);
 
-        InvalidUserException thrown = assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(user);
-        });
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user)
+        );
         assertEquals("Password must be at least 6 characters long", thrown.getMessage());
     }
 
@@ -94,9 +94,9 @@ public class HelloWorldTest {
         user.setPassword("validPass");
         user.setAge(17);
 
-        InvalidUserException thrown = assertThrows(InvalidUserException.class, () -> {
-            registrationService.register(user);
-        });
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user)
+        );
         assertEquals("User must be at least 18 years old", thrown.getMessage());
     }
 }
