@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private StorageDaoImpl storageDao;
     private RegistrationServiceImpl registrationService;
-    private final static int MINIMAL_AGE = 18;
+    private final int MINIMAL_AGE = 18;
 
     @BeforeEach
     void setUp() {
