@@ -14,9 +14,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws RegistrationException {
         if (user == null) {
-            return null;
+            throw new RegistrationException("The user does not exist");
         }
-        isNullElementsUser(user);
+        isUserDataNull(user);
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("The user with this login already exists");
         }
@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return user;
     }
 
-    private void isNullElementsUser(User user) throws RegistrationException {
+    private void isUserDataNull(User user) throws RegistrationException {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login cannot be null");
         }

@@ -34,28 +34,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void ageElementIsNull_NotOk() {
+    void register_NullAge_NotOk() {
         User actual = defaultUser;
         actual.setAge(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void passwordElementIsNull_NotOk() {
+    void register_NullPassword_NotOk() {
         User actual = defaultUser;
         actual.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void loginElementIsNull_NotOk() {
+    void register_NullLogin_NotOk() {
         User actual = defaultUser;
         actual.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
     }
 
     @Test
-    void invalidLoginElement_NotOk() {
+    void register_InvalidLogin_NotOk() {
         User actual = defaultUser;
         actual.setLogin("asd");
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
@@ -66,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidAgeElement_NotOk() {
+    void register_InvalidAge_NotOk() {
         User actual = defaultUser;
         actual.setAge(1);
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));
@@ -77,7 +77,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void invalidPasswordElement_NotOk() {
+    void register_InvalidPassword_NotOk() {
         User actual = defaultUser;
         actual.setPassword("Tom");
         assertThrows(RegistrationException.class, () -> registrationService.register(actual));

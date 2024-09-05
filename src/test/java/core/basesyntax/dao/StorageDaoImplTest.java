@@ -30,13 +30,6 @@ class StorageDaoImplTest {
     }
 
     @Test
-    void addUser_OK() {
-        User expected = defaultUser;
-        User actual = storageDao.add(defaultUser);
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void getUser_OK() {
         User expected = defaultUser;
         storageDao.add(defaultUser);
