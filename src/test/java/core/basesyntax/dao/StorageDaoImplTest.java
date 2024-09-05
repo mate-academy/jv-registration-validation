@@ -6,16 +6,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class StorageDaoImplTest {
-    private static final StorageDaoImpl storageDao = new StorageDaoImpl();
+    private static StorageDaoImpl storageDao;
     private static final Integer DEFAULT_AGE = 18;
     private static final String DEFAULT_PASSWORD = "123456";
     private static final String DEFAULT_LOGIN = "Ukraine";
     private User defaultUser;
-    
+
+    @BeforeAll
+    static void init() {
+        storageDao = new StorageDaoImpl();
+    }
+
     @BeforeEach
     void setUp() {
         defaultUser = new User();

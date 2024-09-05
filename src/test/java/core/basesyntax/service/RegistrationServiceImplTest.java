@@ -9,16 +9,22 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exeption.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final StorageDao storageDao = new StorageDaoImpl();
-    private static final RegistrationService registrationService = new RegistrationServiceImpl();
-    private static final Integer DEFAULT_AGE = 18;
+    private static RegistrationService registrationService;
+    private static final int DEFAULT_AGE = 18;
     private static final String DEFAULT_PASSWORD = "123456";
     private static final String DEFAULT_LOGIN = "Ukraine";
     private User defaultUser;
+
+    @BeforeAll
+    static void init() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @BeforeEach
     void setUp() {
@@ -35,9 +41,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_NullAge_NotOk() {
-        User actual = defaultUser;
-        actual.setAge(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(actual));
+        defaultUser.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
     }
 
     @Test
@@ -88,15 +93,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void allRegistrationElement_Ok() throws RegistrationException {
-        User actual = new User();
-        actual.setLogin("chuga1ster");
-        actual.setPassword("12345678");
-        actual.setAge(25);
+    void register_NegativeAge_NotOk() {
+        User actual = defaultUser;
+        actual.setAge(-5);
+        assertThrows(RegistrationException.class, () -> registrationService.register(actual));
+    }
+
+    @Test
+    void register_UserAlreadyExists_NotOk() throws RegistrationException {
+        registrationService.register(defaultUser);
+        assertThrows(RegistrationException.class, () -> registrationService.register(defaultUser));
+    }
+
+    @Test
+    void register_ValidUser_Ok() throws RegistrationException {
         User expected = new User();
         expected.setLogin("chuga1ster");
         expected.setPassword("12345678");
         expected.setAge(25);
-        assertEquals(expected, registrationService.register(actual));
+        User actual = registrationService.register(expected);
+        assertEquals(actual, expected);
     }
 }
