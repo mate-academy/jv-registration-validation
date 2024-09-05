@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             storageDao.add(user);
             return storageDao.get(user.getLogin());
         } catch (UserNotOkException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("User registration error", e);
         }
     }
 
