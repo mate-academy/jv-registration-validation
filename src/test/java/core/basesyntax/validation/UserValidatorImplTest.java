@@ -14,8 +14,8 @@ class UserValidatorImplTest {
     public void validate_ValidUser_ok() {
         User user = new User();
         user.setAge(18);
-        user.setLogin("validated");
-        user.setPassword("validated");
+        user.setLogin("valid1");
+        user.setPassword("valid1");
         assertDoesNotThrow(() -> validator.validate(user));
     }
 
@@ -35,7 +35,7 @@ class UserValidatorImplTest {
     @Test
     public void validate_LoginIsLessThan6Characters_notOk() {
         User user = new User();
-        user.setLogin("null");
+        user.setLogin("null1");
         assertThrows(UserValidationException.class, () -> validator.validate(user));
     }
 
@@ -49,7 +49,7 @@ class UserValidatorImplTest {
     @Test
     public void validate_PasswordIsLessThan6Characters_notOk() {
         User user = new User();
-        user.setPassword("null");
+        user.setPassword("null1");
         assertThrows(UserValidationException.class, () -> validator.validate(user));
     }
 

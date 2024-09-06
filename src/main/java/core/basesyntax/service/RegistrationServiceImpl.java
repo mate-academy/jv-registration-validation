@@ -19,9 +19,10 @@ public class RegistrationServiceImpl implements RegistrationService {
                 throw new UserValidationException("User with this login already exists");
             }
             storageDao.add(user);
+            return user;
         } catch (UserValidationException exception) {
-            exception.printStackTrace();
+            System.err.println("Registration failed: " + exception.getMessage());
+            throw new RuntimeException("Registration failed", exception);
         }
-        return user;
     }
 }
