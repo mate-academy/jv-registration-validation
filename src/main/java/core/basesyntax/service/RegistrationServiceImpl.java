@@ -40,5 +40,4 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MIN_AGE + " years old.");
         }
     }
-
 }

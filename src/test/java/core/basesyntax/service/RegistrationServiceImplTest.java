@@ -49,7 +49,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPasswordIsNull_isNotOK() {
+    void register_shortPassword_notOk() {
         User expected = new User("Ivan20044567", null, 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(expected);
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsNot_isNotOK() {
+    void register_underage_NotOK() {
         User expected = new User("Iv45HG", "1234567", 15);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(expected);
