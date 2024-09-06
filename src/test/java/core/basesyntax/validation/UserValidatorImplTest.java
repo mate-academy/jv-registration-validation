@@ -11,7 +11,7 @@ class UserValidatorImplTest {
     private final UserValidator validator = new UserValidatorImpl();
 
     @Test
-    public void validate_ValidUser_NoExceptionThrown() {
+    public void validate_ValidUser_ok() {
         User user = new User();
         user.setAge(18);
         user.setLogin("validated");
