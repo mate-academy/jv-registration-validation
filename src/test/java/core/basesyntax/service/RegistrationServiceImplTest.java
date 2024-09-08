@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final User corectUser = new User(1211222121L, "notShort", "notShort", 19);
+    private final User correctUser = new User(1211222121L, "notShort", "notShort", 19);
     private final User wrongLogin = new User(1211222121L, "Short", "notShort", 19);
     private final User wrongPassword = new User(1211222121L, "notShort", "Short", 19);
     private final User wrongAge = new User(1211222121L, "notShort", "notShort", 17);
@@ -18,8 +18,8 @@ class RegistrationServiceImplTest {
     private final User emptyAge = new User(1211222121L, "notShort", "notShort", null);
 
     @Test
-    void register_corectUser_ok() {
-        assertEquals(registrationService.register(corectUser), corectUser);
+    void register_correctUser_ok() {
+        assertEquals(registrationService.register(correctUser), correctUser);
     }
 
     @Test

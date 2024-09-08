@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 || user.getPassword() == null
                 || user.getLogin() == null
                 || user.getId() == null) {
-            throw new InvalidDataException();
+            throw new InvalidDataException("Null data");
         }
         if (user.getLogin().length() >= MIN_LENGTH
                 && user.getPassword().length() >= MIN_LENGTH
@@ -24,6 +24,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             storageDao.add(user);
             return user;
         }
-        throw new InvalidDataException();
+        throw new InvalidDataException("Invalid data");
     }
 }
