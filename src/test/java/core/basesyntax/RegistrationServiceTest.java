@@ -8,17 +8,17 @@ import core.basesyntax.exception.InvalidUserException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import core.basesyntax.db.Storage;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
+    private static RegistrationService registrationService;
 
-    private RegistrationService registrationService;
-
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         registrationService = new RegistrationServiceImpl();
-        core.basesyntax.db.Storage.people.clear();
+        Storage.people.clear();
     }
 
     @Test
@@ -31,24 +31,25 @@ public class RegistrationServiceTest {
         User registeredUser = registrationService.register(user);
 
         assertNotNull(registeredUser);
+        assertEquals(registeredUser, user);
         assertEquals(user.getLogin(), registeredUser.getLogin());
     }
 
     @Test
     public void register_existingLogin_userNotRegistered() {
-        User user1 = new User();
-        user1.setLogin("existingLogin");
-        user1.setPassword("password1");
-        user1.setAge(20);
-        registrationService.register(user1);
+        User user = new User();
+        user.setLogin("existingLogin");
+        user.setPassword("password1");
+        user.setAge(20);
+        Storage.people.add(user);
 
-        User user2 = new User();
-        user2.setLogin("existingLogin");
-        user2.setPassword("password2");
-        user2.setAge(25);
+        User sameUser = new User();
+        sameUser.setLogin("existingLogin");
+        sameUser.setPassword("password2");
+        sameUser.setAge(25);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
-                registrationService.register(user2)
+                registrationService.register(sameUser)
         );
         assertEquals("User with this login already exists", thrown.getMessage());
     }
@@ -85,6 +86,58 @@ public class RegistrationServiceTest {
                 registrationService.register(user)
         );
         assertEquals("Password must be at least 6 characters long", thrown.getMessage());
+    }
+
+    @Test
+    public void register_nullLogin_throwsException() {
+        User user = new User();
+        user.setLogin(null);
+        user.setPassword("validPass");
+        user.setAge(20);
+
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user)
+        );
+        assertEquals("Login cannot be null", thrown.getMessage());
+    }
+
+    @Test
+    public void register_nullPassword_throwsException() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword(null);
+        user.setAge(20);
+
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user)
+        );
+        assertEquals("Password cannot be null", thrown.getMessage());
+    }
+
+    @Test
+    public void register_nullAge_throwsException() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPass");
+        user.setAge(null);
+
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user)
+        );
+        assertEquals("Age cannot be null", thrown.getMessage());
+    }
+
+    @Test
+    public void register_negativeAge_throwsException() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPass");
+        user.setAge(-5);
+
+        InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
+                registrationService.register(user)
+        );
+        assertEquals("Age cannot be negative", thrown.getMessage());
     }
 
     @Test
