@@ -6,8 +6,8 @@ import core.basesyntax.exception.InvalidUserException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    public static final int MIN_LOGIN_LENGHT = 6;
-    public static final int AGE_MUST_BE_MORE_THAN = 18;
+    public static final int MIN_CREDENTIAL_LENGTH = 6;
+    public static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -15,14 +15,26 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidUserException("User cannot be null");
         }
-        if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGHT) {
-            throw new InvalidUserException("Login must be at least 6 characters long");
+        if (user.getLogin() == null) {
+            throw new InvalidUserException("Login cannot be null");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_LOGIN_LENGHT) {
-            throw new InvalidUserException("Password must be at least 6 characters long");
+        if (user.getLogin().length() < MIN_CREDENTIAL_LENGTH) {
+            throw new InvalidUserException("Login must be at least " + MIN_CREDENTIAL_LENGTH + " characters long");
         }
-        if (user.getAge() == null || user.getAge() < AGE_MUST_BE_MORE_THAN) {
-            throw new InvalidUserException("User must be at least 18 years old");
+        if (user.getPassword() == null) {
+            throw new InvalidUserException("Password cannot be null");
+        }
+        if (user.getPassword().length() < MIN_CREDENTIAL_LENGTH) {
+            throw new InvalidUserException("Password must be at least " + MIN_CREDENTIAL_LENGTH + " characters long");
+        }
+        if (user.getAge() == null) {
+            throw new InvalidUserException("Age cannot be null");
+        }
+        if (user.getAge() < 0) {
+            throw new InvalidUserException("Age cannot be negative");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new InvalidUserException("User must be at least " + MIN_AGE + " years old");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidUserException("User with this login already exists");
