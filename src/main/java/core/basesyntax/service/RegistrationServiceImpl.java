@@ -11,19 +11,42 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getAge() == null
-                || user.getPassword() == null
-                || user.getLogin() == null
-                || user.getId() == null) {
-            throw new InvalidDataException("Null data");
-        }
-        if (user.getLogin().length() >= MIN_LENGTH
-                && user.getPassword().length() >= MIN_LENGTH
-                && user.getAge() >= MIN_AGE
-                && storageDao.get(user.getLogin()) == null) {
+        if (validateLogin(user) && validatePassword(user)
+            && validateAge(user) && sameCheck(user)) {
             storageDao.add(user);
             return user;
         }
-        throw new InvalidDataException("Invalid data");
+        throw new RegistrationException("");
+    }
+
+    private boolean validateAge(User user) {
+        if (user.getAge() == null
+                || user.getAge() < MIN_AGE) {
+            throw new RegistrationException("Wrong age");
+        }
+        return true;
+    }
+
+    private boolean validateLogin(User user) {
+        if (user.getLogin() == null
+                || user.getLogin().length() < MIN_LENGTH) {
+            throw new RegistrationException("Wrong login");
+        }
+        return true;
+    }
+
+    private boolean validatePassword(User user) {
+        if (user.getPassword() == null
+                || user.getPassword().length() < MIN_LENGTH) {
+            throw new RegistrationException("Wrong password");
+        }
+        return true;
+    }
+
+    private boolean sameCheck(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("A user with the same login already exists.");
+        }
+        return true;
     }
 }

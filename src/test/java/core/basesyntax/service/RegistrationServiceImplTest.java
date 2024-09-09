@@ -4,69 +4,83 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
-    private final User correctUser = new User(1211222121L, "notShort", "notShort", 19);
-    private final User wrongLogin = new User(1211222121L, "Short", "notShort", 19);
-    private final User wrongPassword = new User(1211222121L, "notShort", "Short", 19);
-    private final User wrongAge = new User(1211222121L, "notShort", "notShort", 17);
-    private final User emptyId = new User(null, "notShort", "notShort", 19);
-    private final User emptyLogin = new User(1211222121L, null, "notShort", 19);
-    private final User emptyPassword = new User(1211222121L, "notShort", null, 19);
-    private final User emptyAge = new User(1211222121L, "notShort", "notShort", null);
+    private static RegistrationService registrationService;
+    private final User correctUser = new User("notShort", "notShort", 19);
+    private final User wrongLogin = new User("Short", "notShort", 19);
+    private final User wrongPassword = new User("notShort", "Short", 19);
+    private final User wrongAge = new User("notShort", "notShort", 17);
+    private final User emptyLogin = new User(null, "notShort", 19);
+    private final User emptyPassword = new User("notShort", null, 19);
+    private final User emptyAge = new User("notShort", "notShort", null);
+    private final User negativeAge = new User("notShort", "notShort", -7);
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @Test
     void register_correctUser_ok() {
-        assertEquals(registrationService.register(correctUser), correctUser);
+        User actual = registrationService.register(correctUser);
+        assertEquals(actual, correctUser);
     }
 
     @Test
-    void register_wrongLogin_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(wrongLogin);
-        });
-    }
-
-    @Test
-    void register_wrongPassword_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(wrongPassword);
-        });
-    }
-
-    @Test
-    void register_wrongAge_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+    void register_underAge_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(wrongAge);
         });
     }
 
     @Test
-    void register_emptyId_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(emptyId);
+    void register_sameUser_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(correctUser);
         });
     }
 
     @Test
-    void register_emptyLogin_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+    void register_shortLogin_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(wrongLogin);
+        });
+    }
+
+    @Test
+    void register_shortPassword_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(wrongPassword);
+        });
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(emptyLogin);
         });
     }
 
     @Test
-    void register_emptyAge_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+    void register_nullAge_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(emptyAge);
         });
     }
 
     @Test
-    void register_emptyPassword_notOk() {
-        assertThrows(InvalidDataException.class, () -> {
+    void register_negativeAge_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(negativeAge);
+        });
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(emptyPassword);
         });
     }
