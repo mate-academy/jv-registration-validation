@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import core.basesyntax.InvalidUserException;
+import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -10,20 +10,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null) {
-            throw new InvalidUserException("User cannot be null");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserException("User with this login already exists");
-        }
-        if (user.getLogin() == null || user.getLogin().length() < 6) {
-            throw new InvalidUserException("Login must contain 6 or more symbols");
-        }
-        if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new InvalidUserException("Password must contain 6 or more symbols");
-        }
-        if (user.getAge() == null || user.getAge() < 18) {
-            throw new InvalidUserException("User must be at least 18 years old");
+        try {
+            if (storageDao.get(user.getLogin()) != null) {
+                throw new RegistrationException("User with this login already exists");
+            }
+            if (user.getLogin() == null || user.getLogin().length() < 6) {
+                throw new RegistrationException("Login must contain 6 or more symbols");
+            }
+            if (user.getPassword() == null || user.getPassword().length() < 6) {
+                throw new RegistrationException("Password must contain 6 or more symbols");
+            }
+            if (user.getAge() == null || user.getAge() < 18) {
+                throw new RegistrationException("User must be at least 18 years old");
+            }
+        } catch (NullPointerException e) {
+            throw new RegistrationException("User cannot be null");
         }
 
         return storageDao.add(user);
