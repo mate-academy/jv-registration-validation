@@ -25,7 +25,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPassword_isNotOK() {
+    void register_userPasswordIsShort_isNotOK() {
         User expected = new User("Ivan204567", "12", 20);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(expected);
@@ -33,8 +33,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLogin_isNotOK() {
+    void register_userLoginIsShort_isNotOK() {
         User expected = new User("Ivan", "1234567", 18);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(expected);
+        });
+    }
+
+    @Test
+    void register_userUnderage_isNotOK() {
+        User expected = new User("Iv45HG", "1234567", 15);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(expected);
         });
@@ -49,7 +57,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_userPasswordIsNull_isNotOk() {
         User expected = new User("Ivan20044567", null, 18);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(expected);
@@ -65,15 +73,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_underage_NotOK() {
-        User expected = new User("Iv45HG", "1234567", 15);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(expected);
-        });
-    }
-
-    @Test
-    void register_userInDb_isNotOK() {
+    void register_userAlreadyExists_isNotOK() {
         User user = new User("JohnDoe", "john123", 28);
         Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> {
