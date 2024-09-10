@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private final User correctUser = new User("notShort", "notShort", 19);
-    private final User sameUser = new User("notShort", "notShort", 1000);
+    private final User loginCopy = new User("notShort", "notShort", 1000);
     private final User nullUser = new User();
     private final User wrongLogin = new User("Short", "notShort", 19);
     private final User wrongPassword = new User("notShort", "Short", 19);
@@ -45,9 +45,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_sameUser_notOk() {
+    void register_loginCopy_notOk() {
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(sameUser);
+            registrationService.register(loginCopy);
         });
     }
 

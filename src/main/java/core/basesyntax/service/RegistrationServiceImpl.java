@@ -11,8 +11,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("Please enter the data");
+        }
         if (validateLogin(user) && validatePassword(user)
-                && validateAge(user) && sameCheck(user)) {
+                && validateAge(user) && copyCheck(user)) {
             storageDao.add(user);
             return user;
         }
@@ -43,7 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return true;
     }
 
-    private boolean sameCheck(User user) {
+    private boolean copyCheck(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("A user with the same login already exists.");
         }
