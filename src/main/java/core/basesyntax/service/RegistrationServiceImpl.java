@@ -12,11 +12,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (validateLogin(user) && validatePassword(user)
-            && validateAge(user) && sameCheck(user)) {
+                && validateAge(user) && sameCheck(user)) {
             storageDao.add(user);
             return user;
         }
-        throw new RegistrationException("");
+        throw new RegistrationException("Registration is not complete");
     }
 
     private boolean validateAge(User user) {
