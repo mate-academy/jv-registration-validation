@@ -2,7 +2,7 @@ package core.basesyntax.validators;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exeptions.InvalidUserException;
+import core.basesyntax.exeptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class UserValidator {
@@ -26,46 +26,47 @@ public class UserValidator {
         this.storageDao = new StorageDaoImpl();
     }
     
-    public void validateUser(User user) throws InvalidUserException {
+    public User validateUser(User user) throws RegistrationException {
         validateForNullableValues(user);
         validatePasswordStrength(user);
         validateAge(user);
         validateUserExistInStorage(user);
+        return user;
     }
 
-    private void validateForNullableValues(User user) throws InvalidUserException {
+    private void validateForNullableValues(User user) throws RegistrationException {
         if (user == null) {
-            throw new InvalidUserException("User cannot be null");
+            throw new RegistrationException("User cannot be null");
         }
         if (user.getId() == null) {
-            throw new InvalidUserException("User id cannot be null");
+            throw new RegistrationException("User id cannot be null");
         }
         if (user.getLogin() == null) {
-            throw new InvalidUserException("Login cannot be null");
+            throw new RegistrationException("Login cannot be null");
         }
         if (user.getAge() == null) {
-            throw new InvalidUserException("Age cannot be null");
+            throw new RegistrationException("Age cannot be null");
         }
         if (user.getPassword() == null) {
-            throw new InvalidUserException("Age cannot be null");
+            throw new RegistrationException("Age cannot be null");
         }
     }
 
-    private void validatePasswordStrength(User user) throws InvalidUserException {
+    private void validatePasswordStrength(User user) throws RegistrationException {
         if (!user.getPassword().matches(PASSWORD_REGEXP)) {
-            throw new InvalidUserException(INCORRECT_PASSWORD_PATTERN_MESSAGE);
+            throw new RegistrationException(INCORRECT_PASSWORD_PATTERN_MESSAGE);
         }
     }
 
-    private void validateAge(User user) throws InvalidUserException {
-        if (user.getAge() < 0) {
-            throw new InvalidUserException(NEGATIVE_AGE_MESSAGE);
+    private void validateAge(User user) throws RegistrationException {
+        if (user.getAge() < 18) {
+            throw new RegistrationException(NEGATIVE_AGE_MESSAGE);
         }
     }
 
-    private void validateUserExistInStorage(User user) throws InvalidUserException {
+    private void validateUserExistInStorage(User user) throws RegistrationException {
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserException(USER_ALREADY_EXISTS_MESSAGE);
+            throw new RegistrationException(USER_ALREADY_EXISTS_MESSAGE);
         }
     }
 }

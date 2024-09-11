@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import core.basesyntax.exeptions.InvalidUserException;
+import core.basesyntax.exeptions.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.validators.UserValidator;
@@ -8,6 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserValidationTest {
     private static final String DEFAULT_LOGIN = "HelloMates";
@@ -26,9 +28,9 @@ public class UserValidationTest {
     @Test
     void validateUser_nullableUser_NotOk() {
         User userWithNullProperties = new User();
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 userValidator.validateUser(null));
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 userValidator.validateUser(userWithNullProperties));
 
     }
@@ -42,19 +44,20 @@ public class UserValidationTest {
                 new User(1L, "mate", "strongPass", null)
         );
         for (User userWithInvalidProperties : usersWithNullableProperties) {
-            Assertions.assertThrows(InvalidUserException.class, () ->
+            Assertions.assertThrows(RegistrationException.class, () ->
                     userValidator.validateUser(userWithInvalidProperties));
         }
     }
 
     @Test
-    void validateUser_validUser_Ok() {
+    void validateUser_validUser_Ok() throws RegistrationException {
         User user = new User(DEFAULT_ID, DEFAULT_LOGIN, DEFAULT_VALID_PASSWORD, DEFAULT_AGE);
-        Assertions.assertDoesNotThrow(() -> userValidator.validateUser(user));
+        User actual = userValidator.validateUser(user);
+        assertEquals(user, actual);
     }
 
     @Test
-    void validateUser_checkValidPasswords_Ok() throws InvalidUserException {
+    void validateUser_checkValidPasswords_Ok() throws RegistrationException {
         String passwordByPattern1 = "HelloWorld!28";
         String passwordByPattern2 = "4141&JavaCode";
         User user = createDefaultUser();
@@ -77,7 +80,7 @@ public class UserValidationTest {
         );
         User user = createDefaultUser();
         for (String incorrectPassword : incorrectPasswords) {
-            Assertions.assertThrows(InvalidUserException.class, () -> {
+            Assertions.assertThrows(RegistrationException.class, () -> {
                 user.setPassword(incorrectPassword);
                 userValidator.validateUser(user);
             });
@@ -88,19 +91,19 @@ public class UserValidationTest {
     void validateUser_negativeAge_NotOk() {
         User user = createDefaultUser();
         user.setAge(-2);
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 userValidator.validateUser(user));
     }
 
     @Test
     void register_nullableUser_NotOk() {
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(null));
     }
 
     @Test
     void register_userWithNullableId_NotOk() {
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(new User(null,
                         DEFAULT_LOGIN,
                         DEFAULT_VALID_PASSWORD,
@@ -109,7 +112,7 @@ public class UserValidationTest {
 
     @Test
     void register_userWithNullableLogin_NotOk() {
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(new User(DEFAULT_ID,
                         null,
                         DEFAULT_VALID_PASSWORD,
@@ -118,7 +121,7 @@ public class UserValidationTest {
 
     @Test
     void register_userWithNullablePassword_NotOk() {
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(new User(DEFAULT_ID,
                         DEFAULT_LOGIN,
                         null,
@@ -127,7 +130,7 @@ public class UserValidationTest {
 
     @Test
     void register_userWithNullableAge_NotOk() {
-        Assertions.assertThrows(InvalidUserException.class, () ->
+        Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(new User(DEFAULT_ID,
                         DEFAULT_LOGIN,
                         DEFAULT_VALID_PASSWORD,
@@ -135,22 +138,23 @@ public class UserValidationTest {
     }
 
     @Test
-    void register_UserWithSameLogin_NotOk() throws InvalidUserException {
-        User user1 = new User(1L, "SameLogin123", "HardPassword123!", 18);
-        User user2 = new User(2L, "SameLogin123", "SuperPassword$54", 22);
-        registrationService.register(user1);
-        Assertions.assertThrows(InvalidUserException.class, () ->
-                registrationService.register(user2));
+    void register_UserWithSameLogin_NotOk() throws RegistrationException {
+        User user = new User(1L, "SameLogin123", "HardPassword123!", 18);
+        User newUser = new User(2L, "SameLogin123", "SuperPassword$54", 22);
+
+        registrationService.register(user);
+        Assertions.assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
     }
 
     @Test
-    void register_validUsers_Ok() throws InvalidUserException {
+    void register_validUsers_Ok() throws RegistrationException {
         User user1 = new User(1L, "Mate123", "HardPassword123!", 18);
         User user2 = new User(2L, "JoeBaiden753", "SuperPassword$54", 22);
         User registeredUser1 = registrationService.register(user1);
-        Assertions.assertEquals(registeredUser1, user1);
+        assertEquals(registeredUser1, user1);
         User registeredUser2 = registrationService.register(user2);
-        Assertions.assertEquals(registeredUser2, user2);
+        assertEquals(registeredUser2, user2);
     }
 
     private User createDefaultUser() {
