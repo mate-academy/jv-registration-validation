@@ -7,18 +7,18 @@ import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    public static final int VALID_AGE = 18;
+    private static final int VALID_AGE = 18;
     private static final String VALID_LOGIN = "validlogin";
     private static final String VALID_PASSWORD = "validpassword";
 
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -63,7 +63,7 @@ class RegistrationServiceImplTest {
         User user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         Storage.people.add(user);
         User newUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
