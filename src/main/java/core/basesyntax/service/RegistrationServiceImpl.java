@@ -15,7 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Please enter the data");
         }
         if (validateLogin(user) && validatePassword(user)
-                && validateAge(user) && copyCheck(user)) {
+                && validateAge(user) && loginCopyCheck(user)) {
             storageDao.add(user);
             return user;
         }
@@ -46,7 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return true;
     }
 
-    private boolean copyCheck(User user) {
+    private boolean loginCopyCheck(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("A user with the same login already exists.");
         }

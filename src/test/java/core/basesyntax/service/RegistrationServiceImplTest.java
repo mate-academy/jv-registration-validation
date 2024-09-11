@@ -9,8 +9,9 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private final User correctUser = new User("notShort", "notShort", 19);
-    private final User loginCopy = new User("notShort", "notShort", 1000);
+    private final User correctUser = new User("sixChr", "sixChr", 18);
+    private final User moreThenEnough = new User("moreThenSix", "moreThenSix",23);
+    private final User loginCopy = new User("sixChr", "blaBla", 1000);
     private final User nullUser = new User();
     private final User wrongLogin = new User("Short", "notShort", 19);
     private final User wrongPassword = new User("notShort", "Short", 19);
@@ -35,6 +36,12 @@ class RegistrationServiceImplTest {
     void register_correctUser_ok() {
         User actual = registrationService.register(correctUser);
         assertEquals(actual, correctUser);
+    }
+
+    @Test
+    void register_moreThenEnough_ok() {
+        User actual = registrationService.register(moreThenEnough);
+        assertEquals(actual, moreThenEnough);
     }
 
     @Test
