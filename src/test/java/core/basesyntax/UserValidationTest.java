@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class UserValidationTest {
     private static final String DEFAULT_LOGIN = "HelloMates";
     private static final String DEFAULT_VALID_PASSWORD = "SuperPassword123@";
@@ -53,7 +51,7 @@ public class UserValidationTest {
     void validateUser_validUser_Ok() throws RegistrationException {
         User user = new User(DEFAULT_ID, DEFAULT_LOGIN, DEFAULT_VALID_PASSWORD, DEFAULT_AGE);
         User actual = userValidator.validateUser(user);
-        assertEquals(user, actual);
+        Assertions.assertEquals(user, actual);
     }
 
     @Test
@@ -152,9 +150,9 @@ public class UserValidationTest {
         User user1 = new User(1L, "Mate123", "HardPassword123!", 18);
         User user2 = new User(2L, "JoeBaiden753", "SuperPassword$54", 22);
         User registeredUser1 = registrationService.register(user1);
-        assertEquals(registeredUser1, user1);
+        Assertions.assertEquals(registeredUser1, user1);
         User registeredUser2 = registrationService.register(user2);
-        assertEquals(registeredUser2, user2);
+        Assertions.assertEquals(registeredUser2, user2);
     }
 
     private User createDefaultUser() {
