@@ -6,7 +6,8 @@ import core.basesyntax.exeption.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MINIMAL_LENGTH = 6;
+    private static final int MINIMAL_LOGIN_LENGTH = 6;
+    private static final int MINIMAL_PASSWORD_LENGTH = 6;
     private static final int MINIMAL_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -27,24 +28,24 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("A user with this login already exists");
         }
-        if (user.getLogin().length() < MINIMAL_LENGTH) {
+        if (user.getLogin().length() < MINIMAL_LOGIN_LENGTH) {
             throw new RegistrationException("The login length cannot be "
-                    + "shorter than six characters");
+                    + "shorter than " + MINIMAL_LOGIN_LENGTH + " characters");
         }
         if (user.getLogin().contains(" ")) {
             throw new RegistrationException("Login should not contain spaces");
         }
-        if (user.getPassword().length() < MINIMAL_LENGTH) {
+        if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
             throw new RegistrationException("The password length "
-                   + "cannot be shorter than six characters");
+                    + "cannot be shorter than " + MINIMAL_PASSWORD_LENGTH + " characters");
         }
         if (user.getPassword().contains(" ")) {
             throw new RegistrationException("Password should not "
-                   + "contain spaces");
+                    + "contain spaces");
         }
         if (user.getAge() < MINIMAL_AGE) {
             throw new RegistrationException("Registration is available to "
-                   + "users over 18 years of age");
+                    + "users over " + MINIMAL_AGE + " years of age");
         }
         return storageDao.add(user);
     }

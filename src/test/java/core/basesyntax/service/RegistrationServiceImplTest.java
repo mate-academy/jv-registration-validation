@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private RegistrationServiceImpl registrationService;
     private User user;
 
     @BeforeEach
@@ -29,22 +29,25 @@ class RegistrationServiceImplTest {
 
     @Test
     void nullLogin_NotOk() {
+        user.setLogin(null);
         Assertions.assertThrows(RegistrationException.class, () -> {
-            registrationService.register(null);
+            registrationService.register(user);
         });
     }
 
     @Test
     void nullPassword_NotOk() {
+        user.setPassword(null);
         Assertions.assertThrows(RegistrationException.class, () -> {
-            registrationService.register(null);
+            registrationService.register(user);
         });
     }
 
     @Test
     void nullAge_NotOk() {
+        user.setAge(null);
         Assertions.assertThrows(RegistrationException.class, () -> {
-            registrationService.register(null);
+            registrationService.register(user);
         });
     }
 
