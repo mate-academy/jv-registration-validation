@@ -4,10 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class RegistrationServiceImplTest {
+public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private final User edgeUser = new User("sixChr", "sixChr", 18);
     private final User correctUser = new User("moreThenSix", "moreThenSix",23);
@@ -26,6 +30,7 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
+    @Test
     void register_nullUser_notOk() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(nullUser);
@@ -59,7 +64,6 @@ class RegistrationServiceImplTest {
             registrationService.register(shortAge);
         });
     }
-
 
     @Test
     void register_shortLogin_notOk() {
