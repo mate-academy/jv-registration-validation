@@ -31,7 +31,6 @@ public class UserValidationTest {
                 userValidator.validateUser(null));
         Assertions.assertThrows(RegistrationException.class, () ->
                 userValidator.validateUser(userWithNullProperties));
-
     }
 
     @Test
