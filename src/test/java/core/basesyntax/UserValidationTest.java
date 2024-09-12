@@ -137,7 +137,7 @@ public class UserValidationTest {
     }
 
     @Test
-    void register_UserWithSameLogin_NotOk() throws RegistrationException {
+    void register_UserWithSameLogin_NotOk() {
         User user = new User(1L, "SameLogin123", "HardPassword123!", 18);
         User newUser = new User(2L, "SameLogin123", "SuperPassword$54", 22);
 
