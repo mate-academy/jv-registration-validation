@@ -6,9 +6,9 @@ import core.basesyntax.exeption.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MINIMAL_LENGTH = 6;
+    private static final int MINIMAL_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final int MINIMAL_LENGTH = 6;
-    private final int MINIMAL_AGE = 18;
 
     @Override
     public User register(User user) throws RegistrationException {
@@ -24,26 +24,27 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new RegistrationException("Password cannot be null");
         }
-        if (user.getId() == null) {
-            throw new RegistrationException("Id cannot be null");
-        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("A user with this login already exists");
         }
         if (user.getLogin().length() < MINIMAL_LENGTH) {
-            throw new RegistrationException("The login length cannot be shorter than six characters");
+            throw new RegistrationException("The login length cannot be "
+                    + "shorter than six characters");
         }
         if (user.getLogin().contains(" ")) {
             throw new RegistrationException("Login should not contain spaces");
         }
         if (user.getPassword().length() < MINIMAL_LENGTH) {
-            throw new RegistrationException("The password length cannot be shorter than six characters");
+            throw new RegistrationException("The password length "
+                   + "cannot be shorter than six characters");
         }
         if (user.getPassword().contains(" ")) {
-            throw new RegistrationException("Password should not contain spaces");
+            throw new RegistrationException("Password should not "
+                   + "contain spaces");
         }
         if (user.getAge() < MINIMAL_AGE) {
-            throw new RegistrationException("Registration is available to users over 18 years of age");
+            throw new RegistrationException("Registration is available to "
+                   + "users over 18 years of age");
         }
         return storageDao.add(user);
     }
