@@ -20,6 +20,7 @@ public class UserValidator {
             "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,20}$";
     private static final String USER_ALREADY_EXISTS_MESSAGE = "User with given login "
             + "is already exists";
+    private static final int MINIMUM_AGE = 18;
     private final StorageDao storageDao;
 
     public UserValidator() {
@@ -59,7 +60,7 @@ public class UserValidator {
     }
 
     private void validateAge(User user) throws RegistrationException {
-        if (user.getAge() < 18) {
+        if (user.getAge() < MINIMUM_AGE) {
             throw new RegistrationException(NEGATIVE_AGE_MESSAGE);
         }
     }
