@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -140,7 +141,7 @@ public class UserValidationTest {
         User user = new User(1L, "SameLogin123", "HardPassword123!", 18);
         User newUser = new User(2L, "SameLogin123", "SuperPassword$54", 22);
 
-        registrationService.register(user);
+        Storage.people.add(user);
         Assertions.assertThrows(RegistrationException.class, () ->
                 registrationService.register(newUser));
     }
