@@ -3,19 +3,17 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private final User edgeUser = new User("sixChr", "sixChr", 18);
     private final User correctUser = new User("moreThenSix", "moreThenSix",23);
-    private final User userWithSameLogin = new User("moreThenSix", "blaBla", 1000);
+    private final User userWithOriginLogin = new User("Hello w", "blaBla", 1000);
+    private final User userWithCopiedLogin = new User("Hello w", "please", 100);
     private final User nullUser = new User();
     private final User shortLogin = new User("Short", "notShort", 19);
     private final User shortPassword = new User("notShort", "Short", 19);
@@ -44,17 +42,16 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    @Order(1)
     void register_correctUser_ok() {
         User actual = registrationService.register(correctUser);
         assertEquals(actual, correctUser);
     }
 
     @Test
-    @Order(2)
     void register_userWithSameLogin_notOk() {
+        Storage.people.add(userWithOriginLogin);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithSameLogin);
+            registrationService.register(userWithCopiedLogin);
         });
     }
 
