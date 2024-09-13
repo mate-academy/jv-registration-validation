@@ -17,13 +17,13 @@ public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
-    static void setUp(){
+    static void setUp() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
     }
 
     @AfterEach
-    void cleanUp(){
+    void cleanUp() {
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
     }
