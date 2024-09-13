@@ -16,29 +16,50 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null) {
-            throw new RegistrationFailedException("Login " + NULL_ERROR_MESSAGE + user.getLogin());
+            throw new RegistrationFailedException("Login "
+                    + NULL_ERROR_MESSAGE
+                    + user.getLogin());
         }
+
         if (user.getPassword() == null) {
-            throw new RegistrationFailedException("Password " + NULL_ERROR_MESSAGE + user.getPassword());
+            throw new RegistrationFailedException("Password "
+                    + NULL_ERROR_MESSAGE
+                    + user.getPassword());
         }
+
         if (user.getAge() == null) {
-            throw new RegistrationFailedException("Age " + NULL_ERROR_MESSAGE + user.getAge());
+            throw new RegistrationFailedException("Age "
+                    + NULL_ERROR_MESSAGE
+                    + user.getAge());
         }
+
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationFailedException("Login is already exist " + user.getLogin());
+            throw new RegistrationFailedException("Login is already exist "
+                    + user.getLogin());
         }
+
         if (user.getLogin().length() < VALID_LENGTH) {
-            throw new RegistrationFailedException("Login " + MIN_LENGTH_ERROR_MESSAGE + user.getLogin());
+            throw new RegistrationFailedException("Login "
+                    + MIN_LENGTH_ERROR_MESSAGE
+                    + user.getLogin());
         }
+
         if (user.getPassword().length() < VALID_LENGTH) {
-            throw new RegistrationFailedException("Password " + MIN_LENGTH_ERROR_MESSAGE + user.getLogin());
+            throw new RegistrationFailedException("Password "
+                    + MIN_LENGTH_ERROR_MESSAGE
+                    + user.getLogin());
         }
+
         if (user.getLogin().matches(UPPER_CASE_SYMBOLS)) {
-            throw new RegistrationFailedException("Enter the login in lower case " + user.getLogin());
+            throw new RegistrationFailedException("Enter the login in lower case "
+                    + user.getLogin());
         }
+
         if (user.getAge() < ACCEPTABLE_AGE) {
-            throw new RegistrationFailedException("You are not of legal age " + user.getAge());
+            throw new RegistrationFailedException("You are not of legal age "
+                    + user.getAge());
         }
+
         return storageDao.add(user);
     }
 }

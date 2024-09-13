@@ -1,26 +1,19 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.UserSupplier;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationFailedException;
 import core.basesyntax.model.User;
-import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    // age must be bigger than 18
-    // login can't be null
-    // password can't be null
-    // login length must be bigger than 8
-    // passwords length must be bigger than 8
-    // password must be equal to repeat password
     private static final User[] VALID_USERS = {
             new UserSupplier().of("testLogin", "qqqwertd123", 18),
             new UserSupplier().of("tutifruti", "zxcqwer345", 30)
@@ -34,7 +27,6 @@ class RegistrationServiceImplTest {
     private static final int THIRD = 2;
     private static final int FOURTH = 3;
     private static final int FIFTH = 4;
-    private static final int SIXTH = 5;
     private static final int LENGTH = VALID_USERS.length;
     private static final String VALID_PASSWORD = "validpassword";
     private static final int VALID_AGE = 18;
@@ -97,7 +89,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void addUserInvalidPasswordLength_notOk() {
-        User newUser = new UserSupplier().of(VALID_LOGINS[FOURTH], INVALID_PASSWORD_LOGIN, VALID_AGE);
+        User newUser = new UserSupplier().of(
+                VALID_LOGINS[FOURTH], INVALID_PASSWORD_LOGIN, VALID_AGE);
         failTest(registrationService, newUser);
     }
 
