@@ -4,6 +4,7 @@ import core.basesyntax.UserSupplier;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
+import core.basesyntax.exception.RegistrationFailedException;
 import core.basesyntax.model.User;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,6 +112,6 @@ class RegistrationServiceImplTest {
     }
 
     private void failTest(RegistrationService registrationService, User user) {
-        assertThrows(RuntimeException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationFailedException.class, () -> registrationService.register(user));
     }
 }
