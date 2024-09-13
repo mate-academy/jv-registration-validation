@@ -15,6 +15,14 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceTest {
     private static RegistrationService registrationService;
 
+    // Константы для повторно используемых значений
+    private static final String VALID_LOGIN = "validLogin";
+    private static final String VALID_PASSWORD = "validPass";
+    private static final String EXISTING_LOGIN = "existingLogin";
+    private static final String PASSWORD1 = "password1";
+    private static final String PASSWORD2 = "password2";
+    private static final String SHORT_LOGIN = "short";
+
     @BeforeAll
     public static void setUp() {
         registrationService = new RegistrationServiceImpl();
@@ -24,8 +32,8 @@ public class RegistrationServiceTest {
     @Test
     public void register_validUser_userRegistered() {
         User user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
         user.setAge(20);
 
         User registeredUser = registrationService.register(user);
@@ -38,14 +46,14 @@ public class RegistrationServiceTest {
     @Test
     public void register_existingLogin_userNotRegistered() {
         User user = new User();
-        user.setLogin("existingLogin");
-        user.setPassword("password1");
+        user.setLogin(EXISTING_LOGIN);
+        user.setPassword(PASSWORD1);
         user.setAge(20);
         Storage.people.add(user);
 
         User sameUser = new User();
-        sameUser.setLogin("existingLogin");
-        sameUser.setPassword("password2");
+        sameUser.setLogin(EXISTING_LOGIN);
+        sameUser.setPassword(PASSWORD2);
         sameUser.setAge(25);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
@@ -65,8 +73,8 @@ public class RegistrationServiceTest {
     @Test
     public void register_shortLogin_throwsException() {
         User user = new User();
-        user.setLogin("short");
-        user.setPassword("validPass");
+        user.setLogin(SHORT_LOGIN);
+        user.setPassword(VALID_PASSWORD);
         user.setAge(20);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
@@ -78,8 +86,8 @@ public class RegistrationServiceTest {
     @Test
     public void register_shortPassword_throwsException() {
         User user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("short");
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(SHORT_LOGIN);
         user.setAge(20);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
@@ -92,7 +100,7 @@ public class RegistrationServiceTest {
     public void register_nullLogin_throwsException() {
         User user = new User();
         user.setLogin(null);
-        user.setPassword("validPass");
+        user.setPassword(VALID_PASSWORD);
         user.setAge(20);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
@@ -104,7 +112,7 @@ public class RegistrationServiceTest {
     @Test
     public void register_nullPassword_throwsException() {
         User user = new User();
-        user.setLogin("validLogin");
+        user.setLogin(VALID_LOGIN);
         user.setPassword(null);
         user.setAge(20);
 
@@ -117,8 +125,8 @@ public class RegistrationServiceTest {
     @Test
     public void register_nullAge_throwsException() {
         User user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
         user.setAge(null);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
@@ -130,8 +138,8 @@ public class RegistrationServiceTest {
     @Test
     public void register_negativeAge_throwsException() {
         User user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
         user.setAge(-5);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
@@ -143,8 +151,8 @@ public class RegistrationServiceTest {
     @Test
     public void register_underageUser_throwsException() {
         User user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("validPass");
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
         user.setAge(17);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->

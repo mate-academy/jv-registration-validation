@@ -12,23 +12,39 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        validateUserNotNull(user);
+        validateLogin(user);
+        validatePassword(user);
+        validateAge(user);
+        validateUserUniqueness(user);
+        return storageDao.add(user);
+    }
+
+    private void validateUserNotNull(User user) {
         if (user == null) {
             throw new InvalidUserException("User cannot be null");
         }
+    }
+
+    private void validateLogin(User user) {
         if (user.getLogin() == null) {
             throw new InvalidUserException("Login cannot be null");
         }
         if (user.getLogin().length() < MIN_CREDENTIAL_LENGTH) {
-            throw new InvalidUserException("Login must be at least "
-                    + MIN_CREDENTIAL_LENGTH + " characters long");
+            throw new InvalidUserException("Login must be at least " + MIN_CREDENTIAL_LENGTH + " characters long");
         }
+    }
+
+    private void validatePassword(User user) {
         if (user.getPassword() == null) {
             throw new InvalidUserException("Password cannot be null");
         }
         if (user.getPassword().length() < MIN_CREDENTIAL_LENGTH) {
-            throw new InvalidUserException("Password must be at least "
-                    + MIN_CREDENTIAL_LENGTH + " characters long");
+            throw new InvalidUserException("Password must be at least " + MIN_CREDENTIAL_LENGTH + " characters long");
         }
+    }
+
+    private void validateAge(User user) {
         if (user.getAge() == null) {
             throw new InvalidUserException("Age cannot be null");
         }
@@ -38,9 +54,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < MIN_AGE) {
             throw new InvalidUserException("User must be at least " + MIN_AGE + " years old");
         }
+    }
+
+    private void validateUserUniqueness(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidUserException("User with this login already exists");
         }
-        return storageDao.add(user);
     }
 }
