@@ -1,83 +1,124 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import core.basesyntax.exceptions.RegistrationFailed;
+import core.basesyntax.UserSupplier;
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
+import core.basesyntax.exception.RegistrationFailedException;
 import core.basesyntax.model.User;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class RegistrationServiceImplTest {
-    private static final int CORRECT_AGE = 19;
-    private static final int AGE_FOR_TEST = 20;
-    private static final int INCORRECT_AGE = 16;
-    private static final String INCORRECT_LOGIN = "test";
-    private static final String CORRECT_PASSWORD = "testpassword";
-    private static final String INNCORRECT_PASSWORD = "qwe";
-    private static final String SAME_TEST_LOGIN = "testlogin123";
-    private RegistrationServiceImpl registrationService;
-    private User testUser;
-    private User user1;
-    private User user2;
+    // age must be bigger than 18
+    // login can't be null
+    // password can't be null
+    // login length must be bigger than 8
+    // passwords length must be bigger than 8
+    // password must be equal to repeat password
+    private static final User[] VALID_USERS = {
+            new UserSupplier().of("testLogin", "qqqwertd123", 18),
+            new UserSupplier().of("tutifruti", "zxcqwer345", 30)
+    };
+    private static final String[] VALID_LOGINS = {
+            "validlogin", "alsovalidlogin", "lavinart",
+            "blockblock", "qqwertfff", "fttpfres"
+    };
+    private static final int FIRST = 0;
+    private static final int SECOND = 1;
+    private static final int THIRD = 2;
+    private static final int FOURTH = 3;
+    private static final int FIFTH = 4;
+    private static final int SIXTH = 5;
+    private static final int LENGTH = VALID_USERS.length;
+    private static final String VALID_PASSWORD = "validpassword";
+    private static final int VALID_AGE = 18;
+    private static final String INVALID_PASSWORD_LOGIN = "qwerv";
+    private static final String UPPER_CASE_LOGIN = "UPPERCASE";
+    private static final int INVALID_AGE = 17;
+
+    private StorageDao storageDao;
+    private RegistrationService registrationService;
 
     @BeforeEach
     void setUp() {
+        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
-        testUser = new User();
-        user1 = new User();
-        user2 = new User();
+        for (int i = 0; i < LENGTH; i++) {
+            storageDao.add(VALID_USERS[i]);
+        }
     }
 
     @Test
-    void userWithLoginNull_isNotOk() {
-        testUser.setLogin(null);
-        assertThrows(RegistrationFailed.class, () -> {
-            registrationService.register(testUser);
-        });
+    void addNewUser_ok() {
+        User newUser = new UserSupplier().of(VALID_LOGINS[FIRST], VALID_PASSWORD, VALID_AGE);
+        int expectedStorageSize = LENGTH + 1;
+        registrationService.register(newUser);
+        int actualStorageSize = Storage.people.size();
+        assertEquals(expectedStorageSize, actualStorageSize);
+        assertEquals(Storage.people.get(LENGTH), newUser);
     }
 
     @Test
-    void userWithPasswordNull_isNotOk() {
-        testUser.setPassword(null);
-        assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
+    void addUserWithExistLogin_notOk() {
+        String existLogin = VALID_USERS[FIRST].getLogin();
+        User newUser = new UserSupplier().of(existLogin, VALID_PASSWORD, VALID_AGE);
+        failTest(registrationService, newUser);
     }
 
     @Test
-    void userWithAgeNull_isNotOk() {
-        testUser.setAge(null);
-        assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
+    void addUserWithLoginNull_notOk() {
+        User newUser = new UserSupplier().of(null, VALID_PASSWORD, VALID_AGE);
+        failTest(registrationService, newUser);
     }
 
     @Test
-    void loginLengthMustBeGreaterThanSixCharacters() {
-        testUser.setLogin(INCORRECT_LOGIN);
-        assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
+    void addUserWithPasswordNull_notOk() {
+        User newUser = new UserSupplier().of(VALID_LOGINS[SECOND], null, VALID_AGE);
+        failTest(registrationService, newUser);
     }
 
     @Test
-    void passwordLengthMustBeGreaterThanSixCharacters() {
-        testUser.setPassword(INNCORRECT_PASSWORD);
-        assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
+    void addUserWithAgeNull_notOk() {
+        User newUser = new UserSupplier().of(VALID_LOGINS[THIRD], VALID_PASSWORD, null);
+        failTest(registrationService, newUser);
     }
 
     @Test
-    void ageMustBeGreaterThanEighteen() {
-        testUser.setAge(INCORRECT_AGE);
-        assertThrows(RegistrationFailed.class, () -> registrationService.register(testUser));
+    void addUserInvalidLoginLength_notOk() {
+        User newUser = new UserSupplier().of(INVALID_PASSWORD_LOGIN, VALID_PASSWORD, VALID_AGE);
+        failTest(registrationService, newUser);
     }
 
     @Test
-    void registrationWithTheSameLogin_IsNotOk() {
-        user1.setLogin(SAME_TEST_LOGIN);
-        user1.setPassword(CORRECT_PASSWORD);
-        user1.setAge(CORRECT_AGE);
+    void addUserInvalidPasswordLength_notOk() {
+        User newUser = new UserSupplier().of(VALID_LOGINS[FOURTH], INVALID_PASSWORD_LOGIN, VALID_AGE);
+        failTest(registrationService, newUser);
+    }
 
-        user2.setLogin(SAME_TEST_LOGIN);
-        user2.setPassword(CORRECT_PASSWORD);
-        user2.setAge(AGE_FOR_TEST);
+    @Test
+    void addUserInvalidAge_notOk() {
+        User newUser = new UserSupplier().of(VALID_LOGINS[FIFTH], VALID_PASSWORD, INVALID_AGE);
+        failTest(registrationService, newUser);
+    }
 
-        registrationService.register(user1);
+    @Test
+    void addUserUpperCaseLogin_notOk() {
+        User newUser = new UserSupplier().of(UPPER_CASE_LOGIN, VALID_PASSWORD, INVALID_AGE);
+        failTest(registrationService, newUser);
+    }
 
-        assertThrows(RegistrationFailed.class, () -> registrationService.register(user2));
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
+    }
+
+    private void failTest(RegistrationService registrationService, User user) {
+        assertThrows(RegistrationFailedException.class, () -> registrationService.register(user));
     }
 }
