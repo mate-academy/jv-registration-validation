@@ -7,6 +7,8 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationFailedException;
 import core.basesyntax.model.User;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -109,6 +111,11 @@ class RegistrationServiceImplTest {
     void addUserUpperCaseLogin_notOk() {
         User newUser = new UserSupplier().of(UPPER_CASE_LOGIN, VALID_PASSWORD, INVALID_AGE);
         failTest(registrationService, newUser);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     private void failTest(RegistrationService registrationService, User user) {
