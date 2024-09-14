@@ -1,12 +1,9 @@
 package core.basesyntax.service;
 
-import core.basesyntax.UserSupplier;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.RegistrationFailedException;
 import core.basesyntax.model.User;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
