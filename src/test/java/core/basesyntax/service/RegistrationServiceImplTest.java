@@ -2,16 +2,18 @@ package core.basesyntax.service;
 
 import core.basesyntax.exeption.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationService;
-    private User user;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    @BeforeEach
-    void setUp() {
+class RegistrationServiceImplTest {
+    private static RegistrationServiceImpl registrationService;
+    private static User user;
+
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
         user = new User();
         user.setLogin("Daedrus");
@@ -21,56 +23,79 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullUser_NotOk() {
-        Assertions.assertThrows(RegistrationException.class, () -> {
+    void register_NullUser_NotOk() {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void nullLogin_NotOk() {
+    void register_nullLogin_NotOk() {
         user.setLogin(null);
-        Assertions.assertThrows(RegistrationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void nullPassword_NotOk() {
+    void register_nullPassword_NotOk() {
         user.setPassword(null);
-        Assertions.assertThrows(RegistrationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void nullAge_NotOk() {
+    void register_nullAge_NotOk() {
         user.setAge(null);
-        Assertions.assertThrows(RegistrationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void user_Age_NotOk() {
+    void register_user_Age_NotOk() {
         user.setAge(17);
-        Assertions.assertThrows(RegistrationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void user_shortLogin_NotOk() {
+    void register_user_shortLogin_NotOk() {
         user.setLogin("Jonn");
-        Assertions.assertThrows(RegistrationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void user_short_password_NotOk() {
+    void register_user_short_password_NotOk() {
         user.setPassword("aksk1");
-        Assertions.assertThrows(RegistrationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_ValidUser_Ok() {
+        assertDoesNotThrow(() -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_UserWithNegativeAge_NotOk() {
+        user.setAge(-5);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_UserAlreadyExists_NotOk() throws RegistrationException {
+        registrationService.register(user);
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
