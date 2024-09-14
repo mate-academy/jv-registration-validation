@@ -17,22 +17,22 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user == null) {
             throw new RegistrationException(
-                    "User is null " + user);
+                    "User is null ");
         }
 
         if (user.getLogin() == null) {
             throw new RegistrationException(
-                    "Login " + NULL_ERROR_MESSAGE + user.getLogin());
+                    "Login " + NULL_ERROR_MESSAGE);
         }
 
         if (user.getPassword() == null) {
             throw new RegistrationException(
-                    "Password " + NULL_ERROR_MESSAGE + user.getPassword());
+                    "Password " + NULL_ERROR_MESSAGE);
         }
 
         if (user.getAge() == null) {
             throw new RegistrationException(
-                    "Age " + NULL_ERROR_MESSAGE + user.getAge());
+                    "Age " + NULL_ERROR_MESSAGE);
         }
 
         if (storageDao.get(user.getLogin()) != null) {
