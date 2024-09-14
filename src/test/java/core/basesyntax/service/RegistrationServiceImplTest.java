@@ -1,121 +1,149 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
-import core.basesyntax.model.User;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
+import core.basesyntax.exception.RegistrationException;
+import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    // age must be bigger than 18
-    // login can't be null
-    // password can't be null
-    // login length must be bigger than 8
-    // passwords length must be bigger than 8
-    // password must be equal to repeat password
-    private static final User[] VALID_USERS = {
-            new UserSupplier().of("testLogin", "qqqwertd123", 18),
-            new UserSupplier().of("tutifruti", "zxcqwer345", 30)
-    };
-    private static final String[] VALID_LOGINS = {
-            "validlogin", "alsovalidlogin", "lavinart",
-            "blockblock", "qqwertfff", "fttpfres"
-    };
-    private static final int FIRST = 0;
-    private static final int SECOND = 1;
-    private static final int THIRD = 2;
-    private static final int FOURTH = 3;
-    private static final int FIFTH = 4;
-    private static final int SIXTH = 5;
-    private static final int LENGTH = VALID_USERS.length;
-    private static final String VALID_PASSWORD = "validpassword";
-    private static final int VALID_AGE = 18;
-    private static final String INVALID_PASSWORD_LOGIN = "qwerv";
-    private static final String UPPER_CASE_LOGIN = "UPPERCASE";
-    private static final int INVALID_AGE = 17;
-
-    private StorageDao storageDao;
+    private static final int ACCEPTABLE_AGE = 18;
+    private static final String DEFAULT_LOGIN = "qwertyuio";
+    private static final String DEFAULT_PASSWORD = "1234567";
     private RegistrationService registrationService;
 
     @BeforeEach
     void setUp() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
-        for (int i = 0; i < LENGTH; i++) {
-            storageDao.add(VALID_USERS[i]);
-        }
     }
 
     @Test
-    void addNewUser_ok() {
-        User newUser = new UserSupplier().of(VALID_LOGINS[FIRST], VALID_PASSWORD, VALID_AGE);
-        int expectedStorageSize = LENGTH + 1;
+    void registerNullUser_notOk() {
+        User newUser = null;
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerNullLogin_notOk() {
+        User newUser = User.of(null, DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerNullPassword_notOk() {
+        User newUser = User.of(DEFAULT_LOGIN, null, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerNullAge_notOk() {
+        User newUser = User.of(DEFAULT_LOGIN, DEFAULT_PASSWORD, null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerEmptyLogin_notOk() {
+        User newUser = User.of("", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerUpperCaseLogin_notOk() {
+        User newUser = User.of("PLANET", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerCamelCaseLogin_notOk() {
+        User newUser = User.of("CamelCaseLogin", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerLowerCaseLogin_ok() {
+        User newUser = User.of("lowercaselogin", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
+    }
+
+    @Test
+    void registerLoginLength3_notOk() {
+        User newUser = User.of("123", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerLoginLength6_ok() {
+        User newUser = User.of("planet", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
+    }
+
+    @Test
+    void registerPasswordLength0_notOk() {
+        User newUser = User.of("defaultlogin1", "", ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerPasswordLength3_notOk() {
+        User newUser = User.of("defaultlogin2", "123", ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerPasswordLength6_ok() {
+        User newUser = User.of("defaultlogin3", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
+    }
+
+    @Test
+    void registerAge10_notOk() {
+        User newUser = User.of("defaultlogin4", DEFAULT_PASSWORD, 10);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerAge17_notOk() {
+        User newUser = User.of("defaultlogin5", DEFAULT_PASSWORD, 17);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
+    }
+
+    @Test
+    void registerAge18_ok() {
+        User newUser = User.of("defaultlogin6", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
+    }
+
+    @Test
+    void registerExistLogin_notOk() {
+        User newUser = User.of(DEFAULT_LOGIN, DEFAULT_PASSWORD, ACCEPTABLE_AGE);
         registrationService.register(newUser);
-        int actualStorageSize = Storage.people.size();
-        assertEquals(expectedStorageSize, actualStorageSize);
-        assertEquals(Storage.people.get(LENGTH), newUser);
-    }
-
-    @Test
-    void addUserWithExistLogin_notOk() {
-        String existLogin = VALID_USERS[FIRST].getLogin();
-        User newUser = new UserSupplier().of(existLogin, VALID_PASSWORD, VALID_AGE);
-        failTest(registrationService, newUser);
-    }
-
-    @Test
-    void addUserWithLoginNull_notOk() {
-        User newUser = new UserSupplier().of(null, VALID_PASSWORD, VALID_AGE);
-        failTest(registrationService, newUser);
-    }
-
-    @Test
-    void addUserWithPasswordNull_notOk() {
-        User newUser = new UserSupplier().of(VALID_LOGINS[SECOND], null, VALID_AGE);
-        failTest(registrationService, newUser);
-    }
-
-    @Test
-    void addUserWithAgeNull_notOk() {
-        User newUser = new UserSupplier().of(VALID_LOGINS[THIRD], VALID_PASSWORD, null);
-        failTest(registrationService, newUser);
-    }
-
-    @Test
-    void addUserInvalidLoginLength_notOk() {
-        User newUser = new UserSupplier().of(INVALID_PASSWORD_LOGIN, VALID_PASSWORD, VALID_AGE);
-        failTest(registrationService, newUser);
-    }
-
-    @Test
-    void addUserInvalidPasswordLength_notOk() {
-        User newUser = new UserSupplier().of(VALID_LOGINS[FOURTH], INVALID_PASSWORD_LOGIN, VALID_AGE);
-        failTest(registrationService, newUser);
-    }
-
-    @Test
-    void addUserInvalidAge_notOk() {
-        User newUser = new UserSupplier().of(VALID_LOGINS[FIFTH], VALID_PASSWORD, INVALID_AGE);
-        failTest(registrationService, newUser);
-    }
-
-    @Test
-    void addUserUpperCaseLogin_notOk() {
-        User newUser = new UserSupplier().of(UPPER_CASE_LOGIN, VALID_PASSWORD, INVALID_AGE);
-        failTest(registrationService, newUser);
+        User sameLoginUser = User.of(DEFAULT_LOGIN, DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(sameLoginUser));
     }
 
     @AfterEach
     void tearDown() {
         Storage.people.clear();
-    }
-
-    private void failTest(RegistrationService registrationService, User user) {
-        assertThrows(RegistrationFailedException.class, () -> registrationService.register(user));
     }
 }
