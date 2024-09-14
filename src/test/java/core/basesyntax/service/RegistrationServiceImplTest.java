@@ -4,16 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService;
+    private static RegistrationService registrationService;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
@@ -76,20 +77,34 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_existingUserLogin_notOk() {
-        User user1 = new User();
-        user1.setLogin("validUser");
-        user1.setPassword("validPassword");
-        user1.setAge(20);
-        registrationService.register(user1);
-
-        User user2 = new User();
-        user2.setLogin("validUser");
-        user2.setPassword("anotherPassword");
-        user2.setAge(22);
+    void register_negativeAgeUser_notOk() {
+        User user = new User();
+        user.setLogin("validUser");
+        user.setPassword("validPassword");
+        user.setAge(-5);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_existingUserLogin_notOk() {
+        Storage.people.clear();
+
+        User user = new User();
+        user.setLogin("validUser");
+        user.setPassword("validPassword");
+        user.setAge(20);
+        Storage.people.add(user);
+
+        User newUser = new User();
+        newUser.setLogin("validUser");
+        newUser.setPassword("anotherPassword");
+        newUser.setAge(22);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(newUser);
         });
     }
 
