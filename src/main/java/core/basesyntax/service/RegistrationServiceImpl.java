@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.RegistrationFailedException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -15,49 +15,49 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException(
+                    "User is null ");
+        }
+
         if (user.getLogin() == null) {
-            throw new RegistrationFailedException("Login "
-                    + NULL_ERROR_MESSAGE
-                    + user.getLogin());
+            throw new RegistrationException(
+                    "Login " + NULL_ERROR_MESSAGE);
         }
 
         if (user.getPassword() == null) {
-            throw new RegistrationFailedException("Password "
-                    + NULL_ERROR_MESSAGE
-                    + user.getPassword());
+            throw new RegistrationException(
+                    "Password " + NULL_ERROR_MESSAGE);
         }
 
         if (user.getAge() == null) {
-            throw new RegistrationFailedException("Age "
-                    + NULL_ERROR_MESSAGE
-                    + user.getAge());
+            throw new RegistrationException(
+                    "Age " + NULL_ERROR_MESSAGE);
         }
 
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationFailedException("Login is already exist "
-                    + user.getLogin());
+            throw new RegistrationException(
+                    "Login is already exist " + user.getLogin());
         }
 
         if (user.getLogin().length() < VALID_LENGTH) {
-            throw new RegistrationFailedException("Login "
-                    + MIN_LENGTH_ERROR_MESSAGE
-                    + user.getLogin());
+            throw new RegistrationException(
+                    "Login " + MIN_LENGTH_ERROR_MESSAGE + user.getLogin());
         }
 
         if (user.getPassword().length() < VALID_LENGTH) {
-            throw new RegistrationFailedException("Password "
-                    + MIN_LENGTH_ERROR_MESSAGE
-                    + user.getLogin());
+            throw new RegistrationException(
+                    "Password " + MIN_LENGTH_ERROR_MESSAGE + user.getLogin());
         }
 
         if (user.getLogin().matches(UPPER_CASE_SYMBOLS)) {
-            throw new RegistrationFailedException("Enter the login in lower case "
-                    + user.getLogin());
+            throw new RegistrationException(
+                    "Enter the login in lower case " + user.getLogin());
         }
 
         if (user.getAge() < ACCEPTABLE_AGE) {
-            throw new RegistrationFailedException("You are not of legal age "
-                    + user.getAge());
+            throw new RegistrationException(
+                    "You are not of legal age " + user.getAge());
         }
 
         return storageDao.add(user);
