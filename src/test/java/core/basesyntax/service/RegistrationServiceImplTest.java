@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private static final int ACCEPTABLE_AGE = 18;
     private static final String DEFAULT_LOGIN = "qwertyuio";
     private static final String DEFAULT_PASSWORD = "1234567";
