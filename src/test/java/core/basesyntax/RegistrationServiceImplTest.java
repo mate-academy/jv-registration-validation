@@ -11,16 +11,16 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
 
-    private StorageDao storageDao;
-    private RegistrationServiceImpl registrationService;
+    private static StorageDao storageDao;
+    private static RegistrationServiceImpl registrationService;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         storageDao = mock(StorageDao.class);
         registrationService = new RegistrationServiceImpl(storageDao);
     }
@@ -39,7 +39,7 @@ class RegistrationServiceImplTest {
         user.setAge(20);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
-                "Login must be at least 6 characters long");
+                "Login cannot be null");
     }
 
     @Test
@@ -74,7 +74,7 @@ class RegistrationServiceImplTest {
         user.setAge(20);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
-                "Password must be at least 6 characters long");
+                "Password cannot be null");
     }
 
     @Test
@@ -96,7 +96,7 @@ class RegistrationServiceImplTest {
         user.setAge(null);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
-                "User must be at least 18 years old");
+                "Age cannot be null");
     }
 
     @Test
