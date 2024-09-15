@@ -2,12 +2,8 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import core.basesyntax.dao.StorageDao;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -15,14 +11,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
-    private static StorageDao storageDao;
     private static RegistrationServiceImpl registrationService;
 
     @BeforeAll
     static void setUp() {
-        storageDao = mock(StorageDao.class);
-        registrationService = new RegistrationServiceImpl(storageDao);
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
@@ -60,9 +53,13 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         user.setAge(20);
 
-        when(storageDao.get("existingUser")).thenReturn(new User());
+        Storage.people.add(user);
+        User newUser = new User();
+        newUser.setLogin("existingUser");
+        newUser.setPassword("newPassword456");
+        newUser.setAge(25);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(user),
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser),
                 "User with login existingUser already exists");
     }
 
@@ -117,10 +114,7 @@ class RegistrationServiceImplTest {
         user.setPassword("password123");
         user.setAge(20);
 
-        when(storageDao.add(user)).thenReturn(user);
-
         User result = registrationService.register(user);
         assertEquals(user, result);
-        verify(storageDao, times(1)).add(user);
     }
 }

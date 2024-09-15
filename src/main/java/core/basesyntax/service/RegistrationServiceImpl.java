@@ -1,19 +1,14 @@
 package core.basesyntax.service;
 
-import core.basesyntax.dao.StorageDao;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import java.util.Optional;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
-
-    private final StorageDao storageDao;
-
-    public RegistrationServiceImpl(StorageDao storageDao) {
-        this.storageDao = storageDao;
-    }
 
     @Override
     public User register(User user) {
@@ -26,10 +21,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login must be at least "
                     + MIN_LOGIN_LENGTH + " characters long");
-        }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with login "
-                    + user.getLogin() + " already exists");
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password cannot be null");
@@ -46,6 +37,15 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + MIN_AGE + " years old");
         }
 
-        return storageDao.add(user);
+        Optional<User> existingUser = Storage.people.stream()
+                .filter(u -> u.getLogin().equals(user.getLogin()))
+                .findFirst();
+        if (existingUser.isPresent()) {
+            throw new RegistrationException("User with login "
+                    + user.getLogin() + " already exists");
+        }
+
+        Storage.people.add(user);
+        return user;
     }
 }
