@@ -15,12 +15,9 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceTest {
     private static RegistrationService registrationService;
 
-    // Константы для повторно используемых значений
     private static final String VALID_LOGIN = "validLogin";
     private static final String VALID_PASSWORD = "validPass";
     private static final String EXISTING_LOGIN = "existingLogin";
-    private static final String PASSWORD1 = "password1";
-    private static final String PASSWORD2 = "password2";
     private static final String SHORT_LOGIN = "short";
 
     @BeforeAll
@@ -47,13 +44,13 @@ public class RegistrationServiceTest {
     public void register_existingLogin_userNotRegistered() {
         User user = new User();
         user.setLogin(EXISTING_LOGIN);
-        user.setPassword(PASSWORD1);
+        user.setPassword(VALID_PASSWORD);
         user.setAge(20);
         Storage.people.add(user);
 
         User sameUser = new User();
         sameUser.setLogin(EXISTING_LOGIN);
-        sameUser.setPassword(PASSWORD2);
+        sameUser.setPassword(VALID_PASSWORD);
         sameUser.setAge(25);
 
         InvalidUserException thrown = assertThrows(InvalidUserException.class, () ->
