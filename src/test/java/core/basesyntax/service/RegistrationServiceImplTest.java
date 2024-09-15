@@ -85,12 +85,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerLoginLength6_ok() {
-        User newUser = User.of("planet", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
-        User actual = registrationService.register(newUser);
-        assertEquals(newUser, actual);
+    void registerLoginLength5_notOk() {
+        User newUser = User.of("12345", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
     }
-
+    
     @Test
     void registerPasswordLength0_notOk() {
         User newUser = User.of("defaultlogin1", "", ACCEPTABLE_AGE);
@@ -106,10 +106,10 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerPasswordLength6_ok() {
-        User newUser = User.of("defaultlogin3", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
-        User actual = registrationService.register(newUser);
-        assertEquals(newUser, actual);
+    void registerPasswordLength5_notOk() {
+        User newUser = User.of("defaultLogin3", "12345", ACCEPTABLE_AGE);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(newUser));
     }
 
     @Test
@@ -127,19 +127,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerAge18_ok() {
-        User newUser = User.of("defaultlogin6", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
-        User actual = registrationService.register(newUser);
-        assertEquals(newUser, actual);
-    }
-
-    @Test
     void registerExistLogin_notOk() {
         User newUser = User.of(DEFAULT_LOGIN, DEFAULT_PASSWORD, ACCEPTABLE_AGE);
         registrationService.register(newUser);
         User sameLoginUser = User.of(DEFAULT_LOGIN, DEFAULT_PASSWORD, ACCEPTABLE_AGE);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(sameLoginUser));
+    }
+
+    @Test
+    void registerLoginPasswordLength6_age18_ok() {
+        User newUser = User.of("defaultlogin5", DEFAULT_PASSWORD, ACCEPTABLE_AGE);
+        User actual = registrationService.register(newUser);
+        assertEquals(newUser, actual);
     }
 
     @AfterEach
