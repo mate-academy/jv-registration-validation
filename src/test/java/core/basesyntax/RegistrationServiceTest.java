@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.UserRegistrationException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -53,7 +53,7 @@ public class RegistrationServiceTest {
         sameUser.setPassword(VALID_PASSWORD);
         sameUser.setAge(25);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(sameUser)
         );
         assertEquals("User with this login already exists", thrown.getMessage());
@@ -61,7 +61,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_nullUser_throwsException() {
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(null)
         );
         assertEquals("User cannot be null", thrown.getMessage());
@@ -74,7 +74,7 @@ public class RegistrationServiceTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(20);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user)
         );
         assertEquals("Login must be at least 6 characters long", thrown.getMessage());
@@ -87,7 +87,7 @@ public class RegistrationServiceTest {
         user.setPassword(SHORT_LOGIN);
         user.setAge(20);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user)
         );
         assertEquals("Password must be at least 6 characters long", thrown.getMessage());
@@ -100,7 +100,7 @@ public class RegistrationServiceTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(20);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user)
         );
         assertEquals("Login cannot be null", thrown.getMessage());
@@ -113,7 +113,7 @@ public class RegistrationServiceTest {
         user.setPassword(null);
         user.setAge(20);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user)
         );
         assertEquals("Password cannot be null", thrown.getMessage());
@@ -126,7 +126,7 @@ public class RegistrationServiceTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(null);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user)
         );
         assertEquals("Age cannot be null", thrown.getMessage());
@@ -139,7 +139,7 @@ public class RegistrationServiceTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(-5);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user)
         );
         assertEquals("Age cannot be negative", thrown.getMessage());
@@ -152,7 +152,7 @@ public class RegistrationServiceTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(17);
 
-        UserRegistrationException thrown = assertThrows(UserRegistrationException.class, () ->
+        RegistrationException thrown = assertThrows(RegistrationException.class, () ->
                 registrationService.register(user)
         );
         assertEquals("User must be at least 18 years old", thrown.getMessage());
