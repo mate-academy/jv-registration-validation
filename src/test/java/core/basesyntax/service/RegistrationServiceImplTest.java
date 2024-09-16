@@ -1,36 +1,30 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.exeption.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private static User user;
 
     @BeforeAll
     static void setUp() {
         registrationService = new RegistrationServiceImpl();
-        user = new User();
-        user.setLogin("Daedrus");
-        user.setAge(25);
-        user.setPassword("Daedrus123");
-
     }
 
     @Test
-    void register_NullUser_NotOk() {
+    void shouldThrowRegistrationExceptionWhenUserIsNull() {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(null);
         });
     }
 
     @Test
-    void register_nullLogin_NotOk() {
+    void shouldThrowRegistrationExceptionWhenLoginIsNull() {
+        User user = getUser();
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -38,7 +32,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPassword_NotOk() {
+    void shouldThrowRegistrationExceptionWhenPasswordIsNull() {
+        User user = getUser();
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -46,7 +41,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullAge_NotOk() {
+    void shouldThrowRegistrationExceptionWhenAgeIsNull() {
+        User user = getUser();
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -54,7 +50,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_Age_NotOk() {
+    void shouldThrowRegistrationExceptionWhenAgeIsNegative() {
+        User user = getUser();
+        user.setAge(-1);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void shouldThrowRegistrationExceptionWhenAgeNotOk() {
+        User user = getUser();
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -62,7 +68,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_shortLogin_NotOk() {
+    void shouldThrowRegistrationExceptionWhenLoginIsShort() {
+        User user = getUser();
         user.setLogin("Jonn");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -70,7 +77,8 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_user_short_password_NotOk() {
+    void shouldThrowRegistrationExceptionWhenPasswordIsShort() {
+        User user = getUser();
         user.setPassword("aksk1");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -78,25 +86,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ValidUser_Ok() {
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_UserWithNegativeAge_NotOk() {
-        user.setAge(-5);
-        assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void register_UserAlreadyExists_NotOk() throws RegistrationException {
+    void shouldThrowRegistrationExceptionWhenUserIsExist() throws RegistrationException {
+        User user = getUser();
         registrationService.register(user);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    private User getUser() {
+        User user = new User();
+        user.setLogin("Daedrus");
+        user.setAge(25);
+        user.setPassword("Daedrus123");
+        return user;
     }
 }
