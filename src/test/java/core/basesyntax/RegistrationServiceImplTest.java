@@ -117,4 +117,15 @@ class RegistrationServiceImplTest {
         User result = registrationService.register(user);
         assertEquals(user, result);
     }
+
+    @Test
+    void register_userWithAge18_ok() {
+        User user = new User();
+        user.setLogin("validLogin18");
+        user.setPassword("password123");
+        user.setAge(18);
+
+        User result = registrationService.register(user);
+        assertEquals(user, result, "User with age 18 should be registered successfully");
+    }
 }
