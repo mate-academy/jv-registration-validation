@@ -26,7 +26,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenLoginIsNull() {
-        User user = initialize();
+        User user = initializeUser();
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenPasswordIsNull() {
-        User user = initialize();
+        User user = initializeUser();
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -44,7 +44,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenAgeIsNull() {
-        User user = initialize();
+        User user = initializeUser();
         user.setAge(null);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenAgeIsNegative() {
-        User user = initialize();
+        User user = initializeUser();
         user.setAge(-1);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenAgeNotOk() {
-        User user = initialize();
+        User user = initializeUser();
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -71,7 +71,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenLoginIsShort() {
-        User user = initialize();
+        User user = initializeUser();
         user.setLogin("Jonn");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -80,7 +80,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenPasswordIsShort() {
-        User user = initialize();
+        User user = initializeUser();
         user.setPassword("aksk1");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -89,7 +89,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowRegistrationExceptionWhenUserIsExist() {
-        User user = initialize();
+        User user = initializeUser();
         Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -98,12 +98,12 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldValidUser() throws RegistrationException {
-        User user = initialize();
+        User user = initializeUser();
         User actual = registrationService.register(user);
         assertEquals(actual, user);
     }
 
-    private User initialize() {
+    private User initializeUser() {
         User user = new User();
         user.setLogin("Daedrus");
         user.setAge(25);
