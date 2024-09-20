@@ -137,6 +137,11 @@ class RegistrationServiceTest {
     }
 
     @Test
+    void register_nullUser_NotOk() {
+        assertThrows(InvalidDataException.class, () -> registrationService.register(null));
+    }
+
+    @Test
     void register_nullLogin_NotOk() {
         john.setAge(ANOTHER_ADULT_AGE);
         john.setLogin(null);

@@ -11,14 +11,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (findUserByLogin(user) != null) {
-            throw new InvalidDataException("User with this login has been already registered");
+        if (user == null) {
+            throw new InvalidDataException("User must not be null");
         }
         if (user.getLogin() == null) {
             throw new InvalidDataException("Login mustn't be null");
         }
         if (user.getPassword() == null) {
             throw new InvalidDataException("Password mustn't be null");
+        }
+        if (findUserByLogin(user) != null) {
+            throw new InvalidDataException("User with this login has been already registered");
         }
         if (user.getLogin().length() < MIN_LENGTH_DATA) {
             throw new InvalidDataException("Login must contain at least "
