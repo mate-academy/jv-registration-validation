@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws RegistrationException {
         if (user == null) {
-            throw new RegistrationException("the user was entered incorrectly, please enter again");
+            throw new RegistrationException("user can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("this user is already registered");
