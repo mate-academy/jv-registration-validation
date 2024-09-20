@@ -16,11 +16,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDao storageDao = new StorageDaoImpl();
+    private static StorageDao storageDao;
 
     @BeforeAll
     static void setUp() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
@@ -31,14 +32,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void checkEmptyList() {
+    void register_validUser_storageNotEmpty() {
         User testUser1 = new User("loginn", "password", 18);
         registrationService.register(testUser1);
         assertFalse(Storage.people.isEmpty());
     }
 
     @Test
-    void actualListSizeAndContent() {
+    void register_multipleUsers_storageContainsAllUsers() {
         User testUser2 = new User("login2", "password", 18);
         User testUser3 = new User("login3", "password2",22);
         registrationService.register(testUser2);
@@ -51,38 +52,38 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void inputNull_NotOk() {
+    void register_nullUser_throwsRegistrationException() {
         User testNullUser = null;
         assertThrows(RegistrationException.class, () -> registrationService.register(testNullUser));
     }
 
     @Test
-    void userAge_NotOk() {
+    void register_ageJustBelowMinAge_notOk() {
         User testUser = new User("Loginn", "password", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void userLoginLength_NotOk() {
+    void register_loginTooShort_throwsRegistrationException() {
         User testUser = new User("login", "password", 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void passwordLength_notOk() {
+    void register_passwordBelowMinLength_throwsRegistrationException() {
         User testUser = new User("loginOk", "pas-d", 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void notUserWhichSuchLogin_NotOk() {
+    void register_duplicateLogin_throwsRegistrationException() {
         User testUser = new User("login1", "password", 18);
-        storageDao.add(testUser);
+        Storage.people.add(testUser);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
-    void userGetMethod_Ok() {
+    void register_validUser_userIsRetrievable() {
         User testUser = new User("login1", "password", 18);
         registrationService.register(testUser);
         String testUserLogin = testUser.getLogin();
