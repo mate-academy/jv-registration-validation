@@ -30,14 +30,9 @@ public class RegistrationServiceImplTest {
         User registeredUser = registrationService.register(validUser);
         assertNotNull(registeredUser, "User should be registered");
         assertEquals(validUser.getLogin(), registeredUser.getLogin());
+        assertEquals(validUser.getPassword(), registeredUser.getPassword());
+        assertEquals(validUser.getAge(), registeredUser.getAge());
         assertEquals(1, Storage.people.size(), "User should be added to the storage");
-    }
-
-    @Test
-    public void register_nullUser_notOk() {
-        RegistrationException thrown = assertThrows(RegistrationException.class,
-                () -> registrationService.register(null));
-        assertEquals("User cannot be null", thrown.getMessage());
     }
 
     @Test
@@ -53,18 +48,6 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_nullLogin_notOk() {
-        User user = new User();
-        user.setLogin(null);
-        user.setPassword("qwertyQ123");
-        user.setAge(20);
-
-        RegistrationException thrown = assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
-        assertEquals("Login cannot be null", thrown.getMessage());
-    }
-
-    @Test
     public void register_passwordTooShort_notOk() {
         User user = new User();
         user.setLogin("validUser123");
@@ -74,18 +57,6 @@ public class RegistrationServiceImplTest {
         RegistrationException thrown = assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
         assertEquals("Password must be at least 6 characters", thrown.getMessage());
-    }
-
-    @Test
-    public void register_nullPassword_notOk() {
-        User user = new User();
-        user.setLogin("validUser123");
-        user.setPassword(null);
-        user.setAge(20);
-
-        RegistrationException thrown = assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
-        assertEquals("Password cannot be null", thrown.getMessage());
     }
 
     @Test
@@ -101,15 +72,17 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_nullAge_notOk() {
+    public void register_ageExactly18_ok() {
         User user = new User();
         user.setLogin("validUser123");
         user.setPassword("qwertyQ123");
-        user.setAge(null);
+        user.setAge(18);
 
-        RegistrationException thrown = assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
-        assertEquals("Age cannot be null", thrown.getMessage());
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser, "User should be registered");
+        assertEquals(user.getLogin(), registeredUser.getLogin());
+        assertEquals(user.getPassword(), registeredUser.getPassword());
+        assertEquals(user.getAge(), registeredUser.getAge());
     }
 
     @Test
@@ -128,5 +101,48 @@ public class RegistrationServiceImplTest {
         RegistrationException thrown = assertThrows(RegistrationException.class,
                 () -> registrationService.register(secondUser));
         assertEquals("User with this login already exists", thrown.getMessage());
+    }
+
+    @Test
+    public void register_nullLogin_notOk() {
+        User user = new User();
+        user.setLogin(null);
+        user.setPassword("qwertyQ123");
+        user.setAge(20);
+
+        RegistrationException thrown = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login cannot be null", thrown.getMessage());
+    }
+
+    @Test
+    public void register_nullPassword_notOk() {
+        User user = new User();
+        user.setLogin("validUser123");
+        user.setPassword(null);
+        user.setAge(20);
+
+        RegistrationException thrown = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password cannot be null", thrown.getMessage());
+    }
+
+    @Test
+    public void register_nullAge_notOk() {
+        User user = new User();
+        user.setLogin("validUser123");
+        user.setPassword("qwertyQ123");
+        user.setAge(null);
+
+        RegistrationException thrown = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Age cannot be null", thrown.getMessage());
+    }
+
+    @Test
+    public void register_nullUser_notOk() {
+        RegistrationException thrown = assertThrows(RegistrationException.class,
+                () -> registrationService.register(null));
+        assertEquals("User cannot be null", thrown.getMessage());
     }
 }
