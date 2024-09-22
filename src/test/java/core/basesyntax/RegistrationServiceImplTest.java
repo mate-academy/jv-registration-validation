@@ -91,7 +91,7 @@ public class RegistrationServiceImplTest {
         firstUser.setLogin("validUser123");
         firstUser.setPassword("qwertyQ123");
         firstUser.setAge(20);
-        registrationService.register(firstUser);
+        Storage.people.add(firstUser);
 
         User secondUser = new User();
         secondUser.setLogin("validUser123");
