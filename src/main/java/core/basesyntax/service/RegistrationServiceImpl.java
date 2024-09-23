@@ -22,15 +22,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new UserAlreadyExistException("User with same login already exist!");
         }
-        if (user.getLogin() == null || user.getLogin().length() < LOGIN_MIN_LENGTH) {
-            throw new LoginTooShortException("Login should be more then six characters!");
+        if (user.getLogin().length() < LOGIN_MIN_LENGTH) {
+            throw new LoginTooShortException("Login should be more than six characters!");
         }
-        if (user.getPassword() == null || user.getPassword().length() < PASSWORD_MIN_LENGTH) {
-            throw new PasswordTooShortException("Login should be more then six characters!");
+        if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
+            throw new PasswordTooShortException("Password should be more than six characters!");
         }
-        if (user.getAge() == null || user.getAge() < AGE_MINIMAL_LIMIT) {
+        if (user.getAge() < AGE_MINIMAL_LIMIT) {
             throw new AgeRestrictionException(
-                    "User with age less then 18 or null, can't be created!"
+                    "User should be 18 years old or more!"
             );
         }
         return storageDao.add(user);
