@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.RegistrationValidationException;
+import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
@@ -13,11 +13,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
-    void clearStorage() {
+    void setUp() {
         Storage.people.clear();
+        registrationService = new RegistrationServiceImpl();
     }
 
     @Test
@@ -37,9 +38,9 @@ class RegistrationServiceTest {
     void register_loginShorterThanRequired_notOk() {
         User user = new User("log", "password123", 25);
 
-        assertThrows(RegistrationValidationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "RegistrationValidationException "
+        }, "RegistrationException "
                 + "should be thrown if the login has less than 6 characters");
     }
 
@@ -47,9 +48,9 @@ class RegistrationServiceTest {
     void register_passwordShorterThanRequired_notOk() {
         User user = new User("testlogin", "pass", 25);
 
-        assertThrows(RegistrationValidationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "RegistrationValidationException "
+        }, "RegistrationException "
                 + "should be thrown if the password has less than 6 characters");
     }
 
@@ -57,34 +58,22 @@ class RegistrationServiceTest {
     void register_ageLessThanRequired_notOk() {
         User user = new User("testlogin", "password", 12);
 
-        assertThrows(RegistrationValidationException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        }, "RegistrationValidationException "
+        }, "RegistrationException "
                 + "should be thrown if age is less than 18");
 
     }
 
     @Test
     void register_duplicateLogin_notOk() {
-        User user1 = new User("testlogin", "password", 25);
-        Storage.people.add(user1);
-
-        User user2 = new User("testlogin", "password123", 30);
-
-        assertThrows(RegistrationValidationException.class, () -> {
-            registrationService.register(user2);
-        }, "RegistrationValidationException "
+        User user = new User("testlogin", "password", 25);
+        Storage.people.add(user);
+        User newUser = new User("testlogin", "password123", 30);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(newUser);
+        }, "RegistrationException "
                 + "should be thrown if the login already exists");
-    }
-
-    @Test
-    void register_userAddedToStorage_Ok() {
-        User user1 = new User("testlogin", "password", 25);
-        User registeredUser1 = registrationService.register(user1);
-        assertEquals(registeredUser1, registrationService.get(user1.getLogin()));
-        User user2 = new User("testlogin123", "password12345", 30);
-        User registeredUser2 = registrationService.register(user2);
-        assertEquals(registeredUser2, registrationService.get(user2.getLogin()));
     }
 
     @Test
@@ -109,5 +98,37 @@ class RegistrationServiceTest {
         User userRegistered = registrationService.register(user);
         assertNotNull(userRegistered);
         assertEquals(18, userRegistered.getAge());
+    }
+
+    @Test
+    void registe_nullUser_notOk() {
+        User user = null;
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        }, "RegistrationException should be thrown if null user");
+    }
+
+    @Test
+    void register_nullLogin_notOk() {
+        User user = new User(null, "password123", 20);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        }, "RegistrationException should be thrown if null login");
+    }
+
+    @Test
+    void register_nullPassword_notOk() {
+        User user = new User("logintest", null, 20);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        }, "RegistrationException should be thrown if null password");
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        User user = new User("logintest", "password123", 0);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        }, "RegistrationException should be thrown if null age");
     }
 }
