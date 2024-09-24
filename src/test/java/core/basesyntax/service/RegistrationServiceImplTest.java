@@ -5,10 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.AgeRestrictionException;
-import core.basesyntax.exceptions.LoginTooShortException;
-import core.basesyntax.exceptions.PasswordTooShortException;
-import core.basesyntax.exceptions.UserAlreadyExistException;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,7 +72,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullUser_notOk() {
         User nullUser = null;
-        assertThrows(IllegalArgumentException.class, () -> registrationService.register(nullUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(nullUser));
     }
 
     @Test
@@ -84,39 +81,39 @@ class RegistrationServiceImplTest {
         User secondUser = new User();
         secondUser.setLogin(LOGIN_SIX_CHARACTERS);
         Storage.people.add(firstUser);
-        assertThrows(UserAlreadyExistException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(secondUser));
     }
 
     @Test
     void register_shortLogin_notOk() {
         firstUser.setLogin(LOGIN_ONE_CHARACTER);
-        assertThrows(LoginTooShortException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
         firstUser.setLogin(LOGIN_TWO_CHARACTER);
-        assertThrows(LoginTooShortException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
         firstUser.setLogin(LOGIN_THREE_CHARACTER);
-        assertThrows(LoginTooShortException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
     void register_nullLogin_notOk() {
         firstUser.setLogin(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
     }
 
     @Test
     void register_shortPassword_notOk() {
         firstUser.setLogin(LOGIN_SIX_CHARACTERS);
         firstUser.setPassword(PASSWORD_ONE_CHARACTER);
-        assertThrows(PasswordTooShortException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(firstUser)
         );
         firstUser.setPassword(PASSWORD_THREE_CHARACTERS);
-        assertThrows(PasswordTooShortException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(firstUser)
         );
         firstUser.setPassword(PASSWORD_FIVE_CHARACTERS);
-        assertThrows(PasswordTooShortException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(firstUser)
         );
     }
@@ -125,7 +122,7 @@ class RegistrationServiceImplTest {
     void register_nullPassword_notOk() {
         firstUser.setLogin(LOGIN_SIX_CHARACTERS);
         firstUser.setPassword(null);
-        assertThrows(NullPointerException.class,
+        assertThrows(RegistrationException.class,
                 () -> registrationService.register(firstUser)
         );
     }
@@ -135,11 +132,11 @@ class RegistrationServiceImplTest {
         firstUser.setLogin(LOGIN_SIX_CHARACTERS);
         firstUser.setPassword(PASSWORD_SIX_CHARACTERS);
         firstUser.setAge(AGE_SEVEN);
-        assertThrows(AgeRestrictionException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
         firstUser.setAge(AGE_TWELVE);
-        assertThrows(AgeRestrictionException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
         firstUser.setAge(AGE_SEVENTEEN);
-        assertThrows(AgeRestrictionException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
 
     }
 
@@ -148,6 +145,6 @@ class RegistrationServiceImplTest {
         firstUser.setLogin(LOGIN_SIX_CHARACTERS);
         firstUser.setPassword(PASSWORD_SIX_CHARACTERS);
         firstUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
     }
 }

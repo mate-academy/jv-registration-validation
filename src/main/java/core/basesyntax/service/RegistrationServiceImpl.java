@@ -2,10 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exceptions.AgeRestrictionException;
-import core.basesyntax.exceptions.LoginTooShortException;
-import core.basesyntax.exceptions.PasswordTooShortException;
-import core.basesyntax.exceptions.UserAlreadyExistException;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -17,19 +14,28 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new IllegalArgumentException("User can't be null!");
+            throw new RegistrationException("User can't be null!");
+        }
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login can't be null!");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null!");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age can't be null!");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new UserAlreadyExistException("User with same login already exist!");
+            throw new RegistrationException("User with same login already exist!");
         }
         if (user.getLogin().length() < LOGIN_MIN_LENGTH) {
-            throw new LoginTooShortException("Login should be more than six characters!");
+            throw new RegistrationException("Login should be more than six characters!");
         }
         if (user.getPassword().length() < PASSWORD_MIN_LENGTH) {
-            throw new PasswordTooShortException("Password should be more than six characters!");
+            throw new RegistrationException("Password should be more than six characters!");
         }
         if (user.getAge() < AGE_MINIMAL_LIMIT) {
-            throw new AgeRestrictionException(
+            throw new RegistrationException(
                     "User should be 18 years old or more!"
             );
         }
