@@ -13,8 +13,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user == null || user.getLogin() == null || user.getPassword() == null) {
-            throw new RegistrationException("User, login, or password cannot be null.");
+        if (user == null) {
+            throw new RegistrationException("User cannot be null");
+        }
+
+        if (user.getLogin() == null || user.getPassword() == null) {
+            throw new RegistrationException("Login and password cannot be null");
         }
 
         if (user.getLogin().length() < 6) {
@@ -33,7 +37,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User with this login already exists.");
         }
 
-        storage.add(user);
-        return null;
+        return storage.add(user);
     }
 }
