@@ -4,22 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.service.model.User;
-import java.util.concurrent.atomic.AtomicLong;
+
+import core.basesyntax.exception.RegistrationException;
+import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
-    private static final int MIN_AGE = 18;
-    private static final int MIN_PASSWORD_LENGTH = 6;
+class RegistrationServiceImplTest {;
     private static RegistrationServiceImpl registrationService;
-    private static AtomicLong userIdCounter;
 
     @BeforeAll
     static void createReference() {
         registrationService = new RegistrationServiceImpl();
-        userIdCounter = new AtomicLong(1);
     }
 
     @BeforeEach
@@ -30,7 +27,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyExists_shouldThrowException() {
         User user = new User();
-        user.setId(userIdCounter.getAndIncrement());
+        user.setId((long) Storage.people.size() + 1);
         user.setLogin("validUser123");
         user.setPassword("password123");
         user.setAge(20);
@@ -48,7 +45,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageAboveMin_shouldAddUserToStorage() throws RegistrationException {
         User user = new User();
-        user.setId(userIdCounter.getAndIncrement());
+        user.setId((long) Storage.people.size() + 1);
         user.setLogin("validUser123");
         user.setPassword("validPassword123");
         user.setAge(20);
@@ -62,7 +59,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordLengthAtMin_shouldSucceed() throws RegistrationException {
         User user = new User();
-        user.setId(userIdCounter.getAndIncrement());
+        user.setId((long) Storage.people.size() + 1);
         user.setLogin("userWithPass");
         user.setPassword("pass12");
         user.setAge(20);
@@ -114,7 +111,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginLengthAtMin_shouldSucceed() throws RegistrationException {
         User user = new User();
-        user.setId(userIdCounter.getAndIncrement());
+        user.setId((long) Storage.people.size() + 1);
         user.setLogin("abcde1");
         user.setPassword("validPassword123");
         user.setAge(20);

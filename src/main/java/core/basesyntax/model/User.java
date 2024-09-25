@@ -1,4 +1,4 @@
-package core.basesyntax.service.model;
+package core.basesyntax.model;
 
 import java.util.Objects;
 

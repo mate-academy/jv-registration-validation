@@ -1,7 +1,7 @@
 package core.basesyntax.dao;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.service.model.User;
+import core.basesyntax.model.User;
 
 public class StorageDaoImpl implements StorageDao {
     private static Long index = 0L;
