@@ -29,10 +29,8 @@ class RegistrationServiceImplTest {
     private static final int AGE_THIRTY = 30;
     private static final int AGE_SEVENTEEN = 17;
     private static final int AGE_TWELVE = 12;
-    private static final int AGE_SEVEN = 17;
-
+    private static final int AGE_SEVEN = 7;
     private static RegistrationService registrationService;
-    private User firstUser;
 
     @BeforeAll
     static void beforeAll() {
@@ -41,12 +39,12 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        firstUser = new User();
         Storage.people.clear();
     }
 
     @Test
     void register_addUserWithCorrectData_ok() {
+        User firstUser = new User();
         firstUser.setLogin(LOGIN_SIX_CHARACTERS);
         firstUser.setPassword(PASSWORD_SIX_CHARACTERS);
         firstUser.setAge(AGE_EIGHTEEN);
@@ -77,74 +75,81 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginAlreadyExist_notOk() {
-        firstUser.setLogin(LOGIN_SIX_CHARACTERS);
+        User user = new User();
+        user.setLogin(LOGIN_SIX_CHARACTERS);
         User secondUser = new User();
         secondUser.setLogin(LOGIN_SIX_CHARACTERS);
-        Storage.people.add(firstUser);
+        Storage.people.add(user);
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(secondUser));
     }
 
     @Test
     void register_shortLogin_notOk() {
-        firstUser.setLogin(LOGIN_ONE_CHARACTER);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-        firstUser.setLogin(LOGIN_TWO_CHARACTER);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-        firstUser.setLogin(LOGIN_THREE_CHARACTER);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+        User user = new User();
+        user.setLogin(LOGIN_ONE_CHARACTER);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setLogin(LOGIN_TWO_CHARACTER);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setLogin(LOGIN_THREE_CHARACTER);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_nullLogin_notOk() {
-        firstUser.setLogin(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+        User user = new User();
+        user.setLogin(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
-        firstUser.setLogin(LOGIN_SIX_CHARACTERS);
-        firstUser.setPassword(PASSWORD_ONE_CHARACTER);
+        User user = new User();
+        user.setLogin(LOGIN_SIX_CHARACTERS);
+        user.setPassword(PASSWORD_ONE_CHARACTER);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(firstUser)
+                () -> registrationService.register(user)
         );
-        firstUser.setPassword(PASSWORD_THREE_CHARACTERS);
+        user.setPassword(PASSWORD_THREE_CHARACTERS);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(firstUser)
+                () -> registrationService.register(user)
         );
-        firstUser.setPassword(PASSWORD_FIVE_CHARACTERS);
+        user.setPassword(PASSWORD_FIVE_CHARACTERS);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(firstUser)
+                () -> registrationService.register(user)
         );
     }
 
     @Test
     void register_nullPassword_notOk() {
-        firstUser.setLogin(LOGIN_SIX_CHARACTERS);
-        firstUser.setPassword(null);
+        User user = new User();
+        user.setLogin(LOGIN_SIX_CHARACTERS);
+        user.setPassword(null);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(firstUser)
+                () -> registrationService.register(user)
         );
     }
 
     @Test
     void register_underAge_notOk() {
-        firstUser.setLogin(LOGIN_SIX_CHARACTERS);
-        firstUser.setPassword(PASSWORD_SIX_CHARACTERS);
-        firstUser.setAge(AGE_SEVEN);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-        firstUser.setAge(AGE_TWELVE);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-        firstUser.setAge(AGE_SEVENTEEN);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+        User user = new User();
+        user.setLogin(LOGIN_SIX_CHARACTERS);
+        user.setPassword(PASSWORD_SIX_CHARACTERS);
+        user.setAge(AGE_SEVEN);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setAge(AGE_TWELVE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setAge(AGE_SEVENTEEN);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
 
     }
 
     @Test
     void register_nullAge_notOk() {
-        firstUser.setLogin(LOGIN_SIX_CHARACTERS);
-        firstUser.setPassword(PASSWORD_SIX_CHARACTERS);
-        firstUser.setAge(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+        User user = new User();
+        user.setLogin(LOGIN_SIX_CHARACTERS);
+        user.setPassword(PASSWORD_SIX_CHARACTERS);
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
