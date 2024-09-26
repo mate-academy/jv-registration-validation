@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException; // Правильний імпорт винятку
@@ -21,52 +22,65 @@ public class RegistrationServiceTest {
     @Test
     public void register_validUser_ok() {
         User validUser = new User("validLogin", "validPassword", 20);
-
         registrationService.register(validUser);
-
         assertEquals(validUser, storage.get(validUser.getLogin()));
     }
 
-    @Test(expected = RegistrationException.class)
+    @Test
     public void register_nullUser_notOk() {
-        registrationService.register(null);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(null));
+        assertEquals("User cannot be null", exception.getMessage());
     }
 
-    @Test(expected = RegistrationException.class)
+    @Test
     public void register_nullLogin_notOk() {
         User user = new User(null, "validPassword", 20);
-        registrationService.register(user);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login cannot be null", exception.getMessage());
     }
 
-    @Test(expected = RegistrationException.class)
+    @Test
     public void register_nullPassword_notOk() {
         User user = new User("validLogin", null, 20);
-        registrationService.register(user);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password cannot be null", exception.getMessage());
     }
 
-    @Test(expected = RegistrationException.class)
+    @Test
     public void register_loginTooShort_notOk() {
         User user = new User("short", "validPassword", 20);
-        registrationService.register(user);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Login must be at least 6 characters", exception.getMessage());
     }
 
-    @Test(expected = RegistrationException.class)
+    @Test
     public void register_passwordTooShort_notOk() {
         User user = new User("validLogin", "short", 20);
-        registrationService.register(user);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password must be at least 6 characters", exception.getMessage());
     }
 
-    @Test(expected = RegistrationException.class)
+    @Test
     public void register_ageTooYoung_notOk() {
         User user = new User("validLogin", "validPassword", 17);
-        registrationService.register(user);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("User must be at least 18 years old", exception.getMessage());
     }
 
-    @Test(expected = RegistrationException.class)
+    @Test
     public void register_loginAlreadyExists_notOk() {
         User existingUser = new User("existingLogin", "validPassword", 20);
-        storage.add(existingUser); // Додаємо користувача в сховище для перевірки
+        storage.add(existingUser);
 
-        registrationService.register(existingUser);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(existingUser));
+        assertEquals("User with this login already exists", exception.getMessage());
     }
+
 }

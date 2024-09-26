@@ -17,24 +17,28 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User cannot be null");
         }
 
-        if (user.getLogin() == null || user.getPassword() == null) {
-            throw new RegistrationException("Login and password cannot be null");
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login cannot be null");
+        }
+
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password cannot be null");
         }
 
         if (user.getLogin().length() < 6) {
-            throw new RegistrationException("Login must be at least 6 characters.");
+            throw new RegistrationException("Login must be at least 6 characters");
         }
 
         if (user.getPassword().length() < 6) {
-            throw new RegistrationException("Password must be at least 6 characters.");
+            throw new RegistrationException("Password must be at least 6 characters");
         }
 
         if (user.getAge() < 18) {
-            throw new RegistrationException("User must be at least 18 years old.");
+            throw new RegistrationException("User must be at least 18 years old");
         }
 
         if (storage.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login already exists.");
+            throw new RegistrationException("User with this login already exists");
         }
 
         return storage.add(user);
