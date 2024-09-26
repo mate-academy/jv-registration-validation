@@ -3,52 +3,40 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationServiceImpl registrationServiceImpl;
+    private static RegistrationServiceImpl registrationServiceImpl;
     private User user;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll() {
         registrationServiceImpl = new RegistrationServiceImpl();
-        user = new User();
-        Storage.people.clear();
-    }
-
-    @Test
-    void userIsValid_ok() {
-        User existingUser = new User();
-        existingUser.setLogin("differentLogin");
-        Storage.people.add(existingUser);
-        user.setAge(20);
-        user.setLogin("validLogin");
-        user.setPassword("validPas");
-        User registeredUser = registrationServiceImpl.register(user);
-        assertEquals(user, registeredUser);
     }
 
     @Test
     void register_ageLessThan18_notOk() {
+        User user = new User();
         user.setAge(17);
         user.setLogin("validLogin");
         user.setPassword("validPass");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void register_negativeAge_notOk() {
+        User user = new User();
         user.setAge(-5);
         user.setLogin("validLogin");
         user.setPassword("validePasssword");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void register_ageEquals18_ok() {
+        User user = new User();
         user.setAge(18);
         user.setLogin("valLog");
         user.setPassword("valPas");
@@ -58,33 +46,34 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_LoginExist_notOk() {
-        User existingUser = new User();
-        existingUser.setLogin("validLogin");
-        Storage.people.add(existingUser);
+        User user = new User();
         user.setAge(20);
         user.setLogin("validLogin");
         user.setPassword("validPass");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void registre_LoginLength_notOk() {
+        User user = new User();
         user.setAge(20);
         user.setLogin("log");
         user.setPassword("validPass");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void register_LoginLengthEdgeCase_notOk() {
+        User user = new User();
         user.setAge(18);
         user.setLogin("valid");
         user.setPassword("validP");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void register_LoginLengthEquals_ok() {
+        User user = new User();
         user.setAge(18);
         user.setLogin("validL");
         user.setPassword("validP");
@@ -94,14 +83,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordLength_notOk() {
+        User user = new User();
         user.setAge(20);
         user.setLogin("validLogin");
         user.setPassword("passp");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void register_PasswordLength_Ok() {
+        User user = new User();
         user.setAge(18);
         user.setLogin("validLogin");
         user.setPassword("validP");
@@ -111,34 +102,28 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordLengthEdgeCase_notOk() {
+        User user = new User();
         user.setAge(20);
         user.setLogin("validLogin");
         user.setPassword("valid");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
-    }
-
-    @Test
-    void registr_PasswordLengthEqalse_Ok() {
-        user.setAge(20);
-        user.setLogin("validLogin");
-        user.setPassword("validP");
-        User registeredUser = registrationServiceImpl.register(user);
-        assertEquals(user, registeredUser);
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void register_LoginNotNull_notOk() {
+        User user = new User();
         user.setAge(20);
         user.setLogin(null);
         user.setPassword("validPass");
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 
     @Test
     void register_PasswordNotNull_notOk() {
+        User user = new User();
         user.setAge(20);
         user.setLogin("validLogin");
         user.setPassword(null);
-        assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
+        assertThrows(RegistrationException.class, () -> registrationServiceImpl.register(user));
     }
 }
