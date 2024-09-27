@@ -15,13 +15,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new InvalidUserException("A user with this login is already registered");
         }
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin() == null || user.getLogin().length() < 6) {
             throw new InvalidUserException("Login must contain at least 6 characters");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new InvalidUserException("Password must contain at least 6 characters");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() == null || user.getAge() < 18) {
             throw new InvalidUserException("You are not have 18 years old");
         }
         if (user.getLogin() == null) {
