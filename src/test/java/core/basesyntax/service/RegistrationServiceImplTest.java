@@ -30,7 +30,16 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_UserValid_Ok() {
+        StorageDao storageDao = new StorageDaoImpl();
         assertNotNull(service.register(user));
+        assertNotNull(storageDao.get(user.getLogin()));
+    }
+
+    @Test
+    void register_UserNullValue_NotOk() {
+        service.register(null);
+        assertThrows(InvalidUserException.class, () -> service.register(null),
+                "User must not be null");
     }
 
     @Test
@@ -79,13 +88,6 @@ class RegistrationServiceImplTest {
     void register_AgeLimitValue_Ok() {
         user.setAge(18);
         assertNotNull(service.register(user));
-    }
-
-    @Test
-    void register_UserNullValue_NotOk() {
-        service.register(null);
-        assertThrows(InvalidUserException.class, () -> service.register(null),
-                "Incorrect value");
     }
 
     @Test
