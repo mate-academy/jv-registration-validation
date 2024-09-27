@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
 public class InvalidUserException extends RuntimeException {
-    InvalidUserException(String massage) {
+    public InvalidUserException(String massage) {
         super(massage);
     }
 }
