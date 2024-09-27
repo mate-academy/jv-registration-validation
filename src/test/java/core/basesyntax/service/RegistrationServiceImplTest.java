@@ -94,20 +94,20 @@ class RegistrationServiceImplTest {
     void register_LoginNullValue_NotOk() {
         user.setLogin(null);
         assertThrows(InvalidUserException.class, () -> service.register(user),
-                "Login must contain at least 6 characters");
+                "Login cannot be null");
     }
 
     @Test
     void register_PasswordNullValue_NotOk() {
         user.setPassword(null);
         assertThrows(InvalidUserException.class, () -> service.register(user),
-                "Password must contain at least 6 characters");
+                "Password cannot be null");
     }
 
     @Test
     void register_AgeNullValue_NotOk() {
         user.setAge(null);
         assertThrows(InvalidUserException.class, () -> service.register(user),
-                "You are not have 18 years old");
+                "Age cannot be null");
     }
 }
