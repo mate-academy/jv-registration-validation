@@ -24,15 +24,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null || user.getAge() < 18) {
             throw new InvalidUserException("You are not have 18 years old");
         }
-        if (user.getLogin() == null) {
-            throw new InvalidUserException("Login cannot be empty");
-        }
-        if (user.getPassword() == null) {
-            throw new InvalidUserException("Password cannot be empty");
-        }
-        if (user.getAge() == null) {
-            throw new InvalidUserException("Enter user age");
-        }
         return storageDao.add(user);
     }
 }

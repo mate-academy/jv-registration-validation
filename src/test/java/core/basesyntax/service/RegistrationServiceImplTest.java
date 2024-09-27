@@ -73,19 +73,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginLimitValue_Ok() {
+    void register_ValidLogin_Ok() {
         user.setLogin("user11");
         assertNotNull(service.register(user));
     }
 
     @Test
-    void register_PasswordLimitValue_Ok() {
+    void register_ValidPassword_Ok() {
         user.setPassword("user22");
         assertNotNull(service.register(user));
     }
 
     @Test
-    void register_AgeLimitValue_Ok() {
+    void register_ValidAge_Ok() {
         user.setAge(18);
         assertNotNull(service.register(user));
     }
@@ -94,20 +94,20 @@ class RegistrationServiceImplTest {
     void register_LoginNullValue_NotOk() {
         user.setLogin(null);
         assertThrows(InvalidUserException.class, () -> service.register(user),
-                "Login cannot be empty");
+                "Login must contain at least 6 characters");
     }
 
     @Test
     void register_PasswordNullValue_NotOk() {
         user.setPassword(null);
         assertThrows(InvalidUserException.class, () -> service.register(user),
-                "Password cannot be empty");
+                "Password must contain at least 6 characters");
     }
 
     @Test
     void register_AgeNullValue_NotOk() {
         user.setAge(null);
         assertThrows(InvalidUserException.class, () -> service.register(user),
-                "Enter user age");
+                "You are not have 18 years old");
     }
 }
