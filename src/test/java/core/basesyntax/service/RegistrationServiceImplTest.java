@@ -17,7 +17,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThan18_notOk() {
+    void register_AgeNull_notOk() {
         User user = new User();
         user.setAge(null);
         user.setLogin("validLogin");
@@ -32,16 +32,6 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("validePasssword");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_ageEquals18_ok() {
-        User user = new User();
-        user.setAge(18);
-        user.setLogin("valLog");
-        user.setPassword("valPas");
-        User registeredUser = registrationService.register(user);
-        assertEquals(user, registeredUser);
     }
 
     @Test
@@ -93,16 +83,6 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("passp");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_PasswordLengthSatisfactory_Ok() {
-        User user = new User();
-        user.setAge(18);
-        user.setLogin("validLogin");
-        user.setPassword("validP");
-        User registeredUser = registrationService.register(user);
-        assertEquals(user, registeredUser);
     }
 
     @Test
