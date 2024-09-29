@@ -3,6 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageLessThan18_notOk() {
         User user = new User();
-        user.setAge(17);
+        user.setAge(null);
         user.setLogin("validLogin");
         user.setPassword("validPass");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
@@ -46,14 +47,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_LoginExist_notOk() {
         User user = new User();
-        user.setAge(20);
         user.setLogin("validLogin");
         user.setPassword("validPass");
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setAge(20);
+        Storage.people.add(user);
+        User newUser = new User();
+        newUser.setLogin("validLogin");
+        newUser.setPassword("validPass");
+        newUser.setAge(22);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 
     @Test
-    void registre_LoginLength_notOk() {
+    void registre_LoginLengthShort_notOk() {
         User user = new User();
         user.setAge(20);
         user.setLogin("log");
@@ -81,7 +87,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordLength_notOk() {
+    void register_PasswordLengthShort_notOk() {
         User user = new User();
         user.setAge(20);
         user.setLogin("validLogin");
@@ -90,7 +96,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordLength_Ok() {
+    void register_PasswordLengthSatisfactory_Ok() {
         User user = new User();
         user.setAge(18);
         user.setLogin("validLogin");
