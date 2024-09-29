@@ -22,11 +22,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void isCorrectType() {
-        assertTrue(user instanceof User);
-    }
-
-    @Test
     void userWithTheSameLoginAlreadyExists_NotOk() {
         User user2 = new User();
         user2.setAge(18);
@@ -38,12 +33,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void userNullNotOk() {
-        User actual = registrationService.register(null);
-        assertNull(actual);
+        assertThrows(UserNotAllowed.class, () -> registrationService.register(null));
     }
 
     @Test
-    void loginIsNotOk() {
+    void loginLengthLessThen_6_CharactersIsNotOk() {
         User actual = user;
         actual.setLogin("test");
         assertThrows(UserNotAllowed.class, () -> registrationService.register(actual));
