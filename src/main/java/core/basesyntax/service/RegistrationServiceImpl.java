@@ -5,7 +5,6 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.UserNotAllowed;
 import core.basesyntax.model.User;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             loginSet.add(user.getLogin());
         }
     }
+
     @Override
     public User register(User user) throws UserNotAllowed {
         if (user != null) {
