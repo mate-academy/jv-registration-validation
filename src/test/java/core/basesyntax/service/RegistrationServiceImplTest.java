@@ -136,6 +136,7 @@ class RegistrationServiceImplTest {
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
+
     @Test
     void register_negativeAge_shouldThrowException() {
         User user = new User();
