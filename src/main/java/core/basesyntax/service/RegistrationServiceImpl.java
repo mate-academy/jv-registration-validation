@@ -21,7 +21,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    public void validateUserNotNull(User user) {
+    private void validateUserNotNull(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
@@ -57,7 +57,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
     }
 
-    public void validateUserUniqueness(User user) {
+    private void validateUserUniqueness(User user) {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with login %s already exists."
                         .formatted(user.getLogin()));
