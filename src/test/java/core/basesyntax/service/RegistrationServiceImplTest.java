@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationServiceImpl registrationService;
+    private static RegistrationService registrationService;
 
     @BeforeAll
     static void createReference() {
@@ -26,7 +26,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyExists_shouldThrowException() {
         User user = new User();
-        user.setId((long) Storage.people.size() + 1);
         user.setLogin("validUser123");
         user.setPassword("password123");
         user.setAge(20);
@@ -44,7 +43,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageAboveMin_shouldAddUserToStorage() throws RegistrationException {
         User user = new User();
-        user.setId((long) Storage.people.size() + 1);
         user.setLogin("validUser123");
         user.setPassword("validPassword123");
         user.setAge(20);
@@ -58,7 +56,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordLengthAtMin_shouldSucceed() throws RegistrationException {
         User user = new User();
-        user.setId((long) Storage.people.size() + 1);
         user.setLogin("userWithPass");
         user.setPassword("pass12");
         user.setAge(20);
@@ -110,7 +107,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginLengthAtMin_shouldSucceed() throws RegistrationException {
         User user = new User();
-        user.setId((long) Storage.people.size() + 1);
         user.setLogin("abcde1");
         user.setPassword("validPassword123");
         user.setAge(20);
@@ -131,6 +127,15 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
+    @Test
+    void register_nullAge_shouldThrowException() {
+        User user = new User();
+        user.setLogin("validUser123");
+        user.setPassword("validPassword123");
+        user.setAge(0);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
     @Test
     void register_negativeAge_shouldThrowException() {
         User user = new User();
