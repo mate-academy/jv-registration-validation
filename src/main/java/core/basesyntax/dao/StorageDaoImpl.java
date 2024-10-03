@@ -22,4 +22,9 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
+
+    @Override
+    public int size() {
+        return Storage.people.size();
+    }
 }
