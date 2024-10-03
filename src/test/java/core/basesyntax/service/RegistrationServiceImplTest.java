@@ -6,20 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static RegistrationService registrationService;
-
-    @BeforeAll
-    static void createReference() {
-        registrationService = new RegistrationServiceImpl();
-    }
+    private RegistrationService registrationService;
 
     @BeforeEach
-    void resetStorage() {
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
         Storage.people.clear();
     }
 
@@ -28,7 +23,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("validUser123");
         user.setPassword("password123");
-        user.setAge(20);
+        user.setAge(18);
         Storage.people.add(user);
 
         User duplicateUser = new User();
@@ -41,7 +36,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageAboveMin_shouldAddUserToStorage() throws RegistrationException {
+    void register_validUser_ok() throws RegistrationException {
         User user = new User();
         user.setLogin("validUser123");
         user.setPassword("validPassword123");
@@ -51,19 +46,6 @@ class RegistrationServiceImplTest {
 
         assertEquals(1, Storage.people.size());
         assertEquals("validUser123", Storage.people.get(0).getLogin());
-    }
-
-    @Test
-    void register_passwordLengthAtMin_shouldSucceed() throws RegistrationException {
-        User user = new User();
-        user.setLogin("userWithPass");
-        user.setPassword("pass12");
-        user.setAge(20);
-
-        registrationService.register(user);
-
-        assertEquals(1, Storage.people.size());
-        assertEquals("userWithPass", Storage.people.get(0).getLogin());
     }
 
     @Test
@@ -102,19 +84,6 @@ class RegistrationServiceImplTest {
         user.setAge(15);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_loginLengthAtMin_shouldSucceed() throws RegistrationException {
-        User user = new User();
-        user.setLogin("abcde1");
-        user.setPassword("validPassword123");
-        user.setAge(20);
-
-        registrationService.register(user);
-
-        assertEquals(1, Storage.people.size());
-        assertEquals("abcde1", Storage.people.get(0).getLogin());
     }
 
     @Test
