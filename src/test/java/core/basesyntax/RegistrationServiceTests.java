@@ -9,17 +9,24 @@ import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
  * Feel free to remove this class and create your own.
  */
 public class RegistrationServiceTests {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao = new StorageDaoImpl();
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
+
+    @BeforeAll
+    public static void set_up() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @Test
-    public void add_user_OK() {
+    public void register_validUser_success() {
         User newUser = new User();
         newUser.setLogin("Bob679");
         newUser.setAge(18);
@@ -33,38 +40,43 @@ public class RegistrationServiceTests {
     }
 
     @Test
-    public void add_user_with_incorrect_login() {
+    public void register_incorrectLogin_throwsException() {
         User newUser = new User();
         newUser.setLogin("Mary");
         newUser.setAge(18);
         newUser.setPassword("666666666");
-        assertThrows(InvalidDataException.class, () -> {
+        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(newUser);
         });
+        assertEquals("The length of login is less than 6 characters", exception.getMessage());
     }
 
     @Test
-    public void add_user_with_existing_login() {
+    public void register_existingLogin_throwsException() {
         User newUser = new User();
         newUser.setLogin("Bob679");
         newUser.setAge(22);
         newUser.setPassword("1230988686");
-        assertEquals(storageDao.size(), 1);
+        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(newUser);
+        });
+        assertEquals("The user with the same login already exists", exception.getMessage());
     }
 
     @Test
-    public void add_user_with_null_login() {
+    public void register_nullLogin_throwsException() {
         User newUser = new User();
         newUser.setLogin(null);
         newUser.setAge(35);
         newUser.setPassword("853895378");
-        assertThrows(NullPointerException.class, () -> {
+        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(newUser);
         });
+        assertEquals("The login cannot be null", exception.getMessage());
     }
 
     @Test
-    public void add_user_with_empty_login() {
+    public void register_emptyLogin_throwsException() {
         User newUser = new User();
         newUser.setLogin("");
         newUser.setAge(35);
@@ -75,29 +87,31 @@ public class RegistrationServiceTests {
     }
 
     @Test
-    public void add_user_with_incorrect_password() {
+    public void register_incorrectPassword_throwsException() {
         User newUser = new User();
         newUser.setLogin("Alice12");
         newUser.setAge(44);
-        newUser.setPassword("123");
-        assertThrows(InvalidDataException.class, () -> {
+        newUser.setPassword("12345");
+        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(newUser);
         });
+        assertEquals("The length of password is less than 6 characters", exception.getMessage());
     }
 
     @Test
-    public void add_user_with_null_password() {
+    public void register_nullPassword_throwsException() {
         User newUser = new User();
         newUser.setLogin("Olha906784");
         newUser.setAge(35);
         newUser.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
+        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(newUser);
         });
+        assertEquals("The password cannot be null", exception.getMessage());
     }
 
     @Test
-    public void add_user_with_empty_password() {
+    public void register_emptyPassword_throwsException() {
         User newUser = new User();
         newUser.setLogin("Anton69504");
         newUser.setAge(35);
@@ -108,35 +122,26 @@ public class RegistrationServiceTests {
     }
 
     @Test
-    public void add_user_with_incorrect_age() {
+    public void register_incorrectAge_throwsException() {
         User newUser = new User();
         newUser.setLogin("Mary67890");
-        newUser.setAge(8);
-        newUser.setPassword("098765543211111");
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(newUser);
-        });
-    }
-
-    @Test
-    public void add_user_with_empty_age() {
-        User newUser = new User();
-        newUser.setLogin("Mary67890");
-        newUser.setAge(0000);
-        newUser.setPassword("098765543211111");
-        assertThrows(InvalidDataException.class, () -> {
-            registrationService.register(newUser);
-        });
-    }
-
-    @Test
-    public void add_user_with_borderline_value_age() {
-        User newUser = new User();
-        newUser.setLogin("Mary67890533");
         newUser.setAge(17);
         newUser.setPassword("098765543211111");
-        assertThrows(InvalidDataException.class, () -> {
+        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
             registrationService.register(newUser);
         });
+        assertEquals("The age is less than 18 years", exception.getMessage());
+    }
+
+    @Test
+    public void register_negativeAge_throwsException() {
+        User newUser = new User();
+        newUser.setLogin("Mary67890");
+        newUser.setAge(-10);
+        newUser.setPassword("098765543211111");
+        InvalidDataException exception = assertThrows(InvalidDataException.class, () -> {
+            registrationService.register(newUser);
+        });
+        assertEquals("The age is less than 18 years", exception.getMessage());
     }
 }
