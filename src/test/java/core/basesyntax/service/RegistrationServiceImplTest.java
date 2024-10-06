@@ -42,7 +42,8 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword123");
         user.setAge(20);
 
-        registrationService.register(user);
+        User actual = registrationService.register(user);
+        assertEquals(actual, user);
 
         assertEquals(1, Storage.people.size());
         assertEquals("validUser123", Storage.people.get(0).getLogin());
