@@ -10,25 +10,30 @@ import core.basesyntax.exception.UserUncheckedException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static final String LESS_THAN_SIX_CHARACTERS = "12345";
+    private static RegistrationService registrationService;
+    private static StorageDao storage;
     private User user;
-    private RegistrationService registrationService;
-    private StorageDao storage;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        storage = new StorageDaoImpl();
+    }
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
-        storage = new StorageDaoImpl();
         user = new User("123456", "password", 18);
         Storage.people.clear();
     }
 
     @Test
-    void loginIsAlreadyContainInStorage_notOk() {
+    void register_DuplicateLogin_notOk() {
         registrationService.register(user);
         assertThrows(UserUncheckedException.class, () -> registrationService.register(user));
     }
@@ -60,7 +65,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void registrationServiceNullValue_notOk() {
-        assertThrows(NullPointerException.class, () -> registrationService.register(null));
+        assertThrows(UserUncheckedException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -76,9 +81,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userNotFoundInStorage_ok() {
+    void userIsNotExistInStorage() {
         User actual = storage.get("Nothing");
         User expected = null;
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void register_ReturnsProvidedUser_WhenSuccess() {
+        User actual = registrationService.register(user);
+        User expected = user;
         assertEquals(expected, actual);
     }
 }
