@@ -2,8 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
-import core.basesyntax.exception.UserUncheckedException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -14,24 +13,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new UserUncheckedException("User cannot be null");
+            throw new RegistrationException("User cannot be null");
         }
         if (user.getLogin() == null || user.getPassword() == null) {
-            throw new UserUncheckedException("Login or password cannot be null");
+            throw new RegistrationException("Login or password cannot be null");
         }
-        for (User person : Storage.people) {
-            if (person.getLogin().equals(user.getLogin())) {
-                throw new UserUncheckedException("Login already taken");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("Login already taken");
         }
         if (user.getLogin().length() < MIN_CHARACTERS_LENGTH
                 || user.getPassword().length() < MIN_CHARACTERS_LENGTH) {
-            throw new UserUncheckedException("Login or password characters less than 6");
+            throw new RegistrationException("Login or password characters less than 6");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new UserUncheckedException("User age is less than 18");
+            throw new RegistrationException("User age is less than 18");
         }
-        storageDao.add(user);
-        return storageDao.get(user.getLogin());
+        return storageDao.add(user);
     }
 }

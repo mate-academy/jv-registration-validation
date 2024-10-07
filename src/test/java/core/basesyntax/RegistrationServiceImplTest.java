@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.UserUncheckedException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
@@ -35,19 +35,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_DuplicateLogin_notOk() {
         registrationService.register(user);
-        assertThrows(UserUncheckedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void loginIsLessThanSixCharacters_notOk() {
         user.setLogin(LESS_THAN_SIX_CHARACTERS);
-        assertThrows(UserUncheckedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void passwordIsLessThanSixCharacters_notOk() {
         user.setPassword(LESS_THAN_SIX_CHARACTERS);
-        assertThrows(UserUncheckedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -60,24 +60,24 @@ class RegistrationServiceImplTest {
     @Test
     void ageIsLessThanEighteen_notOK() {
         user.setAge(17);
-        assertThrows(UserUncheckedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void registrationServiceNullValue_notOk() {
-        assertThrows(UserUncheckedException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
     void loginNullValue_notOk() {
         user.setLogin(null);
-        assertThrows(UserUncheckedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void passwordNullValue_notOk() {
         user.setPassword(null);
-        assertThrows(UserUncheckedException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
