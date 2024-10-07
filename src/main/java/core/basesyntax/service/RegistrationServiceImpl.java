@@ -22,20 +22,21 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (user.getPassword() == null) {
                 throw new InvalidDataException("The password cannot be null");
             }
-            if (String.valueOf(user.getAge()) == null) {
-                throw new InvalidDataException("The age cannot be null");
+            if (user.getAge() == 0) {
+                throw new InvalidDataException("The age cannot be zero");
+            }
+            if (user.getLogin().length() < MIN_LENGTH_OF_PASSWORD_AND_LOGIN) {
+                throw new InvalidDataException("The length of login is less than 6 characters");
+            }
+            if (user.getPassword().length() < MIN_LENGTH_OF_PASSWORD_AND_LOGIN) {
+                throw new InvalidDataException("The length of password is less than 6 characters");
+            }
+            if (user.getAge() < 18) {
+                throw new InvalidDataException("The age is less than 18 years");
+            } else {
+                storageDao.add(user);
             }
         }
-
-        if (user.getLogin().length() < MIN_LENGTH_OF_PASSWORD_AND_LOGIN) {
-            throw new InvalidDataException("The length of login is less than 6 characters");
-        } else if (user.getPassword().length() < MIN_LENGTH_OF_PASSWORD_AND_LOGIN) {
-            throw new InvalidDataException("The length of password is less than 6 characters");
-        } else if (user.getAge() < 18) {
-            throw new InvalidDataException("The age is less than 18 years");
-        } else {
-            storageDao.add(user);
-            return user;
-        }
+        return user;
     }
 }
