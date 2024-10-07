@@ -23,7 +23,7 @@ public class RegistrationServiceTest {
     @BeforeEach
     public void setUp() {
         storageDao = new StorageDaoImpl();
-        registrationService = new RegistrationServiceImpl();
+        registrationService = new RegistrationServiceImpl(storageDao);
         user = new User();
     }
 
@@ -70,6 +70,12 @@ public class RegistrationServiceTest {
 
     @Test
     void registerPasswordExists_NotOk() throws RegistrationException {
+        User user = new User();
+        user.setLogin("existingUser");
+        user.setPassword("password123");
+        user.setAge(21);
+        storageDao.add(user);
+
         User newUser = new User();
         newUser.setLogin("existingUser");
         newUser.setPassword("password123");
@@ -95,6 +101,12 @@ public class RegistrationServiceTest {
 
             assertEquals("Login length must be at least 6 characters.", exception.getMessage());
         }
+
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
+        user.setAge(20);
+
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
@@ -103,7 +115,7 @@ public class RegistrationServiceTest {
         existingUser.setLogin("existingUser");
         existingUser.setPassword("password123");
         existingUser.setAge(20);
-        registrationService.register(existingUser);
+        storageDao.add(existingUser);
 
         User newUserWithExistingLogin = new User();
         newUserWithExistingLogin.setLogin("existingUser");
@@ -147,14 +159,11 @@ public class RegistrationServiceTest {
             assertEquals("Age must be at least 18 years old.", exception.getMessage());
         }
 
-        int validAge = 18;
-        user.setLogin("validLogin");
+        user.setLogin("validLogin18");
         user.setPassword("validPassword");
-        user.setAge(validAge);
+        user.setAge(18);
 
-        assertDoesNotThrow(() -> {
-            registrationService.register(user);
-        });
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
@@ -169,5 +178,12 @@ public class RegistrationServiceTest {
         assertEquals("validUser", registeredUser.getLogin());
         assertEquals("validPassword123", registeredUser.getPassword());
         assertEquals(20, registeredUser.getAge());
+
+        User storedUser = storageDao.get("validUser");
+        assertNotNull(storedUser);
+        assertEquals("validUser", storedUser.getLogin());
+        assertEquals("validPassword123", storedUser.getPassword());
+        assertEquals(20, storedUser.getAge());
     }
+
 }
