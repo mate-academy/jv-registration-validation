@@ -1,5 +1,10 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
@@ -9,12 +14,6 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * Feel free to remove this class and create your own.
- */
 public class RegistrationServiceTest {
     private StorageDao storageDao;
     private RegistrationService registrationService;
@@ -129,11 +128,9 @@ public class RegistrationServiceTest {
         assertEquals("Login already exists.", exception.getMessage());
     }
 
-
     @Test
     void registerPassword_NotOk() throws RegistrationException {
         String[] invalidPasswords = {"1", "ab", "son", "user", "hell0"};
-
         for (String password : invalidPasswords) {
             user.setLogin("validLog");
             user.setPassword(password);
