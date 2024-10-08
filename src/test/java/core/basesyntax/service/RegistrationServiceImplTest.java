@@ -1,15 +1,13 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidDataException;
 import core.basesyntax.exceptions.UserExistException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -26,49 +24,49 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userNull_notOk() {
-        assertThrows(InvalidDataException.class, () -> registrationService.register(null));
+        Assertions.assertThrows(InvalidDataException.class, () -> registrationService.register(null));
     }
 
     @Test
     void register_loginNull_notOk() {
         User user = new User(null, "Qwerty", 25);
 
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortLogin_notOk() {
         User user = new User("stark", "Qwerty", 25);
 
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_passwordNull_notOk() {
         User user = new User("t.stark", null, 25);
 
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_shortPassword_notOk() {
         User user = new User("t.stark", "Qwe", 25);
 
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_ageNull_notOk() {
         User user = new User("t.stark", "Qwerty", null);
 
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_ageUnder18_notOk() {
         User user = new User("t.stark", "Qwerty", 15);
 
-        assertThrows(InvalidDataException.class, () -> registrationService.register(user));
+        Assertions.assertThrows(InvalidDataException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -78,7 +76,7 @@ class RegistrationServiceImplTest {
 
         registrationService.register(firstUser);
 
-        assertThrows(UserExistException.class, () -> registrationService.register(secondUser));
+        Assertions.assertThrows(UserExistException.class, () -> registrationService.register(secondUser));
     }
 
     @Test
@@ -87,9 +85,9 @@ class RegistrationServiceImplTest {
 
         User createdUser = registrationService.register(user);
 
-        assertNotNull(createdUser.getId());
-        assertEquals(user.getLogin(), createdUser.getLogin());
-        assertEquals(user.getPassword(), createdUser.getPassword());
-        assertEquals(user.getAge(), createdUser.getAge());
+        Assertions.assertNotNull(createdUser.getId());
+        Assertions.assertEquals(user.getLogin(), createdUser.getLogin());
+        Assertions.assertEquals(user.getPassword(), createdUser.getPassword());
+        Assertions.assertEquals(user.getAge(), createdUser.getAge());
     }
 }
