@@ -5,11 +5,11 @@
 * Make sure you name your methods according to [convention](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names).
 * Add tests for all possible User's parameters (null login/password/age, user under 18/18/over 18 years old, negative age, and so on...).
 * Make sure to **not** add something that is not described in the task requirements, or tied to something that may change over time like max user age. It is likely that average and maximum human lifespan will grow over time, so let's keep it in mind.
-* In your tests very important to check **all possible edge cases**. For example, we have min password length 6 characters. 
+* In your tests very important to check **all possible edge cases**. For example, we have min password length of 6 characters. 
 In this case would be good to test: empty password (0-length - not-ok), 'abc' (3-length - not-ok), 'abcdf' (5-length - **not-ok edge case**), 
 'abcdef' (6-length - **ok edge case**), 'abcdefgh' (8-length - ok). Few not-ok checks you can have in one not-ok test method. Same for ok-test.
-Testing only 'abc' (3-length - not-ok) and 'abcdefgh' (8-length - ok) is not enough because we do not check how the program behave with edge cases.
-* Make sure that after successful registration user was added to storage and `register` method returned correct user.
+Testing only 'abc' (3-length - not-ok) and 'abcdefgh' (8-length - ok) is not enough because we do not check how the program behaves with edge cases.
+* Make sure that after successful registration user was added to storage and the `register` method returned the correct user.
 * Use low-level methods like `Storage.people.add()` directly instead of `RegistrationService.register()` method to add users for testing. Because we can not use the same method which is under a test to insert some mock test data into our storage since we can not guarantee its correctness yet.
 * Don't create one big if with all conditions. Better to split one big if into several small ones.
 
@@ -40,15 +40,18 @@ Testing only 'abc' (3-length - not-ok) and 'abcdefgh' (8-length - ok) is not eno
      return storageDao.add(user);
     }
   ```
+* Do not complicate `if-else` statements.  
 * Exception messages should be informative (see code example above).
-* You don't need main method to see how your solution works, you have tests for this purpose.
-* If you are expecting exception to be thrown in the test, you can do it this way:
+* You don't need the main method to see how your solution works, you have tests for this purpose.
+* If you are expecting an exception to be thrown in the test, you can do it this way:
 ```
 assertThrows(ExpectedException.class, () -> object.methodUnderTest(inputParams);
 ```
 * Don't use `NullPointerException`, because in such case we can't distinguish was this exception because of our mistake or because of validation.
 
 * Move all hardcoded values to [constant fields](https://mate-academy.github.io/style-guides/java/java.html#s5.2.4-constant-names) and give them informative names.
+
+* Test cases should be independent - do not rely on the other tests to fill the data.
 
 * Check your code for coverage with tests, expected coverage should be 90%+. [How to run](https://www.jetbrains.com/help/idea/running-test-with-coverage.html#run-config-with-coverage)
 
