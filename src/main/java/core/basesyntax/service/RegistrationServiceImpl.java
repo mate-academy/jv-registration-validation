@@ -11,7 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public void register(User user) {
+    public User register(User user) {
         if (user.getLogin() == null) {
             throw new InvalidUserDataException(
                     "Login cannot be null");
@@ -35,5 +35,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         storageDao.add(user);
 
+        return user;
     }
 }
