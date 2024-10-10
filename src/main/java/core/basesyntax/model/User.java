@@ -8,7 +8,12 @@ public class User {
     private String password;
     private Integer age;
 
+<<<<<<< HEAD
     public User(String login, String password, Integer age) {
+=======
+    public User(Long id, String login, String password, Integer age) {
+        this.id = id;
+>>>>>>> 0c691a3ae050bbbdfb54b37d74a2655f0caee0d9
         this.password = password;
         this.login = login;
         this.age = age;
