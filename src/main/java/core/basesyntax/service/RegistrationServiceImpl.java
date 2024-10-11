@@ -12,12 +12,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
             throw new RegistrationException("Login can't be null"
                     + "Min char count is "
                     + MIN_CHAR_COUNT);
         }
-        if (user.getPassword() == null) {
+        if (user.getPassword() == null ||  user.getPassword().isEmpty()) {
             throw new RegistrationException("Password can't be null"
                     + "Min char count is "
                     + MIN_CHAR_COUNT);

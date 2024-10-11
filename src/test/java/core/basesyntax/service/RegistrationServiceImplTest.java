@@ -21,7 +21,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_user_isOK() {
-        User expected = new User("BobGood", "1234567", 18);
+        User expected = new User("BobGoo", "123456", 18);
         registrationService.register(expected);
         assertEquals(expected, storageDao.get(expected.getLogin()));
     }
@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userAlreadyExists_isNotOK() {
-        User expected = new User("BobAlreadyExists", "john123", 28);
+        User expected = new User("BobAlreadyExists", "1234567", 28);
         storageDao.add(expected);
         assertThrows(RegistrationException.class, () -> registrationService.register(expected));
     }
