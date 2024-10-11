@@ -14,19 +14,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null"
-                    + user.getLogin()
                     + "Min char count is "
                     + MIN_CHAR_COUNT);
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null"
-                    + user.getPassword()
                     + "Min char count is "
                     + MIN_CHAR_COUNT);
         }
         if (user.getAge() == null) {
             throw new RegistrationException("Age can't be null"
-                    + user.getAge()
                     + "Min age is "
                     + MIN_AGE);
         }

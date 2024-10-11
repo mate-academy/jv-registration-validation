@@ -22,8 +22,8 @@ class RegistrationServiceImplTest {
     @Test
     void register_user_isOK() {
         User expected = new User("BobGood", "1234567", 18);
-        User actual = registrationService.register(expected);
-        assertEquals(actual, expected);
+        registrationService.register(expected);
+        assertEquals(expected, storageDao.get(expected.getLogin()));
     }
 
     @Test
