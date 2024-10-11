@@ -98,19 +98,21 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordEdgeCases_notOk() {
         User user = new User();
-        user.setLogin("validLogin");
 
+        user.setLogin("uniqueLogin1");
         user.setPassword("");
         user.setAge(20);
         Exception exception1 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
         assertEquals("Пароль повинен містити щонайменше 6 символів", exception1.getMessage());
 
+        user.setLogin("uniqueLogin2");
         user.setPassword("abc");
         Exception exception2 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
         assertEquals("Пароль повинен містити щонайменше 6 символів", exception2.getMessage());
 
+        user.setLogin("uniqueLogin3");
         user.setPassword("abcdf");
         Exception exception3 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
@@ -120,23 +122,26 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageEdgeCases_notOk() {
         User user = new User();
-        user.setLogin("validLogin");
         user.setPassword("validPassword");
 
+        user.setLogin("uniqueLogin4");
         user.setAge(null);
         Exception exception1 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
         assertEquals("Користувач повинен бути не молодшим за 18 років", exception1.getMessage());
 
+        user.setLogin("uniqueLogin5");
         user.setAge(17);
         Exception exception2 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
         assertEquals("Користувач повинен бути не молодшим за 18 років", exception2.getMessage());
 
+        user.setLogin("uniqueLogin6");
         user.setAge(-1);
         Exception exception3 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
         assertEquals("Користувач повинен бути не молодшим за 18 років", exception3.getMessage());
     }
 }
+
 
