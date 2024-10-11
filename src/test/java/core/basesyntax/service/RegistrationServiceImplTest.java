@@ -22,7 +22,7 @@ class RegistrationServiceImplTest {
         Exception exception = assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(null);
         });
-        assertEquals("User cannot be null", exception.getMessage());
+        assertEquals("Користувач не може бути null", exception.getMessage());
     }
 
     @Test
@@ -41,7 +41,7 @@ class RegistrationServiceImplTest {
         Exception exception = assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(user2);
         });
-        assertEquals("User with this login already exists", exception.getMessage());
+        assertEquals("Користувач з таким логіном вже існує", exception.getMessage());
     }
 
     @Test
@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
         Exception exception = assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(user);
         });
-        assertEquals("Login must be at least 6 characters long", exception.getMessage());
+        assertEquals("Логін повинен містити щонайменше 6 символів", exception.getMessage());
     }
 
     @Test
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
         Exception exception = assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(user);
         });
-        assertEquals("Password must be at least 6 characters long", exception.getMessage());
+        assertEquals("Пароль повинен містити щонайменше 6 символів", exception.getMessage());
     }
 
     @Test
@@ -80,7 +80,7 @@ class RegistrationServiceImplTest {
         Exception exception = assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(user);
         });
-        assertEquals("User must be at least 18 years old", exception.getMessage());
+        assertEquals("Користувач повинен бути не молодшим за 18 років", exception.getMessage());
     }
 
     @Test
@@ -104,17 +104,17 @@ class RegistrationServiceImplTest {
         user.setAge(20);
         Exception exception1 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
-        assertEquals("Password must be at least 6 characters long", exception1.getMessage());
+        assertEquals("Пароль повинен містити щонайменше 6 символів", exception1.getMessage());
 
         user.setPassword("abc");
         Exception exception2 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
-        assertEquals("Password must be at least 6 characters long", exception2.getMessage());
+        assertEquals("Пароль повинен містити щонайменше 6 символів", exception2.getMessage());
 
         user.setPassword("abcdf");
         Exception exception3 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
-        assertEquals("Password must be at least 6 characters long", exception3.getMessage());
+        assertEquals("Пароль повинен містити щонайменше 6 символів", exception3.getMessage());
     }
 
     @Test
@@ -126,17 +126,17 @@ class RegistrationServiceImplTest {
         user.setAge(null);
         Exception exception1 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
-        assertEquals("User must be at least 18 years old", exception1.getMessage());
+        assertEquals("Користувач повинен бути не молодшим за 18 років", exception1.getMessage());
 
         user.setAge(17);
         Exception exception2 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
-        assertEquals("User must be at least 18 years old", exception2.getMessage());
+        assertEquals("Користувач повинен бути не молодшим за 18 років", exception2.getMessage());
 
         user.setAge(-1);
         Exception exception3 = assertThrows(InvalidUserDataException.class, () ->
                 registrationService.register(user));
-        assertEquals("User must be at least 18 years old", exception3.getMessage());
+        assertEquals("Користувач повинен бути не молодшим за 18 років", exception3.getMessage());
     }
 }
 
