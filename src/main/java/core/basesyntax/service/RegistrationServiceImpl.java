@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + "Min char count is "
                     + MIN_CHAR_COUNT);
         }
-        if (user.getPassword() == null ||  user.getPassword().isEmpty()) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new RegistrationException("Password can't be null"
                     + "Min char count is "
                     + MIN_CHAR_COUNT);
