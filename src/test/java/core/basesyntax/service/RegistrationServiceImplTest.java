@@ -102,15 +102,18 @@ class RegistrationServiceImplTest {
 
         user.setPassword("");
         user.setAge(20);
-        Exception exception1 = assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
+        Exception exception1 = assertThrows(InvalidUserDataException.class, () ->
+                registrationService.register(user));
         assertEquals("Password must be at least 6 characters long", exception1.getMessage());
 
         user.setPassword("abc");
-        Exception exception2 = assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
+        Exception exception2 = assertThrows(InvalidUserDataException.class, () ->
+                registrationService.register(user));
         assertEquals("Password must be at least 6 characters long", exception2.getMessage());
 
         user.setPassword("abcdf");
-        Exception exception3 = assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
+        Exception exception3 = assertThrows(InvalidUserDataException.class, () ->
+                registrationService.register(user));
         assertEquals("Password must be at least 6 characters long", exception3.getMessage());
     }
 
@@ -121,15 +124,19 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword");
 
         user.setAge(null);
-        Exception exception1 = assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
+        Exception exception1 = assertThrows(InvalidUserDataException.class, () ->
+                registrationService.register(user));
         assertEquals("User must be at least 18 years old", exception1.getMessage());
 
         user.setAge(17);
-        Exception exception2 = assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
+        Exception exception2 = assertThrows(InvalidUserDataException.class, () ->
+                registrationService.register(user));
         assertEquals("User must be at least 18 years old", exception2.getMessage());
 
         user.setAge(-1);
-        Exception exception3 = assertThrows(InvalidUserDataException.class, () -> registrationService.register(user));
+        Exception exception3 = assertThrows(InvalidUserDataException.class, () ->
+                registrationService.register(user));
         assertEquals("User must be at least 18 years old", exception3.getMessage());
     }
 }
+

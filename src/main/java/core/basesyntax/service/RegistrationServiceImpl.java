@@ -18,16 +18,20 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserDataException("Користувач не може бути null");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserDataException("Користувач з таким логіном вже існує");
+            throw new InvalidUserDataException(
+                    "Користувач з таким логіном вже існує");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidUserDataException("Логін повинен містити щонайменше " + MIN_LOGIN_LENGTH + " символів");
+            throw new InvalidUserDataException(
+                    "Логін повинен містити щонайменше " + MIN_LOGIN_LENGTH + " символів");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidUserDataException("Пароль повинен містити щонайменше " + MIN_PASSWORD_LENGTH + " символів");
+            throw new InvalidUserDataException(
+                    "Пароль повинен містити щонайменше " + MIN_PASSWORD_LENGTH + " символів");
         }
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
-            throw new InvalidUserDataException("Користувач повинен бути не молодшим за " + MIN_AGE + " років");
+            throw new InvalidUserDataException(
+                    "Користувач повинен бути не молодшим за " + MIN_AGE + " років");
         }
         return storageDao.add(user);
     }
