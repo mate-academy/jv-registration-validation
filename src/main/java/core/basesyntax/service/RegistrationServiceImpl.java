@@ -12,42 +12,59 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            throw new RegistrationException("Login can't be null"
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
+        isUserValid(user);
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        return storageDao.add(user);
+    }
+
+    private void validateLogin(String login) {
+        if (login == null || login.isEmpty()) {
+            throw new RegistrationException("Login can't be null");
+        }
+        if (login.length() < MIN_CHAR_COUNT) {
+            throw new RegistrationException("Login is too short"
+                    + login
                     + "Min char count is "
                     + MIN_CHAR_COUNT);
         }
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+    }
+
+    private void validatePassword(String password) {
+        if (password == null || password.isEmpty()) {
             throw new RegistrationException("Password can't be null"
                     + "Min char count is "
                     + MIN_CHAR_COUNT);
         }
-        if (user.getAge() == null) {
+        if (password.length() < MIN_CHAR_COUNT) {
+            throw new RegistrationException("Password is too short"
+                    + password
+                    + "Min char count is "
+                    + MIN_CHAR_COUNT);
+        }
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null) {
             throw new RegistrationException("Age can't be null"
                     + "Min age is "
                     + MIN_AGE);
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User already exists");
-        }
-        if (user.getLogin().length() < MIN_CHAR_COUNT) {
-            throw new RegistrationException("Login is too short"
-                    + user.getLogin()
-                    + "Min char count is "
-                    + MIN_CHAR_COUNT);
-        }
-        if (user.getPassword().length() < MIN_CHAR_COUNT) {
-            throw new RegistrationException("Password is too short"
-                    + user.getPassword()
-                    + "Min char count is "
-                    + MIN_CHAR_COUNT);
-        }
-        if (user.getAge() < MIN_AGE) {
+        if (age < MIN_AGE) {
             throw new RegistrationException("Not valid age: "
-                    + user.getAge()
+                    + age
                     + ". Min allowed age is "
                     + MIN_AGE);
         }
-        return storageDao.add(user);
+    }
+
+    private void isUserValid(User user) {
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User already exists");
+        }
     }
 }

@@ -3,7 +3,7 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,19 +11,17 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDaoImpl storageDao;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @Test
-    void register_user_isOK() {
+    void register_validUser_isOK() {
         User expected = new User("BobGoo", "123456", 18);
-        registrationService.register(expected);
-        assertEquals(expected, storageDao.get(expected.getLogin()));
+        User actual = registrationService.register(expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -65,7 +63,18 @@ class RegistrationServiceImplTest {
     @Test
     void register_userAlreadyExists_isNotOK() {
         User expected = new User("BobAlreadyExists", "1234567", 28);
-        storageDao.add(expected);
+        Storage.people.add(expected);
         assertThrows(RegistrationException.class, () -> registrationService.register(expected));
+    }
+
+    @Test
+    void register_negativeAge_isNotOK() {
+        User expected = new User("BobWithNegativeAge", "1234567", -28);
+        assertThrows(RegistrationException.class, () -> registrationService.register(expected));
+    }
+
+    @Test
+    void register_nullUser_isNotOK() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 }
