@@ -13,38 +13,38 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new ValidationException("The user must not being a null");
+            throw new ValidationException("User can't be null");
         }
         if (user.getLogin() == null) {
-            throw new ValidationException("The login must not be a null");
+            throw new ValidationException("Login can't be null");
         }
         if (user.getPassword() == null) {
-            throw new ValidationException("The password must not be not a null");
+            throw new ValidationException("Password can't be null");
         }
         if (user.getAge() == null) {
-            throw new ValidationException("The age most not be a null");
+            throw new ValidationException("Age can't be null");
         }
-        if (!checkForMinCharsInLine(user)) {
-            throw new ValidationException("Invalid length line!"
-                    + "Length line must be at least 6 characters");
+        if (!isValidUserCredentials(user)) {
+            throw new ValidationException("Login and password should contain"
+                    + " at least 6 characters");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new ValidationException("Invalid age! The age must be at least 18 years old");
+            throw new ValidationException("User should be at least 18 years old");
         }
-        if (checkOnExistedLogin(user)) {
-            throw new ValidationException("This login has already used");
+        if (isLoginAlreadyUsed(user)) {
+            throw new ValidationException("This login is already in use");
         }
         return storageDao.add(user);
     }
 
-    private boolean checkForMinCharsInLine(User user) {
+    private boolean isValidUserCredentials(User user) {
         if (user.getLogin().length() < MIN_LENGTH || user.getPassword().length() < MIN_LENGTH) {
             return false;
         }
         return true;
     }
 
-    private boolean checkOnExistedLogin(User user) {
+    private boolean isLoginAlreadyUsed(User user) {
         User userFromStorage = storageDao.get(user.getLogin());
         if (user.getLogin() != null && userFromStorage != null
                 && user.getLogin().equals(userFromStorage.getLogin())) {

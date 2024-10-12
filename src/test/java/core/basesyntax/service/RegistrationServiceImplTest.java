@@ -5,19 +5,43 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final RegistrationService REGISTRATION_SERVICE = new RegistrationServiceImpl();
+    private RegistrationService registrationService;
+
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @Test
     void register_checkOnUserRegistration_isOk() {
         User actual = new User();
-        actual.setLogin("Snowman");
-        actual.setPassword("123456");
+        actual.setLogin("Snowtrack");
+        actual.setPassword("1234567");
         actual.setAge(44);
-        User expected = REGISTRATION_SERVICE.register(actual);
+        User actual1 = new User();
+        actual1.setLogin("Genadiy");
+        actual1.setPassword("1234567");
+        actual1.setAge(18);
+        User actual2 = new User();
+        actual2.setLogin("Nicole");
+        actual2.setPassword("1234567");
+        actual2.setAge(22);
+        User actual3 = new User();
+        actual3.setLogin("Snowhunter");
+        actual3.setPassword("123456");
+        actual3.setAge(41);
+        User expected = registrationService.register(actual);
         assertEquals(expected, actual);
+        expected = registrationService.register(actual1);
+        assertEquals(expected, actual1);
+        expected = registrationService.register(actual2);
+        assertEquals(expected, actual2);
+        expected = registrationService.register(actual3);
+        assertEquals(expected, actual3);
     }
 
     @Test
@@ -26,13 +50,13 @@ class RegistrationServiceImplTest {
         testUser.setLogin("WormJim");
         testUser.setPassword("123456");
         testUser.setAge(29);
-        REGISTRATION_SERVICE.register(testUser);
+        registrationService.register(testUser);
         User testUser2 = new User();
         testUser2.setLogin("WormJim");
         testUser2.setPassword("654321");
         testUser2.setAge(24);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser2);
+            registrationService.register(testUser2);
         });
     }
 
@@ -43,15 +67,15 @@ class RegistrationServiceImplTest {
         testUser.setPassword("123456");
         testUser.setAge(24);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
         testUser.setLogin("");
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
-        testUser.setLogin("1");
+        testUser.setLogin("J");
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
     }
 
@@ -62,11 +86,15 @@ class RegistrationServiceImplTest {
         testUser.setPassword("123");
         testUser.setAge(32);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
         testUser.setPassword("");
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
+        });
+        testUser.setPassword("12345");
+        assertThrows(ValidationException.class, () -> {
+            registrationService.register(testUser);
         });
     }
 
@@ -77,15 +105,15 @@ class RegistrationServiceImplTest {
         testUser.setPassword("123456");
         testUser.setAge(17);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
         testUser.setAge(-1);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
         testUser.setAge(0);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
     }
 
@@ -96,20 +124,20 @@ class RegistrationServiceImplTest {
         testUser.setPassword("123456");
         testUser.setAge(18);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
         testUser.setLogin("Snowman");
         testUser.setPassword(null);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
         testUser.setPassword("123456");
         testUser.setAge(null);
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser);
+            registrationService.register(testUser);
         });
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(null);
+            registrationService.register(null);
         });
     }
 }
