@@ -11,50 +11,62 @@ class RegistrationServiceImplTest {
     private static final RegistrationService REGISTRATION_SERVICE = new RegistrationServiceImpl();
 
     @Test
+    void register_checkOnUserRegistration_isOk() {
+        User actual = new User();
+        actual.setLogin("Snowman");
+        actual.setPassword("123456");
+        actual.setAge(44);
+        User expected = REGISTRATION_SERVICE.register(actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void register_theSameLogin_NotOk() {
         User testUser = new User();
         testUser.setLogin("WormJim");
         testUser.setPassword("123456");
         testUser.setAge(29);
+        REGISTRATION_SERVICE.register(testUser);
         User testUser2 = new User();
         testUser2.setLogin("WormJim");
         testUser2.setPassword("654321");
         testUser2.setAge(24);
-        User expected = REGISTRATION_SERVICE.register(testUser);
-        User actual = REGISTRATION_SERVICE.register(testUser2);
-        assertEquals(expected, actual, "Test failed you should not register the same user's login");
+        assertThrows(ValidationException.class, () -> {
+            REGISTRATION_SERVICE.register(testUser2);
+        });
     }
 
     @Test
     void register_invalidLoginLength_notOk() {
         User testUser = new User();
-        User testUser2 = new User();
         testUser.setLogin("Jo");
         testUser.setPassword("123456");
-        testUser2.setLogin("");
-        testUser2.setPassword("123456");
+        testUser.setAge(24);
         assertThrows(ValidationException.class, () -> {
             REGISTRATION_SERVICE.register(testUser);
         });
+        testUser.setLogin("");
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser2);
+            REGISTRATION_SERVICE.register(testUser);
+        });
+        testUser.setLogin("1");
+        assertThrows(ValidationException.class, () -> {
+            REGISTRATION_SERVICE.register(testUser);
         });
     }
 
     @Test
     void register_invalidPasswordLength_notOk() {
         User testUser = new User();
-        User testUser2 = new User();
         testUser.setLogin("Snowman");
         testUser.setPassword("123");
-        testUser2.setLogin("Bigfoot");
-        testUser2.setPassword("");
+        testUser.setAge(32);
         assertThrows(ValidationException.class, () -> {
             REGISTRATION_SERVICE.register(testUser);
         });
+        testUser.setPassword("");
         assertThrows(ValidationException.class, () -> {
-            REGISTRATION_SERVICE.register(testUser2);
-
+            REGISTRATION_SERVICE.register(testUser);
         });
     }
 
@@ -64,6 +76,14 @@ class RegistrationServiceImplTest {
         testUser.setLogin("Snowman");
         testUser.setPassword("123456");
         testUser.setAge(17);
+        assertThrows(ValidationException.class, () -> {
+            REGISTRATION_SERVICE.register(testUser);
+        });
+        testUser.setAge(-1);
+        assertThrows(ValidationException.class, () -> {
+            REGISTRATION_SERVICE.register(testUser);
+        });
+        testUser.setAge(0);
         assertThrows(ValidationException.class, () -> {
             REGISTRATION_SERVICE.register(testUser);
         });
@@ -87,6 +107,9 @@ class RegistrationServiceImplTest {
         testUser.setAge(null);
         assertThrows(ValidationException.class, () -> {
             REGISTRATION_SERVICE.register(testUser);
+        });
+        assertThrows(ValidationException.class, () -> {
+            REGISTRATION_SERVICE.register(null);
         });
     }
 }
