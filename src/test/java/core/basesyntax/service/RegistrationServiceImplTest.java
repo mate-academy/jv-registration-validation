@@ -1,11 +1,12 @@
 package core.basesyntax.service;
 
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class RegistrationServiceImplTest {
 
@@ -60,8 +61,10 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("simple");
         user.setAge(20);
-        RegistrationException registrationException = Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user));
-        Assertions.assertEquals("The password must be complex!", registrationException.getMessage());
+        RegistrationException registrationException = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("The password must be complex!",
+                registrationException.getMessage());
     }
 
     @Test

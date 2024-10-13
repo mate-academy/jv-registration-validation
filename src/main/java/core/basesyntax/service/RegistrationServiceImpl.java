@@ -58,4 +58,3 @@ public class RegistrationServiceImpl implements RegistrationService {
         return hasUpperCase && hasLowerCase & hasDigit & hasSpecialSymbol;
     }
 }
-
