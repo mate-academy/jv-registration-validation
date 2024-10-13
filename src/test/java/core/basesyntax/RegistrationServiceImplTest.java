@@ -33,62 +33,62 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_DuplicateLogin_notOk() {
+    void register_duplicateLogin_notOk() {
         registrationService.register(user);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void loginIsLessThanSixCharacters_notOk() {
+    void register_loginIsLessThanSixCharacters_notOk() {
         user.setLogin(LESS_THAN_SIX_CHARACTERS);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void passwordIsLessThanSixCharacters_notOk() {
+    void register_passwordIsLessThanSixCharacters_notOk() {
         user.setPassword(LESS_THAN_SIX_CHARACTERS);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userRegister_ok() {
+    void register_userRegister_ok() {
         User actual = registrationService.register(user);
         User expected = storage.get(user.getLogin());
         assertEquals(expected, actual);
     }
 
     @Test
-    void ageIsLessThanEighteen_notOK() {
+    void register_ageIsLessThanEighteen_notOK() {
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void registrationServiceNullValue_notOk() {
+    void register_registrationServiceNullValue_notOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
-    void loginNullValue_notOk() {
+    void register_loginNullValue_notOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void passwordNullValue_notOk() {
+    void register_passwordNullValue_notOk() {
         user.setPassword(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void userIsNotExistInStorage() {
+    void storage_userIsNotExistInStorage() {
         User actual = storage.get("Nothing");
         User expected = null;
         assertEquals(expected, actual);
     }
 
     @Test
-    void register_ReturnsProvidedUser_WhenSuccess() {
+    void register_returnsProvidedUser_WhenSuccess() {
         User actual = registrationService.register(user);
         User expected = user;
         assertEquals(expected, actual);
