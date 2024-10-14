@@ -9,16 +9,16 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class HelloWorldTest {
+public class RegistrationServiceImplTest {
 
-    private RegistrationServiceImpl registrationService;
-    private StorageDao storageDao;
+    private static RegistrationServiceImpl registrationService;
+    private static StorageDao storageDao;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
@@ -30,8 +30,8 @@ public class HelloWorldTest {
         validUser.setPassword("passwordValid");
         validUser.setLogin("loginValid");
 
-        User result = registrationService.register(validUser);
-        assertNotNull(result);
+        storageDao.add(validUser);
+        assertNotNull(storageDao.get("loginValid"));
         assertEquals(validUser, storageDao.get("loginValid"));
     }
 
@@ -41,7 +41,7 @@ public class HelloWorldTest {
         firstUser.setLogin("validLogin");
         firstUser.setPassword("validPassword");
         firstUser.setAge(20);
-        registrationService.register(firstUser);
+        storageDao.add(firstUser);
 
         User secondUserWithSameLogin = new User();
         secondUserWithSameLogin.setLogin("validLogin");
@@ -78,6 +78,18 @@ public class HelloWorldTest {
     }
 
     @Test
+    void register_emptyPassword_notOk() {
+        User userWithEmptyPassword = new User();
+        userWithEmptyPassword.setLogin("validLogin");
+        userWithEmptyPassword.setPassword("");
+        userWithEmptyPassword.setAge(20);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(userWithEmptyPassword);
+        });
+    }
+
+    @Test
     void register_shortLogin_notOk() {
         User userWithShortLogin = new User();
         userWithShortLogin.setLogin("log");
@@ -90,19 +102,32 @@ public class HelloWorldTest {
     }
 
     @Test
-    void register_loginIsNull_notOk() {
-        User userWithNullLogin = new User();
-        userWithNullLogin.setLogin(null);
-        userWithNullLogin.setPassword("validPassword");
-        userWithNullLogin.setAge(20);
+    void register_minLengthLogin_ok() {
+        User userWithMinLengthLogin = new User();
+
+        String minLengthLogin = "MinLog";
+        userWithMinLengthLogin.setLogin(minLengthLogin);
+        userWithMinLengthLogin.setPassword("validPassword");
+        userWithMinLengthLogin.setAge(20);
+
+        registrationService.register(userWithMinLengthLogin);
+        assertEquals(userWithMinLengthLogin, storageDao.get(minLengthLogin));
+    }
+
+    @Test
+    void register_emptyLogin_notOk() {
+        User userWithEmptyLogin = new User();
+        userWithEmptyLogin.setLogin("");
+        userWithEmptyLogin.setPassword("validPassword");
+        userWithEmptyLogin.setAge(20);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNullLogin);
+            registrationService.register(userWithEmptyLogin);
         });
     }
 
     @Test
-    void register_ageIsNull_notOk() {
+    void register_ageIsZero_notOk() {
         User userWithNullAge = new User();
         userWithNullAge.setLogin("validLogin");
         userWithNullAge.setPassword("validPassword");
@@ -123,5 +148,15 @@ public class HelloWorldTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithFewYears);
         });
+    }
+
+    @Test
+    void register_minAge_ok() {
+        User userWithMinAge = new User();
+        userWithMinAge.setLogin("LoginV");
+        userWithMinAge.setPassword("PasswordV");
+        userWithMinAge.setAge(18);
+        registrationService.register(userWithMinAge);
+        assertEquals(userWithMinAge, storageDao.get("LoginV"));
     }
 }
