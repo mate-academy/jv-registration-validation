@@ -9,7 +9,7 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
@@ -17,8 +17,8 @@ public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storageDao;
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
@@ -30,7 +30,7 @@ public class RegistrationServiceImplTest {
         validUser.setPassword("passwordValid");
         validUser.setLogin("loginValid");
 
-        storageDao.add(validUser);
+        registrationService.register(validUser);
         assertNotNull(storageDao.get("loginValid"));
         assertEquals(validUser, storageDao.get("loginValid"));
     }
@@ -57,7 +57,7 @@ public class RegistrationServiceImplTest {
     void register_shortPassword_notOk() {
         User userWithShortPassword = new User();
         userWithShortPassword.setLogin("validLogin");
-        userWithShortPassword.setPassword("pwd");
+        userWithShortPassword.setPassword("short");
         userWithShortPassword.setAge(20);
 
         assertThrows(RegistrationException.class, () -> {
@@ -104,7 +104,6 @@ public class RegistrationServiceImplTest {
     @Test
     void register_minLengthLogin_ok() {
         User userWithMinLengthLogin = new User();
-
         String minLengthLogin = "MinLog";
         userWithMinLengthLogin.setLogin(minLengthLogin);
         userWithMinLengthLogin.setPassword("validPassword");
@@ -128,25 +127,25 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_ageIsZero_notOk() {
-        User userWithNullAge = new User();
-        userWithNullAge.setLogin("validLogin");
-        userWithNullAge.setPassword("validPassword");
-        userWithNullAge.setAge(0);
+        User userWithZeroAge = new User();
+        userWithZeroAge.setLogin("validLogin");
+        userWithZeroAge.setPassword("validPassword");
+        userWithZeroAge.setAge(0);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithNullAge);
+            registrationService.register(userWithZeroAge);
         });
     }
 
     @Test
     void register_fewYears_notOk() {
-        User userWithFewYears = new User();
-        userWithFewYears.setLogin("validLogin");
-        userWithFewYears.setPassword("validPassword");
-        userWithFewYears.setAge(16);
+        User userWithSeventeenYears = new User();
+        userWithSeventeenYears.setLogin("validLogin");
+        userWithSeventeenYears.setPassword("validPassword");
+        userWithSeventeenYears.setAge(17);
 
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(userWithFewYears);
+            registrationService.register(userWithSeventeenYears);
         });
     }
 
