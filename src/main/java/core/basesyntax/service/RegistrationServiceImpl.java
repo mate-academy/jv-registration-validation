@@ -14,20 +14,20 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new NullPointerException("You can not add user without any parameters");
+            throw new RegistrationException("You can not add user without any parameters");
         }
         for (User user1 : Storage.people) {
             if (user.getLogin() != null && user.getLogin().equals(user1.getLogin())) {
                 throw new RegistrationException("User with such login already exist");
             }
         }
-        if (user.getLogin() != null && user.getLogin().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
+        if (user.getLogin() == null || user.getLogin().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
             throw new RegistrationException("Login should have at least 6 characters");
         }
-        if (user.getPassword() != null && user.getPassword().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
+        if (user.getPassword() == null || user.getPassword().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
             throw new RegistrationException("Password should have at least 6 characters");
         }
-        if (user.getAge() != null && user.getAge() < MINIMAL_AMOUNT_OF_AGE) {
+        if (user.getAge() == null || user.getAge() < MINIMAL_AMOUNT_OF_AGE) {
             throw new RegistrationException("User need to be at least 18 years old");
         }
         storageDao.add(user);

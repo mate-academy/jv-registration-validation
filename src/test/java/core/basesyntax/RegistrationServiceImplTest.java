@@ -13,63 +13,83 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RegistrationServiceImplTest {
     private static RegistrationService registrationService = new RegistrationServiceImpl();
+    private static final int MINIMAL_AMOUNT_OF_SYMBOLS = 6;
+    private static final int MINIMAL_AMOUNT_OF_AGE = 18;
     @BeforeAll
     static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
     @Test
-    void checkIfUserIsNull_NotOk() {
-        User user = new User();
-        assertThrows(NullPointerException.class, () -> {
+    void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(null);
+        });
+    }
+
+    @Test
+    void check_IfMethodAddDuplicateUsers_NotOk(){
+        User user1 = new User("Mykola", "1234567", 85);
+        registrationService.register(user1);
+        User user2 = new User("Mykola", "1234567", 85);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user2);
+        });
+    }
+
+    @Test
+    void check_IfMethodCanAddNewUser_Ok() {
+        User expecterUser = new User ("Mykola1", "1234567", 18);
+        User actualUser = registrationService.register(expecterUser);
+        assertEquals(expecterUser, actualUser, "Expected User is: "
+                + expecterUser + ", but was found: " + actualUser);
+    }
+
+    @Test
+    void register_passwordIsLessThanMinLength_notOk() {
+        User user = new User ("Mykola1", "12345", 18);
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void checkIfUserIsAlreadyExist_NotOk() {
-        User user1 = new User(10l, "Mykola", "1234567", 85);
-        registrationService.register(user1);
-        User user2 = new User(11l, "Mykola", "1234567", 85);
+    void register_loginIsLessThanMinLength_notOk() {
+        User user = new User ("Myk", "12345568979", 18);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(user);
         });
     }
 
     @Test
-    void checkIfMethodCanAddNewUser_Ok() {
-        User user1 = new User(10l, "Mykola1", "1234567", 18);
-        User user2 = new User(10l, "Mykola2", "1234567", 27);
-        User user3 = new User(10l, "Mykola30", "1234567", 19);
-        User user4 = new User(10l, "Mykola478", "1234567", 85);
-        User user5 = new User(10l, "Mykola87985", "1234567", 54);
-        registrationService.register(user1);
-        registrationService.register(user2);
-        registrationService.register(user3);
-        registrationService.register(user4);
-        registrationService.register(user5);
-        int expected = 5;
-        int actual = Storage.people.size();
-        assertEquals(expected, actual, "Test failed! Size of array should be "
-                + expected + ", but it is " + Storage.people.size());
+    void register_ageIsLessThanMinLength_notOk() {
+        User user = new User ("Mykola758", "12345568979", 15);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
-    void checkIfMethodAddDuplicateUsers_NotOk() {
-        User user1 = new User(10l, "Mykola", "1234567", 18);
-        User user2 = new User(10l, "Mykola", "1234567", 27);
-        User user3 = new User(10l, "Mykola3", "1234567", 19);
-        User user4 = new User(10l, "Mykola4", "1234567", 85);
-        User user5 = new User(10l, "Mykola5", "1234567", 54);
-        registrationService.register(user1);
-        registrationService.register(user3);
-        registrationService.register(user4);
-        registrationService.register(user5);
-        int expected = 4;
-        int actual = Storage.people.size();
-        assertEquals(expected, actual, "Test failed! Size of array should be "
-                + expected + ", but it is " + Storage.people.size());
+    void register_loginIsNull_notOk() {
+        User user = new User (null, "12345568979", 19);
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user2);
+            registrationService.register(user);
         });
     }
+
+    @Test
+    void register_passwordIsNull_notOk() {
+        User user = new User ("Mykola8908", null, 27);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_ageIsNull_notOk() {
+        User user = new User ("Mykola8908", "123456789", null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
 }
