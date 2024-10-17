@@ -30,9 +30,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password must be at least "
                     + MIN_PASSWORD_LENGTH + " characters");
         }
-        if (user.getAge() == null) {
-            throw new RegistrationException("Age cannot be null");
-        }
         if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Age must be at least 18 years old");
         }

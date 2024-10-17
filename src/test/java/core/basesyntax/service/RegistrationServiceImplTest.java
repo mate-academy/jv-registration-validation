@@ -4,24 +4,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static StorageDao storageDao;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
     }
 
     @Test
-    void register_validUser() {
+    void register_validUser_ok() {
         User validUser = new User();
         validUser.setAge(20);
         validUser.setPassword("passwordValid");
@@ -45,7 +46,7 @@ class RegistrationServiceImplTest {
         secondUserWithSameLogin.setPassword("anotherPassword");
         secondUserWithSameLogin.setAge(25);
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(secondUserWithSameLogin);
         });
     }
@@ -81,7 +82,7 @@ class RegistrationServiceImplTest {
         userWithShortLogin.setPassword("validPassword");
         userWithShortLogin.setAge(20);
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithShortLogin);
         });
     }
@@ -98,7 +99,7 @@ class RegistrationServiceImplTest {
         registrationService.register(userWithMinLengthLogin);
         assertEquals(userWithMinLengthLogin, storageDao.get(minLengthLogin));
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithMinLengthLogin);
         });
     }
@@ -110,7 +111,7 @@ class RegistrationServiceImplTest {
         userWithEmptyPassword.setPassword("");
         userWithEmptyPassword.setAge(20);
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithEmptyPassword);
         });
     }
@@ -122,7 +123,7 @@ class RegistrationServiceImplTest {
         userWithZeroAge.setPassword("validPassword");
         userWithZeroAge.setAge(0);
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithZeroAge);
         });
     }
@@ -134,7 +135,7 @@ class RegistrationServiceImplTest {
         userWithSeventeenYears.setPassword("validPassword");
         userWithSeventeenYears.setAge(17);
 
-        assertThrows(RuntimeException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userWithSeventeenYears);
         });
     }
