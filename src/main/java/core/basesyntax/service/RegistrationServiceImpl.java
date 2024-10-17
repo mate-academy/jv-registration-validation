@@ -8,23 +8,23 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MINIMAL_AMOUNT_OF_SYMBOLS = 6;
+    private static final int MINIMAL_AMOUNT_OF_AGE = 18;
 
     @Override
     public User register(User user) {
-        char []loginLength = user.getLogin().toCharArray();
-        char []passwordLength = user.getPassword().toCharArray();
         for (User user1 : Storage.people) {
             if (user.getLogin().equals(user1.getLogin())) {
                 throw new NoValidDataException("User with such login already exist");
             }
         }
-        if (loginLength.length < 6) {
+        if (user.getLogin().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
             throw new NoValidDataException("Login should have at least 6 characters");
         }
-        if (passwordLength.length < 6) {
+        if (user.getPassword().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
             throw new NoValidDataException("Password should have at least 6 characters");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < MINIMAL_AMOUNT_OF_AGE) {
             throw new NoValidDataException("User need to be at least 18 years old");
         }
         storageDao.add(user);
