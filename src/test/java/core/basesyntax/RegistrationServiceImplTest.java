@@ -27,9 +27,9 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_IfMethodAddDuplicateUsers_NotOk(){
+    void register_DuplicateUsers_NotOk(){
         User user1 = new User("Mykola", "1234567", 85);
-        registrationService.register(user1);
+        Storage.people.add(user1);
         User user2 = new User("Mykola", "1234567", 85);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user2);
@@ -87,6 +87,14 @@ public class RegistrationServiceImplTest {
     @Test
     void register_ageIsNull_notOk() {
         User user = new User ("Mykola8908", "123456789", null);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = new User ("Mykola8908", "123456789", -13);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });

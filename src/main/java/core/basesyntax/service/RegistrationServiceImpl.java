@@ -16,10 +16,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("You can not add user without any parameters");
         }
-        for (User user1 : Storage.people) {
-            if (user.getLogin() != null && user.getLogin().equals(user1.getLogin())) {
-                throw new RegistrationException("User with such login already exist");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with such login already exists");
         }
         if (user.getLogin() == null || user.getLogin().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
             throw new RegistrationException("Login should have at least 6 characters");
