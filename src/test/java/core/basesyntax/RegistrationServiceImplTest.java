@@ -34,9 +34,9 @@ public class RegistrationServiceImplTest {
     void checkIfMethodCanAddNewUser_Ok() {
         User user1 = new User(10l, "Mykola1", "1234567", 18);
         User user2 = new User(10l, "Mykola2", "1234567", 27);
-        User user3 = new User(10l, "Mykola3", "1234567", 19);
-        User user4 = new User(10l, "Mykola4", "1234567", 85);
-        User user5 = new User(10l, "Mykola5", "1234567", 54);
+        User user3 = new User(10l, "Mykola30", "1234567", 19);
+        User user4 = new User(10l, "Mykola478", "1234567", 85);
+        User user5 = new User(10l, "Mykola87985", "1234567", 54);
         registrationService.register(user1);
         registrationService.register(user2);
         registrationService.register(user3);
@@ -56,7 +56,9 @@ public class RegistrationServiceImplTest {
         User user4 = new User(10l, "Mykola4", "1234567", 85);
         User user5 = new User(10l, "Mykola5", "1234567", 54);
         registrationService.register(user1);
-        registrationService.register(user2);
+        assertThrows(NoValidDataException.class, () -> {
+            registrationService.register(user2);
+        });
         registrationService.register(user3);
         registrationService.register(user4);
         registrationService.register(user5);

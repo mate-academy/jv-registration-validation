@@ -13,6 +13,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new NullPointerException("You can not add user without any parameters");
+        }
         for (User user1 : Storage.people) {
             if (user.getLogin().equals(user1.getLogin())) {
                 throw new NoValidDataException("User with such login already exist");
