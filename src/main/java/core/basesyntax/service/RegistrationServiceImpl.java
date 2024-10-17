@@ -1,6 +1,6 @@
 package core.basesyntax.service;
 
-import core.basesyntax.Exception.NoValidDataException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -18,17 +18,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         for (User user1 : Storage.people) {
             if (user.getLogin().equals(user1.getLogin())) {
-                throw new NoValidDataException("User with such login already exist");
+                throw new RegistrationException("User with such login already exist");
             }
         }
         if (user.getLogin().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
-            throw new NoValidDataException("Login should have at least 6 characters");
+            throw new RegistrationException("Login should have at least 6 characters");
         }
         if (user.getPassword().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
-            throw new NoValidDataException("Password should have at least 6 characters");
+            throw new RegistrationException("Password should have at least 6 characters");
         }
         if (user.getAge() < MINIMAL_AMOUNT_OF_AGE) {
-            throw new NoValidDataException("User need to be at least 18 years old");
+            throw new RegistrationException("User need to be at least 18 years old");
         }
         storageDao.add(user);
         return user;
