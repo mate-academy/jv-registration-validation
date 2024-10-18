@@ -19,7 +19,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User with such login already exists");
         }
         if (user.getLogin() == null || user.getLogin().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
-            throw new RegistrationException("Login should have at least 6 characters");
+            throw new RegistrationException("Login should have at least "
+                    + MINIMAL_AMOUNT_OF_SYMBOLS + " characters");
         }
         if (user.getPassword() == null || user.getPassword().length() < MINIMAL_AMOUNT_OF_SYMBOLS) {
             throw new RegistrationException("Password should have at least 6 characters");

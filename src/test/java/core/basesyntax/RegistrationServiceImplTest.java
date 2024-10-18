@@ -39,7 +39,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void check_IfMethodCanAddNewUser_Ok() {
+    void check_ifMethodCanAddNewUser_ok() {
         User expecterUser = new User("Mykola1", "1234567", 18);
         User actualUser = registrationService.register(expecterUser);
         assertEquals(expecterUser, actualUser, "Expected User is: "
@@ -63,8 +63,8 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageIsLessThanMinLength_notOk() {
-        User user = new User("Mykola758", "12345568979", 15);
+    void register_ageIsLessThanMinAge_notOk() {
+        User user = new User("Mykola758", "12345568979", 17);
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
@@ -101,5 +101,4 @@ public class RegistrationServiceImplTest {
             registrationService.register(user);
         });
     }
-
 }
