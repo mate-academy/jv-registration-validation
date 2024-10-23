@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_edgePasswordValue_throwsExeption() {
+    void register_edgePasswordValue_throwsException() {
         User user = createUser(VALID_LOGIN_VALUE, "abc12", VALID_AGE_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
@@ -92,7 +92,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_edgeAgeValue_throwsExcepton() {
+    void register_edgeAgeValue_throwsException() {
         User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
