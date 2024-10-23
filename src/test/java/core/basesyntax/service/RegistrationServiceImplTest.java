@@ -110,7 +110,8 @@ class RegistrationServiceImplTest {
         registrationService.register(user);
 
         User duplicateUser = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
-        assertThrows(RegistrationException.class, () -> registrationService.register(duplicateUser));
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(duplicateUser));
     }
 
     private User createUser(String login, String password, Integer age) {
