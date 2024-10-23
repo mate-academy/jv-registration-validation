@@ -9,7 +9,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
     private static final int MIN_LOGIN_PASSWORD_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private final Storage storage = new Storage();
 
     @Override
     public User register(User user) {
@@ -34,7 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Not valid age " + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
-        if (storage.people.contains(user)) {
+        if (Storage.people.contains(user)) {
             throw new RegistrationException("User is already exist");
         }
         return storageDao.add(user);
