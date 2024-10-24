@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_PASSWORD_AND_LOGIN_LENGTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -76,7 +77,7 @@ class RegistrationServiceImplTest {
 
         assertThrows(RegisterException.class,
                 () -> registrationService.register(user),
-                "Minimum login length is 6. Try again");
+                "Minimum login length is " + MIN_PASSWORD_AND_LOGIN_LENGTH + ". Try again");
     }
 
     @Test
@@ -100,7 +101,7 @@ class RegistrationServiceImplTest {
 
         assertThrows(RegisterException.class,
                 () -> registrationService.register(user),
-                "Password must have more than 6 characters");
+                ("Minimum password length is " + MIN_PASSWORD_AND_LOGIN_LENGTH + ". Try again"));
     }
 
     @Test
