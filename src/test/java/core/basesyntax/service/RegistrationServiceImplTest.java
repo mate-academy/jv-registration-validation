@@ -1,20 +1,22 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-
     private RegistrationServiceImpl registrationService;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
+
     @Test
     void shouldThrowExceptionWhenUserAlreadyExists() {
         User existingUser = new User();
@@ -33,17 +35,19 @@ class RegistrationServiceImplTest {
 
     @Test
     void shouldThrowExceptionWhenUserIsNull() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(null), "User can't be null");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(null), "User can't be null");
     }
 
     @Test
     void shouldThrowExceptionWhenLoginIsNull() {
         User newUser = new User();
-        newUser.setLogin(null);  // Null login to trigger the exception
+        newUser.setLogin(null);
         newUser.setPassword("password123");
         newUser.setAge(25);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(newUser), "Login can't be null");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(newUser), "Login can't be null");
     }
 
     @Test
@@ -53,7 +57,8 @@ class RegistrationServiceImplTest {
         newUser.setPassword("password123");
         newUser.setAge(25);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(newUser), "Login can't be shorter than 6");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(newUser), "Login can't be shorter than 6");
     }
 
     @Test
@@ -63,7 +68,8 @@ class RegistrationServiceImplTest {
         newUser.setPassword(null);
         newUser.setAge(25);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(newUser), "Password can't be null");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(newUser), "Password can't be null");
     }
 
     @Test
@@ -73,7 +79,8 @@ class RegistrationServiceImplTest {
         newUser.setPassword("short");
         newUser.setAge(25);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(newUser), "Password can't be shorter than 6");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(newUser), "Password can't be shorter than 6");
     }
 
     @Test
@@ -83,7 +90,9 @@ class RegistrationServiceImplTest {
         user.setPassword("valanesa");
         user.setAge(16);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(user), "Not valid age: " + user.getAge() + ". Min allowed age is 18");
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user), "Not valid age: " + user.getAge()
+                        + ". Min allowed age is 18");
     }
 
     @Test

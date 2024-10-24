@@ -37,7 +37,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be shorter than 6");
         }
         if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Not valid age: " + user.getAge() + ". Min allowed age is 18");
+            throw new RegistrationException("Not valid age: "
+                    + user.getAge() + ". Min allowed age is 18");
         }
         return storageDao.add(user);
     }
