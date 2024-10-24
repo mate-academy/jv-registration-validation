@@ -1,12 +1,12 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegisterException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService;
@@ -41,12 +41,16 @@ class RegistrationServiceImplTest {
         newUser.setPassword("new user password");
         newUser.setAge(19);
 
-        assertThrows(RegisterException.class, () -> registrationService.register(newUser), "Login already exists! Enter another value");
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(newUser),
+                "Login already exists! Enter another value");
     }
 
     @Test
     void userIsNull_NotOk() {
-        assertThrows(RegisterException.class, () -> registrationService.register(null), "User can not be null!");
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(null),
+                "User can not be null!");
     }
 
     @Test
@@ -56,7 +60,9 @@ class RegistrationServiceImplTest {
         user.setAge(19);
         user.setPassword("password");
 
-        assertThrows(RegisterException.class, () -> registrationService.register(user), "Login can not be null!");
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(user),
+                "Login can not be null!");
     }
 
     @Test
@@ -66,7 +72,9 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
         user.setAge(19);
 
-        assertThrows(RegisterException.class, () -> registrationService.register(user), "Minimum login length is 6. Try again");
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(user),
+                "Minimum login length is 6. Try again");
     }
 
     @Test
@@ -76,7 +84,9 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         user.setAge(20);
 
-        assertThrows(RegisterException.class, () -> registrationService.register(user), "Password can not be null!");
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(user),
+                "Password can not be null!");
     }
 
     @Test
@@ -86,7 +96,9 @@ class RegistrationServiceImplTest {
         user.setPassword("12345");
         user.setAge(20);
 
-        assertThrows(RegisterException.class, () -> registrationService.register(user), "Password must have more than 6 characters");
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(user),
+                "Password must have more than 6 characters");
     }
 
     @Test
@@ -96,7 +108,9 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
         user.setAge(null);
 
-        assertThrows(RegisterException.class, () -> registrationService.register(user), "Age can not be null!");
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(user),
+                "Age can not be null!");
     }
 
     @Test
@@ -106,8 +120,8 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
         user.setAge(17);
 
-        assertThrows(RegisterException.class, () -> registrationService.register(user), "You are too young! Minimum age is 18 but you enter:" + user.getAge());
+        assertThrows(RegisterException.class,
+                () -> registrationService.register(user),
+                "You are too young! Minimum age is 18 but you enter:" + user.getAge());
     }
-
-
 }

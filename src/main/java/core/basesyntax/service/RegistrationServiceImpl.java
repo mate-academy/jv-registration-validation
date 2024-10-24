@@ -23,25 +23,25 @@ public class RegistrationServiceImpl implements RegistrationService {
                 throw new RegisterException("Login already exists! Enter another value");
             }
         }
-            if (user.getLogin() == null) {
-                throw new RegisterException("Login can not be null!");
-            }
-
-            if (user.getLogin().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
-                throw new RegisterException("Minimum login length is 6. Try again");
-            }
-            if (user.getPassword() == null) {
-                throw new RegisterException("Password cannot be null");
-            }
-            if (user.getPassword().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
-                throw new RegisterException("Password must have more than 6 characters!");
-            }
-            if (user.getAge() == null) {
-                throw new RegisterException("Age can not be null!");
-            }
-            if (user.getAge() < MIN_AGE) {
-                throw new RegisterException("You are too young! Minimum age is 18 but you enter:" + user.getAge());
-            }
+        if (user.getLogin() == null) {
+            throw new RegisterException("Login can not be null!");
+        }
+        if (user.getLogin().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
+            throw new RegisterException("Minimum login length is 6. Try again");
+        }
+        if (user.getPassword() == null) {
+            throw new RegisterException("Password cannot be null");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
+            throw new RegisterException("Password must have more than 6 characters!");
+        }
+        if (user.getAge() == null) {
+            throw new RegisterException("Age can not be null!");
+        }
+        if (user.getAge() < MIN_AGE) {
+            throw new RegisterException("You are too young! Minimum age is 18 but you enter:"
+                     + user.getAge());
+        }
         return storageDao.add(user);
     }
 }
