@@ -52,7 +52,7 @@ class RegistrationServiceImplTest {
     void userIsNull_NotOk() {
         assertThrows(RegisterException.class,
                 () -> registrationService.register(null),
-                "User can not be null!");
+                "User can not be null");
     }
 
     @Test
@@ -88,7 +88,7 @@ class RegistrationServiceImplTest {
 
         assertThrows(RegisterException.class,
                 () -> registrationService.register(user),
-                "Password can not be null!");
+                "Password can not be null");
     }
 
     @Test
@@ -112,7 +112,7 @@ class RegistrationServiceImplTest {
 
         assertThrows(RegisterException.class,
                 () -> registrationService.register(user),
-                "Age can not be null!");
+                "Age can not be null");
     }
 
     @Test
@@ -124,6 +124,6 @@ class RegistrationServiceImplTest {
 
         assertThrows(RegisterException.class,
                 () -> registrationService.register(user),
-                "You are too young! Minimum age is 18 but you enter:" + user.getAge());
+                "Minimum age is 18. Your age: " + user.getAge());
     }
 }
