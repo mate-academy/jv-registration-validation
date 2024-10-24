@@ -17,6 +17,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User can't be null");
         }
 
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login can't be null");
+        }
         String login = user.getLogin();
 
         for (User existingUser : Storage.people) {
@@ -24,9 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 throw new RegistrationException("Such user already exists");
             }
         }
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Login can't be null");
-        }
+
         if (user.getLogin().length() < MIN_LOGIN) {
             throw new RegistrationException("Login can't be shorter than 6");
         }
