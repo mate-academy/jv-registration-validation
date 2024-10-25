@@ -1,10 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -16,17 +14,28 @@ class RegistrationServiceImplTest {
     private static final String VALID_PASSWORD_VALUE = "abc1234";
     private static final Integer VALID_AGE_VALUE = 18;
     private RegistrationService registrationService;
-    private StorageDao storageDao;
 
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @AfterEach
     void tearDown() {
         Storage.people.clear();
+    }
+
+    @Test
+    void register_validUser_success() {
+        User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
+        User actual = registrationService.register(user);
+        assertEquals(actual, user);
+    }
+
+    @Test
+    void register_nullUser_throwsException() {
+        User user = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -48,13 +57,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validLoginValue_success() {
-        User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
-        registrationService.register(user);
-        assertTrue(storageDao.get(user.getLogin()) != null);
-    }
-
-    @Test
     void register_nullPasswordValue_throwsException() {
         User user = createUser(VALID_LOGIN_VALUE, null, VALID_AGE_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
@@ -70,13 +72,6 @@ class RegistrationServiceImplTest {
     void register_edgePasswordValue_throwsException() {
         User user = createUser(VALID_LOGIN_VALUE, "abc12", VALID_AGE_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_validPasswordValue_success() {
-        User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
-        registrationService.register(user);
-        assertTrue(storageDao.get(user.getLogin()) != null);
     }
 
     @Test
@@ -98,16 +93,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validAgeValue_success() {
-        User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
-        registrationService.register(user);
-        assertTrue(storageDao.get(user.getLogin()) != null);
-    }
-
-    @Test
     void register_userAlreadyExist_throwsException() {
         User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
-        registrationService.register(user);
+        Storage.people.add(user);
 
         User duplicateUser = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
         assertThrows(RegistrationException.class,
