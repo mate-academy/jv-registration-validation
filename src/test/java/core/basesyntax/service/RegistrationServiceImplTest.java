@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
@@ -33,12 +32,7 @@ class RegistrationServiceImplTest {
         first.setAge(19);
         first.setLogin("first1");
         first.setPassword("passw1");
-        User actual;
-        try {
-            actual = registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
+        User actual = registrationService.register(first);
         User expected = storageDao.get(first.getLogin());
         assertEquals(expected, actual);
     }
@@ -64,29 +58,23 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lessEighteen_notOk() {
+    void register_lessThanMinValidAge_notOk() {
         first.setAge(6);
         first.setLogin("firsgddt1");
         first.setPassword("passfew1");
-        try {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
-        fail("RegistrationException should be thrown if age is less than 18");
+        });
     }
 
     @Test
-    void register_moreMaxAge_notOk() {
+    void register_greaterThanMaxAge_notOk() {
         first.setAge(116);
         first.setLogin("firsttt");
         first.setPassword("passwww");
-        try {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
-        fail("RegistrationException should be thrown if age is more than 110");
+        });
     }
 
     @Test
@@ -94,12 +82,9 @@ class RegistrationServiceImplTest {
         first.setAge(-11);
         first.setLogin("firsrcttt");
         first.setPassword("67sswww");
-        try {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
-        fail("RegistrationException should be thrown if age is negative");
+        });
     }
 
     @Test
@@ -138,12 +123,9 @@ class RegistrationServiceImplTest {
         first.setAge(19);
         first.setLogin("firhtrdst1");
         first.setPassword("sw1");
-        try {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
-        fail("RegistrationException should be thrown if password is less than 6 characters");
+        });
 
         User user = new User();
         user.setAge(99);
@@ -187,13 +169,12 @@ class RegistrationServiceImplTest {
         user.setAge(99);
         user.setLogin("");
         user.setPassword("as964sw1");
-        try {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
+        });
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
-        } catch (RegistrationException e) {
-            return;
-        }
-        fail("RegistrationException should be thrown if login is less than 6 characters");
+        });
     }
 
     @Test
@@ -206,7 +187,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_thereIsNoUserYet_ok() throws RegistrationException {
+    void register_thereIsNoUserYet_ok() {
         first.setAge(19);
         first.setLogin("firs90brt1");
         first.setPassword("asреdasw1");
@@ -231,11 +212,8 @@ class RegistrationServiceImplTest {
         user.setPassword("as964yysw1");
         storageDao.add(first);
         storageDao.add(user);
-        try {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
-        fail("RegistrationException should be thrown if a user with this login already exists");
+        });
     }
 }

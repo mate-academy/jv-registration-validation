@@ -3,7 +3,6 @@ package core.basesyntax.service;
 import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -18,43 +17,28 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password can't be null");
+        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Password is invalid."
+                    + " Password can't be less than 6 characters");
         }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password can't be less than 6 characters");
+        if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException("Login is invalid."
+                    + " Login can't be less than 6 characters");
         }
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Login can't be null");
+        if (user.getAge() == null || user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
+            throw new RegistrationException(String.format("Age is invalid."
+                    + " Min allowed age is: %s."
+                    + " Max allowed age is: %s", MIN_AGE, MAX_AGE));
         }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login can't be less than 6 characters");
-        }
-        if (user.getAge() == null) {
-            throw new RegistrationException("Age can't be null");
-        }
-        if (user.getAge() < MIN_AGE || user.getAge() > MAX_AGE) {
-            throw new RegistrationException("Not valid age: " + user.getAge()
-                    + ". Min allowed age is " + MIN_AGE
-                    + ". Max allowed age is " + MAX_AGE);
-        }
-        if (!isUserAbsent(user)) {
-            throw new RegistrationException("A user with this login already exists");
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException(String.format("User with login %s already exists",
+                    user.getLogin()));
         }
         if (user.getLogin().length() >= MIN_LOGIN_LENGTH
-                && user.getPassword().length() >= MIN_PASSWORD_LENGTH
-                && user.getAge() >= MIN_AGE && user.getAge() <= MAX_AGE) {
+                && user.getPassword().length() >= MIN_PASSWORD_LENGTH) {
             storageDao.add(user);
         }
         return user;
     }
 
-    private boolean isUserAbsent(User user) {
-        for (User entry : Storage.people) {
-            if (entry.getLogin().equals(user.getLogin())) {
-                return false;
-            }
-        }
-        return true;
-    }
 }
