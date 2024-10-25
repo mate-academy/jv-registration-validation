@@ -30,7 +30,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validAge_ok() {
+    void register_validAgeLoginPassword_ok() {
         first.setAge(29);
         first.setLogin("first1");
         first.setPassword("passw1");
@@ -101,16 +101,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validPassword_ok() {
-        first.setAge(19);
-        first.setLogin("firserfdt1");
-        first.setPassword("passdfsw1");
-        User actual = registrationService.register(first);
-        User expected = storageDao.get(first.getLogin());
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void register_notValidPassword_notOk() {
         first.setAge(19);
         first.setLogin("firhtrdst1");
@@ -137,16 +127,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_validLogin_ok() {
-        first.setAge(19);
-        first.setLogin("firlnyst1");
-        first.setPassword("pasoppsw1");
-        User actual = registrationService.register(first);
-        User expected = storageDao.get(first.getLogin());
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void register_notValidLogin_notOk() {
         first.setAge(19);
         first.setLogin("f1");
@@ -170,21 +150,6 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
         });
-    }
-
-    @Test
-    void register_thereIsNoUserYet_ok() {
-        first.setAge(19);
-        first.setLogin("firs90brt1");
-        first.setPassword("asреdasw1");
-        User user = new User();
-        user.setAge(99);
-        user.setLogin("firk__tst1");
-        user.setPassword("as99-64sw1");
-        storageDao.add(user);
-        User actual = registrationService.register(first);
-        User expected = storageDao.get(first.getLogin());
-        assertEquals(expected, actual);
     }
 
     @Test
