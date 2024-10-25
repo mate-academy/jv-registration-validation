@@ -193,7 +193,7 @@ class RegistrationServiceImplTest {
         } catch (RegistrationException e) {
             return;
         }
-        fail("RegistrationException should be thrown if password is less than 6 characters");
+        fail("RegistrationException should be thrown if login is less than 6 characters");
     }
 
     @Test
@@ -215,13 +215,13 @@ class RegistrationServiceImplTest {
         user.setLogin("firk__tst1");
         user.setPassword("as99-64sw1");
         storageDao.add(user);
-        registrationService.register(first);
+        User actual = registrationService.register(first);
         User expected = storageDao.get(first.getLogin());
-        assertEquals(expected, first);
+        assertEquals(expected, actual);
     }
 
     @Test
-    void register_thereIsUserAlreadyExists_notOk() {
+    void register_userAlreadyExists_notOk() {
         first.setAge(19);
         first.setLogin("fi432brst1");
         first.setPassword("asesmnysw1");

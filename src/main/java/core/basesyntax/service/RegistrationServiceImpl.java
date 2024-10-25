@@ -41,8 +41,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!isUserAbsent(user)) {
             throw new RegistrationException("A user with this login already exists");
         }
-        if (isUserAbsent(user)
-                && user.getLogin().length() >= MIN_LOGIN_LENGTH
+        if (user.getLogin().length() >= MIN_LOGIN_LENGTH
                 && user.getPassword().length() >= MIN_PASSWORD_LENGTH
                 && user.getAge() >= MIN_AGE && user.getAge() <= MAX_AGE) {
             storageDao.add(user);
