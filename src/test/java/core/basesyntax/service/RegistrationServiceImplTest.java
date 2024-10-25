@@ -15,6 +15,7 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
     private User first;
+    private User second;
 
     @BeforeAll
     static void beforeAll() {
@@ -25,35 +26,31 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         first = new User();
+        second = new User();
     }
 
     @Test
     void register_validAge_ok() {
-        first.setAge(19);
+        first.setAge(29);
         first.setLogin("first1");
         first.setPassword("passw1");
         User actual = registrationService.register(first);
         User expected = storageDao.get(first.getLogin());
         assertEquals(expected, actual);
-    }
 
-    @Test
-    void register_minValidAge_ok() throws RegistrationException {
-        first.setAge(18);
-        first.setLogin("second2");
-        first.setPassword("passw2");
-        User actual = registrationService.register(first);
-        User expected = storageDao.get(first.getLogin());
+        second.setAge(18);
+        second.setLogin("sec55ond2");
+        second.setPassword("passw2");
+        actual = registrationService.register(second);
+        expected = storageDao.get(second.getLogin());
         assertEquals(expected, actual);
-    }
 
-    @Test
-    void register_maxValidAge_ok() throws RegistrationException {
-        first.setAge(110);
-        first.setLogin("second3");
-        first.setPassword("passw3");
-        User actual = registrationService.register(first);
-        User expected = storageDao.get(first.getLogin());
+        User third = new User();
+        third.setAge(110);
+        third.setLogin("second3");
+        third.setPassword("passw3");
+        actual = registrationService.register(third);
+        expected = storageDao.get(third.getLogin());
         assertEquals(expected, actual);
     }
 
@@ -108,12 +105,7 @@ class RegistrationServiceImplTest {
         first.setAge(19);
         first.setLogin("firserfdt1");
         first.setPassword("passdfsw1");
-        User actual;
-        try {
-            actual = registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
+        User actual = registrationService.register(first);
         User expected = storageDao.get(first.getLogin());
         assertEquals(expected, actual);
     }
@@ -127,12 +119,11 @@ class RegistrationServiceImplTest {
             registrationService.register(first);
         });
 
-        User user = new User();
-        user.setAge(99);
-        user.setLogin("firktst1");
-        user.setPassword("");
+        second.setAge(99);
+        second.setLogin("firktst1");
+        second.setPassword("");
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(second);
         });
     }
 
@@ -150,12 +141,7 @@ class RegistrationServiceImplTest {
         first.setAge(19);
         first.setLogin("firlnyst1");
         first.setPassword("pasoppsw1");
-        User actual;
-        try {
-            actual = registrationService.register(first);
-        } catch (RegistrationException e) {
-            return;
-        }
+        User actual = registrationService.register(first);
         User expected = storageDao.get(first.getLogin());
         assertEquals(expected, actual);
     }
@@ -165,15 +151,15 @@ class RegistrationServiceImplTest {
         first.setAge(19);
         first.setLogin("f1");
         first.setPassword("ppassew-w1");
-        User user = new User();
-        user.setAge(99);
-        user.setLogin("");
-        user.setPassword("as964sw1");
+
+        second.setAge(99);
+        second.setLogin("");
+        second.setPassword("as964sw1");
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(first);
         });
         assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
+            registrationService.register(second);
         });
     }
 
