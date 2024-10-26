@@ -20,6 +20,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         } else if (storageDao.get(user.getLogin()) == null) {
             return storageDao.add(user);
         }
-        return null;
+        throw new InvalidDataException("user already exists");
     }
 }
