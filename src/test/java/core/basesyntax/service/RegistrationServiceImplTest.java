@@ -148,13 +148,14 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(fourthUser));
 
         var expected = exception.getMessage();
-        var actual = "Not valid login."
-                + "Min length is "
-                + MIN_LENGTH;
+        var actual = "Login must be at least "
+                + MIN_LENGTH
+                + " current long "
+                + fourthUser.getLogin().length();
 
         Assertions.assertEquals(actual, expected);
         Assertions.assertFalse(Storage.people.contains(fourthUser),
-                "User should be added to storage.");
+                "User shouldn't be added to storage.");
     }
 
     @Test
@@ -171,9 +172,10 @@ class RegistrationServiceImplTest {
         var exception = Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(fifthUser));
 
-        var expected = "Not valid password."
-                + "Min length is "
-                + MIN_LENGTH;
+        var expected = "Password must be at least"
+                + MIN_LENGTH
+                + " current length"
+                + fifthUser.getPassword().length();
         var actual = exception.getMessage();
 
         Assertions.assertEquals(expected, actual);
@@ -208,13 +210,12 @@ class RegistrationServiceImplTest {
         var exception = Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(seventhUser));
 
-        var expected = "Not valid age "
-                + seventhUser.getAge()
-                + ". Min age is " + MIN_AGE;
+        var expected = "User must be at least "
+                + MIN_AGE
+                + " years old.";
         var actual = exception.getMessage();
 
         Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(seventhUser.getAge() > MIN_AGE);
         Assertions.assertFalse(Storage.people.contains(seventhUser),
                 "User with incorrect age should not be added to storage.");
     }
@@ -224,13 +225,10 @@ class RegistrationServiceImplTest {
         var exception = Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(eighthUser));
 
-        var expected = "Not valid age "
-                + eighthUser.getAge()
-                + ". Because age is negative";
+        var expected = "Age cannot be negative";
         var actual = exception.getMessage();
 
         Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(eighthUser.getAge() > MIN_AGE);
         Assertions.assertFalse(Storage.people.contains(eighthUser),
                 "User with incorrect age should not be added to storage.");
     }

@@ -17,35 +17,39 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidDataException("User cannot be null");
         }
+        if (user.getLogin() == null) {
+            throw new InvalidDataException("User login cannot be null");
+        }
         if (Storage.people.contains(storageDao.get(user.getLogin()))) {
             throw new InvalidDataException("User already exists "
                     + user.getLogin()
                     + " with such login");
         }
-        if (user.getLogin() == null) {
-            throw new InvalidDataException("User login cannot be null");
-        }
-        if (user.getLogin().length() < 6) {
-            throw new InvalidDataException("Not valid login." + "Min length is " + MIN_LENGTH);
+        if (user.getLogin().length() < MIN_LENGTH) {
+            throw new InvalidDataException("Login must be at least "
+                    + MIN_LENGTH
+                    + " current long "
+                    + user.getLogin().length());
         }
         if (user.getPassword() == null) {
             throw new InvalidDataException("User password cannot be null");
         }
-        if (user.getPassword().length() < 6) {
-            throw new InvalidDataException("Not valid password." + "Min length is " + MIN_LENGTH);
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new InvalidDataException("Password must be at least"
+                    + MIN_LENGTH
+                    + " current length"
+                    + user.getPassword().length());
         }
         if (user.getAge() == null) {
             throw new InvalidDataException("User age cannot be null");
         }
         if (user.getAge() < 0) {
-            throw new InvalidDataException("Not valid age "
-                    + user.getAge()
-                    + ". Because age is negative");
+            throw new InvalidDataException("Age cannot be negative");
         }
         if (user.getAge() < 18) {
-            throw new InvalidDataException("Not valid age "
-                    + user.getAge()
-                    + ". Min age is " + MIN_AGE);
+            throw new InvalidDataException("User must be at least "
+                    + MIN_AGE
+                    + " years old.");
         }
         return storageDao.add(user);
     }
