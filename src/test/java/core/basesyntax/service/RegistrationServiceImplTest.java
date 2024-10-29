@@ -4,10 +4,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidDataException;
 import core.basesyntax.exceptions.UserExistException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -17,7 +14,7 @@ class RegistrationServiceImplTest {
         registrationService = new RegistrationServiceImpl();
     }
 
-    @BeforeEach
+    @AfterEach
     void beforeEach() {
         Storage.people.clear();
     }
@@ -70,7 +67,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageUnder18_notOk() {
-        User user = new User("t.stark", "Qwerty", 15);
+        User user = new User("t.stark", "Qwerty", 17);
 
         Assertions.assertThrows(InvalidDataException.class,
                 () -> registrationService.register(user));
@@ -81,7 +78,7 @@ class RegistrationServiceImplTest {
         User firstUser = new User("t.stark", "Qwerty", 25);
         User secondUser = new User("t.stark", "Qwerty12345", 20);
 
-        registrationService.register(firstUser);
+        Storage.people.add(firstUser);
 
         Assertions.assertThrows(UserExistException.class,
                 () -> registrationService.register(secondUser));
