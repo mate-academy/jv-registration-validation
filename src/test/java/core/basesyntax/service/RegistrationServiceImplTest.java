@@ -5,8 +5,8 @@ import core.basesyntax.exceptions.InvalidDataException;
 import core.basesyntax.exceptions.UserExistException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
