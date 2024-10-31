@@ -1,4 +1,4 @@
-package core.basesyntax.exeptions;
+package core.basesyntax.exceptions;
 
 public class InvalidUserLoginException extends Exception {
 

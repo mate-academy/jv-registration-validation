@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
-import core.basesyntax.exeptions.InvalidUserDataException;
-import core.basesyntax.exeptions.NullUserException;
+import core.basesyntax.exceptions.InvalidUserDataException;
+import core.basesyntax.exceptions.NullUserException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

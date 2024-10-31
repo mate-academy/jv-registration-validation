@@ -2,11 +2,11 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exeptions.InvalidUserAgeException;
-import core.basesyntax.exeptions.InvalidUserDataException;
-import core.basesyntax.exeptions.InvalidUserLoginException;
-import core.basesyntax.exeptions.InvalidUserPasswordException;
-import core.basesyntax.exeptions.NullUserException;
+import core.basesyntax.exceptions.InvalidUserAgeException;
+import core.basesyntax.exceptions.InvalidUserDataException;
+import core.basesyntax.exceptions.InvalidUserLoginException;
+import core.basesyntax.exceptions.InvalidUserPasswordException;
+import core.basesyntax.exceptions.NullUserException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             storageDao.add(user);
             return user;
         } else {
-            return null;
+            throw new InvalidUserDataException("Validation didn't pass.");
         }
     }
 
@@ -36,7 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         } catch (InvalidUserLoginException
                  | InvalidUserPasswordException
                  | InvalidUserAgeException e) {
-            throw new InvalidUserDataException();
+            throw new InvalidUserDataException(e.getMessage());
         }
     }
 
