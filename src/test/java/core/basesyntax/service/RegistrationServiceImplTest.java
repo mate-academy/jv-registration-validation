@@ -1,7 +1,7 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -31,36 +31,37 @@ class RegistrationServiceImplTest {
     void register_lowerThanExpectedAge_NotOk() {
         int age = 17;
         user.setAge(age);
-        assertTrue(user.getAge() < 18);
+        RegistrationException exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Not valid age: " + age + ". Minimal allowed age is 18";
+        String actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
     }
 
     @Test
     void register_equalsToExpectedAge_Ok() {
         int age = 18;
         user.setAge(age);
-        assertEquals(user.getAge(), 18);
-    }
-
-    @Test
-    void register_graterThanExpectedAge_Ok() {
-        int age = 19;
-        user.setAge(age);
-        assertFalse(user.getAge() < 18);
+        User registeredUser = assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(registeredUser.getAge(), 18);
     }
 
     @Test
     void register_negativeAge_notOk() {
         int age = -18;
         user.setAge(age);
-        assertTrue(user.getAge() < 0);
+        RegistrationException exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Not valid age: " + age + ". Minimal allowed age is 18";
+        String actual = exception.getMessage();
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_nullPassword_NotOk() {
         user.setPassword(null);
-        Exception exception = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
         String expected = "Password can't be null";
         String actual = exception.getMessage();
         assertTrue(actual.contains(expected));
@@ -70,10 +71,9 @@ class RegistrationServiceImplTest {
     void register_emptyPassword_NotOk() {
         String password = "";
         user.setPassword(password);
-        Exception exception = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        String expected = "Password can't be null";
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Password can't be empty";
         String actual = exception.getMessage();
         assertTrue(actual.contains(expected));
     }
@@ -82,36 +82,29 @@ class RegistrationServiceImplTest {
     void register_lengthOfPasswordIs3_NotOk() {
         String password = "asd";
         user.setPassword(password);
-        assertTrue(user.getPassword().length() < 6);
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Password can't be less than 6 symbols";
+        String actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
     }
 
     @Test
     void register_lengthOfPasswordIs5_NotOk() {
         String password = "small";
         user.setPassword(password);
-        assertTrue(user.getPassword().length() < 6);
-    }
-
-    @Test
-    void register_lengthOfPasswordEqualsTo6_Ok() {
-        String password = "small1";
-        user.setPassword(password);
-        assertTrue(user.getPassword().length() <= 6);
-    }
-
-    @Test
-    void register_lengthOfPasswordGreaterThan6_Ok() {
-        String password = "theBiggestPassword";
-        user.setPassword(password);
-        assertTrue(user.getPassword().length() > 6);
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Password can't be less than 6 symbols";
+        String actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
     }
 
     @Test
     void register_NullLogin_NotOk() {
         user.setLogin(null);
-        Exception exception = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
         String expected = "Login can't be null";
         String actual = exception.getMessage();
         assertTrue(actual.contains(expected));
@@ -120,10 +113,31 @@ class RegistrationServiceImplTest {
     @Test
     void register_emptyLogin_NotOk() {
         user.setLogin("");
-        Exception exception = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
-        String expected = "Login can't be null";
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Login can't be empty";
+        String actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
+    }
+
+    @Test
+    void register_lengthOfLoginIs3_NotOk() {
+        String login = "asd";
+        user.setLogin(login);
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Login can't be less than 6 symbols";
+        String actual = exception.getMessage();
+        assertTrue(actual.contains(expected));
+    }
+
+    @Test
+    void register_lengthOfLoginIs5_NotOk() {
+        String login = "small";
+        user.setLogin(login);
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        String expected = "Login can't be less than 6 symbols";
         String actual = exception.getMessage();
         assertTrue(actual.contains(expected));
     }
@@ -131,12 +145,21 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullAge_NotOk() {
         user.setAge(null);
-        Exception exception = assertThrows(RegistrationException.class, () -> {
-            registrationService.register(user);
-        });
+        Exception exception =
+                assertThrows(RegistrationException.class, () -> registrationService.register(user));
         String expected = "Age can't be null";
         String actual = exception.getMessage();
         assertTrue(actual.contains(expected));
+    }
+
+    @Test
+    void register_userWithExistingLogin_NotOk() {
+        User newUser = new User();
+        newUser.setLogin("someLogin");
+        newUser.setPassword("goodPassword");
+        newUser.setAge(22);
+        registrationService.register(newUser);
+        assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 }
 
