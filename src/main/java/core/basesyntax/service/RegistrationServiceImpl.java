@@ -23,11 +23,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() < MIN_LOGIN) {
             throw new UserValidationException("Login is too short!");
         }
-        if (!Storage.people.isEmpty()) {
-            if (storageDao.get(user.getLogin()) != null) {
-                throw new UserValidationException("User with login: \""
-                        + user.getLogin() + "\" already exists");
-            }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserValidationException("User with login: \""
+                    + user.getLogin() + "\" already exists");
         }
         if (user.getPassword() == null) {
             throw new UserValidationException("Password can't be null");
