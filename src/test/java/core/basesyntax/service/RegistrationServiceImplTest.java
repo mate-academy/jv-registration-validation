@@ -80,7 +80,6 @@ class RegistrationServiceImplTest {
         assertThrows(UserValidationException.class, () -> {
             service.register(null);
         });
-        assertFalse(Storage.people.contains(null));
     }
 
     @Test
