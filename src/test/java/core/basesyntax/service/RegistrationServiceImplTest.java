@@ -100,6 +100,15 @@ class RegistrationServiceImplTest {
         assertFalse(Storage.people.contains(userOfAge17));
     }
 
+    @Test
+    void register_negativeAge_NotOk() {
+        User userOfNegativeAge = new User("Markus", "5x5x5xx", -10);
+        assertThrows(RegistrationException.class, () -> {
+            service.register(userOfNegativeAge);
+        });
+        assertFalse(Storage.people.contains(userOfNegativeAge));
+    }
+
     @AfterEach
     void tearDown() {
         Storage.people.clear();
