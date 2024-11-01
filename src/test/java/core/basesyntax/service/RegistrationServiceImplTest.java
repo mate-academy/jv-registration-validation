@@ -31,7 +31,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_identicalLogins_NotOk() {
         User user = new User("Markus", "121212", 18);
-        service.register(user);
+        Storage.people.add(user);
         User repeatedLoginUser = new User("Markus", "323232", 30);
         assertThrows(RegistrationException.class, () -> {
             service.register(repeatedLoginUser);
