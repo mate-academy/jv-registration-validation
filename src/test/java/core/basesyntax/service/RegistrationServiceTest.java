@@ -32,7 +32,9 @@ public class RegistrationServiceTest {
     void register_savingWithSameLogin_NotOk() {
         user.setLogin("nice_login");
         registrationService.register(user);
-        assertThrows(UserRegistrationException.class, () -> registrationService.register(user));
+        User user2 = new User();
+        user2.setLogin("nice_login");
+        assertThrows(UserRegistrationException.class, () -> registrationService.register(user2));
     }
 
     @Test

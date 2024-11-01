@@ -10,17 +10,31 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user != null) {
-            if (user.getLogin() != null && user.getLogin().length() >= 6) {
-                if (user.getPassword() != null && user.getPassword().length() >= 6) {
-                    if (user.getAge() != null && user.getAge() >= 18) {
-                        if (storageDao.get(user.getLogin()) == null) {
-                            return storageDao.add(user);
-                        }
-                    }
-                }
+        String validationMessage = validateUser(user);
+        if (validationMessage == null) {
+            if (storageDao.get(user.getLogin()) == null) {
+                return storageDao.add(user);
+            } else {
+                throw new UserRegistrationException("User with this login already exists.");
             }
+        } else {
+            throw new UserRegistrationException(validationMessage);
         }
-        throw new UserRegistrationException();
+    }
+
+    private String validateUser(User user) {
+        if (user == null) {
+            return "User cannot be null.";
+        }
+        if (user.getLogin() == null || user.getLogin().length() < 6) {
+            return "Login must be at least 6 characters long.";
+        }
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            return "Password must be at least 6 characters long.";
+        }
+        if (user.getAge() == null || user.getAge() < 18) {
+            return "User must be at least 18 years old.";
+        }
+        return null;
     }
 }
