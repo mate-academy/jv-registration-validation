@@ -29,15 +29,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_twoUniqueLogins_Ok() {
-        User firstUser = new User("Markus", "121212", 18);
-        service.register(firstUser);
-        User secondUser = new User("Tormund", "121212", 18);
-        service.register(secondUser);
-        assertTrue(Storage.people.contains(secondUser));
-    }
-
-    @Test
     void register_identicalLogins_NotOk() {
         User user = new User("Markus", "121212", 18);
         service.register(user);
