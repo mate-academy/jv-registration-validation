@@ -25,9 +25,7 @@ class RegistrationServiceTest {
     private static RegistrationService registrationService;
 
     private static User validUser;
-    private static User minAgeUser;
-    private static User minLengthLoginUser;
-    private static User minLengthPasswordUser;
+    private static User minValuesUser;
     private static User validUserSameLogin;
     private static User invalidLoginUser;
     private static User invalidPasswordUser;
@@ -41,9 +39,7 @@ class RegistrationServiceTest {
     static void setUp() {
         registrationService = new RegistrationServiceImpl();
         validUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
-        minLengthLoginUser = new User(MIN_LENGTH_LOGIN, VALID_PASSWORD, VALID_AGE);
-        minLengthPasswordUser = new User(VALID_LOGIN, MIN_LENGTH_PASSWORD, VALID_AGE);
-        minAgeUser = new User(VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
+        minValuesUser = new User(MIN_LENGTH_LOGIN, MIN_LENGTH_PASSWORD, MIN_AGE);
         validUserSameLogin = new User(VALID_LOGIN, MIN_LENGTH_PASSWORD, MIN_AGE);
         invalidLoginUser = new User(INVALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         invalidPasswordUser = new User(VALID_LOGIN, INVALID_PASSWORD, VALID_AGE);
@@ -61,21 +57,9 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void register_minLengthLoginUser_Ok() {
-        User actualUser = registrationService.register(minLengthLoginUser);
-        testRegisteredUser(actualUser, MIN_LENGTH_LOGIN, VALID_PASSWORD, VALID_AGE);
-    }
-
-    @Test
-    void register_minLengthPasswordUser_Ok() {
-        User actualUser = registrationService.register(minLengthPasswordUser);
-        testRegisteredUser(actualUser, VALID_LOGIN, MIN_LENGTH_PASSWORD, VALID_AGE);
-    }
-
-    @Test
-    void register_minAgeUser_Ok() {
-        User actualUser = registrationService.register(minAgeUser);
-        testRegisteredUser(actualUser, VALID_LOGIN, VALID_PASSWORD, MIN_AGE);
+    void register_minAgeAndStringLengthsUser_Ok() {
+        User actualUser = registrationService.register(minValuesUser);
+        testRegisteredUser(actualUser, MIN_LENGTH_LOGIN, MIN_LENGTH_PASSWORD, MIN_AGE);
     }
 
     @Test
