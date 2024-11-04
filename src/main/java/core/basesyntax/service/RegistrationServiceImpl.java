@@ -2,7 +2,7 @@ package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.exception.InvalidDataException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
@@ -12,49 +12,40 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-
         if (user == null) {
-            throw new InvalidDataException("User cannot be null");
+            throw new RegistrationException("User cannot be null");
         }
-
         if (user.getLogin() == null) {
-            throw new InvalidDataException("User login cannot be null");
+            throw new RegistrationException("User login cannot be null");
         }
-
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidDataException("User already exists "
+            throw new RegistrationException("User already exists "
                     + user.getLogin()
                     + " with such login");
         }
-
         if (user.getLogin().length() < MIN_LENGTH) {
-            throw new InvalidDataException("Login must be at least "
+            throw new RegistrationException("Login must be at least "
                     + MIN_LENGTH
                     + " current long "
                     + user.getLogin().length());
         }
-
         if (user.getPassword() == null) {
-            throw new InvalidDataException("User password cannot be null");
+            throw new RegistrationException("User password cannot be null");
         }
-
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new InvalidDataException("Password must be at least"
+            throw new RegistrationException("Password must be at least"
                     + MIN_LENGTH
                     + " current length"
                     + user.getPassword().length());
         }
-
         if (user.getAge() == null) {
-            throw new InvalidDataException("User age cannot be null");
+            throw new RegistrationException("User age cannot be null");
         }
-
         if (user.getAge() < 0) {
-            throw new InvalidDataException("Age cannot be negative");
+            throw new RegistrationException("Age cannot be negative");
         }
-
-        if (user.getAge() < 18) {
-            throw new InvalidDataException("User must be at least "
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("User must be at least "
                     + MIN_AGE
                     + " years old.");
         }
