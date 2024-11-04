@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static final String VALID_LOGIN_VALUE = "ABC1234";
     private static final String VALID_PASSWORD_VALUE = "abc1234";
+    private static final String INVALID_LENGTH_VALUE = "abc";
     private static final Integer VALID_AGE_VALUE = 18;
+    private static final Integer INVALID_AGE_VALUE = 17;
     private RegistrationService registrationService;
 
     @BeforeEach
@@ -46,13 +48,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortLoginValue_throwsException() {
-        User user = createUser("abc", VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_edgeLoginValue_throwsException() {
-        User user = createUser("abc12", VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
+        User user = createUser(INVALID_LENGTH_VALUE, VALID_PASSWORD_VALUE, VALID_AGE_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -64,13 +60,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPasswordValue_throwsException() {
-        User user = createUser(VALID_LOGIN_VALUE, "abc", VALID_AGE_VALUE);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_edgePasswordValue_throwsException() {
-        User user = createUser(VALID_LOGIN_VALUE, "abc12", VALID_AGE_VALUE);
+        User user = createUser(VALID_LOGIN_VALUE, INVALID_LENGTH_VALUE, VALID_AGE_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
@@ -82,13 +72,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_invalidAgeValue_throwsException() {
-        User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, 10);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void register_edgeAgeValue_throwsException() {
-        User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, 17);
+        User user = createUser(VALID_LOGIN_VALUE, VALID_PASSWORD_VALUE, INVALID_AGE_VALUE);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
