@@ -1,8 +1,7 @@
 package core.basesyntax.service;
 
-
 public class CustomeException extends RuntimeException {
-    public CustomeException (String message) {
+    public CustomeException(String message) {
         super(message);
     }
 }
