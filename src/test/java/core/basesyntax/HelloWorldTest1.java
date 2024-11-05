@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.model.User;
-import core.basesyntax.service.CustomeException;
+import core.basesyntax.service.CustomException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,7 +24,7 @@ class HelloWorldTest1 {
         user.setLogin(null);
         user.setPassword("12345678");
         user.setAge(22);
-        assertThrows(CustomeException.class, () -> {
+        assertThrows(CustomException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -35,7 +35,7 @@ class HelloWorldTest1 {
         user.setLogin("user12345");
         user.setPassword(null);
         user.setAge(41);
-        assertThrows(CustomeException.class, () -> {
+        assertThrows(CustomException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -44,7 +44,7 @@ class HelloWorldTest1 {
     void nullAge_NotOk() {
         User user = new User();
         user.setAge(null);
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
         String excepted = "User login,password or age is null";
         String actual = exception.getMessage();
@@ -57,9 +57,9 @@ class HelloWorldTest1 {
         user.setLogin("abc");
         user.setPassword("abrakadabra");
         user.setAge(83);
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
-        String excepted = "User login is need to be at least 6 letters!";
+        String excepted = "User login must be at least 6 characters long!";
         String actual = exception.getMessage();
         assertTrue(actual.contains(excepted));
     }
@@ -70,9 +70,9 @@ class HelloWorldTest1 {
         user.setLogin("abcdf");
         user.setPassword("messagetotheworld");
         user.setAge(41);
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
-        String excepted = "User login is need to be at least 6 letters!";
+        String excepted = "User login must be at least 6 characters long!";
         String actual = exception.getMessage();
         assertTrue(actual.contains(excepted));
     }
@@ -93,7 +93,7 @@ class HelloWorldTest1 {
         user.setLogin("");
         user.setAge(32);
         user.setPassword("thebestpassword");
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
         String excepted = "User login or password is empty";
         String actual = exception.getMessage();
@@ -116,7 +116,7 @@ class HelloWorldTest1 {
         user.setLogin("Vitaliks");
         user.setAge(62);
         user.setPassword("great_password");
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
         String excepted = "User with this login is already register!";
         String actual = exception.getMessage();
@@ -129,7 +129,7 @@ class HelloWorldTest1 {
         user.setLogin("Hensai");
         user.setAge(19);
         user.setPassword("");
-        assertThrows(CustomeException.class, () -> registrationService.register(user));
+        assertThrows(CustomException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -138,7 +138,7 @@ class HelloWorldTest1 {
         user.setLogin("Igorenis");
         user.setAge(42);
         user.setPassword("kgr");
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
         String expected = "User password is need to be at least 6 letters!";
         String actual = exception.getMessage();
@@ -151,7 +151,7 @@ class HelloWorldTest1 {
         user.setLogin("Umanius");
         user.setAge(53);
         user.setPassword("iakr1");
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
         String expected = "User password is need to be at least 6 letters!";
         String actual = exception.getMessage();
@@ -174,9 +174,9 @@ class HelloWorldTest1 {
         user.setLogin("Mariana");
         user.setAge(16);
         user.setPassword("kievthebest");
-        Exception exception = assertThrows(CustomeException.class, () ->
+        Exception exception = assertThrows(CustomException.class, () ->
                 registrationService.register(user));
-        String excepted = "User age is under 18!";
+        String excepted = "The user must not be less than 18 years old!";
         String actual = exception.getMessage();
         assertTrue(actual.contains(excepted));
     }

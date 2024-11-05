@@ -8,26 +8,26 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws CustomeException {
+    public User register(User user) throws CustomException {
         if (user.getAge() == null || user.getPassword() == null || user.getLogin() == null) {
-            throw new CustomeException("User login,password or age is null!");
+            throw new CustomException("User login,password or age is null!" + user.getAge() + user.getPassword() + user.getLogin());
         }
         if (user.getLogin().isEmpty() || (user.getPassword().isEmpty())) {
-            throw new CustomeException("User login or password is empty!");
+            throw new CustomException("User login or password is empty!" + user.getLogin() + user.getPassword());
         }
         if ((user.getLogin().length()) < 6) {
-            throw new CustomeException("User login is need to be at least 6 letters! - "
+            throw new CustomException("User login must be at least 6 characters long! - "
                     + user.getLogin());
         }
         if (user.getAge() < 18) {
-            throw new CustomeException("User age is under 18! " + user.getAge());
+            throw new CustomException("The user must not be less than 18 years old! " + user.getAge());
         }
         if ((user.getPassword().length() < 6)) {
-            throw new CustomeException("User password is need to be at least 6 letters! - "
+            throw new CustomException("User password is need to be at least 6 letters! - "
                     + user.getPassword());
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new CustomeException("User with this login is already register! - "
+            throw new CustomException("User with this login is already register! - "
                     + user.getLogin());
         }
         return storageDao.add(user);
