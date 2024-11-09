@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import core.basesyntax.service.RegistrationException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -117,7 +117,7 @@ class UserTaskTest {
     }
 
     @Test
-    void UserPasswordIsNotExist_NotOk() {
+    void register_UserPasswordIsNotExist_NotOk() {
         User user = new User();
         user.setLogin("Hensai");
         user.setAge(19);
