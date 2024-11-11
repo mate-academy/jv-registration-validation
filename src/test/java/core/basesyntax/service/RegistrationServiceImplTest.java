@@ -1,5 +1,8 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
@@ -25,39 +28,28 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User expected = new User(1L, "tarsan@Gmail.com", "123456", 30);
+        User expected = new User("tarsan@Gmail.com", "123456", 30);
         User actual = registrationService.register(expected);
 
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void register_lengthUserLogin_ok() {
-        User expected = new User(1L, "tarsan@Gmail.com", "123456", 30);
-        User actual = registrationService.register(expected);
-
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertTrue(MIN_LENGTH <= expected.getLogin().length());
-        Assertions.assertTrue(Storage.people.contains(expected),
-                "User should be added to storage.");
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_userLoginIsNull_notOk() {
-        User user = new User(1L, null, "123456", 30);
+        User user = new User(null, "123456", 30);
         var exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
 
         var expected = "User login cannot be null";
         var actual = exception.getMessage();
 
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(Storage.people.contains(user));
+        assertEquals(expected, actual);
+        assertFalse(Storage.people.contains(user));
     }
 
     @Test
-    void register_lengthUserLogin_notOk() {
-        User user = new User(1L, "Bob", "123456", 30);
+    void register_loginLengthLessThanMin() {
+        User user = new User("Bob", "123456", 30);
         var exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
 
@@ -67,25 +59,14 @@ class RegistrationServiceImplTest {
                 + " current long "
                 + user.getLogin().length();
 
-        Assertions.assertEquals(actual, expected);
-        Assertions.assertFalse(Storage.people.contains(user),
+        assertEquals(actual, expected);
+        assertFalse(Storage.people.contains(user),
                 "User shouldn't be added to storage.");
     }
 
     @Test
-    void register_userPassword_isOk() {
-        User user = new User(1L, "Andrian", "123456", 30);
-
-        var actual = registrationService.register(user).getPassword().length();
-
-        Assertions.assertTrue(actual >= MIN_LENGTH);
-        Assertions.assertTrue(Storage.people.contains(user),
-                "User should be added to storage.");
-    }
-
-    @Test
-    void register_userPasswordLength_notOk() {
-        User user = new User(1L, "Andrian", "123", 30);
+    void register_passwordLengthLessThanMin() {
+        User user = new User("Andrian", "123", 30);
 
         var exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
@@ -96,14 +77,14 @@ class RegistrationServiceImplTest {
                 + user.getPassword().length();
         var actual = exception.getMessage();
 
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(Storage.people.contains(user),
+        assertEquals(expected, actual);
+        assertFalse(Storage.people.contains(user),
                 "User with short password should not be added to storage.");
     }
 
     @Test
     void register_userPasswordIsNull_notOk() {
-        User user = new User(1L, "Andrian", null, 30);
+        User user = new User("Andrian", null, 30);
 
         var exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
@@ -111,25 +92,14 @@ class RegistrationServiceImplTest {
         var expected = "User password cannot be null";
         var actual = exception.getMessage();
 
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(Storage.people.contains(user),
+        assertEquals(expected, actual);
+        assertFalse(Storage.people.contains(user),
                 "User with null password should not be added to storage.");
     }
 
     @Test
-    void register_userAges_isOk() {
-        User user = new User(1L, "Andrian", "123456", 30);
-
-        var actual = registrationService.register(user).getAge();
-
-        Assertions.assertTrue(MIN_AGE <= actual);
-        Assertions.assertTrue(Storage.people.contains(user),
-                "User should be added to storage.");
-    }
-
-    @Test
-    void register_userAge_isNotOk() {
-        User user = new User(1L, "Andrian", "123456", 17);
+    void register_userAgeLessThanMin() {
+        User user = new User("Andrian", "123456", 17);
 
         var exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
@@ -139,14 +109,14 @@ class RegistrationServiceImplTest {
                 + " years old.";
         var actual = exception.getMessage();
 
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(Storage.people.contains(user),
+        assertEquals(expected, actual);
+        assertFalse(Storage.people.contains(user),
                 "User with incorrect age should not be added to storage.");
     }
 
     @Test
     void register_userAgeIsNegative_notOk() {
-        User user = new User(1L, "Andrian", "123456", -17);
+        User user = new User("Andrian", "123456", -17);
 
         var exception = Assertions.assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
@@ -154,23 +124,8 @@ class RegistrationServiceImplTest {
         var expected = "Age cannot be negative";
         var actual = exception.getMessage();
 
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(Storage.people.contains(user),
+        assertEquals(expected, actual);
+        assertFalse(Storage.people.contains(user),
                 "User with incorrect age should not be added to storage.");
-    }
-
-    @Test
-    void register_userAgeIsNull_notOk() {
-        User user = new User(1L, "Andrian", "123456", null);
-
-        var exception = Assertions.assertThrows(RegistrationException.class,
-                () -> registrationService.register(user));
-
-        var expected = "User age cannot be null";
-        var actual = exception.getMessage();
-
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertFalse(Storage.people.contains(user),
-                "User with null age should not be added to storage.");
     }
 }

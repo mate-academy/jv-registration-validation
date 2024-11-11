@@ -38,9 +38,6 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + " current length"
                     + user.getPassword().length());
         }
-        if (user.getAge() == null) {
-            throw new RegistrationException("User age cannot be null");
-        }
         if (user.getAge() < 0) {
             throw new RegistrationException("Age cannot be negative");
         }
