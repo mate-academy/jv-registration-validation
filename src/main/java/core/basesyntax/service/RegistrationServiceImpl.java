@@ -12,12 +12,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return storageDao.add(checkUserValidation(user));
+        checkUserValidation(user);
+        return storageDao.add(user);
     }
 
-    public User checkUserValidation(User user) throws RegistrationException {
+    private User checkUserValidation(User user) {
         if (user == null) {
-            throw new RegistrationException("Invalid data");
+            throw new RegistrationException("User can't be null! Maybe you made a mistake");
         }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");

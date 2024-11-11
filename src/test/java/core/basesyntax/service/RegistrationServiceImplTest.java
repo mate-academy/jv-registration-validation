@@ -1,17 +1,17 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.RegistrationException;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int VALID_AGE = 20;
+    private static final int VALID_AGE = 18;
     private static final long VALID_ID = 123883022L;
     private static final String VALID_LOGIN = "UserName";
     private static final String VALID_PASSWORD = "BestPasswordEver123";
@@ -35,15 +35,13 @@ class RegistrationServiceImplTest {
                 assertThrows(RegistrationException.class, () -> registrationService.register(user));
         String expected = "Not valid age: " + age + ". Minimal allowed age is 18";
         String actual = exception.getMessage();
-        assertTrue(actual.contains(expected));
+        assertEquals(expected, actual);
     }
 
     @Test
     void register_equalsToExpectedAge_Ok() {
-        int age = 18;
-        user.setAge(age);
-        User registeredUser = assertDoesNotThrow(() -> registrationService.register(user));
-        assertEquals(registeredUser.getAge(), 18);
+        User actualUser = registrationService.register(user);
+        assertEquals(actualUser, user);
     }
 
     @Test
@@ -60,7 +58,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_nullPassword_NotOk() {
         user.setPassword(null);
-        Exception exception =
+        RegistrationException exception =
                 assertThrows(RegistrationException.class, () -> registrationService.register(user));
         String expected = "Password can't be null";
         String actual = exception.getMessage();
@@ -158,7 +156,7 @@ class RegistrationServiceImplTest {
         newUser.setLogin("someLogin");
         newUser.setPassword("goodPassword");
         newUser.setAge(22);
-        registrationService.register(newUser);
+        Storage.people.add(newUser);
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 }
