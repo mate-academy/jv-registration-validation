@@ -6,9 +6,9 @@ import core.basesyntax.excpt.NotValidUserData;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private final static int MIN_AGE = 18;
+    private final static int MIN_CHAR_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
-    private static final int MIN_AGE = 18;
-    private static final int MIN_CHAR_LENGTH = 6;
 
     @Override
     public User register(User user) {
