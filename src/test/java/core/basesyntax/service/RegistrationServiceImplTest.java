@@ -22,45 +22,63 @@ class RegistrationServiceImplTest {
     }
 
     @BeforeEach
-    public void beforeFirst() {
+    public void before() {
         user.setAge(18);
         user.setPassword("Abracadabra");
         user.setLogin("Abracadabra");
     }
 
     @AfterEach
-    public void afterFirst() {
+    public void after() {
         if (Storage.people.contains(user)) {
             Storage.people.remove(user);
         }
     }
 
     @Test
-    public void getUser_minCharactersLogin_notOk() {
+    public void register_minCharactersLogin_notOk() {
         user.setLogin("abc");
         assertThrows(NotValidUserData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void getUser_minAge_notOk() {
+    public void register_minAge_notOk() {
         user.setAge(17);
         assertThrows(NotValidUserData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void getUser_minCharactersPassword_notOk() {
+    public void register_minCharactersPassword_notOk() {
         user.setPassword("abc");
         assertThrows(NotValidUserData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void getUser_existingUserAdd_notOk() {
+    public void register_LoginIsNull_notOk() {
+        user.setLogin(null);
+        assertThrows(NotValidUserData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_ageIsNull_notOk() {
+        user.setAge(null);
+        assertThrows(NotValidUserData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_passwordIsNull_notOk() {
+        user.setPassword(null);
+        assertThrows(NotValidUserData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    public void register_existingUserAdd_notOk() {
         Storage.people.add(user);
         assertThrows(NotValidUserData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void getUser_addUser_Ok() {
+    public void register_addUser_Ok() {
         assertEquals(user, registrationService.register(user),
                 "Register method should return added user");
     }
