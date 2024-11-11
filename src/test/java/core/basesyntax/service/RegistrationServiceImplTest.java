@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,8 +17,8 @@ class RegistrationServiceImplTest {
 
     private static final String LOGIN_ALREADY_TAKEN = "This login is already taken";
     private static final String LOGIN_TOO_SHORT = "Login cannot be null or less than 6 characters";
-    private static final String PASSWORD_TOO_SHORT
-            = "Password cannot be null or less than 6 characters";
+    private static final String PASSWORD_TOO_SHORT = "Password cannot be "
+            + "null or less than 6 characters";
     private static final String AGE_TOO_YOUNG = "User's age must be at least 18 and cannot be null";
     private StorageDao storageDao;
     private RegistrationService registrationService;
@@ -166,9 +165,4 @@ class RegistrationServiceImplTest {
                 () -> registrationService.register(user));
         assertEquals(AGE_TOO_YOUNG, exception.getMessage());
     }
-
-    //there is no user with such login in the Storage yet
-    //user's login is at least 6 characters
-    //user's password is at least 6 characters
-    //user's age is at least 18 years old
 }
