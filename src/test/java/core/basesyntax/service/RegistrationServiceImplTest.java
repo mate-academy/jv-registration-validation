@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
                 assertThrows(RegistrationException.class, () -> registrationService.register(user));
         String expected = "Password can't be null";
         String actual = exception.getMessage();
-        assertTrue(actual.contains(expected));
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -77,7 +77,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lengthOfPasswordIs3_NotOk() {
+    void register_invalidLengthOfPassword3_NotOk() {
         String password = "asd";
         user.setPassword(password);
         Exception exception =
@@ -88,7 +88,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_lengthOfPasswordIs5_NotOk() {
+    void register_invalidLengthOfPassword5_NotOk() {
         String password = "small";
         user.setPassword(password);
         Exception exception =
@@ -160,4 +160,3 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(newUser));
     }
 }
-

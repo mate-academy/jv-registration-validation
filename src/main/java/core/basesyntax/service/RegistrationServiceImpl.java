@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         return storageDao.add(user);
     }
 
-    private User checkUserValidation(User user) {
+    private void checkUserValidation(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null! Maybe you made a mistake");
         }
@@ -40,15 +40,16 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + ". Minimal allowed age is " + MINIMAL_AGE);
         }
         if (user.getPassword().length() < MINIMAL_LENGTH) {
-            throw new RegistrationException("Password can't be less than 6 symbols");
+            throw new RegistrationException("Password can't be less than "
+                    + MINIMAL_LENGTH + " symbols");
         }
         if (user.getLogin().length() < MINIMAL_LENGTH) {
-            throw new RegistrationException("Login can't be less than 6 symbols");
+            throw new RegistrationException("Login can't be less than "
+                    + MINIMAL_LENGTH + " symbols");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("You can't register with this login. "
                     + "This login is already occupied");
         }
-        return user;
     }
 }
