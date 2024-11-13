@@ -15,7 +15,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         return null;
     }
 
-
     private boolean userValidation(User user) {
         return userNullCheck(user)
                 && userValidateLoginExist(user.getLogin())

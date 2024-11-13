@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 public class UserRegistrationTest {
     private static final String SUCCESS_LOGIN = "SUCCESS_LOGIN";
     private static final String SUCCESS_PASSWORD = "SUCCESS_PASSWORD_123";
@@ -18,8 +17,8 @@ public class UserRegistrationTest {
     private static final String NOT_SUCCESS_LOGIN = "short";
     private static final String NOT_SUCCESS_PASSWORD = "short";
     private static final Integer NOT_SUCCESS_AGE = 15;
+    private static final User user = new User();
     private RegistrationServiceImpl registrationService;
-    private static final  User user = new User();
 
     @BeforeAll
     static void setUserValidParams() {
