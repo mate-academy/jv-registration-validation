@@ -47,6 +47,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     public void removeByLogin(String login) {
-        storageDao.deleteByLogin(login);
+        storageDao.removeByLogin(login);
     }
 }

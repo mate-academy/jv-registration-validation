@@ -7,5 +7,5 @@ public interface StorageDao {
 
     User get(String login);
 
-    void deleteByLogin(String login);
+    void removeByLogin(String login);
 }
