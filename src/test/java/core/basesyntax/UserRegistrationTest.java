@@ -1,6 +1,8 @@
 package core.basesyntax;
 
-import core.basesyntax.dao.StorageDaoImpl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -8,8 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class UserRegistrationTest {
     private static final String SUCCESS_LOGIN = "SUCCESS_LOGIN";
@@ -19,7 +19,7 @@ public class UserRegistrationTest {
     private static final String NOT_SUCCESS_PASSWORD = "short";
     private static final Integer NOT_SUCCESS_AGE = 15;
     private RegistrationServiceImpl registrationService;
-    private final static User user = new User();
+    private static final  User user = new User();
 
     @BeforeAll
     static void setUserValidParams() {

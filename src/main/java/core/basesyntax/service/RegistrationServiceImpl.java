@@ -9,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if(userValidation(user)){
+        if (userValidation(user)) {
             return storageDao.add(user);
         }
         return null;
@@ -24,7 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 && userValidateAge(user.getAge());
     }
 
-    private boolean userNullCheck(User user){
+    private boolean userNullCheck(User user) {
         return user != null
                 && user.getLogin() != null
                 && user.getPassword() != null
