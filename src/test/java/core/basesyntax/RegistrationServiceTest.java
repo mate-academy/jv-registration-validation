@@ -1,8 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
@@ -11,7 +8,9 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class UserTaskTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class RegistrationServiceTest {
     private static RegistrationService registrationService;
 
     @BeforeAll
@@ -20,7 +19,7 @@ class UserTaskTest {
     }
 
     @Test
-    void userLoginIsAlreadyExist_NotOk() {
+    void register_UserLoginIsAlreadyExist_NotOk() {
         User user = new User();
         user.setLogin("Vitalik");
         user.setAge(62);
@@ -38,7 +37,7 @@ class UserTaskTest {
     }
 
     @Test
-    void userWithNullLogin_NotOk() {
+    void register_UserWithNullLogin_NotOk() {
         User user = new User();
         user.setLogin(null);
         user.setPassword("12345678");
@@ -49,7 +48,7 @@ class UserTaskTest {
     }
 
     @Test
-    void register_UserHaveNullPassword_NotOk() {
+    void register_UserWithNullPassword_NotOk() {
         User user = new User();
         user.setLogin("user12345");
         user.setPassword(null);
@@ -60,7 +59,7 @@ class UserTaskTest {
     }
 
     @Test
-    void register_UserIsNullAge_NotOk() {
+    void register_UserWithNullAge_NotOk() {
         User user = new User();
         user.setAge(null);
         assertThrows(RegistrationException.class, () ->
@@ -94,13 +93,13 @@ class UserTaskTest {
     }
 
     @Test
-    void register_UserLoginIsRight_Ok() {
+    void register_ValidUser_Ok() {
         User user = new User();
         user.setLogin("umaniu");
-        user.setAge(22);
+        user.setAge(18);
         user.setPassword("normalpassword321");
-        registrationService.register(user);
-        assertTrue("umaniu".equals(user.getLogin()));
+        User actual = registrationService.register(user);
+        assertEquals(actual, user);
     }
 
     @Test
@@ -117,7 +116,7 @@ class UserTaskTest {
     }
 
     @Test
-    void register_UserPasswordIsNotExist_NotOk() {
+    void register_UserPasswordIsEmpty_NotOk() {
         User user = new User();
         user.setLogin("Hensai");
         user.setAge(19);
@@ -157,8 +156,8 @@ class UserTaskTest {
         user.setLogin("Yagrik123");
         user.setAge(53);
         user.setPassword("guaks341");
-        registrationService.register(user);
-        assertTrue("guaks341".equals(user.getPassword()));
+        User register = registrationService.register(user);
+        assertEquals(register, user);
     }
 
     @Test
