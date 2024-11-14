@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.InvalidUserDataException;
@@ -7,8 +9,6 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
 
@@ -36,7 +36,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void login_leangh_noOk() {
+    public void login_length_notOk() {
         User user = new User();
         user.setLogin("12345");
         user.setPassword("12345678");
@@ -48,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void password_leangh_noOk() {
+    public void password_length_noOk() {
         User user = new User();
         user.setLogin("SuperLongLogin");
         user.setPassword("short");
@@ -72,7 +72,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void user_age_login_noOk() {
+    public void user_age_and_login_notOk() {
         User user = new User();
         user.setLogin("short");
         user.setPassword("LongPassword");
@@ -84,7 +84,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void user_age_password_noOk() {
+    public void user_age_and_password_notOk() {
         User user = new User();
         user.setLogin("LongLogin");
         user.setPassword("abc");
@@ -149,6 +149,18 @@ class RegistrationServiceImplTest {
         user.setLogin("SomeLoginNoWhiteSpace");
         user.setPassword("Super ExoticPassword");
         user.setAge(63);
+
+        assertThrows(InvalidUserDataException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void user_age_below_0_noOk() {
+        User user = new User();
+        user.setLogin("SomeLoginNoWhiteSpace");
+        user.setPassword("SuperExoticPassword");
+        user.setAge(-1);
 
         assertThrows(InvalidUserDataException.class, () -> {
             registrationService.register(user);

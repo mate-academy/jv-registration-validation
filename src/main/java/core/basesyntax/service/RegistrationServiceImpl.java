@@ -39,6 +39,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidUserDataException("User must have at least 18 yo!");
         }
 
+        if (user.getAge() < 0) {
+            throw new InvalidUserDataException("User age must be over 0!");
+        }
+
         if (user.getLogin().contains(" ")) {
             throw new InvalidUserDataException("User login can not have white spaces!");
         }
