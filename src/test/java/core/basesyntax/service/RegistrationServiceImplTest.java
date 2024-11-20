@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
         testUser.setLogin("JustALogin");
         testUser.setPassword("JustAPassword");
         testUser.setAge(null);
-        assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -59,7 +59,7 @@ class RegistrationServiceImplTest {
         testUser.setLogin(null);
         testUser.setPassword("JustAPassword");
         testUser.setAge(21);
-        assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -75,7 +75,7 @@ class RegistrationServiceImplTest {
         testUser.setLogin("JustALogin");
         testUser.setPassword(null);
         testUser.setAge(21);
-        assertThrows(NullPointerException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
     }
 
     @Test
@@ -102,10 +102,10 @@ class RegistrationServiceImplTest {
         registrationService.register(thirdUser);
         List<User> expected = new ArrayList<>();
         firstUser.setId((long)1);
+        secondUser.setId((long)2);
+        thirdUser.setId((long)3);
         expected.add(firstUser);
-        firstUser.setId((long)2);
         expected.add(secondUser);
-        firstUser.setId((long)3);
         expected.add(thirdUser);
         assertEquals(expected, Storage.people);
     }
