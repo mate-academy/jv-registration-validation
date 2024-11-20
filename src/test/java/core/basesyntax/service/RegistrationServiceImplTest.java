@@ -31,6 +31,9 @@ class RegistrationServiceImplTest {
         thirdUser.setLogin("ShortLogin");
         thirdUser.setPassword("NotAPassword");
         thirdUser.setAge(39);
+        firstUser.setId((long)1);
+        secondUser.setId((long)2);
+        thirdUser.setId((long)3);
     }
 
     @AfterEach
@@ -43,7 +46,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin("JustALogin");
         testUser.setPassword("JustAPassword");
         testUser.setAge(null);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser),
+                "Missing information: User age");
     }
 
     @Test
@@ -51,7 +55,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin("JustALogin");
         testUser.setPassword("JustAPassword");
         testUser.setAge(12);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser),
+                "You have to be at least 18 years old to register");
     }
 
     @Test
@@ -59,7 +64,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin(null);
         testUser.setPassword("JustAPassword");
         testUser.setAge(21);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser),
+                "Missing information: User login ");
     }
 
     @Test
@@ -67,7 +73,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin("Login");
         testUser.setPassword("JustAPass");
         testUser.setAge(21);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser),
+                "Login is too short");
     }
 
     @Test
@@ -75,7 +82,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin("JustALogin");
         testUser.setPassword(null);
         testUser.setAge(21);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser),
+                "Missing information: User Password");
     }
 
     @Test
@@ -83,7 +91,8 @@ class RegistrationServiceImplTest {
         testUser.setLogin("JustALogin");
         testUser.setPassword("APass");
         testUser.setAge(21);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser),
+                "Password is too short");
     }
 
     @Test
@@ -92,21 +101,20 @@ class RegistrationServiceImplTest {
         testUser.setPassword("APass");
         testUser.setAge(21);
         registrationService.register(firstUser);
-        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser));
+        assertThrows(InvalidDataException.class, () -> registrationService.register(testUser),
+                "this login already exists");
+
     }
 
     @Test
     void register_users_Ok() throws InvalidDataException {
-        registrationService.register(firstUser);
-        registrationService.register(secondUser);
-        registrationService.register(thirdUser);
         List<User> expected = new ArrayList<>();
-        firstUser.setId((long)1);
-        secondUser.setId((long)2);
-        thirdUser.setId((long)3);
         expected.add(firstUser);
         expected.add(secondUser);
         expected.add(thirdUser);
+        registrationService.register(firstUser);
+        registrationService.register(secondUser);
+        registrationService.register(thirdUser);
         assertEquals(expected, Storage.people);
     }
 
