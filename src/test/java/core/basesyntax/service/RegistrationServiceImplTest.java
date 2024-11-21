@@ -1,12 +1,18 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-
-import org.junit.jupiter.api.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
@@ -201,11 +207,11 @@ class RegistrationServiceImplTest {
     @Test
     void registerUser_MaxAge_Ok() {
         user.setAge(MAX_AGE);
-       try {
-           registrationService.register(user);
-           assertTrue(Storage.people.contains(user));
-       } catch (RegistrationException e) {
-           fail("Unexpected exception thrown: " + e.getMessage());
-       }
+        try {
+            registrationService.register(user);
+            assertTrue(Storage.people.contains(user));
+        } catch (RegistrationException e) {
+            fail("Unexpected exception thrown: " + e.getMessage());
+        }
     }
 }

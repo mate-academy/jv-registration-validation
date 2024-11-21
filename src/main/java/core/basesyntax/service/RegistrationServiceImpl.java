@@ -6,7 +6,6 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
     private static final int MIN_ID_LENGTH = 1;
     private static final int MAX_ID_LENGTH = 200;
     private static final int MIN_AGE = 18;
@@ -16,6 +15,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MAX_LOGIN_LENGTH = 100;
     private static final String SPACE = " ";
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -59,23 +59,26 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Incorrect Password: Password cannot be null");
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Invalid User Password length(min): " + password.length());
+            throw new RegistrationException("Invalid User Password length(min): "
+                    + password.length());
         }
         if (password.length() > MAX_PASSWORD_LENGTH) {
-            throw new RegistrationException("Invalid user Password length(max): " + password.length());
+            throw new RegistrationException("Invalid user Password length(max): "
+                    + password.length());
         }
         if (!password.matches(".*[!@#$%^&*()_+=|<>?{}\\[\\]~-].*")) {
-            throw new RegistrationException("User password must contain at least one special symbol");
+            throw new RegistrationException("User password must contain at"
+                    +" least one special symbol");
         }
     }
 
     private void validateUserId(User user) {
         Long userId = user.getId();
         if (userId == null) {
-            throw new RegistrationException ("User ID cannot be null");
+            throw new RegistrationException("User ID cannot be null");
         }
         if (userId < MIN_ID_LENGTH || userId > MAX_ID_LENGTH) {
-            throw new RegistrationException ("Invalid user ID range: " + userId);
+            throw new RegistrationException("Invalid user ID range: " + userId);
         }
     }
 
