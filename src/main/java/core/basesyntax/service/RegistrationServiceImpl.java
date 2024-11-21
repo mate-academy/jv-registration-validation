@@ -68,7 +68,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (!password.matches(".*[!@#$%^&*()_+=|<>?{}\\[\\]~-].*")) {
             throw new RegistrationException("User password must contain at"
-                    +" least one special symbol");
+                    + " least one special symbol");
         }
     }
 

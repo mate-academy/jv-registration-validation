@@ -55,7 +55,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerUser_NullId_notOk() {
         user.setId(null);
-        Assertions.assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
