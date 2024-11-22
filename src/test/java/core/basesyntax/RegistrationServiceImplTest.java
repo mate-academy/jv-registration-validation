@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import static core.basesyntax.db.Storage.people;
+
 import core.basesyntax.exception.InvalidRegistrationException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
