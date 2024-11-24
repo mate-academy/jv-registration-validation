@@ -39,14 +39,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortLogin_NotOK() {
+    void register_lessThan6Login_NotOK() {
         assertThrows(RegistrationException.class, () -> {
             util.register(new User("1", "123456", 30));
         });
     }
 
     @Test
-    void register_minLengthLogin_OK() {
+    void register_exactly6Login_OK() {
         assertDoesNotThrow(() -> {
             util.register(new User("666666", "123456", 30));
         });
@@ -60,14 +60,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortPassword_NotOK() {
+    void register_lessThan6Password_NotOK() {
         assertThrows(RegistrationException.class, () -> {
             util.register(new User("123456", "1", 30));
         });
     }
 
     @Test
-    void register_minLengthPassword_OK() {
+    void register_exactly6Password_OK() {
         assertDoesNotThrow(() -> {
             util.register(new User("PasswordTest", "666666", 30));
         });
