@@ -20,7 +20,7 @@ public class RegistrationServiceImplTest {
     static void setUp() {
         users = new ArrayList<>();
         users.add(new User("SuperAdam", "123456", 19));
-        users.add(new User("SuperAdam", "randomPassword", 99));
+        users.add(new User("SuperAdam", "randomPassword", 49));
         Storage.people.add(users.get(0));
     }
 
@@ -34,42 +34,42 @@ public class RegistrationServiceImplTest {
     @Test
     void register_nullLogin_NotOK() {
         assertThrows(RegistrationException.class, () -> {
-            util.register(new User(null, "123456", 123456));
+            util.register(new User(null, "123456", 30));
         });
     }
 
     @Test
     void register_shortLogin_NotOK() {
         assertThrows(RegistrationException.class, () -> {
-            util.register(new User("1", "123456", 123456));
+            util.register(new User("1", "123456", 30));
         });
     }
 
     @Test
     void register_minLengthLogin_OK() {
         assertDoesNotThrow(() -> {
-            util.register(new User("666666", "123456", 123456));
+            util.register(new User("666666", "123456", 30));
         });
     }
 
     @Test
     void register_nullPassword_NotOK() {
         assertThrows(RegistrationException.class, () -> {
-            util.register(new User("123456", null, 123456));
+            util.register(new User("123456", null, 30));
         });
     }
 
     @Test
     void register_shortPassword_NotOK() {
         assertThrows(RegistrationException.class, () -> {
-            util.register(new User("123456", "1", 123456));
+            util.register(new User("123456", "1", 30));
         });
     }
 
     @Test
     void register_minLengthPassword_OK() {
         assertDoesNotThrow(() -> {
-            util.register(new User("PasswordTest", "666666", 123456));
+            util.register(new User("PasswordTest", "666666", 30));
         });
     }
 
