@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -24,7 +25,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_notUniqueLogin_NotOK() {
+    void register_nonUniqueLogin_NotOK() {
         assertThrows(RegistrationException.class, () -> {
             util.register(users.get(1));
         });
@@ -45,6 +46,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_minLengthLogin_OK() {
+        assertDoesNotThrow(() -> {
+            util.register(new User("666666", "123456", 123456));
+        });
+    }
+
+    @Test
     void register_nullPassword_NotOK() {
         assertThrows(RegistrationException.class, () -> {
             util.register(new User("123456", null, 123456));
@@ -59,6 +67,13 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_minLengthPassword_OK() {
+        assertDoesNotThrow(() -> {
+            util.register(new User("PasswordTest", "666666", 123456));
+        });
+    }
+
+    @Test
     void register_nullAge_NotOK() {
         assertThrows(RegistrationException.class, () -> {
             util.register(new User("123456", "123456", null));
@@ -69,6 +84,13 @@ public class RegistrationServiceImplTest {
     void register_ageUnder18_NotOK() {
         assertThrows(RegistrationException.class, () -> {
             util.register(new User("123456", "123456", 1));
+        });
+    }
+
+    @Test
+    void register_minAllowedAge_OK() {
+        assertDoesNotThrow(() -> {
+            util.register(new User("AgeTest", "123456", 18));
         });
     }
 }

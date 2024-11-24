@@ -1,6 +1,6 @@
 package core.basesyntax.exceptions;
 
-public class RegistrationException extends Error {
+public class RegistrationException extends RuntimeException {
     public RegistrationException(String message) {
         super(message);
     }
