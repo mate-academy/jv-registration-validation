@@ -10,7 +10,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws RegistrationException {
-        if (storageDao.get(user.getLogin()) != null) {
+        if (user == null || storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This login is already used.");
         }
         if (user.getLogin() == null || user.getLogin().length() < 6) {
@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RegistrationException("Password should contains at least 6 symbols.");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() == null || user.getAge() < 18) {
             throw new RegistrationException("Users under 18 years are not approved.");
         }
         storageDao.add(user);

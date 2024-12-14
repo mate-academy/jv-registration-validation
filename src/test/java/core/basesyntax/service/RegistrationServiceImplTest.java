@@ -20,11 +20,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginCorrectLength_Ok() {
+    void register_LoginCorrectLength_Ok() throws RegistrationException {
         User user1 = new User(4L, "kate43", "tyo7654", 25);
         User user2 = new User(4L, "kate4305", "tyo7654", 25);
-        User actual1 = storageDao.add(user1);
-        User actual2 = storageDao.add(user2);
+        User actual1 = registrationService.register(user1);
+        User actual2 = registrationService.register(user2);
         assertEquals(user1, actual1);
         assertEquals(user2, actual2);
     }
@@ -88,11 +88,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordCorrectLength_Ok() {
+    void register_PasswordCorrectLength_Ok() throws RegistrationException {
         User user1 = new User(15L, "yurii_sk", "546987", 21);
         User user2 = new User(10L, "oleksii", "ogsr7654", 29);
-        User actual1 = storageDao.add(user1);
-        User actual2 = storageDao.add(user2);
+        User actual1 = registrationService.register(user1);
+        User actual2 = registrationService.register(user2);
         assertEquals(user1, actual1);
         assertEquals(user2, actual2);
     }
@@ -110,11 +110,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeCorrect_Ok() {
+    void register_AgeCorrect_Ok() throws RegistrationException {
         User user1 = new User(71L, "igor_trs", "546987", 21);
         User user2 = new User(52L, "taras85", "ogsr7654", 29);
-        User actual1 = storageDao.add(user1);
-        User actual2 = storageDao.add(user2);
+        User actual1 = registrationService.register(user1);
+        User actual2 = registrationService.register(user2);
         assertEquals(user1, actual1);
         assertEquals(user2, actual2);
     }
