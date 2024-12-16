@@ -6,20 +6,25 @@ import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_PASSWORD_LOGIN_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) throws RegistrationException {
-        if (user == null || storageDao.get(user.getLogin()) != null) {
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This login is already used.");
         }
-        if (user.getLogin() == null || user.getLogin().length() < 6) {
+        if (user.getLogin() == null || user.getLogin().length() < MIN_PASSWORD_LOGIN_LENGTH) {
             throw new RegistrationException("Login should contains at least 6 symbols.");
         }
-        if (user.getPassword() == null || user.getPassword().length() < 6) {
+        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LOGIN_LENGTH) {
             throw new RegistrationException("Password should contains at least 6 symbols.");
         }
-        if (user.getAge() == null || user.getAge() < 18) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationException("Users under 18 years are not approved.");
         }
         storageDao.add(user);
