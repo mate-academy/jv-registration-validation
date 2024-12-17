@@ -1,12 +1,10 @@
 package core.basesyntax;
 
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Feel free to remove this class and create your own.
@@ -30,59 +28,71 @@ public class MyTest {
     }
 
     @Test
-    void checkNotNullUser() {
-        if (user == null) {
-            throw new MyUncheckedException("User is null");
-        }
+    void user_notNull_check() {
+        assertNotNull(user, "User is invalid!" );
     }
 
     @Test
-    void loginIsNotNull() {
+    void login_notNull_check() {
         assertNotNull(login);
     }
 
     @Test
-    void loginLengthIsNotZero() {
-        if (loginLength == 0) {
-            throw new MyUncheckedException("Login is invalid");
-        }
+    void login_length_notZero_check() {
+        assertThrows(MyUncheckedException.class , () -> {
+            if (loginLength == 0) {
+                throw new MyUncheckedException("Login should be bigger!");
+            }
+        });
     }
 
     @Test
-    void loginLengthIsMoreThan_6() {
-        if (loginLength < 6) {
-            throw new MyUncheckedException("Login should be bigger");
-        }
+    void login_length_moreThan_6_check() {
+        assertThrows(MyUncheckedException.class , () -> {
+            if (loginLength < 6) {
+                throw new MyUncheckedException("Login should be bigger!");
+            }
+        });
     }
 
     @Test
-    void passwordLengthIsNotZero() {
-        if (passwordLength == 0) {
-            throw new MyUncheckedException("Password is invalid");
-        }
+    void password_length_notZero_check() {
+        assertThrows(MyUncheckedException.class , () -> {
+            if (passwordLength == 0) {
+                throw new MyUncheckedException("Password should be bigger!");
+            }
+        });
     }
 
     @Test
-    void passwordIsNotNull() {
+    void password_notNull_check() {
         assertNotNull(password);
     }
 
     @Test
-    void passwordLengthIsMoreThan_6() {
-        if (passwordLength < 6) {
-            throw new MyUncheckedException("Password should be bigger");
-        }
+    void password_length_moreThan_6_check() {
+        assertThrows(MyUncheckedException.class , () -> {
+            if (passwordLength < 6) {
+                throw new MyUncheckedException("Password should be bigger!");
+            }
+        });
     }
 
     @Test
-    void checkAgeOver_0() {
-        assertTrue(age >= 0, "Age is invalid!");
+    void age_under_0_check() {
+        assertThrows(MyUncheckedException.class , () -> {
+            if (age < 0) {
+                throw new MyUncheckedException("Age should be bigger!");
+            }
+        });
     }
 
     @Test
-    void userAgeIsUnder_18() {
-        if (age < 18) {
-            throw new MyUncheckedException("You are too young");
-        }
+    void age_under_18_check() {
+        assertThrows(MyUncheckedException.class, () -> {
+            if (age < 18) {
+                throw new MyUncheckedException("You must be at least 18 to register!");
+            }
+        });
     }
 }
