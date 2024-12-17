@@ -34,7 +34,7 @@ public class MyTest {
     }
 
     @Test
-    void register_nullLogin_notOk() {  // Змінили назву методу, щоб вона відповідала очікуваному результату
+    void register_nullLogin_notOk() {
         assertNotNull(login, "Login should not be null");
     }
 
