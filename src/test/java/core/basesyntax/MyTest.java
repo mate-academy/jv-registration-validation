@@ -33,7 +33,7 @@ public class MyTest {
     }
 
     @Test
-    void login_notNull_check() {
+    void register_nullLogin_notOk() {
         assertNotNull(login);
     }
 
@@ -47,7 +47,7 @@ public class MyTest {
     }
 
     @Test
-    void login_length_moreThan_6_check() {
+    void register_shortLogin_notOk() {
         assertThrows(MyUncheckedException.class , () -> {
             if (loginLength < 6) {
                 throw new MyUncheckedException("Login should be bigger!");
@@ -65,12 +65,12 @@ public class MyTest {
     }
 
     @Test
-    void password_notNull_check() {
+    void register_nullPassword_notOk() {
         assertNotNull(password);
     }
 
     @Test
-    void password_length_moreThan_6_check() {
+    void register_shortPassword_notOk() {
         assertThrows(MyUncheckedException.class , () -> {
             if (passwordLength < 6) {
                 throw new MyUncheckedException("Password should be bigger!");
