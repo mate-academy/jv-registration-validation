@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
     @Test
     void userLoginNull_NotOk() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -62,7 +62,7 @@ class RegistrationServiceImplTest {
     @Test
     void passwordNull_NotOk() {
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -98,7 +98,7 @@ class RegistrationServiceImplTest {
     @Test
     void userAgeNull_NotOk() {
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }

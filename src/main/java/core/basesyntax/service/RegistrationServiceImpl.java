@@ -18,13 +18,13 @@ public class RegistrationServiceImpl implements RegistrationService {
                         "User with login " + user.getLogin() + " already exist");
             }
         }
-        if (user.getLogin().length() < 6 || user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().length() < 6) {
             throw new RegistrationException("User login should be at least 6 characters");
         }
-        if (user.getPassword().length() < 6 || user.getPassword() == null) {
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RegistrationException("Password should be at least 6 characters");
         }
-        if (user.getAge() < MIN_AGE || user.getAge() == null) {
+        if (user.getAge() == null || user.getAge() < MIN_AGE) {
             throw new RegistrationException("User age must be at least 18 years old");
         }
         storageDao.add(user);
