@@ -7,10 +7,10 @@ import core.basesyntax.exception.InvalidUserObjectException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
-    private static final int REQUIRED_AGE = 18;
-    private static final int MINIMAL_PASSWORD_LENGTH = 6;
     private static final int MINIMAL_EMAIL_LENGTH = 6;
+    private static final int MINIMAL_PASSWORD_LENGTH = 6;
+    private static final int REQUIRED_AGE = 18;
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() <= 0) {
             throw new InvalidUserCredentialsException("User age cannot be negative or zero");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < REQUIRED_AGE) {
             throw new InvalidUserCredentialsException("User age cannot be less than 18");
         }
         validateUserEmail(user);
@@ -42,7 +42,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new InvalidUserCredentialsException("User login cannot be null");
         }
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin().length() < MINIMAL_EMAIL_LENGTH) {
             throw new InvalidUserCredentialsException("User login length cannot be less than 6");
         }
     }
@@ -51,7 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getPassword() == null) {
             throw new InvalidUserCredentialsException("User password cannot be null");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MINIMAL_PASSWORD_LENGTH) {
             throw new InvalidUserCredentialsException("User password length cannot be less than 6");
         }
     }

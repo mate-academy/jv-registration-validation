@@ -5,14 +5,11 @@ import core.basesyntax.exception.InvalidUserObjectException;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
-
 
     @Test
     public void register_nullUser_should_throw_invalidUserException_negative() {
