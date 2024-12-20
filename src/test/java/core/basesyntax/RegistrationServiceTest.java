@@ -1,8 +1,5 @@
 package core.basesyntax;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
-import core.basesyntax.db.Storage;
 import core.basesyntax.exception.InvalidUserCredentialsException;
 import core.basesyntax.exception.InvalidUserObjectException;
 import core.basesyntax.model.User;
@@ -12,9 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceTest {
-    private Storage storage = new Storage();
-    private StorageDao storageDao = new StorageDaoImpl();
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @Test
     public void register_nullUser_should_throw_invalidUserException_negative() {
