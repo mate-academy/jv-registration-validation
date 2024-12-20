@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl rsi;
@@ -33,6 +34,13 @@ class RegistrationServiceImplTest {
         actual.setPassword("123456");
         actual.setLogin("fffffffff");
         actual.setAge(18);
+    }
+
+    @Test
+    void register_userNull_notOk() {
+        assertThrows(InvalidUserException.class, () -> {
+            rsi.register(null);
+        });
     }
 
     @Test
@@ -101,11 +109,11 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_Ok() {
-        actual.setLogin("vasyasho1");
+        actual.setLogin("vasyasho12");
         try {
             assertEquals(rsi.register(actual), actual);
         } catch (InvalidUserException e) {
-            System.out.println("Registration is successful");;
+            fail("Registration failed unexpectedly");
         }
     }
 }
