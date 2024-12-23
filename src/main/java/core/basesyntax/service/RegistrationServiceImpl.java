@@ -11,20 +11,29 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws RegistrationException {
+    public User register(User user) {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This login is already used.");
         }
-        if (user.getLogin() == null || user.getLogin().length() < MIN_PASSWORD_LOGIN_LENGTH) {
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login can't be null.");
+        }
+        if (user.getLogin().length() < MIN_PASSWORD_LOGIN_LENGTH) {
             throw new RegistrationException("Login should contains at least 6 symbols.");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LOGIN_LENGTH) {
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null.");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LOGIN_LENGTH) {
             throw new RegistrationException("Password should contains at least 6 symbols.");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age can't be null.");
+        }
+        if (user.getAge() < MIN_AGE) {
             throw new RegistrationException("Users under 18 years are not approved.");
         }
         storageDao.add(user);

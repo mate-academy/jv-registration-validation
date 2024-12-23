@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int MIN_PASSWORD_LOGIN_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private StorageDaoImpl storageDao;
     private RegistrationServiceImpl registrationService;
 
@@ -20,18 +22,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginCorrectLength_Ok() throws RegistrationException {
+    void register_CorrectLoginLength_Ok() throws RegistrationException {
         User user = new User("kate43", "tyo7654", 25);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void register_LoginShorterThan6_NotOk() {
-        User user = new User("cat", "goi32kls", 50);
+    void register_InvalidLoginLength_NotOk() {
+        User user = new User("cat12", "goi32kls", 50);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Registration exception should be thrown if trying to register user "
-                        + "with login shorter then 6 symbols.");
+                        + "with login shorter then " + MIN_PASSWORD_LOGIN_LENGTH + " symbols.");
     }
 
     @Test
@@ -39,7 +41,7 @@ class RegistrationServiceImplTest {
         User user = new User(null, "itk567e3", 29);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Registration exception should be thrown if trying to register user "
-                        + "with login shorter then 6 symbols.");
+                        + "with login shorter then " + MIN_PASSWORD_LOGIN_LENGTH + " symbols.");
     }
 
     @Test
@@ -57,30 +59,30 @@ class RegistrationServiceImplTest {
         User user = new User("user195", null, 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Registration exception should be thrown if trying to register user "
-                        + "with password shorter then 6 symbols.");
+                        + "with password shorter then " + MIN_PASSWORD_LOGIN_LENGTH + " symbols.");
     }
 
     @Test
-    void register_PasswordShorterThan6_NotOk() {
-        User user = new User("borys1995", "543", 29);
+    void register_InvalidPasswordLength_NotOk() {
+        User user = new User("borys1995", "54321", 29);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Registration exception should be thrown if trying to register user "
-                        + "with password shorter then 6 symbols.");
+                        + "with password shorter then " + MIN_PASSWORD_LOGIN_LENGTH + " symbols.");
     }
 
     @Test
-    void register_PasswordCorrectLength_Ok() throws RegistrationException {
+    void register_CorrectPasswordLength_Ok() throws RegistrationException {
         User user = new User("yurii_sk", "546987", 21);
         User actual = registrationService.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    void register_AgeLessThan18_NotOk() {
-        User user = new User("user1692", "954leels", 2);
+    void register_AgeLessThanMinimum_NotOk() {
+        User user = new User("user1692", "954leels", 17);
         assertThrows(RegistrationException.class, () -> registrationService.register(user),
                 "Registration exception should be thrown if trying to register user "
-                        + "with age less than 18.");
+                        + "with age less than " + MIN_AGE + ".");
     }
 
     @Test
