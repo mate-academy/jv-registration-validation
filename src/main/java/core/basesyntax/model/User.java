@@ -3,7 +3,7 @@ package core.basesyntax.model;
 import java.util.Objects;
 
 public class User {
-    final String login;
+    private String login;
     private String password;
     private Integer age;
 
@@ -38,9 +38,6 @@ public User(String login , String password , Integer age){
         this.login = login;
         this.password = password;
         this.age = age;
-}
-public User(String login){
-        this.login = login;
 }
     @Override
     public int hashCode() {
