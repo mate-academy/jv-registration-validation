@@ -41,7 +41,6 @@ public class HelloWorldTest {
                 ()-> {
                     registrationService.register(user1);
                 });
-
     }
 
     @Test
