@@ -16,18 +16,18 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) throws ImpossibleRegisterUserException {
         if (user == null) {
-            throw new ImpossibleRegisterUserException("The user can`t be empty");
+            throw new ImpossibleRegisterUserException("The user is null");
         } else if (user.getLogin() == null || user.getLogin().length() < MINIMAL_LENGTH) {
-            throw new ImpossibleRegisterUserException("This login is incorrect");
+            throw new ImpossibleRegisterUserException("This login is null or too short");
         } else if (user.getPassword() == null || user.getPassword().length() < MINIMAL_LENGTH) {
-            throw new ImpossibleRegisterUserException("This password is incorrect");
+            throw new ImpossibleRegisterUserException("This password is null or too short");
         } else if (user.getAge() == null || user.getAge() < MINIMAL_AGE) {
-            throw new ImpossibleRegisterUserException("Age of the user isn`t enough to show content");
+            throw new ImpossibleRegisterUserException("Age is null or less than MINIMAL_AGE");
         } else {
             List<User> copy = new ArrayList<>(Storage.people);
             for (int i = 0; i < copy.size(); i++) {
                 if (copy.get(i).getLogin().equals(user.getLogin())) {
-                    throw new ImpossibleRegisterUserException("The user who have this login already exists");
+                    throw new ImpossibleRegisterUserException("A user with this login already exists.");
                 }
             }
             storageDao.add(user);
