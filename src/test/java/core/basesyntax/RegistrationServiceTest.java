@@ -53,10 +53,20 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_shortLogin_notOk() {
+    void register_shortPassword_notOk() {
         User user = new User();
         user.setLogin("validUser");
         user.setPassword("short");
+        user.setAge(25);
+
+        assertThrows(InvalidUserException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_shortLogin_notOk() {
+        User user = new User();
+        user.setLogin("short");
+        user.setPassword("newPassword123");
         user.setAge(25);
 
         assertThrows(InvalidUserException.class, () -> registrationService.register(user));
