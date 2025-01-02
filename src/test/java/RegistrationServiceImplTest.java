@@ -33,7 +33,8 @@ public class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(IllegalArgumentException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationServiceImpl.RegistrationException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
@@ -43,7 +44,8 @@ public class RegistrationServiceImplTest {
         user.setPassword("validPassword");
         user.setAge(20);
 
-        assertThrows(IllegalArgumentException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceImpl.RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
@@ -53,7 +55,8 @@ public class RegistrationServiceImplTest {
         user.setPassword("short");
         user.setAge(20);
 
-        assertThrows(IllegalArgumentException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceImpl.RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
@@ -63,7 +66,8 @@ public class RegistrationServiceImplTest {
         user.setPassword("validPassword");
         user.setAge(17);
 
-        assertThrows(IllegalArgumentException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationServiceImpl.RegistrationException.class,
+                () -> registrationService.register(user));
     }
 
     @Test
@@ -79,7 +83,7 @@ public class RegistrationServiceImplTest {
         duplicateUser.setPassword("anotherPassword");
         duplicateUser.setAge(25);
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(RegistrationServiceImpl.RegistrationException.class,
                 () -> registrationService.register(duplicateUser));
     }
 }
