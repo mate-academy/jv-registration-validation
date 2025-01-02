@@ -9,6 +9,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        if (user.getLogin() == null || user.getLogin().length() < 6) {
+            throw new IllegalArgumentException("User login must be at least 6 characters");
+        }
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            throw new IllegalArgumentException("User password must be at least 6 characters");
+        }
+        if (user.getAge() == null || user.getAge() < 18) {
+            throw new IllegalArgumentException("User must be at least 18 years old");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new IllegalArgumentException("User with this login already exists");
+        }
+        return storageDao.add(user);
     }
 }
