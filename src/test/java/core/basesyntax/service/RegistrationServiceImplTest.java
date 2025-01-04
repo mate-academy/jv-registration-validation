@@ -11,7 +11,6 @@ class RegistrationServiceImplTest {
 
     private User createValidUser() {
         User user = new User();
-        //user.setLogin("superlogin");
         user.setPassword("P$assword21");
         user.setAge(18);
         user.setId(1L);
@@ -49,7 +48,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void sizeOfPasswordIslongerThan6_Ok() {
+    void sizeOfPasswordIsLongerThan6_Ok() {
         User user = createValidUser();
         user.setLogin("login54");
 
