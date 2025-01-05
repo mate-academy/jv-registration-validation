@@ -24,8 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegisterFailedException("User with login"
-                    + user.getLogin() + "already exists");
+            throw new RegisterFailedException("User with login "
+                    + user.getLogin() + " already exists");
         }
 
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
-            throw new RegisterFailedException("Used must be at least "
+            throw new RegisterFailedException("User must be at least "
                     + MIN_AGE + " years old.");
         }
 

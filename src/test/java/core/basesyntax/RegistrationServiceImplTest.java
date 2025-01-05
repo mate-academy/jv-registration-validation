@@ -3,6 +3,7 @@ package core.basesyntax;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.RegisterFailedException;
 import core.basesyntax.model.User;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static RegistrationServiceImpl service;
+    private static StorageDao storageDao;
 
     private static final User firstUser = new User("Bob_Super", "Bob12345", 18);
     private static final User secondUser = new User("X_Ann_X", "Ann123", 25);
@@ -21,11 +23,11 @@ public class RegistrationServiceImplTest {
     @BeforeAll
     static void beforeAll() {
         service = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     void setUp() {
-        StorageDaoImpl storageDao = new StorageDaoImpl();
         storageDao.add(firstUser);
         storageDao.add(secondUser);
         storageDao.add(thirdUser);
