@@ -19,12 +19,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Login should contain at least 6 characters");
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new InvalidDataException("Password should contain at leas 6 characters");
+            throw new InvalidDataException("Password should contain at least 6 characters");
         }
         if (user.getAge() == null || user.getAge() < 18) {
             throw new InvalidDataException("User age should be at least 18");
         }
-        return user;
+        return storageDao.add(user);
 
     }
 }

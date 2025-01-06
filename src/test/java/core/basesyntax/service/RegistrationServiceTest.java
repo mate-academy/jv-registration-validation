@@ -73,7 +73,7 @@ class RegistrationServiceTest {
         Exception exception = Assertions.assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
-        Assertions.assertEquals("Password should contain at leas 6 characters",
+        Assertions.assertEquals("Password should contain at least 6 characters",
                 exception.getMessage());
     }
 
@@ -85,7 +85,7 @@ class RegistrationServiceTest {
         Exception exception = Assertions.assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });
-        Assertions.assertEquals("Password should contain at leas 6 characters",
+        Assertions.assertEquals("Password should contain at least 6 characters",
                 exception.getMessage());
     }
 
