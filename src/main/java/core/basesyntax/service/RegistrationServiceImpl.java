@@ -7,30 +7,33 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int LOGIN_AND_PASSWORD_LEN = 6;
-    private static final int AGE = 18;
+    private static final int REQUIRED_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User register(User user) throws InvalidCredentialsException {
+    public User register(User user) {
         if (user == null) {
             throw new InvalidCredentialsException("User cannot be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidCredentialsException("Sorry but this login is token");
+            throw new InvalidCredentialsException(
+                    "Sorry but login: " + user.getLogin() + " is taken"
+            );
         }
         if (user.getLogin() == null || user.getLogin().length() < LOGIN_AND_PASSWORD_LEN) {
             throw new InvalidCredentialsException(
-                    "Sorry but your login must be " + LOGIN_AND_PASSWORD_LEN + " or more"
+                    "Sorry but your login must be " + LOGIN_AND_PASSWORD_LEN + " characters or more"
             );
         }
         if (user.getPassword() == null || user.getPassword().length() < LOGIN_AND_PASSWORD_LEN) {
             throw new InvalidCredentialsException(
-                    "Sorry but your password must be " + LOGIN_AND_PASSWORD_LEN + " or more"
+                    "Sorry but your password must be "
+                            + LOGIN_AND_PASSWORD_LEN + " characters or more"
             );
         }
-        if (user.getAge() == null || user.getAge() < AGE) {
+        if (user.getAge() == null || user.getAge() < REQUIRED_AGE) {
             throw new InvalidCredentialsException(
-                    "Sorry but you must be " + AGE + " or older"
+                    "Sorry but you must be " + REQUIRED_AGE + " years old or older"
             );
         }
         return storageDao.add(user);

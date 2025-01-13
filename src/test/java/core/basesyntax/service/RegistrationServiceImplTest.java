@@ -10,8 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int LOGIN_AND_PASSWORD_LEN = 6;
-    private static final int AGE = 18;
+    private static final int REQUIRED_AGE = 18;
+    private static final String INCORRECT_LOGIN = "userT";
+    private static final String INCORRECT_PASSWORD = "passT";
     private StorageDaoImpl storageDao = new StorageDaoImpl();
     private RegistrationServiceImpl registrationService;
     private User defaultUser;
@@ -25,11 +26,7 @@ class RegistrationServiceImplTest {
     @Test
     public void register_userWithCorrectData_Ok() {
         User expected;
-        try {
-            expected = registrationService.register(defaultUser);
-        } catch (InvalidCredentialsException e) {
-            throw new RuntimeException("User is registered");
-        }
+        expected = registrationService.register(defaultUser);
         assertEquals(defaultUser, expected);
     }
 
@@ -42,33 +39,23 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_loginLessThan6_notOk() {
-        StringBuilder login = new StringBuilder();
-        for (int i = 1; i < LOGIN_AND_PASSWORD_LEN; i++) {
-            login.append("a");
-            defaultUser.setLogin(login.toString());
-            assertThrows(InvalidCredentialsException.class,
-                    () -> registrationService.register(defaultUser));
-        }
+        defaultUser.setLogin(INCORRECT_LOGIN);
+        assertThrows(InvalidCredentialsException.class,
+                () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_passwordLessThan6_notOk() {
-        StringBuilder password = new StringBuilder();
-        for (int i = 1; i < LOGIN_AND_PASSWORD_LEN; i++) {
-            password.append("a");
-            defaultUser.setPassword(password.toString());
-            assertThrows(InvalidCredentialsException.class,
-                    () -> registrationService.register(defaultUser));
-        }
+        defaultUser.setPassword(INCORRECT_PASSWORD);
+        assertThrows(InvalidCredentialsException.class,
+                () -> registrationService.register(defaultUser));
     }
 
     @Test
     public void register_ageLessThan18_notOk() {
-        for (int age = 1; age < AGE; age++) {
-            defaultUser.setAge(age);
-            assertThrows(InvalidCredentialsException.class,
-                    () -> registrationService.register(defaultUser));
-        }
+        defaultUser.setAge(REQUIRED_AGE - 1);
+        assertThrows(InvalidCredentialsException.class,
+                () -> registrationService.register(defaultUser));
     }
 
     @Test
