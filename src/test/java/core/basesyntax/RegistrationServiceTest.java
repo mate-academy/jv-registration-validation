@@ -53,7 +53,7 @@ public class RegistrationServiceTest {
     void register_nullAge_notOK() {
         user.setLogin("Login123123");
         user.setPassword("password12");
-        user.setAge(null);
+        user.setAge(0);
         Exception exception = Assertions.assertThrows(InvalidDataException.class, () -> {
             registrationService.register(user);
         });

@@ -14,15 +14,15 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("User is null");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidDataException("User with this login \"" + user.getLogin() + "\" already exist");
+            throw new InvalidDataException("User with this login already exist");
         }
-        if (user.getLogin().length() < 6 || user.getLogin() == null) {
+        if (user.getLogin() == null || user.getLogin().length() < 6) {
             throw new InvalidDataException("Login should contain at least 6 characters");
         }
-        if (user.getPassword().length() < 6 || user.getPassword() == null) {
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new InvalidDataException("Password should contain at least 6 characters");
         }
-        if (user.getAge() < 18 || user.getAge() == null) {
+        if (user.getAge() == 0 || user.getAge() < 18) {
             throw new InvalidDataException("User age should be at least 18");
         }
         return storageDao.add(user);
