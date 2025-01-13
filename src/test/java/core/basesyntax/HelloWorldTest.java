@@ -5,7 +5,9 @@ import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.service.UserNullException;
 import core.basesyntax.service.UserRepeatingException;
-import core.basesyntax.service.UserWrongFieldsException;
+import core.basesyntax.service.UserWrongAgeException;
+import core.basesyntax.service.UserWrongLoginException;
+import core.basesyntax.service.UserWrongPasswordException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +24,9 @@ public class HelloWorldTest {
     void setUp() {
         user = new User();
         user.setId(1L);
-        user.setLogin("loginUser");
+        user.setLogin("loginU");
         user.setPassword("123456");
-        user.setAge(21);
+        user.setAge(18);
     }
 
     @Test
@@ -43,7 +45,7 @@ public class HelloWorldTest {
     @Test
     void register_wrongLogin_notOk() {
         user.setLogin("wrong");
-        Assertions.assertThrows(UserWrongFieldsException.class, () -> {
+        Assertions.assertThrows(UserWrongLoginException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -51,7 +53,7 @@ public class HelloWorldTest {
     @Test
     void register_wrongPassword_notOk() {
         user.setPassword("12345");
-        Assertions.assertThrows(UserWrongFieldsException.class, () -> {
+        Assertions.assertThrows(UserWrongPasswordException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -59,7 +61,7 @@ public class HelloWorldTest {
     @Test
     void register_wrongAge_notOk() {
         user.setAge(17);
-        Assertions.assertThrows(UserWrongFieldsException.class, () -> {
+        Assertions.assertThrows(UserWrongAgeException.class, () -> {
             registrationService.register(user);
         });
     }
