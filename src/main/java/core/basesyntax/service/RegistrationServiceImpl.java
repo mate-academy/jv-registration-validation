@@ -9,6 +9,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        if (user == null) {
+            throw new UserNullException("User is null");
+        }
+        if (user.getLogin().length() < 6
+                || user.getPassword().length() < 6
+                || user.getAge() < 18) {
+            throw new UserWrongFieldsException("Wrong field");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserRepeatingException("User with this login exists");
+        }
+        return storageDao.add(user);
     }
 }
