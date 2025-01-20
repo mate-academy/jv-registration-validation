@@ -8,8 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     public static RegistrationService service;
@@ -110,5 +109,19 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_ageIsGreaterThan18_ok() {
+        User user = new User();
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(18);
+        User registeredUser = service.register(user);
+        assertAll(
+                () -> assertEquals(user.getLogin(), registeredUser.getLogin()),
+                () -> assertEquals(user.getPassword(), registeredUser.getPassword()),
+                () -> assertEquals(user.getAge(), registeredUser.getAge())
+        );
     }
 }
