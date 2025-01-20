@@ -13,11 +13,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
         String login = user.getLogin();
         String password = user.getPassword();
+        Integer age = user.getAge();
         if (login == null) {
             throw new RegistrationException("Username must not be empty");
         }
         if (password == null) {
             throw new RegistrationException("Password must not be empty");
+        }
+        if (age == null) {
+            throw new RegistrationException("Age must not be empty");
         }
         if (storageDao.get(login) != null) {
             throw new RegistrationException("Username '"

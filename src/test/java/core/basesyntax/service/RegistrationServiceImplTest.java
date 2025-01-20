@@ -29,9 +29,11 @@ class RegistrationServiceImplTest {
         User user1 = new User();
         user1.setLogin("username");
         user1.setPassword("password");
+        user1.setAge(22);
         User user2 = new User();
         user2.setLogin("username");
         user2.setPassword("password");
+        user1.setAge(22);
         service.register(user1);
         Executable executable = () -> service.register(user2);
         assertThrows(RegistrationException.class, executable);
@@ -41,6 +43,7 @@ class RegistrationServiceImplTest {
     void register_loginIsNull_notOk() {
         User user = new User();
         user.setPassword("password");
+        user.setAge(22);
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
@@ -49,6 +52,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("username");
         user.setPassword("password");
+        user.setAge(22);
         User registeredUser = service.register(user);
         assertEquals(registeredUser.getLogin(), user.getLogin());
     }
@@ -58,6 +62,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("name");
         user.setPassword("password");
+        user.setAge(22);
         Executable executable = () -> service.register(user);
         assertThrows(RegistrationException.class, executable);
     }
@@ -66,6 +71,7 @@ class RegistrationServiceImplTest {
     void register_passwordIsNull_notOk() {
         User user = new User();
         user.setLogin("username");
+        user.setAge(22);
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
@@ -74,6 +80,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("username");
         user.setPassword("password");
+        user.setAge(22);
         User registeredUser = service.register(user);
         assertEquals(registeredUser.getPassword(), user.getPassword());
     }
@@ -83,6 +90,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("username");
         user.setPassword("pass");
+        user.setAge(22);
         Executable executable = () -> service.register(user);
         assertThrows(RegistrationException.class, executable);
     }
