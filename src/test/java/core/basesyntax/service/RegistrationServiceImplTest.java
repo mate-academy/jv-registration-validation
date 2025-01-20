@@ -34,7 +34,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginAlreadyExist_notOk() {
         User duplicatedUser = createValidUser();
-        service.register(user);
+        Storage.people.add(user);
         assertThrows(RegistrationException.class, () -> service.register(duplicatedUser));
     }
 
