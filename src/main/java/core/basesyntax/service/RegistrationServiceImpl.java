@@ -6,6 +6,8 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    public static final int MIN_LENGTH = 6;
+    public static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -27,13 +29,13 @@ public class RegistrationServiceImpl implements RegistrationService {
                     + login
                     + "' is already taken");
         }
-        if (login.trim().length() < 6) {
+        if (login.trim().length() < MIN_LENGTH) {
             throw new RegistrationException("Username must be at least 6 characters long");
         }
-        if (password.trim().length() < 6) {
+        if (password.trim().length() < MIN_LENGTH) {
             throw new RegistrationException("Password must be at least 6 characters long");
         }
-        if (age < 18) {
+        if (age < MIN_AGE) {
             throw new RegistrationException("You must be at least 18 years old");
         }
         return storageDao.add(user);
