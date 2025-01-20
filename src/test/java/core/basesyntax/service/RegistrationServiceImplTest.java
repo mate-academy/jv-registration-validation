@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginLengthGreaterThanSix_ok() {
         User registeredUser = service.register(user);
-        compareExpectedActualUsers(registeredUser);
+        assertEquals(user, registeredUser);
     }
 
     @Test
@@ -65,7 +65,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordLengthGreaterThanSix_ok() {
         User registeredUser = service.register(user);
-        compareExpectedActualUsers(registeredUser);
+        assertEquals(user, registeredUser);
     }
 
     @Test
@@ -89,7 +89,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageIsGreaterThan18_ok() {
         User registeredUser = service.register(user);
-        compareExpectedActualUsers(registeredUser);
+        assertEquals(user, registeredUser);
     }
 
     private static User createValidUser() {
@@ -98,13 +98,5 @@ class RegistrationServiceImplTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
         return user;
-    }
-
-    private void compareExpectedActualUsers(User expected) {
-        assertAll(
-                () -> assertEquals(user.getLogin(), expected.getLogin()),
-                () -> assertEquals(user.getPassword(), expected.getPassword()),
-                () -> assertEquals(user.getAge(), expected.getAge())
-        );
     }
 }
