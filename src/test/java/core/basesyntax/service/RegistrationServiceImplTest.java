@@ -1,7 +1,9 @@
 package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.RegistrationException;
+import core.basesyntax.exception.AgeException;
+import core.basesyntax.exception.LoginException;
+import core.basesyntax.exception.PasswordException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +34,10 @@ class RegistrationServiceImplTest {
         User user2 = new User();
         user2.setLogin("username");
         user2.setPassword("password");
-        user1.setAge(22);
+        user2.setAge(22);
         service.register(user1);
         Executable executable = () -> service.register(user2);
-        assertThrows(RegistrationException.class, executable);
+        assertThrows(LoginException.class, executable);
     }
 
     @Test
@@ -43,7 +45,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setPassword("password");
         user.setAge(22);
-        assertThrows(RegistrationException.class, () -> service.register(user));
+        assertThrows(LoginException.class, () -> service.register(user));
     }
 
     @Test
@@ -63,7 +65,7 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
         user.setAge(22);
         Executable executable = () -> service.register(user);
-        assertThrows(RegistrationException.class, executable);
+        assertThrows(LoginException.class, executable);
     }
 
     @Test
@@ -71,7 +73,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("username");
         user.setAge(22);
-        assertThrows(RegistrationException.class, () -> service.register(user));
+        assertThrows(PasswordException.class, () -> service.register(user));
     }
 
     @Test
@@ -91,7 +93,7 @@ class RegistrationServiceImplTest {
         user.setPassword("pass");
         user.setAge(22);
         Executable executable = () -> service.register(user);
-        assertThrows(RegistrationException.class, executable);
+        assertThrows(PasswordException.class, executable);
     }
 
     @Test
@@ -99,7 +101,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("username");
         user.setPassword("password");
-        assertThrows(RegistrationException.class, () -> service.register(user));
+        assertThrows(AgeException.class, () -> service.register(user));
     }
 
     @Test
@@ -108,7 +110,7 @@ class RegistrationServiceImplTest {
         user.setLogin("username");
         user.setPassword("password");
         user.setAge(17);
-        assertThrows(RegistrationException.class, () -> service.register(user));
+        assertThrows(AgeException.class, () -> service.register(user));
     }
 
     @Test
