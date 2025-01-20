@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.AgeException;
 import core.basesyntax.exception.LoginException;
@@ -9,14 +13,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
     private static RegistrationService service;
     private static final String VALID_LOGIN = "username";
-    private static final String INVALID_LOGIN = "username";
+    private static final String INVALID_LOGIN = "name";
     private static final String VALID_PASSWORD = "password";
-    private static final String INVALID_PASSWORD = "password";
+    private static final String INVALID_PASSWORD = "pass";
     private static final int VALID_AGE = 22;
     private User user;
 
