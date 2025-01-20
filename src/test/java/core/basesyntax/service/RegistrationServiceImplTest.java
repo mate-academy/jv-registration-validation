@@ -86,4 +86,12 @@ class RegistrationServiceImplTest {
         Executable executable = () -> service.register(user);
         assertThrows(RegistrationException.class, executable);
     }
+
+    @Test
+    void register_ageIsNull_notOk() {
+        User user = new User();
+        user.setLogin("username");
+        user.setPassword("password");
+        assertThrows(RegistrationException.class, () -> service.register(user));
+    }
 }
