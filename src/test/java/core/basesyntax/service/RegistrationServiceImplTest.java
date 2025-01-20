@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exception.AgeException;
-import core.basesyntax.exception.LoginException;
-import core.basesyntax.exception.PasswordException;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,13 +43,13 @@ class RegistrationServiceImplTest {
     void register_loginAlreadyExist_notOk() {
         User duplicatedUser = createValidUser();
         service.register(user);
-        assertThrows(LoginException.class, () -> service.register(duplicatedUser));
+        assertThrows(RegistrationException.class, () -> service.register(duplicatedUser));
     }
 
     @Test
     void register_loginIsNull_notOk() {
         user.setLogin(null);
-        assertThrows(LoginException.class, () -> service.register(user));
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
@@ -63,13 +61,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginLengthLessThanSix_notOk() {
         user.setLogin(INVALID_LOGIN);
-        assertThrows(LoginException.class, () -> service.register(user));
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         user.setPassword(null);
-        assertThrows(PasswordException.class, () -> service.register(user));
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
@@ -81,19 +79,19 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordLengthLessThanSix_notOk() {
         user.setPassword(INVALID_PASSWORD);
-        assertThrows(PasswordException.class, () -> service.register(user));
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_ageIsNull_notOk() {
         user.setAge(null);
-        assertThrows(AgeException.class, () -> service.register(user));
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_ageIsLessThan18_notOk() {
         user.setAge(17);
-        assertThrows(AgeException.class, () -> service.register(user));
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
