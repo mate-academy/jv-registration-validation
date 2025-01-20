@@ -31,14 +31,6 @@ class RegistrationServiceImplTest {
         user = createValidUser();
     }
 
-    private static User createValidUser() {
-        User user = new User();
-        user.setLogin(VALID_LOGIN);
-        user.setPassword(VALID_PASSWORD);
-        user.setAge(VALID_AGE);
-        return user;
-    }
-
     @Test
     void register_loginAlreadyExist_notOk() {
         User duplicatedUser = createValidUser();
@@ -98,6 +90,14 @@ class RegistrationServiceImplTest {
     void register_ageIsGreaterThan18_ok() {
         User registeredUser = service.register(user);
         compareExpectedActualUsers(registeredUser);
+    }
+
+    private static User createValidUser() {
+        User user = new User();
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+        return user;
     }
 
     private void compareExpectedActualUsers(User expected) {
