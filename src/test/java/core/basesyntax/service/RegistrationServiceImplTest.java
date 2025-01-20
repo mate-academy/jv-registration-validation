@@ -102,4 +102,13 @@ class RegistrationServiceImplTest {
         user.setPassword("password");
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
+
+    @Test
+    void register_ageIsLessThan18_notOk() {
+        User user = new User();
+        user.setLogin("username");
+        user.setPassword("password");
+        user.setAge(17);
+        assertThrows(RegistrationException.class, () -> service.register(user));
+    }
 }
