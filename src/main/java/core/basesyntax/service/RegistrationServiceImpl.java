@@ -10,7 +10,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user.getLogin() == null || user.getLogin().length() < 6) {
-            throw new RegistrationServiceException("Login is not valid");
+            throw new RegistrationServiceException("Login is not valid by length");
         }
         if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new RegistrationServiceException("Password is not valid");
