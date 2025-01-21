@@ -1,8 +1,11 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
     private final User testUser = new User();
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeAll
     static void beforeAll() {
@@ -68,5 +72,13 @@ class RegistrationServiceImplTest {
         testUser.setPassword("Bobina");
         User registeredUser = registrationService.register(testUser);
         assertEquals(registeredUser, testUser);
+    }
+
+    @Test
+    void registerUser_userExists_Ok() throws RegistrationException {
+        registrationService.register(testUser);
+        User userFromStorage = storageDao.get(testUser.getLogin());
+        assertNotNull(userFromStorage);
+        assertEquals(testUser.getLogin(), userFromStorage.getLogin());
     }
 }

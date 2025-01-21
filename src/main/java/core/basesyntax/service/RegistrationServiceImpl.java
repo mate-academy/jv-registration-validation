@@ -28,6 +28,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User's age should be at least "
                     + MIN_AGE + " years old!");
         }
-        return (storageDao.get(user.getLogin()) == null) ? storageDao.add(user) : user;
+        if (storageDao.get(user.getLogin()) == null) {
+            return storageDao.add(user);
+        }
+        return user;
     }
 }
