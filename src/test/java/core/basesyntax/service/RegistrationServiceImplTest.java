@@ -14,16 +14,18 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private final User testUser = new User();
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static StorageDao storageDao;
+    private User testUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
     void setUp() {
+        testUser = new User();
         testUser.setLogin("Albertino");
         testUser.setPassword("password");
         testUser.setAge(25);
