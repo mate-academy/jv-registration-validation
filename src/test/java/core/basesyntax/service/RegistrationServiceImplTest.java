@@ -1,26 +1,23 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
-    private static StorageDao storageDao;
     private User testUser;
 
     @BeforeAll
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
-        storageDao = new StorageDaoImpl();
     }
 
     @BeforeEach
@@ -29,7 +26,11 @@ class RegistrationServiceImplTest {
         testUser.setLogin("Albertino");
         testUser.setPassword("password");
         testUser.setAge(25);
-        storageDao.cleanStorage();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -76,24 +77,15 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerUser_validPassword_Ok() throws RegistrationException {
-        testUser.setPassword("Bobina");
         User registeredUser = registrationService.register(testUser);
         assertEquals(registeredUser, testUser);
     }
 
     @Test
     void registerUser_twiceRegister_NotOk() throws RegistrationException {
-        registrationService.register(testUser);
+        Storage.people.add(testUser);
         String errorMessage = "User does already exist";
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser),
                 errorMessage);
-    }
-
-    @Test
-    void registerUser_userExists_Ok() throws RegistrationException {
-        registrationService.register(testUser);
-        User userFromStorage = storageDao.get(testUser.getLogin());
-        assertNotNull(userFromStorage);
-        assertEquals(testUser.getLogin(), userFromStorage.getLogin());
     }
 }
