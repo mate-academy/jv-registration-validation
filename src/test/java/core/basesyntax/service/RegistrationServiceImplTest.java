@@ -32,9 +32,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerUser_nullUser_NotOk() {
+    void registerUser_nullData_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(null),
                 "RegistrationException should be thrown if User is null!");
+        testUser.setLogin(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser),
+                "RegistrationException should be thrown if Login is null!");
+        testUser.setLogin("Albertino");
+        testUser.setPassword(null);
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser),
+                "RegistrationException should be thrown if Password is null!");
     }
 
     @Test
@@ -61,9 +68,6 @@ class RegistrationServiceImplTest {
     @Test
     void registerUser_shortPassword_NotOk() {
         String errorMessage = "User's password is less than 6 symbols";
-        testUser.setPassword(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(testUser),
-                errorMessage);
         testUser.setPassword("Bob");
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser),
                 errorMessage);
