@@ -29,6 +29,7 @@ class RegistrationServiceImplTest {
         testUser.setLogin("Albertino");
         testUser.setPassword("password");
         testUser.setAge(25);
+        storageDao.cleanStorage();
     }
 
     @Test
@@ -78,6 +79,14 @@ class RegistrationServiceImplTest {
         testUser.setPassword("Bobina");
         User registeredUser = registrationService.register(testUser);
         assertEquals(registeredUser, testUser);
+    }
+
+    @Test
+    void registerUser_twiceRegister_NotOk() throws RegistrationException {
+        registrationService.register(testUser);
+        String errorMessage = "User does already exist";
+        assertThrows(RegistrationException.class, () -> registrationService.register(testUser),
+                errorMessage);
     }
 
     @Test
