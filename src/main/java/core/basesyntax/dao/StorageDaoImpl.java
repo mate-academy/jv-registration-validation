@@ -24,7 +24,7 @@ public class StorageDaoImpl implements StorageDao {
     }
 
     @Override
-    public User deleteUser(String login) {
+    public User delete(String login) {
         User detectedUser = get(login);
         if(detectedUser == null) {
             return null;

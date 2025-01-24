@@ -10,12 +10,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        final int MINIMAL_LOGIN_LENGTH = 6;
-        final int MINIMAL_AGE_LIMIT = 18;
+        final int minimalLoginLength = 6;
+        final int minimalAge = 18;
         boolean isLoginTaken = storageDao.get(user.getLogin()) != null;
-        boolean isTooShortLength = user.getLogin().length() < MINIMAL_LOGIN_LENGTH;
-        boolean isTooShortPassword = user.getPassword().length() < MINIMAL_LOGIN_LENGTH;
-        boolean isTooYoungUser = user.getAge() < MINIMAL_AGE_LIMIT;
+        boolean isTooShortLength = user.getLogin().length() < minimalLoginLength;
+        boolean isTooShortPassword = user.getPassword().length() < minimalLoginLength;
+        boolean isTooYoungUser = user.getAge() < minimalAge;
 
         if (user.getLogin() == null) {
             throwError("User login not provided");
@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throwError("Minimal user age is 18 years");
         }
         storageDao.add(user);
-        return null;
+        return user;
     }
 
     private void throwError(String errorMessage) {

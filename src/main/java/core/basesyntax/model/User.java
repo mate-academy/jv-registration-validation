@@ -1,5 +1,7 @@
 package core.basesyntax.model;
 
+import core.basesyntax.InvalidUserDataException;
+
 import java.util.Objects;
 
 public class User {
@@ -9,6 +11,12 @@ public class User {
     private Integer age;
 
     public User(String login, String password, int age) {
+        if (login == null) {
+            throw new InvalidUserDataException("User login not provided");
+        }
+        if (password == null) {
+            throw new InvalidUserDataException("User password not provided");
+        }
         this.login = login;
         this.age = age;
         this.password = password;
