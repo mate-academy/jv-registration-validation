@@ -8,21 +8,22 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class RegistrationServiceImplTest {
-    StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
     RegistrationServiceImpl service = new RegistrationServiceImpl();
     User validUser;
-    String VALID_LOGIN_1 = "valid_login@savelogin.com";
-    String VALID_LOGIN_2 = "other_login@savelogin.com";
-    String VALID_PASSWORD = "sTroN_G_pass*rdo";
-    String INVALID_PASSWORD = "12345";
-    String INVALID_LOGIN = "simpl";
+    private final  String VALID_LOGIN_1 = "valid_login@savelogin.com";
+    private final String VALID_LOGIN_2 = "other_login@savelogin.com";
+    private final String VALID_PASSWORD = "sTroN_G_pass*rdo";
+    private final String INVALID_PASSWORD = "12345";
+    private final String INVALID_LOGIN = "simpl";
     int AGE_VALID = 25;
-    int UNDER_LIMIT_AGE = 14;
+    private final int UNDER_LIMIT_AGE = 14;
+
     @BeforeEach
     void setUp() {
         User validUserInfo = new User(VALID_LOGIN_1, VALID_PASSWORD, AGE_VALID);
@@ -49,37 +50,43 @@ class RegistrationServiceImplTest {
 
     @Test
     void passwordShort() {
-        assertThrows(InvalidUserDataException.class, () -> service.register(new User(VALID_LOGIN_2, INVALID_PASSWORD, AGE_VALID)),
+        assertThrows(InvalidUserDataException.class,
+                () -> service.register(new User(VALID_LOGIN_2, INVALID_PASSWORD, AGE_VALID)),
                 "User password is week - should be at least 6 characters long");
     }
 
     @Test
     void emailShort() {
-        assertThrows(InvalidUserDataException.class, () -> service.register(new User(INVALID_LOGIN, VALID_LOGIN_2, AGE_VALID)),
+        assertThrows(InvalidUserDataException.class,
+                () -> service.register(new User(INVALID_LOGIN, VALID_LOGIN_2, AGE_VALID)),
                 "User login should be at least 6 characters long");
     }
 
     @Test
     void ageBelowLimit() {
-        assertThrows(InvalidUserDataException.class, () -> service.register(new User(VALID_LOGIN_2, VALID_PASSWORD, UNDER_LIMIT_AGE)),
+        assertThrows(InvalidUserDataException.class,
+                () -> service.register(new User(VALID_LOGIN_2, VALID_PASSWORD, UNDER_LIMIT_AGE)),
                 "Minimal user age is 18 years");
     }
 
     @Test
     void userLoginAbsent() {
-        assertThrows(NullPointerException.class, () -> service.register(new User(null, VALID_PASSWORD, AGE_VALID)),
+        assertThrows(NullPointerException.class,
+                () -> service.register(new User(null, VALID_PASSWORD, AGE_VALID)),
                 "User login not provided");
     }
 
     @Test
     void userPasswordAbsent() {
-        assertThrows(NullPointerException.class, () -> service.register(new User(VALID_LOGIN_2, null, AGE_VALID)),
+        assertThrows(NullPointerException.class,
+                () -> service.register(new User(VALID_LOGIN_2, null, AGE_VALID)),
                 "User password not provided");
     }
 
     @Test
     void negativeAge() {
-        assertThrows(InvalidUserDataException.class, () -> service.register(new User(VALID_LOGIN_2, VALID_PASSWORD, -AGE_VALID)),
+        assertThrows(InvalidUserDataException.class,
+                () -> service.register(new User(VALID_LOGIN_2, VALID_PASSWORD, -AGE_VALID)),
                 "User age must be positive number");
     }
 
@@ -88,7 +95,7 @@ class RegistrationServiceImplTest {
         assertEquals(storageDao.get(VALID_LOGIN_1), validUser);
         User userOne = new User(VALID_LOGIN_2, VALID_PASSWORD, AGE_VALID);
         service.register(userOne);
-        assertEquals(storageDao.get(VALID_LOGIN_2),  userOne);
+        assertEquals(storageDao.get(VALID_LOGIN_2), userOne);
     }
 
     @AfterEach
