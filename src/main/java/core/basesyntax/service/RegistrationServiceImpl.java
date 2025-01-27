@@ -13,16 +13,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             return null;
         }
         if (user.getLogin().length() < 6) {
-            throw new NotValidRegistrationExeption("Login can't be less than 6 char");
+            throw new NotValidRegistrationException("Login can't be less than 6 char");
         }
         if (user.getPassword().length() < 6) {
-            throw new NotValidRegistrationExeption("Password can't be less than 6 char");
+            throw new NotValidRegistrationException("Password can't be less than 6 char");
         }
         if (user.getAge() < 18) {
-            throw new NotValidRegistrationExeption("Age suold be more than 18");
+            throw new NotValidRegistrationException("Age suold be more than 18");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new NotValidRegistrationExeption("Email is already used");
+            throw new NotValidRegistrationException("Email is already used");
         }
         storageDao.add(user);
         return user;

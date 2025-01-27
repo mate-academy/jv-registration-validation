@@ -1,8 +1,9 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -17,10 +18,10 @@ class RegistrationServiceImplTest {
         User user = registrationService.register(actual);
         try {
             User userCopy = registrationService.register(actual);
-        } catch (NotValidRegistrationExeption e) {
+        } catch (NotValidRegistrationException e) {
             return;
         }
-        fail("Error! Shouldnt be able too add same user");
+        Assertions.fail("Error! Shouldnt be able too add same user");
     }
 
     private void fail(String s) {
@@ -38,10 +39,10 @@ class RegistrationServiceImplTest {
         User user = registrationService.register(actual);
         try {
             User userCopy = registrationService.register(actualCopy);
-        } catch (NotValidRegistrationExeption e) {
+        } catch (NotValidRegistrationException e) {
             return;
         }
-        fail("Error! Shouldnt be able too add user with same login");
+        Assertions.fail("Error! Shouldnt be able too add user with same login");
     }
 
     @Test
@@ -52,10 +53,10 @@ class RegistrationServiceImplTest {
         actual.setAge(18);
         try {
             User user = registrationService.register(actual);
-        } catch (NotValidRegistrationExeption e) {
+        } catch (NotValidRegistrationException e) {
             return;
         }
-        fail("Error! Can't add user with less 6 char login");
+        Assertions.fail("Error! Can't add user with less 6 char login");
     }
 
     @Test
@@ -66,10 +67,10 @@ class RegistrationServiceImplTest {
         actual.setAge(18);
         try {
             User user = registrationService.register(actual);
-        } catch (NotValidRegistrationExeption e) {
+        } catch (NotValidRegistrationException e) {
             return;
         }
-        fail("Error! Can't add user with less 6 char password");
+        Assertions.fail("Error! Can't add user with less 6 char password");
     }
 
     @Test
@@ -80,16 +81,16 @@ class RegistrationServiceImplTest {
         actual.setAge(13);
         try {
             User user = registrationService.register(actual);
-        } catch (NotValidRegistrationExeption e) {
+        } catch (NotValidRegistrationException e) {
             return;
         }
-        fail("Error! NotValidRegistration should be thrown");
+        Assertions.fail("Error! NotValidRegistration should be thrown");
     }
 
     @Test
     void addNullUser_notOK() {
         User actual = null;
         User user = registrationService.register(actual);
-        assertEquals(user, null, "Error! User should be null");
+        assertNull(user, "Error! User should be null");
     }
 }
