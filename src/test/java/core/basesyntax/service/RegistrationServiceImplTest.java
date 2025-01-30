@@ -56,7 +56,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginIsLessThan6Characters_NotOK() {
+    void register_LoginIsLessThan6Characters_NotOk() {
         StringBuilder login = new StringBuilder();
         for (char letter = 'a'; letter < 'f'; letter++) {
             user.setLogin(login.toString());
@@ -66,7 +66,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginIsAtLeast6Characters_OK() {
+    void register_LoginIsAtLeast6Characters_Ok() {
         StringBuilder login = new StringBuilder("6chars");
         for (char ch = 'a'; ch < 'f'; ch++) {
             user.setPassword("validPassword");
@@ -89,7 +89,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordIsLessThan6Characters_NotOK() {
+    void register_PasswordIsLessThan6Characters_NotOk() {
         user.setLogin("validLogin");
         StringBuilder password = new StringBuilder();
         for (char letter = 'a'; letter < 'f'; letter++) {
@@ -101,7 +101,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordIsAtLeast6Characters_OK() {
+    void register_PasswordIsAtLeast6Characters_Ok() {
         StringBuilder login = new StringBuilder("anotherValidLogin");
         StringBuilder password = new StringBuilder("sixLet");
         for (char letter = 'a'; letter < 'f'; letter++) {
