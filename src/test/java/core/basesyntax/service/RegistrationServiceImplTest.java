@@ -26,13 +26,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_NullUser_NotOk() {
+        assertThrows(CustomException.class, () -> service.register(null));
+    }
+
+    @Test
     void register_StorageHasUserWithSuchLogin_NotOk() {
         User storedUser = new User();
         storedUser.setLogin("existingUser");
         Storage.people.add(storedUser);
         user.setLogin("existingUser");
-        assertThrows(CustomException.class, () -> service.register(user),
-                "User with this login already exists");
+        assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
@@ -46,12 +50,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NullUser_NotOk() {
-        assertThrows(CustomException.class, () -> service.register(null));
+    void register_NullLogin_NotOk() {
+        user.setLogin(null);
+        assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
-    void register_LoginIsLessThen6Characters_NotOK() {
+    void register_LoginIsLessThan6Characters_NotOK() {
         StringBuilder login = new StringBuilder();
         for (char letter = 'a'; letter < 'f'; letter++) {
             user.setLogin(login.toString());
@@ -77,9 +82,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordIsLessThen6Characters_NotOK() {
+    void register_NullPassword_NotOk() {
         user.setLogin("validLogin");
-        user.setAge(25);
+        user.setPassword(null);
+        assertThrows(CustomException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_PasswordIsLessThan6Characters_NotOK() {
+        user.setLogin("validLogin");
         StringBuilder password = new StringBuilder();
         for (char letter = 'a'; letter < 'f'; letter++) {
             user.setPassword(password.toString());
@@ -106,7 +117,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeLessThen18_NotOk() {
+    void register_AgeLessThan18_NotOk() {
         user.setLogin("validLogin");
         user.setPassword("validPassword");
         for (int age = -4; age < 18; age += 4) {
@@ -117,7 +128,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_AgeIs18_Ok() {
+    void register_AgeIsGreaterThan18_Ok() {
         int testAge = 50;
         for (int age = 18; age < testAge; age += 10) {
             user.setLogin("validLogin" + age);
