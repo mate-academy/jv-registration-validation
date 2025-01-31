@@ -113,7 +113,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_NegativeAge_Ok() {
+    void register_NegativeAge_NotOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword");
