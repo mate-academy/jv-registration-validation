@@ -1,7 +1,6 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -19,39 +18,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_StorageHasUserWithSuchLogin_NotOk() {
-        User storedUser = new User();
-        storedUser.setLogin("existingUser");
-        storedUser.setPassword("validPassword");
-        storedUser.setAge(25);
-        Storage.people.add(storedUser);
-        User user = new User();
-        user.setLogin("existingUser");
-        user.setPassword("validPassword");
-        user.setAge(25);
-        assertThrows(RegistrationException.class, () -> service.register(user));
-    }
-
-    @Test
-    void register_ValidUser_Ok() {
-        User user = new User();
-        user.setLogin("notExistingUser");
-        user.setPassword("validPassword");
-        user.setAge(25);
-        User actual = service.register(user);
-        assertNotNull(user);
-        assertEquals(user, actual);
-    }
-
-    @Test
     void register_NullLogin_NotOk() {
         User user = new User();
         user.setLogin(null);
+        user.setPassword("validPassword");
+        user.setAge(25);
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_LoginIsLessThan6Characters_NotOk() {
+    void register_LoginLengthLessThen6_NotOk() {
         User user = new User();
         user.setLogin("abcd");
         user.setPassword("validPassword");
@@ -60,14 +36,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_LoginIsAtLeast6Characters_Ok() {
+    void register_UserWithLoginExists_NotOk() {
+        User storedUser = new User();
+        storedUser.setLogin("existingLogin");
+        storedUser.setPassword("validPassword");
+        storedUser.setAge(25);
+        Storage.people.add(storedUser);
         User user = new User();
-        user.setLogin("sixLet");
-        user.setPassword("ValidPassword");
+        user.setLogin("existingLogin");
+        user.setPassword("validPassword");
         user.setAge(25);
-        User actual = service.register(user);
-        assertNotNull(user);
-        assertEquals(user, actual);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
@@ -80,25 +59,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_PasswordIsLessThan6Characters_NotOk() {
+    void register_PasswordLengthLessThan6_NotOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("abc");
         user.setAge(25);
-        assertNotNull(user);
         assertThrows(RegistrationException.class, () -> service.register(user));
-
     }
 
     @Test
-    void register_PasswordIsAtLeast6Characters_Ok() {
+    void register_NullAge_NotOk() {
         User user = new User();
         user.setLogin("validLogin");
-        user.setPassword("SixLet");
-        user.setAge(25);
-        assertNotNull(user);
-        assertEquals(service.register(user), user);
-
+        user.setPassword("validPassword");
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
@@ -107,9 +82,7 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("validPassword");
         user.setAge(15);
-        assertNotNull(user);
         assertThrows(RegistrationException.class, () -> service.register(user));
-
     }
 
     @Test
@@ -118,7 +91,15 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("validPassword");
         user.setAge(-18);
-        assertNotNull(user);
         assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_Age18_Ok() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
+        user.setAge(18);
+        assertEquals(user, service.register(user));
     }
 }
