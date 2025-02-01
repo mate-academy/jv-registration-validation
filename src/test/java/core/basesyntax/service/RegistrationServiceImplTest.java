@@ -95,11 +95,11 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_Age18_Ok() {
+    void register_ValidUser_Ok() {
         User user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("validPassword");
-        user.setAge(18);
+        user.setLogin("Volvo4ka.ya");
+        user.setPassword("toyota107");
+        user.setAge(35);
         assertEquals(user, service.register(user));
     }
 }
