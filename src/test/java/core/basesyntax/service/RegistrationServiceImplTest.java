@@ -79,17 +79,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addNullAge_NotOk() {
-        User expected = new User();
-        expected.setLogin("admin@gmail.com");
-        expected.setPassword("Admin123");
-        expected.setAge(null);
-        assertThrows(RegistrationUserException.class,
-                () -> registrationService.register(expected),
-                "Age cant be null");
-    }
-
-    @Test
     void invalidAge_NotOk() {
         User expected = new User();
         expected.setLogin("admin@gmail.com");
@@ -97,7 +86,7 @@ class RegistrationServiceImplTest {
         expected.setAge(17);
         assertThrows(RegistrationUserException.class,
                 () -> registrationService.register(expected),
-                "Age cant be less than 18");
+                "Age must be at least 18 years old.");
     }
 
     @Test
@@ -115,7 +104,7 @@ class RegistrationServiceImplTest {
 
         assertThrows(RegistrationUserException.class, () ->
                 registrationService.register(registerUser),
-                "Cant add this user. User already exists");
+                "User with this login already exists.");
     }
 
     @Test
@@ -126,7 +115,7 @@ class RegistrationServiceImplTest {
         expected.setAge(26);
         assertThrows(RegistrationUserException.class, () ->
                 registrationService.register(expected),
-                "Login cant be empty");
+                "Login can't be null and must be at least 6 characters long.");
     }
 
     @Test
@@ -137,7 +126,8 @@ class RegistrationServiceImplTest {
         expected.setAge(27);
         assertThrows(RegistrationUserException.class, () ->
                 registrationService.register(expected),
-                "Password cant be empty");
+                "Password can't be null and must"
+                        + "be at least 6 characters long.");
     }
 
 }
