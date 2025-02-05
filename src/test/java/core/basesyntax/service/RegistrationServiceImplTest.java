@@ -53,13 +53,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_passSameUserTwice_notOk() {
+    public void register_sameUserTwice_throwsException() {
         service.register(user);
         assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    public void register_sameLoginUser_notOk() {
+    public void register_userWithExistingLogin_throwsException() {
         service.register(user);
         user.setAge(21);
         user.setPassword("test_0001");
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_userInvalidLoginLength_notOk() {
+    public void register_userWithShortLogin_throwsException() {
         user.setLogin("test");
         assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
@@ -103,7 +103,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userUnderMinLoginLength_Ok() {
+    void register_userUnderMinLoginLength_throwsException() {
         user.setLogin("test0");
         assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
