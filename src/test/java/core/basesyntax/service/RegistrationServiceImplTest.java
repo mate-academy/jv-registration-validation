@@ -23,19 +23,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passUserValidValue_Ok() {
+    void register_validUser_Ok() {
         User actual = service.register(user);
         assertEquals(user, actual);
     }
 
     @Test
-    public void register_passUserNullValue_TrowsException() {
+    public void register_nullUser_notOk() {
         user = null;
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_passThreeValidUsers_Ok() {
+    void register_threeValidUsers_Ok() {
         User actual = service.register(user);
         assertEquals(user, actual);
         User user01 = new User();
@@ -53,46 +53,58 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_passSameUserTwice_TrowsException() {
+    public void register_passSameUserTwice_notOk() {
         service.register(user);
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    public void register_passSameLoginUser_TrowsException() {
+    public void register_sameLoginUser_notOk() {
         service.register(user);
         user.setAge(21);
         user.setPassword("test_0001");
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    public void register_passUserInvalidLoginLength_TrowsException() {
+    public void register_userInvalidLoginLength_notOk() {
         user.setLogin("test");
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_passUserNullPassword_ThrowsException() {
+    void register_userNullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_passUserInvalidPassword_ThrowsException() {
+    void register_userInvalidPassword_notOk() {
         user.setPassword("test");
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_passUserNullAge_ThrowsException() {
+    void register_userNullAge_notOk() {
         user.setAge(null);
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 
     @Test
-    void register_passUserInvalidAge_ThrowsException() {
+    void register_userInvalidAge_notOk() {
         user.setAge(-1);
-        assertThrows(UserRegistrationExceptions.class, () -> service.register(user));
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_userMinLoginLength_Ok() {
+        user.setLogin("test_0");
+        assertEquals(user, service.register(user));
+    }
+
+    @Test
+    void register_userUnderMinLoginLength_Ok() {
+        user.setLogin("test0");
+        assertThrows(UserRegistrationException.class, () -> service.register(user));
     }
 }

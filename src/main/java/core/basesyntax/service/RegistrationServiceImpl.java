@@ -5,41 +5,45 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_REG_AGE = 18;
+
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
-        try {
-            if (user == null) {
-                throw new UserRegistrationExceptions("User cannot be null");
-            }
-            if (user.getLogin() == null) {
-                throw new UserRegistrationExceptions("Login is empty.");
-            }
-            if (user.getLogin().length() < 6) {
-                throw new UserRegistrationExceptions(
-                        "Login is too short, has to be at least 6 characters.");
-            }
-            if (user.getPassword() == null) {
-                throw new UserRegistrationExceptions("Password is empty.");
-            }
-            if (user.getPassword().length() < 6) {
-                throw new UserRegistrationExceptions(
-                        "Password is too short, has to be at least 6 characters.");
-            }
-            if (user.getAge() == null) {
-                throw new UserRegistrationExceptions("Age is empty.");
-            }
-            if (user.getAge() < 18) {
-                throw new UserRegistrationExceptions("Age has to be at least 18 years.");
-            }
-            if (storageDao.get(user.getLogin()) != null) {
-                throw new UserRegistrationExceptions("Login already exists.");
-            }
-            storageDao.add(user);
-        } catch (UserRegistrationExceptions e) {
-            throw new UserRegistrationExceptions(e.getMessage());
+        if (user == null) {
+            throw new UserRegistrationException("User cannot be null");
         }
+        if (user.getLogin() == null) {
+            throw new UserRegistrationException("Login is empty.");
+        }
+        if (user.getLogin().length() < 6) {
+            throw new UserRegistrationException(
+                    "Login is too short, has to be at least " + MIN_LOGIN_LENGTH + " characters.");
+        }
+        if (user.getPassword() == null) {
+            throw new UserRegistrationException("Password is empty.");
+        }
+        if (user.getPassword().length() < 6) {
+            throw new UserRegistrationException(
+                    "Password is too short, has to be at least "
+                            + MIN_PASSWORD_LENGTH
+                            + " characters.");
+        }
+        if (user.getAge() == null) {
+            throw new UserRegistrationException("Age is empty.");
+        }
+        if (user.getAge() < 18) {
+            throw new UserRegistrationException("Age has to be at least "
+                    + MIN_REG_AGE
+                    + " years.");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new UserRegistrationException("Login already exists.");
+        }
+        storageDao.add(user);
         return user;
     }
 }
