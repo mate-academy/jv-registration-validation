@@ -19,14 +19,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new UserRegistrationException("Login is empty.");
         }
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new UserRegistrationException(
                     "Login is too short, has to be at least " + MIN_LOGIN_LENGTH + " characters.");
         }
         if (user.getPassword() == null) {
             throw new UserRegistrationException("Password is empty.");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
             throw new UserRegistrationException(
                     "Password is too short, has to be at least "
                             + MIN_PASSWORD_LENGTH
@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new UserRegistrationException("Age is empty.");
         }
-        if (user.getAge() < 18) {
+        if (user.getAge() < MIN_REG_AGE) {
             throw new UserRegistrationException("Age has to be at least "
                     + MIN_REG_AGE
                     + " years.");
