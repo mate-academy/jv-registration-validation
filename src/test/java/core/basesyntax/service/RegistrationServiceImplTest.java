@@ -7,194 +7,138 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
-    private StorageDao storageDao = new StorageDaoImpl();
+    private static RegistrationService registrationService;
+    private static StorageDao storageDao;
+    private static final String VALID_LOGIN = "user12";
+    private static final String VALID_PASSWORD = "password";
+    private static final int VALID_AGE = 18;
+
+    @BeforeAll
+    public static void setUp() {
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
 
     @Test
     void userWithNoSuchLoginInStorage_Ok() {
-        User testUser = new User();
-        testUser.setLogin("login123");
+        User testUser = new User("login123", VALID_PASSWORD, VALID_AGE);
         storageDao.add(testUser);
         assertNull(storageDao.get("login1234"));
     }
 
     @Test
     void userWithThisLoginInStorage_NotOk() {
-        User testUser = new User();
-        testUser.setLogin("login4321");
+        User testUser = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
         storageDao.add(testUser);
-        assertEquals(testUser, storageDao.get("login4321"));
+        assertEquals(testUser, storageDao.get(VALID_LOGIN));
     }
 
     @Test
     void loginHasAtLeastSixCharacters_Ok() {
-        User testUser1 = new User();
-        testUser1.setLogin("user12");
-        testUser1.setPassword("password");
-        testUser1.setAge(18);
+        User testUser1 = new User("user!!", VALID_PASSWORD, VALID_AGE);
+        User testUser2 = new User("user1234!!", VALID_PASSWORD, VALID_AGE);
+        User testUser3 = new User("user1234!!!@#$", VALID_PASSWORD, VALID_AGE);
         registrationService.register(testUser1);
-        assertEquals(testUser1, storageDao.get("user12"));
-        User testUser2 = new User();
-        testUser2.setLogin("user123456");
-        testUser2.setPassword("password");
-        testUser2.setAge(18);
         registrationService.register(testUser2);
-        assertEquals(testUser2, storageDao.get("user123456"));
-        User testUser3 = new User();
-        testUser3.setLogin("user123456!@#$");
-        testUser3.setPassword("password");
-        testUser3.setAge(18);
         registrationService.register(testUser3);
-        assertEquals(testUser3, storageDao.get("user123456!@#$"));
+        assertEquals(testUser1, storageDao.get("user!!"));
+        assertEquals(testUser2, storageDao.get("user1234!!"));
+        assertEquals(testUser3, storageDao.get("user1234!!!@#$"));
     }
 
     @Test
     void loginIsShorterThanSixCharacters_NotOk() {
-        User testUser1 = new User();
-        testUser1.setLogin("login");
-        testUser1.setPassword("password");
-        testUser1.setAge(18);
+        User testUser1 = new User("login", VALID_PASSWORD, VALID_AGE);
+        User testUser2 = new User("lo", VALID_PASSWORD, VALID_AGE);
+        User testUser3 = new User("", VALID_PASSWORD, VALID_AGE);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser1));
-        User testUser2 = new User();
-        testUser2.setLogin("lo");
-        testUser2.setPassword("password");
-        testUser2.setAge(18);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser2));
-        User testUser3 = new User();
-        testUser3.setLogin("");
-        testUser3.setPassword("password");
-        testUser3.setAge(18);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser3));
     }
 
     @Test
     void passwordHasAtLeastSixCharacters_Ok() {
-        User testUser = new User();
-        testUser.setLogin("login1");
-        testUser.setPassword("passwo");
-        testUser.setAge(18);
-        registrationService.register(testUser);
-        assertEquals(testUser, storageDao.get("login1"));
-        User testUser2 = new User();
-        testUser2.setLogin("login2");
-        testUser2.setPassword("password123");
-        testUser2.setAge(18);
+        User testUser1 = new User("login1", "passwo", VALID_AGE);
+        User testUser2 = new User("login2", "password123", VALID_AGE);
+        User testUser3 = new User("login3", "password123456!@#$%^&*()", VALID_AGE);
+        registrationService.register(testUser1);
         registrationService.register(testUser2);
-        assertEquals(testUser2, storageDao.get("login2"));
-        User testUser3 = new User();
-        testUser3.setLogin("login3");
-        testUser3.setPassword("password123456!@#$%^&*()");
-        testUser3.setAge(18);
         registrationService.register(testUser3);
+        assertEquals(testUser1, storageDao.get("login1"));
+        assertEquals(testUser2, storageDao.get("login2"));
         assertEquals(testUser3, storageDao.get("login3"));
     }
 
     @Test
     void passwordIsShorterThanSixCharacters_NotOk() {
-        User testUser = new User();
-        testUser.setLogin("login1");
-        testUser.setAge(18);
-        testUser.setPassword("pass1");
-        assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
-        User testUser2 = new User();
-        testUser2.setLogin("login1");
-        testUser2.setAge(18);
-        testUser2.setPassword("pas");
+        User testUser1 = new User(VALID_LOGIN, "pass1", VALID_AGE);
+        User testUser2 = new User(VALID_LOGIN, "pas", VALID_AGE);
+        User testUser3 = new User(VALID_LOGIN, "", VALID_AGE);
+        assertThrows(UserValidationException.class, () -> registrationService.register(testUser1));
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser2));
-        User testUser3 = new User();
-        testUser3.setLogin("login1");
-        testUser3.setAge(18);
-        testUser3.setPassword("");
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser3));
     }
 
     @Test
     void userAgeIsAtLeastEighteenYearsOld_Ok() {
-        User testUser = new User();
-        testUser.setLogin("testUser");
-        testUser.setPassword("password");
-        testUser.setAge(18);
-        registrationService.register(testUser);
-        assertEquals(testUser, storageDao.get("testUser"));
-        User testUser2 = new User();
-        testUser2.setLogin("testUser2");
-        testUser2.setPassword("password");
-        testUser2.setAge(28);
+        User testUser1 = new User("ageTestUser1", VALID_PASSWORD, 18);
+        User testUser2 = new User("ageTestUser2", VALID_PASSWORD, 28);
+        User testUser3 = new User("ageTestUser3", VALID_PASSWORD, 123);
+        registrationService.register(testUser1);
         registrationService.register(testUser2);
-        assertEquals(testUser2, storageDao.get("testUser2"));
-        User testUser3 = new User();
-        testUser3.setLogin("testUser3");
-        testUser3.setPassword("password");
-        testUser3.setAge(123);
         registrationService.register(testUser3);
-        assertEquals(testUser3, storageDao.get("testUser3"));
+        assertEquals(testUser1, storageDao.get("ageTestUser1"));
+        assertEquals(testUser2, storageDao.get("ageTestUser2"));
+        assertEquals(testUser3, storageDao.get("ageTestUser3"));
     }
 
     @Test
     void userAgeIsLessThanEighteenYearsOld_NotOk() {
-        User testUser = new User();
-        testUser.setLogin("login1");
-        testUser.setPassword("password");
-        testUser.setAge(17);
-        assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
-        testUser.setAge(5);
-        assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
+        User testUser1 = new User(VALID_LOGIN, VALID_PASSWORD, 17);
+        User testUser2 = new User(VALID_LOGIN, VALID_PASSWORD, 15);
+        User testUser3 = new User(VALID_LOGIN, VALID_PASSWORD, 1);
+        assertThrows(UserValidationException.class, () -> registrationService.register(testUser1));
+        assertThrows(UserValidationException.class, () -> registrationService.register(testUser2));
+        assertThrows(UserValidationException.class, () -> registrationService.register(testUser3));
     }
 
     @Test
     void userAgeIsZero_NotOk() {
-        User testUser = new User();
-        testUser.setLogin("login1");
-        testUser.setPassword("password");
-        testUser.setAge(0);
+        User testUser = new User(VALID_LOGIN, VALID_PASSWORD, 0);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void userAgeIsNegativeNumber_NotOk() {
-        User testUser = new User();
-        testUser.setLogin("login1");
-        testUser.setPassword("password");
-        testUser.setAge(-20);
+        User testUser = new User(VALID_LOGIN, VALID_PASSWORD, -20);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void loginIsNull_NotOk() {
-        User testUser = new User();
-        testUser.setLogin(null);
-        testUser.setPassword("password");
-        testUser.setAge(17);
+        User testUser = new User(null, VALID_PASSWORD, VALID_AGE);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void passwordIsNull_NotOk() {
-        User testUser = new User();
-        testUser.setLogin("testUser");
-        testUser.setPassword(null);
-        testUser.setAge(17);
+        User testUser = new User(VALID_LOGIN, null, VALID_AGE);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void ageIsNull_NotOk() {
-        User testUser = new User();
-        testUser.setLogin("testUser");
-        testUser.setPassword("password");
-        testUser.setAge(null);
+        User testUser = new User(VALID_LOGIN, VALID_PASSWORD, null);
         assertThrows(UserValidationException.class, () -> registrationService.register(testUser));
     }
 
     @Test
     void passwordLengthCheck_Ok() {
-        User testUser = new User();
-        testUser.setLogin("testUserPassword");
-        testUser.setPassword("password");
-        testUser.setAge(18);
+        User testUser = new User(VALID_LOGIN + "passwordLenght", VALID_PASSWORD, VALID_AGE);
         int passwordLengthExpected = 8;
         assertEquals(passwordLengthExpected,
                 registrationService.register(testUser).getPassword().length());
@@ -202,11 +146,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void loginLengthCheck_Ok() {
-        User testUser = new User();
-        testUser.setLogin("testUserLogin");
-        testUser.setPassword("password");
-        testUser.setAge(18);
-        int loginLengthExpected = 13;
+        User testUser = new User(VALID_LOGIN + "loginLenght", VALID_PASSWORD, VALID_AGE);
+        int loginLengthExpected = 17;
         assertEquals(loginLengthExpected,
                 registrationService.register(testUser).getLogin().length());
     }
