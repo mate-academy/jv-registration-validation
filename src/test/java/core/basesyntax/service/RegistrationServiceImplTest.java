@@ -5,8 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.RegisterException;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
     private static User userOk;
+    private static User userNull;
     private static User userLoginNull;
     private static User userLoginThreeLength;
     private static User userLoginFiveLength;
@@ -34,6 +36,7 @@ class RegistrationServiceImplTest {
     static void beforeAll() {
         registrationService = new RegistrationServiceImpl();
         userOk = new User("Andrew123", "Andrew123", 18);
+        userNull = null;
         userLoginNull = new User(null, "Andrew123", 18);
         userLoginThreeLength = new User("And", "Andrew123", 18);
         userLoginFiveLength = new User("Andre", "Andrew123", 18);
@@ -43,12 +46,12 @@ class RegistrationServiceImplTest {
         userPasswordThreeLength = new User("Andrew123", "And", 18);
         userPasswordFiveLength = new User("Andrew123", "Andre", 18);
         userPasswordSixLength = new User("Andrew123", "Andrew", 18);
-        userPasswordSevenLength = new User("Andrew123", "Andrew1", 18);
+        userPasswordSevenLength = new User("Luck123", "Andrew1", 18);
         userAgeNull = new User("Andrew123", "Andrew123", null);
         userAgeNegative = new User("Andrew123", "Andrew123", -1);
         userAgeUnderEighteen = new User("Andrew123", "Andrew123", 16);
         userAgeEighteen = new User("Andrew123", "Andrew123", 18);
-        userAgeOverEighteen = new User("Andrew123", "Andrew123", 50);
+        userAgeOverEighteen = new User("Luck123", "Andrew123", 50);
     }
 
     @BeforeEach
@@ -57,9 +60,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(userNull);
+        });
+    }
+
+    @Test
     void register_userInStorage_notOk() {
         Storage.people.add(userOk);
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userOk);
         });
     }
@@ -72,17 +82,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userLoginNull);
         });
     }
 
     @Test
     void register_invalidLoginLength_notOk() {
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userLoginThreeLength);
         });
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userLoginFiveLength);
         });
     }
@@ -97,17 +107,17 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullPassword_notOk() {
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userPasswordNull);
         });
     }
 
     @Test
     void register_invalidPasswordLength_notOk() {
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userPasswordThreeLength);
         });
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userPasswordFiveLength);
         });
     }
@@ -124,21 +134,21 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullAge_notOk() {
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userAgeNull);
         });
     }
 
     @Test
     void register_negativeAge_notOk() {
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userAgeNegative);
         });
     }
 
     @Test
     void register_invalidAge_notOk() {
-        assertThrows(RegisterException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(userAgeUnderEighteen);
         });
     }
