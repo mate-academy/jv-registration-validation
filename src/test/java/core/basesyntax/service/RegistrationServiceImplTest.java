@@ -57,14 +57,14 @@ class RegistrationServiceImplTest {
 
     @Test
     void userExists_NotOk() {
-        user.setLogin("okayLogin");
-        user.setPassword("okayPassword");
-        user.setAge(20);
         User otherUser = new User();
         otherUser.setLogin("okayLogin");
         otherUser.setPassword("okayPassword");
         otherUser.setAge(20);
         Storage.people.add(otherUser);
+        user.setLogin("okayLogin");
+        user.setPassword("okayPassword");
+        user.setAge(20);
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
