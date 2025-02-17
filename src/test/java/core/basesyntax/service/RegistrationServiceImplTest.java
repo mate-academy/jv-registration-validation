@@ -18,7 +18,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addNullUser() {
+    void register_nullUser_notOk() {
         assertThrows(InvalidDataOfUserException.class, () -> registrationService.register(null));
     }
 
@@ -58,6 +58,11 @@ class RegistrationServiceImplTest {
         user.setPassword("1266634");
         user.setAge(18);
         assertThrows(InvalidDataOfUserException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_storageDublicat_notOk() {
+
     }
 
 }
