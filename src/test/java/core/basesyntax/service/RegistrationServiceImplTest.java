@@ -70,7 +70,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void notConteinsUser_Ok() {
+    void notContainsUser_Ok() {
         User testUser = new User(3238887801L, "giterr", "passpa", 19);
         assertEquals(registrationService.register(testUser),testUser);
     }
