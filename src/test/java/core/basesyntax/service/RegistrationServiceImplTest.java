@@ -47,6 +47,24 @@ class RegistrationServiceImplTest {
         assertThrows(DataExceptions.class, () -> registrationService.register(user));
     }
 
+    @Test
+    void register_nullValue_NotOk() {
+        RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+
+        User userOne = new User(null, "bobone", "123456", 18);
+        assertThrows(DataExceptions.class, () -> registrationService.register(userOne));
+
+        User userTwo = new User(1234L, null, "123456", 18);
+        assertThrows(DataExceptions.class, () -> registrationService.register(userTwo));
+
+        User userThree = new User(2345L, "bobthree", null, 18);
+        assertThrows(DataExceptions.class, () -> registrationService.register(userThree));
+
+        User userFour = new User(3456L, "bobfour", "123456", null);
+        assertThrows(DataExceptions.class, () -> registrationService.register(userFour));
+
+    }
+
 }
 
 

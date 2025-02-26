@@ -10,6 +10,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) throws DataExceptions {
+        if (user.getLogin() == null
+                || user.getId() == null
+                || user.getAge() == null
+                || user.getPassword() == null) {
+            throw new DataExceptions("User data contains empty fields");
+        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new DataExceptions("Login is already used");
         }
