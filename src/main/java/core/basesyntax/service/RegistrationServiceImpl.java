@@ -19,7 +19,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getPassword() == null) {
-            throw new RegistrationException("Age cannot be null");
+            throw new RegistrationException("Password cannot be null");
         }
         if (user.getPassword().length() < 6) {
             throw new RegistrationException("Password must be at least 6 characters");
@@ -29,11 +29,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age cannot be null");
         }
         if (user.getAge() < 18) {
-            throw new RegistrationException("Age must be at least 18 characters");
+            throw new RegistrationException("Age must be at least 18");
         }
 
         for (int i = 0; i < Storage.people.size(); i++) {
-            if (Objects.equals(user,Storage.people.get(i))) {
+            if (user.getLogin().equals(Storage.people.get(i).getLogin())) {
                 throw new RegistrationException("User already exists");
             }
         }

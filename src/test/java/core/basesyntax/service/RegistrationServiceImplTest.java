@@ -22,7 +22,7 @@ class RegistrationServiceImplTest {
         user = new User();
         user.setLogin("romander");
         user.setPassword("123456");
-        user.setAge(20);;
+        user.setAge(20);
     }
 
     @Test
@@ -81,7 +81,7 @@ class RegistrationServiceImplTest {
         otherUser.setAge(20);
         Storage.people.add(otherUser);
         assertThrows(RegistrationException.class, () -> {
-            service.register(otherUser);
+            service.register(user);
         });
     }
 
