@@ -13,7 +13,7 @@ class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
 
     @BeforeAll
-    public static void setUp () {
+    public static void setUp() {
         registrationService = new RegistrationServiceImpl();
     }
 
