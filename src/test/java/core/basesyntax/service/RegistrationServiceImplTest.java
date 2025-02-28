@@ -3,10 +3,12 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.exception.RegistrationServiceImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
@@ -15,6 +17,11 @@ class RegistrationServiceImplTest {
     @BeforeAll
     public static void setUp() {
         registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    public void clear() {
+        Storage.people.clear();
     }
 
     @Test
@@ -78,14 +85,18 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_newUser_Ok() {
+    void register_validUser_Ok() {
         User testUser = new User("giterr", "passpa", 19);
         assertEquals(registrationService.register(testUser),testUser);
     }
 
     @Test
-    void register_existedUser_Ok() {
+    void register_existedUser_notOk() {
         User testUser = new User("giterr", "passpa", 19);
-        assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
+        registrationService.register(testUser); // реєструємо першого користувача
+        User sameUser = new User("giterr", "anotherPass", 22);
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> registrationService.register(sameUser));
+        assertEquals("User is already exists", exception.getMessage());
     }
 }
