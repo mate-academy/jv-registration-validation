@@ -5,7 +5,9 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class RegistrationServiceImplTest {
 
     private RegistrationService registrationService;
@@ -20,7 +22,9 @@ class RegistrationServiceImplTest {
         User user = new User("user", "password123", 25);
         InvalidUserDataException exception = assertThrows(
                 InvalidUserDataException.class, () -> registrationService.register(user));
-        assertEquals("Login must be at least 6 characters long.", exception.getMessage());
+        assertEquals(
+                "Login must be at least 6 characters long.",
+                exception.getMessage());
     }
 
     @Test
@@ -28,15 +32,19 @@ class RegistrationServiceImplTest {
         User user = new User("user1236666", "pass", 25);
         InvalidUserDataException exception = assertThrows(
                 InvalidUserDataException.class, () -> registrationService.register(user));
-        assertEquals("Password must be at least 6 characters long.", exception.getMessage());
+        assertEquals(
+                "Password must be at least 6 characters long.",
+                exception.getMessage());
     }
 
     @Test
     public void register_nullAge_notOk() {
-        User user = new User("user123", "password123", 0); // assuming age can't be null and 0 is invalid
+        User user = new User("user123", "password123", 0);
         InvalidUserDataException exception = assertThrows(
                 InvalidUserDataException.class, () -> registrationService.register(user));
-        assertEquals("User must be at least 18 years old.", exception.getMessage());
+        assertEquals(
+                "User must be at least 18 years old.",
+                exception.getMessage());
     }
 
     @Test
@@ -44,7 +52,9 @@ class RegistrationServiceImplTest {
         User user = new User("user123", "password123", 17);
         InvalidUserDataException exception = assertThrows(
                 InvalidUserDataException.class, () -> registrationService.register(user));
-        assertEquals("User must be at least 18 years old.", exception.getMessage());
+        assertEquals(
+                "User must be at least 18 years old.",
+                exception.getMessage());
     }
 
     @Test
@@ -54,6 +64,8 @@ class RegistrationServiceImplTest {
         registrationService.register(user1);
         InvalidUserDataException exception = assertThrows(
                 InvalidUserDataException.class, () -> registrationService.register(user2));
-        assertEquals("User with this login already exists.", exception.getMessage());
+        assertEquals(
+                "User with this login already exists.",
+                exception.getMessage());
     }
 }

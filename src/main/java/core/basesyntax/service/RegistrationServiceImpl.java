@@ -11,7 +11,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
 
-        if (storageDao.getUserByLogin(user.getLogin()) != null){
+        if (storageDao.getUserByLogin(user.getLogin()) != null) {
             throw new InvalidUserDataException("User with this login already exists.");
         }
 
