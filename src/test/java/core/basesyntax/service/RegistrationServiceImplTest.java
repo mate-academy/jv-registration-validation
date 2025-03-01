@@ -58,7 +58,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_userAlreadyExists_notOk() throws IllegalAccessException {
+    public void register_userAlreadyExists_notOk() {
         User user1 = new User("user123", "password123", 25);
         User user2 = new User("user123", "password1234", 26);
         registrationService.register(user1);
