@@ -22,4 +22,12 @@ public class StorageDaoImpl implements StorageDao {
         }
         return null;
     }
+
+    @Override
+    public User getUserByLogin(String login) {
+        return Storage.people.stream()
+                .filter(user -> user.getLogin().equals(login))
+                .findFirst()
+                .orElse(null);
+    }
 }
