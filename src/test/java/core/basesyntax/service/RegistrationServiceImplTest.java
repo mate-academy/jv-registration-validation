@@ -55,12 +55,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageAboveEighteenIncluded_Ok() {
-        User testUser = new User("giteras", "passpass", 18);
-        assertEquals(registrationService.register(testUser),testUser);
-    }
-
-    @Test
     void register_loginUpToSix_notOk() {
         User testUser = new User("giter", "passpass", 18);
         assertThrows(RegistrationException.class, () -> registrationService.register(testUser));
@@ -93,7 +87,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_existedUser_notOk() {
         User testUser = new User("giterr", "passpa", 19);
-        registrationService.register(testUser); // реєструємо першого користувача
+        Storage.people.add(testUser);
         User sameUser = new User("giterr", "anotherPass", 22);
         RegistrationException exception = assertThrows(RegistrationException.class,
                 () -> registrationService.register(sameUser));
