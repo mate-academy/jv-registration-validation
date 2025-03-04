@@ -1,12 +1,14 @@
 package core.basesyntax.service;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.model.User;
 import core.basesyntax.exception.RegistrationException;
+import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
@@ -24,7 +26,7 @@ class RegistrationServiceImplTest {
         user.setPassword("strongPass");
         user.setAge(20);
 
-        User registeredUser =registrationService.register(user);
+        User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
         assertEquals("validUser", registeredUser.getLogin());
     }
@@ -38,7 +40,7 @@ class RegistrationServiceImplTest {
         registrationService.register(user1);
 
         User user2 = new User();
-        user2.setLogin("duplicateLogin"); // Такий самий логін
+        user2.setLogin("duplicateLogin");
         user2.setPassword("password321");
         user2.setAge(25);
 
@@ -49,7 +51,7 @@ class RegistrationServiceImplTest {
     void register_shortPassword_notOk() {
         User user = new User();
         user.setLogin("validLogin");
-        user.setPassword("123"); // Менше 6 символів
+        user.setPassword("123");
         user.setAge(19);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
@@ -60,7 +62,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setLogin("youngUser");
         user.setPassword("password123");
-        user.setAge(17); // Менше 18 років
+        user.setAge(17);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
