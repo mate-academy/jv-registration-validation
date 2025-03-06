@@ -28,17 +28,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin().length() < LOGIN_MIN) {
             throw new RegistrationException("Login can't be less symbol than " + LOGIN_MIN);
         }
-        if (user.getLogin().length() >= LOGIN_MIN) {
-            storageDao.add(user);
-        }
         if (user.getPassword().length() < PASSWORD_MIN) {
             throw new RegistrationException("Password can't be less symbol than " + PASSWORD_MIN);
-        }
-        if (user.getPassword().length() >= PASSWORD_MIN) {
-            storageDao.add(user);
-        }
-        if (user.getAge() >= AGE_MIN) {
-            storageDao.add(user);
         }
         if (user.getAge() < AGE_MIN) {
             throw new RegistrationException("Not valid age: " + user.getAge()
