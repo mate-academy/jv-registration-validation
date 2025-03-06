@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
             registrationService.register(user);
         });
 
-        assertEquals("Password is null or short", exception.getMessage());
+        assertEquals("Password must be at least 6 characters long", exception.getMessage());
     }
 
     @Test
@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
             registrationService.register(user);
         });
 
-        assertEquals("To small guy", exception.getMessage());
+        assertEquals("User must be at least 18 years old", exception.getMessage());
     }
 
     @Test
