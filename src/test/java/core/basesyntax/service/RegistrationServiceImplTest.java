@@ -33,7 +33,7 @@ class RegistrationServiceImplTest {
         } catch (RegistrationException e) {
             return;
         }
-        fail("Short login");
+        fail("Login must be at least 6 characters long");
     }
 
     @Test
@@ -65,6 +65,12 @@ class RegistrationServiceImplTest {
     @Test
     void register_userIsNull_notOk() {
         User user = null;
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userAge_notOk() {
+        User user = new User("validUser", "validPassword", 16);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
