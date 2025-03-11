@@ -21,13 +21,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void nullUser_NotOk() {
+    void validUser_NotOk() {
         user = null;
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
-    void nullUser_Ok() {
+    void validUser_Ok() {
         assertDoesNotThrow(() -> registrationService.register(user));
     }
 
@@ -40,7 +40,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerLogin_Ok() {
         user.setLogin("sdfghj");
-        assertNull(storageDao.get(user.getLogin()));
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
@@ -82,18 +82,6 @@ class RegistrationServiceImplTest {
     @Test
     void userAge_NotOk() {
         user.setAge(10);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
-    }
-
-    @Test
-    void nullId_Ok() {
-        user.setId(2145678L);
-        assertDoesNotThrow(() -> registrationService.register(user));
-    }
-
-    @Test
-    void nullId_NotOk() {
-        user.setId(null);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 

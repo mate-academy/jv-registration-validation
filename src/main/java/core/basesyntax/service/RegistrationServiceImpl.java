@@ -16,9 +16,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User login must be at least"
                     + " 6 characters long and not null");
         }
-        if (user.getId() == null) {
-            throw new RegistrationException("User does not have an id number");
-        }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User login already exists");
         }
@@ -32,6 +29,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() < 18) {
             throw new RegistrationException("User must be at least 18 years old");
         }
+
+        storageDao.add(user);
+
         return user;
     }
 }

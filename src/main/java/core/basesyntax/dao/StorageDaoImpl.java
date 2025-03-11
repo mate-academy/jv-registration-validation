@@ -26,7 +26,7 @@ public class StorageDaoImpl implements StorageDao {
     @Override
     public User getById(long id) {
         for (User user : Storage.people) {
-            if (user.getId().equals(id)) {
+            if (user.getId() == id) {
                 return user;
             }
         }
