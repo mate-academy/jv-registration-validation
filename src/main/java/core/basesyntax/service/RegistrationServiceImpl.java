@@ -22,23 +22,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getAge() == null) {
             throw new RegistrationException("Age can't be null");
         }
-        if (user.getLogin().equals(login)) {
-            throw new RegistrationException("User with this login " + login + " already exists.");
-        }
         if (user.getLogin().length() < LOGIN_MIN) {
             throw new RegistrationException("Login can't be less symbol than " + LOGIN_MIN);
         }
-        if (user.getLogin().length() >= LOGIN_MIN) {
-            storageDao.add(user);
-        }
         if (user.getPassword().length() < PASSWORD_MIN) {
             throw new RegistrationException("Password can't be less symbol than " + PASSWORD_MIN);
-        }
-        if (user.getPassword().length() >= PASSWORD_MIN) {
-            storageDao.add(user);
-        }
-        if (user.getAge() >= AGE_MIN) {
-            storageDao.add(user);
         }
         if (user.getAge() < AGE_MIN) {
             throw new RegistrationException("Not valid age: " + user.getAge()
