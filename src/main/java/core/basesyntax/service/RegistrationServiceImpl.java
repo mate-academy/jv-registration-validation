@@ -13,19 +13,20 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new InvalidUserExeption("User can't be null");
+            throw new InvalidUserException("User can't be null");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new InvalidUserExeption("User with this login already exists");
+            throw new InvalidUserException("User with this login already exists");
         }
-        if (user.getAge() >= MIN_AGE && user.getPassword().length() >= MIN_SYMBOLS
-                && user.getLogin().length() >= MIN_SYMBOLS) {
-            return storageDao.add(user);
+        if (user.getLogin().length() < MIN_SYMBOLS) {
+            throw new InvalidUserException("Login cannot be less than" + MIN_SYMBOLS);
         }
-        if (user.getLogin().length() < MIN_SYMBOLS || user.getPassword().length() < MIN_SYMBOLS
-                || user.getAge() < MIN_AGE) {
-            throw new InvalidUserExeption("Incorrect data");
+        if (user.getPassword().length() < MIN_SYMBOLS) {
+            throw new InvalidUserException("Password cannot be less than" + MIN_SYMBOLS);
         }
-        return null;
+        if (user.getAge() < MIN_AGE) {
+            throw new InvalidUserException("Age cannot be less than" + MIN_AGE);
+        }
+        return storageDao.add(user);
     }
 }

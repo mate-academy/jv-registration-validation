@@ -37,7 +37,7 @@ class RegistrationServiceImplTest {
         shortPassUser.setAge(22);
         shortPassUser.setLogin("validLogin23");
         shortPassUser.setPassword("pass");
-        assertThrows(InvalidUserExeption.class, () -> service.register(shortPassUser));
+        assertThrows(InvalidUserException.class, () -> service.register(shortPassUser));
         assertEquals(0, Storage.people.size());
     }
 
@@ -47,7 +47,7 @@ class RegistrationServiceImplTest {
         shortLoginUser.setAge(19);
         shortLoginUser.setPassword("normalPass");
         shortLoginUser.setLogin("login");
-        assertThrows(InvalidUserExeption.class, () -> service.register(shortLoginUser));
+        assertThrows(InvalidUserException.class, () -> service.register(shortLoginUser));
         assertEquals(0, Storage.people.size());
     }
 
@@ -57,7 +57,7 @@ class RegistrationServiceImplTest {
         invalidUserAge.setAge(17);
         invalidUserAge.setLogin("ValidLogin123");
         invalidUserAge.setPassword("normalPass333");
-        assertThrows(InvalidUserExeption.class, () -> service.register(invalidUserAge));
+        assertThrows(InvalidUserException.class, () -> service.register(invalidUserAge));
         assertEquals(0, Storage.people.size());
     }
 
@@ -72,13 +72,13 @@ class RegistrationServiceImplTest {
         anotherUser.setLogin("validLogin");
         anotherUser.setAge(18);
         anotherUser.setPassword("goodPassword123");
-        assertThrows(InvalidUserExeption.class, () -> service.register(anotherUser));
+        assertThrows(InvalidUserException.class, () -> service.register(anotherUser));
         assertEquals(1, Storage.people.size());
     }
 
     @Test
     void register_nullUser_NotOk() {
-        assertThrows(InvalidUserExeption.class, () -> service.register(null));
+        assertThrows(InvalidUserException.class, () -> service.register(null));
         assertEquals(0, Storage.people.size());
     }
 }
