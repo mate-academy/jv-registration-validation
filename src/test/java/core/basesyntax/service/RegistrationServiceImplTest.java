@@ -1,39 +1,40 @@
 package core.basesyntax.service;
 
+import core.basesyntax.Expected.myExpectedClass;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private List<User> users;
     private static User nullUser;
-    private static RegistrationService registrationServise;
+    private static RegistrationService registrationService;
 
     @BeforeAll
-    static void BeforeAll() {
-        registrationServise = new RegistrationServiceImpl();
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
     }
 
     @BeforeEach
-    void BeforeEach() {
+    void beforeEach() {
         users = new ArrayList<>();
         nullUser = null;
-        users.add(registrationServise.register(nullUser));
-        users.add(create_Users("Igor228", "123455", 18));
-        users.add(create_Users("Alina45", "password", 20));
-        users.add(create_Users("Alina45", "password", null));
-        users.add(create_Users("Alina45", null, 20));
-        users.add(create_Users(null, "password2211", 20));
+        users.add(nullUser);
+        users.add(createUsers("Igor228", "123455", 18));
+        users.add(createUsers("Alina45", "password", 20));
+        users.add(createUsers("Alina45", "password", null));
+        users.add(createUsers("Alina45", null, 20));
+        users.add(createUsers(null, "password2211", 20));
     }
 
-    User create_Users(String login, String pass, Integer age) {
+    User createUsers(String login, String pass, Integer age) {
         User userValid = new User();
         userValid.setLogin(login);
         userValid.setPassword(pass);
@@ -44,43 +45,49 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNull_Ok() {
-        User actual = registrationServise.register(nullUser);
-        assertNull(actual);
+        Exception exception = assertThrows(myExpectedClass.class, () -> {
+            registrationService.register(users.get(0));
+        });
+        assertEquals("User cannot be null", exception.getMessage());
     }
 
     @Test
     void registerAdd_Ok() {
-        registrationServise.register(nullUser);
-        registrationServise.register(users.get(1));
-        registrationServise.register(users.get(2));
-        registrationServise.register(users.get(2));
+        registrationService.register(users.get(1));
+        registrationService.register(users.get(2));
+        registrationService.register(users.get(2));
         boolean actual = Storage.people.size() == 2;
         assertTrue(actual);
     }
 
     @Test
-    void register_nullAge_notOk() {
-        Exception exception = assertThrows(NullPointerException.class, () -> {
-            registrationServise.register(users.get(3));
-        });
-        assertEquals("null Age", exception.getMessage());
+    void registerAdd_notOk() {
+
     }
 
     @Test
-    void register_nullPass_notOk() {
-        Exception exception = assertThrows(NullPointerException.class, () -> {
-            registrationServise.register(users.get(4));
+    void register_nullAge_Ok() {
+        Exception exception = assertThrows(myExpectedClass.class, () -> {
+            registrationService.register(users.get(3));
         });
-
-        assertEquals("null Pass", exception.getMessage());
+        assertEquals("User Age cannot be null", exception.getMessage());
     }
 
     @Test
-    void register_nullLogin_notOk() {
-        Exception exception = assertThrows(NullPointerException.class, () -> {
-            registrationServise.register(users.get(5));
+    void register_nullPass_Ok() {
+        Exception exception = assertThrows(myExpectedClass.class, () -> {
+            registrationService.register(users.get(4));
         });
 
-        assertEquals("null Login", exception.getMessage());
+        assertEquals("User Pass cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void register_nullLogin_Ok() {
+        Exception exception = assertThrows(myExpectedClass.class, () -> {
+            registrationService.register(users.get(5));
+        });
+
+        assertEquals("User Login cannot be null", exception.getMessage());
     }
 }
