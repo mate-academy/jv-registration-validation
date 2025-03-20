@@ -7,78 +7,82 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import core.basesyntax.exception.InvalidDataException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
 
     private final RegistrationService service = new RegistrationServiceImpl();
 
+    @BeforeEach
     @AfterEach
-    void tearDown() {
+    void clearStorage() {
         people.clear();
     }
 
     @Test
-    void registerUser_Ok() {
-        User first = new User("CommonLogin","CommonPassword",20);
-        User second = new User("LoginOk","PasswordOk",32);
-        User third = new User("TheNormalLogin","GoodPassword",22);
-        service.register(first);
-        service.register(second);
-        service.register(third);
-        assertEquals(people.size(),3,"The length of the storage should be 3");
+    void registerUser_validData_userAddedToStorage() {
+        User user = new User("ValidLogin", "ValidPassword", 20);
+        User registeredUser = service.register(user);
+        assertEquals(1, people.size());
+        assertEquals(user, registeredUser);
     }
 
     @Test
-    void registerNullUser_notOk() {
-        User nullUser = null;
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(nullUser);
-        });
+    void registerUser_nullUser_throwsException() {
+        assertThrows(InvalidDataException.class,
+                () -> service.register(null), "User cannot be null.");
     }
 
     @Test
-    void registerSameUser_notOk() {
-        User user = new User("CommonLogin","CommonPass",20);
-        service.register(user);
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(user);
-        });
+    void registerUser_duplicateLogin_throwsException() {
+        User user1 = new User("DuplicateLogin", "Password1", 20);
+        User user2 = new User("DuplicateLogin", "Password2", 25);
+        people.add(user1);
+        assertThrows(InvalidDataException.class,
+                () -> service.register(user2), "User with this login is already registered.");
     }
 
     @Test
-    void registerUserWithInvalidData_notOk() {
-        User first = new User(null,null,null);
-        User second = new User("GoodLogin",null,30);
-        User third = new User(null,"PassGood",20);
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(first);
-        });
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(second);
-        });
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(third);
-        });
+    void registerUser_nullLogin_throwsException() {
+        User user = new User(null, "Password", 20);
+        assertThrows(InvalidDataException.class,
+                () -> service.register(user), "User's login cannot be null or empty.");
     }
 
     @Test
-    void registerUserCredentialsTooShort_notOk() {
-        User first = new User("User","Pass",20);
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(first);
-        });
+    void registerUser_nullPassword_throwsException() {
+        User user = new User("Login", null, 20);
+        assertThrows(InvalidDataException.class,
+                () -> service.register(user), "User's password cannot be null or empty.");
     }
 
     @Test
-    void registerUserAgeInvalid_notOk() {
-        User first = new User("GoodLogin","GoodPass",10);
-        User second = new User("LoginOk","PassOk",null);
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(first);
-        });
-        assertThrows(InvalidDataException.class,() -> {
-            service.register(second);
-        });
+    void registerUser_shortLogin_throwsException() {
+        User user = new User("Short", "Password", 20);
+        assertThrows(InvalidDataException.class,
+                () -> service.register(user), "User's login must be at least 6 characters long.");
+    }
+
+    @Test
+    void registerUser_shortPassword_throwsException() {
+        User user = new User("Login", "Short", 20);
+        assertThrows(InvalidDataException.class,
+                () -> service.register(user),
+                "User's password must be at least 6 characters long.");
+    }
+
+    @Test
+    void registerUser_ageBelowMinimum_throwsException() {
+        User user = new User("Login", "Password", 17);
+        assertThrows(InvalidDataException.class,
+                () -> service.register(user), "User's age must be at least 18 years.");
+    }
+
+    @Test
+    void registerUser_nullAge_throwsException() {
+        User user = new User("Login", "Password", null);
+        assertThrows(InvalidDataException.class,
+                () -> service.register(user), "User's age must be at least 18 years.");
     }
 }

@@ -11,24 +11,33 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new InvalidDataException("User can't be null");
+            throw new InvalidDataException("User cannot be null.");
         }
+
         if (user.getAge() == null || user.getAge() < 18) {
-            throw new InvalidDataException("Invalid User's age");
+            throw new InvalidDataException("User's age must be at least 18 years.");
         }
-        if (user.getLogin() == null || user.getPassword() == null) {
-            throw new InvalidDataException("User's credentials are invalid");
+
+        if (user.getLogin() == null || user.getLogin().isEmpty()) {
+            throw new InvalidDataException("User's login cannot be null or empty.");
         }
+
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new InvalidDataException("User's password cannot be null or empty.");
+        }
+
         if (user.getLogin().length() < 6) {
-            throw new InvalidDataException("Login is too short");
+            throw new InvalidDataException("User's login must be at least 6 characters long.");
         }
+
         if (user.getPassword().length() < 6) {
-            throw new InvalidDataException("Password is too short");
+            throw new InvalidDataException("User's password must be at least 6 characters long.");
         }
-        if (!(storageDao.get(user.getLogin()) == null)) {
-            throw new InvalidDataException("Provided user is already registered");
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidDataException("User with this login is already registered.");
         }
-        storageDao.add(user);
-        return user;
+
+        return storageDao.add(user);
     }
 }
