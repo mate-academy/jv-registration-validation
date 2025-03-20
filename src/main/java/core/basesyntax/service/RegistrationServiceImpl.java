@@ -12,9 +12,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (StorageDaoImpl.getIndex() == Integer.MAX_VALUE) {
-            throw new RegistrationException("StorageDao is full!");
-        }
         if (user == null) {
             throw new RegistrationException("User must not be null!!!");
         }
@@ -39,7 +36,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("The password length must be at least "
                     + MIN_LENGTH_USER_PASSWORD + " characters.");
         }
-
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This user is already registered.");
         }

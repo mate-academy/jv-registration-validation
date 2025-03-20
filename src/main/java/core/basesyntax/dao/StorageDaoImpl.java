@@ -4,15 +4,7 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 
 public class StorageDaoImpl implements StorageDao {
-    private static Long index = 0L;
-
-    public static Long getIndex() {
-        return index;
-    }
-
-    public static void setIndex(Long index) {
-        StorageDaoImpl.index = index;
-    }
+    private Long index = 0L;
 
     @Override
     public User add(User user) {
