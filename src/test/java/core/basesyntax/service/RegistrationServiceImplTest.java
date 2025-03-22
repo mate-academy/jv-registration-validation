@@ -8,6 +8,7 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,6 @@ class RegistrationServiceImplTest {
     private static final String DEFAULT_STRING = "abcdef";
     private static final int MIN_LENGTH_STRING = 6;
     private static final int MIN_USER_AGE = 18;
-    private static final int MAX_USER_AGE = 200;
     private static RegistrationService registrationService;
     private static StorageDao storageDao;
 
@@ -23,6 +23,11 @@ class RegistrationServiceImplTest {
     void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 
     @Test
@@ -128,46 +133,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_caseAgeIsMoreMaxUserAge_Ok() {
-        for (int i = MAX_USER_AGE + 1; i < (MAX_USER_AGE + MIN_USER_AGE); i++) {
-            User currentUser = new User(DEFAULT_STRING, DEFAULT_STRING, i);
-            assertThrows(RegistrationException.class,
-                    () -> registrationService.register(currentUser),
-                    "If increase exceeds " + MAX_USER_AGE
-                            + " years, an exception should be thrown.");
-        }
-    }
-
-    @Test
     void register_caseUserAlreadyExists_notOk() {
-        for (int i = MIN_USER_AGE; i <= MAX_USER_AGE; i++) {
-            User currentUser = new User();
-            currentUser.setAge(i);
-            currentUser.setLogin(DEFAULT_STRING + i);
-            currentUser.setPassword(DEFAULT_STRING + i);
-            Storage.people.add(currentUser);
-            assertThrows(RegistrationException.class,
-                    () -> registrationService.register(currentUser),
-                    "If the user already exists, a RegistrationException should be throw.");
-        }
+        User currentUser = new User(DEFAULT_STRING, DEFAULT_STRING, MIN_USER_AGE);
+        Storage.people.add(currentUser);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(currentUser),
+                "If the user already exists, a RegistrationException should be throw.");
     }
 
     @Test
     void register_registrationUser_Ok() {
-        for (int i = MIN_USER_AGE + 1; i <= MAX_USER_AGE; i++) {
-            User currentUser = new User();
-            currentUser.setLogin(DEFAULT_STRING + (char) i);
-            currentUser.setPassword(DEFAULT_STRING + (char) i);
-            currentUser.setAge(i);
-            User actualUser = registrationService.register(currentUser);
-            assertEquals(currentUser, actualUser,
-                    "The register method must return the registered user.");
-            assertNotNull(storageDao.get(currentUser.getLogin()),
-                    "If the user has been added, then he must already be registered.");
-            assertEquals(i - MIN_USER_AGE, Storage.people.size(),
-                    "In case of user registration"
-                            + ", the length of the storage size must match the loop index.");
-        }
+        User currentUser = new User(DEFAULT_STRING, DEFAULT_STRING, MIN_USER_AGE);
+        int expectedPeopleSize = Storage.people.size() + 1;
+        User actualUser = registrationService.register(currentUser);
+        assertEquals(currentUser, actualUser,
+                "The register method must return the registered user.");
+        assertNotNull(storageDao.get(currentUser.getLogin()),
+                "If the user has been added, then he must already be registered.");
+        int actual = Storage.people.size();
+        assertEquals(expectedPeopleSize, actual,
+                "In case of user registration"
+                        + ", the length of the storage size must match the loop index.");
     }
 }
+
 

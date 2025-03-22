@@ -7,23 +7,19 @@ import core.basesyntax.model.User;
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH_STRING = 6;
     private static final int MIN_USER_AGE = 18;
-    private static final int MAX_USER_AGE = 200;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException("User must not be null!!!");
+            throw new RegistrationException("User must not be null");
         }
         if (user.getAge() == null) {
-            throw new RegistrationException("User age must not be null!!!");
+            throw new RegistrationException("User age must not be null");
         }
         if (user.getAge() < MIN_USER_AGE) {
             throw new RegistrationException("The user must be at least "
                     + MIN_USER_AGE + " years old.");
-        }
-        if (user.getAge() > MAX_USER_AGE) {
-            throw new RegistrationException("Your age exceeds the life span of a human.");
         }
         if (user.getLogin() == null) {
             throw new RegistrationException("User login must not be null!");
@@ -48,7 +44,6 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This user is already registered.");
         }
-        storageDao.add(user);
-        return user;
+        return storageDao.add(user);
     }
 }
