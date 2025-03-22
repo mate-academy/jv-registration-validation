@@ -5,9 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private static final int MIN_LENGTH_USER_LOGIN = 6;
-    private static final int MIN_LENGTH_USER_PASSWORD = 6;
+    private static final int MIN_LENGTH_STRING = 6;
     private static final int MIN_USER_AGE = 18;
+    private static final int MAX_USER_AGE = 200;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -22,19 +22,28 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("The user must be at least "
                     + MIN_USER_AGE + " years old.");
         }
+        if (user.getAge() > MAX_USER_AGE) {
+            throw new RegistrationException("Your age exceeds the life span of a human.");
+        }
         if (user.getLogin() == null) {
-            throw new RegistrationException("User login must not be null!!!");
+            throw new RegistrationException("User login must not be null!");
+        }
+        if (user.getLogin().isEmpty()) {
+            throw new RegistrationException("User login must not be empty!");
+        }
+        if (user.getLogin().length() < MIN_LENGTH_STRING) {
+            throw new RegistrationException("The login length must be at least "
+                    + MIN_LENGTH_STRING + " characters.");
         }
         if (user.getPassword() == null) {
-            throw new RegistrationException("User password must not be null!!!");
+            throw new RegistrationException("User password must not be null!");
         }
-        if (user.getLogin().length() < MIN_LENGTH_USER_LOGIN) {
-            throw new RegistrationException("The login length must be at least "
-                    + MIN_LENGTH_USER_LOGIN + " characters.");
+        if (user.getPassword().isEmpty()) {
+            throw new RegistrationException("User password must not be empty!");
         }
-        if (user.getPassword().length() < MIN_LENGTH_USER_PASSWORD) {
+        if (user.getPassword().length() < MIN_LENGTH_STRING) {
             throw new RegistrationException("The password length must be at least "
-                    + MIN_LENGTH_USER_PASSWORD + " characters.");
+                    + MIN_LENGTH_STRING + " characters.");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("This user is already registered.");

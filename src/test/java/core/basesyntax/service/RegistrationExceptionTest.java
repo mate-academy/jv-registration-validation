@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationExceptionTest {
     @Test
-    void constructor_RuntimeException_OK() {
+    void constructor_checkRuntimeException_OK() {
         assertThrows(RuntimeException.class, () -> {
             throw new RegistrationException("message");
         }, "RegistrationException must be inherited from RuntimeException.");
