@@ -10,19 +10,39 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User cannot be null.");
+        }
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login cannot be null.");
+        }
+        if (user.getLogin().length() < 6) {
+            throw new RegistrationException("Login must be at least 6 characters long, but was "
+                    + user.getLogin().length() + ".");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password cannot be null.");
+        }
+        if (user.getPassword().length() < 6) {
+            throw new RegistrationException("Password must be at least 6 characters long, but was "
+                    + user.getPassword().length() + ".");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age cannot be null.");
+        }
+        if (user.getAge() < 0) {
+            throw new RegistrationException("Age cannot be negative, but was "
+                    + user.getAge() + ".");
+        }
+        if (user.getAge() < 18) {
+            throw new RegistrationException("User must be at least 18 years old, but was "
+                    + user.getAge() + ".");
+        }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User this login already exist");
+            throw new RegistrationException("User with login '" + user.getLogin()
+                    + "' already exists.");
         }
-        if (user.getLogin() == null || user.getLogin().length() < 6) {
-            throw new RegistrationException("login must be at least 6 charters long.");
-        }
-        if (user.getPassword() == null || user.getPassword().length() < 6) {
-            throw new RegistrationException("Password must be at least 6 charters long.");
-        }
-        if (user.getAge() == null || user.getAge() < 18) {
-            throw new RegistrationException("User must be at least 18 years old.");
-        }
+
         return storageDao.add(user);
     }
-
 }
