@@ -12,6 +12,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
 
+        if (user.getLogin() == null) {
+            throw new NullPointerException("Error, login can't be null.");
+        }
+
         if (user.getLogin().length() < 6) {
             throw new InvalidDataException("Error, login too short.");
         }
@@ -22,8 +26,20 @@ public class RegistrationServiceImpl implements RegistrationService {
             }
         }
 
-        if (user.getAge() < 18) {
+        if (user.getAge() == null) {
+            throw new NullPointerException("Error, age can't be null.");
+        }
+
+        if (user.getAge() < 18 && user.getAge() >= 0) {
             throw new InvalidDataException("Error, user below 18 years old.");
+        }
+
+        if (user.getAge() > 122 || user.getAge() < 0) {
+            throw new InvalidDataException("Error, not real age.");
+        }
+
+        if (user.getPassword() == null) {
+            throw new NullPointerException("Error, password can't be null.");
         }
 
         if (user.getPassword().length() < 6) {
