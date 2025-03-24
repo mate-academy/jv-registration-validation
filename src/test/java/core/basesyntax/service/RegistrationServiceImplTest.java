@@ -6,8 +6,7 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
 
@@ -44,7 +43,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginNull_NotOK() {
         user.setLogin(null);
-        assertThrows(NullPointerException.class, () -> service.register(user));
+        assertThrows(InvalidDataException.class, () -> service.register(user));
     }
 
     @Test
@@ -86,7 +85,7 @@ class RegistrationServiceImplTest {
     @Test
     void register_passwordNull_NotOK() {
         user.setPassword(null);
-        assertThrows(NullPointerException.class, () -> service.register(user));
+        assertThrows(InvalidDataException.class, () -> service.register(user));
     }
 
     @Test
@@ -110,7 +109,7 @@ class RegistrationServiceImplTest {
         // Age Section
     void register_ageNull_NotOK() {
         user.setAge(null);
-        assertThrows(NullPointerException.class, () -> service.register(user));
+        assertThrows(InvalidDataException.class, () -> service.register(user));
     }
 
     @Test
@@ -184,8 +183,16 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_returnedCorrectUser_OK() {
+        User expected = user;
+        User actual = service.register(user);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void register_repetetiveLogin_NotOK() {
-        service.register(user);
+        Storage.people.add(user);
         assertThrows(InvalidDataException.class, () -> service.register(user));
     }
 }

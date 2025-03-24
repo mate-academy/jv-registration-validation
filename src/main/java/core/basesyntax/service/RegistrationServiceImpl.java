@@ -13,7 +13,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public User register(User user) {
 
         if (user.getLogin() == null) {
-            throw new NullPointerException("Error, login can't be null.");
+            throw new InvalidDataException("Error, login can't be null.");
         }
 
         if (user.getLogin().length() < 6) {
@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getAge() == null) {
-            throw new NullPointerException("Error, age can't be null.");
+            throw new InvalidDataException("Error, age can't be null.");
         }
 
         if (user.getAge() < 18 && user.getAge() >= 0) {
@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getPassword() == null) {
-            throw new NullPointerException("Error, password can't be null.");
+            throw new InvalidDataException("Error, password can't be null.");
         }
 
         if (user.getPassword().length() < 6) {
