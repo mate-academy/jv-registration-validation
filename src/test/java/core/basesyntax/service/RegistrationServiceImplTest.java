@@ -1,12 +1,14 @@
 package core.basesyntax.service;
 
-import core.basesyntax.RegistrationException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService;
@@ -40,8 +42,10 @@ class RegistrationServiceImplTest {
         secondUser.setPassword("password2");
         secondUser.setAge(21);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
-        assertEquals("User with this login" + secondUser.getLogin() + "already exists", exception.getMessage());
+        RegistrationException exception = assertThrows(
+                RegistrationException.class, () -> registrationService.register(secondUser));
+        assertEquals("User with this login" + secondUser.getLogin()
+                + "already exists", exception.getMessage());
     }
 
     @Test
@@ -51,7 +55,8 @@ class RegistrationServiceImplTest {
         user.setPassword("pass");
         user.setAge(53);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user));
         assertEquals("Login cannot be null!", exception.getMessage());
     }
 
@@ -62,7 +67,8 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         user.setAge(20);
 
-        RegistrationException exception = assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user));
         assertEquals("Password cannot be null!", exception.getMessage());
     }
 
@@ -83,12 +89,18 @@ class RegistrationServiceImplTest {
         user3.setPassword("password");
         user3.setAge(20);
 
-        RegistrationException exception1 = assertThrows(RegistrationException.class, () -> registrationService.register(user1));
-        RegistrationException exception2 = assertThrows(RegistrationException.class, () -> registrationService.register(user2));
-        RegistrationException exception3 = assertThrows(RegistrationException.class, () -> registrationService.register(user3));
-        assertEquals("Login must be at least 6 characters long, you have " + user1.getLogin().length(), exception1.getMessage());
-        assertEquals("Login must be at least 6 characters long, you have " + user2.getLogin().length(), exception2.getMessage());
-        assertEquals("Login must be at least 6 characters long, you have " + user3.getLogin().length(), exception3.getMessage());
+        RegistrationException exception1 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user1));
+        RegistrationException exception2 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user2));
+        RegistrationException exception3 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user3));
+        assertEquals("Login must be at least 6 characters long, you have "
+                + user1.getLogin().length(), exception1.getMessage());
+        assertEquals("Login must be at least 6 characters long, you have "
+                + user2.getLogin().length(), exception2.getMessage());
+        assertEquals("Login must be at least 6 characters long, you have "
+                + user3.getLogin().length(), exception3.getMessage());
     }
 
     @Test
@@ -124,13 +136,19 @@ class RegistrationServiceImplTest {
         thirdUser.setPassword("qwert");
         thirdUser.setAge(21);
 
-        RegistrationException exception1 = assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
-        RegistrationException exception2 = assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
-        RegistrationException exception3 = assertThrows(RegistrationException.class, () -> registrationService.register(thirdUser));
+        RegistrationException exception1 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(firstUser));
+        RegistrationException exception2 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(secondUser));
+        RegistrationException exception3 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(thirdUser));
 
-        assertEquals("Password must be at least 6 characters, you have " + firstUser.getPassword().length(), exception1.getMessage());
-        assertEquals("Password must be at least 6 characters, you have " + secondUser.getPassword().length(), exception2.getMessage());
-        assertEquals("Password must be at least 6 characters, you have " + thirdUser.getPassword().length(), exception3.getMessage());
+        assertEquals("Password must be at least 6 characters, you have "
+                + firstUser.getPassword().length(), exception1.getMessage());
+        assertEquals("Password must be at least 6 characters, you have "
+                + secondUser.getPassword().length(), exception2.getMessage());
+        assertEquals("Password must be at least 6 characters, you have "
+                + thirdUser.getPassword().length(), exception3.getMessage());
     }
 
     @Test
@@ -166,14 +184,16 @@ class RegistrationServiceImplTest {
         user3.setPassword("password");
         user3.setAge(-4);
 
-        RegistrationException exception1 = assertThrows(RegistrationException.class, () -> registrationService.register(user1));
-        RegistrationException exception2 = assertThrows(RegistrationException.class, () -> registrationService.register(user2));
-        RegistrationException exception3 = assertThrows(RegistrationException.class, () -> registrationService.register(user3));
+        RegistrationException exception1 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user1));
+        RegistrationException exception2 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user2));
+        RegistrationException exception3 = assertThrows(
+                RegistrationException.class, () -> registrationService.register(user3));
 
-
-        assertEquals("User must be at least 18 years old" , exception1.getMessage());
-        assertEquals("Age cannot be null!" , exception2.getMessage());
-        assertEquals("User must be at least 18 years old" , exception3.getMessage());
+        assertEquals("User must be at least 18 years old", exception1.getMessage());
+        assertEquals("Age cannot be null!", exception2.getMessage());
+        assertEquals("User must be at least 18 years old", exception3.getMessage());
     }
 
     @Test

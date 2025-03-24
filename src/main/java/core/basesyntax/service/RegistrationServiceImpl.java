@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import core.basesyntax.RegistrationException;
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
@@ -10,7 +9,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getLogin() == null ) {
+        if (user.getLogin() == null) {
             throw new RegistrationException("Login cannot be null!");
         }
         if (user.getPassword() == null) {
@@ -20,16 +19,19 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age cannot be null!");
         }
         if (user.getLogin().length() < 6) {
-            throw new RegistrationException("Login must be at least 6 characters long, you have " + user.getLogin().length());
+            throw new RegistrationException("Login must be at least 6 characters long, you have "
+                    + user.getLogin().length());
         }
         if (user.getPassword().length() < 6) {
-            throw new RegistrationException("Password must be at least 6 characters, you have " + user.getPassword().length());
+            throw new RegistrationException("Password must be at least 6 characters, you have "
+                    + user.getPassword().length());
         }
-        if (user.getAge() < 18){
+        if (user.getAge() < 18) {
             throw new RegistrationException("User must be at least 18 years old");
         }
         if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with this login" + user.getLogin() + "already exists");
+            throw new RegistrationException("User with this login " + user.getLogin()
+                    + " already exists");
         }
         return storageDao.add(user);
     }
