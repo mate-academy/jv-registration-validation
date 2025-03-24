@@ -1,8 +1,8 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.InvalidDataException;
 import core.basesyntax.db.Storage;
@@ -18,12 +18,15 @@ class RegistrationServiceImplTest {
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }
+
     public RegistrationServiceImpl getService() {
         return service;
     }
+
     public void setService(RegistrationServiceImpl service) {
         this.service = service;
     }
