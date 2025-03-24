@@ -1,17 +1,32 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import core.basesyntax.InvalidDataException;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
 
-    User user = new User();
-    RegistrationServiceImpl service = new RegistrationServiceImpl();
+    private User user = new User();
+    private RegistrationServiceImpl service = new RegistrationServiceImpl();
+
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public RegistrationServiceImpl getService() {
+        return service;
+    }
+    public void setService(RegistrationServiceImpl service) {
+        this.service = service;
+    }
 
     @BeforeEach
     void prepareUser() {
@@ -22,7 +37,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-        // Login section
     void register_login5Characters_NotOK() {
         user.setLogin("12345");
         assertThrows(InvalidDataException.class, () -> service.register(user));
@@ -64,7 +78,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-        // Password section
     void register_password5Characters_NotOK() {
         user.setPassword("12345");
         assertThrows(InvalidDataException.class, () -> service.register(user));
@@ -106,7 +119,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-        // Age Section
     void register_ageNull_NotOK() {
         user.setAge(null);
         assertThrows(InvalidDataException.class, () -> service.register(user));
@@ -186,7 +198,6 @@ class RegistrationServiceImplTest {
     void register_returnedCorrectUser_OK() {
         User expected = user;
         User actual = service.register(user);
-
         assertEquals(expected, actual);
     }
 
