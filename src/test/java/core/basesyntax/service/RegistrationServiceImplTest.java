@@ -54,7 +54,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullPasswor_notOk() {
+    void register_nullPassword_notOk() {
         User user = new User();
         user.setLogin("valisUser");
         user.setPassword(null);
@@ -75,12 +75,40 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortPassword_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("pass");
-        user.setAge(20);
+        User firstUser = new User();
+        firstUser.setLogin("validUser");
+        firstUser.setPassword("");
+        firstUser.setAge(20);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        User secondUser = new User();
+        secondUser.setLogin("validUser2");
+        secondUser.setPassword("abc");
+        secondUser.setAge(20);
+
+        User thirdUser = new User();
+        thirdUser.setLogin("validUser3");
+        thirdUser.setPassword("qwert");
+        thirdUser.setAge(21);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(firstUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
+        assertThrows(RegistrationException.class, () -> registrationService.register(thirdUser));
+    }
+
+    @Test
+    void register_validPassword_ok() {
+        User firstUser = new User();
+        firstUser.setLogin("validUser");
+        firstUser.setPassword("qwerty");
+        firstUser.setAge(20);
+
+        User secondUser = new User();
+        secondUser.setLogin("validUser2");
+        secondUser.setPassword("password");
+        secondUser.setAge(20);
+
+        assertDoesNotThrow(() -> registrationService.register(firstUser));
+        assertDoesNotThrow(() -> registrationService.register(secondUser));
     }
 
     @Test
