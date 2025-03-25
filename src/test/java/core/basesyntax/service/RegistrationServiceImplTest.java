@@ -210,4 +210,5 @@ class RegistrationServiceImplTest {
         assertEquals(loginLengthExpected,
                 registrationService.register(testUser).getLogin().length());
     }
+
 }
