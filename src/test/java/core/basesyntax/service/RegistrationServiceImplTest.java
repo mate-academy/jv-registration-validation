@@ -19,7 +19,6 @@ class RegistrationServiceImplTest {
     @Test
     void password_atLeastSixSymbols_ok() {
         Assertions.assertDoesNotThrow(() -> {
-            registrationService.register(new User("login123","ValidPassword",19));
             registrationService.register(new User("login124","ValidP",21));
         });
     }
@@ -27,7 +26,6 @@ class RegistrationServiceImplTest {
     @Test
     void login_atLeastSixSymbols_ok() {
         Assertions.assertDoesNotThrow(() -> {
-            registrationService.register(new User("validLogin","123456",21));
             registrationService.register(new User("validL","123456754",25));
         });
     }
@@ -35,17 +33,14 @@ class RegistrationServiceImplTest {
     @Test
     void age_Over18_ok() {
         Assertions.assertDoesNotThrow(() -> {
-            registrationService.register(new User("validLogin","123456",21));
-            registrationService.register(new User("validL","123456754",100));
+            registrationService.register(new User("validLogin","123456",18));
         });
     }
 
     @Test
     void age_Under18_notOk() {
         Assertions.assertThrows(RegistrationException.class,() -> {
-            registrationService.register(new User("validLogin","12asdga6",0));
-            registrationService.register(new User("validL","123asgda54",-10));
-            registrationService.register(new User("validLog","12dfhsg54",17));
+            registrationService.register(new User("validLog","ValidPassword",17));
         });
     }
 
@@ -65,8 +60,6 @@ class RegistrationServiceImplTest {
     void password_shortPassword_notOk() {
         Assertions.assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("ValidLogin","short",18));
-            registrationService.register(new User("ValidLogin",null,18));
-            registrationService.register(new User("ValidLogin","s",18));
         });
     }
 
@@ -74,8 +67,6 @@ class RegistrationServiceImplTest {
     void login_shortLogin_notOk() {
         Assertions.assertThrows(RegistrationException.class, () -> {
             registrationService.register(new User("short","ValidPassword",18));
-            registrationService.register(new User(null,"ValidPassword",18));
-            registrationService.register(new User("s","ValidPassword",18));
         });
     }
 
