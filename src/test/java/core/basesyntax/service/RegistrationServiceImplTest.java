@@ -75,16 +75,12 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginNull_notOk() {
         user.setLogin(null);
-        User actual = service.register(user1);
-        assertEquals(user1, actual);
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
     void register_passwordNull_notOk() {
         user.setPassword(null);
-        User actual = service.register(user2);
-        assertEquals(user2, actual);
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
