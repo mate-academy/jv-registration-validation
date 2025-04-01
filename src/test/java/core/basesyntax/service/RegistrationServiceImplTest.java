@@ -3,6 +3,8 @@ package core.basesyntax.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exceptions.RegistrationFailedException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,10 +12,12 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private RegistrationService registrationService;
+    private StorageDao storageDao;
 
     @BeforeEach
     void setUp() {
-        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl(storageDao);
     }
 
     @Test
@@ -35,9 +39,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userPassword_notOk() {
+    void register_edgeUserPassword_notOk() {
         assertThrows(RegistrationFailedException.class, () -> registrationService
-                .register(new User("JohnDoe1995", "gdf3", 25)));
+                .register(new User("JohnDoe1995", "gdf23", 25)));
     }
 
     @Test
@@ -47,34 +51,50 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userLogin_notOk() {
+    void register_edgeUserLogin_notOk() {
         assertThrows(RegistrationFailedException.class, () -> registrationService
-                .register(new User("john", "john5405", 25)));
+                .register(new User("john1", "john5405", 25)));
     }
 
     @Test
     void register_userLoginDuplicate_notOk() {
-        registrationService.register(new User("JaneDoe24", "john5405", 25));
+        registrationService.register(new User("JohnDoe1995", "john5405", 25));
         assertThrows(RegistrationFailedException.class, () -> registrationService
-                .register(new User("JaneDoe24", "john5405", 25)));
+                .register(new User("JohnDoe1995", "john5405", 25)));
+    }
+
+    @Test
+    void register_userEdge_oK() {
+        User user = new User("John19", "john19", 25);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
     void register_user_oK() {
-        User actual = registrationService
-                .register(new User("JohnDoe1995", "john5405", 25));
-        User expected = new User("JohnDoe1995", "john5405", 25);
-        assertEquals(expected, actual);
+        User user = new User("John19Johnny", "john19re3532", 75);
+        registrationService.register(user);
+        assertEquals(user, storageDao.get(user.getLogin()));
     }
 
     @Test
     void register_multipleUsers_oK() {
-        registrationService.register(new User("TestLogin1", "testPassword1", 21));
-        registrationService.register(new User("TestLogin2", "testPassword1", 75));
-        registrationService.register(new User("TestLogin3", "testPassword1", 18));
-        registrationService.register(new User("TestLogin4", "testPassword1", 53));
-        User actual = registrationService.register(new User("TestLogin5", "testPassword1", 75));
-        User expected = new User("TestLogin5", "testPassword1", 75);
-        assertEquals(expected, actual);
+        User userOne = new User("TestLogin1", "testPassword1", 21);
+        User userTwo = new User("TestLogin2", "testPassword2", 75);
+        User userThree = new User("TestLogin3", "testPassword3", 18);
+        User userFour = new User("TestLogin4", "testPassword4", 53);
+        User userFive = new User("TestLogin5", "testPassword5", 53);
+
+        registrationService.register(userOne);
+        registrationService.register(userTwo);
+        registrationService.register(userThree);
+        registrationService.register(userFour);
+        registrationService.register(userFive);
+
+        assertEquals(userOne, storageDao.get(userOne.getLogin()));
+        assertEquals(userTwo, storageDao.get(userTwo.getLogin()));
+        assertEquals(userThree, storageDao.get(userThree.getLogin()));
+        assertEquals(userFour, storageDao.get(userFour.getLogin()));
+        assertEquals(userFive, storageDao.get(userFive.getLogin()));
     }
 }
