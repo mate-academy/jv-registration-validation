@@ -10,7 +10,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        if (user.getAge() == null || user.getLogin() == null  || user.getPassword() == null) {
+        if (user.getAge() == null || user.getLogin() == null || user.getPassword() == null) {
             throw new RegistrationFailedException("Null data is not allowed");
         }
         if (user.getLogin().length() < 6) {
