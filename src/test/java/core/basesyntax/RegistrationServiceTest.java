@@ -36,7 +36,7 @@ public class RegistrationServiceTest {
     @Test
     void register_loginLength_notOk() {
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User(null, "123456", 22)));
+                () -> registrationService.register(new User("", "123456", 22)));
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("nnn", "123456", 22)));
         assertThrows(RegistrationException.class,
@@ -62,7 +62,7 @@ public class RegistrationServiceTest {
     @Test
     void register_Age_notOk() {
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth", "123456", null)));
+                () -> registrationService.register(new User("nnngth", "123456", 3)));
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("nnngth1", "123456", 17)));
         assertThrows(RegistrationException.class,
@@ -80,10 +80,29 @@ public class RegistrationServiceTest {
     @Test
     void register_passwordLength_notOk() {
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth", "null", 18)));
+                () -> registrationService.register(new User("nnngth", "", 18)));
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("nnngth1", "123", 22)));
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(new User("nnngth2", "12345", 99)));
     }
+
+    @Test
+    void register_passwordNull_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(new User("nnngth", null, 18)));
+    }
+
+    @Test
+    void register_AgedNull_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(new User("nnngth", "1234567", null)));
+    }
+
+    @Test
+    void register_loginNull_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(new User(null, "1234567890", 18)));
+    }
+
 }
