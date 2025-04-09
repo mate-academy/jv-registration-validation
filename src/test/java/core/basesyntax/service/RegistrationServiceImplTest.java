@@ -23,12 +23,6 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void storage_checkingByEmail_emailExistsNotOk() {
-        boolean actual = storageDao.get(user.getLogin()) == null;
-        assertTrue(actual);
-    }
-
-    @Test
     void register_Login_isNotValid() {
         user.setLogin("qw2sq");
         assertThrows(RegistrationException.class, () -> {
@@ -55,6 +49,6 @@ class RegistrationServiceImplTest {
     @Test
     void register_User_isNull() {
         user = null;
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }

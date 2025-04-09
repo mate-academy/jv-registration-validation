@@ -17,7 +17,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         boolean ageIsValid = false;
 
         if (user == null) {
-            throw new NullPointerException("User is null");
+            throw new RegistrationException("User is null");
         }
 
         if (user.getLogin() != null && user.getLogin().length() >= MIN_SYMBOLS) {
