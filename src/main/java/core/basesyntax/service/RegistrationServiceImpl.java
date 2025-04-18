@@ -14,8 +14,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User must not be null");
         }
 
-        if (user.getLogin() == null || user.getLogin().trim().isEmpty()) {
-            throw new RegistrationException("Login must not be null or empty");
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login must not be null");
+        }
+
+        if (user.getLogin().trim().isEmpty()) {
+            throw new RegistrationException("Login must not be empty");
         }
 
         if (user.getLogin().length() < 6) {
@@ -26,8 +30,12 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Login already exists");
         }
 
-        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
-            throw new RegistrationException("Password must not be null or empty");
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password must not be null");
+        }
+
+        if (user.getPassword().trim().isEmpty()) {
+            throw new RegistrationException("Password must not be empty");
         }
 
         if (user.getPassword().length() < 6) {
