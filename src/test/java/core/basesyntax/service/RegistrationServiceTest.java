@@ -2,12 +2,11 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import core.basesyntax.service.RegistrationService;
-import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,88 +20,88 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_valid_ok() {
-        assertDoesNotThrow(() -> registrationService.register(new User("newLogin", "123456", 18)));
+    void register_validUser_ok() {
+        User validUser = new User("validLogin", "validPassword", 18);
+        assertDoesNotThrow(() -> registrationService.register(validUser));
+        assertEquals(1, Storage.people.size());
+        assertEquals(validUser, Storage.people.get(0));
     }
 
     @Test
-    void register_loginExist_notOk() {
-        User user = new User("newLogin", "123456", 22);
-        Storage.people.add(user);
+    void register_existingLogin_notOk() {
+        User existingUser = new User("existingLogin", "password123", 22);
+        Storage.people.add(existingUser);
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("newLogin", "123456", 22)));
+                () -> registrationService.register(new User("existingLogin", "newPassword", 22)));
     }
 
     @Test
-    void register_loginLength_notOk() {
+    void register_loginTooShort_notOk() {
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("", "123456", 22)));
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnn", "123456", 22)));
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("njkil", "123456", 22)));
+                () -> registrationService.register(new User("short", "password123", 22)));
     }
 
     @Test
-    void register_LoginLength_ok() {
-        assertDoesNotThrow(() -> registrationService.register(new User("nnngth", "123456", 22)));
-        assertDoesNotThrow(() -> registrationService.register(
-                new User("nnngthnjsad", "123456", 22)));
-        assertDoesNotThrow(() -> registrationService.register(
-                new User("nnngthdxscCSAFSAfa", "123456", 22)));
+    void register_loginMinLength_ok() {
+        assertDoesNotThrow(() -> registrationService.register(new User("length6", "password123", 22)));
     }
 
     @Test
-    void register_Age_ok() {
-        assertDoesNotThrow(() -> registrationService.register(new User("nnngth", "123456", 18)));
-        assertDoesNotThrow(() -> registrationService.register(new User("nnngth1", "123456", 25)));
-        assertDoesNotThrow(() -> registrationService.register(new User("nnngth2", "123456", 100)));
+    void register_nullLogin_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(new User(null, "password123", 22)));
     }
 
     @Test
-    void register_Age_notOk() {
+    void register_nullPassword_notOk() {
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth", "123456", 3)));
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth1", "123456", 17)));
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth2", "123456", -1)));
+                () -> registrationService.register(new User("validLogin", null, 22)));
     }
 
     @Test
-    void register_passwordLength_ok() {
-        assertDoesNotThrow(() -> registrationService.register(new User("nnngth", "123456", 18)));
-        assertDoesNotThrow(() -> registrationService.register(new User("nnngth1", "12345678", 22)));
-        assertDoesNotThrow(() -> registrationService.register(
-                new User("nnngth2", "123456sfcasVdaGDSgaGsdvg", 99)));
+    void register_passwordTooShort_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(new User("validLogin", "short", 22)));
     }
 
     @Test
-    void register_passwordLength_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth", "", 18)));
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth1", "123", 22)));
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth2", "12345", 99)));
+    void register_passwordMinLength_ok() {
+        assertDoesNotThrow(() -> registrationService.register(new User("validLogin", "length6", 22)));
     }
 
     @Test
-    void register_passwordNull_notOk() {
+    void register_nullAge_notOk() {
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth", null, 18)));
+                () -> registrationService.register(new User("validLogin", "password123", null)));
     }
 
     @Test
-    void register_AgedNull_notOk() {
+    void register_ageUnder18_notOk() {
         assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User("nnngth", "1234567", null)));
+                () -> registrationService.register(new User("validLogin", "password123", 17)));
     }
 
     @Test
-    void register_loginNull_notOk() {
-        assertThrows(RegistrationException.class,
-                () -> registrationService.register(new User(null, "1234567890", 18)));
+    void register_ageMin_ok() {
+        assertDoesNotThrow(() -> registrationService.register(new User("validLogin", "password123", 18)));
     }
 
+    @Test
+    void register_ageOver18_ok() {
+        assertDoesNotThrow(() -> registrationService.register(new User("validLogin", "password123", 19)));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(new User("validLogin", "password123", -5)));
+    }
+
+    @Test
+    void register_userAddedToStorage_ok() {
+        User user = new User("newUser", "newPassword", 25);
+        assertDoesNotThrow(() -> registrationService.register(user));
+        assertEquals(1, Storage.people.size());
+        assertEquals(user, Storage.people.get(0));
+    }
 }
