@@ -10,16 +10,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         User tmp = storageDao.get(user.getLogin());
-        if (tmp != null) {
-            throw new IllegalArgumentException("The user exist");
-        }
         if (user.getAge() == null || user.getLogin() == null || user.getPassword() == null) {
             throw new NullPointerException();
         }
-        if (user.getAge() >= 18 && user.getLogin().length() >= 6 && user.getPassword().length() >= 6) {
-            storageDao.add(user);
-            return user;
+
+        if (tmp == null) {
+            if (user.getAge() >= 18 && user.getLogin().length() >= 6 && user.getPassword().length() >= 6) {
+                storageDao.add(user);
+                return user;
+            }
+        } else {
+            return new User();
         }
-        return new User();
+        return null;
     }
+
 }

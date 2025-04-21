@@ -4,6 +4,8 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,12 +17,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class HelloWorldTest {
 
-    private final RegistrationServiceImpl registerService = new RegistrationServiceImpl();
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static RegistrationServiceImpl registerService;
+    private static StorageDao storageDao;
+    private User user;
+
+    @BeforeAll
+    static void setUp() {
+        registerService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+    }
+
+    @BeforeEach
+    void connect() {
+        user = new User();
+    }
 
     @Test
     void register_correctUser_ok() {
-        User user = new User();
         user.setLogin("Igor123");
         user.setPassword("123456");
         user.setAge(19);
@@ -33,7 +46,6 @@ public class HelloWorldTest {
 
     @Test
     void register_nullAge_NotOk() {
-        User user = new User();
         user.setLogin("Igor123");
         user.setPassword("123456");
         user.setAge(null);
@@ -43,7 +55,6 @@ public class HelloWorldTest {
 
     @Test
     void register_nullLogin_NotOk() {
-        User user = new User();
         user.setLogin(null);
         user.setPassword("123456");
         user.setAge(19);
@@ -53,7 +64,6 @@ public class HelloWorldTest {
 
     @Test
     void register_nullPassword_NotOk() {
-        User user = new User();
         user.setLogin("Igor123");
         user.setPassword(null);
         user.setAge(19);
@@ -63,7 +73,6 @@ public class HelloWorldTest {
 
     @Test
     void register_sizePassword_notOk() {
-        User user = new User();
         user.setLogin("Igor123");
         user.setPassword("1234");
         user.setAge(19);
@@ -74,7 +83,6 @@ public class HelloWorldTest {
 
     @Test
     void register_sizeLogin_notOk() {
-        User user = new User();
         user.setLogin("Igor");
         user.setPassword("123456");
         user.setAge(19);
@@ -85,7 +93,6 @@ public class HelloWorldTest {
 
     @Test
     void register_sizeAge_notOk() {
-        User user = new User();
         user.setLogin("Igor123");
         user.setPassword("123456");
         user.setAge(14);
@@ -96,14 +103,14 @@ public class HelloWorldTest {
 
     @Test
     void register_duplicateUser_NotOk() {
-        User user = new User();
         user.setLogin("Igor123");
         user.setPassword("123456");
         user.setAge(19);
 
-        registerService.register(user);
+        User actual = registerService.register(user);
+        User expected = registerService.register(user);
 
-        assertThrows(IllegalArgumentException.class, () -> registerService.register(user));
+        assertNotEquals(actual, expected);
     }
 
 }
