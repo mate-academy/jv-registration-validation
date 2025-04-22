@@ -53,7 +53,7 @@ class RegistrationServiceImplTest {
     @DisplayName(" with short login should throw exception")
     @Test
     void register_shortLogin_notOk() {
-        user.setLogin("Olek");
+        user.setLogin("Ole");
         user.setPassword("1234567");
         user.setAge(18);
         RegistrationException ex = assertThrows(RegistrationException.class,
