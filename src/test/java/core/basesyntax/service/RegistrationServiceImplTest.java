@@ -157,6 +157,9 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         user.setAge(18);
 
-        assertThrows(NullPointerException.class, () -> registrationService.register(user));
+        RegistrationException ex = assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+        assertEquals("Password must be at least 6 characters", ex.getMessage());
     }
+
 }
