@@ -50,7 +50,7 @@ class RegistrationServiceImplTest {
         assertEquals(login, registered.getLogin());
     }
 
-    @DisplayName("register() with short login should throw exception")
+    @DisplayName(" with short login should throw exception")
     @Test
     void register_shortLogin_notOk() {
         user.setLogin("Olek");
