@@ -20,7 +20,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User password has less than six characters");
         }
         if (user.getAge() <18) {
-            throw new RegistrationException("the user's age is less than eighteen");
+            throw new RegistrationException("The user's age is less than eighteen");
         }
 
         return null;

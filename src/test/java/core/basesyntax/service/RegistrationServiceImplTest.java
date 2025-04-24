@@ -80,7 +80,7 @@ class RegistrationServiceImplTest {
     void register_userAgeIsLessThanEighteen() {
         // given
         User user = new User();
-        user.setAge(18);
+        user.setAge(17);
 
         // when
         RegistrationException exception = assertThrows(RegistrationException.class,
