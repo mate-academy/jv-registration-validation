@@ -22,6 +22,6 @@ There are a lot of ways to name your test methods. The main point is that they s
 names and be consistent along with other developers in your team. For this task use such convention:
 `<methodUnderTest>_<state>_<expectedBehavior>`; For example, if we are testing the method `register` with a `null`  
 user's age the test method name should be `register_nullAge_notOk`. notOk is because
-the test expects the register method to throw an exception.
+the test expects the register method to throw an exception.і
 
 #### [Try to avoid these common mistakes, while solving task](./checklist.md)
