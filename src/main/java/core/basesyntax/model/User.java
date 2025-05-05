@@ -8,6 +8,12 @@ public class User {
     private String password;
     private Integer age;
 
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     public Long getId() {
         return id;
     }
@@ -45,9 +51,11 @@ public class User {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         User user = (User) o;
         return Objects.equals(login, user.login)
                 && Objects.equals(password, user.password)
