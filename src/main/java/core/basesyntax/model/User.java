@@ -8,8 +8,10 @@ public class User {
     private String password;
     private Integer age;
 
-    public Long getId() {
-        return id;
+    public User(String login, String password, int age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
     }
 
     public void setId(Long id) {
