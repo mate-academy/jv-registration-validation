@@ -5,4 +5,8 @@ package core.basesyntax;
  */
 public class HelloWorldTest {
 
+    public String getHellowWorld() {
+        return "Hellow world";
+    }
+
 }
