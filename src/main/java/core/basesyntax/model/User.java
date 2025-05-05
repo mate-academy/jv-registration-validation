@@ -8,6 +8,12 @@ public class User {
     private String password;
     private Integer age;
 
+    public User(String login, String password, Integer age) {
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
+
     public Long getId() {
         return id;
     }
@@ -57,5 +63,14 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(login, password, age);
+    }
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "login='" + login + '\''
+                + ", password='" + password + '\''
+                + ", age=" + age
+                + '}';
     }
 }
