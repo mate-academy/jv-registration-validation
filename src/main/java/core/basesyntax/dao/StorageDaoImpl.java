@@ -2,6 +2,7 @@ package core.basesyntax.dao;
 
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
+import java.util.List;
 
 public class StorageDaoImpl implements StorageDao {
     private static Long index = 0L;
@@ -21,5 +22,10 @@ public class StorageDaoImpl implements StorageDao {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return Storage.people;
     }
 }
