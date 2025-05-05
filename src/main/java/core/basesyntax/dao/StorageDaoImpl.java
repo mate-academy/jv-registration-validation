@@ -8,6 +8,7 @@ public class StorageDaoImpl implements StorageDao {
 
     @Override
     public User add(User user) {
+
         user.setId(++index);
         Storage.people.add(user);
         return user;
