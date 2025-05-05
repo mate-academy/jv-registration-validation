@@ -9,6 +9,15 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User register(User user) {
-        return null;
+        if (user.getAge() < 18) {
+            throw new RuntimeException("Invalid age. The user must be at least 18 years old");
+        }
+        if (user.getPassword().length() < 6) {
+            throw new RuntimeException("Password length must be at least 6 characters");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RuntimeException("Login is already used. Create new login");
+        }
+        return storageDao.add(user);
     }
 }
