@@ -16,6 +16,14 @@ public class User {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id + ", login='" + login + '\''
+                + ", password='" + password + '\''
+                + ", age=" + age + '}';
+    }
+
     public String getLogin() {
         return login;
     }
