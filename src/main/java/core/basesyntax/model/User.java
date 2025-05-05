@@ -8,6 +8,9 @@ public class User {
     private String password;
     private Integer age;
 
+    public User() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -58,4 +61,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(login, password, age);
     }
+
 }
