@@ -1,4 +1,4 @@
-package core.basesyntax.service;
+package core.basesyntax;
 
 import core.basesyntax.model.User;
 
