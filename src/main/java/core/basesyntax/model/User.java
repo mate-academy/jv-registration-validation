@@ -1,12 +1,21 @@
 package core.basesyntax.model;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class User {
+    private static AtomicLong idCounter = new AtomicLong(1);
     private Long id;
     private String login;
     private String password;
     private Integer age;
+
+    public User(String login, String password, Integer age) {
+        this.id = idCounter.get();
+        this.login = login;
+        this.password = password;
+        this.age = age;
+    }
 
     public Long getId() {
         return id;
