@@ -1,10 +1,14 @@
 package core.basesyntax.service;
 
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_AGE;
+import static core.basesyntax.service.RegistrationServiceImpl.MIN_LENGTH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +22,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RegistrationException.class, () -> service.register(null));
+        String expectedMessage = "User can't be null";
+        RegistrationException exception = assertThrows(RegistrationException.class, 
+                () -> service.register(null));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -26,7 +33,10 @@ class RegistrationServiceImplTest {
         User nullLoginUser = new User();
         nullLoginUser.setPassword("testpassword");
         nullLoginUser.setAge(19);
-        assertThrows(RegistrationException.class, () -> service.register(nullLoginUser));
+        String expectedMessage = "User's login can't be empty";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(nullLoginUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -34,7 +44,10 @@ class RegistrationServiceImplTest {
         User nullPasswordUser = new User();
         nullPasswordUser.setLogin("dianazotsenko");
         nullPasswordUser.setAge(19);
-        assertThrows(RegistrationException.class, () -> service.register(nullPasswordUser));
+        String expectedMessage = "User's password can't be empty";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(nullPasswordUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -42,7 +55,10 @@ class RegistrationServiceImplTest {
         User nullAgeUser = new User();
         nullAgeUser.setLogin("bobforester");
         nullAgeUser.setPassword("testpassword");
-        assertThrows(RegistrationException.class, () -> service.register(nullAgeUser));
+        String expectedMessage = "User's age can't be empty";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(nullAgeUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -51,7 +67,10 @@ class RegistrationServiceImplTest {
         emptyLoginUser.setLogin("");
         emptyLoginUser.setPassword("testpassword");
         emptyLoginUser.setAge(19);
-        assertThrows(RegistrationException.class, () -> service.register(emptyLoginUser));
+        String expectedMessage = "Login must be at least " + MIN_LENGTH + " characters long.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(emptyLoginUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -60,7 +79,10 @@ class RegistrationServiceImplTest {
         threeCharacterLoginUser.setLogin("dia");
         threeCharacterLoginUser.setPassword("testpassword");
         threeCharacterLoginUser.setAge(19);
-        assertThrows(RegistrationException.class, () -> service.register(threeCharacterLoginUser));
+        String expectedMessage = "Login must be at least " + MIN_LENGTH + " characters long.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(threeCharacterLoginUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -69,7 +91,10 @@ class RegistrationServiceImplTest {
         fivecharacterLoginUser.setLogin("diana");
         fivecharacterLoginUser.setPassword("testpassword");
         fivecharacterLoginUser.setAge(19);
-        assertThrows(RegistrationException.class, () -> service.register(fivecharacterLoginUser));
+        String expectedMessage = "Login must be at least " + MIN_LENGTH + " characters long.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(fivecharacterLoginUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -91,21 +116,15 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginAlreadyExists_notOk() {
-        User loginAlreadyExistsUser = new User();
-        loginAlreadyExistsUser.setLogin("dianazot");
-        loginAlreadyExistsUser.setPassword("testpassword");
-        loginAlreadyExistsUser.setAge(19);
-        assertThrows(RegistrationException.class, () -> service.register(loginAlreadyExistsUser));
-    }
-
-    @Test
     void register_emptyPassword_notOk() {
         User emptyPasswordUser = new User();
         emptyPasswordUser.setLogin("dianazotsenko");
         emptyPasswordUser.setPassword("");
         emptyPasswordUser.setAge(19);
-        assertThrows(RegistrationException.class, () -> service.register(emptyPasswordUser));
+        String expectedMessage = "Password must be at least " + MIN_LENGTH + " characters long.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(emptyPasswordUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -114,8 +133,10 @@ class RegistrationServiceImplTest {
         threeCharacterPasswordUser.setLogin("dianazotsenko");
         threeCharacterPasswordUser.setPassword("tes");
         threeCharacterPasswordUser.setAge(19);
-        assertThrows(RegistrationException.class,
+        String expectedMessage = "Password must be at least " + MIN_LENGTH + " characters long.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
                 () -> service.register(threeCharacterPasswordUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -124,8 +145,10 @@ class RegistrationServiceImplTest {
         fivecharacterPasswordUser.setLogin("dianazotsenko");
         fivecharacterPasswordUser.setPassword("testp");
         fivecharacterPasswordUser.setAge(19);
-        assertThrows(RegistrationException.class,
+        String expectedMessage = "Password must be at least " + MIN_LENGTH + " characters long.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
                 () -> service.register(fivecharacterPasswordUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -152,7 +175,10 @@ class RegistrationServiceImplTest {
         negativeAgeUser.setLogin("alicewhite");
         negativeAgeUser.setPassword("testpassword");
         negativeAgeUser.setAge(-5);
-        assertThrows(RegistrationException.class, () -> service.register(negativeAgeUser));
+        String expectedMessage = "User's age must be at least" + MIN_AGE + " years.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(negativeAgeUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -161,7 +187,10 @@ class RegistrationServiceImplTest {
         zeroAgeUser.setLogin("alicewhite");
         zeroAgeUser.setPassword("testpassword");
         zeroAgeUser.setAge(0);
-        assertThrows(RegistrationException.class, () -> service.register(zeroAgeUser));
+        String expectedMessage = "User's age must be at least" + MIN_AGE + " years.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(zeroAgeUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -170,7 +199,10 @@ class RegistrationServiceImplTest {
         underAgeUser.setLogin("alicewhite");
         underAgeUser.setPassword("testpassword");
         underAgeUser.setAge(10);
-        assertThrows(RegistrationException.class, () -> service.register(underAgeUser));
+        String expectedMessage = "User's age must be at least" + MIN_AGE + " years.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(underAgeUser));
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -189,5 +221,28 @@ class RegistrationServiceImplTest {
         overAgeUser.setPassword("testpassword");
         overAgeUser.setAge(30);
         assertEquals(overAgeUser, service.register(overAgeUser));
+    }
+
+    @Test
+    void register_loginAlreadyExists_notOk() {
+        User firstUser = new User();
+        firstUser.setLogin("dianazotsenko");
+        firstUser.setPassword("testpassword");
+        firstUser.setAge(19);
+        User sameSecondUser = new User();
+        sameSecondUser.setLogin("dianazotsenko");
+        sameSecondUser.setPassword("testpassword");
+        sameSecondUser.setAge(19);
+        assertEquals(firstUser, service.register(firstUser));
+        String expectedMessage = "User with login '" + sameSecondUser.getLogin()
+                + "' already exists.";
+        RegistrationException exception = assertThrows(RegistrationException.class,
+                () -> service.register(sameSecondUser));
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
