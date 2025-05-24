@@ -47,50 +47,49 @@ class RegistrationServiceImplTest {
 
     @Test
     void registerNullUser_NotOk() {
-        assertThrows(CustomException.class, () -> {
-            service.register(null);
-        });
+        CustomException e = assertThrows(CustomException.class, () -> service.register(null));
+        assertEquals("User must not be null", e.getMessage());
     }
 
     @Test
     void registerIncorrectLoginUser_NotOk() {
-        assertThrows(CustomException.class, () -> {
-            service.register(userIncorrectLogin);
-        });
+        CustomException e = assertThrows(CustomException.class,
+                () -> service.register(userIncorrectLogin));
+        assertEquals("Login must be longer than 5 characters", e.getMessage());
     }
 
     @Test
     void registerIncorrectPasswordUser_NotOk() {
-        assertThrows(CustomException.class, () -> {
-            service.register(userIncorrectPassword);
-        });
+        CustomException e = assertThrows(CustomException.class,
+                () -> service.register(userIncorrectPassword));
+        assertEquals("Password must be longer than 5 characters", e.getMessage());
     }
 
     @Test
     void registerIncorrectAgedUser_NotOk() {
-        assertThrows(CustomException.class, () -> {
-            service.register(userIncorrectAge);
-        });
+        CustomException e = assertThrows(CustomException.class,
+                () -> service.register(userIncorrectAge));
+        assertEquals("User must be older than 17", e.getMessage());
     }
 
     @Test
     void registerNullLoginUser_NotOk() {
-        assertThrows(CustomException.class, () -> {
-            service.register(userNullLogin);
-        });
+        CustomException e = assertThrows(CustomException.class,
+                () -> service.register(userNullLogin));
+        assertEquals("Login must not be null", e.getMessage());
     }
 
     @Test
     void registerNullPasswordUser_NotOk() {
-        assertThrows(CustomException.class, () -> {
-            service.register(userNullPassword);
-        });
+        CustomException e = assertThrows(CustomException.class,
+                () -> service.register(userNullPassword));
+        assertEquals("Password must not be null", e.getMessage());
     }
 
     @Test
     void registerNullAgedUser_NotOk() {
-        assertThrows(CustomException.class, () -> {
-            service.register(userNullAge);
-        });
+        CustomException e = assertThrows(CustomException.class,
+                () -> service.register(userNullAge));
+        assertEquals("Age must not be null", e.getMessage());
     }
 }
