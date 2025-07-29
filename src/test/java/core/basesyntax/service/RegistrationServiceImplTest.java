@@ -31,7 +31,9 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(RegistrationException.class, () -> registrationService.register(null));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(null));
+        assertEquals("User cannot be null", exception.getMessage());
     }
 
     @Test
@@ -40,25 +42,31 @@ class RegistrationServiceImplTest {
         user.setLogin("log");
         user.setPassword("validPass");
         user.setAge(22);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertEquals("user's login is at least 6 characters", exception.getMessage());
     }
 
     @Test
     void register_shortPassword_notOk() {
         User user = new User();
-        user.setLogin("validLog");
+        user.setLogin("validLogin2");
         user.setPassword("123");
         user.setAge(23);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertEquals("user's password is at least 6 characters", exception.getMessage());
     }
 
     @Test
     void register_underageUser_notOk() {
         User user = new User();
-        user.setLogin("validLogin");
+        user.setLogin("validLogin4");
         user.setPassword("valPassword");
-        user.setAge(23);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setAge(17);
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertEquals("user's age is at least 18 years old", exception.getMessage());
     }
 
     @Test
@@ -74,7 +82,9 @@ class RegistrationServiceImplTest {
         user2.setAge(22);
         registrationService.register(user2);
 
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertEquals("Login is already taken", exception.getMessage());
     }
 
     @Test
@@ -83,7 +93,9 @@ class RegistrationServiceImplTest {
         user.setLogin(null);
         user.setPassword("valPassword");
         user.setAge(23);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertEquals("Login cannot be empty", exception.getMessage());
     }
 
     @Test
@@ -92,7 +104,9 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword(null);
         user.setAge(23);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertEquals("Password cannot be empty", exception.getMessage());
     }
 
     @Test
@@ -101,6 +115,8 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("valPassword");
         user.setAge(null);
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        RegistrationException exception = assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+        assertEquals("Age cannot be empty", exception.getMessage());
     }
 }
