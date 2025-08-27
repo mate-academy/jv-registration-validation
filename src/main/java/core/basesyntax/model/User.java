@@ -58,4 +58,40 @@ public class User {
     public int hashCode() {
         return Objects.hash(login, password, age);
     }
+
+    public static class UserBuilder {
+        private Long id;
+        private String login;
+        private String password;
+        private Integer age;
+
+        public UserBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserBuilder setLogin(String login) {
+            this.login = login;
+            return this;
+        }
+
+        public UserBuilder setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public UserBuilder setAge(Integer age) {
+            this.age = age;
+            return this;
+        }
+
+        public User build() {
+            User user = new User();
+            user.setId(this.id);
+            user.setLogin(this.login);
+            user.setPassword(this.password);
+            user.setAge(this.age);
+            return user;
+        }
+    }
 }
