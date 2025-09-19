@@ -17,6 +17,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        people.clear();
         this.registrationService = new RegistrationServiceImpl();
         usersList = new ArrayList<>();
         User max = new User(1L, "max123", "1234567",20);
@@ -31,6 +32,8 @@ class RegistrationServiceImplTest {
         User lewis = new User(10L, "lewis", "123",15);
         User george = new User(11L, null, "1234567",20);
         User kimmy = new User(12L, "kimmy@gmail.com", null,20);
+        User alexandra = new User(13L, "alexandra@gmail.com", "1234567",-20);
+        User mario = new User(14L, "mario@gmail.com", "1234567",null);
         usersList.add(max); //0
         usersList.add(alex); //1
         usersList.add(bella); //2
@@ -43,123 +46,110 @@ class RegistrationServiceImplTest {
         usersList.add(lewis); // 9
         usersList.add(george); //10
         usersList.add(kimmy); //11
-
+        usersList.add(alexandra); //12
+        usersList.add(mario); //13
     }
 
     @Test
-    void AllCriteriesAreFailed_NotOk() {
-        try {
-            registrationService.register(usersList.get(9));
-        } catch (LoginShorterThanSixException e) {
-            return;
-        }
-        fail("Login should be longer than 6");
+    void register_allCriteriesAreFailed_notOk() {
+        assertThrows(LoginShorterThanSixException.class,
+                () -> registrationService.register(usersList.get(9)));
     }
 
     @Test
-    void UserEqualsNull_NotOk() {
-        try {
-            registrationService.register(null); //user is null
-        } catch (NullPointerException e) {
-            return;
-        }
-        fail("User can't be null");
+    void register_userEqualsNull_notOk() {
+        assertThrows(UserIsNullException.class,
+                () -> registrationService.register(null));
     }
 
     @Test
-    void UserAlreadyExists_NotOk() {
-        try {
-            registrationService.register(usersList.get(0));
-            registrationService.register(usersList.get(0)); // user already exists
-        } catch (UserAlreadyExistsException e) {
-            return;
-        }
-        fail("User already exists");
+    void register_userAlreadyExists_notOk() {
+        people.add(usersList.get(0));
+        assertThrows(UserAlreadyExistsException.class,
+                () -> registrationService.register(usersList.get(0)));
     }
 
     @Test
-    void LoginShorterThanSix_NotOk() {
-        try {
-            registrationService.register(usersList.get(2)); // bella; login is shorter than 6
-        } catch (LoginShorterThanSixException e) {
-            return;
-        }
-        fail("Login must be longer or equals to 6");
+    void register_loginShorterThanSix_notOk() {
+        assertThrows(LoginShorterThanSixException.class,
+                () -> registrationService.register(usersList.get(2)));
     }
 
     @Test
-    void LoginIsSix_Ok() {
-        User current = registrationService.register(usersList.get(0));
-        assertEquals(people.get(2), current); //check if the user was registered
+    void register_loginIsSix_ok() {
+        User testUser = usersList.get(0);
+        User returned = registrationService.register(testUser);
+        assertTrue(people.contains(returned));
     }
 
     @Test
-    void LoginLongerThanSix_Ok() {
-        User current = registrationService.register(usersList.get(3)); // carloss; login.length equals 17
-        assertEquals(people.get(0), current);
+    void register_loginLongerThanSix_ok() {
+        User testUser = usersList.get(3);
+        User returned = registrationService.register(testUser);
+        assertTrue(people.contains(returned));
     }
 
     @Test
-    void PasswordShorterThanSix_NotOk() {
-        try {
-            registrationService.register(usersList.get(4));// kelly; password is 4
-        } catch (PasswordShorterThanSixException e) {
-            return;
-        }
-       fail("Password must be longer or equals to 6");
+    void register_passwordShorterThanSix_notOk() {
+        assertThrows(PasswordShorterThanSixException.class,
+                () -> registrationService.register(usersList.get(4)));
     }
 
     @Test
-    void PasswordIsSix_Ok() {
-        User current = registrationService.register(usersList.get(5));
-        assertEquals(people.get(3), current);
+    void register_passwordIsSix_ok() {
+        User testUser = usersList.get(5);
+        User returned = registrationService.register(testUser);
+        assertTrue(people.contains(returned));
     }
 
     @Test
-    void PasswordLongerThanSix_Ok() {
-        User current = registrationService.register(usersList.get(6));
-        assertEquals(people.get(4), current);
+    void register_passwordLongerThanSix_ok() {
+        User testUser = usersList.get(6);
+        User returned = registrationService.register(testUser);
+        assertTrue(people.contains(returned));
     }
 
     @Test
-    void UserYoungerThanEighteen_NotOk() {
-        try {
-            registrationService.register(usersList.get(1));
-        } catch (UserYoungerThanEighteenException e) {
-            return;
-        }
-        fail("User must be 18 or older");
+    void register_userYoungerThanEighteen_notOk() {
+        assertThrows(UserYoungerThanEighteenException.class,
+                () -> registrationService.register(usersList.get(1)));
     }
 
     @Test
-    void UserIsEighteen_Ok() {
-        User current = registrationService.register(usersList.get(8)); //charles is 18
-        assertEquals(people.get(5), current);
+    void register_userIsEighteen_ok() {
+        User testUser = usersList.get(8);
+        User returned = registrationService.register(testUser);
+        assertTrue(people.contains(returned));
     }
 
     @Test
-    void UserOlderThanEighteen_Ok() {
-        User current = registrationService.register(usersList.get(7));
-        assertEquals(people.get(1), current);
+    void register_userOlderThanEighteen_ok() {
+        User testUser = usersList.get(7);
+        User returned = registrationService.register(testUser);
+        assertTrue(people.contains(returned));
     }
 
     @Test
-    void LoginIsNull_NotOk() {
-        try {
-            registrationService.register(usersList.get(10));
-        } catch(LoginIsNullException e) {
-            return;
-        }
-        fail("Login can't be null");
+    void register_loginIsNull_notOk() {
+        assertThrows(LoginIsNullException.class,
+                () -> registrationService.register(usersList.get(10)));
     }
 
     @Test
-    void PasswordsNull_NotOk() {
-        try {
-            registrationService.register(usersList.get(11));
-        } catch(PasswordIsNullException e) {
-            return;
-        }
-        fail("Password can't be null");
+    void PasswordIsNull_notOk() {
+        assertThrows(PasswordIsNullException.class,
+                () -> registrationService.register(usersList.get(11)));
+    }
+
+    @Test
+    void register_ageIsNull_notOk() {
+        assertThrows(AgeIsNullException.class,
+                () -> registrationService.register(usersList.get(13)));
+    }
+
+    @Test
+    void register_ageIsMinus_notOk() {
+        assertThrows(UserYoungerThanEighteenException.class,
+                () -> registrationService.register(usersList.get(12)));
     }
 }
