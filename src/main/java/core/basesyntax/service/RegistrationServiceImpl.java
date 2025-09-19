@@ -33,13 +33,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserAlreadyExistsException("User with login '" + user.getLogin() + "' already exists");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new LoginShorterThanSixException("Login should be longer than 6" + user.getLogin().length());
+            throw new LoginShorterThanSixException("Login must be at least " + MIN_LOGIN_LENGTH
+                    + " characters. Current length: " + user.getLogin().length());
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new PasswordShorterThanSixException("Password should be longer than 6" + user.getPassword().length());
+            throw new PasswordShorterThanSixException("Password must be at least " + MIN_PASSWORD_LENGTH
+                    + " characters. Current length: " + user.getPassword().length());
         }
         if (user.getAge() < MIN_AGE) {
-            throw new UserYoungerThanEighteenException("User should be alder than 18" + user.getAge());
+            throw new UserYoungerThanEighteenException("User must be at least " + MIN_AGE
+                    + " years old. Current age: " + user.getAge());
         }
         return storageDao.add(user);
     }

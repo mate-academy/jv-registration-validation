@@ -34,6 +34,9 @@ class RegistrationServiceImplTest {
         User kimmy = new User(12L, "kimmy@gmail.com", null,20);
         User alexandra = new User(13L, "alexandra@gmail.com", "1234567",-20);
         User mario = new User(14L, "mario@gmail.com", "1234567",null);
+        User alonso = new User(15L, "alonso@gmail.com", "",22);
+        User fernando = new User(16L, "fernando@gmail.com", "12345",22);
+        User antonelli = new User(17L, "", "1234567",22);
         usersList.add(max); //0
         usersList.add(alex); //1
         usersList.add(bella); //2
@@ -48,6 +51,27 @@ class RegistrationServiceImplTest {
         usersList.add(kimmy); //11
         usersList.add(alexandra); //12
         usersList.add(mario); //13
+        usersList.add(alonso); // 14
+        usersList.add(fernando); //15
+        usersList.add(antonelli);//16
+    }
+
+    @Test
+    void register_passwordIsEmpty_notOk() {
+        assertThrows(PasswordShorterThanSixException.class,
+                () -> registrationService.register(usersList.get(14)));
+    }
+
+    @Test
+    void register_passwordIsFive_notOk() {
+        assertThrows(PasswordShorterThanSixException.class,
+                () -> registrationService.register(usersList.get(15)));
+    }
+
+    @Test
+    void register_loginIsEmpty_notOk() {
+        assertThrows(LoginShorterThanSixException.class,
+                () -> registrationService.register(usersList.get(16)));
     }
 
     @Test
@@ -80,6 +104,7 @@ class RegistrationServiceImplTest {
         User testUser = usersList.get(0);
         User returned = registrationService.register(testUser);
         assertTrue(people.contains(returned));
+        assertEquals(people.get(0), testUser);
     }
 
     @Test
@@ -87,6 +112,7 @@ class RegistrationServiceImplTest {
         User testUser = usersList.get(3);
         User returned = registrationService.register(testUser);
         assertTrue(people.contains(returned));
+        assertEquals(people.get(0), testUser);
     }
 
     @Test
@@ -100,6 +126,7 @@ class RegistrationServiceImplTest {
         User testUser = usersList.get(5);
         User returned = registrationService.register(testUser);
         assertTrue(people.contains(returned));
+        assertEquals(people.get(0), testUser);
     }
 
     @Test
@@ -107,6 +134,7 @@ class RegistrationServiceImplTest {
         User testUser = usersList.get(6);
         User returned = registrationService.register(testUser);
         assertTrue(people.contains(returned));
+        assertEquals(people.get(0), testUser);
     }
 
     @Test
@@ -120,6 +148,7 @@ class RegistrationServiceImplTest {
         User testUser = usersList.get(8);
         User returned = registrationService.register(testUser);
         assertTrue(people.contains(returned));
+        assertEquals(people.get(0), testUser);
     }
 
     @Test
@@ -127,6 +156,7 @@ class RegistrationServiceImplTest {
         User testUser = usersList.get(7);
         User returned = registrationService.register(testUser);
         assertTrue(people.contains(returned));
+        assertEquals(people.get(0), testUser);
     }
 
     @Test
@@ -136,7 +166,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void PasswordIsNull_notOk() {
+    void register_passwordIsNull_notOk() {
         assertThrows(PasswordIsNullException.class,
                 () -> registrationService.register(usersList.get(11)));
     }
