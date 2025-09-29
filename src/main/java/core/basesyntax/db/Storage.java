@@ -6,4 +6,8 @@ import java.util.List;
 
 public class Storage {
     public static final List<User> people = new ArrayList<>();
+
+    public static void clear() {
+        people.clear();
+    }
 }
