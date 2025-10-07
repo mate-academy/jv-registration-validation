@@ -46,7 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                     "Login must be at least " + LOGIN_MIN_LENGTH
                             + " characters long. Login: " + login);
         }
-        if (password.length() < LOGIN_MIN_LENGTH) {
+        if (password.length() < PASSWORD_MIN_LENGTH) {
             throw new InvalidRegistrationData(
                     "Password must be at least " + PASSWORD_MIN_LENGTH
                             + " characters long. Password: " + password);

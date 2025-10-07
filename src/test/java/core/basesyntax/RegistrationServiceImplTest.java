@@ -1,98 +1,138 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.InvalidRegistrationData;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationServiceImplTest {
     private static final int ADULT_AGE = 24;
+    private static final int EXACT_MIN_AGE = 18;
+    private static final int ZERO_AGE = 0;
+    private static final int NEGATIVE_AGE = -5;
     private static final String VALID_LOGIN = "employee";
-    private static final String ANOTHER_VALID_LOGIN = "employee1";
+    private static final String LEN_5_LOGIN = "abcde";
+    private static final String LEN_6_LOGIN = "abcdef";
     private static final String VALID_PASSWORD = "password";
-    private static final int NOT_ADULT_AGE = 15;
-    private static final String SHORT_LOGIN = "login";
-    private static final String SHORT_PASSWORD = "pass";
-    private static RegistrationServiceImpl registrationServiceImpl;
+    private static final String LEN_5_PASSWORD = "12345";
+    private static final String LEN_6_PASSWORD = "123456";
+
+    private RegistrationServiceImpl registrationService;
+    private StorageDao storageDao;
     private User user;
 
-    @BeforeAll
-    public static void init() {
-        registrationServiceImpl = new RegistrationServiceImpl();
-    }
-
     @BeforeEach
-    public void setUp() {
-        this.user = new User();
-        this.user.setLogin(VALID_LOGIN);
-        this.user.setPassword(VALID_PASSWORD);
-        this.user.setAge(ADULT_AGE);
+    void setUp() {
+        Storage.people.clear();
+        registrationService = new RegistrationServiceImpl();
+        storageDao = new StorageDaoImpl();
+        user = new User();
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(ADULT_AGE);
     }
 
     @Test
-    public void register_nullUser_notOk() {
-        this.user = null;
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_nullUser_notOk() {
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(null));
     }
 
     @Test
-    public void register_nullLogin_notOk() {
-        this.user.setLogin(null);
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_nullLogin_notOk() {
+        user.setLogin(null);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_nullPassword_notOk() {
-        this.user.setPassword(null);
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_nullPassword_notOk() {
+        user.setPassword(null);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_nullAge_notOk() {
-        this.user.setAge(null);
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_nullAge_notOk() {
+        user.setAge(null);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_shortLogin_notOk() {
-        this.user.setLogin(SHORT_LOGIN);
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_emptyLogin_notOk() {
+        user.setLogin("");
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_shortPassword_notOk() {
-        this.user.setPassword(SHORT_PASSWORD);
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_loginLength5_notOk() {
+        user.setLogin(LEN_5_LOGIN);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_notAdultAge_notOk() {
-        this.user.setAge(NOT_ADULT_AGE);
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_loginLength6_ok() {
+        user.setLogin(LEN_6_LOGIN);
+        User saved = registrationService.register(user);
+        assertEquals(user, saved);
+        assertEquals(user, storageDao.get(LEN_6_LOGIN));
     }
 
     @Test
-    public void register_validInput_Ok() {
-        assertEquals(this.user, registrationServiceImpl.register(this.user));
+    void register_emptyPassword_notOk() {
+        user.setPassword("");
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 
     @Test
-    public void register_duplicateLogin_notOk() {
-        this.user.setLogin(ANOTHER_VALID_LOGIN);
-        registrationServiceImpl.register(this.user);
-        assertThrows(InvalidRegistrationData.class,
-                () -> registrationServiceImpl.register(this.user));
+    void register_passwordLength5_notOk() {
+        user.setPassword(LEN_5_PASSWORD);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordLength6_ok() {
+        user.setPassword(LEN_6_PASSWORD);
+        User saved = registrationService.register(user);
+        assertEquals(user, saved);
+        assertEquals(user, storageDao.get(VALID_LOGIN));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        user.setAge(NEGATIVE_AGE);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_zeroAge_notOk() {
+        user.setAge(ZERO_AGE);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_exactly18_ok() {
+        user.setAge(EXACT_MIN_AGE);
+        User saved = registrationService.register(user);
+        assertNotNull(saved);
+        assertEquals(user, storageDao.get(VALID_LOGIN));
+    }
+
+    @Test
+    void register_validInput_ok() {
+        User saved = registrationService.register(user);
+        assertEquals(user, saved);
+        assertEquals(user, storageDao.get(VALID_LOGIN));
+    }
+
+    @Test
+    void register_duplicateLogin_notOk() {
+        storageDao.add(user);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 }
