@@ -16,12 +16,15 @@ import org.junit.jupiter.api.Test;
 public class RegistrationServiceImplTest {
     private static final int ADULT_AGE = 24;
     private static final int EXACT_MIN_AGE = 18;
+    private static final int NOT_ADULT_AGE = 17;
     private static final int ZERO_AGE = 0;
     private static final int NEGATIVE_AGE = -5;
     private static final String VALID_LOGIN = "employee";
+    private static final String LEN_3_LOGIN = "abc";
     private static final String LEN_5_LOGIN = "abcde";
     private static final String LEN_6_LOGIN = "abcdef";
     private static final String VALID_PASSWORD = "password";
+    private static final String LEN_3_PASSWORD = "123";
     private static final String LEN_5_PASSWORD = "12345";
     private static final String LEN_6_PASSWORD = "123456";
 
@@ -133,6 +136,24 @@ public class RegistrationServiceImplTest {
     @Test
     void register_duplicateLogin_notOk() {
         storageDao.add(user);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginLength3_notOk() {
+        user.setLogin(LEN_3_LOGIN);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordLength3_notOk() {
+        user.setPassword(LEN_3_PASSWORD);
+        assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_age17_notOk() {
+        user.setAge(NOT_ADULT_AGE);
         assertThrows(InvalidRegistrationData.class, () -> registrationService.register(user));
     }
 }

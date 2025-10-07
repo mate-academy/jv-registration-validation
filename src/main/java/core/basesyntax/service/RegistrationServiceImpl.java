@@ -54,7 +54,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (age < USER_MIN_AGE) {
             throw new InvalidRegistrationData(
                     "Age must be at least " + USER_MIN_AGE
-                            + "Age: " + age);
+                            + ". Age: " + age);
         }
     }
 }
