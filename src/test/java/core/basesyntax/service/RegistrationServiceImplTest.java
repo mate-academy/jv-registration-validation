@@ -52,9 +52,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_loginLength6Edge_Ok() {
+    void register_loginLength6Edge_ok() {
         User expected = new User("123456", "123456", 30);
-        registrationService.register(expected);
+        registerAndAssertUserExists(expected);
     }
 
     @Test
@@ -101,9 +101,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLength6Edge_Ok() {
+    void register_passwordLength6Edge_ok() {
         User passwordLength6User = new User("jackie-chan", "123456", 88);
-        registrationService.register(passwordLength6User);
+        registerAndAssertUserExists(passwordLength6User);
     }
 
     @Test
