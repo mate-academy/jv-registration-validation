@@ -15,8 +15,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationServiceException("User should not be null!");
         }
-        if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
-            throw new RegistrationServiceException("User data incomplete!");
+        if (user.getLogin() == null) {
+            throw new RegistrationServiceException("Login must not be null!");
+        }
+        if (user.getPassword() == null) {
+            throw new RegistrationServiceException("Password must not be null!");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationServiceException("Age must not be null!");
         }
         if (user.getLogin().length() < 6 || user.getPassword().length() < 6) {
             throw new RegistrationServiceException(

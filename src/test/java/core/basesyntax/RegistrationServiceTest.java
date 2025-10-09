@@ -1,8 +1,5 @@
 package core.basesyntax;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -12,7 +9,12 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class RegistrationServiceTest {
+    private final static int MIN_LOGIN_LENGTH = 6;
+    private final static int MIN_PASSWORD_LENGTH = 6;
+    private final static int MIN_AGE = 18;
     private final User user = new User();
     private final StorageDao storageDao = new StorageDaoImpl();
     private final RegistrationServiceImpl registrationService
@@ -28,84 +30,91 @@ public class RegistrationServiceTest {
 
     @Test
     public void register_nullUser_notOk() {
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(null),
-                "User should not be null!"
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(null)
         );
+        assertEquals("User should not be null!", ex.getMessage());
     }
 
     @Test
     public void register_nullLogin_notOk() {
         user.setLogin(null);
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(user),
-                "Login should not be null!"
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
         );
+        assertEquals("Login must not be null!", ex.getMessage());
     }
 
     @Test
     public void register_shortLogin_notOk() {
-        user.setLogin("qwert");
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(user),
-                "Login length should be more than 6 characters!"
+        user.setLogin("admin");
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
         );
+        assertEquals("Register failed. Please check your username and password.", ex.getMessage());
     }
 
     @Test
     public void register_borderLogin_ok() {
-        user.setPassword("qwert1");
-        boolean actual = registrationService.register(user).getPassword().length() == 6;
-        assertTrue(actual, "Login should be more than 6 characters!");
+        user.setLogin("admin1");
+        boolean actual = registrationService.register(user).getLogin().length() == MIN_LOGIN_LENGTH;
+        assertTrue(actual, "Login should at least 6 characters!");
     }
 
     @Test
     public void register_nullPassword_notOk() {
         user.setPassword(null);
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(user),
-                "Password should not be null!"
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
         );
+        assertEquals("Password must not be null!", ex.getMessage());
     }
 
     @Test
     public void register_shortPassword_notOk() {
         user.setPassword("admin");
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(user),
-                "Password length should be more than 6 characters!"
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
         );
+        assertEquals("Register failed. Please check your username and password.", ex.getMessage());
     }
 
     @Test
     public void register_borderPassword_ok() {
-        user.setPassword("admin1");
-        boolean actual = registrationService.register(user).getPassword().length() == 6;
-        assertTrue(actual, "Your password must be more than 6 characters long!");
+        user.setPassword("qwert1");
+        boolean actual = registrationService.register(user).getPassword().length() == MIN_PASSWORD_LENGTH;
+        assertTrue(actual, "Your password must be at least 6 characters long!");
     }
 
     @Test
     public void register_nullAge_notOk() {
         user.setAge(null);
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(user),
-                "Age should not be null!"
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
         );
+        assertEquals("Age must not be null!", ex.getMessage());
     }
 
     @Test
     public void register_underAge_notOk() {
         user.setAge(17);
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(user),
-                "Your age is lower than 18."
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
         );
+        assertEquals("Your age is lower than 18.", ex.getMessage());
     }
 
     @Test
     public void register_borderAge_ok() {
         user.setAge(18);
-        boolean actual = registrationService.register(user).getAge() == 18;
+        boolean actual = registrationService.register(user).getAge() == MIN_AGE;
         assertTrue(actual, "Your age is lower than 18.");
     }
 
@@ -117,10 +126,11 @@ public class RegistrationServiceTest {
         user1.setAge(31);
         storageDao.add(user1);
         user.setLogin("admin1");
-        assertThrows(RegistrationServiceException.class,
-                () -> registrationService.register(user),
-                "This login already exists!"
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
         );
+        assertEquals("Your login " + user.getLogin() + " already exists.", ex.getMessage());
     }
 
     @Test
