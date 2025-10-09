@@ -1,5 +1,9 @@
 package core.basesyntax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -9,12 +13,11 @@ import core.basesyntax.service.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class RegistrationServiceTest {
-    private final static int MIN_LOGIN_LENGTH = 6;
-    private final static int MIN_PASSWORD_LENGTH = 6;
-    private final static int MIN_AGE = 18;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE = 18;
+
     private final User user = new User();
     private final StorageDao storageDao = new StorageDaoImpl();
     private final RegistrationServiceImpl registrationService
@@ -87,7 +90,8 @@ public class RegistrationServiceTest {
     @Test
     public void register_borderPassword_ok() {
         user.setPassword("qwert1");
-        boolean actual = registrationService.register(user).getPassword().length() == MIN_PASSWORD_LENGTH;
+        boolean actual = registrationService.register(user)
+                .getPassword().length() == MIN_PASSWORD_LENGTH;
         assertTrue(actual, "Your password must be at least 6 characters long!");
     }
 
