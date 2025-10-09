@@ -1,14 +1,39 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao;
+
+    public RegistrationServiceImpl(StorageDao storageDao) {
+        this.storageDao = storageDao;
+    }
 
     @Override
     public User register(User user) {
-        return null;
+        if (user == null) {
+            throw new RegistrationServiceException("User should not be null!");
+        }
+        if (user.getLogin() == null || user.getPassword() == null || user.getAge() == null) {
+            throw new RegistrationServiceException("User data incomplete!");
+        }
+        if (user.getLogin().length() < 6 || user.getPassword().length() < 6) {
+            throw new RegistrationServiceException(
+                    "Register failed. Please check your username and password."
+            );
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationServiceException(
+                    "Your login " + user.getLogin() + " already exists."
+            );
+        }
+        if (user.getAge() < 18) {
+            throw new RegistrationServiceException(
+                    "Your age is lower than 18."
+            );
+        }
+
+        return storageDao.add(user);
     }
 }
