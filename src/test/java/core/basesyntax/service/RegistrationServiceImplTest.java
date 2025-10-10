@@ -8,11 +8,18 @@ import core.basesyntax.db.Storage;
 import core.basesyntax.model.RegistrationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final StorageDaoImpl storageDao = new StorageDaoImpl();
-    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private StorageDaoImpl storageDao;
+    private RegistrationServiceImpl registrationService;
+
+    @BeforeEach
+    void initializeServices() {
+        storageDao = new StorageDaoImpl();
+        registrationService = new RegistrationServiceImpl();
+    }
 
     @AfterEach
     void clearStorage() {
@@ -50,27 +57,32 @@ class RegistrationServiceImplTest {
     void register_lengthPassword_notOk() {
         User user = new User();
         user.setAge(20);
-        user.setLogin("UserLogin");
+        user.setLogin("UserLogin1");
         user.setPassword("123");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
         User secondUser = new User();
         secondUser.setAge(20);
-        secondUser.setLogin("UserLogin");
+        secondUser.setLogin("UserLogin2");
         secondUser.setPassword("12345");
         assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
+        User thirdUser = new User();
+        thirdUser.setAge(20);
+        thirdUser.setLogin("UserLogin2");
+        thirdUser.setPassword("");
+        assertThrows(RegistrationException.class, () -> registrationService.register(thirdUser));
     }
 
     @Test
     void register_lengthPassword_ok() {
         User user = new User();
         user.setAge(20);
-        user.setLogin("UserLogin");
+        user.setLogin("UserLogin1");
         user.setPassword("123456");
         assertEquals(user, registrationService.register(user),
                 "User with proper password didn't registered");
         User secondUser = new User();
         secondUser.setAge(20);
-        secondUser.setLogin("UserLogin");
+        secondUser.setLogin("UserLogin2");
         secondUser.setPassword("12345678");
         assertEquals(secondUser, registrationService.register(secondUser),
                 "User with proper password didn't registered");
@@ -88,6 +100,11 @@ class RegistrationServiceImplTest {
         secondUser.setLogin("UserL");
         secondUser.setPassword("123456");
         assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
+        User thirdUser = new User();
+        thirdUser.setAge(20);
+        thirdUser.setLogin("");
+        thirdUser.setPassword("123456");
+        assertThrows(RegistrationException.class, () -> registrationService.register(thirdUser));
     }
 
     @Test
@@ -118,6 +135,11 @@ class RegistrationServiceImplTest {
         secondUser.setLogin("UserLogin2");
         secondUser.setPassword("123456");
         assertThrows(RegistrationException.class, () -> registrationService.register(secondUser));
+        User thirdUser = new User();
+        thirdUser.setAge(0);
+        thirdUser.setLogin("UserLogin3");
+        thirdUser.setPassword("123456");
+        assertThrows(RegistrationException.class, () -> registrationService.register(thirdUser));
     }
 
     @Test
