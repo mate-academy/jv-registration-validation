@@ -57,7 +57,8 @@ public class RegistrationServiceTest {
                 RegistrationServiceException.class,
                 () -> registrationService.register(user)
         );
-        assertEquals("Your login length should be at least " + MIN_LOGIN_LENGTH + " characters!", ex.getMessage());
+        assertEquals("Your login length should be at least "
+                + MIN_LOGIN_LENGTH + " characters!", ex.getMessage());
     }
 
     @Test
@@ -84,7 +85,8 @@ public class RegistrationServiceTest {
                 RegistrationServiceException.class,
                 () -> registrationService.register(user)
         );
-        assertEquals("Your password must not be less than " + MIN_PASSWORD_LENGTH + " characters!", ex.getMessage());
+        assertEquals("Your password must not be less than "
+                + MIN_PASSWORD_LENGTH + " characters!", ex.getMessage());
     }
 
     @Test
@@ -92,7 +94,8 @@ public class RegistrationServiceTest {
         user.setPassword("qwert1");
         boolean actual = registrationService.register(user)
                 .getPassword().length() == MIN_PASSWORD_LENGTH;
-        assertTrue(actual, "Your password must be at least " + MIN_PASSWORD_LENGTH + " characters long.");
+        assertTrue(actual, "Your password must be at least "
+                + MIN_PASSWORD_LENGTH + " characters long.");
     }
 
     @Test
