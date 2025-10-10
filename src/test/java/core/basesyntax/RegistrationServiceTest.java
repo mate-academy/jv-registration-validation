@@ -57,14 +57,14 @@ public class RegistrationServiceTest {
                 RegistrationServiceException.class,
                 () -> registrationService.register(user)
         );
-        assertEquals("Register failed. Please check your username and password.", ex.getMessage());
+        assertEquals("Your login length should be at least " + MIN_LOGIN_LENGTH + " characters!", ex.getMessage());
     }
 
     @Test
     public void register_borderLogin_ok() {
         user.setLogin("admin1");
         boolean actual = registrationService.register(user).getLogin().length() == MIN_LOGIN_LENGTH;
-        assertTrue(actual, "Login should at least 6 characters!");
+        assertTrue(actual, "Login should at least " + MIN_LOGIN_LENGTH + " characters!");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class RegistrationServiceTest {
                 RegistrationServiceException.class,
                 () -> registrationService.register(user)
         );
-        assertEquals("Register failed. Please check your username and password.", ex.getMessage());
+        assertEquals("Your password must not be less than " + MIN_PASSWORD_LENGTH + " characters!", ex.getMessage());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class RegistrationServiceTest {
         user.setPassword("qwert1");
         boolean actual = registrationService.register(user)
                 .getPassword().length() == MIN_PASSWORD_LENGTH;
-        assertTrue(actual, "Your password must be at least 6 characters long!");
+        assertTrue(actual, "Your password must be at least " + MIN_PASSWORD_LENGTH + " characters long.");
     }
 
     @Test
@@ -112,14 +112,14 @@ public class RegistrationServiceTest {
                 RegistrationServiceException.class,
                 () -> registrationService.register(user)
         );
-        assertEquals("Your age is lower than 18.", ex.getMessage());
+        assertEquals("Your age is lower than " + MIN_AGE + ".", ex.getMessage());
     }
 
     @Test
     public void register_borderAge_ok() {
         user.setAge(18);
         boolean actual = registrationService.register(user).getAge() == MIN_AGE;
-        assertTrue(actual, "Your age is lower than 18.");
+        assertTrue(actual, "Your age is lower than " + MIN_AGE + ".");
     }
 
     @Test
@@ -128,7 +128,7 @@ public class RegistrationServiceTest {
         user1.setLogin("admin1");
         user1.setPassword("qwert1234");
         user1.setAge(31);
-        storageDao.add(user1);
+        registrationService.register(user1);
         user.setLogin("admin1");
         RegistrationServiceException ex = assertThrows(
                 RegistrationServiceException.class,
@@ -143,7 +143,40 @@ public class RegistrationServiceTest {
         user1.setLogin("admin1");
         user1.setPassword("qwert1234");
         user1.setAge(23);
-        boolean actual = storageDao.add(user1) == user1;
+        registrationService.register(user1);
+        boolean actual = storageDao.get(user1.getLogin()).equals(user1);
         assertTrue(actual, "Your login has been successfully registered!");
+    }
+
+    @Test
+    public void register_emptyPassword_NotOk() {
+        user.setPassword("");
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
+        );
+        assertEquals("Your password must not be less than "
+                + MIN_PASSWORD_LENGTH + " characters!", ex.getMessage());
+    }
+
+    @Test
+    public void register_emptyLogin_NotOk() {
+        user.setLogin("");
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
+        );
+        assertEquals("Your login length should be at least "
+                + MIN_PASSWORD_LENGTH + " characters!", ex.getMessage());
+    }
+
+    @Test
+    public void register_negativeAge_NotOk() {
+        user.setAge(-66);
+        RegistrationServiceException ex = assertThrows(
+                RegistrationServiceException.class,
+                () -> registrationService.register(user)
+        );
+        assertEquals("Your age must not be negative!", ex.getMessage());
     }
 }
