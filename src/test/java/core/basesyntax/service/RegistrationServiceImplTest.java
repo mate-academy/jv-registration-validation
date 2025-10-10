@@ -2,6 +2,7 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -26,6 +27,11 @@ class RegistrationServiceImplTest {
         Storage.people.clear();
     }
 
+    @Test
+    void register_nullUser_notOk() {
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
+    }
+    
     @Test
     void register_nullAge_notOk() {
         User user = new User();
@@ -80,12 +86,14 @@ class RegistrationServiceImplTest {
         user.setPassword("123456");
         assertEquals(user, registrationService.register(user),
                 "User with proper password didn't registered");
+        assertTrue(Storage.people.contains(user));
         User secondUser = new User();
         secondUser.setAge(20);
         secondUser.setLogin("UserLogin2");
         secondUser.setPassword("12345678");
         assertEquals(secondUser, registrationService.register(secondUser),
                 "User with proper password didn't registered");
+        assertTrue(Storage.people.contains(secondUser));
     }
 
     @Test
@@ -164,7 +172,7 @@ class RegistrationServiceImplTest {
         user.setAge(20);
         user.setLogin("UserLogin1");
         user.setPassword("123456");
-        storageDao.add(user);
+        Storage.people.add(user);
         User secondUser = new User();
         secondUser.setAge(20);
         secondUser.setLogin("UserLogin1");

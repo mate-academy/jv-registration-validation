@@ -14,11 +14,12 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("User can't be null");
         }
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User is already in database");
-        }
         if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with login '" + user.getLogin()
+                    + " already exists");
         }
         if (user.getLogin().length() < Constants.MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login must be at least 6 characters long");
