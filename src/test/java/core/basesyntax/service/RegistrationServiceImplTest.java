@@ -1,19 +1,21 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
-import core.basesyntax.throwable.InvalidDataEntry;
 import core.basesyntax.model.User;
+import core.basesyntax.throwable.InvalidDataEntry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class RegistrationServiceImplTest {
-    RegistrationServiceImpl registrationService;
-    StorageDaoImpl storageDao;
-    User user;
+    private RegistrationServiceImpl registrationService;
+    private StorageDaoImpl storageDao;
+    private User user;
+
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();

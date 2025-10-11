@@ -6,8 +6,8 @@ import core.basesyntax.model.User;
 import core.basesyntax.throwable.InvalidDataEntry;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
 
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {
@@ -37,6 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         return true;
     }
+
     @Override
     public boolean passwordSizeCheck(String password) {
         if (password.length() < 6) {
