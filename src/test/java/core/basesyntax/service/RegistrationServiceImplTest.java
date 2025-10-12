@@ -15,6 +15,7 @@ class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService;
     private StorageDaoImpl storageDao;
     private User user;
+
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
@@ -30,7 +31,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUser_UserIsNull_NotOk() {
+    void register_UserIsNull_NotOk() {
         assertThrows(InvalidDataEntry.class, () -> registrationService.register(null));
     }
 
@@ -60,7 +61,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void registerExistedUser_NotOk() {
+    void register_UserExisted_NotOk() {
         storageDao.add(user);
         assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
     }
@@ -141,7 +142,6 @@ class RegistrationServiceImplTest {
         user.setAge(16);
         assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
     }
-
 
     @Test
     void register_AgeNegative_NotOk() {

@@ -41,7 +41,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataEntry("Login can't be null");
         }
         if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new InvalidDataEntry("Login must have at least " + MIN_LOGIN_LENGTH + " characters.");
+            throw new InvalidDataEntry("Login must have at least "
+                    + MIN_LOGIN_LENGTH
+                    + " characters.");
         }
         return true;
     }
@@ -52,7 +54,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataEntry("Password can't be null");
         }
         if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new InvalidDataEntry("Password must have at least " + MIN_PASSWORD_LENGTH + " characters.");
+            throw new InvalidDataEntry("Password must have at least "
+                    + MIN_PASSWORD_LENGTH
+                    + " characters.");
         }
         return true;
     }
