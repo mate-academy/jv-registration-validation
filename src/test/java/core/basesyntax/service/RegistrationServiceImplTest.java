@@ -31,14 +31,34 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void addUser_OK() {
-        User actual = registrationService.register(user);
-        assertEquals(user, actual);
+    void addUser_UserIsNull_NotOk() {
+        assertThrows(InvalidDataEntry.class, () -> registrationService.register(null));
     }
 
     @Test
-    void addUser_UserIsNull_NotOk() {
-        assertThrows(InvalidDataEntry.class, () -> registrationService.register(null));
+    void register_LoginIsNull_NotOk() {
+        user.setLogin(null);
+        assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_PasswordIsNull_NotOk() {
+        user.setPassword(null);
+        assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_AgeIsNull_NotOk() {
+        user.setAge(null);
+        assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_UserIsValid_Ok() {
+        User actual = registrationService.register(user);
+        int actualAge = actual.getAge();
+        assertEquals(1, Storage.people.size());
+        assertEquals(user, actual);
     }
 
     @Test
@@ -48,9 +68,27 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void login_isValid_Ok() {
+        user.setLogin("loginValid");
+        assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
+    void login_SizeIs6_Ok() {
+        user.setLogin("123456");
+        assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
     void login_SizeLessThan6_NotOk() {
         user.setLogin("12345");
         assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void password_IsValid_Ok() {
+        user.setPassword("passwordValid");
+        registrationService.register(user);
     }
 
     @Test
@@ -60,8 +98,32 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void age_MoreThen18_Ok() {
+        user.setAge(25);
+        assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
+    void age_Is18_Ok() {
+        user.setAge(18);
+        assertEquals(user, registrationService.register(user));
+    }
+
+    @Test
     void age_LessThen18_NotOk() {
         user.setAge(16);
+        assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void age_Is0_NotOk() {
+        user.setAge(0);
+        assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void age_IsNegative_NotOk() {
+        user.setAge(-1);
         assertThrows(InvalidDataEntry.class, () -> registrationService.register(user));
     }
 }

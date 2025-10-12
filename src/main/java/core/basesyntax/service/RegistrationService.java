@@ -5,11 +5,11 @@ import core.basesyntax.model.User;
 public interface RegistrationService {
     User register(User user);
 
-    boolean userExistCheck(String login);
+    boolean userExistCheck(User user);
 
-    boolean loginSizeCheck(String login);
+    boolean loginSizeCheck(User user);
 
-    boolean passwordSizeCheck(String password);
+    boolean passwordSizeCheck(User user);
 
-    boolean ageCheck(int age);
+    boolean ageCheck(User user);
 }

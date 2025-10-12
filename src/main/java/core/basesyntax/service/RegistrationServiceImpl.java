@@ -7,6 +7,9 @@ import core.basesyntax.throwable.InvalidDataEntry;
 
 public class RegistrationServiceImpl implements RegistrationService {
 
+    static final int MIN_LOGIN_LENGTH = 6;
+    static final int MIN_PASSWORD_LENGTH = 6;
+    static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -14,42 +17,53 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new InvalidDataEntry("User is null.");
         }
-        userExistCheck(user.getLogin());
-        loginSizeCheck(user.getLogin());
-        ageCheck(user.getAge());
-        passwordSizeCheck(user.getPassword());
-        storageDao.add(user);
-        return user;
+        userExistCheck(user);
+        loginSizeCheck(user);
+        ageCheck(user);
+        passwordSizeCheck(user);
+        return storageDao.add(user);
     }
 
     @Override
-    public boolean userExistCheck(String login) {
-        if (storageDao.get(login) != null) {
-            throw new InvalidDataEntry("User already exist.");
+    public boolean userExistCheck(User user) {
+        if (user.getLogin() == null) {
+            throw new InvalidDataEntry("Login can't be null");
+        }
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new InvalidDataEntry("User with such login already exists.");
         }
         return true;
     }
 
     @Override
-    public boolean loginSizeCheck(String login) {
-        if (login.length() < 6) {
+    public boolean loginSizeCheck(User user) {
+        if (user.getLogin() == null) {
+            throw new InvalidDataEntry("Login can't be null");
+        }
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new InvalidDataEntry("Login must have at least 6 characters.");
         }
         return true;
     }
 
     @Override
-    public boolean passwordSizeCheck(String password) {
-        if (password.length() < 6) {
-            throw new InvalidDataEntry("Password must have at least 6 characters.");
+    public boolean passwordSizeCheck(User user) {
+        if (user.getPassword() == null) {
+            throw new InvalidDataEntry("Password can't be null");
+        }
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new InvalidDataEntry("Password must have at least 18 characters.");
         }
         return true;
     }
 
     @Override
-    public boolean ageCheck(int age) {
-        if (age < 18) {
-            throw new InvalidDataEntry("Age must be greater than 18.");
+    public boolean ageCheck(User user) {
+        if (user.getAge() == null) {
+            throw new InvalidDataEntry("Age can't be null");
+        }
+        if (user.getAge() < MIN_AGE || user.getAge() < 0) {
+            throw new InvalidDataEntry("Age must must at least 18 years old.");
         }
         return true;
     }
