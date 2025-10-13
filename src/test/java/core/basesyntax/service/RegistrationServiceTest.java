@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.ValidationException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -18,14 +19,16 @@ class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl(storageDao);
     }
 
     @AfterEach
     void tearDown() {
+        Storage.people.clear();
+        registrationService = null;
         storageDao = null;
-
     }
 
     @Test
@@ -80,8 +83,8 @@ class RegistrationServiceTest {
         user2.setLogin("validLogin2");
         user2.setPassword("anotherPassword4");
         user2.setAge(25);
-        
-        registrationService.register(user1);
+
+        storageDao.add(user1);
         
         assertThrows(ValidationException.class,
                 () -> registrationService.register(user2));
@@ -92,7 +95,6 @@ class RegistrationServiceTest {
         User user = new User();
         user.setLogin("validLogin5");
         user.setAge(20);
-        
         assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
     }
@@ -103,7 +105,6 @@ class RegistrationServiceTest {
         user.setLogin("validLogin6");
         user.setPassword("short");
         user.setAge(20);
-        
         assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
     }
@@ -113,7 +114,6 @@ class RegistrationServiceTest {
         User user = new User();
         user.setLogin("validLogin7");
         user.setPassword("validPassword");
-        
         assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
     }
@@ -124,8 +124,73 @@ class RegistrationServiceTest {
         user.setLogin("validLogin8");
         user.setPassword("validPassword");
         user.setAge(17);
-        
         assertThrows(ValidationException.class,
                 () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginExactlyMinLength_Ok() {
+        User user = new User();
+        user.setLogin("validLogin9");
+        user.setPassword("validPassword9");
+        user.setAge(20);
+        User saved = registrationService.register(user);
+        assertNotNull(saved);
+        assertEquals(user, storageDao.get("validLogin9"));
+    }
+
+    @Test
+    void register_emptyLogin_notOk() {
+        User user = new User();
+        user.setLogin("");
+        user.setPassword("validPassword10");
+        user.setAge(20);
+        assertThrows(ValidationException.class,
+                () -> registrationService.register(user));
+        assertEquals(null, storageDao.get(""));
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        User user = new User();
+        user.setLogin("validLogin10");
+        user.setPassword("");
+        user.setAge(20);
+        assertThrows(ValidationException.class,
+                () -> registrationService.register(user));
+        assertEquals(null, storageDao.get("validLogin10"));
+    }
+
+    @Test
+    void register_ageIs18_ok() {
+        User user = new User();
+        user.setLogin("validLogin11");
+        user.setPassword("validPassword11");
+        user.setAge(18);
+        User saved = registrationService.register(user);
+        assertNotNull(saved);
+        assertEquals(user, storageDao.get("validLogin11"));
+    }
+
+    @Test
+    void register_zeroAge_NotOk() {
+        User user = new User();
+        user.setLogin("validLogin12");
+        user.setPassword("validPassword12");
+        user.setAge(0);
+        assertThrows(ValidationException.class,
+                () -> registrationService.register(user));
+        assertEquals(null, storageDao.get("validLogin12"));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = new User();
+        user.setLogin("validLogin13");
+        user.setPassword("validPassword13");
+        user.setAge(-1);
+        assertThrows(ValidationException.class,
+                () -> registrationService.register(user));
+        assertEquals(null, storageDao.get("validLogin13"));
     }
 }
