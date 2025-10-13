@@ -1,79 +1,82 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegistrationServiceImplTest {
-    private User user;
+class StorageDaoImplTest {
     private StorageDaoImpl storage;
+    private User user;
 
     @BeforeEach
-    public void initUser() {
-        User newUser = new User();
-        newUser.setId(1L);
-        newUser.setLogin("admin");
-        newUser.setPassword("admin");
-        newUser.setAge(18);
+    void setUp() {
+        storage = new StorageDaoImpl();
 
-        this.user = newUser;
-    }
-
-    @BeforeEach
-    public void initStorage() {
-        this.storage = new StorageDaoImpl();
+        user = new User();
+        user.setId(1L);
+        // унікальний логін, щоб тести не злипались між собою навіть при статичному сховищі
+        user.setLogin("user_" + System.nanoTime());
+        user.setPassword("secret1");
+        user.setAge(18);
     }
 
     @Test
-    void check_user_not_in_storage_Ok() {
-        User userInStorage = storage.get(user.getLogin());
-        assertNull(userInStorage);
+    void get_unknownLogin_returnsNull() {
+        User fromStorage = storage.get("no_such_login_" + System.nanoTime());
+        assertNull(fromStorage);
     }
 
     @Test
-    void user_password_ok() {
-        String userPassword = "123456";
-        boolean isGreaterThan5 = userPassword.length() >= 6;
-        assertTrue(isGreaterThan5);
+    void get_nullLogin_returnsNull() {
+        User fromStorage = storage.get(null);
+        assertNull(fromStorage);
     }
 
     @Test
-    void user_password_notOk() {
-        String userPassword = "123";
-        boolean isGreaterThan5 = userPassword.length() >= 6;
-        assertFalse(isGreaterThan5);
+    void add_validUser_ok() {
+        storage.add(user);
+
+        User fromStorage = storage.get(user.getLogin());
+        assertNotNull(fromStorage);
+        assertEquals(user.getLogin(), fromStorage.getLogin());
+        assertEquals(user.getAge(), fromStorage.getAge());
+        assertEquals(user.getId(), fromStorage.getId());
     }
 
     @Test
-    void user_login_ok() {
-        String userLogin = "user12";
-        boolean isGreaterThan5 = userLogin.length() >= 6;
-        assertTrue(isGreaterThan5);
+    void add_nullUser_throwsException() {
+        assertThrows(NullPointerException.class, () -> storage.add(null));
     }
 
     @Test
-    void user_login_notOk() {
-        String userLogin = "user";
-        boolean isGreaterThan5 = userLogin.length() >= 6;
-        assertFalse(isGreaterThan5);
-    }
+    void add_thenGet_differentUsers_ok() {
+        User u1 = new User();
+        u1.setId(11L);
+        u1.setLogin("u1_" + System.nanoTime());
+        u1.setPassword("pass123");
+        u1.setAge(20);
 
-    @Test
-    void user_age_Ok() {
-        int userAge = 18;
-        boolean isGreaterThan17 = userAge >= 18;
-        assertTrue(isGreaterThan17);
-    }
+        User u2 = new User();
+        u2.setId(22L);
+        u2.setLogin("u2_" + System.nanoTime());
+        u2.setPassword("pass456");
+        u2.setAge(21);
 
-    @Test
-    void user_age_notOk() {
-        int userAge = 15;
-        boolean isGreaterThan17 = userAge >= 18;
-        assertFalse(isGreaterThan17);
+        storage.add(u1);
+        storage.add(u2);
+
+        User from1 = storage.get(u1.getLogin());
+        User from2 = storage.get(u2.getLogin());
+
+        assertNotNull(from1);
+        assertNotNull(from2);
+        assertEquals(u1.getLogin(), from1.getLogin());
+        assertEquals(u2.getLogin(), from2.getLogin());
     }
 }
