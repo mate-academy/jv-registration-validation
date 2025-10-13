@@ -131,12 +131,23 @@ class RegistrationServiceTest {
     @Test
     void register_loginExactlyMinLength_Ok() {
         User user = new User();
-        user.setLogin("validLogin9");
+        user.setLogin("Login9");
         user.setPassword("validPassword9");
         user.setAge(20);
         User saved = registrationService.register(user);
         assertNotNull(saved);
-        assertEquals(user, storageDao.get("validLogin9"));
+        assertEquals(user, storageDao.get("Login9"));
+    }
+
+    @Test
+    void register_passwordExactlyMinLength_Ok() {
+        User user = new User();
+        user.setLogin("Login10");
+        user.setPassword("Passwo");
+        user.setAge(20);
+        User saved = registrationService.register(user);
+        assertNotNull(saved);
+        assertEquals(user, storageDao.get("Login10"));
     }
 
     @Test

@@ -23,13 +23,22 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new ValidationException("User cannot be null");
         }
-        if (user.getLogin() == null || user.getLogin().length() < MIN_LENGTH) {
-            throw new ValidationException("Login must be at least 6 characters long");
+        if (user.getLogin() == null) {
+            throw new ValidationException("“Login cannot be null");
         }
-        if (user.getPassword() == null || user.getPassword().length() < MIN_LENGTH) {
-            throw new ValidationException("Password must be at least 6 characters long");
+        if (user.getLogin().length() < MIN_LENGTH) {
+            throw new ValidationException("Login must be at least MIN_LENGTH characters");
         }
-        if (user.getAge() == null || user.getAge() < MIN_AGE) {
+        if (user.getPassword() == null) {
+            throw new ValidationException("Password cannot be null");
+        }
+        if (user.getPassword().length() < MIN_LENGTH) {
+            throw new ValidationException("Password must be at least MIN_LENGTH characters");
+        }
+        if (user.getAge() == null) {
+            throw new ValidationException("Age cannot be null");
+        }
+        if (user.getAge() < MIN_AGE) {
             throw new ValidationException("Age must be at least 18");
         }
         User existingUser = storageDao.get(user.getLogin());
