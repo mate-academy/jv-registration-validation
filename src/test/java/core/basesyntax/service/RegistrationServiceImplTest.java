@@ -10,7 +10,7 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class StorageDaoImplTest {
+class RegistrationServiceImplTest {
     private StorageDaoImpl storage;
     private User user;
 
