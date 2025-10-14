@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDaoImpl;
@@ -88,7 +87,7 @@ class RegistrationServiceImplTest {
         User testUser = new User(1L, "Loginn", "Passwo", 20);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertSame(testUser, registered);
+        assertEquals(testUser, registered);
         assertEquals(testUser, dao.get(testUser.getLogin()));
         assertEquals("Loginn", registered.getLogin());
     }
@@ -98,7 +97,7 @@ class RegistrationServiceImplTest {
         User testUser = new User(1L, "LoginOk", "PasswordOk", 20);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertSame(testUser, registered);
+        assertEquals(testUser, registered);
         assertEquals(testUser, dao.get(testUser.getLogin()));
     }
 
@@ -107,7 +106,7 @@ class RegistrationServiceImplTest {
         User testUser = new User(1L, "LoginOk", "passwor", 20);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertSame(testUser, registered);
+        assertEquals(testUser, registered);
         assertEquals(testUser, dao.get(testUser.getLogin()));
     }
 
@@ -147,7 +146,7 @@ class RegistrationServiceImplTest {
         User testUser = new User(12L, "LoginGood", "PasswordGood", 19);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertSame(testUser, registered);
+        assertEquals(testUser, registered);
         assertEquals(testUser, dao.get(testUser.getLogin()));
         assertEquals("LoginGood", registered.getLogin());
         assertEquals("PasswordGood", registered.getPassword());

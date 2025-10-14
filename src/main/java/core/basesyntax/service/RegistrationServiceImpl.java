@@ -18,11 +18,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("User cannot be null");
         }
 
-        if (user.getLogin() == null || user.getLogin().length() < 6) {
+        if (user.getLogin() == null || user.getLogin().trim().isEmpty() || user.getLogin().length() < 6) {
             throw new InvalidDataException("Invalid login");
         }
 
-        if (user.getPassword() == null || user.getPassword().length() < 6) {
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty() || user.getPassword().length() < 6) {
             throw new InvalidDataException("Invalid password");
         }
 
