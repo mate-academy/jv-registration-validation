@@ -56,6 +56,13 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_5CharLogin_notOk() {
+        User testUser = new User(1L, "Login", "Password", 20);
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(testUser));
+    }
+
+    @Test
     void register_nullPassword_notOk() {
         User testUser = new User(1L, "LoginOk", null, 20);
         assertThrows(InvalidDataException.class, () ->
@@ -65,6 +72,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_shortPassword_notOk() {
         User testUser = new User(1L, "LoginOk", "bad", 20);
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(testUser));
+    }
+
+    @Test
+    void register_5CharPassword_notOk() {
+        User testUser = new User(1L, "LoginOk", "Passa", 20);
         assertThrows(InvalidDataException.class, () ->
                 registrationService.register(testUser));
     }
@@ -93,6 +107,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_negativeAge_notOk() {
         User testUser = new User(1L, "LoginOk", "PasswordOk", -5);
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(testUser));
+    }
+
+    @Test
+    void register_ageZero_notOk() {
+        User testUser = new User(1L, "LoginOk", "PasswordOk", 0);
         assertThrows(InvalidDataException.class, () ->
                 registrationService.register(testUser));
     }
