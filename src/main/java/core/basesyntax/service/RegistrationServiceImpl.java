@@ -5,9 +5,9 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private final int MIN_AGE = 18;
-    private final int MIN_LOGIN_LENGTH = 6;
-    private final int MIN_PASSWORD_LENGTH = 6;
+    private final int minAge = 18;
+    private final int minLoginLength = 6;
+    private final int minPasswordLength = 6;
 
     private final StorageDao storageDao;
 
@@ -26,7 +26,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getLogin().trim().isEmpty()
-                || user.getLogin().length() < MIN_LOGIN_LENGTH) {
+                || user.getLogin().length() < minLoginLength) {
             throw new InvalidDataException("Login length must be at least 6");
         }
 
@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getPassword().trim().isEmpty()
-                || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+                || user.getPassword().length() < minPasswordLength) {
             throw new InvalidDataException("Password length must be at least 6");
         }
 
@@ -47,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new InvalidDataException("Age cannot be null");
         }
 
-        if (user.getAge() < MIN_AGE) {
+        if (user.getAge() < minAge) {
             throw new InvalidDataException("You must be at least 18 years old");
         }
 
