@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -83,31 +84,51 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullAge_notOk() {
+        User testUser = new User(1L, "LoginOk", "PasswordOk", null);
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(testUser));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User testUser = new User(1L, "LoginOk", "PasswordOk", -5);
+        assertThrows(InvalidDataException.class, () ->
+                registrationService.register(testUser));
+    }
+
+    @Test
     void register_loginAndPasswordExactly6_ok() {
         User testUser = new User(1L, "Loginn", "Passwo", 20);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertEquals(testUser, registered);
-        assertEquals(testUser, dao.get(testUser.getLogin()));
+        assertSame(testUser, registered);
+        assertSame(testUser, dao.get(testUser.getLogin()));
         assertEquals("Loginn", registered.getLogin());
+        assertEquals("Passwo", registered.getPassword());
+        assertEquals(20, registered.getAge());
     }
 
     @Test
     void register_login_ok() {
-        User testUser = new User(1L, "LoginOk", "PasswordOk", 20);
+        User testUser = new User(1L, "LoginOk1", "PasswordOk", 20);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertEquals(testUser, registered);
-        assertEquals(testUser, dao.get(testUser.getLogin()));
+        assertSame(testUser, registered);
+        assertSame(testUser, dao.get(testUser.getLogin()));
+        assertEquals("LoginOk1", registered.getLogin());
+        assertEquals("PasswordOk", registered.getPassword());
     }
 
     @Test
     void register_password_ok() {
-        User testUser = new User(1L, "LoginOk", "passwor", 20);
+        User testUser = new User(1L, "LoginOk2", "passwor", 20);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertEquals(testUser, registered);
-        assertEquals(testUser, dao.get(testUser.getLogin()));
+        assertSame(testUser, registered);
+        assertSame(testUser, dao.get(testUser.getLogin()));
+        assertEquals("LoginOk2", registered.getLogin());
+        assertEquals("passwor", registered.getPassword());
     }
 
     @Test
@@ -119,10 +140,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_age18_ok() {
-        User testUser = new User(1L, "LoginOk", "PasswordOk", 18);
+        User testUser = new User(1L, "LoginOk3", "PasswordOk", 18);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertEquals(testUser, dao.get(testUser.getLogin()));
+        assertSame(testUser, dao.get(testUser.getLogin()));
+        assertEquals("LoginOk3", registered.getLogin());
+        assertEquals("PasswordOk", registered.getPassword());
+        assertEquals(18, registered.getAge());
     }
 
     @Test
@@ -134,8 +158,8 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_duplicateLogin_notOk() {
-        User testUser1 = new User(1L, "LoginOk", "PasswordOk", 20);
-        User testUser2 = new User(13L, "LoginOk", "Passwordko", 22);
+        User testUser1 = new User(1L, "LoginOk4", "PasswordOk", 20);
+        User testUser2 = new User(13L, "LoginOk4", "Passwordko", 22);
         dao.add(testUser1);
         assertThrows(InvalidDataException.class, () ->
                 registrationService.register(testUser2));
@@ -146,8 +170,8 @@ class RegistrationServiceImplTest {
         User testUser = new User(12L, "LoginGood", "PasswordGood", 19);
         User registered = registrationService.register(testUser);
         assertNotNull(registered);
-        assertEquals(testUser, registered);
-        assertEquals(testUser, dao.get(testUser.getLogin()));
+        assertSame(testUser, registered);
+        assertSame(testUser, dao.get(testUser.getLogin()));
         assertEquals("LoginGood", registered.getLogin());
         assertEquals("PasswordGood", registered.getPassword());
         assertEquals(19, registered.getAge());
