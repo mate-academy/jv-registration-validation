@@ -23,7 +23,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login must have at least 6 characters");
+            throw new RegistrationException("Login must have at least "
+                    + MIN_LOGIN_LENGTH + " characters");
         }
 
         if (storageDao.get(login) != null) {
@@ -36,7 +37,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password must have at least 6 characters");
+            throw new RegistrationException("Password must have at least "
+                    + MIN_PASSWORD_LENGTH + "characters");
         }
 
         Integer age = user.getAge();
@@ -45,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (age < MIN_AGE) {
-            throw new RegistrationException("Your age must be at least 18");
+            throw new RegistrationException("Your age must be at least " + MIN_AGE + " years");
         }
 
         return storageDao.add(user);

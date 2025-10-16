@@ -256,4 +256,19 @@ class RegistrationServiceImplTest {
         assertEquals(1, Storage.people.size());
         assertTrue(Storage.people.contains(registeredUser));
     }
+
+    @Test
+    void register_shortLogins_notOk() {
+        String[] shortLogins = {"", "a", "ab", "abc", "abcd"};
+        for (String login : shortLogins) {
+            User user = new User();
+            user.setLogin(login);
+            user.setPassword("validPassword");
+            user.setAge(25);
+
+            assertThrows(RegistrationException.class,
+                    () -> registrationService.register(user),
+                    "Should throw for login: " + login);
+        }
+    }
 }
