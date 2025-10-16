@@ -35,7 +35,7 @@ class RegistrationServiceImplTest {
         assertEquals(user.getPassword(), registeredUser.getPassword());
         assertEquals(user.getAge(), registeredUser.getAge());
 
-        assertEquals(1, core.basesyntax.db.Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertTrue(Storage.people.contains(registeredUser));
     }
 
@@ -46,7 +46,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortLogin_notOk() {
+    void register_loginLength5_notOk() {
         User user = new User();
         user.setLogin("short");
         user.setPassword("validPassword");
@@ -56,12 +56,28 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_loginLength6_ok() {
+        User user = new User();
+        user.setLogin("loginn");
+        user.setPassword("validPassword");
+        user.setAge(30);
+
+        User registeredUser = registrationService.register(user);
+
+        assertNotNull(registeredUser);
+        assertEquals("loginn", registeredUser.getLogin());
+        assertEquals(1, Storage.people.size());
+        assertTrue(Storage.people.contains(registeredUser));
+    }
+
+    @Test
     void register_existingLogin_notOk() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("validPassword");
         user.setAge(30);
-        registrationService.register(user);
+
+        Storage.people.add(user);
 
         User newUser = new User();
         newUser.setLogin("validLogin");
@@ -77,6 +93,66 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setAge(30);
         user.setPassword("short");
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordLength3_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("pas");
+        user.setAge(30);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordLength5_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("short");
+        user.setAge(30);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordLength6_ok() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("passwo");
+        user.setAge(30);
+
+        User registeredUser = registrationService.register(user);
+
+        assertNotNull(registeredUser);
+        assertEquals("passwo", registeredUser.getPassword());
+        assertEquals(1, Storage.people.size());
+        assertTrue(Storage.people.contains(registeredUser));
+    }
+
+    @Test
+    void register_passwordLength8_ok() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("password");
+        user.setAge(30);
+
+        User registeredUser = registrationService.register(user);
+
+        assertNotNull(registeredUser);
+        assertEquals("password", registeredUser.getPassword());
+        assertEquals(1, Storage.people.size());
+        assertTrue(Storage.people.contains(registeredUser));
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        User user = new User();
+        user.setPassword("");
+        user.setLogin("validLogin");
+        user.setAge(20);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
@@ -109,5 +185,75 @@ class RegistrationServiceImplTest {
         user.setPassword("validPassword");
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setAge(null);
+        user.setPassword("validPassword");
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
+        user.setAge(-10);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_zeroAge_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
+        user.setAge(0);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_age17_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
+        user.setAge(17);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_age18_ok() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
+        user.setAge(18);
+
+        User registeredUser = registrationService.register(user);
+
+        assertNotNull(registeredUser);
+        assertEquals(18, registeredUser.getAge());
+        assertEquals(1, Storage.people.size());
+        assertTrue(Storage.people.contains(registeredUser));
+    }
+
+    @Test
+    void register_age19_ok() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("validPassword");
+        user.setAge(19);
+
+        User registeredUser = registrationService.register(user);
+
+        assertNotNull(registeredUser);
+        assertEquals(19, registeredUser.getAge());
+        assertEquals(1, Storage.people.size());
+        assertTrue(Storage.people.contains(registeredUser));
     }
 }

@@ -6,6 +6,9 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final int MIN_AGE = 18;
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
@@ -15,7 +18,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         String login = user.getLogin();
-        if (login == null || login.length() < 6) {
+        if (login == null) {
+            throw new RegistrationException("Login cannot be null");
+        }
+
+        if (login.length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login must have at least 6 characters");
         }
 
@@ -24,17 +31,23 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         String password = user.getPassword();
-        if (password == null || password.length() < 6) {
+        if (password == null) {
+            throw new RegistrationException("Password cannot be null");
+        }
+
+        if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException("Password must have at least 6 characters");
         }
 
         Integer age = user.getAge();
-        if (age == null || age < 18) {
+        if (age == null) {
+            throw new RegistrationException("Your age cannot be null");
+        }
+
+        if (age < MIN_AGE) {
             throw new RegistrationException("Your age must be at least 18");
         }
 
-        User addedUser = storageDao.add(user);
-
-        return addedUser;
+        return storageDao.add(user);
     }
 }
