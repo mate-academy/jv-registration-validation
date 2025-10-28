@@ -22,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Password can't be null");
         }
         if (user.getAge() == null) {
-            throw new RegistrationException("Password can't be null");
+            throw new RegistrationException("Age can't be null");
         }
         if (isUserAlreadyExist(user)) {
             throw new RegistrationException("user: " + user.getLogin() + " is already exists!");
