@@ -2,7 +2,6 @@ package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
@@ -42,14 +41,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullAge_notOk() {
+        User userNullPassword = new User(52152L, "Alexander", "password", null);
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(userNullPassword));
+    }
+
+    @Test
     void register_validRegistration_Ok() {
         User validUser = new User(52152L, "Alexander", "password", 19);
         registrationService.register(validUser);
         User expectedUserFromDB = storageDao.get(validUser.getLogin());
 
-        boolean isUserExist = expectedUserFromDB.equals(validUser);
-
-        assertTrue(isUserExist, "Expected user to be registered, but was false.");
+        assertEquals(validUser, expectedUserFromDB);
     }
 
     @Test
@@ -78,7 +82,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_alreadyExistsUser_NotOk() {
+    void register_alreadyExistsUser_notOk() {
         User validUser = new User(52152L, "Alexander", "password", 19);
         storageDao.add(validUser);
 
@@ -89,7 +93,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidLoginSize_NotOk() {
+    void register_invalidLoginSize_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService
                         .register(new User(321884L, "John", "password", 19)));
@@ -100,7 +104,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidPasswordSize_NotOk() {
+    void register_invalidPasswordSize_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService
                         .register(new User(321884L, "Maksym", "ps", 19)));
@@ -111,9 +115,20 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_invalidAge_NotOk() {
+    void register_invalidAge_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService
                         .register(new User(321884L, "Maksym", "password", 12)));
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService
+                        .register(new User(321884L, "Maksym", "password", 17)));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        assertThrows(RegistrationException.class,
+                () -> registrationService
+                        .register(new User(321884L, "Maksym", "password", -4)));
     }
 }
