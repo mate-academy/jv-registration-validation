@@ -4,11 +4,11 @@ import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationService;
 import core.basesyntax.service.RegistrationServiceImpl;
 import core.basesyntax.service.UserValidationException;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test; // Regularny import
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals; // Statyczny import
+import static org.junit.jupiter.api.Assertions.assertNotNull; // Statyczny import
+import static org.junit.jupiter.api.Assertions.assertThrows; // Statyczny import
 
 public class HelloWorldTest {
     private final RegistrationService registrationService = new RegistrationServiceImpl();
