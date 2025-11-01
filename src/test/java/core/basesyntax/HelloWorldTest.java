@@ -75,6 +75,5 @@ public class HelloWorldTest {
         assertNotNull(registeredUser);
 
         assertEquals("validlogin", registeredUser.getLogin());
-
     }
 }
