@@ -1,8 +1,135 @@
 package core.basesyntax;
 
-/**
- * Feel free to remove this class and create your own.
- */
-public class HelloWorldTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationService;
+import core.basesyntax.service.RegistrationServiceImpl;
+import core.basesyntax.service.UserValidationException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class HelloWorldTest {
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
+    private final StorageDao storageDao = new StorageDaoImpl();
+
+    @BeforeEach
+    public void setUp() {
+        storageDao.clear();
+    }
+
+    // --- TESTY NA WARTOŚCI NULL (Wcięcia poprawione) ---
+
+    @Test
+    public void register_userIsNull_throwsException() {
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(null)
+        );
+    }
+
+    @Test
+    public void register_loginIsNull_throwsException() {
+        User user = new User();
+        user.setPassword("password123");
+        user.setAge(20);
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    public void register_passwordIsNull_throwsException() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setAge(20);
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    public void register_ageIsNull_throwsException() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("password123");
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    // --- TESTY NA WALIDACJĘ (Wcięcia poprawione) ---
+
+    @Test
+    public void register_loginTooShort_throwsException() {
+        User user = new User();
+        user.setLogin("abcde");
+        user.setPassword("password123");
+        user.setAge(20);
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    public void register_passwordTooShort_throwsException() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("12345");
+        user.setAge(20);
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    public void register_userUnderage_throwsException() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("password123");
+        user.setAge(17);
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    public void register_loginAlreadyExists_throwsException() {
+        User firstUser = new User();
+        firstUser.setLogin("uniqueLogin");
+        firstUser.setPassword("password123");
+        firstUser.setAge(20);
+        storageDao.add(firstUser);
+
+        User duplicateUser = new User();
+        duplicateUser.setLogin("uniqueLogin");
+        duplicateUser.setPassword("password456");
+        duplicateUser.setAge(25);
+
+        assertThrows(UserValidationException.class,
+                () -> registrationService.register(duplicateUser)
+        );
+    }
+
+    // --- TEST SUKCESU ---
+
+    @Test
+    public void register_validUser_returnsRegisteredUser() {
+        User newUser = new User();
+        newUser.setLogin("validlogin6");
+        newUser.setPassword("password123");
+        newUser.setAge(18);
+        User registeredUser = registrationService.register(newUser);
+
+        assertNotNull(registeredUser);
+
+        User userFromStorage = storageDao.get("validlogin6");
+        assertNotNull(userFromStorage, "Registered user should be found in storage.");
+
+        assertEquals("validlogin6", userFromStorage.getLogin());
+        assertEquals(18, registeredUser.getAge());
+    }
 }
