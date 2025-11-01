@@ -6,7 +6,7 @@ public class User {
     private Long id;
     private String login;
     private String password;
-    private Integer age;
+   private Integer age;
 
     public Long getId() {
         return id;
