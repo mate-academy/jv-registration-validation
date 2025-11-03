@@ -1,0 +1,131 @@
+package core.basesyntax.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import core.basesyntax.db.Storage;
+import core.basesyntax.exception.NotValidUserException;
+import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class RegistrationServiceImplTest {
+    private static RegistrationService registrationService;
+    private static User nullUser;
+    private User user;
+
+    @BeforeAll
+    static void beforeAll() {
+        registrationService = new RegistrationServiceImpl();
+        nullUser = null;
+    }
+
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        Storage.people.clear();
+    }
+
+    @Test
+    void register_nullUser_notOk() {
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(nullUser);
+        });
+    }
+
+    @Test
+    void register_userIsRegistered_notOk() {
+        User registeredUser = new User();
+        registeredUser.setLogin("123456");
+        registeredUser.setAge(18);
+        registeredUser.setId(1235L);
+        registeredUser.setPassword("123456");
+        Storage.people.add(registeredUser);
+        user.setLogin("123456");
+        user.setAge(19);
+        user.setId(12356L);
+        user.setPassword("123456pass");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_ageIsNull_notOk() {
+        user.setAge(null);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin("login6");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_userIsUnder18_notOk() {
+        user.setAge(17);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin("login6");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_validUser_isOk() {
+        user.setAge(18);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin("login6");
+        User saved = registrationService.register(user);
+        assertEquals(saved,user);
+        assertTrue(Storage.people.contains(user));
+    }
+
+    @Test
+    void register_loginIsNull_notOk() {
+        user.setAge(18);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin(null);
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginLength_notOk() {
+        user.setAge(18);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin("login");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_passwordIsNull_notOk() {
+        user.setAge(18);
+        user.setId(12345L);
+        user.setPassword(null);
+        user.setLogin("login6");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_passwordLength_notOk() {
+        user.setAge(18);
+        user.setId(12345L);
+        user.setPassword("12345");
+        user.setLogin("login6");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+}
