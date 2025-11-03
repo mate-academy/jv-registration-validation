@@ -25,6 +25,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         user = new User();
+        Storage.people.clear();
     }
 
     @Test
@@ -37,6 +38,9 @@ class RegistrationServiceImplTest {
     @Test
     void register_userIsUnder18_notOk() {
         user.setAge(17);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin("login6");
         assertThrows(NotValidUserException.class, () -> {
             registrationService.register(user);
         });
@@ -45,8 +49,13 @@ class RegistrationServiceImplTest {
     @Test
     void register_userIsOver18_isOk() {
         user.setAge(18);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin("login6");
         Integer actual = user.getAge();
         assertTrue(actual >= 18);
+        registrationService.register(user);
+        assertTrue(Storage.people.contains(user));
     }
 
     @Test
@@ -55,7 +64,7 @@ class RegistrationServiceImplTest {
         user.setId(12345L);
         user.setPassword("123456");
         user.setLogin("login6");
-        assertEquals(User.class,registrationService.register(user).getClass());
+        assertEquals(registrationService.register(user),user);
     }
 
     @Test

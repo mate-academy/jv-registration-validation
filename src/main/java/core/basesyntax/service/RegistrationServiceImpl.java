@@ -15,14 +15,23 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new NotValidUserException("User can not be null");
         }
+        if (user.getAge() == null) {
+            throw new NotValidUserException("User age should not be null");
+        }
         if (user.getAge() < MIN_AGE) {
             throw new NotValidUserException("User should be over 18");
+        }
+        if (user.getLogin() == null) {
+            throw new NotValidUserException("Login should not be null");
         }
         if (user.getLogin().length() < MIN_LENGTH) {
             throw new NotValidUserException("Login should be at least 6 characters long");
         }
+        if (user.getPassword() == null) {
+            throw new NotValidUserException("Password should not be null");
+        }
         if (user.getPassword().length() < MIN_LENGTH) {
-            throw new NotValidUserException("Login should be at least 6 characters long");
+            throw new NotValidUserException("Password should be at least 6 characters long");
         }
         return storageDao.add(user);
     }
