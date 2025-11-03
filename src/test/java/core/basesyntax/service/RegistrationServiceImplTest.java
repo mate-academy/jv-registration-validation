@@ -36,6 +36,34 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_userIsRegistered_notOk() {
+        User registeredUser = new User();
+        registeredUser.setLogin("123456");
+        registeredUser.setAge(18);
+        registeredUser.setId(1235L);
+        registeredUser.setPassword("123456");
+        Storage.people.add(registeredUser);
+        user.setLogin("123456");
+        user.setAge(19);
+        user.setId(12356L);
+        user.setPassword("123456pass");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_ageIsNull_notOk() {
+        user.setAge(null);
+        user.setId(12345L);
+        user.setPassword("123456");
+        user.setLogin("login6");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_userIsUnder18_notOk() {
         user.setAge(17);
         user.setId(12345L);
@@ -47,24 +75,25 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_userIsOver18_isOk() {
+    void register_validUser_isOk() {
         user.setAge(18);
         user.setId(12345L);
         user.setPassword("123456");
         user.setLogin("login6");
-        Integer actual = user.getAge();
-        assertTrue(actual >= 18);
-        registrationService.register(user);
+        User saved = registrationService.register(user);
+        assertEquals(saved,user);
         assertTrue(Storage.people.contains(user));
     }
 
     @Test
-    void register_returnsUser_isOk() {
+    void register_loginIsNull_notOk() {
         user.setAge(18);
         user.setId(12345L);
         user.setPassword("123456");
-        user.setLogin("login6");
-        assertEquals(registrationService.register(user),user);
+        user.setLogin(null);
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
     }
 
     @Test
@@ -79,6 +108,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_passwordIsNull_notOk() {
+        user.setAge(18);
+        user.setId(12345L);
+        user.setPassword(null);
+        user.setLogin("login6");
+        assertThrows(NotValidUserException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_passwordLength_notOk() {
         user.setAge(18);
         user.setId(12345L);
@@ -87,15 +127,5 @@ class RegistrationServiceImplTest {
         assertThrows(NotValidUserException.class, () -> {
             registrationService.register(user);
         });
-    }
-
-    @Test
-    void register_storageWasIncreased_Ok() {
-        user.setAge(18);
-        user.setId(12345L);
-        user.setPassword("123456");
-        user.setLogin("login6");
-        registrationService.register(user);
-        assertTrue(Storage.people.contains(user));
     }
 }
