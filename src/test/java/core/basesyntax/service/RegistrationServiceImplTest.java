@@ -1,5 +1,6 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,9 +40,9 @@ class RegistrationServiceImplTest {
         User result = registrationService.register(user);
 
         assertNotNull(result);
+        assertEquals(user, result, "Returned user must be the same object that was passed.");
         assertNotNull(result.getId(), "id should be set after adding to storage");
-        assertTrue(Storage.people.contains(result));
-        assertEquals(user, result);
+        assertTrue(Storage.people.contains(result), "User must be present in Storage.people");
     }
 
     @Test
@@ -101,10 +102,11 @@ class RegistrationServiceImplTest {
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
 
-        User result = registrationService.register(user);
+        User result = assertDoesNotThrow(() -> registrationService.register(user));
 
         assertNotNull(result);
         assertEquals(user, result);
+        assertTrue(Storage.people.contains(result));
     }
 
     @Test
@@ -139,10 +141,11 @@ class RegistrationServiceImplTest {
         user.setPassword("abcdef");
         user.setAge(VALID_AGE);
 
-        User result = registrationService.register(user);
+        User result = assertDoesNotThrow(() -> registrationService.register(user));
 
         assertNotNull(result);
         assertEquals(user, result);
+        assertTrue(Storage.people.contains(result));
     }
 
     @Test
@@ -189,8 +192,9 @@ class RegistrationServiceImplTest {
         user.setAge(18);
 
         User result = registrationService.register(user);
+        assertNotNull(result);
+        assertEquals(user, result);
         assertNotNull(result.getId());
         assertTrue(Storage.people.contains(result));
-        assertEquals(user, result);
     }
 }
