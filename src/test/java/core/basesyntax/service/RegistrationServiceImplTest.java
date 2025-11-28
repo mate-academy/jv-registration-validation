@@ -1,6 +1,5 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,6 +41,7 @@ class RegistrationServiceImplTest {
         assertNotNull(result);
         assertNotNull(result.getId(), "id should be set after adding to storage");
         assertTrue(Storage.people.contains(result));
+        assertEquals(user, result);
     }
 
     @Test
@@ -92,11 +92,19 @@ class RegistrationServiceImplTest {
             assertThrows(RegistrationException.class, () -> registrationService.register(user),
                     "Should throw for login length: " + bad.length());
         }
-        User ok = new User();
-        ok.setLogin("abcdef");
-        ok.setPassword(VALID_PASSWORD);
-        ok.setAge(VALID_AGE);
-        assertDoesNotThrow(() -> registrationService.register(ok));
+    }
+
+    @Test
+    void register_loginWithMinLength_ok() {
+        User user = new User();
+        user.setLogin("abcdef");
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+
+        User result = registrationService.register(user);
+
+        assertNotNull(result);
+        assertEquals(user, result);
     }
 
     @Test
@@ -116,17 +124,25 @@ class RegistrationServiceImplTest {
         String[] badPasswords = {"", "abc", "abcde"}; // 0,3,5
         for (String bad : badPasswords) {
             User user = new User();
-            user.setLogin(VALID_LOGIN + bad); // ensure unique login
+            user.setLogin(VALID_LOGIN + bad);
             user.setPassword(bad);
             user.setAge(VALID_AGE);
             assertThrows(RegistrationException.class, () -> registrationService.register(user),
                     "Should throw for password length: " + bad.length());
         }
-        User ok = new User();
-        ok.setLogin("loginOK");
-        ok.setPassword("abcdef");
-        ok.setAge(VALID_AGE);
-        assertDoesNotThrow(() -> registrationService.register(ok));
+    }
+
+    @Test
+    void register_passwordWithMinLength_ok() {
+        User user = new User();
+        user.setLogin("loginOK");
+        user.setPassword("abcdef");
+        user.setAge(VALID_AGE);
+
+        User result = registrationService.register(user);
+
+        assertNotNull(result);
+        assertEquals(user, result);
     }
 
     @Test
@@ -175,5 +191,6 @@ class RegistrationServiceImplTest {
         User result = registrationService.register(user);
         assertNotNull(result.getId());
         assertTrue(Storage.people.contains(result));
+        assertEquals(user, result);
     }
 }
