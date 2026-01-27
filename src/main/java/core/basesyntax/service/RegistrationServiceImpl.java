@@ -13,14 +13,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LENGTH = 6;
     private final StorageDao storageDao = new StorageDaoImpl();
 
-    /* TODO: delete
-    there is no user with such login in the Storage yet
-    user's login is at least 6 characters
-    user's password is at least 6 characters
-    user's age is at least 18 years old
-
-    user == null*/
-
     @Override
     public User register(User user) {
         if (user == null) {
