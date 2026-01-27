@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exeption.InputDataException;
 import core.basesyntax.exeption.LoginAlreadyExistsException;
 import core.basesyntax.exeption.UserIsNullException;
@@ -19,6 +20,7 @@ public class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        Storage.people.clear();
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         User bob = new User();
@@ -50,7 +52,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_minAge_Ok() {
+    public void register_minAge_Ok() {
         User expected = new User();
         expected.setAge(18);
         expected.setLogin("new_User_18");
@@ -61,7 +63,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_minLoginLength_Ok() {
+    public void register_minLoginLength_Ok() {
         User expected = new User();
         expected.setAge(19);
         expected.setLogin("123456");
@@ -72,7 +74,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_minPasswordLength_Ok() {
+    public void register_minPasswordLength_Ok() {
         User expected = new User();
         expected.setAge(90);
         expected.setLogin("new_User2026");
@@ -83,7 +85,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_nullAge_notOk() {
+    public void register_nullAge_notOk() {
         User expected = new User();
         expected.setAge(null);
         expected.setLogin("new_User_nullAge");
@@ -94,7 +96,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_nullPassword_notOk() {
+    public void register_nullPassword_notOk() {
         User expected = new User();
         expected.setAge(33);
         expected.setLogin("new_User");
@@ -105,7 +107,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_nullLogin_notOk() {
+    public void register_nullLogin_notOk() {
         User expected = new User();
         expected.setAge(33);
         expected.setLogin(null);
@@ -116,10 +118,10 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_incorrectLogin_notOk() {
+    public void register_incorrectLogin_notOk() {
         User expected = new User();
         expected.setAge(33);
-        expected.setLogin("vvvv");
+        expected.setLogin("vvvvv");
         expected.setPassword("16283940");
         assertThrows(InputDataException.class, () -> {
             registrationService.register(expected);
@@ -127,18 +129,18 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_incorrectPassword_notOk() {
+    public void register_incorrectPassword_notOk() {
         User expected = new User();
         expected.setAge(33);
         expected.setLogin("newUser18");
-        expected.setPassword("64");
+        expected.setPassword("12345");
         assertThrows(InputDataException.class, () -> {
             registrationService.register(expected);
         });
     }
 
     @Test
-    public void registerUser_loginExists_notOk() {
+    public void register_loginExists_notOk() {
         User expected = new User();
         expected.setAge(33);
         expected.setLogin("bob_2000");
@@ -149,7 +151,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_smallAge_notOk() {
+    public void register_smallAge_notOk() {
         User expected = new User();
         expected.setAge(10);
         expected.setLogin("newUser10");
@@ -160,7 +162,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
-    public void registerUser_negativeAge_notOk() {
+    public void register_negativeAge_notOk() {
         User expected = new User();
         expected.setAge(-12);
         expected.setLogin("newUser-12");
