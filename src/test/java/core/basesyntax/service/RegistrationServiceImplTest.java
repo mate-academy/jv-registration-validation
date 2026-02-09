@@ -17,10 +17,12 @@ class RegistrationServiceImplTest {
     private static final String LOGIN_5_CHAR = "login";
     private static final String LOGIN_8_CHAR = "logintwo";
     private static final String LOGIN_3_CHAR = "log";
+    private static final String EMPTY_LOGIN = "";
     private static final String PASSWORD_6_CHAR = "PASSWO";
     private static final String PASSWORD_5_CHAR = "PASSW";
     private static final String PASSWORD_8_CHAR = "PASSWORD";
     private static final String PASSWORD_3_CHAR = "PAS";
+    private static final String EMPTY_PASSWORD = "";
     private static final int AGE_15 = 15;
     private static final int AGE_17 = 17;
     private static final int AGE_18 = 18;
@@ -56,8 +58,11 @@ class RegistrationServiceImplTest {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
+        int expected = Storage.people.size() + 1;
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+        assertEquals(expected, Storage.people.size());
+
 
     }
 
@@ -67,8 +72,10 @@ class RegistrationServiceImplTest {
         user.setLogin(LOGIN_6_CHAR);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
+        int expected = Storage.people.size() + 1;
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+        assertEquals(expected, Storage.people.size());
     }
 
     @Test
@@ -77,8 +84,10 @@ class RegistrationServiceImplTest {
         user.setLogin(LOGIN_8_CHAR);
         user.setPassword(VALID_PASSWORD);
         user.setAge(VALID_AGE);
+        int expected = Storage.people.size() + 1;
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+        assertEquals(expected, Storage.people.size());
     }
 
     @Test
@@ -109,13 +118,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_3EmptyLogin_NotOk() {
+        User user = new User();
+        user.setLogin(EMPTY_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_6charPassword_Ok() {
         User user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(PASSWORD_6_CHAR);
         user.setAge(VALID_AGE);
+        int expected = Storage.people.size() + 1;
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+        assertEquals(expected, Storage.people.size());
     }
 
     @Test
@@ -124,8 +144,10 @@ class RegistrationServiceImplTest {
         user.setLogin(VALID_LOGIN);
         user.setPassword(PASSWORD_8_CHAR);
         user.setAge(VALID_AGE);
+        int expected = Storage.people.size() + 1;
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+        assertEquals(expected, Storage.people.size());
     }
 
     @Test
@@ -156,13 +178,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_emptyPassword_NotOk() {
+        User user = new User();
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(EMPTY_PASSWORD);
+        user.setAge(VALID_AGE);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_age18_Ok() {
         User user = new User();
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(AGE_18);
+        int expected = Storage.people.size() + 1;
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+        assertEquals(expected, Storage.people.size());
     }
 
     @Test
@@ -171,8 +204,10 @@ class RegistrationServiceImplTest {
         user.setLogin(VALID_LOGIN);
         user.setPassword(VALID_PASSWORD);
         user.setAge(AGE_20);
+        int expected = Storage.people.size() + 1;
         User actual = registrationService.register(user);
         assertEquals(user, actual);
+        assertEquals(expected, Storage.people.size());
     }
 
     @Test
