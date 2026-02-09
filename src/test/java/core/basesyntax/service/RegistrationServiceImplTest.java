@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private final RegistrationService registrationService = new RegistrationServiceImpl();
     private static final String VALID_LOGIN = "LOGGIN";
     private static final String VALID_PASSWORD = "PASSWORD";
     private static final int VALID_AGE = 20;
@@ -28,6 +27,7 @@ class RegistrationServiceImplTest {
     private static final int AGE_20 = 20;
     private static final int NEGATIVE_AGE = -20;
 
+    private final RegistrationService registrationService = new RegistrationServiceImpl();
 
     @BeforeEach
     public void clear() {
