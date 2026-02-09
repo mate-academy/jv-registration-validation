@@ -62,8 +62,6 @@ class RegistrationServiceImplTest {
         User actual = registrationService.register(user);
         assertEquals(user, actual);
         assertEquals(expected, Storage.people.size());
-
-
     }
 
     @Test
