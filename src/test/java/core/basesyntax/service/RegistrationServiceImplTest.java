@@ -4,13 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.exception.CreateUserException;
-import core.basesyntax.exception.WrongDataException;
+import core.basesyntax.db.Storage;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private RegistrationService registrationService = new RegistrationServiceImpl();
+    private static RegistrationService registrationService;
+
+    @BeforeEach
+    void setUp() {
+        registrationService = new RegistrationServiceImpl();
+        Storage.people.clear();
+    }
 
     @Test
     void allDataIsValid_ok() {
@@ -26,13 +33,49 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void passwordIsNull_notOk() {
+    void invalidAge_notOk() {
         User user = new User();
         user.setLogin("validLogin");
-        user.setAge(20);
-        user.setPassword(null);
+        user.setPassword("123456");
+        user.setAge(3);
 
-        assertThrows(WrongDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void ageIsNull_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setPassword("123456");
+        user.setAge(null);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void loginLengthIsLessThanValid_notOk() {
+        User user = new User();
+        user.setLogin("val");
+        user.setPassword("123456");
+        user.setAge(19);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void loginStringIsEmpty_notOk() {
+        User user = new User();
+        user.setLogin("");
+        user.setPassword("12345678");
+        user.setAge(19);
+
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
@@ -44,82 +87,56 @@ class RegistrationServiceImplTest {
         user.setAge(20);
         user.setLogin(null);
 
-        assertThrows(WrongDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void ageIsNull_notOk() {
+    void userWithLoginAlreadyExist_notOk() {
         User user = new User();
         user.setLogin("validLogin");
-        user.setPassword("12345678");
-        user.setAge(null);
+        user.setPassword("1234567");
+        user.setAge(20);
 
-        assertThrows(WrongDataException.class, () -> {
+        registrationService.register(user);
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
 
     @Test
-    void invalidLogin_notOk() {
-        User user = new User();
-        user.setLogin("val");
-        user.setPassword("12345678");
-        user.setAge(19);
-
-        assertThrows(WrongDataException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void invalidAge_notOk() {
-        User user = new User();
-        user.setLogin("validLogin");
-        user.setPassword("12345678");
-        user.setAge(3);
-
-        assertThrows(WrongDataException.class, () -> {
-            registrationService.register(user);
-        });
-    }
-
-    @Test
-    void invalidPassword_notOK() {
+    void passwordLengthIsLessThanValid_notOK() {
         User user = new User();
         user.setLogin("validLogin");
         user.setPassword("123");
         user.setAge(19);
 
-        assertThrows(WrongDataException.class, () -> {
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
-    /*
- need help with it
+
     @Test
-    void dublicateOfUser_notOk() {
+    void passwordStringIsEmpty_notOK() {
         User user = new User();
         user.setLogin("validLogin");
-        user.setPassword("12345678");
+        user.setPassword("");
         user.setAge(19);
 
-        User dublicateUser = new User();
-        dublicateUser.setLogin("validLogin");
-        dublicateUser.setPassword("12345678");
-        dublicateUser.setAge(19);
-
-        registrationService.register(user);
-        assertThrows(WrongDataException.class, () -> {
-            registrationService.register(dublicateUser);
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
         });
-    }*/
-    @Test
-    void userIsNull_notOk() {
-        User user = null;
+    }
 
-        assertThrows(CreateUserException.class, () -> {
+    @Test
+    void passwordIsNull_notOk() {
+        User user = new User();
+        user.setLogin("validLogin");
+        user.setAge(20);
+        user.setPassword(null);
+
+        assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
         });
     }
