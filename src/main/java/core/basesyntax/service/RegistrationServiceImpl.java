@@ -1,25 +1,35 @@
-package core.basesyntax.dao;
+package core.basesyntax.service;
 
-import core.basesyntax.db.Storage;
+import core.basesyntax.dao.StorageDao;
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
-public class StorageDaoImpl implements StorageDao {
-    private static Long index = 0L;
+public class RegistrationServiceImpl implements RegistrationService {
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
-    public User add(User user) {
-        user.setId(++index);
-        Storage.people.add(user);
-        return user;
-    }
-
-    @Override
-    public User get(String login) {
-        for (User user : Storage.people) {
-            if (user.getLogin().equals(login)) {
-                return user;
-            }
+    public User register(User user) {
+        if (user == null) {
+            throw new RegistrationException("User cannot be null");
         }
-        return null;
+
+        if (user.getLogin() == null || user.getLogin().length() < 6) {
+            throw new RegistrationException("Login must be at least 6 characters");
+        }
+
+        if (user.getPassword() == null || user.getPassword().length() < 6) {
+            throw new RegistrationException("Password must be at least 6 characters");
+        }
+
+        if (user.getAge() == null || user.getAge() < 18) {
+            throw new RegistrationException("User must be at least 18 years old");
+        }
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("User with this login already exists");
+        }
+
+        return storageDao.add(user);
     }
 }
