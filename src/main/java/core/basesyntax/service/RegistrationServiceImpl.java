@@ -20,11 +20,13 @@ public class RegistrationServiceImpl implements core.basesyntax.service.Registra
         }
 
         if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login must be at least " + MIN_LOGIN_LENGTH + " characters");
+            throw new RegistrationException("Login must be at least " + MIN_LOGIN_LENGTH
+                    + " characters");
         }
 
         if (user.getPassword() == null || user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters");
+            throw new RegistrationException("Password must be at least "
+                    + MIN_PASSWORD_LENGTH + " characters");
         }
 
         if (user.getAge() == null || user.getAge() < MIN_AGE) {
