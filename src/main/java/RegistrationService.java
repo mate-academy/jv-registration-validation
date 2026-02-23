@@ -1,8 +1,10 @@
-import core.basesyntax.model.User;
+package core.basesyntax.service;
 
 import core.basesyntax.model.User;
 
-    public interface RegistrationService {
-        User register(User user);
-    }
+public interface RegistrationService {
+
+    User register(User user);
+}
+
 

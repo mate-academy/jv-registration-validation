@@ -5,7 +5,8 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
-public class RegistrationServiceImpl implements RegistrationService {
+public class RegistrationServiceImpl implements core.basesyntax.service.RegistrationService {
+
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
