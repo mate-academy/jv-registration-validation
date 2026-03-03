@@ -1,27 +1,34 @@
-# Registration Service
+Тримаю всі `#` на місці, нічого не ламаю. Ось переклад:
 
-Your task is to implement a registration service and write unit tests for it.
+---
 
-Registration service has one method `register(User user)`, that accepts some user (the User.class has already been given to you).
-This method should register a user (by adding it to Storage) only if the user meets the following criteria:
-- there is no user with such login in the Storage yet
-- user's login is at least 6 characters
-- user's password is at least 6 characters
-- user's age is at least 18 years old
+# Сервіс реєстрації
 
+Твоє завдання — реалізувати сервіс реєстрації та написати для нього unit-тести.
 
-You should create your custom unchecked exception and throw it in case of invalid data.
+Сервіс реєстрації має один метод `register(User user)`, який приймає користувача (клас `User` вже надано).
+Цей метод повинен реєструвати користувача (додаючи його до Storage) **лише якщо** користувач відповідає таким вимогам:
 
-`Storage` and class `StorageDaoImpl` for working with Storage have already been implemented. It has two methods:
-- `User add (User user)`  - which adds a user to the storage
-- `User get (String login)` - which gets the user from the storage by login or returns null if there is no such user.
+* у Storage ще немає користувача з таким логіном
+* логін користувача має бути не менше 6 символів
+* пароль користувача має бути не менше 6 символів
+* вік користувача має бути не менше 18 років
 
-Your task is to write as many tests as possible to cover all possible options.
+Ти повинен створити власний unchecked exception і кидати його у випадку невалідних даних.
 
-There are a lot of ways to name your test methods. The main point is that they should have informative 
-names and be consistent along with other developers in your team. For this task use such convention:
-`<methodUnderTest>_<state>_<expectedBehavior>`; For example, if we are testing the method `register` with a `null`  
-user's age the test method name should be `register_nullAge_notOk`. notOk is because
-the test expects the register method to throw an exception.
+`Storage` і клас `StorageDaoImpl` для роботи зі Storage вже реалізовані. Вони мають два методи:
 
-#### [Try to avoid these common mistakes, while solving task](./checklist.md)
+* `User add(User user)` — додає користувача до сховища
+* `User get(String login)` — отримує користувача зі сховища за логіном або повертає null, якщо такого користувача не існує
+
+Твоє завдання — написати якомога більше тестів, щоб покрити всі можливі варіанти.
+
+Існує багато способів називати тестові методи. Головне — щоб назви були інформативними та узгодженими з іншими розробниками в команді. Для цього завдання використовуй таку конвенцію:
+`<methodUnderTest>_<state>_<expectedBehavior>`;
+Наприклад, якщо ми тестуємо метод `register` з `null` віком користувача, назва тесту повинна бути
+`register_nullAge_notOk`.
+`notOk` — тому що тест очікує, що метод `register` викине exception.
+
+#### [Спробуй уникати цих поширених помилок під час виконання завдання](./checklist.md)
+
+---
