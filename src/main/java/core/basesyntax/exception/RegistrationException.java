@@ -1,2 +1,7 @@
-package core.basesyntax.exception;public class RegistrationException {
+package core.basesyntax.exception;
+
+public class RegistrationException extends RuntimeException {
+    public RegistrationException(String message) {
+        super(message);
+    }
 }
