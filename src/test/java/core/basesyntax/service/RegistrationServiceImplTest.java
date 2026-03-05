@@ -5,7 +5,9 @@ import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -94,6 +96,7 @@ class RegistrationServiceImplTest {
         user.setAge(26);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
+
     @Test
     void register_userIsTooYoung_notOk() {
         User user = new User();
