@@ -17,11 +17,25 @@ class RegistrationServiceImplTest {
     private RegistrationService registrationService;
     private StorageDao storageDao;
 
+
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
         storageDao = new StorageDaoImpl();
         Storage.people.clear();
+    }
+
+    @Test
+    void register_userHasBeenAdded_Ok() {
+        User user = new User();
+        user.setId(12L);
+        user.setLogin("patryk");
+        user.setAge(20);
+        user.setPassword("secret");
+        registrationService.register(user);
+        User userFromStorage = storageDao.get("patryk");
+        assertNotNull(userFromStorage, "User should be saved in the storage");
+        assertEquals("patryk", userFromStorage.getLogin());
     }
 
     @Test
@@ -131,8 +145,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_userIsNull_notOk() {
-        User user = new User();
-        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test

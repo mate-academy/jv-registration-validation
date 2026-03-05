@@ -7,6 +7,9 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private final StorageDao storageDao = new StorageDaoImpl(); // add, get
+    private static final int AGE_OF_EIGHTEEN = 18;
+    private static final int AGE_ZERO = 0;
+    private static final int MINIMUM_LENGTH_OF_PASSWORD_OR_LOGIN = 6;
 
     @Override
     public User register(User user) {
@@ -16,24 +19,24 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user.getLogin() == null) {
             throw new RegistrationException("User login is null");
         }
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin().length() < MINIMUM_LENGTH_OF_PASSWORD_OR_LOGIN) {
             throw new RegistrationException("User login is too short");
         }
         if (user.getPassword() == null) {
             throw new RegistrationException("User password is null");
         }
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MINIMUM_LENGTH_OF_PASSWORD_OR_LOGIN) {
             throw new RegistrationException("User password is too short");
         }
         if (user.getAge() == null) {
             throw new RegistrationException("User age is null");
         }
 
-        if (user.getAge() <= 0) {
+        if (user.getAge() <= AGE_ZERO) {
             throw new RegistrationException("User can't be younger than 0");
         }
 
-        if (user.getAge() < 18) {
+        if (user.getAge() < AGE_OF_EIGHTEEN) {
             throw new RegistrationException("User is too young");
         }
 
