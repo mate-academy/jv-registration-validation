@@ -28,13 +28,13 @@ class RegistrationServiceImplTest {
     void register_userHasBeenAdded_Ok() {
         User user = new User();
         user.setId(12L);
-        user.setLogin("patryk");
+        user.setLogin("patryk123");
         user.setAge(20);
-        user.setPassword("secret");
+        user.setPassword("secret123");
         registrationService.register(user);
-        User userFromStorage = storageDao.get("patryk");
+        User userFromStorage = storageDao.get("patryk123");
         assertNotNull(userFromStorage, "User should be saved in the storage");
-        assertEquals("patryk", userFromStorage.getLogin());
+        assertEquals("patryk123", userFromStorage.getLogin());
     }
 
     @Test
@@ -45,7 +45,8 @@ class RegistrationServiceImplTest {
         user.setAge(20);
         user.setPassword("secret");
         User result = registrationService.register(user);
-        assertNotNull(result);
+        User isItNull = storageDao.get(user.getLogin());
+        assertNotNull(isItNull, "User hasn't been added.");
         assertEquals("patryk", result.getLogin());
     }
 
@@ -77,6 +78,8 @@ class RegistrationServiceImplTest {
         user.setPassword("secret1234");
         user.setAge(26);
         User result = registrationService.register(user);
+        User isItNull = storageDao.get(user.getLogin());
+        assertNotNull(isItNull, "User hasn't been added.");
         assertEquals("abcdef", result.getLogin());
     }
 
@@ -94,10 +97,12 @@ class RegistrationServiceImplTest {
     void register_passwordLengthIsExactlyMinimum_ok() {
         User user = new User();
         user.setId(15L);
-        user.setLogin("abcdef");
+        user.setLogin("abcdef123");
         user.setPassword("secret");
         user.setAge(26);
         User result = registrationService.register(user);
+        User userIsNull = storageDao.get(user.getLogin());
+        assertNotNull(userIsNull, "User hasn't been added.");
         assertEquals("secret", result.getPassword());
     }
 
@@ -112,11 +117,21 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_passwordLengthIsZeroLength_notOk() {
+        User user = new User();
+        user.setId(15L);
+        user.setLogin("abcdef");
+        user.setPassword("");
+        user.setAge(26);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_userIsTooYoung_notOk() {
         User user = new User();
         user.setId(20L);
         user.setLogin("login123");
-        user.setPassword("secr");
+        user.setPassword("secret123");
         user.setAge(15);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
@@ -129,6 +144,8 @@ class RegistrationServiceImplTest {
         user.setPassword("secr122");
         user.setAge(18);
         User result = registrationService.register(user);
+        User isItNull = storageDao.get(user.getLogin());
+        assertNotNull(isItNull, "User hasn't been added.");
         assertEquals(18, result.getAge());
     }
 
@@ -137,7 +154,7 @@ class RegistrationServiceImplTest {
         User user = new User();
         user.setId(20L);
         user.setLogin("login123");
-        user.setPassword("secr");
+        user.setPassword("secret123");
         user.setAge(-5);
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
