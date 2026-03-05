@@ -6,11 +6,12 @@ import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
 
     private static final int AGE_OF_EIGHTEEN = 18;
     private static final int AGE_ZERO = 0;
     private static final int MINIMUM_LENGTH_OF_PASSWORD_OR_LOGIN = 6;
+
+    private final StorageDao storageDao = new StorageDaoImpl();
 
     @Override
     public User register(User user) {

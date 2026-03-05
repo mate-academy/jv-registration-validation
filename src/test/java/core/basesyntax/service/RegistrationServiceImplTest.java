@@ -17,7 +17,6 @@ class RegistrationServiceImplTest {
     private RegistrationService registrationService;
     private StorageDao storageDao;
 
-
     @BeforeEach
     void setUp() {
         registrationService = new RegistrationServiceImpl();
