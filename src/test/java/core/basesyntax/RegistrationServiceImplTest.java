@@ -34,12 +34,65 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_nullUser_notOk() {
+    void register_nullLogin_notOk() {
+        User user = createUser(null, "123456", 18);
         Assertions.assertThrows(RegistrationException.class,
-                () -> registrationService.register(null));
+                () -> registrationService.register(user));
     }
 
-    // інші тести — аналогічно (Assertions.assertThrows / assertEquals / assertNotNull)
+    @Test
+    void register_nullPassword_notOk() {
+        User user = createUser("qwerty", null, 18);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        User user = createUser("qwerty", "123456", null);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginLengthLessThan6_notOk() {
+        User user = createUser("abc", "123456", 18);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordLengthLessThan6_notOk() {
+        User user = createUser("qwerty", "123", 18);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_age17_notOk() {
+        User user = createUser("qwerty", "123456", 17);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = createUser("qwerty", "123456", -1);
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_existingLogin_notOk() {
+        // IMPORTANT: add user directly to storage, not via register() (checklist advice)
+        User existing = createUser("qwerty", "123456", 20);
+        Storage.people.add(existing);
+
+        User newUserWithSameLogin = createUser("qwerty", "abcdef", 25);
+
+        Assertions.assertThrows(RegistrationException.class,
+                () -> registrationService.register(newUserWithSameLogin));
+    }
 
     private User createUser(String login, String password, Integer age) {
         User user = new User();
