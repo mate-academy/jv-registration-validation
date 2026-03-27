@@ -8,10 +8,12 @@ import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
-    RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
+    private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
     private final StorageDao storageDao = new StorageDaoImpl();
 
     @BeforeEach
@@ -72,10 +74,54 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_emptyLogin_notOk() {
+        User user = new User();
+        user.setLogin("");
+        user.setPassword("1234567");
+        user.setAge(24);
+        assertThrows(RegistrationDataInvalidException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_loginLengthFive_notOk() {
+        User user = new User();
+        user.setLogin("12345");
+        user.setPassword("1234567");
+        user.setAge(24);
+        assertThrows(RegistrationDataInvalidException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_shortPassword_notOk() {
         User user = new User();
         user.setLogin("test123@gmai.com");
         user.setPassword("1234");
+        user.setAge(24);
+        assertThrows(RegistrationDataInvalidException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        User user = new User();
+        user.setLogin("test123@gmai.com");
+        user.setPassword("");
+        user.setAge(24);
+        assertThrows(RegistrationDataInvalidException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    void register_passwordLengthFive_notOk() {
+        User user = new User();
+        user.setLogin("test123@gmai.com");
+        user.setPassword("12345");
         user.setAge(24);
         assertThrows(RegistrationDataInvalidException.class, () -> {
             registrationService.register(user);
@@ -94,6 +140,30 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_age18_ok() {
+        User user = new User();
+        user.setLogin("test123@gmai.com");
+        user.setPassword("1234566");
+        user.setAge(18);
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser);
+        assertEquals(user, registeredUser);
+        User fromStorage = storageDao.get(user.getLogin());
+        assertNotNull(fromStorage);
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = new User();
+        user.setLogin("test123@gmai.com");
+        user.setPassword("1234566");
+        user.setAge(-1);
+        assertThrows(RegistrationDataInvalidException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
     void register_duplicateLogin_notOk() {
         User user1 = new User();
         User user2 = new User();
@@ -103,7 +173,7 @@ class RegistrationServiceImplTest {
         user2.setPassword("12345675");
         user1.setAge(20);
         user2.setAge(19);
-        registrationService.register(user1);
+        storageDao.add(user1);
         assertThrows(RegistrationDataInvalidException.class, () -> {
             registrationService.register(user2);
         });
