@@ -1,5 +1,9 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
@@ -7,10 +11,6 @@ import core.basesyntax.exception.RegistrationDataInvalidException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
     private final RegistrationServiceImpl registrationService = new RegistrationServiceImpl();
@@ -96,6 +96,17 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_loginLengthSix_ok() {
+        User user = new User();
+        user.setLogin("123456");
+        user.setPassword("1234567");
+        user.setAge(24);
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser);
+        assertEquals(user, registeredUser);
+    }
+
+    @Test
     void register_shortPassword_notOk() {
         User user = new User();
         user.setLogin("test123@gmai.com");
@@ -126,6 +137,17 @@ class RegistrationServiceImplTest {
         assertThrows(RegistrationDataInvalidException.class, () -> {
             registrationService.register(user);
         });
+    }
+
+    @Test
+    void register_passwordLengthSix_ok() {
+        User user = new User();
+        user.setLogin("test123@gmai.com");
+        user.setPassword("123456");
+        user.setAge(24);
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser);
+        assertEquals(user, registeredUser);
     }
 
     @Test
@@ -185,8 +207,10 @@ class RegistrationServiceImplTest {
         user.setLogin("test123@gmai.com");
         user.setPassword("1234566");
         user.setAge(24);
-        registrationService.register(user);
-        User result = storageDao.get(user.getLogin());
-        assertNotNull(result);
+        User registeredUser = registrationService.register(user);
+        assertNotNull(registeredUser);
+        assertEquals(user, registeredUser);
+        User fromStorage = storageDao.get(user.getLogin());
+        assertNotNull(fromStorage);
     }
 }
