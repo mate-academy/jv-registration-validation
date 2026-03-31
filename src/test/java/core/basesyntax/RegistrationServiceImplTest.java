@@ -88,7 +88,7 @@ public class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         user.setPassword("validPassword");
         user.setAge(18);
-        registrationService.register(user);
+        storageDao.add(user);
         User newUser = new User();
         newUser.setLogin("validLogin");
         newUser.setPassword("validPassword");
@@ -100,6 +100,16 @@ public class RegistrationServiceImplTest {
     void register_validUser_ok() {
         user.setLogin("secondValidLogin");
         user.setPassword("validPassword");
+        user.setAge(18);
+        User returnedUser = registrationService.register(user);
+        assertEquals(user, returnedUser);
+        assertEquals(user, storageDao.get(user.getLogin()));
+    }
+
+    @Test
+    void register_loginAndPassword_length6_ok() {
+        user.setLogin("abcdef");
+        user.setPassword("abcdef");
         user.setAge(18);
         User returnedUser = registrationService.register(user);
         assertEquals(user, returnedUser);
