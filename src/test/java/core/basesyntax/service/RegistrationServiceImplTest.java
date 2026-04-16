@@ -1,13 +1,14 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import core.basesyntax.db.Storage;
 import core.basesyntax.exceptions.UserValidationException;
 import core.basesyntax.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private static RegistrationService registrationService;
@@ -159,7 +160,7 @@ class RegistrationServiceImplTest {
         user.setPassword("abcdef");
         user.setAge(30);
 
-        User actual= registrationService.register(user);
+        User actual = registrationService.register(user);
 
         assertEquals(user, actual);
         assertEquals(3, Storage.people.size());
