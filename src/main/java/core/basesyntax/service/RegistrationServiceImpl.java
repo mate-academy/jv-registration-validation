@@ -17,31 +17,42 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new UserValidationException("User is null");
         }
 
-        String login = user.getLogin();
-
-        // there is no user with such login in the Storage yet
-        User userFromDb = storageDao.get(login);
-        if (userFromDb != null) {
+        boolean loginIsUnique = isLoginUnique(user.getLogin());
+        if (!loginIsUnique) {
             throw new UserValidationException("User with such login already exists");
         }
 
-        // user's login is at least 6 characters
-        String normalizedLogin = login.trim();
-        if (normalizedLogin.length() < MIN_LOGIN_LENGTH) {
+        boolean loginIsValid = isLoginValid(user.getLogin());
+        if (!loginIsValid) {
             throw new UserValidationException("User's login must be at least 6 characters long");
         }
 
-        // user's password is at least 6 characters
-        String normalizedPassword = user.getPassword().trim();
-        if (normalizedPassword.length() < MIN_PASSWORD_LENGTH) {
+        boolean passwordIsValid = isPasswordValid(user.getPassword());
+        if (!passwordIsValid) {
             throw new UserValidationException("User's password must be at least 6 characters long");
         }
 
-        // user's age is at least 18
-        if (user.getAge() < MIN_AGE) {
+        boolean ageIsValid = isAgeValid(user.getAge());
+        if (!ageIsValid) {
             throw new UserValidationException("User's age must be at least 18");
         }
 
         return this.storageDao.add(user);
+    }
+
+    private boolean isLoginUnique(String login) {
+        return this.storageDao.get(login) == null;
+    }
+
+    private boolean isLoginValid(String login) {
+        return login != null && login.length() >= MIN_LOGIN_LENGTH;
+    }
+
+    private boolean isPasswordValid(String password) {
+        return password != null && password.length() >= MIN_PASSWORD_LENGTH;
+    }
+
+    private boolean isAgeValid(Integer age) {
+        return age != null && age >= MIN_AGE;
     }
 }
