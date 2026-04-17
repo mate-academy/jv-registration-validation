@@ -5,8 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import core.basesyntax.db.Storage;
-import core.basesyntax.exceptions.UserValidationException;
+import core.basesyntax.exceptions.RegistrationException;
 import core.basesyntax.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,22 +16,7 @@ class RegistrationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear();
-
         registrationService = new RegistrationServiceImpl();
-
-        User bob = new User();
-        bob.setLogin("bobbob");
-        bob.setPassword("bbbooobbb");
-        bob.setAge(23);
-
-        User alice = new User();
-        alice.setLogin("alicealice");
-        alice.setPassword("aaaaliiii");
-        alice.setAge(22);
-
-        Storage.people.add(bob);
-        Storage.people.add(alice);
     }
 
     @Test
@@ -44,13 +30,13 @@ class RegistrationServiceImplTest {
         User actual = registrationService.register(user);
 
         assertEquals(user, actual);
-        assertEquals(3, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertTrue(Storage.people.contains(actual));
     }
 
     @Test
     void register_nullUser_notOk() {
-        assertThrows(UserValidationException.class, () -> registrationService.register(null));
+        assertThrows(RegistrationException.class, () -> registrationService.register(null));
     }
 
     @Test
@@ -61,7 +47,9 @@ class RegistrationServiceImplTest {
         bob.setPassword("bbbooobbb");
         bob.setAge(23);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(bob));
+        Storage.people.add(bob);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(bob));
     }
 
     @Test
@@ -72,7 +60,7 @@ class RegistrationServiceImplTest {
         user.setPassword("aa");
         user.setAge(30);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -83,7 +71,7 @@ class RegistrationServiceImplTest {
         user.setPassword("SomeUserPassword");
         user.setAge(30);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -94,7 +82,7 @@ class RegistrationServiceImplTest {
         user.setPassword("SomeUserPassword");
         user.setAge(17);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -105,7 +93,7 @@ class RegistrationServiceImplTest {
         user.setPassword("SomeUserPassword");
         user.setAge(30);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -116,7 +104,7 @@ class RegistrationServiceImplTest {
         user.setPassword(null);
         user.setAge(30);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -127,7 +115,7 @@ class RegistrationServiceImplTest {
         user.setPassword("SomeUserPassword");
         user.setAge(null);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -138,7 +126,7 @@ class RegistrationServiceImplTest {
         user.setPassword("SomeUserPassword");
         user.setAge(-1);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -149,7 +137,7 @@ class RegistrationServiceImplTest {
         user.setPassword("");
         user.setAge(30);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -163,7 +151,7 @@ class RegistrationServiceImplTest {
         User actual = registrationService.register(user);
 
         assertEquals(user, actual);
-        assertEquals(3, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertTrue(Storage.people.contains(actual));
     }
 
@@ -175,7 +163,7 @@ class RegistrationServiceImplTest {
         user.setPassword("SomeUserPassword");
         user.setAge(0);
 
-        assertThrows(UserValidationException.class, () -> registrationService.register(user));
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 
     @Test
@@ -189,7 +177,34 @@ class RegistrationServiceImplTest {
         User actual = registrationService.register(user);
 
         assertEquals(user, actual);
-        assertEquals(3, Storage.people.size());
+        assertEquals(1, Storage.people.size());
         assertTrue(Storage.people.contains(actual));
+    }
+
+    @Test
+    void register_secondValidUser_ok() {
+        User first = new User();
+        first.setLogin("FirstUser");
+        first.setPassword("FirstUserPassword");
+        first.setAge(30);
+
+        Storage.people.add(first);
+
+        User second = new User();
+        second.setLogin("SecondUser");
+        second.setPassword("SecondUserPassword");
+        second.setAge(30);
+
+        User actual = registrationService.register(second);
+
+        assertEquals(second, actual);
+        assertEquals(2, Storage.people.size());
+        assertTrue(Storage.people.contains(first));
+        assertTrue(Storage.people.contains(second));
+    }
+
+    @AfterEach
+    void tearDown() {
+        Storage.people.clear();
     }
 }
