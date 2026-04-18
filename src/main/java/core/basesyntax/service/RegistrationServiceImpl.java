@@ -27,10 +27,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void validateLogin(User user) {
         String login = user.getLogin();
 
-        if (storageDao.get(login) != null) {
-            throw new RegistrationException("User with login %s already exists".formatted(login));
-        }
-
         if (login == null) {
             throw new RegistrationException("Login can't be null.");
         }
@@ -43,6 +39,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException(
                     "Login must be at least %s symbols long.".formatted(MIN_LOGIN_LENGTH)
             );
+        }
+
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("User with login %s already exists".formatted(login));
         }
     }
 
