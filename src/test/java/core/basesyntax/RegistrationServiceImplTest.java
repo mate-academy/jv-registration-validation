@@ -25,9 +25,9 @@ class RegistrationServiceImplTest {
     void register_validUser_ok() {
         User user = new User("validUser", "password", 20);
 
-        User result = service.register(user);
+        service.register(user);
 
-        assertNotNull(result);
+        assertNotNull(Storage.people.get(0));
     }
 
     @Test
