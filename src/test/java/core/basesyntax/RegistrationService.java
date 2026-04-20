@@ -8,7 +8,7 @@ class RegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
-        Storage.people.clear(); 
+        Storage.people.clear(); // 🔥 обязательно из-за static storage
         storageDao = new StorageDaoImpl();
         service = new RegistrationService(storageDao);
     }
