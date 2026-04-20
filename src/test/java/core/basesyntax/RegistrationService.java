@@ -1,4 +1,11 @@
 import org.junit.jupiter.api.*;
+
+import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
+import core.basesyntax.model.User;
+import core.basesyntax.service.RegistrationException;
+import core.basesyntax.service.RegistrationService;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceTest {
