@@ -22,7 +22,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User user = new User("validUser", "password", 20);
+        User user = new User();
+        user.setLogin("validUser");
+        user.setPassword("password");
+        user.setAge(20);
 
         service.register(user);
 
