@@ -8,7 +8,7 @@ import core.basesyntax.service.RegistrationService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RegistrationServiceTest {
+class RegistrationService {
 
     private RegistrationService service;
     private StorageDaoImpl storageDao;
