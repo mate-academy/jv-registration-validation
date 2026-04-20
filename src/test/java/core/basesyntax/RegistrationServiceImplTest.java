@@ -13,10 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RegistrationServiceImplTest {
 
-    private static final String VALID_LOGIN = "validUser";
-    private static final String VALID_PASSWORD = "password";
-    private static final int VALID_AGE = 20;
-
     private RegistrationServiceImpl service;
 
     @BeforeEach
@@ -27,7 +23,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User user = new User(VALID_LOGIN, VALID_PASSWORD, VALID_AGE);
+        User user = new User("validUser", "password", 20);
 
         User result = service.register(user);
 
