@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-
     private RegistrationServiceImpl service;
 
     @BeforeEach
@@ -22,10 +21,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_validUser_ok() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("password");
-        user.setAge(20);
+        User user = createUser("validUser", "password", 20);
 
         User result = service.register(user);
 
@@ -42,32 +38,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_nullLogin_notOk() {
-        User user = new User();
-        user.setLogin(null);
-        user.setPassword("password");
-        user.setAge(20);
-
-        assertThrows(RegistrationException.class,
-                () -> service.register(user));
-    }
-
-    @Test
-    void register_nullPassword_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword(null);
-        user.setAge(20);
-
-        assertThrows(RegistrationException.class,
-                () -> service.register(user));
-    }
-
-    @Test
-    void register_nullAge_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("password");
-        user.setAge(null);
+        User user = createUser(null, "password", 20);
 
         assertThrows(RegistrationException.class,
                 () -> service.register(user));
@@ -75,10 +46,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_shortLogin_notOk() {
-        User user = new User();
-        user.setLogin("123");
-        user.setPassword("password");
-        user.setAge(20);
+        User user = createUser("123", "password", 20);
 
         assertThrows(RegistrationException.class,
                 () -> service.register(user));
@@ -86,10 +54,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginLengthFive_notOk() {
-        User user = new User();
-        user.setLogin("12345");
-        user.setPassword("password");
-        user.setAge(20);
+        User user = createUser("12345", "password", 20);
 
         assertThrows(RegistrationException.class,
                 () -> service.register(user));
@@ -97,10 +62,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginLengthSix_ok() {
-        User user = new User();
-        user.setLogin("123456");
-        user.setPassword("password");
-        user.setAge(20);
+        User user = createUser("123456", "password", 20);
 
         service.register(user);
 
@@ -108,11 +70,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_nullPassword_notOk() {
+        User user = createUser("validUser", null, 20);
+
+        assertThrows(RegistrationException.class,
+                () -> service.register(user));
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        User user = createUser("validUser", "", 20);
+
+        assertThrows(RegistrationException.class,
+                () -> service.register(user));
+    }
+
+    @Test
     void register_shortPassword_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("123");
-        user.setAge(20);
+        User user = createUser("validUser", "123", 20);
 
         assertThrows(RegistrationException.class,
                 () -> service.register(user));
@@ -120,10 +95,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLengthFive_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("12345");
-        user.setAge(20);
+        User user = createUser("validUser", "12345", 20);
 
         assertThrows(RegistrationException.class,
                 () -> service.register(user));
@@ -131,10 +103,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_passwordLengthSix_ok() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("123456");
-        user.setAge(20);
+        User user = createUser("validUser", "123456", 20);
 
         service.register(user);
 
@@ -142,22 +111,34 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_negativeAge_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("password");
-        user.setAge(-1);
+    void register_passwordLengthEight_ok() {
+        User user = createUser("validUser", "12345678", 20);
+
+        service.register(user);
+
+        assertEquals(1, Storage.people.size());
+        assertEquals(user, Storage.people.get(0));
+    }
+
+    @Test
+    void register_nullAge_notOk() {
+        User user = createUser("validUser", "password", null);
 
         assertThrows(RegistrationException.class,
                 () -> service.register(user));
     }
 
     @Test
-    void register_underAge_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("password");
-        user.setAge(17);
+    void register_negativeAge_notOk() {
+        User user = createUser("validUser", "password", -1);
+
+        assertThrows(RegistrationException.class,
+                () -> service.register(user));
+    }
+
+    @Test
+    void register_ageSeventeen_notOk() {
+        User user = createUser("validUser", "password", 17);
 
         assertThrows(RegistrationException.class,
                 () -> service.register(user));
@@ -165,10 +146,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageEighteen_ok() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("password");
-        user.setAge(18);
+        User user = createUser("validUser", "password", 18);
 
         service.register(user);
 
@@ -177,10 +155,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_ageNineteen_ok() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("password");
-        user.setAge(19);
+        User user = createUser("validUser", "password", 19);
 
         service.register(user);
 
@@ -189,14 +164,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_duplicateLogin_notOk() {
-        User user = new User();
-        user.setLogin("validUser");
-        user.setPassword("password");
-        user.setAge(20);
+        User existingUser = createUser("validUser", "password", 20);
+        Storage.people.add(existingUser);
 
-        Storage.people.add(user);
+        User newUser = createUser("validUser", "newPassword", 22);
 
         assertThrows(RegistrationException.class,
-                () -> service.register(user));
+                () -> service.register(newUser));
+    }
+
+    private User createUser(String login, String password, Integer age) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+        user.setAge(age);
+        return user;
     }
 }
