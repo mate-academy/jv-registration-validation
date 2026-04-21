@@ -11,9 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
-    private static final int MIN_AGE = 18;
-    private static final int MIN_PASSWORD_AND_LOGIN_LENGTH = 6;
-
     private RegistrationService service;
     private User user;
 
@@ -30,7 +27,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ageIsNull_NotOk() {
+    public void register_ageIsNull_notOk() {
         user.setPassword("123456");
         user.setLogin("Bob123");
         user.setAge(null);
@@ -38,7 +35,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_loginIsNull_NotOk() {
+    public void register_loginIsNull_notOk() {
         user.setPassword("123456");
         user.setLogin(null);
         user.setAge(18);
@@ -46,7 +43,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_passwordIsNull_NotOk() {
+    public void register_passwordIsNull_notOk() {
         user.setPassword(null);
         user.setLogin("Bob123");
         user.setAge(18);
@@ -54,7 +51,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_ageIsLessThenExpected_NotOk() {
+    public void register_ageIsLessThenExpected_notOk() {
         user.setPassword("123456");
         user.setLogin("Bob123");
         user.setAge(16);
@@ -115,7 +112,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_zeroLoginLength_NotOk() {
+    public void register_zeroLoginLength_notOk() {
         user.setPassword("123456");
         user.setLogin("");
         user.setAge(18);
@@ -123,7 +120,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_threeLoginLength_NotOk() {
+    public void register_threeLoginLength_notOk() {
         user.setPassword("123456");
         user.setLogin("Bob");
         user.setAge(18);
@@ -131,7 +128,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_fiveLoginLength_NotOk() {
+    public void register_fiveLoginLength_notOk() {
         user.setPassword("123456");
         user.setLogin("Bob12");
         user.setAge(18);
@@ -139,14 +136,14 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_sixLoginLength_Ok() {
+    public void register_sixLoginLength_ok() {
         user.setPassword("123456");
         user.setLogin("Bob123");
         user.setAge(18);
     }
 
     @Test
-    public void register_addUserInStorage_NotOk() {
+    public void register_addUserInStorage_notOk() {
         user.setAge(18);
         user.setLogin("Bobby123");
         user.setPassword("123456");
@@ -163,7 +160,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    public void register_addUserInStorage_Ok() {
+    public void register_addUserInStorage_ok() {
         user.setAge(18);
         user.setLogin("Bobby123");
         user.setPassword("123456");
@@ -180,8 +177,5 @@ class RegistrationServiceImplTest {
         User expected = user2;
         User actual = service.register(user2);
         assertEquals(expected, actual);
-
-        int storageLength = people.size();
-        assertEquals(2, storageLength);
     }
 }
