@@ -23,5 +23,3 @@ names and be consistent along with other developers in your team. For this task 
 `<methodUnderTest>_<state>_<expectedBehavior>`; For example, if we are testing the method `register` with a `null`  
 user's age the test method name should be `register_nullAge_notOk`. notOk is because
 the test expects the register method to throw an exception.
-
-#### [Try to avoid these common mistakes, while solving task](./checklist.md)
