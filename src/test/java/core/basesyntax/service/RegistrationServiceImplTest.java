@@ -1,11 +1,11 @@
 package core.basesyntax.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.CustomException;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationServiceImplTest {
     private RegistrationService service;
@@ -67,7 +67,7 @@ class RegistrationServiceImplTest {
         try {
             service.register(user);
         } catch (CustomException e) {
-
+            System.out.println("");
         }
 
         User user2 = new User();

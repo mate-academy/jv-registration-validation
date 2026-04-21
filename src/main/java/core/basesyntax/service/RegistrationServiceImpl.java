@@ -16,7 +16,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getAge() == null || user.getLogin() == null
-        || user.getPassword() == null) {
+                || user.getPassword() == null) {
             throw new CustomException("fields can not be null");
         }
 
