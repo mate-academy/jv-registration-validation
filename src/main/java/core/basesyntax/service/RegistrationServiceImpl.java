@@ -7,6 +7,7 @@ import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_AND_LOGIN_LENGTH = 6;
 
     private final StorageDao storageDao = new StorageDaoImpl();
 
@@ -33,11 +34,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new CustomException("age is less then expected");
         }
 
-        if (user.getLogin().length() < 6) {
+        if (user.getLogin().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
             throw new CustomException("login is less then expected");
         }
 
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword().length() < MIN_PASSWORD_AND_LOGIN_LENGTH) {
             throw new CustomException("password is less then expected");
 
         }

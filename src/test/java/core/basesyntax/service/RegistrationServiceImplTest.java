@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
+    private static final int MIN_AGE = 18;
+    private static final int MIN_PASSWORD_AND_LOGIN_LENGTH = 6;
+
     private RegistrationService service;
     private User user;
 
@@ -28,42 +31,122 @@ class RegistrationServiceImplTest {
 
     @Test
     public void register_ageIsNull_NotOk() {
+        user.setPassword("123456");
+        user.setLogin("Bob123");
         user.setAge(null);
         assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
     public void register_loginIsNull_NotOk() {
+        user.setPassword("123456");
         user.setLogin(null);
+        user.setAge(18);
         assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
     public void register_passwordIsNull_NotOk() {
         user.setPassword(null);
+        user.setLogin("Bob123");
+        user.setAge(18);
         assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
     public void register_ageIsLessThenExpected_NotOk() {
+        user.setPassword("123456");
+        user.setLogin("Bob123");
         user.setAge(16);
         assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
-    public void register_passwordLengthIsLessThenExpected_NotOk() {
-        user.setPassword("34gd");
+    public void register_ageIsUnderThenExpected_ok() {
+        user.setPassword("123456");
+        user.setLogin("Bob123");
+        user.setAge(19);
+    }
+
+    @Test
+    public void register_ageSameThenExpected_ok() {
+        user.setPassword("123456");
+        user.setLogin("Bob123");
+        user.setAge(18);
+    }
+
+    @Test
+    public void register_ageIsNegativeNumber_notOk() {
+        user.setPassword("123456");
+        user.setLogin("Bob123");
+        user.setAge(-18);
         assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
-    public void register_loginLengthIsLessThenExpected_NotOk() {
+    public void register_zeroPasswordLength_notOk() {
+        user.setPassword("");
+        user.setLogin("Bob123");
+        user.setAge(18);
+        assertThrows(CustomException.class, () -> service.register(user));
+    }
+
+    @Test
+    public void register_threePasswordLength_notOk() {
+        user.setPassword("123");
+        user.setLogin("Bob123");
+        user.setAge(18);
+        assertThrows(CustomException.class, () -> service.register(user));
+    }
+
+    @Test
+    public void register_fivePasswordLength_notOk() {
+        user.setPassword("12345");
+        user.setLogin("Bob123");
+        user.setAge(18);
+        assertThrows(CustomException.class, () -> service.register(user));
+    }
+
+    @Test
+    public void register_sixPasswordLength_ok() {
+        user.setPassword("123456");
+        user.setLogin("Bob123");
+        user.setAge(18);
+    }
+
+    @Test
+    public void register_zeroLoginLength_NotOk() {
+        user.setPassword("123456");
+        user.setLogin("");
+        user.setAge(18);
+        assertThrows(CustomException.class, () -> service.register(user));
+    }
+
+    @Test
+    public void register_threeLoginLength_NotOk() {
+        user.setPassword("123456");
         user.setLogin("Bob");
+        user.setAge(18);
         assertThrows(CustomException.class, () -> service.register(user));
     }
 
     @Test
-    public void register_userAlreadyExistInDb_NotOk() {
+    public void register_fiveLoginLength_NotOk() {
+        user.setPassword("123456");
+        user.setLogin("Bob12");
+        user.setAge(18);
+        assertThrows(CustomException.class, () -> service.register(user));
+    }
+
+    @Test
+    public void register_sixLoginLength_Ok() {
+        user.setPassword("123456");
+        user.setLogin("Bob123");
+        user.setAge(18);
+    }
+
+    @Test
+    public void register_addUserInStorage_NotOk() {
         user.setAge(18);
         user.setLogin("Bobby123");
         user.setPassword("123456");
