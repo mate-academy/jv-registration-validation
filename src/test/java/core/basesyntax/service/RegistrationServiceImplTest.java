@@ -1,9 +1,10 @@
 package core.basesyntax.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.RegistrationException;
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +24,9 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void userIsNotExist_Ok() {
+    void registerValidUser_Ok() {
         User actual = registrationService.register(validUser);
-        assertNotNull(validUser.getLogin(), actual.getLogin());
+        assertEquals(validUser, actual);
     }
 
     @Test
@@ -58,7 +59,7 @@ class RegistrationServiceImplTest {
     @Test
     void registerUserAlreadyExist_NotOk() {
         validUser.setLogin("alreadyRegisteredUser");
-        registrationService.register(validUser);
+        Storage.people.add(validUser);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(validUser));
     }
@@ -75,6 +76,28 @@ class RegistrationServiceImplTest {
         validUser.setPassword(null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(validUser));
+    }
+
+    @Test
+    void registerNullAge_NotOk() {
+        validUser.setAge(null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser));
+    }
+
+    @Test
+    void registerNegativeAge_NotOk() {
+        validUser.setAge(-1);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(validUser));
+    }
+
+    @Test
+    void registerAgeExactlyEighteen_Ok() {
+        validUser.setLogin("EighteenYearsOldUser");
+        validUser.setAge(18);
+        User actual = registrationService.register(validUser);
+        assertEquals(validUser, actual);
     }
 }
 /*here is no user with such login in the Storage yet
