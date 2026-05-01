@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
  */
 public class TestRegistrationService {
     private static final int DEF_AGE = 18;
+    private static final int OVER_AGE = 19;
+    private static final int LOW_AGE = 17;
 
     private static final String DEF_PASS = "123456";
     private static final String LONGER_PASS = "12345678";
@@ -33,8 +35,6 @@ public class TestRegistrationService {
     private static final String SHORT_LOG = "12345";
     private static final String SHORTER_LOG = "123";
     private static final String BLANK_LOG = "";
-
-    private static final int LOW_AGE = 17;
 
     private User correctUser;
 
@@ -57,6 +57,9 @@ public class TestRegistrationService {
     private User blankPassUser;
 
     private User lowAgeUser;
+    private User adultAgeUser;
+    private User overAgeUser;
+
     private RegistrationService registrationService;
     private StorageDao storageDao;
 
@@ -91,9 +94,9 @@ public class TestRegistrationService {
         shorterPassUser = createUser(DEF_LOGIN, SHORTER_PASS, DEF_AGE);
         blankPassUser = createUser(DEF_LOGIN, BLANK_PASS, DEF_AGE);
 
-        shortPassUser = createUser(DEF_LOGIN, SHORTER_PASS, DEF_AGE);
-
         lowAgeUser = createUser(DEF_LOGIN, DEF_PASS, LOW_AGE);
+        adultAgeUser = createUser(DEF_LOGIN, DEF_PASS, DEF_AGE);
+        overAgeUser = createUser(DEF_LOGIN, DEF_PASS, OVER_AGE);
     }
 
     @AfterEach
@@ -182,7 +185,23 @@ public class TestRegistrationService {
     }
 
     @Test
-    void register_LowAgeUser_NotOk() {
+    void register_AgeAdultUser_Ok() {
+        User actual = registrationService.register(adultAgeUser);
+        User expected = storageDao.get(adultAgeUser.getLogin());
+        assertEquals(actual, expected);
+        assertNotNull(actual.getId());
+    }
+
+    @Test
+    void register_AgeOverAdultUser_Ok() {
+        User actual = registrationService.register(overAgeUser);
+        User expected = storageDao.get(overAgeUser.getLogin());
+        assertEquals(actual, expected);
+        assertNotNull(actual.getId());
+    }
+
+    @Test
+    void register_AgeUnderAdultUser_NotOk() {
         assertThrows(RegistrationException.class, () -> registrationService.register(lowAgeUser));
     }
 }
