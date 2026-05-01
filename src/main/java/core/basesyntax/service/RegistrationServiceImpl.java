@@ -12,16 +12,28 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (user == null) {
             throw new RegistrationException("Incorrect user registration");
         }
-        if (user.getLogin() == null || user.getLogin().length() < 6) {
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login is null!");
+        }
+        int minLogLength = 6;
+        if (user.getLogin().length() < minLogLength) {
             throw new RegistrationException("Login is too short!");
         }
         if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("Name already taken");
         }
-        if (user.getPassword().length() < 6) {
-            throw new RegistrationException("Password is too short!");
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password is null!");
         }
-        if (user.getAge() < 18) {
+        int minPassLength = 6;
+        if (user.getPassword().length() < minPassLength) {
+            throw new RegistrationException("Password is short!");
+        }
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age is younger null!");
+        }
+        int minAge = 18;
+        if (user.getAge() < minAge) {
             throw new RegistrationException("User is younger 18!");
         }
         storageDao.add(user);
