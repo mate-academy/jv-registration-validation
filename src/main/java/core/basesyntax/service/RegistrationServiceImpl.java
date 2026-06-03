@@ -1,14 +1,64 @@
 package core.basesyntax.service;
 
 import core.basesyntax.dao.StorageDao;
-import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.exception.RegistrationException;
 import core.basesyntax.model.User;
 
 public class RegistrationServiceImpl implements RegistrationService {
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private static final int MIN_PWD_LENGTH = 6;
+    private static final int MIN_LOGIN_LENGTH = 6;
+    private static final int MIN_AGE = 18;
+    private final StorageDao storageDao;
+
+    public RegistrationServiceImpl(StorageDao storageDao) {
+        this.storageDao = storageDao;
+    }
 
     @Override
     public User register(User user) {
-        return null;
+        if (user == null) {
+            throw new RegistrationException("User can't be null");
+        }
+
+        if (user.getLogin() == null) {
+            throw new RegistrationException("Login can't be null");
+        }
+
+        if (user.getLogin().equals("") || user.getLogin().contains(" ")) {
+            throw new RegistrationException("Login can't be empty");
+        }
+
+        if (user.getPassword() == null) {
+            throw new RegistrationException("Password can't be null");
+        }
+
+        if (user.getPassword().equals("") || user.getPassword().contains(" ")) {
+            throw new RegistrationException("Password can't be empty");
+        }
+
+        if (user.getAge() == null) {
+            throw new RegistrationException("Age can't be null");
+        }
+
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("User age must be at least " + MIN_AGE
+                    + ". Actual age: " + user.getAge());
+        }
+
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException("Login must contain at least "
+                    + MIN_LOGIN_LENGTH + " characters");
+        }
+
+        if (user.getPassword().length() < MIN_PWD_LENGTH) {
+            throw new RegistrationException("Password must contain at least "
+                    + MIN_PWD_LENGTH + " characters");
+        }
+
+        if (storageDao.get(user.getLogin()) != null) {
+            throw new RegistrationException("Login already exists");
+        }
+        return storageDao.add(user);
     }
 }
+
