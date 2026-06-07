@@ -113,6 +113,69 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_fiveCharactersLogin_notOk() {
+        User user = createValidUser();
+        user.setLogin("login");
+
+        assertThrows(
+            RegistrationException.class,
+            () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_emptyLogin_notOk() {
+        User user = createValidUser();
+        user.setLogin("");
+
+        assertThrows(
+            RegistrationException.class,
+            () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_fiveCharactersPassword_notOk() {
+        User user = createValidUser();
+        user.setPassword("12345");
+
+        assertThrows(
+            RegistrationException.class,
+            () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        User user = createValidUser();
+        user.setPassword("");
+
+        assertThrows(
+            RegistrationException.class,
+            () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = createValidUser();
+        user.setAge(-1);
+
+        assertThrows(
+            RegistrationException.class,
+            () -> registrationService.register(user)
+        );
+    }
+
+    @Test
+    void register_ageExactly18_ok() {
+        User user = createValidUser();
+        user.setAge(18);
+
+        registrationService.register(user);
+    }
+
+    @Test
     void register_user_Ok() {
         User user = createValidUser();
 
