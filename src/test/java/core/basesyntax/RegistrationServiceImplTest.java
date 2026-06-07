@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationService;
@@ -118,8 +119,8 @@ class RegistrationServiceImplTest {
         user.setLogin("login");
 
         assertThrows(
-            RegistrationException.class,
-            () -> registrationService.register(user)
+                RegistrationException.class,
+                () -> registrationService.register(user)
         );
     }
 
@@ -129,8 +130,8 @@ class RegistrationServiceImplTest {
         user.setLogin("");
 
         assertThrows(
-            RegistrationException.class,
-            () -> registrationService.register(user)
+                RegistrationException.class,
+                () -> registrationService.register(user)
         );
     }
 
@@ -140,8 +141,8 @@ class RegistrationServiceImplTest {
         user.setPassword("12345");
 
         assertThrows(
-            RegistrationException.class,
-            () -> registrationService.register(user)
+                RegistrationException.class,
+                () -> registrationService.register(user)
         );
     }
 
@@ -151,8 +152,8 @@ class RegistrationServiceImplTest {
         user.setPassword("");
 
         assertThrows(
-            RegistrationException.class,
-            () -> registrationService.register(user)
+                RegistrationException.class,
+                () -> registrationService.register(user)
         );
     }
 
@@ -162,8 +163,8 @@ class RegistrationServiceImplTest {
         user.setAge(-1);
 
         assertThrows(
-            RegistrationException.class,
-            () -> registrationService.register(user)
+                RegistrationException.class,
+                () -> registrationService.register(user)
         );
     }
 
