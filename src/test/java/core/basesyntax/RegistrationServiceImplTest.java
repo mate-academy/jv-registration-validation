@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import core.basesyntax.service.RegistrationException;
 import core.basesyntax.service.RegistrationService;
@@ -16,6 +17,7 @@ class RegistrationServiceImplTest {
     @BeforeEach
     void setUp() {
         this.registrationService = new RegistrationServiceImpl();
+        Storage.people.clear();
     }
 
     private User createValidUser() {
