@@ -15,7 +15,7 @@ Testing only 'abc' (3-length - not-ok) and 'abcdefgh' (8-length - ok) is not eno
 
   - Bad example:
   ```java
-    public User register(User user) {
+    import core.basesyntax.RegistrationException;public User register(User user) {
      if (user.getLogin() == null 
        || user.getPassword() == null
        || user.getAge() < MIN_AGE) {
@@ -27,7 +27,7 @@ Testing only 'abc' (3-length - not-ok) and 'abcdefgh' (8-length - ok) is not eno
 
   - Good example:
   ```java
-    public User register(User user) {
+    import core.basesyntax.RegistrationException;public User register(User user) {
      if (user.getLogin() == null) {
        throw new RegistrationException("Login can't be null");
      }
