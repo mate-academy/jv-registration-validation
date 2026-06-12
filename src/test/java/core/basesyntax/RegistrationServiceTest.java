@@ -26,13 +26,10 @@ public class RegistrationServiceTest {
 
     @Test
     void register_validUser_ok() {
-        StorageDao storage = new StorageDaoImpl();
-        RegistrationService service = new RegistrationServiceImpl(storage);
-
         User user = new User(1L, "login123", "password", 20);
         User result = service.register(user);
-        assertNotNull(storage.get("login123"));
         assertEquals(user, result);
+        assertEquals(user,storage.get("login123"));
 
     }
 
@@ -65,9 +62,11 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    void register_shortlogin_not0k() {
+    void register_shortlogin_notOk() {
         assertThrows(RegistrationException.class,
                 () -> service.register(new User(1L, "", "password", 20)));
+        assertThrows(RegistrationException.class,
+                () -> service.register(new User(1L, "a", "password", 20)));
         assertThrows(RegistrationException.class,
                 () -> service.register(new User(1L, "abc", "password", 20)));
         assertThrows(RegistrationException.class,
@@ -130,11 +129,28 @@ public class RegistrationServiceTest {
     }
 
     @Test
+    void register_longLogin_Ok() {
+        User user = new User(1L, "abcdefgh", "password", 20);
+        User result = service.register(user);
+        assertEquals(user, result);
+        assertNotNull(storage.get("abcdefgh"));
+    }
+
+    @Test
     void register_minPasswordLength_ok() {
         User user = new User(1L, "login123", "abcdef", 20);
         User result = service.register(user);
         assertEquals(user, result);
         assertNotNull(storage.get("login123"));
+    }
+
+    @Test
+    void register_longPassword_Ok() {
+        User user = new User(1L, "login123", "abcdefgh", 20);
+        User result = service.register(user);
+        assertEquals(user,result);
+        assertNotNull(storage.get("login123"));
+
     }
 
     @Test
