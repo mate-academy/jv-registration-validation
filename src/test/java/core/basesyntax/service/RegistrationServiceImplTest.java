@@ -52,8 +52,24 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortLogin_notOk() {
-        User user = createUser("login", "password", 20);
+    void register_shortLoginZeroLength_notOk() {
+        User user = createUser("", "password", 20);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_shortLoginThreeLength_notOk() {
+        User user = createUser("abc", "password", 20);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_shortLoginFiveLength_notOk() {
+        User user = createUser("abcde", "password", 20);
 
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(user));
@@ -61,13 +77,20 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_loginLengthSix_ok() {
-        User user = createUser("login1", "password", 20);
+        User user = createUser("abcdef", "password", 20);
 
         assertDoesNotThrow(() -> registrationService.register(user));
     }
 
     @Test
-    void register_emptyPassword_notOk() {
+    void register_loginLengthEight_ok() {
+        User user = createUser("abcdefgh", "password", 20);
+
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_shortPasswordZeroLength_notOk() {
         User user = createUser("Yehoria", "", 20);
 
         assertThrows(RegistrationException.class,
@@ -75,7 +98,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLengthThree_notOk() {
+    void register_shortPasswordThreeLength_notOk() {
         User user = createUser("Yehoria", "abc", 20);
 
         assertThrows(RegistrationException.class,
@@ -83,7 +106,7 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_passwordLengthFive_notOk() {
+    void register_shortPasswordFiveLength_notOk() {
         User user = createUser("Yehoria", "abcde", 20);
 
         assertThrows(RegistrationException.class,
