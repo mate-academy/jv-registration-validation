@@ -138,8 +138,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_zeroAge_notOK() {
-    user.setAge(0);
-    assertThrows(RegistrationException.class, () -> registrationService.register(user));
+        user.setAge(0);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
-
