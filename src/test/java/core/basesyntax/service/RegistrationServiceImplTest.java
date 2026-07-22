@@ -64,7 +64,7 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_existingLogin_notOk() {
-        registrationService.register(user);
+        Storage.people.add(user);
         User anotherUser = new User();
         anotherUser.setLogin(VALID_LOGIN);
         anotherUser.setPassword(VALID_PASSWORD);
@@ -137,8 +137,26 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_zeroAge_notOK() {
-        user.setAge(0);
+    void register_loginLength3_notOk() {
+        user.setLogin("abc");
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginLength8_ok() {
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
+    }
+
+    @Test
+    void register_passwordLength3_notOk() {
+        user.setPassword("abc");
+        assertThrows(RegistrationException.class,() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordLength8_ok() {
+        User actual = registrationService.register(user);
+        assertEquals(user, actual);
     }
 }
