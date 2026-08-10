@@ -39,7 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         if (user.getAge() < MIN_AGE) {
-            throw new UserValidationException("User age less than 18");
+            throw new UserValidationException("User age should be at least 18");
         }
         return storageDao.add(user);
     }
