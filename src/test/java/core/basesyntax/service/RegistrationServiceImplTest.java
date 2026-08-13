@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.db.Storage;
 import core.basesyntax.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +32,11 @@ class RegistrationServiceImplTest {
         assertEquals(user.getPassword(), registered.getPassword());
         assertEquals(user.getAge(), registered.getAge());
 
-        User fromStorage = new StorageDaoImpl().get(user.getLogin());
+        // storage contains equal user
+        User fromStorage = Storage.people.stream()
+                .filter(u -> "validLogin".equals(u.getLogin()))
+                .findFirst()
+                .orElse(null);
         assertNotNull(fromStorage);
         assertEquals(user, fromStorage);
     }
@@ -44,7 +47,9 @@ class RegistrationServiceImplTest {
         first.setLogin("duplicate");
         first.setPassword("password");
         first.setAge(30);
-        registrationService.register(first);
+
+        // use low-level setup as requested
+        Storage.people.add(first);
 
         User second = new User();
         second.setLogin("duplicate");
@@ -80,6 +85,16 @@ class RegistrationServiceImplTest {
         user.setLogin("teenager");
         user.setPassword("password");
         user.setAge(17);
+
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = new User();
+        user.setLogin("negAge");
+        user.setPassword("password");
+        user.setAge(-5);
 
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
