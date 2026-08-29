@@ -43,7 +43,7 @@ class RegistrationServiceImplTest {
         user.setLogin("duplicateLogin1234");
         user.setPassword("pass1234");
         user.setAge(20);
-        registrationService.register(user);
+        Storage.people.add(user);
 
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
@@ -154,6 +154,50 @@ class RegistrationServiceImplTest {
         user.setLogin("123456789");
         user.setPassword("123456789");
         user.setAge(null);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void register_emptyPassword_notOk() {
+        user.setLogin("123456789");
+        user.setPassword("");
+        user.setAge(20);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void register_passwordLength3_notOk() {
+        user.setLogin("123456789");
+        user.setPassword("123");
+        user.setAge(20);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void register_passwordLength5_notOk() {
+        user.setLogin("123456789");
+        user.setPassword("12345");
+        user.setAge(20);
+
+        assertThrows(RegistrationException.class, () -> {
+            registrationService.register(user);
+        });
+    }
+
+    @Test
+    public void register_loginLength5_notOk() {
+        user.setLogin("12345");
+        user.setPassword("123456");
+        user.setAge(20);
 
         assertThrows(RegistrationException.class, () -> {
             registrationService.register(user);
