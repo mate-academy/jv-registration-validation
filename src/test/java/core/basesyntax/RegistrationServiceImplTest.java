@@ -38,6 +38,8 @@ class RegistrationServiceImplTest {
         User user = getCorrectUser();
         User result = service.register(user);
         assertEquals(user, result);
+        assertEquals(1, Storage.people.size());
+        assertEquals(user, Storage.people.get(0));
     }
 
     @Test
@@ -53,10 +55,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortLogin_notOk() {
+    void register_loginLength5_notOk() {
         User user = getCorrectUser();
-        user.setLogin("abc");
+        user.setLogin("abcde");
         assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_loginLength6_ok() {
+        User user = getCorrectUser();
+        user.setLogin("abcdef");
+        User result = service.register(user);
+        assertEquals(user, result);
+        assertEquals(1, Storage.people.size());
     }
 
     @Test
@@ -67,10 +78,19 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_shortPassword_notOk() {
+    void register_passwordLength5_notOk() {
         User user = getCorrectUser();
-        user.setPassword("abc");
+        user.setPassword("abcde");
         assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_passwordLength6_ok() {
+        User user = getCorrectUser();
+        user.setPassword("abcdef");
+        User result = service.register(user);
+        assertEquals(user, result);
+        assertEquals(1, Storage.people.size());
     }
 
     @Test
@@ -81,15 +101,36 @@ class RegistrationServiceImplTest {
     }
 
     @Test
-    void register_ageLessThan18_notOk() {
+    void register_negativeAge_notOk() {
+        User user = getCorrectUser();
+        user.setAge(-1);
+        assertThrows(RegistrationException.class, () -> service.register(user));
+    }
+
+    @Test
+    void register_age17_notOk() {
         User user = getCorrectUser();
         user.setAge(17);
         assertThrows(RegistrationException.class, () -> service.register(user));
     }
 
     @Test
+    void register_age18_ok() {
+        User user = getCorrectUser();
+        user.setAge(18);
+        User result = service.register(user);
+        assertEquals(user, result);
+        assertEquals(1, Storage.people.size());
+    }
+
+    @Test
     void register_duplicateLogin_notOk() {
-        service.register(getCorrectUser());
-        assertThrows(RegistrationException.class, () -> service.register(getCorrectUser()));
+        User firstUser = getCorrectUser();
+        Storage.people.add(firstUser);
+        User sameLoginUser = new User();
+        sameLoginUser.setAge(25);
+        sameLoginUser.setPassword("password123");
+        sameLoginUser.setLogin(firstUser.getLogin());
+        assertThrows(RegistrationException.class, () -> service.register(sameLoginUser));
     }
 }
