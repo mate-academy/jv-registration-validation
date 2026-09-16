@@ -23,7 +23,7 @@ class RegistrationServiceImplTest {
         user.setLogin("validLogin");
         User registeredUser = registrationService.register(user);
         assertNotNull(registeredUser);
-        assertEquals(user.getLogin(), registeredUser.getLogin());
+        assertEquals(user, registeredUser);
     }
 
     @Test
