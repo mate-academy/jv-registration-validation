@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
+import core.basesyntax.db.Storage;
 import core.basesyntax.exeptions.AgeValidationExeption;
 import core.basesyntax.exeptions.LoginValidationException;
 import core.basesyntax.exeptions.NullUserValidationExeption;
@@ -16,13 +17,22 @@ import org.junit.jupiter.api.Test;
 
 class RegistrationServiceImplTest {
     private static RegistrationServiceImpl registrationService;
-    private static StorageDao storageDao;
+    private StorageDao storageDao;
     private User user;
 
     @BeforeAll
     static void beforeAll() {
-        storageDao = new StorageDaoImpl();
         registrationService = new RegistrationServiceImpl();
+    }
+
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setLogin("testLV");
+        user.setPassword("testPV");
+        user.setAge(18);
+        Storage.people.clear();
+        storageDao = new StorageDaoImpl();
         User user1 = new User();
         user1.setLogin("testFirst");
         user1.setPassword("testPassword");
@@ -43,14 +53,6 @@ class RegistrationServiceImplTest {
         storageDao.add(user2);
         storageDao.add(user3);
         storageDao.add(user4);
-    }
-
-    @BeforeEach
-    void setUp() {
-        user = new User();
-        user.setLogin("testLV");
-        user.setPassword("testPV");
-        user.setAge(18);
     }
 
     @Test
@@ -80,6 +82,12 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_Login5Characters_NotOk() {
+        user.setLogin("test5");
+        assertThrows(LoginValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_LoginLessThen6Characters_NotOk() {
         user.setLogin("test");
         assertThrows(LoginValidationException.class, () -> registrationService.register(user));
@@ -99,7 +107,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_PasswordAtList6Characters_Ok() {
-        user.setLogin("testValidPassword");
         user.setPassword("testValidPassword");
         User actual = registrationService.register(user);
         User expected = storageDao.get(user.getLogin());
@@ -108,7 +115,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_Password6Characters_Ok() {
-        user.setLogin("testPassword6Characters");
         user.setPassword("testPassword6Characters");
         User actual = registrationService.register(user);
         User expected = storageDao.get(user.getLogin());
@@ -116,29 +122,31 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_Password5Characters_NotOk() {
+        user.setPassword("test5");
+        assertThrows(PasswordValidationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
     void register_PasswordLessThen6Characters_NotOk() {
-        user.setLogin("testPasswordLessThen6Characters");
         user.setPassword("not");
         assertThrows(PasswordValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_PasswordIsEmpty_NotOk() {
-        user.setLogin("testPasswordEmpty");
         user.setPassword("");
         assertThrows(PasswordValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_NullPassword_NotOk() {
-        user.setLogin("testNullPassword");
         user.setPassword(null);
         assertThrows(PasswordValidationException.class, () -> registrationService.register(user));
     }
 
     @Test
     void register_AgeMoreThan18_Ok() {
-        user.setLogin("testAgeMoreThan18");
         user.setPassword("testAgeMoreThan18");
         user.setAge(25);
         User actual = registrationService.register(user);
@@ -148,7 +156,6 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_Age18_Ok() {
-        user.setLogin("testAge18");
         user.setPassword("testAge18");
         User actual = registrationService.register(user);
         User expected = storageDao.get(user.getLogin());
@@ -157,9 +164,13 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_AgeLessThan18_NotOk() {
-        user.setLogin("testLessThanAge18");
-        user.setPassword("testLessThanAge18");
         user.setAge(13);
+        assertThrows(AgeValidationExeption.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_AgeNegativNum_NotOk() {
+        user.setAge(-5);
         assertThrows(AgeValidationExeption.class, () -> registrationService.register(user));
     }
 
