@@ -1,6 +1,7 @@
 package core.basesyntax.service;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import core.basesyntax.db.Storage;
@@ -38,7 +39,10 @@ class RegistrationServiceImplTest {
 
     @Test
     void register_correctRegistration_ok() {
-        assertDoesNotThrow(() -> registrationService.register(user));
+        User createdUser = registrationService.register(user);
+        assertEquals("maxym123", createdUser.getLogin());
+        assertEquals("maxym123", createdUser.getPassword());
+        assertEquals(18, createdUser.getAge());
     }
 
     @Test
@@ -65,21 +69,21 @@ class RegistrationServiceImplTest {
     @Test
     void register_loginIsNull_notOk() {
         user.setLogin(null);
-        assertThrows(RegistrationException.class, () ->
+        assertThrows(NullPointerException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_ageIsNull_notOk() {
         user.setAge(null);
-        assertThrows(RegistrationException.class, () ->
+        assertThrows(NullPointerException.class, () ->
                 registrationService.register(user));
     }
 
     @Test
     void register_passwordIsNull_notOk() {
         user.setPassword(null);
-        assertThrows(RegistrationException.class, () ->
+        assertThrows(NullPointerException.class, () ->
                 registrationService.register(user));
     }
 
@@ -96,5 +100,64 @@ class RegistrationServiceImplTest {
     @Test
     void register_ageIsCorrect_ok() {
         assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_userIsNull_notOk() {
+        assertThrows(NullPointerException.class, () -> registrationService.register(null));
+    }
+
+    @Test
+    void register_ageIsEighten_ok() {
+        user.setAge(18);
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_ageIsGreater_ok() {
+        user.setAge(20);
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_ageIsLessThanZero_notOk() {
+        user.setAge(-1);
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginThreeChars_notOk() {
+        user.setLogin("max");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginZeroChars_notOk() {
+        user.setLogin("");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginFiveChars_notOk() {
+        user.setLogin("maxym");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordThreeChars_notOk() {
+        user.setPassword("max");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordZeroChars_notOk() {
+        user.setPassword("");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordFiveChars_notOk() {
+        user.setPassword("maxym");
+        assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
 }
