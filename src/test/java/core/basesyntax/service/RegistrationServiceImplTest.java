@@ -49,9 +49,52 @@ class RegistrationServiceImplTest {
     }
 
     @Test
+    void register_loginIsLessThan6_notOk() {
+        user.setLogin("maxym");
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordIsLessThan6_notOk() {
+        user.setPassword("maxym");
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
     void register_loginIsNull_notOk() {
         user.setLogin(null);
         assertThrows(RegistrationException.class, () ->
                 registrationService.register(user));
+    }
+
+    @Test
+    void register_ageIsNull_notOk() {
+        user.setAge(null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordIsNull_notOk() {
+        user.setPassword(null);
+        assertThrows(RegistrationException.class, () ->
+                registrationService.register(user));
+    }
+
+    @Test
+    void register_loginIsCorrect_ok() {
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordIsCorrect_ok() {
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_ageIsCorrect_ok() {
+        assertDoesNotThrow(() -> registrationService.register(user));
     }
 }
