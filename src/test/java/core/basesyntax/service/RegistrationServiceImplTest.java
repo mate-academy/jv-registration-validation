@@ -172,4 +172,42 @@ class RegistrationServiceImplTest {
 
         assertTrue(Storage.people.isEmpty());
     }
+
+    @Test
+    void register_negativeAge_notOk() {
+        User user = createUser("user123", "pass123", -1);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_emptyLogin_notOk() {
+        User user = createUser("", "pass123", 20);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_emptyPassword_notOk() {
+        User user = createUser("user123", "", 20);
+
+        assertThrows(RegistrationException.class,
+                () -> registrationService.register(user));
+    }
+
+    @Test
+    void register_loginWithEightCharacters_ok() {
+        User user = createUser("user1234", "pass123", 20);
+
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
+
+    @Test
+    void register_passwordWithEightCharacters_ok() {
+        User user = createUser("user123", "pass1234", 20);
+
+        assertDoesNotThrow(() -> registrationService.register(user));
+    }
 }
