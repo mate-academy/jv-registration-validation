@@ -15,7 +15,7 @@ class RegistrationServiceTest {
     private static final int VALID_AGE_EDGE = 18;
     private static final int VALID_AGE = 35;
     private static final int INVALID_AGE = 12;
-    private static final int INVALID_AGE_TWO= -12;
+    private static final int INVALID_AGE_TWO = -12;
     private static final String VALID_LOGIN_EDGE = "abcdef";
     private static final String VALID_LOGIN = "abcdefgh";
     private static final String VALID_LOGIN_TWO = "abcdefghi";
@@ -28,9 +28,6 @@ class RegistrationServiceTest {
     private static final String INVALID_PASSWORD = "123";
     private static final String INVALID_PASSWORD_EDGE = "12345";
     private static final String EMPTY_STRING = "";
-    
-    
-    
     private RegistrationServiceImpl registrationServiceImpl;
     
     @BeforeEach
