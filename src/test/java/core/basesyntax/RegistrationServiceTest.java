@@ -11,6 +11,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RegistrationServiceTest {
+    private static final int INVALID_AGE_EDGE = 17;
+    private static final int VALID_AGE_EDGE = 18;
+    private static final int VALID_AGE = 35;
+    private static final int INVALID_AGE = 12;
+    private static final int INVALID_AGE_TWO= -12;
+    private static final String VALID_LOGIN_EDGE = "abcdef";
+    private static final String VALID_LOGIN = "abcdefgh";
+    private static final String VALID_LOGIN_TWO = "abcdefghi";
+    private static final String VALID_LOGIN_THREE = "abcdefghij";
+    private static final String VALID_LOGIN_FOUR = "abcdefghijk";
+    private static final String INVALID_LOGIN_EDGE = "abcde";
+    private static final String INVALID_LOGIN = "abc";
+    private static final String VALID_PASSWORD_EDGE = "123456";
+    private static final String VALID_PASSWORD = "12345678";
+    private static final String INVALID_PASSWORD = "123";
+    private static final String INVALID_PASSWORD_EDGE = "12345";
+    private static final String EMPTY_STRING = "";
+    
+    
+    
     private RegistrationServiceImpl registrationServiceImpl;
     
     @BeforeEach
@@ -20,11 +40,11 @@ class RegistrationServiceTest {
     }
     
     @Test
-    void register_userLogionExists_notOk() {
+    void register_userLoginExists_notOk() {
         User user = new User();
-        user.setLogin("hello123");
-        user.setAge(20);
-        user.setPassword("1234567");
+        user.setLogin(VALID_LOGIN);
+        user.setAge(VALID_AGE);
+        user.setPassword(VALID_PASSWORD);
         Storage.people.add(user);
         
         assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
@@ -33,29 +53,29 @@ class RegistrationServiceTest {
     @Test
     void register_invalidUserLogin_notOk() {
         User user = new User();
-        user.setLogin("abc");
-        user.setPassword("12345678");
-        user.setAge(20);
+        user.setLogin(INVALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class, () -> registrationServiceImpl.register(user));
         
         User userTwo = new User();
-        userTwo.setLogin("abcde");
-        userTwo.setPassword("12345678");
-        userTwo.setAge(20);
+        userTwo.setLogin(INVALID_LOGIN_EDGE);
+        userTwo.setPassword(VALID_PASSWORD);
+        userTwo.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userTwo));
         
         User userThree = new User();
-        userThree.setLogin("");
-        userThree.setPassword("12345678");
-        userThree.setAge(20);
+        userThree.setLogin(EMPTY_STRING);
+        userThree.setPassword(VALID_PASSWORD);
+        userThree.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userThree));
         
         User userFour = new User();
         userFour.setLogin(null);
-        userFour.setPassword("12345678");
-        userFour.setAge(20);
+        userFour.setPassword(VALID_PASSWORD);
+        userFour.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class, ()
                 -> registrationServiceImpl.register(userFour));
     }
@@ -63,45 +83,47 @@ class RegistrationServiceTest {
     @Test
     void register_validUserLogin_Ok() {
         User user = new User();
-        user.setLogin("abcdef");
-        user.setPassword("12345678");
-        user.setAge(20);
+        user.setLogin(VALID_LOGIN_EDGE);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE);
         assertEquals(user, registrationServiceImpl.register(user));
+        assertEquals(user, Storage.people.get(0));
         
         User userTwo = new User();
-        userTwo.setLogin("abcdefghjklmnop");
-        userTwo.setPassword("12345678");
-        userTwo.setAge(20);
+        userTwo.setLogin(VALID_LOGIN);
+        userTwo.setPassword(VALID_PASSWORD);
+        userTwo.setAge(VALID_AGE);
         assertEquals(userTwo, registrationServiceImpl.register(userTwo));
+        assertEquals(userTwo, Storage.people.get(1));
     }
     
     @Test
     void register_invalidUserPassword_notOk() {
         User user = new User();
-        user.setLogin("abcdefg");
-        user.setPassword("123");
-        user.setAge(20);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(INVALID_PASSWORD);
+        user.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(user));
         
         User userTwo = new User();
-        userTwo.setLogin("abcdefgh");
-        userTwo.setPassword("12345");
-        userTwo.setAge(20);
+        userTwo.setLogin(VALID_LOGIN_TWO);
+        userTwo.setPassword(INVALID_PASSWORD_EDGE);
+        userTwo.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userTwo));
         
         User userThree = new User();
-        userThree.setLogin("abcdefghi");
-        userThree.setPassword("");
-        userThree.setAge(20);
+        userThree.setLogin(VALID_LOGIN_THREE);
+        userThree.setPassword(EMPTY_STRING);
+        userThree.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userThree));
         
         User userFour = new User();
-        userFour.setLogin("abcdefghij");
+        userFour.setLogin(VALID_LOGIN_FOUR);
         userFour.setPassword(null);
-        userFour.setAge(20);
+        userFour.setAge(VALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userFour));
     }
@@ -109,45 +131,47 @@ class RegistrationServiceTest {
     @Test
     void register_validUserPassword_Ok() {
         User user = new User();
-        user.setLogin("abcdefg");
-        user.setPassword("123456");
-        user.setAge(20);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD_EDGE);
+        user.setAge(VALID_AGE);
         assertEquals(user, registrationServiceImpl.register(user));
+        assertEquals(user, Storage.people.get(0));
         
         User userTwo = new User();
-        userTwo.setLogin("abcdefgh");
-        userTwo.setPassword("123456789");
-        userTwo.setAge(20);
+        userTwo.setLogin(VALID_LOGIN_TWO);
+        userTwo.setPassword(VALID_PASSWORD);
+        userTwo.setAge(VALID_AGE);
         assertEquals(userTwo, registrationServiceImpl.register(userTwo));
+        assertEquals(userTwo, Storage.people.get(1));
     }
     
     @Test
     void register_invalidUserAge_notOk() {
         User user = new User();
-        user.setLogin("abcdef");
-        user.setPassword("12345678");
-        user.setAge(12);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(INVALID_AGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(user));
         
         User userTwo = new User();
-        userTwo.setLogin("abcdefg");
-        userTwo.setPassword("12345678");
-        userTwo.setAge(-12);
+        userTwo.setLogin(VALID_LOGIN_TWO);
+        userTwo.setPassword(VALID_PASSWORD);
+        userTwo.setAge(INVALID_AGE_TWO);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userTwo));
         
         User userThree = new User();
-        userThree.setLogin("abcdefgh");
-        userThree.setPassword("12345678");
+        userThree.setLogin(VALID_LOGIN_THREE);
+        userThree.setPassword(VALID_PASSWORD);
         userThree.setAge(null);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userThree));
         
         User userFour = new User();
-        userFour.setLogin("abcdefghi");
-        userFour.setPassword("12345678");
-        userFour.setAge(17);
+        userFour.setLogin(VALID_LOGIN_FOUR);
+        userFour.setPassword(VALID_PASSWORD);
+        userFour.setAge(INVALID_AGE_EDGE);
         assertThrows(InvalidUserDataException.class,
                 () -> registrationServiceImpl.register(userFour));
     }
@@ -155,15 +179,17 @@ class RegistrationServiceTest {
     @Test
     void register_validUserAge_Ok() {
         User user = new User();
-        user.setLogin("abcdef");
-        user.setPassword("12345678");
-        user.setAge(18);
+        user.setLogin(VALID_LOGIN);
+        user.setPassword(VALID_PASSWORD);
+        user.setAge(VALID_AGE_EDGE);
         assertEquals(user, registrationServiceImpl.register(user));
+        assertEquals(user, Storage.people.get(0));
         
         User userTwo = new User();
-        userTwo.setLogin("abcdefg");
-        userTwo.setPassword("12345678");
+        userTwo.setLogin(VALID_LOGIN_TWO);
+        userTwo.setPassword(VALID_PASSWORD);
         userTwo.setAge(35);
         assertEquals(userTwo, registrationServiceImpl.register(userTwo));
+        assertEquals(userTwo, Storage.people.get(1));
     }
 }
