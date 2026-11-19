@@ -14,7 +14,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException("There is no user in database!");
+            throw new RegistrationException("User can't be null");
         }
         if (user.getLogin() == null || user.getLogin().length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException("Login must be at least 6 characters");
